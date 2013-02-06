@@ -1,11 +1,12 @@
 {
-  String pmml=makePmml(makeDataDictionary(makeDataField("x",DataType.STRING),makeDataField("res",DataType.DOUBLE)),makeScorecard(makeMiningSchema(makeMiningField("res","predicted"),makeMiningField("x","active")),makeOutputSchema("res",DataType.DOUBLE),makeCharacteristic("x_check",makeAttribute(1.0,makeSetPredicate("x",SimpleSetOp.IN,"asdf","qwer"))),makeCharacteristic("x_check",makeAttribute(2.0,makeSetPredicate("x",SimpleSetOp.NOT_IN,"qwer","monkey","ninja")))));
-  Object[][] tests=new Object[][]{{"asdf",3.0},{"qwer",1.0},{"monkey",0.0},{"cowboy",2.0},{"",2.0},{null,2.0},{"ASDF",2.0}};
+  String pmml=makePmml(makeDataDictionary(makeDataField("x",DataType.STRING),makeDataField("y",DataType.STRING),makeDataField("res",DataType.DOUBLE)),makeScorecard(makeMiningSchema(makeMiningField("res","predicted"),makeMiningField("x","active")),makeOutputSchema("res",DataType.DOUBLE),makeCharacteristic("x_check",makeAttribute(1.0,makeSetPredicate("x",SimpleSetOp.IN,"asdf","qwer"))),makeCharacteristic("y_check",makeAttribute(2.0,makeSetPredicate("y",SimpleSetOp.NOT_IN,"qwer","monkey","ninja")))));
+  Object[][] tests=new Object[][]{{"asdf","asdf",3.0},{"qwer","qwer",1.0},{"monkey","monkey",0.0},{"cowboy","cowboy",2.0},{"","",2.0},{null,null,2.0},{"ASDF","ASDF",2.0}};
   for (  Object[] t : tests) {
     HashMap<String,Comparable> m=new HashMap<String,Comparable>();
     m.put("x",(Comparable)t[0]);
+    m.put("y",(Comparable)t[1]);
     ScorecardModel scm=getSCM(pmml);
     double predictedScore=scm.score(m);
-    Assert.assertEquals((Double)t[1],predictedScore,0.00001);
+    Assert.assertEquals((Double)t[2],predictedScore,0.00001);
   }
 }

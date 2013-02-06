@@ -1,8 +1,7 @@
 {
-  if (_needContent) {
+  if (_needArrayContent && _expectedArraySize > 0) {
     String val=new String(ch,start,length);
-    String[] values=val.split(" ");
-    ScorecardModel.IsNotIn<String> pred=(IsNotIn<String>)_predicate;
-    pred._values=values;
+    String[] values=val.split("\\s+");
+    for (    String s : values)     if (s != null && !s.isEmpty())     _arrayContent.add(s);
   }
 }
