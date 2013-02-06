@@ -1,0 +1,28 @@
+{
+  if (fromJar()) {
+    _systemLoader=(URLClassLoader)getSystemClassLoader();
+    _addUrl=URLClassLoader.class.getDeclaredMethod("addURL",URL.class);
+    _addUrl.setAccessible(true);
+    extractInternalFiles();
+    File binlib=internalFile("binlib");
+    System.setProperty("org.hyperic.sigar.path",binlib.getAbsolutePath());
+    addInternalJars("h2o_core.jar");
+    addInternalJars("sigar");
+    addInternalJars("apache");
+    addInternalJars("gson");
+    addInternalJars("junit");
+    addInternalJars("jama");
+    addInternalJars("poi");
+    addInternalJars("s3");
+  }
+ else {
+    System.setProperty("org.hyperic.sigar.path","lib/binlib");
+  }
+  String mainClass="water.H2O";
+  if (args.length >= 2 && args[0].equals("-mainClass")) {
+    mainClass=args[1];
+    args=Arrays.copyOfRange(args,2,args.length);
+  }
+  Class h2oclazz=loadClass(mainClass,true);
+  h2oclazz.getMethod("main",String[].class).invoke(null,(Object)args);
+}

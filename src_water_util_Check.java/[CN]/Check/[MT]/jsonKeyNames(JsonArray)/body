@@ -1,0 +1,12 @@
+{
+  if (a == null)   return true;
+  for (  JsonElement v : a) {
+    if (v.isJsonObject()) {
+      Check.jsonKeyNames(v.getAsJsonObject());
+    }
+ else     if (v.isJsonArray()) {
+      Check.jsonKeyNames(v.getAsJsonArray());
+    }
+  }
+  return true;
+}

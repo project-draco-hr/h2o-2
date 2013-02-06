@@ -1,0 +1,41 @@
+{
+  JsonObject res=new JsonObject();
+  res.addProperty("time",_time);
+  res.addProperty("isDone",_isDone);
+  JsonArray colNames=new JsonArray();
+  for (  String s : _va.colNames())   colNames.add(new JsonPrimitive(s));
+  res.add("column_names",colNames);
+  res.addProperty(Constants.MODEL_KEY,_selfKey.toString());
+  if (_warnings != null) {
+    JsonArray warnings=new JsonArray();
+    for (    String w : _warnings)     warnings.add(new JsonPrimitive(w));
+    res.add("warnings",warnings);
+  }
+  if (_beta == null)   return res;
+  JsonObject coefs=new JsonObject();
+  double norm=0.0;
+  int idx=0;
+  for (int i=0; i < _va._cols.length - 1; i++) {
+    ValueArray.Column C=_va._cols[i];
+    if (C._domain != null)     for (    String d : C._domain)     coefs.addProperty(C._name + "." + d,_beta[idx++]);
+ else {
+      double b=_beta[idx] * _normMul[idx];
+      coefs.addProperty(C._name,b);
+      norm+=b * _normSub[idx];
+      idx++;
+    }
+  }
+  double icpt=_beta[_beta.length - 1];
+  icpt-=norm;
+  coefs.addProperty("Intercept",icpt);
+  res.add("coefficients",coefs);
+  res.add("LSMParams",_solver.toJson());
+  res.add("GLMParams",_glmParams.toJson());
+  res.addProperty("iterations",_iterations);
+  if (_vals != null) {
+    JsonArray vals=new JsonArray();
+    for (    GLMValidation v : _vals)     vals.add(v.toJson());
+    res.add("validations",vals);
+  }
+  return res;
+}

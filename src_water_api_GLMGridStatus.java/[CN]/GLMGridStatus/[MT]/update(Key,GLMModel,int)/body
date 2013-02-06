@@ -1,0 +1,13 @@
+{
+  new TAtomic<GLMGridStatus>(){
+    @Override public GLMGridStatus atomic(    GLMGridStatus old){
+      old._ms[idx]=m._selfKey;
+      old._progress++;
+      return old;
+    }
+    @Override public GLMGridStatus alloc(){
+      return new GLMGridStatus();
+    }
+  }
+.invoke(taskey);
+}

@@ -1,0 +1,25 @@
+def test_B_GenParity1(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    print '\nGenerating some large row count parity datasets in', SYNDATASETS_DIR,
+    print '\nmay be a minute..........'
+    for x in xrange(161, 240, 20):
+        y = (10000 * x)
+        shCmdString = (((('perl ' + h2o.find_file('syn_scripts/parity.pl')) + ' 128 4 ') + str(y)) + ' quad')
+        h2o.spawn_cmd_and_wait('parity.pl', shCmdString.split(), timeout=30)
+        csvFilename = (('parity_128_4_' + str(x)) + '_quad.data')
+        sys.stdout.write('.')
+        sys.stdout.flush()
+    print '\nDatasets generated. Using.'
+    for trials in xrange(1, 7):
+        trees = 6
+        for x in xrange(161, 240, 20):
+            y = (10000 * x)
+            print '\nTrial:', trials, ', y:', y
+            csvFilename = (('parity_128_4_' + str(y)) + '_quad.data')
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            timeoutSecs = (20 + (5 * len(h2o.nodes)))
+            model_key = ((csvFilename + '_') + str(trials))
+            h2o_cmd.runRF(trees=trees, model_key=model_key, timeoutSecs=timeoutSecs, retryDelaySecs=1, csvPathname=csvPathname)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            h2o.clean_sandbox_stdout_stderr()

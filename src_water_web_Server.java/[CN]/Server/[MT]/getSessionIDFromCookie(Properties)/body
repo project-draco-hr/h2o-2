@@ -1,0 +1,12 @@
+{
+  String cks=header.getProperty("cookie","");
+  String[] parts=cks.split(" ");
+  for (  String s : parts) {
+    s=s.trim();
+    if (s.startsWith(SessionManager.SESSION_COOKIE + "=")) {
+      s=s.substring(SessionManager.SESSION_COOKIE.length() + 1,s.endsWith(";") ? s.length() - 1 : s.length());
+      return s;
+    }
+  }
+  return null;
+}

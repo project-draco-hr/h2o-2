@@ -1,0 +1,29 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append(header(array));
+  if (_offset != INFO_PAGE) {
+    JsonObject row=new JsonObject();
+    row.addProperty(ROW,MIN);
+    for (int i=0; i < _va._cols.length; i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._min);
+    sb.append(defaultBuilder(row).build(response,row,contextName));
+    row.addProperty(ROW,MAX);
+    for (int i=0; i < _va._cols.length; i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._max);
+    sb.append(defaultBuilder(row).build(response,row,contextName));
+    row.addProperty(ROW,MEAN);
+    for (int i=0; i < _va._cols.length; i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._mean);
+    sb.append(defaultBuilder(row).build(response,row,contextName));
+    row.addProperty(ROW,VARIANCE);
+    for (int i=0; i < _va._cols.length; i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._sigma);
+    sb.append(defaultBuilder(row).build(response,row,contextName));
+    row.addProperty(ROW,BADAT);
+    for (int i=0; i < _va._cols.length; i++)     row.addProperty(_va._cols[i]._name,_va._numrows - _va._cols[i]._n);
+    sb.append(defaultBuilder(row).build(response,row,contextName));
+  }
+  for (  JsonElement e : array) {
+    Builder builder=response.getBuilderFor(contextName + "_ROW");
+    if (builder == null)     builder=defaultBuilder(e);
+    sb.append(builder.build(response,e,contextName));
+  }
+  sb.append(footer(array));
+  return sb.toString();
+}

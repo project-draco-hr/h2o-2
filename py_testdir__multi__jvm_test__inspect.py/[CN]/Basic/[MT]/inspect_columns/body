@@ -1,0 +1,14 @@
+def inspect_columns(self, filename, rows=1, cols=26, columnNames=crange('A', 'Z'), columnTypes=None):
+    cvsfile = h2o.find_file(filename)
+    node = h2o.nodes[0]
+    res = self.putfile_and_parse(node, cvsfile)
+    ary = node.inspect(res['destination_key'])
+    self.assertEqual(rows, ary['num_rows'])
+    self.assertEqual(cols, ary['num_columns'])
+    if (not (columnNames is None)):
+        for (col, expName) in zip(ary['cols'], columnNames):
+            self.assertEqual(expName, col['name'])
+    if (not (columnTypes is None)):
+        for (col, expType) in zip(ary['cols'], columnTypes):
+            self.assertEqual(expType, col['type'])
+    return ary

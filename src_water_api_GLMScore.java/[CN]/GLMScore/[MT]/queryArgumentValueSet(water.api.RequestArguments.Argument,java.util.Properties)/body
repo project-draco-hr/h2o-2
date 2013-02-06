@@ -1,0 +1,20 @@
+{
+  if (arg == _modelKey && _modelKey.specified()) {
+    GLMModel m=_modelKey.value();
+    if (m._glmParams._f == Family.binomial) {
+      _thresholds._hideInQuery=false;
+    }
+ else {
+      _thresholds.disable("only for binomial");
+      _thresholds._hideInQuery=true;
+    }
+  }
+  if (arg == _dataKey) {
+    ValueArray va=_dataKey.value();
+    GLMModel model=_modelKey.value();
+    int colIds[]=model.columnMapping(va.colNames());
+    if (!GLMModel.isCompatible(colIds)) {
+      for (int i=0; i < colIds.length; i++)       if (colIds[i] == -1)       throw new IllegalArgumentException("Incompatible dataset: " + va._key + " does not have column '"+ model._va._cols[i]._name+ "'");
+    }
+  }
+}

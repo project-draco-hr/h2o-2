@@ -1,0 +1,17 @@
+{
+  Result r=Result.temporary();
+  BooleanVectorFilter filter=new BooleanVectorFilter(r._key,args[0]._key,args[1]._key,args[1].colIndex());
+  filter.invoke(args[0]._key);
+  long numrows=0;
+  for (int i=0; i < filter._rpc.length; i++) {
+    long tmp=filter._rpc[i];
+    filter._rpc[i]=numrows;
+    numrows+=tmp;
+  }
+  ValueArray va=ValueArray.value(args[0]._key);
+  va=VABuilder.updateRows(va,r._key,numrows);
+  va._rpc=filter._rpc;
+  DKV.put(va._key,va.value());
+  DKV.write_barrier();
+  return r;
+}

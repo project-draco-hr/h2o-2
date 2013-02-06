@@ -1,0 +1,13 @@
+{
+  Key fkey=load_test_file("smalldata/cars.csv");
+  Key okey=Key.make("cars.hex");
+  ParseDataset.parse(okey,DKV.get(fkey));
+  UKV.remove(fkey);
+  ValueArray va=ValueArray.value(DKV.get(okey));
+  JsonObject res=LinearRegression.run(va,2,3);
+  assertEquals(58.326241377521995,res.get("Beta1").getAsDouble(),0.000001);
+  assertEquals(-124.57816399564385,res.get("Beta0").getAsDouble(),0.000001);
+  assertEquals(0.9058985668996267,res.get("RSquared").getAsDouble(),0.000001);
+  assertEquals(0.9352584499359637,res.get("Beta1StdErr").getAsDouble(),0.000001);
+  UKV.remove(okey);
+}

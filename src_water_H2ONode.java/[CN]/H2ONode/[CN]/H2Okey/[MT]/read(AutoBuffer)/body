@@ -1,0 +1,11 @@
+{
+  InetAddress inet;
+  try {
+    inet=InetAddress.getByAddress(ab.getA1(4));
+  }
+ catch (  UnknownHostException e) {
+    throw new Error(e);
+  }
+  int port=ab.get2();
+  return new H2Okey(inet,port);
+}

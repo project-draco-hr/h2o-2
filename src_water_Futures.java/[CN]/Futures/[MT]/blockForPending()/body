@@ -1,0 +1,11 @@
+{
+  try {
+    while (_pending_cnt > 0)     _pending[--_pending_cnt].get();
+  }
+ catch (  InterruptedException ie) {
+    throw new RuntimeException(ie);
+  }
+catch (  ExecutionException ee) {
+    throw new RuntimeException(ee);
+  }
+}

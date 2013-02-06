@@ -1,0 +1,14 @@
+{
+  RString query=new RString(ExecQuery.html);
+  query.replace("expr",args.getProperty("Expr"));
+  try {
+    long time=System.currentTimeMillis();
+    Key k=water.exec.Exec.exec(args.getProperty("Expr"));
+    time=System.currentTimeMillis() - time;
+    args.put("Key",k.toString());
+    return query.toString() + "<p>Query execution took " + (time / 1000.0)+ " [s]</p>"+ new Inspect().serveImpl(server,args,sessionId);
+  }
+ catch (  PositionedException e) {
+    return query.toString() + error("<span style='font-family:monospace'>" + e.reportHTML(args.getProperty("Expr")) + "</span>");
+  }
+}

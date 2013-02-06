@@ -1,0 +1,21 @@
+def pickRandGlmParams(paramDict, params):
+    colX = 0
+    randomGroupSize = random.randint(1, len(paramDict))
+    for i in range(randomGroupSize):
+        randomKey = random.choice(paramDict.keys())
+        randomV = paramDict[randomKey]
+        randomValue = random.choice(randomV)
+        params[randomKey] = randomValue
+        if (randomKey == 'x'):
+            colX = randomValue
+        if (('family' not in params) or (params['family'] == 'binomial')):
+            maxCase = max(paramDict['case'])
+            minCase = min(paramDict['case'])
+            if ('case_mode' in params):
+                if (('case' not in params) or (params['case'] is None)):
+                    params['case'] = 1
+                if ((params['case_mode'] == '<') and (params['case'] == minCase)):
+                    params['case'] += 1
+                if ((params['case_mode'] == '>') and (params['case'] == maxCase)):
+                    params['case'] -= 1
+    return colX

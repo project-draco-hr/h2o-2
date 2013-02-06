@@ -1,0 +1,17 @@
+def test_C_hhp_107_01(self):
+    csvPathname = h2o.find_file('smalldata/hhp_107_01.data.gz')
+    print ('\n' + csvPathname)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=15)
+    h2b.browseTheCloud()
+    y = '106'
+    x = ''
+    for trial in range(2):
+        print '\nTrial #', trial, 'start'
+        print '\nx:', x
+        print 'y:', y
+        start = time.time()
+        kwargs = {'y': y, }
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=200, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, 57, **kwargs)
+        h2o.check_sandbox_for_errors()
+        print '\nTrial #', trial

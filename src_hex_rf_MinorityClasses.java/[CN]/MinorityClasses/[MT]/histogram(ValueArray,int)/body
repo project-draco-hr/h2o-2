@@ -1,0 +1,9 @@
+{
+  HistogramTask tsk=new HistogramTask();
+  Column c=data._cols[classIdx];
+  tsk._n=(int)(c._max - c._min) + 1;
+  tsk._classIdx=classIdx;
+  tsk._aryKey=data._key;
+  tsk.invoke(data._key);
+  return tsk._histogram;
+}

@@ -1,0 +1,13 @@
+{
+  boolean isBool=d.columnArity(col) == 1;
+  boolean isBig=d.columnArity(col) > _exclusiveSplitLimit;
+  boolean isFloat=d.isFloat(col);
+  if (isBool)   return eqSplit(col,d,dist,distWeight,_random);
+ else   if (isBig || isFloat)   return ltSplit(col,d,dist,distWeight,_random);
+ else {
+    Split s1=eqSplit(col,d,dist,distWeight,_random);
+    if (s1.isImpossible())     return s1;
+    Split s2=ltSplit(col,d,dist,distWeight,_random);
+    return s1.betterThan(s2) ? s1 : s2;
+  }
+}

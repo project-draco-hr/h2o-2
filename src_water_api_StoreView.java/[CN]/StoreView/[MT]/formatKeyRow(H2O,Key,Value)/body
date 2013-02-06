@@ -1,0 +1,76 @@
+{
+  JsonObject result=new JsonObject();
+  result.addProperty(KEY,key.toString());
+  result.addProperty(VALUE_SIZE,val.length());
+  JsonObject mt=new JsonObject();
+  JsonObject jcols[]=new JsonObject[]{mt,mt,mt,mt,mt};
+  long rows=-1;
+  int cols=-1;
+  if (val._isArray != 0) {
+    ValueArray ary=ValueArray.value(val);
+    if (ary._cols.length > 1 || ary._cols[0]._size != 1) {
+      rows=ary._numrows;
+      cols=ary._cols.length;
+      for (int i=0; i < 5; ++i) {
+        JsonObject col=new JsonObject();
+        if (i < cols) {
+          ValueArray.Column c=ary._cols[i];
+          if (c._size != 0) {
+            if (c._domain == null) {
+              col.addProperty(MIN,c._min);
+              col.addProperty(MEAN,c._mean);
+              col.addProperty(MAX,c._max);
+            }
+ else             if (c._domain.length > 0) {
+              int max=c._domain.length;
+              col.addProperty(MIN,c._domain[0]);
+              col.addProperty(MEAN,c._domain[max / 2]);
+              col.addProperty(MAX,c._domain[max - 1]);
+            }
+          }
+        }
+        jcols[i]=col;
+      }
+    }
+  }
+  if (rows == -1) {
+    byte[] bs=DKV.get(key).getFirstBytes();
+    int[] rows_cols=CsvParser.inspect(bs);
+    if (rows_cols != null && rows_cols[1] != 0) {
+      double bytes_per_row=(double)bs.length / rows_cols[0];
+      rows=(long)(val.length() / bytes_per_row);
+      cols=rows_cols[1];
+      result.addProperty(ROWS,"~" + rows);
+    }
+ else     result.addProperty(ROWS,"");
+  }
+ else   result.addProperty(ROWS,rows);
+  result.addProperty(COLS,rows == -1 ? "" : Integer.toString(cols));
+  for (int i=0; i < jcols.length; i++)   result.add("col_" + i,jcols[i]);
+  byte[] b=new byte[100];
+  int len=0;
+  try {
+    len=val.openStream().read(b);
+  }
+ catch (  IOException e) {
+  }
+  StringBuilder sb=new StringBuilder();
+  int newlines=0;
+  for (int i=0; i < len; i++) {
+    byte c=b[i];
+    if (c == '&')     sb.append("&amp;");
+ else     if (c == '<')     sb.append("&lt;");
+ else     if (c == '>')     sb.append("&gt;");
+ else     if (c == '\r')     ;
+ else     if (c == '\n') {
+      sb.append("<br>");
+      if (newlines++ > 5)       break;
+    }
+ else     if (c == ',' && i + 1 < len && b[i + 1] != ' ')     sb.append(", ");
+ else     if (c < 32)     sb.append('?');
+ else     sb.append((char)c);
+  }
+  if (val.length() > len)   sb.append("...");
+  result.addProperty(VALUE,sb.toString());
+  return result;
+}

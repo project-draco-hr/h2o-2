@@ -1,0 +1,24 @@
+{
+  sb.append("<div class='alert'>Actions: " + (m.isSolved() ? (GLMScore.link(m._selfKey,m._vals[0].bestThreshold(),"Validate on another dataset") + ", ") : "") + GLM.link(m._dataKey,m,"Compute new model")+ "</div>");
+  RString R=new RString("<div class='alert %succ'>GLM on data <a href='/Inspect.html?" + KEY + "=%key'>%key</a>. %iterations iterations computed in %time. %warnings %action</div>"+ "<h4>GLM Parameters</h4>"+ " %GLMParams %LSMParams"+ "<h4>Equation: </h4>"+ "<div><code>%modelSrc</code></div>"+ "<h4>Coefficients</h4>"+ "<div>%coefficients</div>");
+  if (m._warnings != null) {
+    StringBuilder wsb=new StringBuilder();
+    for (    String s : m._warnings)     wsb.append(s).append("<br>");
+    R.replace("warnings",wsb);
+    R.replace("succ","alert-warning");
+    if (!m.converged())     R.replace("action","Suggested action: Go to " + (m.isSolved() ? (GLMGrid.link(m,"Grid search") + ", ") : "") + " to search for better paramters");
+  }
+ else   R.replace("succ","alert-success");
+  R.replace("key",m._dataKey);
+  R.replace("time",PrettyPrint.msecs(m._time,true));
+  R.replace("iterations",m._iterations);
+  R.replace("GLMParams",glmParamsHTML(m));
+  R.replace("LSMParams",lsmParamsHTML(m));
+  if (m.isSolved()) {
+    JsonObject coefs=json.get("coefficients").getAsJsonObject();
+    R.replace("modelSrc",equationHTML(m,coefs));
+    R.replace("coefficients",coefsHTML(coefs));
+  }
+  sb.append(R);
+  if (m._vals != null)   validationHTML(m._vals,sb);
+}

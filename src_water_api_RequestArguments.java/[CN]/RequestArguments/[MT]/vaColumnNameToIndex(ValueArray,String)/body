@@ -1,0 +1,15 @@
+{
+  for (int i=0; i < va._cols.length; ++i) {
+    String colName=va._cols[i]._name;
+    if (colName == null)     colName=String.valueOf(i);
+    if (colName.equals(input))     return i;
+  }
+  try {
+    int i=Integer.parseInt(input);
+    if ((i < 0) || (i >= va._cols.length))     return -1;
+    return i;
+  }
+ catch (  NumberFormatException e) {
+    return -1;
+  }
+}

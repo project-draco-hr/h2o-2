@@ -1,0 +1,5 @@
+{
+  JsonObject obj=(JsonObject)element;
+  if (obj.get(JSON_TYPE).getAsString().equals("heartbeat"))   return new HeartbeatEventRowBuilder();
+  return new BasicEventRowBuild();
+}

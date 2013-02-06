@@ -1,0 +1,7 @@
+{
+  String clazz=f.getClass().getName();
+  if (Paxos.LEADER == H2O.SELF)   return registerType(clazz);
+  FillRequest fr=new FillRequest(clazz,-1);
+  fr=RPC.call(Paxos.LEADER,fr).get();
+  return fr._index;
+}

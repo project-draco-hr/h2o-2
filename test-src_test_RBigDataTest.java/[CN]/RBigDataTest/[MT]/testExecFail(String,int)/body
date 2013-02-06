@@ -1,0 +1,19 @@
+{
+  DKV.write_barrier();
+  int keys=H2O.store_size();
+  try {
+    int i=UNIQUE.getAndIncrement();
+    System.err.println("result" + (new Integer(i).toString()) + ": "+ expr);
+    Key key=Exec.exec(expr,"result" + (new Integer(i).toString()));
+    UKV.remove(key);
+    assertTrue("An exception should have been thrown.",false);
+  }
+ catch (  ParserException e) {
+    assertTrue(false);
+  }
+catch (  EvaluationException e) {
+    if (errorPos != -1)     assertEquals(errorPos,e._pos);
+  }
+  DKV.write_barrier();
+  assertEquals("Keys were not properly deleted for expression " + expr,keys,H2O.store_size());
+}

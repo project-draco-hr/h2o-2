@@ -1,0 +1,15 @@
+def browseJsonHistoryAsUrlLastMatch(matchme, swapme=None):
+    if (not h2o.browse_disable):
+        len_history = len(h2o.json_url_history)
+        i = (-1)
+        while (((len_history + i) != 0) and (not re.search(matchme, h2o.json_url_history[i]))):
+            i = (i - 1)
+        url = h2o.json_url_history[i]
+        if (swapme is not None):
+            url = re.sub(matchme, swapme, url)
+        url = re.sub('GLMGridProgress', 'GLMGridProgress.html', url)
+        url = re.sub('ParseProgress', 'ParseProgress.html', url)
+        url = re.sub('.json', '.html', url)
+        h2o.verboseprint('browseJsonHistoryAsUrlLastMatch:', url)
+        h2o.verboseprint('same, decoded:', urllib.unquote(url))
+        webbrowser.open_new_tab(url)

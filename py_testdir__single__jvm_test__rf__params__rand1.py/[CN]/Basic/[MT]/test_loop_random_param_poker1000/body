@@ -1,0 +1,13 @@
+def test_loop_random_param_poker1000(self):
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    csvPathname = h2o.find_file('smalldata/poker/poker1000')
+    for trial in range(20):
+        params = {'ntree': 17, }
+        colX = h2o_rf.pickRandRfParams(paramDict, params)
+        kwargs = params.copy()
+        print kwargs
+        timeoutSecs = max(60, (kwargs['ntree'] * 11))
+        h2o_cmd.runRF(timeoutSecs=20, csvPathname=csvPathname, **kwargs)
+        print 'Trial #', trial, 'completed'

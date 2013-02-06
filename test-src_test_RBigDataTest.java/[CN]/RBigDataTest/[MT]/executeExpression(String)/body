@@ -1,0 +1,14 @@
+{
+  DKV.write_barrier();
+  try {
+    int i=UNIQUE.getAndIncrement();
+    Key key=Exec.exec(expr,"RBigResult" + i);
+    return key;
+  }
+ catch (  PositionedException e) {
+    System.out.println(e.report(expr));
+    e.printStackTrace();
+    assertTrue(false);
+    return null;
+  }
+}

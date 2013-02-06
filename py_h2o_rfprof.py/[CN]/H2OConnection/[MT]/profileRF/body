@@ -1,0 +1,29 @@
+def profileRF(self, Key, ntree=None, depth=None, sample=None, binLimit=None, gini=None, seed=None, parallel=None, modelKey=None, classCol=None, oobee=None, features=None):
+    ' Profiles the RF & CM '
+    args = {}
+    args['Key'] = Key
+    if (ntree != None):
+        args['ntree'] = str(ntree)
+    if (depth != None):
+        args['depth'] = str(depth)
+    if (sample != None):
+        args['sample'] = str(sample)
+    if (binLimit != None):
+        args['binLimit'] = str(binLimit)
+    if (gini != None):
+        args['gini'] = str(gini)
+    if (seed != None):
+        args['seed'] = str(seed)
+    if (parallel != None):
+        args['parallel'] = str(parallel)
+    if (modelKey != None):
+        args['modelKey'] = str(modelKey)
+    if (classCol != None):
+        args['class'] = str(classCol)
+    if (oobee != None):
+        args['OOBEE'] = str(oobee)
+    if (features != None):
+        args['features'] = str(features)
+    args['action'] = 'RF'
+    res = self._remoteSend(PAGE_DEBUG, args)
+    return (int(res['preprocess']), int(res['trees']), int(res['confusion']))

@@ -1,0 +1,50 @@
+{
+  if (what._type == Result.Type.rtNumberLiteral) {
+    Key key2=ValueArray.getChunkKey(0,to);
+    byte[] bits=new byte[8];
+    UDP.set8d(bits,0,what._const);
+    Value val=new Value(key2,bits);
+    Futures fs=new Futures();
+    DKV.put(key2,val,fs);
+    VABuilder b=new VABuilder(to.toString(),1).addDoubleColumn("0",what._const,what._const,what._const,0).createAndStore(to);
+    fs.blockForPending();
+  }
+ else   if (what._type == Result.Type.rtKey) {
+    if (what.canShallowCopy()) {
+      throw H2O.unimpl();
+    }
+ else     if (what.rawColIndex() != -1) {
+      ValueArray v=ValueArray.value(what._key);
+      if (v == null)       throw new EvaluationException(pos,"Key " + what._key + " not found");
+      int col=what.rawColIndex();
+      Column c=v._cols[col];
+      VABuilder b=new VABuilder(to.toString(),v.numRows()).addColumn(c._name,c._size,c._scale,c._min,c._max,c._mean,c._sigma).createAndStore(to);
+      DeepSingleColumnAssignment da=new DeepSingleColumnAssignment(what._key,to,col);
+      da.invoke(to);
+    }
+ else {
+      ValueArray v=ValueArray.value(what._key);
+      if (v == null)       throw new EvaluationException(pos,"Key " + what._key + " not found");
+      ValueArray r=v.clone();
+      r._key=to;
+      DKV.put(to,r.value());
+      DKV.write_barrier();
+      MRTask copyTask=new MRTask(){
+        @Override public void map(        Key fromk){
+          long chkidx=ValueArray.getChunkIndex(fromk);
+          Key tok=ValueArray.getChunkKey(chkidx,to);
+          byte[] bits=DKV.get(fromk).get();
+          Value tov=new Value(tok,MemoryManager.arrayCopyOf(bits,bits.length));
+          DKV.put(tok,tov,getFutures());
+        }
+        @Override public void reduce(        DRemoteTask drt){
+        }
+      }
+;
+      copyTask.invoke(what._key);
+    }
+  }
+ else {
+    throw new EvaluationException(pos,"Only Values and numeric constants can be assigned");
+  }
+}

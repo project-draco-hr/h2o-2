@@ -1,0 +1,6 @@
+{
+  CtMethod ccms[]=cc.getDeclaredMethods();
+  if (!hasExisting("newInstance","()Lwater/Freezable;",ccms)) {
+    cc.addMethod(CtNewMethod.make("public water.Freezable newInstance() {\n" + "    return new " + cc.getName() + "();\n"+ "}",cc));
+  }
+}

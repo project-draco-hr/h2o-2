@@ -1,0 +1,10 @@
+def tear_down_cloud(node_list=None):
+    if (not node_list):
+        node_list = nodes
+    try:
+        for n in node_list:
+            n.terminate()
+            verboseprint('tear_down_cloud n:', n)
+    finally:
+        check_sandbox_for_errors()
+        node_list[:] = []

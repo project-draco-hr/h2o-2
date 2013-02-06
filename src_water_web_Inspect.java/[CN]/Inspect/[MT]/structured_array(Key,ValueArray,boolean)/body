@@ -1,0 +1,100 @@
+{
+  RString response=new RString(html_ary);
+  if (H2O.OPT_ARGS.hdfs != null && onHDFS) {
+    RString hdfs=new RString("<a href='Store2HDFS?Key=%$key'><button class='btn btn-primary btn-mini'>store on HDFS</button></a>");
+    hdfs.replace("key",key);
+    response.replace("storeHdfs",hdfs.toString());
+  }
+ else {
+    response.replace("storeHdfs","");
+  }
+  response.replace("key",key);
+  response.replace("rows",ary._numrows);
+  response.replace("rowsize",ary._rowsize);
+  response.replace("size",PrettyPrint.bytes(ary.length()));
+  response.replace("ncolumns",ary._cols.length);
+  StringBuilder sb=new StringBuilder();
+  final int num_col=Math.min(255,ary._cols.length);
+  for (int i=0; i < num_col; i++)   sb.append("<th>").append(ary._cols[i]._name);
+  response.replace("head_row",sb);
+  sb=new StringBuilder();
+  for (int i=0; i < num_col; i++)   sb.append("<td> +").append((int)ary._cols[i]._off).append("</td>");
+  response.replace("offset_row",sb);
+  sb=new StringBuilder();
+  for (int i=0; i < num_col; i++)   sb.append("<td>").append(Math.abs(ary._cols[i]._size)).append("b</td>");
+  response.replace("size_row",sb);
+  sb=new StringBuilder();
+  for (int i=0; i < num_col; i++)   sb.append("<td>").append(format(ary._cols[i]._mean)).append("</td>");
+  response.replace("mean_row",sb);
+  sb=new StringBuilder();
+  for (int i=0; i < num_col; i++)   sb.append("<td>").append(format(ary._cols[i]._sigma)).append("</td>");
+  response.replace("sigma_row",sb);
+  sb=new StringBuilder();
+  for (int i=0; i < num_col; i++) {
+    sb.append("<td>");
+    int sz=ary._cols[i]._size;
+    if (sz != 0) {
+      sb.append("(X");
+      int base=ary._cols[i]._base;
+      if (base != 0) {
+        if (base > 0)         sb.append('+');
+        sb.append(base);
+      }
+      sb.append(")");
+      if (sz == 1 || sz == 2) {
+        int s=ary._cols[i]._scale;
+        if (s != 1.0)         sb.append("/").append(s);
+      }
+    }
+    sb.append("</td>");
+  }
+  response.replace("math_row",sb);
+  sb=new StringBuilder();
+  for (int i=0; i < num_col; i++) {
+    sb.append("<td>");
+    int sz=ary._cols[i]._size;
+    if (sz != 0) {
+      double min=ary._cols[i]._min;
+      if (sz > 0 && ary._cols[i]._scale == 1)       sb.append((long)min);
+ else       sb.append(min);
+      sb.append(" - ");
+      double max=ary._cols[i]._max;
+      if (sz > 0 && ary._cols[i]._scale == 1)       sb.append((long)max);
+ else       sb.append(max);
+    }
+    sb.append("</td>");
+  }
+  response.replace("min_max_row",sb);
+  boolean found=false;
+  for (int i=0; i < num_col; i++)   if (ary._cols[i]._n != ary._numrows) {
+    found=true;
+    break;
+  }
+  if (found) {
+    RString row=response.restartGroup("tableRow");
+    sb=new StringBuilder();
+    sb.append("<td>Rows missing data</td>");
+    for (int i=0; i < num_col; i++) {
+      sb.append("<td>");
+      long sz=ary._numrows - ary._cols[i]._n;
+      sb.append(sz != 0 ? sz : "");
+      sb.append("</td>");
+    }
+    row.replace("data_row",sb);
+    row.append();
+  }
+  long num_rows=ary._numrows;
+  if (num_rows > 7) {
+    display_row(ary,0,response,num_col);
+    display_row(ary,1,response,num_col);
+    display_row(ary,2,response,num_col);
+    display_row(ary,-1,response,num_col);
+    display_row(ary,num_rows - 3,response,num_col);
+    display_row(ary,num_rows - 2,response,num_col);
+    display_row(ary,num_rows - 1,response,num_col);
+  }
+ else {
+    for (int i=0; i < num_rows; i++)     display_row(ary,i,response,num_col);
+  }
+  return response.toString();
+}

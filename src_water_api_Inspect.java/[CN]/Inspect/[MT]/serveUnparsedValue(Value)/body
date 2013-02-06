@@ -1,0 +1,20 @@
+{
+  JsonObject result=new JsonObject();
+  result.addProperty(VALUE_TYPE,"unparsed");
+  byte[] bs=v.getFirstBytes();
+  int[] rows_cols=CsvParser.inspect(bs);
+  if (rows_cols != null && rows_cols[1] != 0) {
+    double bytes_per_row=(double)bs.length / rows_cols[0];
+    long rows=(long)(v.length() / bytes_per_row);
+    result.addProperty(ROWS,"~" + rows);
+    result.addProperty(COLS,rows_cols[1]);
+  }
+ else {
+    result.addProperty(ROWS,"unknown");
+    result.addProperty(COLS,"unknown");
+  }
+  result.addProperty(VALUE_SIZE,v.length());
+  Response r=Response.done(result);
+  r.addHeader("<div class='alert'>" + Parse.link(v._key,"Parse into hex format") + ", or "+ RReader.link(v._key,"from R data")+ " </div>");
+  return r;
+}

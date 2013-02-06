@@ -1,0 +1,13 @@
+{
+  boolean did=false;
+synchronized (this) {
+    if (!isCancelled()) {
+      did=true;
+      _target=null;
+      UDPTimeOutThread.PENDING.remove(this);
+      TASKS.remove(_tasknum);
+    }
+    notifyAll();
+  }
+  return did;
+}

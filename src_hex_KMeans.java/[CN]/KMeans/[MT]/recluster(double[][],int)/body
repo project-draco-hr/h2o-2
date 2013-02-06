@@ -1,0 +1,17 @@
+{
+  double[][] res=new double[k][];
+  res[0]=points[0];
+  int count=1;
+  Random rand=RAND_SEED == null ? new Random() : new Random(RAND_SEED);
+  while (count < res.length) {
+    double sum=0;
+    for (int i=0; i < points.length; i++)     sum+=minSqr(res,count,points[i]);
+    for (int i=0; i < points.length; i++) {
+      if (minSqr(res,count,points[i]) > rand.nextDouble() * sum) {
+        res[count++]=points[i];
+        break;
+      }
+    }
+  }
+  return res;
+}

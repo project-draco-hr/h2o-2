@@ -1,0 +1,9 @@
+{
+  Key k=Key.make(to);
+  Expr e=new RLikeParser().parse(x);
+  Expr.Result r=e.eval();
+  Helpers.assign(0,k,r);
+  Helpers.calculateSigma(k,0);
+  r.dispose();
+  return k;
+}

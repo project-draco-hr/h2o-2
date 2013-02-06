@@ -1,0 +1,8 @@
+def __exec_cmd(self, cmd, dump_stdout=True, dump_stderr=True):
+    log(("[ssh] executing command '%s'" % cmd))
+    (stdin, stdout, stderr) = self.ssh.exec_command(cmd)
+    stdin.flush()
+    if dump_stdout:
+        dump_output('[ssh] stdout->', stdout)
+    if dump_stderr:
+        dump_output('[ssh] stderr->', stderr)

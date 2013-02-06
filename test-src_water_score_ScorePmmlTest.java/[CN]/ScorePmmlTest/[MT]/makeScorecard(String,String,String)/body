@@ -1,0 +1,12 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("<Scorecard modelName='TEST_MODEL' functionName='regression' \n");
+  sb.append("   useReasonCodes='false' initialScore='0' baselineMethod='other'>\n");
+  sb.append(miningSchema);
+  sb.append(outputSchema);
+  sb.append("  <Characteristics>\n");
+  for (  String f : characteristics)   sb.append(f);
+  sb.append("  </Characteristics>\n");
+  sb.append("</Scorecard>\n");
+  return sb.toString();
+}

@@ -1,0 +1,26 @@
+{
+  RString row=response.restartGroup("tableRow");
+  row.replace("key",key);
+  int r=key.desired();
+  int repl=key.replica(cloud);
+  if (repl < r) {
+    int d=val.numReplicas();
+    if (val.isPersisted())     d++;
+    if (d < r)     row.replace("replicationStyle","background-color:#ffc0c0;color:#ff0000;");
+    row.replace("r1",d);
+    row.replace("r2",r);
+  }
+ else {
+    row.replace("r1","");
+    row.replace("r2","");
+  }
+  row.replace("home",cloud._memary[key.home(cloud)]);
+  int idx2=cloud.D(key,1);
+  if (idx2 != -1)   row.replace("home2",cloud._memary[idx2]);
+  row.replace("replica",(repl == 255 ? "" : ("r" + repl)));
+  row.replace("class",val.getClass().getName());
+  row.replace("max",val._max);
+  row.replace("in_mem",val.mem() == null ? "null" : val.mem().length);
+  row.replace("persist",val.isPersisted() ? val.nameOfPersist() : "mem");
+  row.append();
+}

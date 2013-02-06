@@ -1,0 +1,15 @@
+{
+  Key arykey=ValueArray.getArrayKey(key);
+  long off=ValueArray.getChunkOffset(key);
+  long size=getObjectMetadataForKey(arykey).getContentLength();
+  long rem=size - off;
+  if (arykey.toString().endsWith(".hex")) {
+    int value_len=DKV.get(arykey).get().length;
+    rem-=value_len;
+  }
+  if (rem < ValueArray.CHUNK_SZ && off > 0)   return null;
+  int sz=(rem >= ValueArray.CHUNK_SZ * 2) ? (int)ValueArray.CHUNK_SZ : (int)rem;
+  Value val=new Value(key,sz,Value.S3);
+  val.setdsk();
+  return val;
+}

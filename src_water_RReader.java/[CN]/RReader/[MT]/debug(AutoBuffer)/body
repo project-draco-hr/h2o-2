@@ -1,0 +1,22 @@
+{
+  final StringBuilder sb=new StringBuilder();
+  final String[] classNames=new String[]{"c1","c2","c3"};
+  sb.append("digraph {\n");
+  new Tree.TreeVisitor(buffer){
+    protected Tree.TreeVisitor leaf(    int tclass) throws IOException {
+      String x=classNames != null && tclass < classNames.length ? String.format("%d [label=\"%s\"];\n",_ts.position() - 2,classNames[tclass]) : String.format("%d [label=\"Class %d\"];\n",_ts.position() - 2,tclass);
+      sb.append(x);
+      return this;
+    }
+    protected Tree.TreeVisitor pre(    int col,    float fcmp,    int off0,    int offl,    int offr) throws IOException {
+      byte b=(byte)_ts.get1(off0);
+      sb.append(String.format("%d [label=\"%s %s %f\"];\n",off0,"col" + col,((b == 'E') ? "==" : "<="),fcmp));
+      sb.append(String.format("%d -> %d;\n",off0,offl));
+      sb.append(String.format("%d -> %d;\n",off0,offr));
+      return this;
+    }
+  }
+.visit();
+  sb.append("}");
+  System.out.println(sb.toString());
+}

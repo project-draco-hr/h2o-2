@@ -1,0 +1,27 @@
+{
+  H2O cloud=H2O.CLOUD;
+  int lo=cloud._memary.length, hi=-1;
+  for (  Key k : _keys) {
+    int i=k.home(cloud);
+    if (i < lo)     lo=i;
+    if (i > hi)     hi=i;
+  }
+  final ArrayList<Key> locals=new ArrayList<Key>();
+  final ArrayList<Key> lokeys=new ArrayList<Key>();
+  final ArrayList<Key> hikeys=new ArrayList<Key>();
+  int self_idx=cloud.nidx(H2O.SELF);
+  int mid=(lo + hi) >>> 1;
+  for (  Key k : _keys) {
+    int idx=k.home(cloud);
+    if (idx == self_idx)     locals.add(k);
+ else     if (idx < mid)     lokeys.add(k);
+ else     hikeys.add(k);
+  }
+  DFuture f=new DFuture(remote_compute(lokeys),remote_compute(hikeys));
+  _keys=locals.toArray(new Key[locals.size()]);
+  if (_keys.length != 0) {
+    init();
+    H2O.FJP_NORM.submit(this);
+  }
+  return f;
+}

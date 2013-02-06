@@ -1,0 +1,11 @@
+{
+  if (folder.isDirectory()) {
+    for (    File f : folder.listFiles()) {
+      if (f.isDirectory())       addFolder(f,filesInProgress);
+ else       filesInProgress.add(f);
+    }
+  }
+ else {
+    filesInProgress.add(folder);
+  }
+}

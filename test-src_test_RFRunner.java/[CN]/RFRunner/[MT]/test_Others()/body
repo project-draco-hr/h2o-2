@@ -1,0 +1,11 @@
+{
+  final OptArgs ARGS=new OptArgs();
+  PrintStream out=new PrintStream(new File("/tmp/RFRunner.stdout.txt"));
+  String javaCmd=ARGS.jvmArgs + " " + RFRunner.JAR+ " "+ RFRunner.MAIN;
+  try {
+    RFRunner.quickTests(javaCmd,out,ARGS);
+  }
+  finally {
+    out.close();
+  }
+}

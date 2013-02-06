@@ -1,0 +1,20 @@
+{
+  int[] szMultiples=size(sizeMultiples,args.maxConcat);
+  int[] szTrees=ntrees;
+  String[] stats=stat_types;
+  boolean[] threading=new boolean[]{true,false};
+  int[] seeds=new int[]{3,42,135};
+  String[] files=makeFiles(args.files.split(","),szMultiples);
+  int experiments=files.length * szTrees.length * stats.length* threading.length* seeds.length;
+  String[] commands=new String[experiments];
+  int i=0;
+  for (  String f : files)   for (  int sz : szTrees)   for (  String stat : stats)   for (  int seed : seeds) {
+    RFArgs rfa=new RFArgs();
+    rfa.seed=seed;
+    rfa.statType=stat;
+    rfa.file=f;
+    rfa.ntrees=sz;
+    commands[i++]=javaCmd + " " + rfa;
+  }
+  for (  String cmd : commands)   runTest(cmd,args.resultDB,out,check);
+}

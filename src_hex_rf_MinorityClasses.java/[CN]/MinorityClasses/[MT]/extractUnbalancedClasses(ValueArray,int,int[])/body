@@ -1,0 +1,11 @@
+{
+  ClassExtractTask tsk=new ClassExtractTask();
+  tsk._imbalancedClasses=classIds;
+  tsk._classColumnIdx=classIdx;
+  tsk._rowsize=data.rowSize();
+  tsk.invoke(data._key);
+  for (int i=0; i < tsk._offsets.length; ++i)   if (tsk._offsets[i] > 0)   tsk.storeValue(i,tsk._bufs[i]);
+  UnbalancedClass[] res=new UnbalancedClass[tsk._imbalancedClasses.length];
+  for (int i=0; i < tsk._imbalancedClasses.length; ++i)   res[i]=new UnbalancedClass(tsk._imbalancedClasses[i],tsk._createdKeys[i],tsk._histogram[i]);
+  return res;
+}

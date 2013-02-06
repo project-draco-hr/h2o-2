@@ -1,0 +1,29 @@
+{
+  byte[] buffer=new byte[7];
+  buffer[0]=(byte)in.read();
+  buffer[1]=(byte)in.read();
+  byte format=-1;
+  if (buffer[1] == '\n') {
+switch (buffer[0]) {
+case XDR_FORMAT:
+case ASCII_FORMAT:
+case BINARY_FORMAT:
+      format=buffer[0];
+    break;
+default :
+  throw new Exception("Unsupported format");
+}
+}
+if (format < 0) {
+for (int i=2; i != 7; ++i) buffer[i]=(byte)in.read();
+String header=new String(buffer,0,5);
+if (header.equals(ASCII_MAGIC_HEADER)) format=ASCII_FORMAT;
+ else if (header.equals(BINARY_MAGIC_HEADER)) format=BINARY_FORMAT;
+ else if (header.equals(XDR_MAGIC_HEADER)) format=XDR_FORMAT;
+ else throw new Exception("Unsupported format");
+if (format != XDR_FORMAT) throw new Exception("Unsupported format");
+if (in.readInt() != VERSION) throw new Exception("Unsupported version");
+}
+in.readInt();
+in.readInt();
+}

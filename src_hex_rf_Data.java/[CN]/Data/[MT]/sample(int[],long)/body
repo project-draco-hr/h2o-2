@@ -1,0 +1,12 @@
+{
+  int sz=0;
+  for (  int s : strata)   sz+=s;
+  int[] sample=new int[sz];
+  int idx=0;
+  Random r=Utils.getRNG(seed);
+  for (int i=0; i < strata.length; ++i) {
+    idx=sampleFromClass(i,strata[i],idx,sample,r);
+  }
+  Arrays.sort(sample);
+  return new Subset(this,sample,0,sample.length);
+}

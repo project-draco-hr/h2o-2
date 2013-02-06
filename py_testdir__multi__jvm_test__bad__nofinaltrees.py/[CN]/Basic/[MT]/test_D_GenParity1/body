@@ -1,0 +1,12 @@
+def test_D_GenParity1(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    for x in xrange(50, 200, 10):
+        shCmdString = (((('perl ' + h2o.find_file('syn_scripts/parity.pl')) + ' 128 4 ') + str(x)) + ' quad')
+        h2o.spawn_cmd_and_wait('parity.pl', shCmdString.split(), timeout=3)
+        csvFilename = (('parity_128_4_' + str(x)) + '_quad.data')
+    for x in xrange(50, 200, 10):
+        sys.stdout.write('.')
+        sys.stdout.flush()
+        csvFilename = (('parity_128_4_' + '100') + '_quad.data')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        h2o_cmd.runRF(csvPathname=csvPathname, trees=100, timeoutSecs=5, retryDelaySecs=0.1)

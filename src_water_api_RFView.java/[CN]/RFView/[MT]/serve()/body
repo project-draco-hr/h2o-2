@@ -1,0 +1,51 @@
+{
+  int tasks=0;
+  int finished=0;
+  RFModel model=_modelKey.value();
+  double[] weights=_weights.value();
+  JsonObject response=new JsonObject();
+  response.addProperty(DATA_KEY,_dataKey.originalValue());
+  response.addProperty(MODEL_KEY,_modelKey.originalValue());
+  response.addProperty(CLASS,_classCol.value());
+  response.addProperty(NUM_TREES,model._totalTrees);
+  response.addProperty(MTRY,-1);
+  tasks+=model._totalTrees;
+  finished+=model.size();
+  if (!_noCM.value()) {
+    tasks+=1;
+    Confusion confusion=Confusion.make(model,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
+    response.addProperty(JSON_CONFUSION_KEY,confusion.keyFor().toString());
+    if (confusion.isValid() && finished > 0) {
+      finished+=1;
+      JsonObject cm=new JsonObject();
+      JsonArray cmHeader=new JsonArray();
+      JsonArray matrix=new JsonArray();
+      cm.addProperty(JSON_CM_TYPE,_oobee.value() ? "OOB error estimate" : "full scoring");
+      cm.addProperty(JSON_CM_CLASS_ERR,confusion.classError());
+      cm.addProperty(JSON_CM_ROWS_SKIPPED,confusion.skippedRows());
+      cm.addProperty(JSON_CM_ROWS,confusion.rows());
+      for (      String s : vaCategoryNames(_dataKey.value()._cols[_classCol.value()],1024))       cmHeader.add(new JsonPrimitive(s));
+      cm.add(JSON_CM_HEADER,cmHeader);
+      final int nclasses=model.classes();
+      for (int crow=0; crow < nclasses; ++crow) {
+        JsonArray row=new JsonArray();
+        for (int ccol=0; ccol < nclasses; ++ccol)         row.add(new JsonPrimitive(confusion._matrix[crow][ccol]));
+        matrix.add(row);
+      }
+      cm.add(JSON_CM_MATRIX,matrix);
+      cm.addProperty(JSON_CM_TREES,confusion._treesUsed);
+      response.add(JSON_CM,cm);
+    }
+  }
+  JsonObject trees=new JsonObject();
+  trees.addProperty(Constants.TREE_COUNT,model.size());
+  if (model.size() > 0) {
+    trees.add(Constants.TREE_DEPTH,model.depth().toJson());
+    trees.add(Constants.TREE_LEAVES,model.leaves().toJson());
+  }
+  response.add(Constants.TREES,trees);
+  Response r=(finished == tasks) ? Response.done(response) : Response.poll(response,finished,tasks);
+  r.setBuilder(JSON_CM,new ConfusionMatrixBuilder());
+  r.setBuilder(Constants.TREES,new TreeListBuilder());
+  return r;
+}

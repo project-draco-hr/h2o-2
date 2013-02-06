@@ -1,0 +1,56 @@
+{
+  Result res=Result.temporary();
+  ValueArray vl=getValueArray(l._key);
+  if (l.rawColIndex() == -1) {
+    l.setColIndex(0);
+    if (vl.numCols() != 1)     throw new EvaluationException(_pos,"Column must be specified for left operand");
+  }
+  MRVectorUnaryOperator op;
+switch (_type) {
+case ttOpAdd:
+    op=new LeftAdd(l._key,res._key,l.rawColIndex(),r._const);
+  break;
+case ttOpSub:
+op=new LeftSub(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpMul:
+op=new LeftMul(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpDiv:
+op=new LeftDiv(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpMod:
+op=new LeftMod(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpLess:
+op=new LeftLess(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpLessOrEq:
+op=new LeftLessOrEq(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpGreater:
+op=new LeftGreater(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpGreaterOrEq:
+op=new LeftGreaterOrEq(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpEq:
+op=new LeftEq(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpNeq:
+op=new LeftNeq(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpAnd:
+op=new LeftAnd(l._key,res._key,l.rawColIndex(),r._const);
+break;
+case ttOpOr:
+op=new LeftOr(l._key,res._key,l.rawColIndex(),r._const);
+break;
+default :
+throw new EvaluationException(_pos,"Unknown operator to be used for binary operator evaluation: " + _type.toString());
+}
+VABuilder b=new VABuilder("temp",vl.numRows()).addDoubleColumn("0").createAndStore(res._key);
+op.invoke(res._key);
+b.setColumnStats(0,op._min,op._max,op._tot / vl.numRows()).createAndStore(res._key);
+return res;
+}

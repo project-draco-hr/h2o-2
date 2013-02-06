@@ -1,0 +1,11 @@
+{
+  long result=def;
+  try {
+    String s=args.getProperty(arg,"");
+    if (!s.isEmpty())     result=Long.parseLong(s);
+  }
+ catch (  NumberFormatException e) {
+    return def;
+  }
+  return result;
+}

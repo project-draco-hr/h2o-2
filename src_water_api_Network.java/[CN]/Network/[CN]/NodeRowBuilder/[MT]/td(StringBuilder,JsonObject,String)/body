@@ -1,0 +1,10 @@
+{
+  sb.append("<td>");
+  String sep="";
+  for (  String p : props) {
+    sb.append(sep);
+    sb.append(ELEMENT_BUILDER.elementToString(json.get(p),p));
+    sep=" / ";
+  }
+  sb.append("</td>");
+}

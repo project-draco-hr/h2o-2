@@ -1,0 +1,44 @@
+{
+  Key key=ServletUtil.check_key(parms,"Key");
+  Value val=DKV.get(key);
+  if (val == null)   throw new PageError("Key not found: " + key.toString());
+  JsonObject result=new JsonObject();
+  result.addProperty("key",key.toString());
+  if (val._isArray != 0) {
+    result.addProperty("type","ary");
+    ValueArray ary=ValueArray.value(val);
+    result.addProperty("rows",ary._numrows);
+    result.addProperty("cols",ary._cols.length);
+    result.addProperty("rowsize",ary._rowsize);
+    result.addProperty("size",ary.length());
+    JsonArray columns=new JsonArray();
+    for (    ValueArray.Column C : ary._cols) {
+      JsonObject col=new JsonObject();
+      col.addProperty("name",C._name);
+      col.addProperty("off",(int)C._off);
+      if (C._domain != null) {
+        col.addProperty("type","enum");
+        JsonArray enums=new JsonArray();
+        for (        String e : C._domain)         enums.add(new JsonPrimitive(e));
+        col.add("enumdomain",enums);
+      }
+ else {
+        col.addProperty("type",C._size > 0 ? "int" : "float");
+      }
+      col.addProperty("size",Math.abs(C._size));
+      col.addProperty("base",C._base);
+      col.addProperty("scale",C._scale);
+      col.addProperty("min",String.valueOf(C._min));
+      col.addProperty("max",String.valueOf(C._max));
+      col.addProperty("badat",String.valueOf(ary._numrows - C._n));
+      col.addProperty("mean",String.valueOf(C._mean));
+      col.addProperty("var",String.valueOf(C._sigma));
+      columns.add(col);
+    }
+    result.add("columns",columns);
+  }
+ else {
+    result.addProperty("type","value");
+  }
+  return result;
+}

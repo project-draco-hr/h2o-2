@@ -1,0 +1,12 @@
+{
+  Thread.currentThread().setPriority(Thread.NORM_PRIORITY);
+  while (true) {
+    try {
+      RPC t=PENDING.take();
+      if (H2O.CLOUD._memset.contains(t._target))       t.call();
+ else       t.cancel(true);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
+}

@@ -1,0 +1,4 @@
+def test_H_domains_and_column_names(self):
+    cinsp = self.inspect_columns('smalldata/test/test_domains_and_column_names.csv', rows=4, cols=3, columnNames=['A1', 'A2', 'A3'], columnTypes=['int', 'int', 'enum'])
+    intersect = set.intersection(set(cinsp['cols'][2]['enum_domain']), set(['one', 'two', 'three', 'four']))
+    self.assertEqual(4, len(intersect))

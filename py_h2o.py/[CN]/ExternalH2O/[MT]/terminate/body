@@ -1,0 +1,4 @@
+def terminate(self):
+    self.shutdown_all()
+    if self.is_alive():
+        raise Exception(('Unable to terminate externally launched node: %s' % self))

@@ -1,0 +1,19 @@
+@classmethod
+def setUpClass(cls):
+    global nodes_per_host
+    nodes_per_host = 4
+    print '\nOnly does sudo locally. Something to think about when you put together'
+    print 'the list of machines in your json. Okay to just break one machine multicast!'
+    print '\nThis test may prompt for sudo passwords for executing iptables on linux'
+    print "Don't execute as root. or without understanding 'sudo iptables' and this video"
+    print '\nhttp://www.youtube.com/watch?v=OWwOJlOI1nU'
+    print '\nIt will use pytest_config-<username>.json for multi-host'
+    print 'Want to run with multicast send or receive disabled somehow in the target cloud'
+    print 'The test tries to do it with iptables'
+    print "\nIf the test fails, you'll have to fix iptables to be how you want them"
+    print "Typically 'iptables -F' should be enough."
+    print "\nDon't run this on 192.168.1.151 which has sshguard enabled in its iptables"
+    print "Only for linux. hopefully centos and ubuntu. don't know about mac"
+    print "\nNormally you'll want this to run with -v to see hangs in cloud building"
+    print '\nThis is how iptables is at start:'
+    showIptables()

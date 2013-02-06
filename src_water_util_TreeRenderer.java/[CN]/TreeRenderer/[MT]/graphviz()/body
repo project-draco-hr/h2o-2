@@ -1,0 +1,16 @@
+{
+  if (DOT_PATH == null)   return "<div class='alert'>Install <a href=\"http://www.graphviz.org/\">graphviz</a> to " + "see visualizations of small trees</div>";
+  if (_nodeCount > 1000)   return "<div class='alert'>Tree is too large to graph.</div>";
+  try {
+    RString img=new RString("<img src=\"data:image/svg+xml;base64,%rawImage\" width='80%%' ></img><p>");
+    Process exec=Runtime.getRuntime().exec(new String[]{DOT_PATH,"-Tsvg"});
+    new GraphvizTreePrinter(exec.getOutputStream(),_columns,_domain).walk_serialized_tree(new AutoBuffer(_treeBits));
+    exec.getOutputStream().close();
+    byte[] data=ByteStreams.toByteArray(exec.getInputStream());
+    img.replace("rawImage",new String(Base64.encodeBase64(data),"UTF-8"));
+    return img.toString();
+  }
+ catch (  Exception e) {
+    return errorRender(e);
+  }
+}

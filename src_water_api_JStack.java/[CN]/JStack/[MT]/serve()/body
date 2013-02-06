@@ -1,0 +1,19 @@
+{
+  JStackCollectorTask collector=new JStackCollectorTask();
+  collector.invokeOnAllNodes();
+  JsonObject json=new JsonObject();
+  json.addProperty(NODE_NAME,H2O.SELF.toString());
+  json.addProperty(CLOUD_NAME,H2O.NAME);
+  json.addProperty(TIME,DateFormat.getInstance().format(new Date()));
+  JsonArray nodes=new JsonArray();
+  for (int i=0; i < collector.result.length; ++i) {
+    JsonObject el=new JsonObject();
+    el.addProperty(NODE,H2O.CLOUD._memary[i].toString());
+    el.addProperty(STACK_TRACES,collector.result[i]);
+    nodes.add(el);
+  }
+  json.add(NODES,nodes);
+  Response r=Response.done(json);
+  r.setBuilder(NODES,new NodeTableBuilder());
+  return r;
+}

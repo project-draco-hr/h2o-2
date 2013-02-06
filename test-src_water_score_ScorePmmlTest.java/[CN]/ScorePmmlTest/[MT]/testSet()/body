@@ -1,0 +1,11 @@
+{
+  String pmml=makePmml(makeDataDictionary(makeDataField("x",DataType.STRING),makeDataField("res",DataType.DOUBLE)),makeScorecard(makeMiningSchema(makeMiningField("res","predicted"),makeMiningField("x","active")),makeOutputSchema("res",DataType.DOUBLE),makeCharacteristic("x_check",makeAttribute(1.0,makeSetPredicate("x",SimpleSetOp.IN,"asdf","qwer"))),makeCharacteristic("x_check",makeAttribute(2.0,makeSetPredicate("x",SimpleSetOp.NOT_IN,"qwer","monkey","ninja")))));
+  Object[][] tests=new Object[][]{{"asdf",3.0},{"qwer",1.0},{"monkey",0.0},{"cowboy",2.0},{"",2.0},{null,2.0},{"ASDF",2.0}};
+  for (  Object[] t : tests) {
+    HashMap<String,Comparable> m=new HashMap<String,Comparable>();
+    m.put("x",(Comparable)t[0]);
+    ScorecardModel scm=getSCM(pmml);
+    double predictedScore=scm.score(m);
+    Assert.assertEquals((Double)t[1],predictedScore,0.00001);
+  }
+}

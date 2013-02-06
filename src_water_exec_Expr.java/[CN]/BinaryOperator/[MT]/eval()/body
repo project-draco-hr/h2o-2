@@ -1,0 +1,32 @@
+{
+  Result kl=_left.eval();
+  Result kr=_right.eval();
+  try {
+switch (kl._type) {
+case rtNumberLiteral:
+switch (kr._type) {
+case rtNumberLiteral:
+        return evalConstConst(kl,kr);
+case rtKey:
+      return evalConstVect(kl,kr);
+default :
+    throw new EvaluationException(_pos,"Only Value or numeric constant are allowed as the second operand");
+}
+case rtKey:
+switch (kr._type) {
+case rtNumberLiteral:
+return evalVectConst(kl,kr);
+case rtKey:
+return evalVectVect(kl,kr);
+default :
+throw new EvaluationException(_pos,"Only Value or numeric constant are allowed as the second operand");
+}
+default :
+throw new EvaluationException(_pos,"Only Value or numeric constant are allowed as the first operand");
+}
+}
+  finally {
+kl.dispose();
+kr.dispose();
+}
+}

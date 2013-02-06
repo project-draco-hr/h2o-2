@@ -1,0 +1,41 @@
+{
+  JsonObject result=new JsonObject();
+  int offset=_offset.value();
+  H2O cloud=H2O.CLOUD;
+  Key[] keys=new Key[_view._max];
+  int len=0;
+  String filter=_filter.value();
+  for (  Key key : H2O.keySet()) {
+    if (filter != null && key.toString().indexOf(filter) == -1)     continue;
+    if (!key.user_allowed())     continue;
+    if (H2O.get(key) == null)     continue;
+    keys[len++]=key;
+    if (len == keys.length) {
+      result.addProperty(Constants.MORE,true);
+      break;
+    }
+  }
+  Arrays.sort(keys,0,len);
+  if ((offset >= len) && (offset != 0))   return Response.error("Only " + len + " keys available");
+  JsonArray ary=new JsonArray();
+  for (int i=offset; i < offset + _view.value(); i++) {
+    if (i >= len)     break;
+    Value val=H2O.get(keys[i]);
+    ary.add(formatKeyRow(cloud,keys[i],val));
+  }
+  result.add(KEYS,ary);
+  result.addProperty(NUM_KEYS,len);
+  result.addProperty(CLOUD_NAME,H2O.NAME);
+  result.addProperty(NODE_NAME,H2O.SELF.toString());
+  Response r=Response.done(result);
+  r.addHeader("<form class='well form-inline' action='StoreView.html'>" + " <input type='text' class='input-small span10' placeholder='filter' " + "    name='filter' id='filter' value='" + _filter.value() + "' maxlength='512'>"+ " <button type='submit' class='btn btn-primary'>Filter keys!</button>"+ "</form>");
+  r.setBuilder(KEYS,new PaginatedTable(argumentsToJson(),offset,_view.value(),len,false));
+  r.setBuilder(KEYS + "." + KEY,new KeyCellBuilder());
+  r.setBuilder(KEYS + ".col_0",new KeyMinAvgMaxBuilder());
+  r.setBuilder(KEYS + ".col_1",new KeyMinAvgMaxBuilder());
+  r.setBuilder(KEYS + ".col_2",new KeyMinAvgMaxBuilder());
+  r.setBuilder(KEYS + ".col_3",new KeyMinAvgMaxBuilder());
+  r.setBuilder(KEYS + ".col_4",new KeyMinAvgMaxBuilder());
+  r.setBuilder(MORE,new HideBuilder());
+  return r;
+}

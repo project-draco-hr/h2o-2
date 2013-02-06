@@ -1,0 +1,42 @@
+def test_GLM_umass(self):
+    if (1 == 1):
+        csvFilenameList = [('uis.dat', 'binomial', 8, 5, False), ('pros.dat', 'binomial', 1, 10, False), ('chdage.dat', 'binomial', 2, 5, True), ('icu.dat', 'binomial', 1, 10, False)]
+    else:
+        csvFilenameList = [('icu.dat', 'binomial', 1, 10, None), ('nhanes3.dat', 'binomial', 15, 10), ('lowbwt.dat', 'binomial', 1, 10, '2,3,4,5,6,7,8,9'), ('lowbwtm11.dat', 'binomial', 1, 10, None), ('meexp.dat', 'gaussian', 3, 10, None), ('nhanes3.dat', 'binomial', 15, 10, None), ('pbc.dat', 'gaussian', 1, 10, None), ('pharynx.dat', 'gaussian', 12, 10, None), ('uis.dat', 'binomial', 8, 10, None)]
+    trial = 0
+    for (csvFilename, family, y, timeoutSecs, header) in csvFilenameList:
+        csvPathname1 = h2o.find_file(('smalldata/logreg/umass_statdata/' + csvFilename))
+        csvPathname2 = (((SYNDATASETS_DIR + '/') + csvFilename) + '_2.csv')
+        h2o_util.file_clean_for_R(csvPathname1, csvPathname2)
+        parseKey = h2o_cmd.parseFile(None, csvPathname2, key=csvFilename, timeoutSecs=10)
+        destination_key = parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, destination_key)
+        num_columns = inspect['num_columns']
+        num_rows = inspect['num_rows']
+        print 'num_columns', num_columns, 'num_rows', num_rows
+        formula = (('V' + str((y + 1))) + ' ~ ')
+        x = None
+        col_names = ''
+        for c in range(0, num_columns):
+            if (x is None):
+                col_names += ('V' + str((c + 1)))
+            else:
+                col_names += (',V' + str((c + 1)))
+            if (c != y):
+                if (x is None):
+                    x = str(c)
+                    formula += ('V' + str((c + 1)))
+                else:
+                    x += (',' + str(c))
+                    formula += ('+V' + str((c + 1)))
+        print 'formula:', formula
+        print 'col_names:', col_names
+        print 'x:', x
+        kwargs = {'num_cross_validation_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_epsilon': 0.0001, 'max_iter': 50, }
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm end (w/check) on ', csvPathname2, 'took', (time.time() - start), 'seconds'
+        h2oResults = h2o_glm.simpleCheckGLM(self, glm, None, prettyPrint=True, **kwargs)
+        (warningsR, cListR, interceptR) = glm_R_and_compare(csvPathname2, family, formula, y, header=header, h2oResults=h2oResults)
+        trial += 1
+        print '\nTrial #', trial

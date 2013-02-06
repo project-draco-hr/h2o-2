@@ -1,0 +1,17 @@
+{
+  if (rowIdx < 0 || rowIdx >= va._numrows)   return;
+  if (colIdx >= va._cols.length)   return;
+  ValueArray.Column c=va._cols[colIdx];
+  if (va.isNA(rowIdx,colIdx)) {
+    obj.addProperty(c._name,"NA");
+  }
+ else   if (c._domain != null) {
+    obj.addProperty(c._name,c._domain[(int)va.data(rowIdx,colIdx)]);
+  }
+ else   if ((c._size > 0) && (c._scale == 1)) {
+    obj.addProperty(c._name,va.data(rowIdx,colIdx));
+  }
+ else {
+    obj.addProperty(c._name,va.datad(rowIdx,colIdx));
+  }
+}

@@ -1,0 +1,8 @@
+def _keyToDict(self, res):
+    ' Converts the given response key to a python dict object '
+    result = {}
+    if (len(res[COLUMNS]) == 1):
+        return res[COLUMNS][0][CONTENTS]
+    for col in res[COLUMNS]:
+        result[col[COLUMN_NAME]] = col[CONTENTS]
+    return result

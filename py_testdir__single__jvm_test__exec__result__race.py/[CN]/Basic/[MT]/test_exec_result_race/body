@@ -1,0 +1,16 @@
+def test_exec_result_race(self):
+    lenNodes = len(h2o.nodes)
+    for execExpr in initList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey='Result.hex', timeoutSecs=4)
+    trial = 0
+    while (trial < 200):
+        for exprExpr in exprList:
+            if (trial < 100):
+                nodeX = 0
+            else:
+                nodeX = random.randint(0, (lenNodes - 1))
+            resultKey = 'Result.hex'
+            (execResultInspect, min_value) = h2e.exec_expr(h2o.nodes[nodeX], execExpr, resultKey=resultKey, timeoutSecs=4)
+            print min_value, execExpr
+            h2o.verboseprint('min_value: ', min_value, 'trial:', trial)
+            trial += 1

@@ -1,0 +1,33 @@
+def test_B_hdfs_files(self):
+    csvFilenameAll = ['covtype.169x.data', 'TEST-poker1000.csv', 'leads.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.data', 'covtype.4x.shuffle.data', 'covtype4x.shuffle.data', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'prostate_2g.csv', 'prostate_long.csv.gz', 'prostate_long_1G.csv', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp2.os.noisy.0_1.data', 'hhp2.os.noisy.9_4.data', 'hhp_9_14_12.data', 'poker_c1s1_testing_refresh.csv', '3G_poker_shuffle', 'billion_rows.csv.gz', 'poker-hand.1244M.shuffled311M.full.txt']
+    if (1 == 0):
+        csvFilenameList = random.sample(csvFilenameAll, 8)
+    else:
+        csvFilenameList = csvFilenameAll
+    h2b.browseTheCloud()
+    timeoutSecs = 200
+    firstglm = {}
+    for csvFilename in csvFilenameList:
+        start = time.time()
+        parseKey = h2i.parseHdfsFile(csvFilename=csvFilename, timeoutSecs=1000, retryDelaySecs=1.0)
+        print csvFilename, '\nparse time (python)', (time.time() - start), 'seconds'
+        print csvFilename, '\nparse time (h2o):', parseKey['response']['time']
+        print 'parse result:', parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        cols = inspect['cols']
+        for (i, colDict) in enumerate(cols):
+            badat = colDict['badat']
+            if (badat != 0):
+                pass
+        num_columns = inspect['num_columns']
+        num_rows = inspect['num_rows']
+        row_size = inspect['row_size']
+        ptype = inspect['type']
+        value_size_bytes = inspect['value_size_bytes']
+        response = inspect['response']
+        ptime = response['time']
+        print ('num_columns: %s, num_rows: %s, row_size: %s, ptype: %s,                    value_size_bytes: %s, response: %s, time: %s' % (num_columns, num_rows, row_size, ptype, value_size_bytes, response, ptime))
+        h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
+        print ('\n' + csvFilename)
+        sys.stdout.write('.')
+        sys.stdout.flush()

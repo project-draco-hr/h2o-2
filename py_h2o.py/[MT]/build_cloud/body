@@ -1,0 +1,39 @@
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=20, retryDelaySecs=0.5, cleanup=True, **kwargs):
+    clean_sandbox()
+    ports_per_node = 3
+    node_list = []
+    try:
+        totalNodes = 0
+        if (hosts is None):
+            hostCount = 1
+            for i in xrange(node_count):
+                verboseprint('psutil starting node', i)
+                newNode = LocalH2O(port=(base_port + (i * ports_per_node)), node_id=totalNodes, **kwargs)
+                node_list.append(newNode)
+                totalNodes += 1
+        else:
+            hostCount = len(hosts)
+            for h in hosts:
+                for i in xrange(node_count):
+                    verboseprint('ssh starting node', i, 'via', h)
+                    newNode = h.remote_h2o(port=(base_port + (i * ports_per_node)), node_id=totalNodes, **kwargs)
+                    node_list.append(newNode)
+                    totalNodes += 1
+        verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
+        start = time.time()
+        stabilize_cloud(node_list[0], len(node_list), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+        verboseprint(len(node_list), ' Node 0 stabilized in ', (time.time() - start), ' secs')
+        verboseprint(('Built cloud: %d node_list, %d hosts, in %d s' % (len(node_list), hostCount, (time.time() - start))))
+        if (hosts is not None):
+            for n in nodes:
+                stabilize_cloud(n, len(nodes), timeoutSecs=15)
+    except:
+        if cleanup:
+            for n in node_list:
+                n.terminate()
+        else:
+            nodes[:] = node_list
+        check_sandbox_for_errors()
+        raise
+    nodes[:] = node_list
+    return node_list

@@ -1,0 +1,30 @@
+def test_rand_inspect(self):
+    csvFilename = 'covtype.data'
+    csvPathname = h2o.find_dataset(('UCI/UCI-large/covtype/' + csvFilename))
+    print ('\n' + csvPathname)
+    parseKey = h2o_cmd.parseFile(None, csvPathname, key=csvFilename, timeoutSecs=10)
+    destination_key = parseKey['destination_key']
+    print csvFilename, 'parse time:', parseKey['response']['time']
+    print "Parse result['destination_key']:", destination_key
+
+    def inspect_and_check(nodeX, destination_key, offset, view, inspect=None):
+        inspectNew = h2o_cmd.runInspect(h2o.nodes[nodeX], destination_key, offset=offset, view=view)
+        constantNames = ['num_columns', 'num_rows']
+        if (inspect is not None):
+            for i in constantNames:
+                self.assertEqual(inspect[i], inspectNew[i])
+        return inspectNew
+    origInspect = inspect_and_check(0, destination_key, 0, 1)
+    h2o.verboseprint(h2o.dump_json(origInspect))
+    num_rows = origInspect['num_rows']
+    num_columns = origInspect['num_columns']
+    lenNodes = len(h2o.nodes)
+    for i in range(1000):
+        offset = good_choices(num_rows)
+        view = good_choices(num_columns)
+        nodeX = random.randint(0, (lenNodes - 1))
+        print 'nodeX:', nodeX, 'offset:', offset, 'view:', view
+        inspect_and_check(nodeX, destination_key, offset, view, origInspect)
+        r = random.randint(0, 10)
+        if (r == 0):
+            inspect_and_check(nodeX, destination_key, offset, view, origInspect)

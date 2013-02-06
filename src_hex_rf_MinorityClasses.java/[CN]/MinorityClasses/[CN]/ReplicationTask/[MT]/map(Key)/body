@@ -1,0 +1,11 @@
+{
+  _createdKeys=new Key[H2O.CLOUD._memary.length];
+  byte[] bits=DKV.get(key).get();
+  for (int i=0; i < _createdKeys.length; ++i) {
+    if (H2O.SELF.index() == i)     _createdKeys[i]=key;
+ else {
+      _createdKeys[i]=Key.make(Key.make()._kb,(byte)1,Key.DFJ_INTERNAL_USER,H2O.CLOUD._memary[i]);
+      DKV.put(_createdKeys[i],new Value(_createdKeys[i],bits));
+    }
+  }
+}

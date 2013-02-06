@@ -1,0 +1,14 @@
+def parseImportS3File(node=None, csvFilename='covtype.data', importS3Path='test-s3-integration', key2=None, timeoutSecs=None, retryDelaySecs=None):
+    if (not node):
+        node = h2o.nodes[0]
+    if (not csvFilename):
+        raise Exception('parseImportS3File: No csvFilename')
+    csvPathnameForH2O = ((('s3:/' + importS3Path) + '/') + csvFilename)
+    if (key2 is None):
+        myKey2 = (csvFilename + '.hex')
+    else:
+        myKey2 = key2
+    print 'Waiting for the slow parse of the file:', csvFilename
+    parseKey = node.parse(csvPathnameForH2O, myKey2, timeoutSecs, retryDelaySecs)
+    print '\nParse result:', parseKey
+    return parseKey

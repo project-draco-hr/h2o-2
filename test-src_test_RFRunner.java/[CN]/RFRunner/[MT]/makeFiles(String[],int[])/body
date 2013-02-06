@@ -1,0 +1,12 @@
+{
+  LinkedList<String> ls=new LinkedList();
+  for (  String f : files)   try {
+    ls.addAll(Arrays.asList(makeFile(f,multiples)));
+  }
+ catch (  IOException e) {
+    throw new Error(e);
+  }
+  String[] res=new String[ls.size()];
+  ls.toArray(res);
+  return res;
+}

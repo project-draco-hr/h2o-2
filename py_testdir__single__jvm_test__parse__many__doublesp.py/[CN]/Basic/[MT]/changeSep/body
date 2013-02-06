@@ -1,0 +1,12 @@
+def changeSep(self, rows, sepCase):
+    r = rows[(-1)]
+    tabseptab = re.search('\\t|\\t', r)
+    spsepsp = re.search(' | ', r)
+    if (1 == 1):
+        newSep = self.sepChangeDict[sepCase]
+    elif (tabseptab or spsepsp):
+        newSep = ','
+    else:
+        newSep = self.sepChangeDict[sepCase]
+    newRows = [r.replace('|', newSep) for r in rows]
+    return newRows

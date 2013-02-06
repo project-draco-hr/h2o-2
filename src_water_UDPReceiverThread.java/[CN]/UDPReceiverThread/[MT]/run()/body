@@ -1,0 +1,31 @@
+{
+  Thread.currentThread().setPriority(Thread.MAX_PRIORITY - 1);
+  DatagramChannel sock=H2O._udpSocket, errsock=null;
+  boolean saw_error=false;
+  while (true) {
+    try {
+      if (errsock != null) {
+        final DatagramChannel tmp2=errsock;
+        errsock=null;
+        tmp2.close();
+      }
+      if (saw_error)       Thread.sleep(1000);
+      saw_error=false;
+      if (sock == null) {
+        sock=DatagramChannel.open();
+        sock.socket().bind(H2O.SELF._key);
+      }
+      basic_packet_handling(new AutoBuffer(sock));
+    }
+ catch (    java.nio.channels.AsynchronousCloseException ex) {
+      break;
+    }
+catch (    Exception e) {
+      System.err.println("UDP Receiver error on port " + H2O.UDP_PORT);
+      e.printStackTrace(System.err);
+      saw_error=true;
+      errsock=sock;
+      sock=null;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  m=new GLMModel(GLMModel.makeKey(),m,null);
+  m._solver=LSMSolver.makeSolver(_lambdas[l],_alphas[alpha]);
+  m.build();
+  if (_xfold <= 1)   m.validateOn(_ary,null,_ts);
+ else   m.xvalidate(_ary,_xfold,_ts);
+  return m;
+}

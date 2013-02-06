@@ -1,0 +1,5 @@
+def __service(self, service, action):
+    if self.need_sudo:
+        sudo_cmd = 'sudo '
+    cmd = ('%sservice %s %s' % (sudo_cmd, service, action))
+    self.__exec_cmd(cmd)

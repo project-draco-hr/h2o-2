@@ -1,0 +1,15 @@
+{
+  StringBuilder sb=new StringBuilder();
+  String name=elementName(contextName);
+  sb.append(caption(object,name));
+  sb.append(header(object,name));
+  for (  Map.Entry<String,JsonElement> entry : object.entrySet()) {
+    JsonElement e=entry.getValue();
+    String elementContext=addToContext(contextName,entry.getKey());
+    Builder builder=response.getBuilderFor(elementContext);
+    if (builder == null)     builder=defaultBuilder(e);
+    sb.append(builder.build(response,e,elementContext));
+  }
+  sb.append(footer(object,elementName(contextName)));
+  return sb.toString();
+}

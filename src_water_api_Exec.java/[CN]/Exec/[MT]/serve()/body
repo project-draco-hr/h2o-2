@@ -1,0 +1,13 @@
+{
+  String s=_exec.value();
+  try {
+    Key k=water.exec.Exec.exec(s,_dest.value());
+    ValueArray va=ValueArray.value(k);
+    Response r=new Inspect(k).serveValueArray(va);
+    if (_safe.value())     r.escapeIllegalJsonElements();
+    return r;
+  }
+ catch (  Exception e) {
+    return Response.error(e.getMessage());
+  }
+}

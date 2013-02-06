@@ -1,0 +1,22 @@
+{
+  String res=null;
+  FSDataOutputStream s=null;
+  try {
+    Path p=getPathForKey(key);
+    _fs.mkdirs(p.getParent());
+    s=_fs.create(p);
+    byte[] b=f.write(new AutoBuffer()).buf();
+    s.write(b);
+  }
+ catch (  IOException e) {
+    res=e.getMessage();
+  }
+ finally {
+    if (s != null)     try {
+      s.close();
+    }
+ catch (    IOException e) {
+    }
+  }
+  return res;
+}

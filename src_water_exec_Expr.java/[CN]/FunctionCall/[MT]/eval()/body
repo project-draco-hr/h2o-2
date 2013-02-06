@@ -1,0 +1,26 @@
+{
+  Result[] args=new Result[_args.length];
+  for (int i=0; i < args.length; ++i) {
+    if (_args[i] == null) {
+      args[i]=_function.checker(i)._defaultValue;
+    }
+ else {
+      args[i]=_args[i].eval();
+      try {
+        _function.checker(i).checkResult(args[i]);
+      }
+ catch (      Exception e) {
+        throw new EvaluationException(_args[i]._pos,e.getMessage());
+      }
+    }
+  }
+  try {
+    return _function.eval(args);
+  }
+ catch (  Exception e) {
+    throw new EvaluationException(_pos,e.toString());
+  }
+ finally {
+    for (    Result r : args)     if (r != null)     r.dispose();
+  }
+}

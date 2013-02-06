@@ -1,0 +1,11 @@
+{
+  UDPRebooted.T.reboot.broadcast();
+  new UDPReceiverThread().start();
+  new MultiReceiverThread().start();
+  new Cleaner().start();
+  new HeartBeatThread().start();
+  new UDPTimeOutThread().start();
+  new TCPReceiverThread().start();
+  water.web.Server.start();
+  water.api.RequestServer.start();
+}

@@ -1,0 +1,11 @@
+{
+  int result=-1;
+  if (from._type == Result.Type.rtStringLiteral) {
+    for (int i=0; i < ary.numCols(); ++i)     if (from._str.equals(ary._cols[i]._name))     return i;
+  }
+ else {
+    result=(int)from._const;
+  }
+  if (result >= ary.numCols())   return -1;
+  return result;
+}

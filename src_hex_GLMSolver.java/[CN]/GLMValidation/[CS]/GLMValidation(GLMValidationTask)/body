@@ -1,0 +1,20 @@
+{
+  _modelKeys=null;
+  _n=tsk._n;
+  _deviance=tsk._deviance;
+  _err=tsk._err;
+  _cm=tsk._cm;
+  _dof=_n - 1 - tsk._beta.length;
+  _aic=tsk._f.aic(_deviance,_n,tsk._beta.length);
+  _thresholds=tsk._thresholds;
+  _dataKey=tsk._ary._key;
+  if (_cm != null) {
+    computeBestThreshold(ErrMetric.SUMC);
+    computeAUC();
+  }
+  if (tsk._f == Family.binomial) {
+    double p=tsk._caseCount / (double)tsk._n;
+    _nullDeviance=-2 * (tsk._caseCount * Math.log(p) + (tsk._n - tsk._caseCount) * Math.log(1 - p));
+  }
+ else   _nullDeviance=tsk._nullDeviance;
+}

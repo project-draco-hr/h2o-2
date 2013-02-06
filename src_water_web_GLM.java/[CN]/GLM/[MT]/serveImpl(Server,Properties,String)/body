@@ -1,0 +1,15 @@
+{
+  JsonObject json=serverJson(server,args,sessionID);
+  if (json.has("error"))   return H2OPage.error(json.get("error").getAsString());
+  String res=getModelHTML(json.get("GLMModel").getAsJsonObject());
+  if (args.containsKey("xval")) {
+    StringBuilder xvalStr=new StringBuilder("<h3>Cross Validation</h3>");
+    JsonArray arr=json.get("xval").getAsJsonArray();
+    for (    JsonElement e : arr) {
+      xvalStr.append("<br/>");
+      xvalStr.append(getXModelHTML(e.getAsJsonObject()));
+    }
+    res=res + xvalStr.toString();
+  }
+  return res;
+}

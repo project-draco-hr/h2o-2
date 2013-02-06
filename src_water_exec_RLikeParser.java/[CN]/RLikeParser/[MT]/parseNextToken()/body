@@ -1,0 +1,93 @@
+{
+  skipWhitespace();
+  int pos=_s.position();
+  if (_s.eof())   return new Token(pos,Token.Type.ttEOF);
+  char c=(char)_s.get1();
+switch (c) {
+case '=':
+    if (_s.peek1() == '=') {
+      _s.get1();
+      return new Token(pos,Token.Type.ttOpEq);
+    }
+ else {
+      return new Token(pos,Token.Type.ttOpAssign);
+    }
+case '&':
+  if (_s.peek1() == '&') {
+    _s.get1();
+    return new Token(pos,Token.Type.ttOpAnd);
+  }
+ else {
+    throw new ParserException(pos,"&& expected");
+  }
+case '?':
+return new Token(pos,Token.Type.ttOpIif);
+case ':':
+return new Token(pos,Token.Type.ttOpColon);
+case '$':
+return new Token(pos,Token.Type.ttOpDollar);
+case '%':
+return new Token(pos,Token.Type.ttOpMod);
+case '+':
+return new Token(pos,Token.Type.ttOpAdd);
+case '-':
+if (_s.peek1() == '>') {
+_s.get1();
+return new Token(pos,Token.Type.ttOpRightAssign);
+}
+ else {
+return new Token(pos,Token.Type.ttOpSub);
+}
+case '*':
+return new Token(pos,Token.Type.ttOpMul);
+case '/':
+return new Token(pos,Token.Type.ttOpDiv);
+case '(':
+return new Token(pos,Token.Type.ttOpParOpen);
+case ')':
+return new Token(pos,Token.Type.ttOpParClose);
+case '[':
+return new Token(pos,Token.Type.ttOpBracketOpen);
+case ']':
+return new Token(pos,Token.Type.ttOpBracketClose);
+case '<':
+if (_s.peek1() == '-') {
+_s.get1();
+return new Token(pos,Token.Type.ttOpAssign);
+}
+ else if (_s.peek1() == '=') {
+_s.get1();
+return new Token(pos,Token.Type.ttOpLessOrEq);
+}
+ else {
+return new Token(pos,Token.Type.ttOpLess);
+}
+case '>':
+if (_s.peek1() == '=') {
+_s.get1();
+return new Token(pos,Token.Type.ttOpGreaterOrEq);
+}
+ else {
+return new Token(pos,Token.Type.ttOpGreater);
+}
+case ',':
+return new Token(pos,Token.Type.ttOpComma);
+case '!':
+if (_s.get1() != '=') throw new ParserException(pos," != operator expected");
+return new Token(pos,Token.Type.ttOpNeq);
+case '"':
+case '\'':
+return parseString();
+case '|':
+if (_s.get1() == '|') {
+return new Token(pos,Token.Type.ttOpOr);
+}
+_s.position(_s.position() - 2);
+return parseIdent();
+default :
+_s.position(_s.position() - 1);
+if (isCharacter(c)) return parseIdent();
+if (isDigit(c)) return parseNumber();
+}
+return new Token(pos,Token.Type.ttUnknown);
+}

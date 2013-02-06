@@ -1,0 +1,19 @@
+{
+  try {
+    MessageDigest md5=MessageDigest.getInstance("MD5");
+    byte[] buf=new byte[4096];
+    int pos;
+    while ((pos=is.read(buf)) > 0)     md5.update(buf,0,pos);
+    return md5.digest();
+  }
+ catch (  NoSuchAlgorithmException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    try {
+      is.close();
+    }
+ catch (    IOException e) {
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  Timer t_extract=new Timer();
+  DataAdapter dapt=DABuilder.create(this).build(_keys);
+  Utils.pln("[RF] Data adapter built in " + t_extract);
+  Data t=Data.make(dapt);
+  _numSplitFeatures=howManySplitFeatures(t);
+  int ntrees=howManyTrees();
+  Utils.pln("[RF] Building " + ntrees + " trees");
+  new RandomForest(this,t,ntrees,_depth,0.0,StatType.values()[_stat],_parallel,_numSplitFeatures);
+  tryComplete();
+}

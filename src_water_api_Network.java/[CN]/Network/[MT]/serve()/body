@@ -1,0 +1,38 @@
+{
+  JsonObject json=new JsonObject();
+  final H2O cloud=H2O.CLOUD;
+  final H2ONode self=H2O.SELF;
+  json.addProperty(CLOUD_NAME,H2O.NAME);
+  json.addProperty(NODE_NAME,self.toString());
+  JsonArray nodes=new JsonArray();
+  for (  H2ONode h2o : cloud._memary) {
+    JsonObject n=new JsonObject();
+    HeartBeat hb=h2o._heartbeat;
+    n.addProperty(NODE,h2o.toString());
+    n.addProperty(TOTAL_CONN_IN,hb._total_in_conn);
+    n.addProperty(TOTAL_CONN_OUT,hb._total_out_conn);
+    n.addProperty(TCP_CONN_IN,hb._tcp_in_conn);
+    n.addProperty(TCP_CONN_OUT,hb._tcp_out_conn);
+    n.addProperty(UDP_CONN_IN,hb._udp_in_conn);
+    n.addProperty(UDP_CONN_OUT,hb._udp_out_conn);
+    n.addProperty(TOTAL_PACKETS_RECV,hb._total_packets_recv);
+    n.addProperty(TOTAL_BYTES_RECV,hb._total_bytes_recv);
+    n.addProperty(TOTAL_BYTES_RECV_RATE,hb._total_bytes_recv_rate);
+    n.addProperty(TOTAL_PACKETS_SENT,hb._total_packets_sent);
+    n.addProperty(TOTAL_BYTES_SENT,hb._total_bytes_sent);
+    n.addProperty(TOTAL_BYTES_SENT_RATE,hb._total_bytes_sent_rate);
+    n.addProperty(TCP_PACKETS_RECV,hb._tcp_packets_recv);
+    n.addProperty(TCP_BYTES_RECV,hb._tcp_bytes_recv);
+    n.addProperty(TCP_PACKETS_SENT,hb._tcp_packets_sent);
+    n.addProperty(TCP_BYTES_SENT,hb._tcp_bytes_sent);
+    n.addProperty(UDP_PACKETS_RECV,hb._udp_packets_recv);
+    n.addProperty(UDP_BYTES_RECV,hb._udp_bytes_recv);
+    n.addProperty(UDP_PACKETS_SENT,hb._udp_packets_sent);
+    n.addProperty(UDP_BYTES_SENT,hb._udp_bytes_sent);
+    nodes.add(n);
+  }
+  json.add(NODES,nodes);
+  Response r=Response.done(json);
+  r.setBuilder(NODES,new NodeTableBuilder());
+  return r;
+}

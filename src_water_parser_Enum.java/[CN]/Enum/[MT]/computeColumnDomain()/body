@@ -1,0 +1,13 @@
+{
+  if (isKilled())   return null;
+  String[] res=new String[_map.size()];
+  Map<ValueString,Integer> oldMap=_map;
+  Iterator<ValueString> it=oldMap.keySet().iterator();
+  for (int i=0; i < res.length; ++i)   res[i]=it.next().toString();
+  Arrays.sort(res);
+  NonBlockingHashMap<ValueString,Integer> newMap=new NonBlockingHashMap<ValueString,Integer>();
+  for (int j=0; j < res.length; ++j)   newMap.put(new ValueString(res[j]),j);
+  oldMap.clear();
+  _map=newMap;
+  return res;
+}

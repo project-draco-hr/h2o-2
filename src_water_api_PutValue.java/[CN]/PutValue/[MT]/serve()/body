@@ -1,0 +1,10 @@
+{
+  JsonObject response=new JsonObject();
+  Key k=Key.make(_key.value()._kb,(byte)(int)_rf.value());
+  Value v=new Value(k,_value.value().getBytes());
+  UKV.put(k,v);
+  response.addProperty(KEY,k.toString());
+  response.addProperty(REPLICATION_FACTOR,k.desired());
+  response.addProperty(VALUE_SIZE,v._max);
+  return Response.done(response);
+}

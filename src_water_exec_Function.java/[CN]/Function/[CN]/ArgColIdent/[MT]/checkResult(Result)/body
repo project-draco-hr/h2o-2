@@ -1,0 +1,5 @@
+{
+  if (r._type == Result.Type.rtStringLiteral)   return;
+  if (r._type == Result.Type.rtNumberLiteral)   if (Math.ceil(r._const) == Math.floor(r._const))   return;
+  throw new Exception("String or integer expected.");
+}

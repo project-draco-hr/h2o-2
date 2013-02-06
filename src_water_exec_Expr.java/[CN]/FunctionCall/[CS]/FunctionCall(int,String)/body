@@ -1,0 +1,6 @@
+{
+  super(pos);
+  _function=Function.FUNCTIONS.get(fName);
+  if (_function == null)   throw new ParserException(pos,"Function " + fName + " is not defined.");
+  _args=new Expr[_function.numArgs()];
+}

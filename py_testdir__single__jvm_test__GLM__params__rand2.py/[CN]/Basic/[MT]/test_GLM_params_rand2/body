@@ -1,0 +1,16 @@
+def test_GLM_params_rand2(self):
+    csvPathname = h2o.find_file('smalldata/covtype/covtype.20k.data')
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key='covtype.20k')
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    paramDict = define_params()
+    for trial in range(20):
+        params = {'y': 54, 'case': 1, 'alpha': 0, 'lambda': 0, }
+        colX = h2o_glm.pickRandGlmParams(paramDict, params)
+        kwargs = params.copy()
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(timeoutSecs=70, parseKey=parseKey, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'Trial #', trial, 'completed\n'

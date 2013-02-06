@@ -1,0 +1,11 @@
+{
+  try {
+    String[] bk=decodeKey(k);
+    GetObjectRequest r=new GetObjectRequest(bk[0],bk[1]);
+    r.setRange(offset,offset + length);
+    return S3.getObject(r);
+  }
+ catch (  AmazonClientException e) {
+    return null;
+  }
+}

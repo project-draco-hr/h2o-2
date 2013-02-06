@@ -1,0 +1,13 @@
+def pickRandRfParams(paramDict, params):
+    colX = 0
+    randomGroupSize = random.randint(1, len(paramDict))
+    for i in range(randomGroupSize):
+        randomKey = random.choice(paramDict.keys())
+        randomV = paramDict[randomKey]
+        randomValue = random.choice(randomV)
+        params[randomKey] = randomValue
+        if (randomKey == 'x'):
+            colX = randomValue
+        if (('sample' in params) and (params['sample'] == 100)):
+            params['out_of_bag_error_estimate'] = 0
+    return colX

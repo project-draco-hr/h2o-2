@@ -1,0 +1,6 @@
+{
+  ValueArray va=_key.value();
+  int colIdx=vaColumnNameToIndex(va,input);
+  if (colIdx == -1)   throw new IllegalArgumentException(input + " not a name of column, or a column index");
+  return colIdx;
+}

@@ -1,0 +1,22 @@
+{
+  return new TreeVisitor<RuntimeException>(tbits){
+    int _maxdepth, _depth, _leaves;
+    protected TreeVisitor leaf(    int tclass){
+      _leaves++;
+      if (_depth > _maxdepth)       _maxdepth=_depth;
+      return this;
+    }
+    protected TreeVisitor pre(    int col,    float fcmp,    int off0,    int offl,    int offr){
+      _depth++;
+      return this;
+    }
+    protected TreeVisitor post(    int col,    float fcmp){
+      _depth--;
+      return this;
+    }
+    long result(){
+      return ((long)_maxdepth << 32) | _leaves;
+    }
+  }
+.visit().result();
+}

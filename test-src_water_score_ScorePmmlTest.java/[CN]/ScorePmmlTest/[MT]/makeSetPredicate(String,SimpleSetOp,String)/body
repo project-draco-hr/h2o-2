@@ -1,0 +1,10 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("<SimpleSetPredicate field='").append(field).append("'");
+  sb.append(" booleanOperator='").append(op.getOp()).append("'>\n");
+  sb.append("  <Array n='").append(values.length).append("' type='string'>\n");
+  for (  String v : values)   sb.append("    ").append(v).append("\n");
+  sb.append("  </Array>\n");
+  sb.append("</SimpleSetPredicate>\n");
+  return sb.toString();
+}

@@ -1,0 +1,8 @@
+{
+  if (_type != Type.rtKey)   return;
+  ValueArray va=getValueArray(pos,_key);
+  if (rawColIndex() == -1) {
+    setColIndex(0);
+    if (va.numCols() != 1)     throw new EvaluationException(pos,"Column must be specified for the first operand");
+  }
+}

@@ -1,0 +1,32 @@
+{
+switch (_type) {
+case ttOpAdd:
+    return Result.scalar(l._const + r._const);
+case ttOpSub:
+  return Result.scalar(l._const - r._const);
+case ttOpMul:
+return Result.scalar(l._const * r._const);
+case ttOpDiv:
+return Result.scalar(l._const / r._const);
+case ttOpMod:
+return Result.scalar(l._const % r._const);
+case ttOpLess:
+return Result.scalar(l._const < r._const ? 1 : 0);
+case ttOpLessOrEq:
+return Result.scalar(l._const <= r._const ? 1 : 0);
+case ttOpGreater:
+return Result.scalar(l._const > r._const ? 1 : 0);
+case ttOpGreaterOrEq:
+return Result.scalar(l._const >= r._const ? 1 : 0);
+case ttOpEq:
+return Result.scalar(l._const == r._const ? 1 : 0);
+case ttOpNeq:
+return Result.scalar(l._const != r._const ? 1 : 0);
+case ttOpAnd:
+return Result.scalar(((l._const != 0) && (r._const != 0)) ? 1 : 0);
+case ttOpOr:
+return Result.scalar(((l._const != 0) && (r._const != 0)) ? 1 : 0);
+default :
+throw new EvaluationException(_pos,"Unknown operator to be used for binary operator evaluation: " + _type.toString());
+}
+}

@@ -1,0 +1,8 @@
+def terminate_instances(instances):
+    'terminate all the instances in a list or Reservation'
+    if (not reservation):
+        return
+    if (type(instances) is boto.ec2.instance.Reservation):
+        instances = [i for i in instances.instances]
+    conn = boto.connect_ec2()
+    conn.terminate_instances([i.id for i in instances])

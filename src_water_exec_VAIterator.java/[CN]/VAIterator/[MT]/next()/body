@@ -1,0 +1,20 @@
+{
+  ++_currentRow;
+  ++_rowInChunk;
+  if (_rowInChunk == _rowsInChunk) {
+    if (_currentRow == _rows) {
+      _currentRow=0;
+      _rowInChunk=0;
+      _chunkOffset=0;
+      _chunkIdx=0;
+    }
+ else {
+      _chunkOffset=_chunkOffset + _rowsInChunk * _rowSize;
+      _chunkIdx+=1;
+    }
+    _chunkBits=_ary.getChunk(_chunkIdx);
+    _rowsInChunk=_chunkBits.remaining() / _rowSize;
+    _rowInChunk=0;
+  }
+  return this;
+}

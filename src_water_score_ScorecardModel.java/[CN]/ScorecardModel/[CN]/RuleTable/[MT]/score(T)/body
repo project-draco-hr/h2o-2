@@ -1,0 +1,26 @@
+{
+  if (value instanceof String) {
+switch (_type) {
+case BOOLEAN:
+      value=(T)Boolean.valueOf((String)value);
+    break;
+case INT:
+  value=(T)new Long(Double.valueOf((String)value).longValue());
+break;
+case DOUBLE:
+value=(T)Double.valueOf((String)value);
+break;
+case STRING:
+break;
+}
+}
+ else if (value instanceof Integer) {
+value=(T)new Long(((Integer)value).intValue());
+}
+ else if (value instanceof Float) {
+value=(T)new Double(((Float)value).floatValue());
+}
+double score=0;
+for (Rule r : _rule) score+=r.score(value);
+return score;
+}

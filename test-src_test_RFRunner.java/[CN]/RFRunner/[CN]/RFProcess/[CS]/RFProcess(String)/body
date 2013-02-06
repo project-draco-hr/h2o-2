@@ -1,0 +1,14 @@
+{
+  Utils.pln("'" + JAVA + " "+ cmd+ "'");
+  List<String> c=new ArrayList<String>();
+  c.add(JAVA);
+  for (  String s : cmd.split(" ")) {
+    s=s.trim();
+    if (s.length() > 0)     c.add(s);
+  }
+  ProcessBuilder bldr=new ProcessBuilder(c);
+  bldr.redirectErrorStream(true);
+  _process=bldr.start();
+  _rd=new BufferedReader(new InputStreamReader(_process.getInputStream()));
+  _rdErr=new BufferedReader(new InputStreamReader(_process.getErrorStream()));
+}

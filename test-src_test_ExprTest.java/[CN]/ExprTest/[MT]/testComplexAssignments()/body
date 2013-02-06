@@ -1,0 +1,12 @@
+{
+  testScalarExpression("a4 = 5",5);
+  testScalarExpression("b4 = 6",6);
+  testScalarExpression("c4 = a4 + b4",11);
+  testScalarExpression("c4",11);
+  testScalarExpression("c4 + a4 -> c5",16);
+  testScalarExpression("c5",16);
+  UKV.remove(Key.make("a4"));
+  UKV.remove(Key.make("b4"));
+  UKV.remove(Key.make("c4"));
+  UKV.remove(Key.make("c5"));
+}

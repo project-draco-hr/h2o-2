@@ -1,0 +1,5 @@
+{
+  if (_caseMode.value() == CaseMode.none)   return Double.NaN;
+  Column c=_key.value()._cols[_classCol.value()];
+  return (_caseMode.value() == CaseMode.eq || Double.isNaN(c._mean)) ? c._max : c._mean;
+}

@@ -1,0 +1,13 @@
+import unittest
+import random, sys, time, os
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i
+import h2o_exec as h2e
+zeroList = []
+for i in range(8):
+    zeroList.append((('ColumnRes' + str(i)) + ' = 0'))
+    zeroList.append((('MatrixRes' + str(i)) + ' = 0'))
+    zeroList.append((('ScalarRes' + str(i)) + ' = 0'))
+exprList = ['ColumnRes<n> = factor(<keyX>[53]) + ColumnRes<n-1>', 'ColumnRes<n> = randomBitVector(19,0,1) + ColumnRes<n-1>', 'ColumnRes<n> = log(<keyX>[<col1>]) + ColumnRes<n-1>', 'ColumnRes<n> = <keyX>[<col1>] + <keyX>[<col2>] + <keyX>[2]', 'MatrixRes<n> = colSwap(<keyX>,<col1>,(<keyX>[2]==0 ? 54321 : 54321))', 'ColumnRes<n> = <keyX>[<col1>]', 'ScalarRes<n> = min(<keyX>[<col1>])', 'ScalarRes<n> = max(<keyX>[<col1>]) + ColumnRes<n-1>', 'ScalarRes<n> = mean(<keyX>[<col1>]) + ColumnRes<n-1>', 'ScalarRes<n> = sum(<keyX>[<col1>]) + ScalarRes<n-1>']
+if (__name__ == '__main__'):
+    h2o.unit_main()

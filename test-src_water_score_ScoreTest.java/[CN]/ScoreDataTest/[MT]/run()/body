@@ -1,0 +1,5 @@
+{
+  File file=find_test_file("smalldata/pmml/Loan_Scorecard.xml");
+  ScorecardModel scm=PMMLParser.load(new FileInputStream(file));
+  Assert.assertEquals(0,scm.score(ROW),1e-6);
+}

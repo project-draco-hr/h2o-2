@@ -1,0 +1,17 @@
+{
+  JsonObject res=new JsonObject();
+  final H2O cloud=H2O.CLOUD;
+  final H2ONode self=H2O.SELF;
+  HeartBeat hb=self._heartbeat;
+  res.addProperty("cloud_name",H2O.NAME);
+  res.addProperty("node_name",self.toString());
+  res.addProperty("cloud_size",cloud._memary.length);
+  res.addProperty("consensus",Paxos._commonKnowledge);
+  res.addProperty("locked",Paxos._cloudLocked);
+  res.addProperty("fjthrds_hi",hb._fjthrds_hi);
+  res.addProperty("fjqueue_hi",hb._fjqueue_hi);
+  res.addProperty("fjthrds_lo",hb._fjthrds_lo);
+  res.addProperty("fjqueue_lo",hb._fjqueue_lo);
+  res.addProperty("rpcs",hb._rpcs);
+  return res;
+}

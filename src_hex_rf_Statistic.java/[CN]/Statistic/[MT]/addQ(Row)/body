@@ -1,0 +1,14 @@
+{
+  final int cls=row.classOf();
+  for (  int f : _features)   if (f != -1) {
+    if (row.isValid() && row.hasValidValue(f)) {
+      short val=row.getEncodedColumnValue(f);
+      try {
+        _columnDists[f][val][cls]++;
+      }
+ catch (      ArrayIndexOutOfBoundsException ab) {
+        throw ab;
+      }
+    }
+  }
+}

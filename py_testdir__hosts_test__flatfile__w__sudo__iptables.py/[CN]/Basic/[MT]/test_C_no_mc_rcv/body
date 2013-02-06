@@ -1,0 +1,7 @@
+def test_C_no_mc_rcv(self):
+    print '\nwith flatfile, with multicast disabled'
+    allAcceptIptables()
+    multicastDropReceiveIptables()
+    showIptables()
+    h2o_hosts.build_cloud_with_hosts(nodes_per_host, use_flatfile=True)
+    h2o.tear_down_cloud()

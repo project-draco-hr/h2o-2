@@ -1,0 +1,24 @@
+{
+  Key modelKey=ServletUtil.check_key(args,"modelKey");
+  RFModel model=UKV.get(modelKey,new RFModel());
+  if (model == null)   throw new PageError("Model key is missing");
+  final int n=getAsNumber(args,"n",0);
+  if (!(0 <= n && n < model.size()))   return wrap(error("Tree number of out bounds"));
+  byte[] tbits=model.tree(n);
+  long dl=Tree.depth_leaves(new AutoBuffer(tbits));
+  int depth=(int)(dl >>> 32);
+  int leaves=(int)(dl & 0xFFFFFFFFL);
+  RString response=new RString(html());
+  int nodeCount=leaves * 2 - 1;
+  response.replace("modelKey",modelKey);
+  response.replace("n",n);
+  response.replace("nodeCount",nodeCount);
+  response.replace("leafCount",leaves);
+  response.replace("depth",depth);
+  ValueArray ary=ServletUtil.check_array(args,"dataKey");
+  int clz=getAsNumber(args,"class",ary._cols.length - 1);
+  TreeRenderer renderer=new TreeRenderer(model,n,ary,clz);
+  String graph=renderer.graphviz();
+  String code=renderer.code();
+  return response.toString() + graph + code;
+}

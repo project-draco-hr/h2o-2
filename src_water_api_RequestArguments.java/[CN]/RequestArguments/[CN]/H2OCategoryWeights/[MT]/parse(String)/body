@@ -1,0 +1,46 @@
+{
+  HashMap<String,Integer> classNames=new HashMap();
+  String[] names=determineColumnClassNames(1024);
+  for (int i=0; i < names.length; ++i)   classNames.put(names[i],i);
+  double[] result=new double[names.length];
+  for (int i=0; i < result.length; ++i)   result[i]=_defaultValue;
+  int start=0;
+  byte[] bsource=input.getBytes();
+  while (start < bsource.length) {
+    while (start < bsource.length && bsource[start] == ' ')     ++start;
+    String className;
+    double classWeight;
+    int end=0;
+    if (bsource[start] == ',') {
+      ++start;
+      end=input.indexOf(',',start);
+      className=input.substring(start,end);
+      ++end;
+    }
+ else {
+      end=input.indexOf('=',start);
+      className=input.substring(start,end);
+    }
+    start=end;
+    while (start < bsource.length && bsource[start] == ' ')     ++start;
+    if (bsource[start] != '=')     throw new IllegalArgumentException("Expected = after the class name.");
+    ++start;
+    end=input.indexOf(',',start);
+    try {
+      if (end == -1) {
+        classWeight=Double.parseDouble(input.substring(start));
+        start=bsource.length;
+      }
+ else {
+        classWeight=Double.parseDouble(input.substring(start,end));
+        start=end + 1;
+      }
+    }
+ catch (    NumberFormatException e) {
+      throw new IllegalArgumentException("Invalid double format for weight value");
+    }
+    if (!classNames.containsKey(className))     throw new IllegalArgumentException("Category " + className + " not found!");
+    result[classNames.get(className)]=classWeight;
+  }
+  return result;
+}

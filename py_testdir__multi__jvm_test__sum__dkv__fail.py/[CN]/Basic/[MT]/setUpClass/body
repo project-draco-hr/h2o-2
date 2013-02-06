@@ -1,0 +1,6 @@
+@classmethod
+def setUpClass(cls):
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    h2o.build_cloud(2)

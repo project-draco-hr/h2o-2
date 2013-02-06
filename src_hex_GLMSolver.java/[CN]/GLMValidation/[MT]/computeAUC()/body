@@ -1,0 +1,14 @@
+{
+  double auc=0;
+  double TPR_pre=1;
+  double FPR_pre=1;
+  for (int t=0; t < _cm.length; ++t) {
+    double TPR=1 - _cm[t].classErr(1);
+    double FPR=_cm[t].classErr(0);
+    auc+=trapeziod_area(FPR_pre,FPR,TPR_pre,TPR);
+    TPR_pre=TPR;
+    FPR_pre=FPR;
+  }
+  auc+=trapeziod_area(FPR_pre,0,TPR_pre,0);
+  _auc=auc;
+}

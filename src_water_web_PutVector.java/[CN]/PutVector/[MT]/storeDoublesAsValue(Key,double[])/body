@@ -1,0 +1,19 @@
+{
+  byte[] bits=MemoryManager.malloc1(8 * d.length);
+  double min=d[0];
+  double max=d[0];
+  double tot=0;
+  for (int i=0; i < d.length; ++i) {
+    UDP.set8d(bits,i * 8,d[i]);
+    if (d[i] < min)     min=d[i];
+    if (d[i] > max)     max=d[i];
+    tot+=d[i];
+  }
+  Key key2=ValueArray.getChunkKey(0,k);
+  Value val=new Value(key2,bits);
+  DKV.put(key2,val);
+  VABuilder b=new VABuilder(k.toString(),d.length).addDoubleColumn("0",min,max,tot / d.length).createAndStore(k);
+  DKV.write_barrier();
+  Helpers.calculateSigma(k,0);
+  return k;
+}

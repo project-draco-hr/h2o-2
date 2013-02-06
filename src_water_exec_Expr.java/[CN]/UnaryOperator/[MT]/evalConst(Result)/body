@@ -1,0 +1,8 @@
+{
+switch (_type) {
+case ttOpSub:
+    return Result.scalar(-o._const);
+default :
+  throw new EvaluationException(_pos,"Operator " + _type.toString() + " not applicable to given operand.");
+}
+}

@@ -1,0 +1,14 @@
+{
+switch (_persist & BACKEND_MASK) {
+case ICE:
+    return "ICE";
+case HDFS:
+  return "HDFS";
+case S3:
+return "S3";
+case NFS:
+return "NFS";
+default :
+throw H2O.unimpl();
+}
+}

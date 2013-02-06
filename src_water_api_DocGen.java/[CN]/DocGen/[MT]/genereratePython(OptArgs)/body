@@ -1,0 +1,31 @@
+{
+  File f=new File(options.destination);
+  if (!options.destination.endsWith(".py")) {
+    f=new File(f,"h2o_base.py");
+  }
+  IndentingAppender ia=new IndentingAppender(Files.newWriter(f,Charsets.UTF_8));
+  ia.appendln("##################################");
+  ia.appendln("### GENERATED CODE DO NOT EDIT ###");
+  ia.appendln("##################################");
+  ia.appendln("import requests");
+  ia.appendln("");
+  ia.appendln("class H2OBase(object):");
+  ia.incrementIndent();
+  ia.appendln("'''");
+  ia.appendln("A generated base class with arguments and documentation");
+  ia.appendln("for accessing H2O's REST API from python");
+  ia.appendln("'''");
+  ia.appendln("").appendln("def __url(self, loc, port=None):");
+  ia.incrementIndent();
+  ia.appendln("raise Exception('__url should be implemented by a base class')");
+  ia.decrementIndent();
+  ia.appendln("").appendln("def __check_request(self, r, extraComment=None):");
+  ia.incrementIndent();
+  ia.appendln("raise Exception('__check_requests should be implemented by a base class')");
+  ia.decrementIndent();
+  Map<String,Request> requests=RequestServer._requests;
+  for (  Request r : requests.values()) {
+    r.buildPython(ia.appendln(""));
+  }
+  ia.close();
+}

@@ -1,0 +1,11 @@
+{
+  double score=_initialScore;
+  for (  String k : row.keySet()) {
+    RuleTable ruleTable=_features.get(k);
+    if (ruleTable != null) {
+      System.out.println("ScorecardModel.score(): " + ruleTable.toString());
+      score+=ruleTable.score(row.get(k));
+    }
+  }
+  return score;
+}

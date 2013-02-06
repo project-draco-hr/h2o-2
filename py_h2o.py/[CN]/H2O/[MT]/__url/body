@@ -1,0 +1,8 @@
+def __url(self, loc, port=None, new=True):
+    if (new is False):
+        if (port is None):
+            port = self.port
+    elif (port is None):
+        port = (self.port + 2)
+    u = ('http://%s:%d/%s' % (self.http_addr, port, loc))
+    return u

@@ -1,0 +1,15 @@
+{
+switch (this) {
+case identity:
+    return 1;
+case logit:
+  if (x == 1 || x == 0)   return MAX_SQRT;
+return 1 / (x * (1 - x));
+case log:
+return (x == 0) ? MAX_SQRT : 1 / x;
+case inverse:
+return -1 / (x * x);
+default :
+throw new Error("unexpected link function id  " + this);
+}
+}

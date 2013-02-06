@@ -1,0 +1,7 @@
+{
+  hb._cloud_id_lo=cloud._id.getLeastSignificantBits();
+  hb._cloud_id_hi=cloud._id.getMostSignificantBits();
+  hb._cloud_md5=Boot._init._jarHash;
+  H2O.SELF._heartbeat=hb;
+  hb.write(new AutoBuffer(H2O.SELF).putUdp(UDP.udp.heartbeat)).close();
+}

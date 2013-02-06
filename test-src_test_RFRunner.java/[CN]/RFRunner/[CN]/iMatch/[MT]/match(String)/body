@@ -1,0 +1,43 @@
+{
+  Matcher m=null;
+  m=pfinish.matcher(s);
+  if (m.find()) {
+    _finish=m.group(1);
+    return false;
+  }
+  m=pntrees.matcher(s);
+  if (m.find()) {
+    _ntrees=Integer.parseInt(m.group(1));
+    return false;
+  }
+  m=pfeatures.matcher(s);
+  if (m.find()) {
+    _features=Integer.parseInt(m.group(1));
+    return false;
+  }
+  m=perror.matcher(s);
+  if (m.find()) {
+    double v=((int)(Double.parseDouble(m.group(2)) * 10000) / 100.0);
+    if (_err == -1)     _err=v;
+ else     _class_err=v;
+    return false;
+  }
+  m=pleaves.matcher(s);
+  if (m.find()) {
+    _avgleaf=Integer.parseInt(m.group(1));
+    return false;
+  }
+  m=pdepth.matcher(s);
+  if (m.find()) {
+    _avgdepth=Integer.parseInt(m.group(1));
+    return false;
+  }
+  m=prows.matcher(s);
+  if (m.find()) {
+    _rows=Integer.parseInt(m.group(1));
+    return false;
+  }
+  m=DONE.matcher(s);
+  if (m.find())   return true;
+ else   return false;
+}

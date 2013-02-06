@@ -1,0 +1,13 @@
+{
+  _random=Utils.getRNG(_seed=seed);
+  int i=0, j=0, featuresPerSplit=_features.length;
+  Arrays.fill(_features,-1);
+  for (; j < featuresPerSplit && i < data.columns() - 1; i++)   if (isColumnUsable(data,i))   _features[j++]=i;
+  for (; i < data.columns() - 1; i++) {
+    if (!isColumnUsable(data,i))     continue;
+    int k=_random.nextInt(j + 1);
+    if (k < featuresPerSplit)     _features[k]=i;
+    j++;
+  }
+  for (  int f : _features)   if (f != -1)   for (  int[] d : _columnDists[f])   Arrays.fill(d,0);
+}

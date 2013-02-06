@@ -1,0 +1,8 @@
+{
+  Key poker=loadAndParseKey("p.hex","smalldata/poker/poker-hand-testing.data");
+  testVectorExpression("p.hex[1] + p.hex[2]",2,15,13,15,12,7);
+  testVectorExpression("p.hex[1] - p.hex[2]",0,9,5,7,10,3);
+  testVectorExpression("p.hex[1] * p.hex[2]",1,36,36,44,11,10);
+  testVectorExpression("p.hex[1] / p.hex[2]",1.0,4.0,2.25,2.75,11.0,2.5);
+  UKV.remove(poker);
+}

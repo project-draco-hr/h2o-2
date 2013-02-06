@@ -1,0 +1,7 @@
+{
+  for (int i=0; i < commandLineArgs.length; i++) {
+    Entry e=commandLineArgs[i];
+    if (name.equals(e.name))     return e.val;
+  }
+  return System.getProperty("h2o.arg." + name);
+}

@@ -1,0 +1,20 @@
+{
+  Result res=Result.temporary();
+  ValueArray opnd=getValueArray(o._key);
+  if (o.rawColIndex() == -1) {
+    o.setColIndex(0);
+    if (opnd.numCols() != 1)     throw new EvaluationException(_pos,"Column must be specified for the operand");
+  }
+  VABuilder b=new VABuilder("temp",opnd.numRows()).addDoubleColumn("0").createAndStore(res._key);
+  MRVectorUnaryOperator op;
+switch (_type) {
+case ttOpSub:
+    op=new UnaryMinus(o._key,res._key,o.rawColIndex());
+  break;
+default :
+throw new EvaluationException(_pos,"Unknown operator to be used for binary operator evaluation: " + _type.toString());
+}
+op.invoke(res._key);
+b.setColumnStats(0,op._min,op._max,op._tot / opnd.numRows()).createAndStore(res._key);
+return res;
+}

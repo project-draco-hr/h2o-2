@@ -1,0 +1,24 @@
+def test_GLM_twovalues(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_twovalues.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    rowDataTrueRaw = '<sp>1,            0<sp>,            <tab>65,            1<tab>,            <sp><tab>2,            1<sp><tab>,            <tab><sp>1,            4<tab><sp>,            <tab><tab>1,            4<tab><tab>,            <sp><sp>1,            4<sp><sp>'
+    rowDataTrue = re.sub('<sp>', ' ', rowDataTrueRaw)
+    rowDataTrue = re.sub('<tab>', '  ', rowDataTrue)
+    rowDataFalse = '0,            1,            0,            -1,            -2,            -1,            -1,            -4,            -1,            -4,            -1,            -4'
+    twoValueList = [('A', 'B', 0, 14), ('A', 'B', 1, 14), (0, 1, 0, 12), (0, 1, 1, 12), (0, 1, 'NaN', 12), (1, 0, 'NaN', 12), ((-1), 1, 0, 12), ((-1), 1, 1, 12), ((-10.0), 10.0, 10.0, 12), ((-10.0), 10.0, (-10.0), 12)]
+    trial = 0
+    for (outputTrue, outputFalse, case, coeffNum) in twoValueList:
+        write_syn_dataset(csvPathname, 20, rowDataTrue, rowDataFalse, str(outputTrue), str(outputFalse))
+        start = time.time()
+        key = ((csvFilename + '_') + str(trial))
+        kwargs = {'case': case, 'y': 10, 'family': 'binomial', 'alpha': 0, 'beta_epsilon': 0.0002, }
+        glm = h2o_cmd.runGLM(csvPathname=csvPathname, key=key)
+        h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
+        coeffNum = len(glm['GLMModel']['coefficients'])
+        if (coeffNum != coeffNum):
+            raise Exception((('Should be ' + coeffNum) + (' coefficients in result. %s' % coeffNum)))
+        print 'trial #', trial, 'glm end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        h2b.browseJsonHistoryAsUrlLastMatch('GLM')
+        h2o.check_sandbox_for_errors()
+        trial += 1

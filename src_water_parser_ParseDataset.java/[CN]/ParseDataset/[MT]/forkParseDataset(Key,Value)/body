@@ -1,0 +1,9 @@
+{
+  ParseStatus.initialize(result,dataset.length());
+  H2O.FJP_NORM.submit(new RecursiveAction(){
+    @Override protected void compute(){
+      parseImpl(result,dataset);
+    }
+  }
+);
+}

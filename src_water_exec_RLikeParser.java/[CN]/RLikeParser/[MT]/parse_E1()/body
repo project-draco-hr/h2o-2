@@ -1,0 +1,8 @@
+{
+  Expr result=parse_E2();
+  while ((top()._type == Token.Type.ttOpAnd) || (top()._type == Token.Type.ttOpOr)) {
+    Token t=pop();
+    result=new BinaryOperator(t._pos,t._type,result,parse_E2());
+  }
+  return result;
+}

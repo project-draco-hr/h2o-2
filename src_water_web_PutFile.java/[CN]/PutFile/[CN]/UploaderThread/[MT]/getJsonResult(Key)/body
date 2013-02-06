@@ -1,0 +1,11 @@
+{
+  Value val=DKV.get(key);
+  JsonArray jsonResult=new JsonArray();
+  JsonObject jsonFile=new JsonObject();
+  jsonFile.addProperty("name",filename);
+  jsonFile.addProperty("size",val.length());
+  jsonFile.addProperty("url","/Get?Key=" + key.toString());
+  jsonFile.addProperty("key",key.toString());
+  jsonResult.add(jsonFile);
+  return jsonResult;
+}

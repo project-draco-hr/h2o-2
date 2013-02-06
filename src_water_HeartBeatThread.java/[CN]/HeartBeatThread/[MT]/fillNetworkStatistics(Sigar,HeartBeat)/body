@@ -1,0 +1,64 @@
+{
+  try {
+    final NetStat netStats=sigar.getNetStat();
+    hb._total_in_conn=(netStats.getAllInboundTotal());
+    hb._total_out_conn=(netStats.getAllOutboundTotal());
+    hb._tcp_in_conn=(netStats.getTcpInboundTotal());
+    hb._tcp_out_conn=(netStats.getTcpOutboundTotal());
+  }
+ catch (  SigarException e) {
+    hb._total_in_conn=-1;
+    hb._total_out_conn=-1;
+    hb._tcp_in_conn=-1;
+    hb._tcp_out_conn=-1;
+    hb._udp_in_conn=-1;
+    hb._udp_out_conn=-1;
+  }
+  try {
+    final String netIfaceName=NetworkInterface.getByInetAddress(H2O.SELF._key.getAddress()).getName();
+    final NetInterfaceStat netInterfaceStat=sigar.getNetInterfaceStat(netIfaceName);
+    final long _rx_bytes=netInterfaceStat.getRxBytes();
+    final long _tx_bytes=netInterfaceStat.getTxBytes();
+    final long _delta_rx_bytes=_last_rx_bytes < 0 ? 0 : _rx_bytes - _last_rx_bytes;
+    final long _delta_tx_bytes=_last_tx_bytes < 0 ? 0 : _tx_bytes - _last_tx_bytes;
+    _last_rx_bytes=_rx_bytes;
+    _last_tx_bytes=_tx_bytes;
+    _sum_rx_bytes+=_delta_rx_bytes;
+    _sum_tx_bytes+=_delta_tx_bytes;
+    final long _now=System.currentTimeMillis();
+    final long _rx_bytes_rate=1000 * _delta_rx_bytes / (_now - _last_stat_collection_time);
+    final long _tx_bytes_rate=1000 * _delta_tx_bytes / (_now - _last_stat_collection_time);
+    _last_stat_collection_time=_now;
+    hb._total_packets_recv=(netInterfaceStat.getRxPackets());
+    hb._total_packets_sent=(netInterfaceStat.getTxPackets());
+    hb._total_bytes_recv=(_rx_bytes);
+    hb._total_bytes_sent=(_tx_bytes);
+    hb._total_bytes_recv_rate=((int)_rx_bytes_rate);
+    hb._total_bytes_sent_rate=((int)_tx_bytes_rate);
+  }
+ catch (  Exception e) {
+    hb._total_packets_recv=-1;
+    hb._total_packets_sent=-1;
+    hb._total_bytes_recv=-1;
+    hb._total_bytes_sent=-1;
+    hb._total_bytes_recv_rate=-1;
+    hb._total_bytes_recv_rate=-1;
+  }
+  try {
+    final Tcp tcpStats=sigar.getTcp();
+    hb._tcp_packets_recv=(tcpStats.getInSegs());
+    hb._tcp_packets_sent=(tcpStats.getOutSegs());
+    hb._tcp_bytes_recv=-1;
+    hb._tcp_bytes_sent=-1;
+  }
+ catch (  SigarException e) {
+    hb._tcp_packets_recv=-1;
+    hb._tcp_packets_sent=-1;
+    hb._tcp_bytes_recv=-1;
+    hb._tcp_bytes_sent=-1;
+  }
+  hb._udp_packets_recv=-1;
+  hb._udp_packets_sent=-1;
+  hb._udp_bytes_recv=-1;
+  hb._udp_bytes_sent=-1;
+}

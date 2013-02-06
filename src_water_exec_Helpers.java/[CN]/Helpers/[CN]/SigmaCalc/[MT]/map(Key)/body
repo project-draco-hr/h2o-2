@@ -1,0 +1,11 @@
+{
+  ValueArray va=ValueArray.value(_key);
+  Column c=va._cols[_col];
+  double mean=c._mean;
+  AutoBuffer bits=va.getChunk(key);
+  int num=bits.remaining() / va._rowsize;
+  for (int i=0; i < num; ++i) {
+    double x=va.datad(bits,i,c);
+    _sigma+=(x - mean) * (x - mean);
+  }
+}

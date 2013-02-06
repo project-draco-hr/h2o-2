@@ -1,0 +1,21 @@
+{
+  Key datakey=Key.make("datakey");
+  try {
+    Random R=new Random(0x987654321L);
+    for (int i=0; i < 10; i++) {
+      double[] coefs=new double[]{R.nextDouble(),R.nextDouble(),R.nextDouble()};
+      ValueArray va=va_maker(datakey,2,10,new DataExpr_Dirty(R,coefs));
+      LSMSolver lsms=LSMSolver.makeSolver();
+      JsonObject glm=computeGLMlog(lsms,va,false);
+      JsonObject res=glm.get("coefficients").getAsJsonObject();
+      assertEquals(coefs[0],res.get("0").getAsDouble(),0.001);
+      assertEquals(coefs[1],res.get("1").getAsDouble(),0.001);
+      assertEquals(coefs[2],res.get("Intercept").getAsDouble(),0.001);
+      UKV.remove(datakey);
+      UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    }
+  }
+  finally {
+    UKV.remove(datakey);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  print("recv: Promise",PROPOSED_MEMBERS,state);
+  long promised_num=state._promise;
+  if (PROPOSAL_MAX == 0)   return print("do  : nothing, received Promise " + promised_num + " but no proposal in progress",PROPOSED_MEMBERS);
+  if (LEADER != H2O.SELF)   return print("do  : nothing: recieved promise (" + promised_num + "), but I gave up being leader",PROPOSED_MEMBERS);
+  if (promised_num < PROPOSAL_MAX)   return print("do  : nothing: promise (" + promised_num + ") is too old to care about ("+ PROPOSAL_MAX+ ")",h2o);
+  long prior_proposal=state._oldProposal;
+  HashSet<H2ONode> prior_value=new HashSet(Arrays.asList(_state._members));
+  if (prior_proposal > 0 && !PROPOSED_MEMBERS.equals(prior_value))   return print("do  : nothing, because this is a promise for the wrong thing",prior_value);
+  ACCEPTED.add(h2o);
+  final int quorum=(PROPOSED_MEMBERS.size() >> 1) + 1;
+  if (ACCEPTED.size() < quorum)   return print("do  : No Quorum yet " + ACCEPTED + "/"+ quorum,PROPOSED_MEMBERS);
+  if (ACCEPTED.size() > quorum)   return print("do  : Nothing; Quorum exceeded and already sent AcceptRequest " + ACCEPTED + "/"+ quorum,PROPOSED_MEMBERS);
+  _state._oldProposal=PROPOSAL_MAX;
+  _state._members=PROPOSED_MEMBERS.toArray(new H2ONode[0]);
+  UDPPaxosAccept.build_and_multicast(_state);
+  return print("send: AcceptRequest because hit Quorum ",PROPOSED_MEMBERS,_state);
+}

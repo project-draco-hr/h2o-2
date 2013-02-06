@@ -1,0 +1,19 @@
+{
+  ValueArray va=ValueArray.value(_key);
+  long cidx=ValueArray.getChunkIndex(key);
+  int rows=va.rpc(cidx);
+  long start=va.startRow(cidx);
+  double ratio=(double)_selected / _numrows;
+  int create=(int)(Math.round((start + rows) * ratio) - Math.round((start) * ratio));
+  _createdSelected+=create;
+  byte[] bits=MemoryManager.malloc1(rows);
+  for (int i=0; i < create; ++i)   bits[i]=1;
+  Random r=hex.rf.Utils.getDeterRNG(_seed + cidx);
+  for (int i=rows - 1; i >= 1; --i) {
+    int j=r.nextInt(i + 1);
+    byte x=bits[i];
+    bits[i]=bits[j];
+    bits[j]=x;
+  }
+  DKV.put(key,new Value(key,bits));
+}

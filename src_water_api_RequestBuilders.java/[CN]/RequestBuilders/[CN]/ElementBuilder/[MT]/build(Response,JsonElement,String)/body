@@ -1,0 +1,13 @@
+{
+  String base;
+  if (element instanceof JsonArray) {
+    base=arrayToString((JsonArray)element,contextName);
+  }
+ else   if (element instanceof JsonObject) {
+    base=objectToString((JsonObject)element,contextName);
+  }
+ else {
+    base=elementToString(element,contextName);
+  }
+  return build(base,elementToName(contextName));
+}

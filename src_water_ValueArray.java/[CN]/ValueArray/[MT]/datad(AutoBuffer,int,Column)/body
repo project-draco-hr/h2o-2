@@ -1,0 +1,22 @@
+{
+  int off=(row_in_chunk * _rowsize) + col._off;
+  double res=0;
+switch (col._size) {
+case 1:
+    res=ab.get1(off);
+  break;
+case 2:
+res=ab.get2(off);
+break;
+case 4:
+res=ab.get4(off);
+break;
+case 8:
+return ab.get8(off);
+case -4:
+return ab.get4f(off);
+case -8:
+return ab.get8d(off);
+}
+return (res + col._base) / col._scale;
+}

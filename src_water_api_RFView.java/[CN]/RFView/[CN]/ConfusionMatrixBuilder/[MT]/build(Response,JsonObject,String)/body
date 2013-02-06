@@ -1,0 +1,61 @@
+{
+  StringBuilder sb=new StringBuilder();
+  if (cm.has(JSON_CM_MATRIX)) {
+    sb.append("<h3>Confusion matrix - ").append(cm.get(JSON_CM_TYPE).getAsString()).append("</h3>");
+    sb.append("<dl class='dl-horizontal'>");
+    sb.append("<dt>classification error</dt><dd>").append(String.format("%5.3f %%",100 * cm.get(JSON_CM_CLASS_ERR).getAsFloat())).append("</dd>");
+    long rows=cm.get(JSON_CM_ROWS).getAsLong();
+    long skippedRows=cm.get(JSON_CM_ROWS_SKIPPED).getAsLong();
+    sb.append("<dt>used / skipped rows </dt><dd>").append(String.format("%d / %d (%3.1f %%)",rows,skippedRows,(double)skippedRows / (skippedRows + rows))).append("</dd>");
+    sb.append("</dl>");
+    sb.append("<table class='table table-striped table-bordered table-condensed'>");
+    sb.append("<tr><th>Actual \\ Predicted</th>");
+    JsonArray header=(JsonArray)cm.get(JSON_CM_HEADER);
+    for (    JsonElement e : header)     sb.append("<th>" + e.getAsString() + "</th>");
+    sb.append("<th>Error</th></tr>");
+    int classes=header.size();
+    long[] totals=new long[classes];
+    JsonArray matrix=(JsonArray)cm.get(JSON_CM_MATRIX);
+    long sumTotal=0;
+    long sumError=0;
+    for (int crow=0; crow < classes; ++crow) {
+      JsonArray row=(JsonArray)matrix.get(crow);
+      long total=0;
+      long error=0;
+      sb.append("<tr><th>" + header.get(crow).getAsString() + "</th>");
+      for (int ccol=0; ccol < classes; ++ccol) {
+        long num=row.get(ccol).getAsLong();
+        total+=num;
+        totals[ccol]+=num;
+        if (ccol == crow) {
+          sb.append("<td style='background-color:LightGreen'>");
+        }
+ else {
+          sb.append("<td>");
+          error+=num;
+        }
+        sb.append(num);
+        sb.append("</td>");
+      }
+      sb.append("<td>");
+      sb.append(String.format("%5.3f = %d / %d",(double)error / total,error,total));
+      sb.append("</td></tr>");
+      sumTotal+=total;
+      sumError+=error;
+    }
+    sb.append("<tr><th>Totals</th>");
+    for (int i=0; i < totals.length; ++i)     sb.append("<td>" + totals[i] + "</td>");
+    sb.append("<td><b>");
+    sb.append(String.format("%5.3f = %d / %d",(double)sumError / sumTotal,sumError,sumTotal));
+    sb.append("</b></td></tr>");
+    sb.append("</table>");
+    sb.append("Trees used: " + cm.get(JSON_CM_TREES).getAsInt());
+  }
+ else {
+    sb.append("<div class='alert alert-info'>");
+    sb.append("Confusion matrix is being computed into the key:</br>");
+    sb.append(cm.get(JSON_CONFUSION_KEY).getAsString());
+    sb.append("</div>");
+  }
+  return sb.toString();
+}

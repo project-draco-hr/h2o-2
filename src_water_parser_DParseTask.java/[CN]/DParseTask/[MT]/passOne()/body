@@ -1,0 +1,40 @@
+{
+switch (_parserType) {
+case CSV:
+    byte[] bits=_sourceDataset.getFirstBytes();
+  CsvParser.Setup setup=CsvParser.guessCsvSetup(bits);
+if (setup == null) throw new Exception("Unable to determine the separator or number of columns on the dataset");
+_colNames=setup.columnNames;
+setColumnNames(_colNames);
+_skipFirstLine=setup.hasHeader;
+this._sep=setup.separator;
+if (_sourceDataset._isArray != 0) {
+ValueArray ary=ValueArray.value(_sourceDataset);
+_nrows=new int[(int)ary.chunks()];
+}
+this.invoke(_sourceDataset._key);
+break;
+case XLS:
+CustomParser p=new XlsParser(this);
+p.parse(_sourceDataset._key);
+--_myrows;
+break;
+case XLSX:
+CustomParser px=new XlsxParser(this);
+px.parse(_sourceDataset._key);
+break;
+default :
+throw new Error("NOT IMPLEMENTED");
+}
+if (_nrows != null) {
+_numRows=0;
+for (int i=0; i < _nrows.length; ++i) {
+_numRows+=_nrows[i];
+_nrows[i]=_numRows;
+}
+}
+ else {
+_numRows=_myrows;
+}
+for (int i=0; i < _ncolumns; ++i) _mean[i]=_mean[i] / (_numRows - _invalidValues[i]);
+}

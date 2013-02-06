@@ -1,0 +1,19 @@
+{
+  try {
+    String _line;
+    _im=new iMatch();
+    while ((_line=_rd.readLine()) != null) {
+      _stdout.println(_line);
+      boolean done=_im.match(_line);
+      if (done) {
+        System.out.println("Error: " + _im._err + "%");
+        break;
+      }
+      exception=_im.exception(_line);
+      if (exception != null)       break;
+    }
+  }
+ catch (  Exception e) {
+    throw new Error(e);
+  }
+}

@@ -1,0 +1,7 @@
+{
+  String folder=args.getProperty("Folder");
+  File root=new File(folder);
+  if (!root.exists())   throw new Exception("Unable to import folder " + folder + ". Folder not found.");
+  folder=root.getCanonicalPath();
+  return FileIntegrityChecker.check(new File(folder));
+}

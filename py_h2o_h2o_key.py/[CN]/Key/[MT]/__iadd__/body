@@ -1,0 +1,8 @@
+def __iadd__(self, other):
+    if (type(other) == int):
+        self._h2o._execExpr(('%s = %s + %s' % (self._name, self._name, other)))
+        self._value = None
+        self.inspect()
+        return self
+    else:
+        print 'error'

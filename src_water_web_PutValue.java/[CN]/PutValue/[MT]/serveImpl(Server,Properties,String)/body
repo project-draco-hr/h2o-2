@@ -1,0 +1,6 @@
+{
+  JsonObject json=serverJson(s,p,sessionID);
+  RString response=new RString("" + "<div class='alert alert-success'>" + "Key <a href='Inspect?Key=%$key'>%key</a> has been put to the "+ "store with replication factor %rf, value size <strong>%vsize</strong>."+ "</div>"+ "<p><a href='StoreView'><button class='btn btn-primary'>Back to Node</button></a>&nbsp;&nbsp;"+ "<a href='Put'><button class='btn'>Put again</button></a>"+ "</p>");
+  response.replace(json);
+  return response.toString();
+}

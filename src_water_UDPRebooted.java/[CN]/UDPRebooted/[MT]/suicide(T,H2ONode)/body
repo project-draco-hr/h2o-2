@@ -1,0 +1,29 @@
+{
+  String m;
+switch (cause) {
+case none:
+    return;
+case reboot:
+  return;
+case shutdown:
+closeAll();
+System.out.println("[h2o] Orderly shutdown command from " + killer);
+System.exit(0);
+return;
+case error:
+m="Error leading to a cloud kill";
+break;
+case locked:
+m="Killed joining a locked cloud";
+break;
+case mismatch:
+m="Killed joining a cloud with a different jar";
+break;
+default :
+m="Received kill " + cause;
+break;
+}
+closeAll();
+System.err.println("[h2o] " + m + " from "+ killer);
+System.exit(-1);
+}

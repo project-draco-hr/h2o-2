@@ -1,0 +1,7 @@
+@classmethod
+def setUpClass(cls):
+    print 'Setup for first cloud'
+    h2o_hosts.build_cloud_with_hosts()
+    print '\nTearing down first cloud'
+    h2o.tear_down_cloud()
+    h2o.clean_sandbox()

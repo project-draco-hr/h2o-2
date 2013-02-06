@@ -1,0 +1,26 @@
+def test_sum_import_hosts(self):
+    importFolderPath = '/home/0xdiag/datasets'
+    h2i.setupImportFolder(None, importFolderPath)
+    csvFilenameAll = [('covtype.data', 'cA', 5, 1), ('covtype.data', 'cB', 5, 1), ('covtype.data', 'cC', 5, 1)]
+    csvFilenameList = csvFilenameAll
+    h2b.browseTheCloud()
+    lenNodes = len(h2o.nodes)
+    firstDone = False
+    for (csvFilename, key2, timeoutSecs, resultMult) in csvFilenameList:
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print ('\n' + csvFilename)
+        h2e.exec_zero_list(zeroList)
+        colResultList = h2e.exec_expr_list_across_cols(lenNodes, exprList, key2, minCol=0, maxCol=54, timeoutSecs=timeoutSecs)
+        print '\ncolResultList', colResultList
+        if (not firstDone):
+            colResultList0 = list(colResultList)
+            good = [float(x) for x in colResultList0]
+            firstDone = True
+        else:
+            print '\n', colResultList0, '\n', colResultList
+            compare = [(float(x) / resultMult) for x in colResultList]
+            print '\n', good, '\n', compare
+            self.assertEqual(good, compare, 'compare is not equal to good (first try * resultMult)')

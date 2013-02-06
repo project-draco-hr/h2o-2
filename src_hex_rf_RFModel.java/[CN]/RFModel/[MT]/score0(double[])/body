@@ -1,0 +1,6 @@
+{
+  int numClasses=classes();
+  int votes[]=new int[numClasses + 1];
+  for (int i=0; i < treeCount(); i++)   votes[(int)Tree.classify(new AutoBuffer(tree(i)),data,numClasses)]++;
+  return classify(votes,null,null) + response()._min;
+}

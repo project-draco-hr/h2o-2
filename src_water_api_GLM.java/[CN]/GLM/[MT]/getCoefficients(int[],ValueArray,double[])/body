@@ -1,0 +1,8 @@
+{
+  JsonObject coefficients=new JsonObject();
+  for (int i=0; i < beta.length; ++i) {
+    String colName=(i == (beta.length - 1)) ? "Intercept" : ary._cols[columnIds[i]]._name;
+    coefficients.addProperty(colName,beta[i]);
+  }
+  return coefficients;
+}

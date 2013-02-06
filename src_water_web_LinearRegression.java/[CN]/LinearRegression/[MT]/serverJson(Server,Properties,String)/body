@@ -1,0 +1,6 @@
+{
+  ValueArray ary=ServletUtil.check_array(args,"Key");
+  int colA=parseColumnNameOrIndex(ary,args.getProperty("colA","0"));
+  int colB=parseColumnNameOrIndex(ary,args.getProperty("colB","1"));
+  return hex.LinearRegression.run(ary,colA,colB);
+}

@@ -1,0 +1,10 @@
+{
+  Statistic result=_stats[index].get();
+  if (result == null) {
+    result=_type == StatType.GINI ? new GiniStatistic(data,_numSplitFeatures,_seed,exclusiveSplitLimit) : new EntropyStatistic(data,_numSplitFeatures,_seed,exclusiveSplitLimit);
+    _stats[index].set(result);
+  }
+  result.forgetFeatures();
+  result.reset(data,seed);
+  return result;
+}

@@ -1,0 +1,7 @@
+{
+  JsonObject result=new JsonObject();
+  for (  Argument a : _arguments) {
+    if (a.specified())     result.addProperty(a._name,a.originalValue());
+  }
+  return result;
+}

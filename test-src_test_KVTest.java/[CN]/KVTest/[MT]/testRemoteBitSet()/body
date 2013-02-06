@@ -1,0 +1,14 @@
+{
+  Key[] keys=new Key[32];
+  for (int i=0; i < keys.length; ++i) {
+    Key k=keys[i]=Key.make("key" + i);
+    byte[] bits=new byte[4];
+    bits[0]=(byte)i;
+    Value val=new Value(k,bits);
+    DKV.put(k,val);
+  }
+  RemoteBitSet r=new RemoteBitSet();
+  r.invoke(keys);
+  assertEquals((int)((1L << keys.length) - 1),r._x);
+  for (  Key k : keys)   UKV.remove(k);
+}

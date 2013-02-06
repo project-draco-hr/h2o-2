@@ -1,0 +1,58 @@
+{
+  ++_colIdx;
+  if (colIdx >= _ncolumns)   return;
+switch (_phase) {
+case ONE:
+    double d=number * pow10(exp);
+  if (d < _min[colIdx])   _min[colIdx]=d;
+if (d > _max[colIdx]) _max[colIdx]=d;
+_mean[colIdx]+=d;
+if (exp != 0) {
+if (exp < _scale[colIdx]) _scale[colIdx]=exp;
+if (_colTypes[colIdx] != DCOL) {
+if (Math.abs(number) > MAX_FLOAT_MANTISSA || exp < -35 || exp > 35) _colTypes[colIdx]=DCOL;
+ else _colTypes[colIdx]=FCOL;
+}
+}
+ else if (_colTypes[colIdx] < ICOL) {
+_colTypes[colIdx]=ICOL;
+}
+break;
+case TWO:
+switch (_colTypes[colIdx]) {
+case BYTE:
+_ab.put1((byte)(number * pow10i(exp - _scale[colIdx]) - _bases[colIdx]));
+break;
+case SHORT:
+_ab.put2((short)(number * pow10i(exp - _scale[colIdx]) - _bases[colIdx]));
+break;
+case INT:
+_ab.put4((int)(number * pow10i(exp - _scale[colIdx]) - _bases[colIdx]));
+break;
+case LONG:
+_ab.put8(number * pow10i(exp - _scale[colIdx]));
+break;
+case FLOAT:
+_ab.put4f((float)(number * pow10(exp)));
+break;
+case DOUBLE:
+_ab.put8d(number * pow10(exp));
+break;
+case DBYTE:
+_ab.put1((short)(number * pow10i(exp - _scale[colIdx]) - _bases[colIdx]));
+break;
+case DSHORT:
+_ab.put2((short)(number * pow10i(exp - _scale[colIdx]) - _bases[colIdx]));
+break;
+case STRINGCOL:
+break;
+}
+if (!Double.isNaN(_mean[colIdx])) {
+d=number * pow10(exp) - _mean[colIdx];
+_sigma[colIdx]+=d * d;
+}
+break;
+default :
+assert(false);
+}
+}

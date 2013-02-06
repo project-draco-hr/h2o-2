@@ -1,0 +1,16 @@
+{
+  Result op=_opnd.eval();
+  try {
+switch (op._type) {
+case rtNumberLiteral:
+      return evalConst(op);
+case rtKey:
+    return evalVect(op);
+default :
+  throw new EvaluationException(_pos,"Incompatible operand type, expected Value or number constant");
+}
+}
+  finally {
+op.dispose();
+}
+}

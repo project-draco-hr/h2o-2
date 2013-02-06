@@ -1,0 +1,8 @@
+{
+  Expr result=parse_F();
+  while ((top()._type == Token.Type.ttOpMul) || (top()._type == Token.Type.ttOpDiv) || (top()._type == Token.Type.ttOpMod)) {
+    Token t=pop();
+    result=new BinaryOperator(t._pos,t._type,result,parse_T());
+  }
+  return result;
+}

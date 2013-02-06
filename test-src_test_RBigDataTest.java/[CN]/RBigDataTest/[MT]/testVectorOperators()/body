@@ -1,0 +1,8 @@
+{
+  Key k=loadAndParseKey("cars.hex","smalldata/cars.csv");
+  testVectorExpression("cars.hex[2] + cars.hex$year",81,78,80,80,84,87);
+  testVectorExpression("cars.hex[2] - cars.hex$year",-65,-62,-64,-72,-72,-75);
+  testVectorExpression("cars.hex[2] * cars.hex$year",584,560,576,304,468,486);
+  testVectorExpression("cars.hex$year / cars.hex[2]",9.125,8.75,9.0,19.0,13.0,13.5);
+  UKV.remove(k);
+}

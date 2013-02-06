@@ -1,0 +1,22 @@
+{
+  try {
+    StringBuilder sb=new StringBuilder("<a href='GLM.query?");
+    sb.append(KEY + "=" + k.toString());
+    sb.append("&y=" + m.responseName());
+    sb.append("&x=" + URLEncoder.encode(m.xcolNames(),"utf8"));
+    sb.append("&family=" + m._glmParams._f.toString());
+    sb.append("&link=" + m._glmParams._l.toString());
+    sb.append("&lambda=" + m._solver._lambda);
+    sb.append("&alpha=" + m._solver._alpha);
+    sb.append("&beta_eps=" + m._glmParams._betaEps);
+    sb.append("&weight=" + m._glmParams._caseWeight);
+    sb.append("&max_iter=" + m._glmParams._maxIter);
+    sb.append("&caseMode=" + URLEncoder.encode(m._glmParams._caseMode.toString(),"utf8"));
+    sb.append("&case=" + m._glmParams._caseVal);
+    sb.append("'>" + content + "</a>");
+    return sb.toString();
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException(e);
+  }
+}

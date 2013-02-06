@@ -1,0 +1,10 @@
+{
+  if (_tl != null)   return;
+  _td=new Counter();
+  _tl=new Counter();
+  for (  Key tkey : _tkeys) {
+    long dl=Tree.depth_leaves(new AutoBuffer(DKV.get(tkey).get()));
+    _td.add((int)(dl >> 32));
+    _tl.add((int)dl);
+  }
+}

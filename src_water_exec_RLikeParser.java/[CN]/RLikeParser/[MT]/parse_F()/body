@@ -1,0 +1,15 @@
+{
+  Expr f=parse_F2();
+switch (top()._type) {
+case ttOpDollar:
+    int pos=pop()._pos;
+  return new StringColumnSelector(pos,f,pop(Token.Type.ttIdent)._id);
+case ttOpBracketOpen:
+pos=pop()._pos;
+int idx=pop(Token.Type.ttInteger)._valueInt;
+pop(Token.Type.ttOpBracketClose);
+return new ColumnSelector(pos,f,idx);
+default :
+return f;
+}
+}

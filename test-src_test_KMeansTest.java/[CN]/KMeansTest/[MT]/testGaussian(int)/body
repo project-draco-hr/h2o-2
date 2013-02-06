@@ -1,0 +1,34 @@
+{
+  Key source=Key.make("datakey");
+  Key target=Key.make(KMeans.KMeansModel.KEY_PREFIX + "datakey.kmeans");
+  try {
+    KMeans.RAND_SEED=8683452581122892189L;
+    final int columns=100;
+    double[][] goals=new double[8][columns];
+    double[][] array=gauss(columns,rows,goals);
+    int[] cols=new int[columns];
+    for (int i=0; i < cols.length; i++)     cols[i]=i;
+    ValueArray va=va_maker(source,(Object[])array);
+    long start=System.currentTimeMillis();
+    KMeans.run(target,va,8,1e-6,cols);
+    long stop=System.currentTimeMillis();
+    Log.write("KMeansTest.testGaussian rows:" + rows + ", ms:"+ (stop - start));
+    KMeans.KMeansModel res=UKV.get(target,new KMeans.KMeansModel());
+    double[][] clusters=res.clusters();
+    for (    double[] goal : goals) {
+      boolean found=false;
+      for (      double[] cluster : clusters) {
+        if (match(cluster,goal)) {
+          found=true;
+          break;
+        }
+      }
+      Assert.assertTrue(found);
+    }
+  }
+  finally {
+    KMeans.RAND_SEED=null;
+    UKV.remove(source);
+    UKV.remove(target);
+  }
+}

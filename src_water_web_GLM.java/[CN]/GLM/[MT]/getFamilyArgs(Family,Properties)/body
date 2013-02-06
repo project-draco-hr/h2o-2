@@ -1,0 +1,21 @@
+{
+  double[] res=null;
+  if (f == Family.binomial) {
+    res=new double[]{1.0,1.0};
+    try {
+      res[GLMSolver.FAMILY_ARGS_CASE]=Double.valueOf(p.getProperty("case","1.0"));
+    }
+ catch (    NumberFormatException e) {
+      throw new GLMInputException("illegal case value" + p.getProperty("case","1.0"));
+    }
+    if (p.containsKey("weight")) {
+      try {
+        res[GLMSolver.FAMILY_ARGS_WEIGHT]=Double.valueOf(p.getProperty("weight","1.0"));
+      }
+ catch (      NumberFormatException e) {
+        throw new GLMInputException("illegal weight value " + p.getProperty("weight"));
+      }
+    }
+  }
+  return res;
+}

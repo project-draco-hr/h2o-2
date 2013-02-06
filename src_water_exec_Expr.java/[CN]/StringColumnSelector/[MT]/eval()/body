@@ -1,0 +1,16 @@
+{
+  Result result=_expr.eval();
+  ValueArray v=getValueArray(result._key);
+  if (v == null) {
+    result.dispose();
+    throw new EvaluationException(_pos,"Key " + result._key.toString() + " not found");
+  }
+  for (int i=0; i < v.numCols(); ++i) {
+    if (v._cols[i]._name.equals(_colName)) {
+      result.setColIndex(i);
+      return result;
+    }
+  }
+  result.dispose();
+  throw new EvaluationException(_pos,"Column " + _colName + " not present in expression");
+}

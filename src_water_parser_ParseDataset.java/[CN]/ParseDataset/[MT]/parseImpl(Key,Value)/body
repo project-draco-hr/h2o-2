@@ -1,0 +1,37 @@
+{
+  if (dataset.isHex())   throw new IllegalArgumentException("This is a binary structured dataset; " + "parse() only works on text files.");
+  try {
+    try {
+      parseUncompressed(result,dataset,CustomParser.Type.XLS);
+      return;
+    }
+ catch (    Exception e) {
+    }
+    Compression compression=guessCompressionMethod(dataset);
+    if (compression == Compression.ZIP) {
+      try {
+        parseUncompressed(result,dataset,CustomParser.Type.XLSX);
+        return;
+      }
+ catch (      Exception e) {
+      }
+    }
+switch (compression) {
+case NONE:
+      parseUncompressed(result,dataset,CustomParser.Type.CSV);
+    break;
+case ZIP:
+  parseZipped(result,dataset);
+break;
+case GZIP:
+parseGZipped(result,dataset);
+break;
+default :
+throw new Error("Uknown compression of dataset!");
+}
+}
+ catch (Exception e) {
+ParseStatus.error(result,e.getMessage());
+throw Throwables.propagate(e);
+}
+}

@@ -1,0 +1,49 @@
+{
+  InetAddress inet=findInetAddressForSelf();
+  WEB_PORT=OPT_ARGS.port != 0 ? OPT_ARGS.port : DEFAULT_PORT;
+  while (true) {
+    UDP_PORT=WEB_PORT + 1;
+    API_PORT=UDP_PORT + 1;
+    try {
+      _webSocket=new ServerSocket(WEB_PORT);
+      _apiSocket=new ServerSocket(API_PORT);
+      _udpSocket=DatagramChannel.open();
+      _udpSocket.socket().setReuseAddress(true);
+      _udpSocket.socket().bind(new InetSocketAddress(inet,UDP_PORT));
+      break;
+    }
+ catch (    IOException e) {
+      try {
+        if (_webSocket != null)         _webSocket.close();
+      }
+ catch (      IOException ohwell) {
+      }
+      try {
+        if (_apiSocket != null)         _apiSocket.close();
+      }
+ catch (      IOException ohwell) {
+      }
+      Closeables.closeQuietly(_udpSocket);
+      _webSocket=null;
+      _apiSocket=null;
+      _udpSocket=null;
+      if (OPT_ARGS.port != 0)       Log.die("On " + H2O.findInetAddressForSelf() + " some of the required ports "+ (OPT_ARGS.port + 0)+ ", "+ (OPT_ARGS.port + 1)+ ", "+ (OPT_ARGS.port + 2)+ " are not available, change -port PORT and try again.");
+    }
+    WEB_PORT+=3;
+  }
+  SELF=H2ONode.self(inet);
+  System.out.println("[h2o] HTTP listening on port: " + WEB_PORT + ", TCP/UDP port: "+ UDP_PORT+ ", API HTTP port "+ API_PORT);
+  NAME=OPT_ARGS.name == null ? System.getProperty("user.name") : OPT_ARGS.name;
+  STATIC_H2OS=parseFlatFile(OPT_ARGS.flatfile);
+  int hash=NAME.hashCode() & 0x7fffffff;
+  int port=(hash % (0xF0000000 - 0xE1000000)) + 0xE1000000;
+  byte[] ip=new byte[4];
+  for (int i=0; i < 4; i++)   ip[i]=(byte)(port >>> ((3 - i) << 3));
+  try {
+    CLOUD_MULTICAST_GROUP=InetAddress.getByAddress(ip);
+  }
+ catch (  UnknownHostException e) {
+    throw new Error(e);
+  }
+  CLOUD_MULTICAST_PORT=(port >>> 16);
+}

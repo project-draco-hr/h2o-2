@@ -1,0 +1,8 @@
+{
+  while (_current < _buffers.size()) {
+    ByteBuffer buffer=_buffers.get(_current);
+    if (buffer.hasRemaining())     return buffer;
+    _current++;
+  }
+  throw new EOFException();
+}

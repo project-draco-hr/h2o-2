@@ -1,0 +1,7 @@
+{
+  JsonObject json=serverJson(server,args,sessionID);
+  RString response=new RString(html());
+  response.replace(json);
+  response.replace("host",H2O.SELF._key.getAddress().getHostAddress());
+  return response.toString();
+}

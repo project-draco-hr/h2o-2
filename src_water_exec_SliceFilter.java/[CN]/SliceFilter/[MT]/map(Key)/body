@@ -1,0 +1,14 @@
+{
+  ValueArray ary=ValueArray.value(_source);
+  long cidx=ValueArray.getChunkIndex(key);
+  long startRow=ary.startRow(cidx);
+  int rowsInChunk=chunkSize(key,_length * _rowSize,_rowSize) / _rowSize;
+  VAIterator iter=new VAIterator(_source,0,_start + startRow);
+  AutoBuffer bits=new AutoBuffer(rowsInChunk * _rowSize);
+  for (int offset=0; offset < bits.limit(); offset+=_rowSize) {
+    iter.next();
+    iter.copyCurrentRow(bits,offset);
+    ++_filteredRows;
+  }
+  DKV.put(key,new Value(key,bits.buf()),getFutures());
+}

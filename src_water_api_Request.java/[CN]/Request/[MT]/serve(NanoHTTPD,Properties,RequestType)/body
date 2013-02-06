@@ -1,0 +1,23 @@
+{
+switch (type) {
+case help:
+    return wrap(server,build(Response.done(serveHelp())));
+case json:
+case www:
+  String query=checkArguments(args,type);
+if (query != null) return wrap(server,query,type);
+long time=System.currentTimeMillis();
+Response response=serve();
+response.setTimeStart(time);
+if (type == RequestType.json) return wrap(server,response.toJson());
+return wrap(server,build(response));
+case debug:
+response=serve_debug();
+return wrap(server,build(response));
+case query:
+query=checkArguments(args,type);
+return wrap(server,query);
+default :
+throw new RuntimeException("Invalid request type " + type.toString());
+}
+}

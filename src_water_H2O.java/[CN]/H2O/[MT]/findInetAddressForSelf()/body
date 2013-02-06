@@ -1,0 +1,59 @@
+{
+  ArrayList<InetAddress> ips=new ArrayList<InetAddress>();
+  try {
+    Enumeration<NetworkInterface> nis=NetworkInterface.getNetworkInterfaces();
+    while (nis.hasMoreElements()) {
+      NetworkInterface ni=nis.nextElement();
+      Enumeration<InetAddress> ias=ni.getInetAddresses();
+      while (ias.hasMoreElements()) {
+        ips.add(ias.nextElement());
+      }
+    }
+  }
+ catch (  SocketException e) {
+  }
+  InetAddress local=null;
+  InetAddress arg=null;
+  if (OPT_ARGS.ip != null) {
+    try {
+      arg=InetAddress.getByName(OPT_ARGS.ip);
+    }
+ catch (    UnknownHostException e) {
+      System.err.println(e.toString());
+      System.exit(-1);
+    }
+    if (!(arg instanceof Inet4Address)) {
+      System.err.println("Only IP4 addresses allowed.");
+      System.exit(-1);
+    }
+    if (!ips.contains(arg)) {
+      System.err.println("IP address not found on this machine");
+      System.exit(-1);
+    }
+    local=arg;
+  }
+ else {
+    List<InetAddress> validIps=Lists.newArrayList();
+    for (    InetAddress ip : ips) {
+      if (ip instanceof Inet4Address && !ip.isLoopbackAddress() && !ip.isLinkLocalAddress()) {
+        validIps.add(ip);
+      }
+    }
+    if (validIps.size() == 1) {
+      local=validIps.get(0);
+    }
+ else {
+      local=guessInetAddress(validIps);
+    }
+  }
+  if (local == null) {
+    try {
+      System.err.println("Failed to determine IP, falling back to localhost.");
+      local=InetAddress.getByName("127.0.0.1");
+    }
+ catch (    UnknownHostException e) {
+      throw new Error(e);
+    }
+  }
+  return local;
+}

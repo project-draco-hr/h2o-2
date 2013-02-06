@@ -1,0 +1,11 @@
+{
+  if (len == 0)   return 0;
+  ByteBuffer buffer=buffer();
+  int remaining=buffer.remaining();
+  if (len > remaining) {
+    buffer.get(b,off,remaining);
+    return remaining;
+  }
+  buffer.get(b,off,len);
+  return len;
+}

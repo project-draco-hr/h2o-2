@@ -1,0 +1,7 @@
+{
+  T old=null;
+  if (bits != null)   old=alloc().read(new AutoBuffer(bits));
+  T nnn=atomic(old);
+  if (nnn == null)   return null;
+  return nnn.write(new AutoBuffer()).buf();
+}

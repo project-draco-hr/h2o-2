@@ -1,0 +1,5 @@
+{
+  if (va.isNA(bits,row,C))   return C._mean;
+  double d=va.datad(bits,row,C) - C._mean;
+  return (C._sigma == 0.0 || Double.isNaN(C._sigma)) ? d : d / C._sigma;
+}

@@ -1,0 +1,9 @@
+{
+  Record record=record();
+  String value=record._originalValue;
+  if (value == null) {
+    T v=defaultValue();
+    value=(v == null) ? "" : v.toString();
+  }
+  return "<input class='span5' type='text' name='" + _name + "' id='"+ _name+ "' placeholder='"+ queryDescription()+ "' "+ (!value.isEmpty() ? (" value='" + value + "' />") : "/>");
+}

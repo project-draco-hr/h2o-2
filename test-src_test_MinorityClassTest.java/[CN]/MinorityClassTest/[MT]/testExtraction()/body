@@ -1,0 +1,12 @@
+{
+  Key key=loadAndParseKey("poker.hex","smalldata/poker/poker-hand-testing.data");
+  ValueArray data=ValueArray.value(key);
+  UnbalancedClass[] uClasses=MinorityClasses.extractUnbalancedClasses(data,10,new int[]{0,9});
+  assertTrue(uClasses.length == 2);
+  assertTrue(uClasses[0]._chunks.length == 6);
+  assertTrue(uClasses[0]._rows == 501209);
+  assertTrue(uClasses[1]._chunks.length == 1);
+  assertTrue(uClasses[1]._rows == 3);
+  for (  UnbalancedClass ubc : uClasses)   for (  Key k : ubc._chunks)   UKV.remove(k);
+  UKV.remove(key);
+}

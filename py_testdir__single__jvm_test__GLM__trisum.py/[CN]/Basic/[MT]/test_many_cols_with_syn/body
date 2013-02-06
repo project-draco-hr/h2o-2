@@ -1,0 +1,23 @@
+def test_many_cols_with_syn(self):
+    csvFilename = 'logreg_trisum_int_cat_10000x10.csv'
+    csvPathname = ('smalldata/logreg/' + csvFilename)
+    key2 = (csvFilename + '.hex')
+    parseKey = h2o_cmd.parseFile(None, h2o.find_file(csvPathname), key2=key2, timeoutSecs=10)
+    print csvFilename, 'parse time:', parseKey['response']['time']
+    print "Parse result['destination_key']:", parseKey['destination_key']
+    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+    print ('\n' + csvFilename)
+    paramDict = define_params()
+    paramDict2 = {}
+    for k in paramDict:
+        paramDict2[k] = paramDict[k][0]
+    y = 10
+    kwargs = {'y': y, 'max_iter': 50, }
+    kwargs.update(paramDict2)
+    start = time.time()
+    glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=20, **kwargs)
+    print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+    h2o_glm.simpleCheckGLM(self, glm, 8, **kwargs)
+    if (not h2o.browse_disable):
+        h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
+        time.sleep(5)

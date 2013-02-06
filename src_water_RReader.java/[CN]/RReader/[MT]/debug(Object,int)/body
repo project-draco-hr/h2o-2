@@ -1,0 +1,14 @@
+{
+  String s=Log.padRight("",indent);
+  if (o instanceof int[]) {
+    String a=Arrays.toString((int[])o);
+    s+=a.substring(0,Math.min(10000,a.length()));
+  }
+ else   if (o instanceof double[]) {
+    String a=Arrays.toString((double[])o);
+    s+=a.substring(0,Math.min(10000,a.length()));
+  }
+ else   s+=o;
+  System.out.println(s);
+  if (o instanceof Object[])   for (  Object i : (Object[])o)   debug(i,indent + 2);
+}

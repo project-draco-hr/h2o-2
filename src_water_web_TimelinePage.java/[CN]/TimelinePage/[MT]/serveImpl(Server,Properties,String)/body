@@ -1,0 +1,87 @@
+{
+  long ctm=System.currentTimeMillis();
+  long[][] snapshot=TimeLine.system_snapshot();
+  TimelineSnapshot events=new TimelineSnapshot(TimeLine.CLOUD,snapshot);
+  H2O cloud=TimeLine.CLOUD;
+  RString response=new RString(html);
+  response.replace("now",new SimpleDateFormat("yyyy.MM.dd HH:mm").format(new Date(ctm)));
+  response.replace("self",H2O.SELF);
+  SimpleDateFormat sdf0=new SimpleDateFormat("HH:mm:ss:SSS");
+  SimpleDateFormat sdf1=new SimpleDateFormat(":SSS");
+  int alt=0;
+  long sec=0;
+  long nsec=0;
+  ArrayList<TimelineSnapshot.Event> heartbeats=new ArrayList<TimelineSnapshot.Event>();
+  for (  TimelineSnapshot.Event event : events) {
+    H2ONode h2o=cloud._memary[event.nodeId()];
+    long l0=event.dataLo();
+    long h8=event.dataHi();
+    int udp_type=(int)(l0 & 0xff);
+    UDP.udp e=UDP.udp.UDPS[udp_type];
+    InetAddress inet=event.addrPack();
+    if (e == UDP.udp.heartbeat) {
+      heartbeats.add(event);
+      continue;
+    }
+ else     if (!heartbeats.isEmpty()) {
+      int[] sends=new int[TimeLine.CLOUD.size()];
+      int[] recvs=new int[TimeLine.CLOUD.size()];
+      for (      TimelineSnapshot.Event h : heartbeats) {
+        if (h.isSend())         ++sends[h.nodeId()];
+ else         ++recvs[h.nodeId()];
+      }
+      StringBuilder heartBeatStr=new StringBuilder();
+      int allSends=0;
+      int allRecvs=0;
+      for (int i=0; i < sends.length; ++i) {
+        if (i != 0)         heartBeatStr.append(", ");
+        heartBeatStr.append(sends[i] + ":" + recvs[i]);
+        allSends+=sends[i];
+        allRecvs+=recvs[i];
+      }
+      long hms=heartbeats.get(heartbeats.size() - 1).ms();
+      long hsec0=hms / 1000;
+      String hdate=((hsec0 == sec) ? sdf1 : sdf0).format(new Date(hms));
+      sec=hsec0;
+      RString row=response.restartGroup("tableRow");
+      row.replace("udp","heartbeat");
+      row.replace("msec",hdate);
+      row.replace("nsec","lots");
+      row.replace("send","many");
+      row.replace("recv","many");
+      row.replace("bytes",allSends + " sends, " + allRecvs+ " recvs ("+ heartBeatStr.toString()+ ")");
+      row.append();
+      heartbeats.clear();
+    }
+    long ms=event.ms();
+    long ns=event.ns();
+    long sec0=ms / 1000;
+    String date=((sec0 == sec) ? sdf1 : sdf0).format(new Date(ms));
+    sec=sec0;
+    RString row=response.restartGroup("tableRow");
+    row.replace("udp",e.toString());
+    row.replace("msec",date);
+    row.replace("nsec",((Math.abs(ns - nsec) > 2000000) ? "lots" : (ns - nsec)));
+    nsec=ns;
+    if (event.isSend()) {
+      row.replace("send","<strong>" + h2o + "</strong>");
+      if (!inet.isMulticastAddress()) {
+        int port=-1;
+        if (events._sends.containsKey(event) && !events._sends.get(event).isEmpty())         port=TimeLine.CLOUD._memary[events._sends.get(event).get(0).nodeId()]._key.getPort();
+        String portStr=":" + ((port != -1) ? port : "?");
+        String addrString=inet.toString() + portStr;
+        row.replace("recv",addrString);
+      }
+ else       row.replace("recv","multicast");
+    }
+ else {
+      int port=event.portPack();
+      row.replace("send",event.addrString());
+      row.replace("recv","<strong>" + ((inet.equals(h2o._key) && (port == h2o._key.getPort())) ? "self" : h2o) + "</strong>");
+    }
+    if (e != UDP.udp.bad)     row.replace("bytes",UDP.printx16(l0,h8));
+    row.append();
+  }
+  response.replace("noOfRows",alt);
+  return response.toString();
+}

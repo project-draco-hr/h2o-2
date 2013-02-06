@@ -1,0 +1,6 @@
+def create_r_matrix(py_array, ncols):
+    if ((type(py_array) == type(matrix([1]))) or (type(py_array) == type(array([1])))):
+        py_array = py_array.tolist()
+    r_vector = robjects.FloatVector(flatten_list(py_array))
+    r_matrix = robjects.r['matrix'](r_vector, ncol=ncols)
+    return r_matrix

@@ -1,0 +1,7 @@
+{
+  Key fkey=load_test_file(path);
+  Key okey=Key.make(keyName);
+  ParseDataset.parse(okey,DKV.get(fkey));
+  UKV.remove(fkey);
+  return okey;
+}

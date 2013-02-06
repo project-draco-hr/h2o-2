@@ -1,0 +1,34 @@
+def test_GLM_many_cols_int2cat(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(10000, 10, 'cA', 100), (10000, 20, 'cB', 200), (10000, 30, 'cC', 300), (10000, 40, 'cD', 400), (10000, 50, 'cE', 500)]
+    exprList = ['<keyX>= colSwap(<keyX>,<col1>,factor(<keyX>[<col1>]))']
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print '\nCreating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print ('\n' + csvFilename)
+        print '\nNow running the int 2 enum exec command across all input cols'
+        colResultList = h2e.exec_expr_list_across_cols(None, exprList, key2, maxCol=colCount, timeoutSecs=4, incrementingResult=False)
+        print '\nexec colResultList', colResultList
+        paramDict2 = {}
+        for k in paramDict:
+            paramDict2[k] = paramDict[k][0]
+        y = colCount
+        kwargs = {'y': y, 'max_iter': 50, 'case': 1, }
+        kwargs.update(paramDict2)
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'y:', y
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        if (not h2o.browse_disable):
+            h2b.browseJsonHistoryAsUrlLastMatch('GLM')
+            time.sleep(3)
+            h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
+            time.sleep(3)

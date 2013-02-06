@@ -1,0 +1,61 @@
+{
+  Arrays.sort(_ms,new Comparator<Key>(){
+    @Override public int compare(    Key k1,    Key k2){
+      Value v1=null, v2=null;
+      if (k1 != null)       v1=DKV.get(k1);
+      if (k2 != null)       v2=DKV.get(k2);
+      if (v1 == null && v2 == null)       return 0;
+      if (v1 == null)       return 1;
+      if (v2 == null)       return -1;
+      GLMModel m1=v1.get(new GLMModel());
+      GLMModel m2=v2.get(new GLMModel());
+      if (m1._glmParams._f == Family.binomial) {
+        double cval1=m1._vals[0].AUC(), cval2=m2._vals[0].AUC();
+        if (cval1 == cval2) {
+          if (m1._vals[0].classError() != null) {
+            double[] cerr1=m1._vals[0].classError(), cerr2=m2._vals[0].classError();
+            assert(cerr2 != null && cerr1.length == cerr2.length);
+            for (int i=0; i < cerr1.length; ++i) {
+              cval1+=cerr1[i];
+              cval2+=cerr2[i];
+            }
+          }
+          if (cval1 == cval2) {
+            cval1=m1._vals[0].err();
+            cval2=m2._vals[0].err();
+          }
+        }
+        return Double.compare(cval2,cval1);
+      }
+ else       return Double.compare(m1._vals[0]._err,m2._vals[0]._err);
+    }
+  }
+);
+  final Key[] keys=_ms;
+  int lastIdx=_ms.length;
+  for (int i=0; i < _ms.length; ++i) {
+    if (keys[i] == null || DKV.get(keys[i]) == null) {
+      lastIdx=i;
+      break;
+    }
+  }
+  final int N=lastIdx;
+  return new Iterable<GLMSolver.GLMModel>(){
+    @Override public Iterator<GLMModel> iterator(){
+      return new Iterator<GLMSolver.GLMModel>(){
+        int _idx=0;
+        @Override public void remove(){
+          throw new UnsupportedOperationException();
+        }
+        @Override public GLMModel next(){
+          return DKV.get(keys[_idx++]).get(new GLMModel());
+        }
+        @Override public boolean hasNext(){
+          return _idx < N;
+        }
+      }
+;
+    }
+  }
+;
+}

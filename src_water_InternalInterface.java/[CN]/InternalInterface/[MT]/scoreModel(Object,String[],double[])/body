@@ -1,0 +1,6 @@
+{
+  Model M=(Model)model;
+  int[] map=M.columnMapping(colNames);
+  if (!Model.isCompatible(map))   throw new IllegalArgumentException("This model uses different columns than those provided");
+  return M.score(row,map);
+}

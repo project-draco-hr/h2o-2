@@ -1,0 +1,5 @@
+{
+  if (v.isJsonObject())   return escape(v.getAsJsonObject());
+  if (v.isJsonArray())   return escape(v.getAsJsonArray());
+  return Objects.firstNonNull(SPECIAL.get(v),v);
+}

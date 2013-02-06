@@ -1,0 +1,7 @@
+{
+  ValueArray v=create(k);
+  Futures fs=new Futures();
+  DKV.put(k,v.value(),fs);
+  fs.blockForPending();
+  return this;
+}

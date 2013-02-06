@@ -1,0 +1,9 @@
+{
+  BitSet cols=new BitSet();
+  for (  int i : _x.value())   cols.set(i);
+  int[] res=new int[cols.cardinality() + 1];
+  int x=0;
+  for (int i=cols.nextSetBit(0); i >= 0; i=cols.nextSetBit(i + 1))   res[x++]=i;
+  res[x]=_y.value();
+  return res;
+}

@@ -1,0 +1,16 @@
+{
+  assert(_currentRow + rows < _rows);
+  next();
+  --rows;
+  while (true) {
+    if (rows < _rowsInChunk) {
+      _rowInChunk+=rows;
+      _currentRow+=rows;
+      break;
+    }
+    _rowInChunk=_rowsInChunk - 1;
+    _currentRow+=_rowsInChunk - 1;
+    rows-=_rowsInChunk;
+    next();
+  }
+}

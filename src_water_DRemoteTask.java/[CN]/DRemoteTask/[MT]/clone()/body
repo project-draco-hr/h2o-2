@@ -1,0 +1,12 @@
+{
+  try {
+    DRemoteTask dt=(DRemoteTask)super.clone();
+    dt.setCompleter(this);
+    dt._fs=null;
+    dt.setPendingCount(0);
+    return dt;
+  }
+ catch (  CloneNotSupportedException cne) {
+    throw Throwables.propagate(cne);
+  }
+}

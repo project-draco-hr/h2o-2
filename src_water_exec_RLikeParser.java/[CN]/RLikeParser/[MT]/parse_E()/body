@@ -1,0 +1,12 @@
+{
+  int pos=top()._pos;
+  Expr result=parse_E1();
+  if (top()._type == Token.Type.ttOpIif) {
+    pop();
+    Expr ifTrue=parse_E();
+    pop(Token.Type.ttOpColon);
+    Expr ifFalse=parse_E();
+    result=new Iif(pos,result,ifTrue,ifFalse);
+  }
+  return result;
+}

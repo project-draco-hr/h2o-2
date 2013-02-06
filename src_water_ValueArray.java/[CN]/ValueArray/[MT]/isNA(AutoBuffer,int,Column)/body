@@ -1,0 +1,18 @@
+{
+  int off=(row_in_chunk * _rowsize) + col._off;
+switch (col._size) {
+case 1:
+    return ab.get1(off) == 255;
+case 2:
+  return ab.get2(off) == 65535;
+case 4:
+return ab.get4(off) == Integer.MIN_VALUE;
+case 8:
+return ab.get8(off) == Long.MIN_VALUE;
+case -4:
+return Float.isNaN(ab.get4f(off));
+case -8:
+return Double.isNaN(ab.get8d(off));
+}
+return true;
+}

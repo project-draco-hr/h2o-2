@@ -1,0 +1,5 @@
+def disconnect(self):
+    if self.__connected():
+        log(('[ssh] Disconnecting from %s ...' % self.public_ip))
+        self.ssh.close()
+        self.ssh = None

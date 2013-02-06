@@ -1,0 +1,9 @@
+{
+  Class z=findLoadedClass(name);
+  if (z != null)   return z;
+  z=javassistLoadClass(name);
+  if (z != null)   return z;
+  z=getParent().loadClass(name);
+  if (z != null)   return z;
+  return z;
+}

@@ -1,0 +1,4 @@
+{
+  byte[] buf=new AutoBuffer().put1(Key.ARRAYLET_CHUNK).put1(0).put8(chknum << LOG_CHK).putA1(arrayKey._kb,arrayKey._kb.length).buf();
+  return Key.make(buf,(byte)arrayKey.desired());
+}

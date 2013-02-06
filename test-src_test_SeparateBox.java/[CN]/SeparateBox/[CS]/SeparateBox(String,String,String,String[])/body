@@ -1,0 +1,23 @@
+{
+  _host=host;
+  _user=user;
+  _key=key;
+  _args=args;
+  _thread=new Thread(){
+    @Override public void run(){
+      try {
+        deploy();
+        String[] args=new String[]{_host,_user,_key};
+        if (_args != null)         args=(String[])ArrayUtils.addAll(args,_args);
+        SSH ssh=new SSH(args);
+        ssh.waitForEnd();
+      }
+ catch (      Exception e) {
+        Log.write(e);
+      }
+    }
+  }
+;
+  _thread.setDaemon(true);
+  _thread.start();
+}

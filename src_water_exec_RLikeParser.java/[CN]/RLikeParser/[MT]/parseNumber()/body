@@ -1,0 +1,28 @@
+{
+  int start=_s.position();
+  boolean dot=false;
+  boolean e=false;
+  while (true) {
+    if (_s.eof())     break;
+    char c=(char)_s.peek1();
+    if (isDigit(c)) {
+      _s.get1();
+      continue;
+    }
+    if (c == '.') {
+      if (dot != false)       throw new ParserException(_s.position(),"Only one dot can be present in number.");
+      dot=true;
+      _s.get1();
+      continue;
+    }
+    if ((c == 'e') || (c == 'E')) {
+      if (e != false)       throw new ParserException(_s.position(),"Only one exponent can be present in number.");
+      e=true;
+      _s.get1();
+      continue;
+    }
+    break;
+  }
+  if ((dot == false) && (e == false))   return new Token(start,Integer.parseInt(_s.getStr(start,_s.position() - start)));
+ else   return new Token(start,Double.parseDouble(_s.getStr(start,_s.position() - start)));
+}

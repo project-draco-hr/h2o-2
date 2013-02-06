@@ -1,0 +1,8 @@
+{
+  if (type == RequestType.json) {
+    JsonObject resp=new JsonObject();
+    resp.addProperty(ERROR,"This request is only provided for browser connections");
+    return wrap(server,resp);
+  }
+  return super.serve(server,args,type);
+}

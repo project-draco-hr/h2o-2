@@ -1,0 +1,35 @@
+{
+  if (send_recv() == other.send_recv())   return false;
+  long myl0=dataLo();
+  long otherl0=other.dataLo();
+  int my_udp_type=(int)(myl0 & 0xff);
+  int other_udp_type=(int)(otherl0 & 0xff);
+  if (my_udp_type != other_udp_type)   return false;
+  UDP.udp e=UDP.udp.UDPS[my_udp_type];
+switch (e) {
+case heartbeat:
+case rebooted:
+case timeline:
+    if ((myl0 & 0xFFFFFFl) != (otherl0 & myl0 & 0xFFFFFFl))     return false;
+  break;
+case ack:
+case ackack:
+case execlo:
+case exechi:
+if ((myl0 & 0xFFFFFFFFFFFFFFl) != (otherl0 & 0xFFFFFFFFFFFFFFl)) return false;
+break;
+case paxos_accept:
+case paxos_accepted:
+case paxos_nack:
+case paxos_promise:
+case paxos_proposal:
+if (myl0 != otherl0) return false;
+if ((dataHi() & 0xFFFFFFFFFFFFFFl) != (other.dataHi() & 0xFFFFFFFFFFFFFFl)) return false;
+break;
+default :
+throw new Error("unexpected udp packet type " + e.toString());
+}
+H2Okey myAddrHost=_cloud._memary[_arr[0]]._key;
+H2Okey otherAddrHost=_cloud._memary[other._arr[0]]._key;
+return isSend() ? (myAddrHost.equals(other.addrPack()) && (addrPack().isMulticastAddress() || addrPack().equals(otherAddrHost))) : (otherAddrHost.equals(addrPack()) && (other.addrPack().isMulticastAddress() || other.addrPack().equals(myAddrHost)));
+}

@@ -1,0 +1,5 @@
+def runKMeans(node=None, csvPathname=None, key=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
+    pto = max((timeoutSecs / 5), 10)
+    parseKey = parseFile(node, csvPathname, key, timeoutSecs=pto)
+    kmeans = runKMeansOnly(node, parseKey, timeoutSecs, retryDelaySecs, **kwargs)
+    return kmeans

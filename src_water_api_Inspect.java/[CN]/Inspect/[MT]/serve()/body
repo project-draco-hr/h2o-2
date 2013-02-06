@@ -1,0 +1,22 @@
+{
+  Value val=_key.value();
+  if (val.isHex()) {
+    return serveValueArray(ValueArray.value(val));
+  }
+  if (_key.originalValue().startsWith(GLMModel.KEY_PREFIX)) {
+    GLMModel m=val.get(new GLMModel());
+    JsonObject res=new JsonObject();
+    res.add("GLMModel",m.toJson());
+    Response r=Response.done(res);
+    r.setBuilder("",new GLMBuilder(m));
+    return r;
+  }
+  if (_key.originalValue().startsWith(KMeansModel.KEY_PREFIX)) {
+    KMeansModel m=new KMeansModel().read(new AutoBuffer(val.get(),0));
+    JsonObject res=new JsonObject();
+    res.add("KMeansModel",m.toJson());
+    Response r=Response.done(res);
+    return r;
+  }
+  return serveUnparsedValue(val);
+}

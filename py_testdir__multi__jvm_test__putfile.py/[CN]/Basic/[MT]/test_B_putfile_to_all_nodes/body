@@ -1,0 +1,7 @@
+def test_B_putfile_to_all_nodes(self):
+    cvsfile = h2o.find_file(file_to_put())
+    origSize = h2o.get_file_size(cvsfile)
+    for node in h2o.nodes:
+        result = node.put_file(cvsfile)
+        returnSize = result['size']
+        self.assertEqual(origSize, returnSize)

@@ -1,0 +1,20 @@
+{
+  H2O.main(new String[]{});
+  File f=new File("smalldata/test/rmodels/iris_x-iris-1-4_y-species_ntree-500.rdata");
+  Key key=TestUtil.load_test_file(f,"test");
+  Desktop desktop=Desktop.getDesktop();
+  desktop.browse(new URI("http://localhost:54323/Inspect.html?key=test"));
+  BufferedReader console=new BufferedReader(new InputStreamReader(System.in));
+  console.readLine();
+  ArrayList<Separate> sites=new ArrayList<Separate>();
+  int nodes=3;
+  for (int i=0; i < nodes; i++) {
+    String host="192.168.1.15" + (i + 1);
+    sites.add(new SeparateBox(host,USER,KEY,new String[]{"init.Boot"}));
+  }
+  H2O.main(new String[]{});
+  TestUtil.stall_till_cloudsize(nodes + 1);
+  new KMeansTest().testGaussian((int)1e6);
+  for (  Separate site : sites)   site.close();
+  System.exit(0);
+}

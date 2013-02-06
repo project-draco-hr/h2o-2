@@ -1,0 +1,42 @@
+{
+  Key datakey=Key.make("datakey");
+  try {
+    ValueArray va=va_maker(datakey,2,10,new DataExpr(){
+      double expr(      byte[] x){
+        return 1.0 / (1.0 + Math.exp(-(0.1 * x[0] + 0.3 * x[1] - 2.5)));
+      }
+    }
+);
+    LSMSolver lsms0=LSMSolver.makeSolver();
+    JsonObject glm=computeGLMlog(lsms0,va,false);
+    JsonObject coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(-2.5,coefs.get("Intercept").getAsDouble(),0.00001);
+    assertEquals(0.1,coefs.get("0").getAsDouble(),0.000001);
+    assertEquals(0.3,coefs.get("1").getAsDouble(),0.000001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    LSMSolver lsms1=LSMSolver.makeL1Solver(LSMSolver.DEFAULT_LAMBDA);
+    glm=computeGLMlog(lsms1,va,false);
+    coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(-2.5,coefs.get("Intercept").getAsDouble(),0.00001);
+    assertEquals(0.1,coefs.get("0").getAsDouble(),0.000001);
+    assertEquals(0.3,coefs.get("1").getAsDouble(),0.000001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    LSMSolver lsms2=LSMSolver.makeL2Solver(LSMSolver.DEFAULT_LAMBDA);
+    glm=computeGLMlog(lsms2,va,false);
+    coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(-2.5,coefs.get("Intercept").getAsDouble(),0.00001);
+    assertEquals(0.1,coefs.get("0").getAsDouble(),0.000001);
+    assertEquals(0.3,coefs.get("1").getAsDouble(),0.000001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    LSMSolver lsmsx=LSMSolver.makeElasticNetSolver(LSMSolver.DEFAULT_LAMBDA);
+    glm=computeGLMlog(lsmsx,va,false);
+    coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(-2.5,coefs.get("Intercept").getAsDouble(),0.00001);
+    assertEquals(0.1,coefs.get("0").getAsDouble(),0.000001);
+    assertEquals(0.3,coefs.get("1").getAsDouble(),0.000001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+  }
+  finally {
+    UKV.remove(datakey);
+  }
+}

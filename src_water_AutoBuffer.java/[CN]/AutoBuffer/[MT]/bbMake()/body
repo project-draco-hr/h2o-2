@@ -1,0 +1,15 @@
+{
+  ByteBuffer bb=null;
+  try {
+    bb=BBS.pollFirst(0,TimeUnit.SECONDS);
+  }
+ catch (  InterruptedException ie) {
+    throw new Error(ie);
+  }
+  if (bb != null) {
+    bbstats(BBCACHE);
+    return bb;
+  }
+  bbstats(BBMAKE);
+  return ByteBuffer.allocateDirect(64 * 1024).order(ByteOrder.nativeOrder());
+}

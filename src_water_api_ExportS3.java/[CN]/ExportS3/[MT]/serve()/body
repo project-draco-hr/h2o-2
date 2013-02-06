@@ -1,0 +1,25 @@
+{
+  final Value value=_source.value();
+  final String bucket=_bucket.value();
+  final String object=_object.value();
+  try {
+    final Key dest=MultipartUpload.init(value);
+    H2O.FJP_NORM.submit(new RecursiveAction(){
+      @Override protected void compute(){
+        MultipartUpload.run(dest,value,bucket,object);
+      }
+    }
+);
+    JsonObject response=new JsonObject();
+    response.addProperty(RequestStatics.DEST_KEY,dest.toString());
+    Response r=ExportS3Progress.redirect(response,dest);
+    r.setBuilder(RequestStatics.DEST_KEY,new KeyElementBuilder());
+    return r;
+  }
+ catch (  IllegalArgumentException e) {
+    return Response.error(e.getMessage());
+  }
+catch (  Error e) {
+    return Response.error(e.getMessage());
+  }
+}

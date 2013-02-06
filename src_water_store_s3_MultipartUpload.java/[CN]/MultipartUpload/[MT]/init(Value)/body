@@ -1,0 +1,11 @@
+{
+  Key dest=Key.make(value._key + ".s3progress");
+  Progress progress=new Progress();
+  ValueArray va=va(value);
+  int todo=(int)va.chunks();
+  todo*=2;
+  todo/=BATCH;
+  progress._todo=todo;
+  UKV.put(dest,progress);
+  return dest;
+}

@@ -1,0 +1,27 @@
+def test_file_with_nul_chars_inserted(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'poker1000'
+    csvPathname = h2o.find_file(('smalldata/poker/' + csvFilename))
+    nulFilename = 'syn_nul.data'
+    nulPathname = ((SYNDATASETS_DIR + '/') + nulFilename)
+    piece_size = 4096
+    with open(csvPathname, 'rb') as in_file:
+        with open(nulPathname, 'wb') as out_file:
+            while True:
+                piece = in_file.read(103)
+                if (piece == ''):
+                    break
+                withNuls = bytearray(piece)
+                withNuls.extend(bytearray.fromhex('00'))
+                out_file.write(withNuls)
+    for trials in xrange(1, 2):
+        trees = 6
+        for x in xrange(161, 240, 40):
+            y = (10000 * x)
+            print '\nTrial:', trials, ', y:', y
+            timeoutSecs = (20 + (5 * len(h2o.nodes)))
+            model_key = ((csvFilename + '_') + str(trials))
+            h2o_cmd.runRF(trees=trees, model_key=model_key, csvPathname=nulPathname, timeoutSecs=timeoutSecs, retryDelaySecs=1)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            h2o.clean_sandbox_stdout_stderr()

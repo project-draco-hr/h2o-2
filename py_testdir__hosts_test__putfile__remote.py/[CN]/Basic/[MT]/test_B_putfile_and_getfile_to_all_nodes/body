@@ -1,0 +1,16 @@
+def test_B_putfile_and_getfile_to_all_nodes(self):
+    cvsfile = h2o.find_file(file_to_put())
+    nodeTry = 0
+    for node in h2o.nodes:
+        sys.stdout.write('.')
+        sys.stdout.flush()
+        h2o.verboseprint('put_file', cvsfile, 'to', node)
+        result = node.put_file(cvsfile)
+        h2o.verboseprint('put_file ok for node', nodeTry)
+        key = result['key']
+        r = node.get_key(key)
+        f = open(cvsfile)
+        self.diff(r, f)
+        h2o.verboseprint('put_file filesize ok')
+        f.close()
+        nodeTry += 1

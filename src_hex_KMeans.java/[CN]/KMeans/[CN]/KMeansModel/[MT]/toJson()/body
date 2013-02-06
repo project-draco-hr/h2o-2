@@ -1,0 +1,12 @@
+{
+  JsonObject res=new JsonObject();
+  res.addProperty("iterations",_iteration);
+  JsonArray ary=new JsonArray();
+  for (  double[] dd : clusters()) {
+    JsonArray ary2=new JsonArray();
+    for (    double d : dd)     ary2.add(new JsonPrimitive(d));
+    ary.add(ary2);
+  }
+  res.add("clusters",ary);
+  return res;
+}

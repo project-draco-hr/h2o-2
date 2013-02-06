@@ -1,0 +1,13 @@
+{
+  Key[] n;
+  if (bits1 == null) {
+    n=new Key[]{_key};
+  }
+ else {
+    AutoBuffer old=new AutoBuffer(bits1);
+    Key[] k=old.getA(Key.class);
+    n=Arrays.copyOf(k,k.length + 1);
+    n[k.length]=_key;
+  }
+  return new AutoBuffer().putA(n).buf();
+}

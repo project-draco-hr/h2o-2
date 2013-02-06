@@ -1,0 +1,23 @@
+def test_regress(x):
+    stats = importr('stats')
+    x = random.uniform(0, 1, 100).reshape([100, 1])
+    y = ((1 + x) + random.uniform(0, 1, 100).reshape([100, 1]))
+    x_in_r = create_r_matrix(x, x.shape[1])
+    y_in_r = create_r_matrix(y, y.shape[1])
+    formula = robjects.Formula('y~x')
+    env = formula.environment
+    env['x'] = x_in_r
+    env['y'] = y_in_r
+    fit = stats.lm(formula)
+    coeffs = stats.coef(fit)
+    resids = stats.residuals(fit)
+    fitted_vals = stats.fitted(fit)
+    modsum = base.summary(fit)
+    rsquared = modsum.rx2('r.squared')
+    se = modsum.rx2('coefficients')[2:4]
+    print 'coeffs:', coeffs
+    print 'resids:', resids
+    print 'fitted_vals:', fitted_vals
+    print 'rsquared:', rsquared
+    print 'se:', se
+    return (coeffs, resids, fitted_vals, rsquared, se)

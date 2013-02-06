@@ -1,0 +1,21 @@
+{
+  StringBuffer sb=new StringBuffer();
+  ArrayList<SplitInfo>[] stats=new ArrayList[_data.columns()];
+  for (int i=0; i < _data.columns() - 1; i++)   stats[i]=new ArrayList<Tree.SplitNode.SplitInfo>();
+  _tree.computeStats(stats);
+  for (int i=0; i < _data.columns() - 1; i++) {
+    String colname=_data.colName(i);
+    ArrayList<SplitInfo> colSplitStats=stats[i];
+    Collections.sort(colSplitStats);
+    int usage=0;
+    for (    SplitInfo si : colSplitStats) {
+      usage+=si._used;
+    }
+    sb.append(colname).append(':').append(usage).append("x");
+    for (    SplitInfo si : colSplitStats) {
+      sb.append(", <=").append(Utils.p2d(si.splitNode().split_value())).append('{').append(si.affectedLeaves()).append("}x" + si._used + " ");
+    }
+    sb.append('\n');
+  }
+  return sb;
+}

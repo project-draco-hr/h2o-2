@@ -1,0 +1,7 @@
+def test_exec_operators(self):
+    for i in range(0, 5):
+        put = h2o.nodes[0].put_value(i, key=('Result' + str(i)), repl=None)
+    start = time.time()
+    h2e.exec_expr_list_rand(len(h2o.nodes), exprList, None, maxTrials=200, timeoutSecs=10)
+    h2o.check_sandbox_for_errors()
+    print 'exec end on ', 'operators', 'took', (time.time() - start), 'seconds'

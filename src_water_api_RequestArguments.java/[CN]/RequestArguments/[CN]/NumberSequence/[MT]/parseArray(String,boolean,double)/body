@@ -1,0 +1,36 @@
+{
+  String str=input.trim().toLowerCase();
+  if (str.startsWith("seq")) {
+    throw new Error("unimplemented");
+  }
+  if (str.contains(":")) {
+    String[] parts=str.split(":");
+    if (parts.length != 2 && parts.length != 3)     throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+    double step=defaultStep;
+    if (parts.length == 3) {
+      step=Double.parseDouble(parts[2]);
+    }
+    double from=Double.parseDouble(parts[0]);
+    double to=Double.parseDouble(parts[1]);
+    if (to == from)     return new double[]{from};
+    if (to < from)     throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+    if (step == 0)     throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+    int n=mul ? (int)((Math.log(to) - Math.log(from)) / Math.log(step)) : (int)((to - from) / step);
+    double[] res=new double[n];
+    for (int i=0; i < n; ++i) {
+      res[i]=from;
+      if (mul)       from*=step;
+ else       from+=step;
+    }
+    return res;
+  }
+ else   if (str.contains(",")) {
+    String[] parts=str.split(",");
+    double[] res=new double[parts.length];
+    for (int i=0; i < parts.length; ++i)     res[i]=Double.parseDouble(parts[i]);
+    return res;
+  }
+ else {
+    return new double[]{Double.parseDouble(str)};
+  }
+}

@@ -1,0 +1,6 @@
+{
+  int i=0;
+  while ((i < _args.length) && (_args[i] != null))   ++i;
+  if (i == _args.length)   throw new ParserException(argument._pos,"Function " + _function._name + " takes only "+ _args.length+ " arguments");
+  _args[i]=argument;
+}

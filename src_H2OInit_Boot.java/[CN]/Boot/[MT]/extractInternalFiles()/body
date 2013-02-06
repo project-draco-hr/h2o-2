@@ -1,0 +1,25 @@
+{
+  Enumeration entries=_h2oJar.entries();
+  while (entries.hasMoreElements()) {
+    ZipEntry e=(ZipEntry)entries.nextElement();
+    String name=e.getName();
+    File out=internalFile(name);
+    out.getParentFile().mkdirs();
+    if (e.isDirectory())     continue;
+    try {
+      BufferedInputStream is=new BufferedInputStream(_h2oJar.getInputStream(e));
+      BufferedOutputStream os=new BufferedOutputStream(new FileOutputStream(out));
+      int read;
+      byte[] buffer=new byte[4096];
+      while ((read=is.read(buffer)) != -1)       os.write(buffer,0,read);
+      os.flush();
+      os.close();
+      is.close();
+    }
+ catch (    FileNotFoundException ex) {
+    }
+catch (    IOException ex) {
+      System.err.println("Unable to extract file " + name + " because "+ ex);
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  new TAtomic<RFModel>(){
+    @Override public RFModel alloc(){
+      return new RFModel();
+    }
+    @Override public RFModel atomic(    RFModel old){
+      return RFModel.make(old,tKey);
+    }
+  }
+.invoke(model);
+}

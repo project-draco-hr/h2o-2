@@ -1,0 +1,28 @@
+{
+  final String host=args[0], user=args[1], key=args[2];
+  Runtime.getRuntime().addShutdownHook(new Thread(){
+    @Override public void run(){
+      SeparateBox.close(host,user,key);
+    }
+  }
+);
+  exitWithParent();
+  ArrayList<String> list=new ArrayList<String>();
+  list.addAll(Arrays.asList(ssh(user,key).split(" ")));
+  list.add(host);
+  String debug="", cp="";
+  int shared=new File(".").getCanonicalPath().length() + 1;
+  for (  String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
+    cp+=cp.length() != 0 ? ":" : "";
+    cp+=new File(s).getCanonicalPath().substring(shared).replace('\\','/');
+  }
+  String command="" + "cd " + TARGET + ";"+ "java "+ debug+ " -ea -cp "+ cp;
+  for (int i=3; i < args.length; i++)   command+=" " + args[i];
+  list.add(command);
+  ProcessBuilder builder=new ProcessBuilder(list);
+  builder.environment().put("CYGWIN","nodosfilewarning");
+  builder.redirectErrorStream(true);
+  Process process=builder.start();
+  SeparateVM.inheritIO(process,null,false);
+  process.waitFor();
+}

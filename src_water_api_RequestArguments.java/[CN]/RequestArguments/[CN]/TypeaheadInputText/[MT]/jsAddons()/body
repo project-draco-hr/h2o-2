@@ -1,0 +1,8 @@
+{
+  RString s=new RString("" + "$('#%ID').typeahead({\n" + "  source:\n"+ "    function(query,process) {\n"+ "      return $.get('%HREF', { filter: query, limit: %LIMIT }, function (data) {\n"+ "        return process(data.%DATA_NAME);\n"+ "      });\n"+ "    },\n"+ "});\n"+ "\n");
+  s.replace("ID",_name);
+  s.replace("HREF",_typeaheadHref);
+  s.replace("LIMIT",_typeaheadLimit);
+  s.replace("DATA_NAME",ITEMS);
+  return super.jsAddons() + s.toString();
+}

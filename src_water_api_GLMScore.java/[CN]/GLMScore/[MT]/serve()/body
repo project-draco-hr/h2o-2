@@ -1,0 +1,18 @@
+{
+  try {
+    JsonObject res=new JsonObject();
+    ValueArray ary=_dataKey.value();
+    GLMModel m=_modelKey.value();
+    GLMValidation v=_thresholds.disabled() ? m.validateOn(ary,null,null) : m.validateOn(ary,null,_thresholds.value()._arr);
+    Response r=Response.done(res);
+    r.setBuilder("",new GLMValidationBuilder(v));
+    return r;
+  }
+ catch (  GLMException e) {
+    return Response.error(e.getMessage());
+  }
+catch (  Throwable t) {
+    t.printStackTrace();
+    return Response.error(t.getMessage());
+  }
+}

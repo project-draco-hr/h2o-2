@@ -1,0 +1,41 @@
+{
+  if (path == null)   path="";
+  if (files == null)   files=new String[][]{{"smalldata/iris/iris.csv",null}};
+  if (tree_size == null)   tree_size=new int[]{100};
+  if (bin_limits == null)   bin_limits=new int[]{10000};
+  if (samples == null)   samples=new int[]{67};
+  if (stats == null)   stats=new String[]{"entropy"};
+  if (ignores == null)   ignores=new int[]{-1};
+  if (seeds == null)   seeds=new int[]{3};
+  if (stratas == null)   stratas=new String[]{null};
+  int experiments=files.length * tree_size.length * stats.length* samples.length* seeds.length* bin_limits.length* ignores.length* stratas.length;
+  String[] commands=new String[experiments];
+  for (int i=0; i < files.length; i++) {
+    files[i][0]=path + "/" + files[i][0];
+    if (files[i][1] != null)     files[i][1]=path + "/" + files[i][1];
+  }
+  int i=0;
+  for (  int ig : ignores)   for (  String[] f : files)   for (  int sz : tree_size)   for (  String stat : stats)   for (  int smpl : samples)   for (  int bl : bin_limits)   for (  int seed : seeds)   for (  String strata : stratas) {
+    RFArgs rfa=new RFArgs();
+    rfa.seed=seed;
+    rfa.statType=stat;
+    rfa.file=f[0];
+    if (f[1] != null)     rfa.validationFile=f[1];
+    rfa.ntrees=sz;
+    rfa.sample=smpl;
+    rfa.binLimit=bl;
+    if (ig != -1)     rfa.ignores=Integer.toString(ig);
+    if (strata != null) {
+      rfa.stratify=true;
+      rfa.strata=strata;
+    }
+    String add=special.get(f) == null ? "" : (" " + special.get(f));
+    commands[i++]=javaCmd_ + " " + rfa+ add;
+  }
+  try {
+    for (    String cmd : commands)     runTest(cmd,args_.resultDB,out_,true);
+  }
+ catch (  Exception e) {
+    throw new Error(e);
+  }
+}

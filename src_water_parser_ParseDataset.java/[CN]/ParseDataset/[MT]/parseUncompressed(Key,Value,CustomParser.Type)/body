@@ -1,0 +1,15 @@
+{
+  DParseTask phaseOne=DParseTask.createPassOne(dataset,result,parserType);
+  phaseOne.passOne();
+  if ((phaseOne._error != null) && !phaseOne._error.isEmpty()) {
+    System.err.println(phaseOne._error);
+    throw new Exception("The dataset format is not recognized/supported");
+  }
+  DParseTask phaseTwo=DParseTask.createPassTwo(phaseOne);
+  phaseTwo.passTwo();
+  if ((phaseTwo._error != null) && !phaseTwo._error.isEmpty()) {
+    System.err.println(phaseTwo._error);
+    UKV.remove(result);
+    throw new Exception("The dataset format is not recognized/supported");
+  }
+}

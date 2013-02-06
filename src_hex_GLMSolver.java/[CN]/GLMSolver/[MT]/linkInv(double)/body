@@ -1,0 +1,14 @@
+{
+switch (this) {
+case identity:
+    return x;
+case logit:
+  return 1.0 / (Math.exp(-x) + 1.0);
+case log:
+return Math.exp(x);
+case inverse:
+return 1 / x;
+default :
+throw new Error("unexpected link function id  " + this);
+}
+}

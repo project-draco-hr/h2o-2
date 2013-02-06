@@ -1,0 +1,4 @@
+def configure_all(self):
+    for node in self.nodes:
+        cmd = self.mapr_conf_cmd(self.cldbs, self.zookeepers, sudo_required=node.need_sudo, mapr_home=node.mapr_home)
+        node.configure_mapr(cmd)

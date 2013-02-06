@@ -1,0 +1,15 @@
+def parseHdfsFile(node=None, csvFilename=None, timeoutSecs=3600, retryDelaySecs=1.0):
+    if (not csvFilename):
+        raise Exception('No csvFilename parameter in inspectHdfsFile')
+    if (not node):
+        node = h2o.nodes[0]
+    print '\nHacked the test to match the new behavior for key names created from hdfs files'
+    hdfsPrefix = 'hdfs://192.168.1.151/datasets/'
+    hdfsPrefix = 'hdfs:/datasets/'
+    hdfsKey = (hdfsPrefix + csvFilename)
+    print 'parseHdfsFile hdfsKey:', hdfsKey
+    inspect = h2o_cmd.runInspect(key=hdfsKey)
+    print 'parseHdfsFile:', inspect
+    parseKey = node.parse(hdfsKey, (csvFilename + '.hex'), timeoutSecs, retryDelaySecs)
+    print 'parseHdfsFile:', parseKey
+    return parseKey

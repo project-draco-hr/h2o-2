@@ -1,0 +1,21 @@
+{
+  new Thread(new Runnable(){
+    public void run(){
+      while (true) {
+        try {
+          new Server(H2O._webSocket);
+          break;
+        }
+ catch (        Exception ioe) {
+          System.err.println("Launching NanoHTTP server got " + ioe);
+          try {
+            Thread.sleep(1000);
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+      }
+    }
+  }
+,"HTTP Server Launcher").start();
+}

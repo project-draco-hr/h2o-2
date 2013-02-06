@@ -1,0 +1,7 @@
+def __init__(self, res):
+    ' Creates the columns container from the resource dictionary. '
+    self._columns = []
+    for col in res:
+        cinfo = ColumnInfo(col)
+        setattr(self, cinfo.name, cinfo)
+        self._columns.append(cinfo)

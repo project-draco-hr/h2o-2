@@ -1,0 +1,11 @@
+{
+  String clzname=cc.getSimpleName();
+  if (!hasExisting(clzname,"()V",cc.getDeclaredConstructors())) {
+    String body="public " + clzname + "() { }";
+    cc.addConstructor(CtNewConstructor.make(body,cc));
+  }
+ else {
+    CtConstructor ctor=cc.getConstructor("()V");
+    ctor.setModifiers(javassist.Modifier.setPublic(ctor.getModifiers()));
+  }
+}

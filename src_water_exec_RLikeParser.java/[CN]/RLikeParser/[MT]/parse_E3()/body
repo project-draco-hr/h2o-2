@@ -1,0 +1,8 @@
+{
+  Expr result=parse_E4();
+  while ((top()._type == Token.Type.ttOpLess) || (top()._type == Token.Type.ttOpLessOrEq) || (top()._type == Token.Type.ttOpGreater)|| (top()._type == Token.Type.ttOpGreaterOrEq)) {
+    Token t=pop();
+    result=new BinaryOperator(t._pos,t._type,result,parse_E4());
+  }
+  return result;
+}

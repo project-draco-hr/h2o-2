@@ -1,0 +1,12 @@
+{
+  StringBuilder sb=new StringBuilder();
+  GLMParams glmp=m._glmParams;
+  parm(sb,"family",glmp._f);
+  parm(sb,"link",glmp._l);
+  parm(sb,EPSILON,glmp._betaEps);
+  if (glmp._caseMode != CaseMode.none) {
+    parm(sb,"case",glmp._caseMode.exp(glmp._caseVal));
+    parm(sb,"weight",glmp._caseWeight);
+  }
+  return sb.toString();
+}

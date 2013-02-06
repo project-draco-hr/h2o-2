@@ -1,0 +1,15 @@
+{
+  String name=elementName(contextName);
+  StringBuilder sb=new StringBuilder();
+  sb.append(caption(object,name));
+  sb.append(header(object,name));
+  sb.append("<td>").append(object.get(JSON_TIME).getAsString()).append("</td>");
+  sb.append("<td>").append(object.get(JSON_NANOS).getAsLong()).append("</td>");
+  String s=object.get(JSON_SEND).getAsString();
+  String r=object.get(JSON_RECV).getAsString();
+  sb.append("<td>" + s + " ??? "+ r+ "</td>");
+  sb.append("<td>").append(object.get(JSON_TYPE).getAsString()).append("</td>");
+  sb.append("<td>").append(object.get(JSON_BYTES).getAsString()).append("</td>");
+  sb.append(footer(object,name));
+  return sb.toString();
+}

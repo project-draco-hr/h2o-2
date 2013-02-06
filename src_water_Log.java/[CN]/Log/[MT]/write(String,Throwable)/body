@@ -1,0 +1,13 @@
+{
+  String stack="";
+  if (t != null) {
+    Writer result=new StringWriter();
+    PrintWriter printWriter=new PrintWriter(result);
+    t.printStackTrace(printWriter);
+    stack=result.toString();
+  }
+  String header=_utcFormat.get().format(new Date()) + ", ";
+  header+=HOST_AND_PID;
+  header+=padRight(Thread.currentThread().getName() + ", ",12);
+  System.out.println(header + (s != null ? s + " " + stack : stack));
+}

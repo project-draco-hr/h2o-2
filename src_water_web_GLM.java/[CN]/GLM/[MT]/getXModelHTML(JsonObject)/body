@@ -1,0 +1,16 @@
+{
+  RString responseTemplate=new RString("<div class='alert %succ'>GLM on data <a href='/Inspect?Key=%key'>%key</a>. %iterations iterations computed in %time[ms]. %warningMsgs</div>" + "<div>%coefficients</div>");
+  if (json.has("warnings")) {
+    responseTemplate.replace("succ","alert-warning");
+    JsonArray ja=json.get("warnings").getAsJsonArray();
+    StringBuilder wsb=new StringBuilder();
+    for (    JsonElement el : ja)     wsb.append(el.getAsJsonPrimitive().getAsString()).append("<br>");
+    responseTemplate.replace("warningMsgs",wsb.toString());
+  }
+ else   responseTemplate.replace("succ","alert-success");
+  responseTemplate.replace("key",json.get("dataset").getAsString());
+  responseTemplate.replace("time",json.get("time").getAsString());
+  responseTemplate.replace("iterations",json.get("iterations").getAsString());
+  responseTemplate.replace("coefficients",getCoefficientsHTML(json.get("coefficients").getAsJsonObject()));
+  return responseTemplate.toString() + getXValidationHTML(json.get("validations").getAsJsonArray());
+}

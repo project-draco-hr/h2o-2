@@ -1,0 +1,14 @@
+def write_syn_dataset(csvPathname, rowCount, SEED):
+    r1 = random.Random(SEED)
+    r2 = random.Random(SEED)
+    r3 = random.Random(SEED)
+    r4 = random.Random(SEED)
+    r5 = random.Random(SEED)
+    r6 = random.Random(SEED)
+    r7 = random.Random(SEED)
+    r8 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    for i in range(rowCount):
+        rowData = ('%s,%s,%s,%s,%s,%s,%s,%s' % (r1.randint(0, 1), r2.randint(0, 2), r3.randint((-4), 4), r4.randint(0, 8), r5.randint((-16), 16), r6.randint((-32), 32), 0, r8.randint(0, 1)))
+        dsf.write((rowData + '\n'))
+    dsf.close()

@@ -1,0 +1,44 @@
+{
+  try {
+    while (true) {
+      DefaultHttpServerConnection conn=new DefaultHttpServerConnection();
+      conn.bind(ssocket.accept(),new BasicHttpParams());
+      HttpRequest request=conn.receiveRequestHeader();
+      RequestLine requestLine=request.getRequestLine();
+      try {
+        HttpResponse response=new BasicHttpResponse(HttpVersion.HTTP_1_1,HttpStatus.SC_OK,null);
+        boolean finish=false;
+        if (requestLine.getMethod().equals("OPTIONS")) {
+          finish=handleOPTIONS(conn,request,response);
+        }
+ else         if (requestLine.getMethod().equals("POST")) {
+          finish=handlePOST(conn,request,response);
+        }
+        if (request instanceof HttpEntityEnclosingRequest)         EntityUtils.consume(((HttpEntityEnclosingRequest)request).getEntity());
+        conn.sendResponseHeader(response);
+        conn.sendResponseEntity(response);
+        if (finish)         break;
+      }
+  finally {
+        try {
+          conn.close();
+        }
+ catch (        IOException e) {
+        }
+      }
+    }
+  }
+ catch (  SocketTimeoutException ste) {
+  }
+catch (  IOException e) {
+  }
+catch (  HttpException e) {
+  }
+ finally {
+    try {
+      if (ssocket != null)       ssocket.close();
+    }
+ catch (    IOException e) {
+    }
+  }
+}

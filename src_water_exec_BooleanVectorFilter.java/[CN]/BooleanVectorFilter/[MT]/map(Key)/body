@@ -1,0 +1,23 @@
+{
+  long srcIdx=ValueArray.getChunkIndex(key);
+  ValueArray srcAry=ValueArray.value(DKV.get(_src));
+  final int rows=srcAry.rpc(srcIdx);
+  AutoBuffer srcBits=srcAry.getChunk(key);
+  AutoBuffer dstBits=new AutoBuffer(srcBits.remaining());
+  long srow=srcAry.startRow(srcIdx);
+  VAIterator vai=new VAIterator(_bvec,_bcol,srow);
+  _rpc=new long[(int)srcAry.chunks() + 1];
+  long rpc=0;
+  for (int i=0; i < rows; i++) {
+    vai.next();
+    if (vai.data() != 0) {
+      dstBits.copyArrayFrom(dstBits.position(),srcBits,i * srcAry._rowsize,srcAry._rowsize);
+      rpc++;
+    }
+  }
+  _rpc[(int)srcIdx]=rpc;
+  byte[] dbits=dstBits.buf();
+  Key d=ValueArray.getChunkKey(srcIdx,_dst);
+  Value v=new Value(d,dbits);
+  DKV.put(d,v);
+}

@@ -1,0 +1,14 @@
+def test_prostate_gaussian(self):
+    errors = []
+    key = h2o_cmd.parseFile(csvPathname=h2o.find_file('smalldata/logreg/prostate.csv'), key2='prostate_g')
+    gaussian_coefficients = {'Intercept': (-0.8052693), 'ID': 0.0002764, 'AGE': (-0.0011601), 'RACE': (-0.0826932), 'DPROS': 0.0924781, 'DCAPS': 0.1089754, 'PSA': 0.0036211, 'VOL': (-0.002056), 'GLEASON': 0.1515751, }
+    gaussian_nd = 91.4
+    gaussian_rd = 65.04
+    gaussian_aic = 427.6
+    errors = self.process_dataset(key, 'CAPSULE', gaussian_coefficients, gaussian_nd, gaussian_rd, gaussian_aic, family='gaussian')
+    if errors:
+        self.fail(str(errors))
+    key = h2o_cmd.parseFile(csvPathname=h2o.find_file('smalldata/logreg/prostate_long.csv.gz'), key2='prostate_long_g')
+    errors = self.process_dataset(key, 'CAPSULE', gaussian_coefficients, gaussian_nd, gaussian_rd, gaussian_aic, family='gaussian')
+    if errors:
+        self.fail(str(errors))

@@ -1,0 +1,17 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append(caption(array,elementName(contextName)));
+  if (array.size() == 0) {
+    sb.append("<div class='alert alert-info'>empty array</div>");
+  }
+ else {
+    sb.append(header(array));
+    for (    JsonElement e : array) {
+      Builder builder=response.getBuilderFor(contextName + "_ROW");
+      if (builder == null)       builder=defaultBuilder(e);
+      sb.append(builder.build(response,e,contextName));
+    }
+    sb.append(footer(array));
+  }
+  return sb.toString();
+}

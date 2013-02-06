@@ -1,0 +1,21 @@
+{
+  StringBuilder sb=null;
+  if (k._kb[0] < 32) {
+    sb=new StringBuilder(k._kb.length / 2 + 4);
+    sb.append('%');
+    for (    byte b : k._kb) {
+      int nib0=((b >>> 4) & 15) + '0';
+      if (nib0 > '9')       nib0+='A' - 10 - '0';
+      int nib1=((b >>> 0) & 15) + '0';
+      if (nib1 > '9')       nib1+='A' - 10 - '0';
+      sb.append((char)nib0).append((char)nib1);
+    }
+  }
+ else {
+    sb=escapeBytes(k._kb);
+  }
+  sb.append('.');
+  sb.append((char)type);
+  sb.append(k.desired());
+  return new File(iceRoot,getDirectoryForKey(k) + File.separator + sb.toString());
+}

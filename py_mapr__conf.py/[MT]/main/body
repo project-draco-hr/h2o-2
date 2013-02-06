@@ -1,0 +1,22 @@
+def main():
+    parser = argparse.ArgumentParser(description='MapR EC2 cluster management utility')
+    parser.add_argument('-v', '--verbose', help='verbose', action='store_true')
+    parser.add_argument('action', choices=['start', 'stop', 'restart', 'configure', 'list'], help='MapR cluster action')
+    args = parser.parse_args()
+    mcluster = MaprCluster(INSTANCES_IDs)
+    mcluster.resolve_conf()
+    mcluster.connect_all()
+    if (args.action == 'start'):
+        mcluster.start_all()
+    elif (args.action == 'stop'):
+        mcluster.stop_all()
+    elif (args.action == 'restart'):
+        mcluster.stop_all()
+        mcluster.start_all()
+    elif (args.action == 'configure'):
+        mcluster.stop_all()
+        mcluster.configure_all()
+        mcluster.start_all()
+    elif (args.action == 'list'):
+        log('Not yet implemented!')
+    mcluster.disconnect_all()

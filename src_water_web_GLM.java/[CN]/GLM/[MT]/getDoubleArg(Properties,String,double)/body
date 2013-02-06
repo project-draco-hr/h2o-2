@@ -1,0 +1,9 @@
+{
+  if (!p.containsKey(name))   return defaultValue;
+  try {
+    return Double.parseDouble(p.getProperty(name));
+  }
+ catch (  NumberFormatException e) {
+    throw new GLMInputException("invalid value of argument " + name);
+  }
+}

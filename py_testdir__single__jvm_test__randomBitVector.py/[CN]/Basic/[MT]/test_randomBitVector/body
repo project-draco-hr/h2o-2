@@ -1,0 +1,32 @@
+def test_randomBitVector(self):
+    trial = 0
+    for (expectedRows, expectedOnes, expectedZeroes, execExpr) in exprList:
+        resultKey = 'Result.hex'
+        (execResultInspect, min_value) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=4)
+        num_columns = execResultInspect['num_columns']
+        num_rows = execResultInspect['num_rows']
+        row_size = execResultInspect['row_size']
+        if (num_columns != 1):
+            raise Exception(('Wrong num_columns in randomBitVector result.  expected: %d, actual: %d' % (1, num_columns)))
+        if (num_rows != expectedRows):
+            raise Exception(('Wrong num_rows in randomBitVector result.  expected: %d, actual: %d' % (expectedRows, num_rows)))
+        if (row_size != 1):
+            raise Exception(('Wrong row_size in randomBitVector result.  expected: %d, actual: %d' % (1, row_size)))
+        actualZeroes = 0
+        actualOnes = 0
+        rowData = execResultInspect['row_data']
+        inspect = h2o_cmd.runInspect(key='Result.hex')
+        row_data = inspect['row_data'][0]
+        for i in range(expectedRows):
+            value = rowData[i]['bits']
+            if (value == 0):
+                actualZeroes += 1
+            elif (value == 1):
+                actualOnes += 1
+            else:
+                raise Exception(('Bad value in cols dict of randomBitVector result. key: %s, value: %s' % (i, value)))
+        if (actualOnes != expectedOnes):
+            raise Exception(("Wrong number of 1's in randomBitVector result.  expected: %d, actual: %d" % (expectedOnes, actualOnes)))
+        if (actualZeroes != expectedZeroes):
+            raise Exception(("Wrong number of 0's in randomBitVector result.  expected: %d, actual: %d" % (expectedZeroes, actualZeroes)))
+        trial += 1

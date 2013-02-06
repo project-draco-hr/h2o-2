@@ -1,0 +1,27 @@
+{
+  ValueArray result=ValueArray.value(_resultKey);
+  long cidx=ValueArray.getChunkIndex(key);
+  int rowSize=result._rowsize;
+  long rowOffset=result.startRow(cidx);
+  VAIterator oldVal=new VAIterator(_oldKey,_oldCol,rowOffset);
+  VAIterator newVal=new VAIterator(_newKey,_newCol,rowOffset);
+  int chunkRows=result.rpc(cidx);
+  AutoBuffer bits=new AutoBuffer(chunkRows * rowSize);
+  Column oldCol=oldVal._ary._cols[_oldCol];
+  Column newCol=newVal._ary._cols[_newCol];
+  int oldMark1=oldCol._off;
+  int newMark1=newCol._off;
+  int oldMark2=Math.abs(oldCol._size) + oldMark1;
+  int newMark2=Math.abs(newCol._size) + newMark1;
+  int oldMark3=oldVal._ary._rowsize;
+  for (int off=0; off < bits.limit(); ) {
+    oldVal.next();
+    newVal.next();
+    off=oldVal.copyCurrentRowPart(bits,off,0,oldMark1);
+    off=newVal.copyCurrentRowPart(bits,off,newMark1,newMark2);
+    off=oldVal.copyCurrentRowPart(bits,off,oldMark2,oldMark3);
+    assert(off % rowSize == 0);
+  }
+  Value val=new Value(key,bits.buf());
+  DKV.put(key,val,getFutures());
+}

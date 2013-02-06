@@ -1,0 +1,13 @@
+{
+  if (fromJar()) {
+    return _systemLoader.getResourceAsStream("resources" + uri);
+  }
+ else {
+    try {
+      return new FileInputStream(new File("lib/resources" + uri));
+    }
+ catch (    FileNotFoundException e) {
+      return null;
+    }
+  }
+}

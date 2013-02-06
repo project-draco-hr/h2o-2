@@ -1,0 +1,63 @@
+{
+  RString row=response.restartGroup("tableRow");
+  row.replace("key",key);
+  if (new String(key._kb).startsWith("ConfusionMatrix"))   row.replace("inspect","RFView");
+ else   row.replace("inspect","Inspect");
+  byte[] b=new byte[100];
+  int len=0;
+  try {
+    len=val.openStream().read(b);
+  }
+ catch (  IOException e) {
+  }
+  StringBuilder sb=new StringBuilder();
+  int newlines=0;
+  for (int i=0; i < len; i++) {
+    byte c=b[i];
+    if (c == '&')     sb.append("&amp;");
+ else     if (c == '<')     sb.append("&lt;");
+ else     if (c == '>')     sb.append("&gt;");
+ else     if (c == '\n') {
+      sb.append("<br>");
+      if (newlines++ > 5)       break;
+    }
+ else     if (c == ',' && i + 1 < len && b[i + 1] != ' ')     sb.append(", ");
+ else     sb.append((char)c);
+  }
+  if (val.length() > len)   sb.append("...");
+  row.replace("value",sb);
+  row.replace("size",val.length());
+  if (H2O.OPT_ARGS.hdfs != null && !val.onHDFS()) {
+    RString hdfs=new RString("<a href='Store2HDFS?Key=%$key'><button class='btn btn-primary btn-mini'>store on HDFS</button></a>");
+    hdfs.replace("key",key);
+    row.replace("storeHdfs",hdfs.toString());
+  }
+ else {
+    row.replace("storeHdfs","");
+  }
+  if (val._isArray != 0) {
+    ValueArray ary=ValueArray.value(val);
+    if (ary._cols.length > 1 || ary._cols[0]._size != 1) {
+      row.replace("rows",ary._numrows);
+      int cols=ary._cols.length;
+      row.replace("cols",cols);
+      for (int i=0; i < Math.min(cols,5); i++) {
+        sb=new StringBuilder();
+        int sz=ary._cols[i]._size;
+        if (sz != 0) {
+          double min=ary._cols[i]._min;
+          if (sz > 0 && ary._cols[i]._scale == 1)           sb.append((long)min);
+ else           sb.append(min);
+          sb.append(" / - / ");
+          double max=ary._cols[i]._max;
+          if (sz > 0 && ary._cols[i]._scale == 1)           sb.append((long)max);
+ else           sb.append(max);
+        }
+        row.replace("col" + i,sb);
+      }
+      row.append();
+      return;
+    }
+  }
+  ServletUtil.createBestEffortSummary(key,row,val.length());
+}

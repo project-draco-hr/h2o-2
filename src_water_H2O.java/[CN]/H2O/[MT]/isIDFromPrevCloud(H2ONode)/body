@@ -1,0 +1,8 @@
+{
+  if (h2o == null)   return false;
+  HeartBeat hb=h2o._heartbeat;
+  long lo=hb._cloud_id_lo;
+  long hi=hb._cloud_id_hi;
+  for (int i=0; i < 256; i++)   if ((CLOUDS[i] != null) && (lo == CLOUDS[i]._id.getLeastSignificantBits() && hi == CLOUDS[i]._id.getMostSignificantBits()))   return true;
+  return false;
+}

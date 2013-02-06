@@ -1,0 +1,12 @@
+{
+  try {
+    while (_chan.read(_bb) != -1)     _bb.clear();
+    _chan.close();
+    TCPS.decrementAndGet();
+    restorePriority();
+    bbFree();
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+}

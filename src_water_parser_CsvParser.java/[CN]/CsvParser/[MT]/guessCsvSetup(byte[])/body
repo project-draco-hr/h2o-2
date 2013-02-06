@@ -1,0 +1,36 @@
+{
+  String[] lines=new String[2];
+  int offset=0;
+  while (offset < bits.length) {
+    int lineStart=offset;
+    while ((offset < bits.length) && (bits[offset] != CHAR_CR) && (bits[offset] != CHAR_LF))     ++offset;
+    int lineEnd=offset;
+    ++offset;
+    if ((offset < bits.length) && (bits[offset] == CHAR_LF))     ++offset;
+    if (bits[lineStart] == '#')     continue;
+    if (lineEnd > lineStart) {
+      String line=new String(bits,lineStart,lineEnd - lineStart);
+      if (lines[0] == null) {
+        lines[0]=line;
+      }
+ else {
+        lines[1]=line;
+        break;
+      }
+    }
+  }
+  if (lines[1] == null)   return null;
+  int[] s1=determineSeparatorCounts(lines[0]);
+  int[] s2=determineSeparatorCounts(lines[1]);
+  for (int i=0; i < s1.length; ++i)   if (((s1[i] == s2[i]) && (s1[i] != 0)) || (i == separators.length - 1)) {
+    try {
+      String[] t1=determineTokens(lines[0],separators[i]);
+      String[] t2=determineTokens(lines[1],separators[i]);
+      if (t1.length != t2.length)       continue;
+      return guessColumnNames(t1,t2,separators[i]);
+    }
+ catch (    Exception e) {
+    }
+  }
+  return null;
+}

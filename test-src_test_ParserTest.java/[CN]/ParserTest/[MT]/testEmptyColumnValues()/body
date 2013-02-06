@@ -1,0 +1,14 @@
+{
+  String data[]={"1,2,3,foo\n" + "4,5,6,bar\n" + "7,,8,\n"+ ",9,10\n"+ "11,,,\n"};
+  double[][] expDouble=new double[][]{d(1,2,3,1),d(4,5,6,0),d(7,NaN,8,NaN),d(NaN,9,10,NaN),d(11,NaN,NaN,NaN)};
+  final char separator=',';
+  String[] dataset=getDataForSeparator(separator,data);
+  Key key=k("EmptyColumnValues",dataset);
+  Key r=Key.make();
+  ParseDataset.parse(r,DKV.get(key));
+  ValueArray va=ValueArray.value(DKV.get(r));
+  String[] cd=va._cols[3]._domain;
+  Assert.assertEquals("bar",cd[0]);
+  Assert.assertEquals("foo",cd[1]);
+  testParsed(r,expDouble,key);
+}

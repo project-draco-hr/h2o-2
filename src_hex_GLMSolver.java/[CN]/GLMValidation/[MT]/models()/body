@@ -1,0 +1,22 @@
+{
+  final Key[] keys=_modelKeys;
+  return new Iterable<GLMModel>(){
+    int idx;
+    @Override public Iterator<GLMModel> iterator(){
+      return new Iterator<GLMSolver.GLMModel>(){
+        @Override public void remove(){
+          throw new UnsupportedOperationException();
+        }
+        @Override public GLMModel next(){
+          if (idx == keys.length)           throw new NoSuchElementException();
+          return DKV.get(keys[idx++]).get(new GLMModel());
+        }
+        @Override public boolean hasNext(){
+          return idx < keys.length;
+        }
+      }
+;
+    }
+  }
+;
+}

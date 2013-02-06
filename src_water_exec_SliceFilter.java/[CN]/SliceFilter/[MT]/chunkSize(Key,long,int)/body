@@ -1,0 +1,7 @@
+{
+  int result=(int)ValueArray.CHUNK_SZ;
+  result=(result / rowSize) * rowSize;
+  long offset=ValueArray.getChunkIndex(k) * result;
+  if (offset + result + result >= aryLength)   return (int)(aryLength - offset);
+ else   return result;
+}

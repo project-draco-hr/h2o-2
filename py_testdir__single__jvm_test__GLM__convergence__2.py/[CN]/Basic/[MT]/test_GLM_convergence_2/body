@@ -1,0 +1,58 @@
+def test_GLM_convergence_2(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(100, 1, 'cD', 300)]
+    lenNodes = len(h2o.nodes)
+    USEKNOWNFAILURE = False
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = ('syn_%s_%sx%s.csv' % (SEEDPERFILE, rowCount, colCount))
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print '\nCreating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+        if USEKNOWNFAILURE:
+            csvFilename = 'failtoconverge_100x50.csv'
+            csvPathname = h2o.find_file(('smalldata/logreg/' + csvFilename))
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print ('\n' + csvFilename)
+        y = colCount
+        kwargs = {'max_iter': 40, 'lambda': 1.0, 'alpha': 0.5, 'weight': 1.0, 'link': 'familyDefault', 'num_cross_validation_folds': 0, 'beta_epsilon': 0.0001, 'thresholds': '0:1:0.01', }
+        if USEKNOWNFAILURE:
+            kwargs['y'] = 50
+        else:
+            kwargs['y'] = y
+        emsg = None
+        for i in range(3):
+            start = time.time()
+            glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+            print 'glm #', i, 'end on', csvPathname, 'took', (time.time() - start), 'seconds'
+            (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, allowFailWarning=True, **kwargs)
+            if (1 == 0):
+                print '\n', '\ncoefficients in col order:'
+                if USEKNOWNFAILURE:
+                    showCols = 50
+                else:
+                    showCols = colCount
+                for c in range(showCols):
+                    print ('%s:\t%s' % (c, coefficients[c]))
+                print 'intercept:\t', intercept
+            x = re.compile('[Ff]ailed')
+            if warnings:
+                print 'warnings:', warnings
+                for w in warnings:
+                    print 'w:', w
+                    if re.search(x, w):
+                        if (emsg is None):
+                            emsg = w
+                        print w
+            if emsg:
+                break
+        if (not h2o.browse_disable):
+            h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
+            time.sleep(5)
+            h2b.browseJsonHistoryAsUrlLastMatch('GLM')
+            time.sleep(5)
+        if (emsg is not None):
+            raise Exception(emsg)

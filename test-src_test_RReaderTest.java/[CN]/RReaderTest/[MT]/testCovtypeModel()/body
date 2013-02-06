@@ -1,0 +1,28 @@
+{
+  Key prok=TestUtil.loadAndParseKey("covtype.hex","smalldata/covtype/covtype.20k.data");
+  ValueArray pro=ValueArray.value(DKV.get(prok));
+  File file=TestUtil.find_test_file("smalldata/test/rmodels/covtype-rf-50tree-as-factor-X5.rdata");
+  Key key=Key.make("covtypeModel");
+  RReader.run(key,new FileInputStream(file));
+  RModel model=UKV.get(key,new RModel());
+  int[] map=new int[pro._cols.length];
+  for (int i=0; i < map.length; i++)   map[i]=i;
+  final int classCol=map.length - 1;
+  System.out.println("min=" + pro._cols[classCol]._min);
+  long start=System.currentTimeMillis();
+  double[] row=new double[map.length];
+  int errs=0;
+  for (int i=0; i < pro._numrows; i++) {
+    for (int j=0; j < map.length; j++)     row[j]=pro.datad(i,j);
+    double score=model.score(row,map);
+    System.out.println(" " + i + " "+ score+ " "+ (pro.datad(i,classCol)));
+    if (Math.abs(pro.datad(i,classCol) - score) > 0.0001)     errs++;
+  }
+  System.err.println(" errs= " + errs + "/"+ pro._numrows);
+  long now=System.currentTimeMillis();
+  long dt=now - start;
+  System.err.println("Took " + dt + "msec/"+ pro._numrows+ " = "+ 1000 * dt / pro._numrows + " usec/row");
+  model.deleteKeys();
+  UKV.remove(key);
+  UKV.remove(prok);
+}

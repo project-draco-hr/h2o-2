@@ -1,0 +1,16 @@
+{
+  ValueArray result=ValueArray.value(_resultKey);
+  long cidx=ValueArray.getChunkIndex(key);
+  long rowOffset=result.startRow(cidx);
+  VAIterator opnd=new VAIterator(_key,_col,rowOffset);
+  int chunkRows=result.rpc(cidx);
+  AutoBuffer bits=new AutoBuffer(chunkRows * 8);
+  for (int i=0; i < chunkRows; i++) {
+    opnd.next();
+    double x=operator(opnd.datad());
+    bits.put8d(x);
+    updateColumnWith(x);
+  }
+  Value val=new Value(key,bits.bufClose());
+  DKV.put(key,val,getFutures());
+}

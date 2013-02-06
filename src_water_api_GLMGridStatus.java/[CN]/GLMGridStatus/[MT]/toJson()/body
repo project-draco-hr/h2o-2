@@ -1,0 +1,9 @@
+{
+  JsonObject j=new JsonObject();
+  JsonArray arr=new JsonArray();
+  for (  GLMModel m : computedModels()) {
+    arr.add(m.toJson());
+  }
+  j.add("models",arr);
+  return j;
+}

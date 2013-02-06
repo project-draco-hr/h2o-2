@@ -1,0 +1,5 @@
+{
+  double coef=jcoefs.get("0." + category).getAsDouble();
+  double predict=1.0 / (1.0 + Math.exp(-(coef * 1.0 + icept)));
+  assertEquals(expected,predict,0.0001);
+}

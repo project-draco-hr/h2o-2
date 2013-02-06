@@ -1,0 +1,10 @@
+{
+  try {
+    String key=element.getAsString();
+    String k=URLEncoder.encode(key,"UTF-8");
+    return "<a href='Inspect.html?key=" + k + "'>"+ key+ "</a>";
+  }
+ catch (  Throwable e) {
+    throw Throwables.propagate(e);
+  }
+}

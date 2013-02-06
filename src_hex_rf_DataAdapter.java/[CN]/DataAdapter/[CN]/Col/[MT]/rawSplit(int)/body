@@ -1,0 +1,7 @@
+{
+  if (idx == BAD)   return Float.NaN;
+  float flo=binned2raw[idx + 0];
+  float fhi=(idx + 1 < binned2raw.length) ? binned2raw[idx + 1] : flo + 1.f;
+  float fmid=(flo + fhi) / 2.0f;
+  return fmid;
+}

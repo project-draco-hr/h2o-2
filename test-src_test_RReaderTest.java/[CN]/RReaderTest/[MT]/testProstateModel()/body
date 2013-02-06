@@ -1,0 +1,22 @@
+{
+  Key prok=TestUtil.loadAndParseKey("prostate.hex","smalldata/logreg/prostate.csv");
+  ValueArray pro=ValueArray.value(DKV.get(prok));
+  File file=TestUtil.find_test_file("smalldata/test/rmodels/prostate-rf-10tree-asFactorCapsule.rdata");
+  Key key=Key.make("prostateModel");
+  RReader.run(key,new FileInputStream(file));
+  RModel model=UKV.get(key,new RModel());
+  int[] map=model.columnMapping(pro.colNames());
+  final int classCol=1;
+  map[map.length - 1]=classCol;
+  double[] row=new double[map.length];
+  int errs=0;
+  for (int i=0; i < pro._numrows; i++) {
+    for (int j=0; j < map.length; j++)     row[j]=pro.datad(i,j);
+    double score=model.score(row,map);
+    if (Math.abs(pro.datad(i,classCol) - score) > 0.0001)     errs++;
+  }
+  assertEquals(100,errs);
+  model.deleteKeys();
+  UKV.remove(key);
+  UKV.remove(prok);
+}

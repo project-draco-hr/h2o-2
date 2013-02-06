@@ -1,0 +1,20 @@
+{
+  assert(H2O.OPT_ARGS.hdfs != null);
+  if (H2O.OPT_ARGS.hdfs.equals("resurrect")) {
+    throw new Error("HDFS resurrection is unimplemented");
+  }
+ else {
+    String version=H2O.OPT_ARGS.hdfs_version == null ? DEFAULT_HDFS_VERSION : H2O.OPT_ARGS.hdfs_version;
+    version=version.equals("mapr") || (H2O.OPT_ARGS.hdfs.startsWith("maprfs://")) ? MAPRFS_HDFS_VERSION : version;
+    try {
+      if (Boot._init.fromJar())       Boot._init.addInternalJars("hadoop/" + version + "/");
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+      Log.die("[hdfs] Unable to initialize hadoop version " + version + " please use different version.");
+      return false;
+    }
+    PersistHdfs.ROOT.toString();
+    return true;
+  }
+}

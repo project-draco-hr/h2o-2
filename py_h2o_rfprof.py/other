@@ -1,0 +1,22 @@
+import urllib
+import urllib2
+import json
+DEFAULT_SERVER = 'http://localhost:54321/'
+KEY = 'Key'
+KEY2 = 'Key2'
+ERROR = 'Error'
+COLUMNS = 'columns'
+COLUMN_NAME = 'name'
+CONTENTS = 'contents'
+EXPR = 'Expr'
+RESULT_KEY = 'ResultKey'
+VALUE = 'Value'
+URL = 'Url'
+ACTION = 'action'
+PAGE_IMPORTURL = 'ImportUrl.json'
+PAGE_REMOVE = 'Remove.json'
+PAGE_DEBUG = 'Debug.json'
+PAGE_PARSE = 'Parse.json'
+h2o = H2OConnection()
+h2o.importUrl('poker', 'file:///home/peta/poker1000')
+print h2o.profileRF('poker', ntree=10)

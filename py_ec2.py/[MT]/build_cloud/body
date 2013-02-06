@@ -1,0 +1,8 @@
+def build_cloud(hosts, node_count=2, base_port=54321, **kwargs):
+    kwargs['use_flatfile'] = h2o.flatfile_name()
+    h2o.write_flatfile(node_count=node_count, base_port=base_port, hosts=hosts)
+    h2o.upload_jar_to_remote_hosts(hosts, slow_connection=True)
+    kwargs.setdefault('node_count', node_count)
+    kwargs.setdefault('base_port', base_port)
+    kwargs.setdefault('hosts', hosts)
+    return h2o.build_cloud(**kwargs)

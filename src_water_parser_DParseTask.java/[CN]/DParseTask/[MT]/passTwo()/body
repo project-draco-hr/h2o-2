@@ -1,0 +1,21 @@
+{
+switch (_parserType) {
+case CSV:
+    this.invoke(_sourceDataset._key);
+  break;
+case XLS:
+case XLSX:
+phaseTwoInitialize();
+_outputStreams2=createRecords(0,_myrows);
+assert(_outputStreams2.length > 0);
+_ab=_outputStreams2[0].initialize();
+CustomParser p=(_parserType == CustomParser.Type.XLS) ? new XlsParser(this) : new XlsxParser(this);
+p.parse(_sourceDataset._key);
+if (_ab != null) _outputStreams2[_outputIdx].store();
+break;
+default :
+throw new Error("NOT IMPLEMENTED");
+}
+for (int i=0; i < _ncolumns; ++i) _sigma[i]=Math.sqrt(_sigma[i] / (_numRows - _invalidValues[i]));
+createValueArrayHeader();
+}

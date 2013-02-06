@@ -1,0 +1,24 @@
+{
+  RString eq=null;
+switch (m._glmParams._l) {
+case identity:
+    eq=new RString("y = %equation");
+  break;
+case logit:
+eq=new RString("y = 1/(1 + Math.exp(-(%equation)))");
+break;
+default :
+eq=new RString("equation display not implemented");
+break;
+}
+StringBuilder sb=new StringBuilder();
+for (Entry<String,JsonElement> e : coefs.entrySet()) {
+if (e.getKey().equals("Intercept")) continue;
+double v=e.getValue().getAsDouble();
+if (v == 0) continue;
+sb.append(dformat(v)).append("*x[").append(e.getKey()).append("] + ");
+}
+sb.append(coefs.get("Intercept").getAsDouble());
+eq.replace("equation",sb.toString());
+return eq.toString();
+}

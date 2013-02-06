@@ -1,0 +1,22 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("<div style='text-align:center;'>");
+  sb.append(infoButton());
+  long lastOffset=(_max / _view) * _view;
+  long lastIdx=(_max / _view);
+  long currentIdx=_offset / _view;
+  long startIdx=Math.max(currentIdx - 5,0);
+  long endIdx=Math.min(startIdx + 11,lastIdx);
+  if (_offset == -1)   currentIdx=-1;
+  sb.append("<span class='pagination'><ul>");
+  sb.append(link("|&lt;",0,_view,_offset == 0));
+  sb.append(link("&lt;",_offset - _view,_view,_offset - _view < 0));
+  if (startIdx > 0)   sb.append(link("...",0,0,true));
+  for (long i=startIdx; i <= endIdx; ++i)   sb.append(link(String.valueOf(i),_view * i,_view,i == currentIdx));
+  if (endIdx < lastIdx)   sb.append(link("...",0,0,true));
+  sb.append(link("&gt;",_offset + _view,_view,_offset + _view > lastOffset));
+  sb.append(link("&gt;|",lastOffset,_view,_offset == lastOffset));
+  sb.append("</ul></span>");
+  sb.append("</div>");
+  return sb.toString();
+}

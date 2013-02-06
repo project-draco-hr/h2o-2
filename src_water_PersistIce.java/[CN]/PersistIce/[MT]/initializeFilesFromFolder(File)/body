@@ -1,0 +1,13 @@
+{
+  for (  File f : dir.listFiles()) {
+    if (f.isDirectory()) {
+      initializeFilesFromFolder(f);
+    }
+ else {
+      Key k=decodeKey(f);
+      Value ice=new Value(k,(int)f.length(),Value.ICE);
+      ice.setdsk();
+      H2O.putIfAbsent_raw(k,ice);
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  Key oldKey=args[0]._key;
+  Key newKey=args[2]._key;
+  ValueArray oldAry=ValueArray.value(oldKey);
+  ValueArray newAry=ValueArray.value(newKey);
+  assert(oldAry != null);
+  assert(newAry != null);
+  int oldCol=Helpers.checkedColumnIndex(oldAry,args[1]);
+  if (oldCol == -1)   throw new Exception("Column not found in source value.");
+  int newCol=args[2].colIndex();
+  Column[] cols=new Column[oldAry.numCols()];
+  int off=0;
+  for (int i=0; i < cols.length; ++i) {
+    if (oldCol == i) {
+      cols[i]=newAry._cols[newCol];
+      cols[i]._name=oldAry._cols[i]._name;
+    }
+ else {
+      cols[i]=oldAry._cols[i];
+    }
+    cols[i]._off=(char)off;
+    off+=Math.abs(cols[i]._size);
+  }
+  Result result=Result.temporary();
+  ValueArray ary=new ValueArray(result._key,oldAry.numRows(),off,cols);
+  DKV.put(result._key,ary.value());
+  DKV.write_barrier();
+  ColSwapTask task=new ColSwapTask(result._key,oldKey,newKey,oldCol,newCol);
+  task.invoke(result._key);
+  return result;
+}

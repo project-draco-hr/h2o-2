@@ -1,0 +1,24 @@
+{
+  Value source=_source.value();
+  Key dest=_dest.value();
+  if (dest == null) {
+    String n=source._key.toString();
+    int dot=n.lastIndexOf('.');
+    if (dot > 0)     n=n.substring(0,dot);
+    dest=Key.make(n + ".hex");
+  }
+  try {
+    ParseDataset.forkParseDataset(dest,source);
+    JsonObject response=new JsonObject();
+    response.addProperty(RequestStatics.DEST_KEY,dest.toString());
+    Response r=ParseProgress.redirect(response,dest);
+    r.setBuilder(RequestStatics.DEST_KEY,new KeyElementBuilder());
+    return r;
+  }
+ catch (  IllegalArgumentException e) {
+    return Response.error(e.getMessage());
+  }
+catch (  Error e) {
+    return Response.error(e.getMessage());
+  }
+}

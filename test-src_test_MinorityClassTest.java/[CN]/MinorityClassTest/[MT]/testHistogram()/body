@@ -1,0 +1,7 @@
+{
+  Key key=loadAndParseKey("poker.hex","smalldata/poker/poker-hand-testing.data");
+  ValueArray data=ValueArray.value(key);
+  int[] h=MinorityClasses.globalHistogram(MinorityClasses.histogram(data,_classIdx));
+  assertTrue(Arrays.equals(expectedHist,h));
+  UKV.remove(key);
+}

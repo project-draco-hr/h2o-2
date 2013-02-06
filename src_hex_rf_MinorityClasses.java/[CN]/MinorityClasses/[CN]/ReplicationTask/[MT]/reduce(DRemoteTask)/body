@@ -1,0 +1,9 @@
+{
+  ReplicationTask other=(ReplicationTask)drt;
+  if (_createdKeys == null)   _createdKeys=other._createdKeys;
+ else {
+    int n=_createdKeys.length;
+    _createdKeys=Arrays.copyOf(_createdKeys,_createdKeys.length + other._createdKeys.length);
+    System.arraycopy(other._createdKeys,0,_createdKeys,n,other._createdKeys.length);
+  }
+}

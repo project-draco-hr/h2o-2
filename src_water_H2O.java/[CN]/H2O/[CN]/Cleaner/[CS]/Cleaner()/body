@@ -1,0 +1,10 @@
+{
+  super("Memory Cleaner");
+  setDaemon(true);
+  _dirty=Long.MAX_VALUE;
+  _myHisto=new Histo();
+  _myHisto.compute(0);
+  Histo.H.set(_myHisto);
+  _myHisto.histo(true);
+  MemoryManager.set_goals("init",false);
+}

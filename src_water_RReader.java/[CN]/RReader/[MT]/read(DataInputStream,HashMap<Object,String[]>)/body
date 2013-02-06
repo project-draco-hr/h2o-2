@@ -1,0 +1,117 @@
+{
+  int flags=in.readInt();
+switch (flags & 255) {
+case NILVALUE_SXP:
+    return null;
+case EMPTYENV_SXP:
+  return PLUG;
+case BASEENV_SXP:
+return PLUG;
+case GLOBALENV_SXP:
+return PLUG;
+case UNBOUNDVALUE_SXP:
+return PLUG;
+case MISSINGARG_SXP:
+return PLUG;
+case BASENAMESPACE_SXP:
+return PLUG;
+case REFSXP:
+{
+int i=flags >> 8;
+if (i == 0) System.out.println(in.readInt());
+return null;
+}
+case PERSISTSXP:
+throw new UnsupportedOperationException();
+case SYMSXP:
+return read(in,attribs);
+case PACKAGESXP:
+throw new UnsupportedOperationException();
+case NAMESPACESXP:
+throw new UnsupportedOperationException();
+case ENVSXP:
+throw new UnsupportedOperationException();
+case LISTSXP:
+attributes(flags,true,true,in);
+return new Object[]{read(in,attribs),read(in,attribs)};
+case LANGSXP:
+attributes(flags,true,true,in);
+return new Object[]{read(in,attribs),read(in,attribs)};
+case CLOSXP:
+throw new UnsupportedOperationException();
+case PROMSXP:
+throw new UnsupportedOperationException();
+case DOTSXP:
+throw new UnsupportedOperationException();
+case EXTPTRSXP:
+throw new UnsupportedOperationException();
+case WEAKREFSXP:
+throw new UnsupportedOperationException();
+case SPECIALSXP:
+case BUILTINSXP:
+throw new UnsupportedOperationException();
+case CHARSXP:
+{
+int length=in.readInt();
+if (length == -1) return "" + null;
+byte[] bytes=new byte[length];
+in.readFully(bytes);
+int levels=flags >> 12;
+if ((levels & UTF8_MASK) != 0) return new String(bytes,"UTF8");
+if ((levels & LATIN1_MASK) != 0) return new String(bytes,"Latin1");
+return new String(bytes);
+}
+case LGLSXP:
+{
+int[] array=new int[in.readInt()];
+for (int i=0; i != array.length; ++i) array[i]=in.readInt();
+attributes(flags,true,false,in);
+return array;
+}
+case INTSXP:
+{
+int[] array=new int[in.readInt()];
+for (int i=0; i != array.length; ++i) array[i]=in.readInt();
+String[] a=attributes(flags,true,false,in);
+if (attribs != null && a != null) attribs.put(array,a);
+return array;
+}
+case REALSXP:
+{
+double[] array=new double[in.readInt()];
+for (int i=0; i != array.length; ++i) array[i]=in.readDouble();
+attributes(flags,true,false,in);
+return array;
+}
+case CPLXSXP:
+throw new UnsupportedOperationException();
+case STRSXP:
+{
+String[] array=new String[in.readInt()];
+for (int i=0; i != array.length; ++i) array[i]=(String)read(in,attribs);
+attributes(flags,true,false,in);
+return array;
+}
+case VECSXP:
+{
+Object[] array=new Object[in.readInt()];
+for (int i=0; i != array.length; ++i) array[i]=read(in,attribs);
+attributes(flags,true,false,in);
+return array;
+}
+case EXPRSXP:
+throw new UnsupportedOperationException();
+case BCODESXP:
+throw new UnsupportedOperationException();
+case CLASSREFSXP:
+throw new UnsupportedOperationException();
+case GENERICREFSXP:
+throw new UnsupportedOperationException();
+case RAWSXP:
+throw new UnsupportedOperationException();
+case S4SXP:
+throw new UnsupportedOperationException();
+default :
+throw new Exception("unknown type ");
+}
+}

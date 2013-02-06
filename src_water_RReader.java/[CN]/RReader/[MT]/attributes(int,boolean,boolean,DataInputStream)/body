@@ -1,0 +1,14 @@
+{
+  boolean hasAttributes=(flags & HAS_ATTR_BIT_MASK) != 0;
+  boolean hasTag=(flags & HAS_TAG_BIT_MASK) != 0;
+  String[] res=null;
+  if (attributes && hasAttributes) {
+    Object o=read(in,null);
+    if (o instanceof Object[]) {
+      Object[] a=(Object[])o;
+      if (a[0] instanceof String[])       res=(String[])a[0];
+    }
+  }
+  if (tag && hasTag)   read(in,null);
+  return res;
+}

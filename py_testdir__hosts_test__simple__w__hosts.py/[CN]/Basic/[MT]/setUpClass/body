@@ -1,0 +1,7 @@
+@classmethod
+def setUpClass(cls):
+    local_host = (not ('hosts' in os.getcwd()))
+    if local_host:
+        h2o.build_cloud(3, java_heap_GB=7)
+    else:
+        h2o_hosts.build_cloud_with_hosts()

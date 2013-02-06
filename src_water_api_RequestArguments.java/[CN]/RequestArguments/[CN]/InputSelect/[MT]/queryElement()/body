@@ -1,0 +1,16 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("<select id='" + _name + "' name='"+ _name+ "'>");
+  String selected=selectedItemValue();
+  String[] values=selectValues();
+  String[] names=selectNames();
+  if (names == null)   names=values;
+  assert(values.length == names.length);
+  if (_required)   sb.append("<option value=''>Please select...</option>");
+  for (int i=0; i < values.length; ++i) {
+    if (values[i].equals(selected))     sb.append("<option value='" + values[i] + "' selected>"+ names[i]+ "</option>");
+ else     sb.append("<option value='" + values[i] + "'>"+ names[i]+ "</option>");
+  }
+  sb.append("</select>");
+  return sb.toString();
+}

@@ -1,0 +1,74 @@
+{
+  long ctm=System.currentTimeMillis();
+  long[][] snapshot=TimeLine.system_snapshot();
+  H2O cloud=TimeLine.CLOUD;
+  TimelineSnapshot events=new TimelineSnapshot(cloud,snapshot);
+  SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss:SSS");
+  JsonObject resJson=new JsonObject();
+  resJson.addProperty("now",sdf.format(new Date(ctm)));
+  resJson.addProperty("self",H2O.SELF.toString());
+  JsonArray eventsJson=new JsonArray();
+  resJson.add("events",eventsJson);
+  List<TimelineSnapshot.Event> heartbeats=Lists.newArrayList();
+  for (  TimelineSnapshot.Event event : events) {
+    H2ONode h2o=cloud._memary[event.nodeId()];
+    long l0=event.dataLo();
+    long h8=event.dataHi();
+    int udp_type=(int)(l0 & 0xff);
+    UDP.udp e=UDP.udp.UDPS[udp_type];
+    if (e == UDP.udp.heartbeat) {
+      heartbeats.add(event);
+      continue;
+    }
+    if (!heartbeats.isEmpty()) {
+      long firstMs=heartbeats.get(0).ms();
+      long lastMs=heartbeats.get(heartbeats.size() - 1).ms();
+      int[] sends=new int[cloud.size()];
+      int[] recvs=new int[cloud.size()];
+      for (      TimelineSnapshot.Event h : heartbeats) {
+        ++(h.isSend() ? sends : recvs)[h.nodeId()];
+      }
+      heartbeats.clear();
+      JsonObject hbJson=new JsonObject();
+      eventsJson.add(hbJson);
+      hbJson.addProperty("type","heartbeat");
+      hbJson.addProperty("firstTime",sdf.format(new Date(firstMs)));
+      hbJson.addProperty("lastTime",sdf.format(new Date(lastMs)));
+      JsonArray cloudListJson=new JsonArray();
+      hbJson.add("clouds",cloudListJson);
+      for (int i=0; i < sends.length; ++i) {
+        JsonObject cloudJson=new JsonObject();
+        cloudListJson.add(cloudJson);
+        cloudJson.addProperty("cloud",TimeLine.CLOUD._memary[i].toString());
+        cloudJson.addProperty("sends",sends[i]);
+        cloudJson.addProperty("recvs",sends[i]);
+      }
+    }
+    long ms=event.ms();
+    long ns=event.ns();
+    String date=sdf.format(new Date(ms));
+    JsonObject eventJson=new JsonObject();
+    eventsJson.add(eventJson);
+    eventJson.addProperty("type",e.toString());
+    eventJson.addProperty("time",date);
+    eventJson.addProperty("nanos",ns);
+    if (event.isSend()) {
+      String recv="multicast";
+      InetAddress inet=event.addrPack();
+      if (!inet.isMulticastAddress()) {
+        int port=-1;
+        if (events._sends.containsKey(event) && !events._sends.get(event).isEmpty())         port=TimeLine.CLOUD._memary[events._sends.get(event).get(0).nodeId()]._key.getPort();
+        String portStr=":" + ((port != -1) ? port : "?");
+        recv=inet.toString() + portStr;
+      }
+      eventJson.addProperty("send",h2o.toString());
+      eventJson.addProperty("recv",recv);
+    }
+ else {
+      eventJson.addProperty("send",event.addrString());
+      eventJson.addProperty("recv",h2o.toString());
+    }
+    eventJson.addProperty("bytes",UDP.printx16(l0,h8));
+  }
+  return resJson;
+}

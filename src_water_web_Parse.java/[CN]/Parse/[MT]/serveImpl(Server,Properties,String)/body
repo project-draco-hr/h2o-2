@@ -1,0 +1,8 @@
+{
+  JsonObject json=serverJson(s,p,sessionID);
+  long time=json.get("TimeMS").getAsLong();
+  RString res=time > 0 ? new RString("Parsed into <a href='/Inspect?Key=%$Key'>%Key</a> in %TimeMS") : new RString("Already parsed into <a href='/Inspect?Key=%$Key'>%Key</a>.");
+  res.replace("Key",json.get("Key").getAsString());
+  res.replace("TimeMS",PrettyPrint.msecs(time,true));
+  return res.toString();
+}

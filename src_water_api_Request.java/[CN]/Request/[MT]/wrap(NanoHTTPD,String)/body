@@ -1,0 +1,5 @@
+{
+  RString html=new RString(_htmlTemplate);
+  html.replace("CONTENTS",response);
+  return server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_HTML,html.toString());
+}

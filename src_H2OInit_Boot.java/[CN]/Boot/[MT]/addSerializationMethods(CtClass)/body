@@ -1,0 +1,12 @@
+{
+  if (cc.subclassOf(_enum)) {
+    exposeRawEnumArray(cc);
+  }
+ else {
+    cc.setModifiers(javassist.Modifier.setPublic(cc.getModifiers()));
+    ensureSerMethods(cc);
+    ensureNullaryCtor(cc);
+    ensureNewInstance(cc);
+  }
+  return cc.toClass(this,null);
+}

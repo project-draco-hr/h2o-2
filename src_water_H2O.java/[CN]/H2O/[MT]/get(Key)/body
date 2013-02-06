@@ -1,0 +1,11 @@
+{
+  Value v=STORE.get(key);
+  if (v == null) {
+    v=Value.lazyArrayChunk(key);
+    if (v == null)     return null;
+    Value res=putIfMatch(key,v,null);
+    if (res != null)     v=res;
+  }
+  if (v != null)   v.touch();
+  return v;
+}

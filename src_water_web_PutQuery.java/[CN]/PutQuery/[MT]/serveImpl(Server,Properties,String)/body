@@ -1,0 +1,12 @@
+{
+  RString r=new RString(html);
+  String hdfsroot=null;
+  if (hdfsroot != null) {
+    r.replace("hdfsroot",hdfsroot + "/");
+    r.replace("hdfsenabled","block");
+  }
+ else {
+    r.replace("hdfsenabled","none");
+  }
+  return r.toString();
+}

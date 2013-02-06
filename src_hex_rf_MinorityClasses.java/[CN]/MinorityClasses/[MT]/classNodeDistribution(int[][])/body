@@ -1,0 +1,12 @@
+{
+  long[] sum=new long[histogram[0].length];
+  for (int c=0; c < histogram[0].length; ++c) {
+    for (int n=0; n < histogram.length; ++n)     sum[c]+=histogram[n][c];
+  }
+  double[][] res=new double[histogram.length][histogram[0].length];
+  for (int c=0; c < histogram[0].length; ++c) {
+    double div=1.0 / sum[c];
+    for (int n=0; n < histogram.length; ++n)     res[n][c]=histogram[n][c] * div;
+  }
+  return res;
+}

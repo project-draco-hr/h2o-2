@@ -1,0 +1,11 @@
+{
+  JsonObject r=new JsonObject();
+  r.addProperty(NAME,getClass().getSimpleName());
+  r.addProperty(DESCRIPTION,_requestHelp);
+  JsonArray args=new JsonArray();
+  for (  Argument arg : _arguments) {
+    args.add(arg.requestHelp());
+  }
+  r.add(ARGUMENTS,args);
+  return r;
+}

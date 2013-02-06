@@ -1,0 +1,16 @@
+{
+  if (arg == _caseMode) {
+    if (_caseMode.value() == CaseMode.none) {
+      _case.disable("n/a");
+      _weight.disable("case not set");
+    }
+  }
+  if (arg == _family) {
+    if (_family.value() != Family.binomial) {
+      _caseMode.disable("Only for binomial family");
+      _case.disable("Only for binomial family");
+      _weight.disable("Only for binomial family");
+      _thresholds.disable("Only for binomial family");
+    }
+  }
+}

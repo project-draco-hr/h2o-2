@@ -1,0 +1,21 @@
+{
+  File f=new File(fn);
+  String name=f.getName();
+  StringBuilder bldr=new StringBuilder();
+  Reader r=new FileReader(f);
+  char[] buf=new char[1024 * 1024];
+  int n=0;
+  String[] names=new String[multiples.length];
+  while ((n=r.read(buf)) > 0)   bldr.append(buf,0,n);
+  r.close();
+  String content=bldr.toString();
+  bldr=null;
+  int off=0;
+  for (  int m : multiples) {
+    File f2=new File(names[off++]="/tmp/" + name + "."+ m);
+    FileWriter fw=new FileWriter(f2,true);
+    for (int i=0; i <= m; ++i)     fw.write(content);
+    fw.close();
+  }
+  return names;
+}

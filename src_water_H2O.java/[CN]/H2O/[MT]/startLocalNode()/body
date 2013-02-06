@@ -1,0 +1,10 @@
+{
+  initializeNetworkSockets();
+  if (STATIC_H2OS != null && !STATIC_H2OS.contains(SELF)) {
+    System.err.println("[h2o] *WARNING* flatfile configuration does not include self: " + SELF);
+    System.err.println("[h2o] *WARNING* flatfile contains: " + STATIC_H2OS);
+    STATIC_H2OS.add(SELF);
+  }
+  System.out.println("[h2o] (" + VERSION + ") '"+ NAME+ "' on "+ SELF+ (OPT_ARGS.flatfile == null ? (", discovery address " + CLOUD_MULTICAST_GROUP + ":"+ CLOUD_MULTICAST_PORT) : ", static configuration based on -flatfile " + OPT_ARGS.flatfile));
+  CLOUD=new H2O(UUID.randomUUID(),Sets.newHashSet(SELF),1);
+}

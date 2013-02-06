@@ -1,0 +1,8 @@
+{
+  int max=globalHistogram[0];
+  for (int i=1; i < globalHistogram.length; ++i)   if (globalHistogram[i] > max)   max=globalHistogram[i];
+  double[] res=new double[globalHistogram.length];
+  double inv=1.0 / max;
+  for (int i=0; i < globalHistogram.length; ++i)   res[i]=globalHistogram[i] * inv;
+  return res;
+}

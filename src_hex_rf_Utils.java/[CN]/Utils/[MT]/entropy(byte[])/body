@@ -1,0 +1,12 @@
+{
+  int counts[]=new int[256];
+  float entropy=0;
+  float total=f.length;
+  for (  byte b : f)   counts[b + 128]++;
+  for (  int c : counts) {
+    if (c == 0)     continue;
+    float p=c / total;
+    entropy-=p * Math.log(p) / Math.log(2);
+  }
+  return entropy;
+}

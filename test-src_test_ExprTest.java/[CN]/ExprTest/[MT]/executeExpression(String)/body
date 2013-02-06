@@ -1,0 +1,14 @@
+{
+  DKV.write_barrier();
+  try {
+    ++i;
+    Key key=Exec.exec(expr,"result" + (new Integer(i).toString()));
+    return key;
+  }
+ catch (  PositionedException e) {
+    System.out.println(e.report(expr));
+    e.printStackTrace();
+    assertTrue(false);
+    return null;
+  }
+}

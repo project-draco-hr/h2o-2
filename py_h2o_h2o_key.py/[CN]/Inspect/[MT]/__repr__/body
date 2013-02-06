@@ -1,0 +1,5 @@
+def __repr__(self, prefix=''):
+    result = ('Key %s: %s rows x %s cols (type %s):' % (self.name, self.rows, self.cols, self.type))
+    for col in self.columns:
+        result += ('\n' + col.__repr__(('  ' + prefix)))
+    return result

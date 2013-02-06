@@ -1,0 +1,14 @@
+{
+  JsonObject result=new JsonObject();
+  try {
+    Key k=_key.value();
+    double[] d=parseSpaceSeparatedDoubles(_value.value());
+    if (d.length > 200000)     return Response.error("Only vectors of up to 200000 values are supported for now.");
+    k=storeDoublesAsValue(k,d);
+    result.addProperty(KEY,k.toString());
+  }
+ catch (  Exception e) {
+    return Response.error(e.toString());
+  }
+  return Response.done(result);
+}

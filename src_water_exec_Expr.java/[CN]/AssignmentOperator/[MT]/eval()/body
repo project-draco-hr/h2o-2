@@ -1,0 +1,11 @@
+{
+  Result rhs=_rhs.eval();
+  try {
+    Helpers.assign(_pos,_lhs,rhs);
+    Helpers.calculateSigma(_lhs,0);
+  }
+  finally {
+    rhs.dispose();
+  }
+  return Result.permanent(_lhs);
+}

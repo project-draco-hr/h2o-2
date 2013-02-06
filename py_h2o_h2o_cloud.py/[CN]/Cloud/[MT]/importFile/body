@@ -1,0 +1,5 @@
+def importFile(self, key, url, hex=True):
+    ' Imports the given server local file to the H2O and parses it to given key. If hex is False, does not\n        parse the file. '
+    uploadKey = (url if hex else key)
+    res = self._remoteSend(PAGE_IMPORTURL, {KEY: uploadKey, URL: file, })
+    return Key(self, res[KEY])

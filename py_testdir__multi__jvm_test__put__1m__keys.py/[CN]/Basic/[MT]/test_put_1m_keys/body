@@ -1,0 +1,12 @@
+def test_put_1m_keys(self):
+    lenNodes = len(h2o.nodes)
+    h2b.browseTheCloud()
+    trial = 0
+    for i in range(50):
+        for j in range(1, 1000):
+            nodeX = random.randint(0, (lenNodes - 1))
+            p = h2o.nodes[nodeX].put_value(trial, key=trial)
+            trial += 1
+        print ('\nAt trial #' + str(trial))
+        c = h2o.nodes[0].get_cloud()
+        print h2o.dump_json(c)

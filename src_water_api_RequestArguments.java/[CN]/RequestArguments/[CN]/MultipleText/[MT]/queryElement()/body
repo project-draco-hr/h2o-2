@@ -1,0 +1,19 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("<div style='max-height:300px;overflow:auto'>");
+  String[] prefixes=textPrefixes();
+  String[] values=textValues();
+  String[] names=textNames();
+  if (prefixes == null)   prefixes=names;
+  if (values == null) {
+    values=new String[prefixes.length];
+    for (int i=0; i < values.length; ++i)     values[i]="";
+  }
+  assert(prefixes.length == values.length);
+  if (values.length == 0)   sb.append("<div class='alert alert-error'>No editable controls under current setup</div>");
+  for (int i=0; i < values.length; ++i) {
+    sb.append("<div class='input-append'>" + "<input class='span3' name='" + names[i] + "' id='"+ _name+ String.valueOf(i)+ "' type='text' value='"+ values[i]+ "' placeholder='"+ queryDescription()+ "'>"+ "<span class='add-on'>"+ prefixes[i]+ "</span>"+ "</div>");
+  }
+  sb.append("</div>");
+  return sb.toString();
+}

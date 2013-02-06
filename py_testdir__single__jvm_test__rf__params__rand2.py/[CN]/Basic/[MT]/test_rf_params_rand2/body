@@ -1,0 +1,12 @@
+def test_rf_params_rand2(self):
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    csvPathname = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
+    for trial in range(20):
+        params = {'ntree': 13, }
+        colX = h2o_rf.pickRandRfParams(paramDict, params)
+        kwargs = params.copy()
+        timeoutSecs = (30 + (20 * kwargs['ntree']))
+        h2o_cmd.runRF(timeoutSecs=120, retryDelaySecs=1, csvPathname=csvPathname, **kwargs)
+        print 'Trial #', trial, 'completed'

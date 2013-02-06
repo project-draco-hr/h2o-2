@@ -1,0 +1,20 @@
+{
+  Key key=keyFor(model._selfKey,model.size(),datakey,classcol,computeOOB);
+  Confusion C=UKV.get(key,new Confusion());
+  if (C != null) {
+    C.shared_init();
+    return C;
+  }
+  Key progressKey=keyForProgress(model._selfKey,model.size(),datakey,classcol,computeOOB);
+  Value v=DKV.DputIfMatch(progressKey,new Value(progressKey,"IN_PROGRESS"),null,null);
+  C=new Confusion(model,datakey,classcol,classWt,computeOOB);
+  if (v != null) {
+    C._matrix=null;
+    return C;
+  }
+  if (model.size() > 0)   C.invoke(datakey);
+  UKV.put(key,C);
+  UKV.remove(progressKey);
+  if (classWt != null)   for (int i=0; i < classWt.length; i++)   if (classWt[i] != 1.0)   Utils.pln("[CM] Weighted votes " + i + " by "+ classWt[i]);
+  return C;
+}

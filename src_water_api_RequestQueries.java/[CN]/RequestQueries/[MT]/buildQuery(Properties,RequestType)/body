@@ -1,0 +1,48 @@
+{
+  if (args.isEmpty())   type=RequestType.query;
+  RString result=new RString(_queryHtml);
+  result.replace("REQ_NAME",this.getClass().getSimpleName());
+  StringBuilder query=new StringBuilder();
+  query.append("<form onsubmit='return false;'>");
+  RString script=new RString(_queryJs);
+  script.replace("REQUEST_NAME",getClass().getSimpleName());
+  for (  Argument arg : _arguments) {
+    try {
+      arg.check(args.getProperty(arg._name,""));
+      queryArgumentValueSet(arg,args);
+    }
+ catch (    IllegalArgumentException e) {
+      if ((type != RequestType.query) || !args.getProperty(arg._name,"").isEmpty())       query.append("<div class='alert alert-error'>" + e.getMessage() + "</div>");
+    }
+    if (arg._hideInQuery)     continue;
+    query.append(arg.query());
+    if (!arg.disabled()) {
+      RString x=script.restartGroup("REQUEST_ELEMENT");
+      x.replace("ELEMENT_NAME",arg._name);
+      if (arg._prerequisites != null) {
+        StringBuilder sb=new StringBuilder("if( ");
+        ArrayList<RequestArguments.Argument> preqs=arg._prerequisites;
+        for (        RequestArguments.Argument dep : preqs)         sb.append("specArg!=='").append(dep._name).append("' && ");
+        sb.append("true ) ");
+        x.replace("ELEMENT_PREQ",sb);
+      }
+      x.append();
+      x=script.restartGroup("ELEMENT_VALUE");
+      x.replace("ELEMENT_NAME",arg._name);
+      x.replace("BODY","function query_value_" + arg._name + "() { "+ arg.jsValue()+ "} ");
+      x.append();
+    }
+    if (arg.refreshOnChange()) {
+      RString x=script.restartGroup("ELEMENT_ONCHANGE");
+      x.replace("BODY",arg.jsRefresh("query_refresh"));
+      x.append();
+    }
+    RString x=script.restartGroup("ELEMENT_ADDONS");
+    x.replace("BODY",arg.jsAddons());
+    x.append();
+  }
+  query.append("</form>");
+  result.replace("QUERY",query.toString());
+  result.replace("SCRIPT",script.toString());
+  return result.toString();
+}

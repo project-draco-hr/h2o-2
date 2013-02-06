@@ -1,0 +1,66 @@
+{
+  Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+  Sigar sigar=null;
+  try {
+    sigar=new Sigar();
+  }
+ catch (  Error e) {
+  }
+  while (true) {
+    try {
+      Thread.sleep(SLEEP);
+    }
+ catch (    InterruptedException e) {
+    }
+    HeartBeat hb=new HeartBeat();
+    final Runtime run=Runtime.getRuntime();
+    hb.set_free_mem(run.freeMemory());
+    hb.set_max_mem(run.maxMemory());
+    hb.set_tot_mem(run.totalMemory());
+    hb._keys=(H2O.STORE.size());
+    hb.set_valsz(myHisto.histo(false)._cached);
+    hb._num_cpus=(char)run.availableProcessors();
+    hb._rpcs=(char)RPC.TASKS.size();
+    hb._fjthrds_hi=(char)H2O.FJP_HI.getPoolSize();
+    hb._fjthrds_lo=(char)H2O.FJP_NORM.getPoolSize();
+    hb._fjqueue_hi=(char)H2O.FJP_HI.getQueuedSubmissionCount();
+    hb._fjqueue_lo=(char)H2O.FJP_NORM.getQueuedSubmissionCount();
+    hb._tcps_active=(char)TCPReceiverThread.TCPS_IN_PROGRESS.get();
+    if (PersistIce.ROOT == null) {
+      hb.set_free_disk(0);
+      hb.set_max_disk(0);
+    }
+ else {
+      File f=new File(PersistIce.ROOT);
+      hb.set_free_disk(f.getUsableSpace());
+      hb.set_max_disk(f.getTotalSpace());
+    }
+    if (sigar != null && H2O.OPT_ARGS.nosigar == null) {
+      try {
+        hb.set_cpu_util(1.0 - sigar.getCpuPerc().getIdle());
+      }
+ catch (      SigarException ex) {
+        hb.set_cpu_util(-1.0);
+      }
+      try {
+        double[] cpu_load=sigar.getLoadAverage();
+        hb.set_cpu_load(cpu_load[0],cpu_load[1],cpu_load[2]);
+      }
+ catch (      SigarException ex) {
+        hb.set_cpu_load(-1.0,-1.0,-1.0);
+      }
+      fillNetworkStatistics(sigar,hb);
+    }
+    H2O cloud=H2O.CLOUD;
+    UDPHeartbeat.build_and_multicast(cloud,hb);
+    long now=System.currentTimeMillis();
+    H2O.SELF._last_heard_from=now;
+    for (    H2ONode h2o : cloud._memary) {
+      if (now - h2o._last_heard_from > SUSPECT) {
+        Paxos.print("hart: announce suspect node",cloud._memset,h2o.toString());
+        Paxos.doChangeAnnouncement(cloud);
+        break;
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  String[] files=new String[]{"smalldata//cars.csv","smalldata//hhp_9_17_12.predict.100rows.data","smalldata//iris/iris2.csv"};
+  int[] szTrees=new int[]{10};
+  String[] stats=new String[]{"entropy"};
+  boolean[] threading=new boolean[]{true};
+  int[] seeds=new int[]{3};
+  int experiments=files.length * szTrees.length * stats.length* threading.length* seeds.length;
+  String[] commands=new String[experiments];
+  int i=0;
+  for (  String f : files)   for (  int sz : szTrees)   for (  String stat : stats)   for (  int seed : seeds) {
+    RFArgs rfa=new RFArgs();
+    rfa.seed=seed;
+    rfa.statType=stat;
+    rfa.file=f;
+    rfa.ntrees=sz;
+    String add=special.get(f) == null ? "" : (" " + special.get(f));
+    commands[i++]=javaCmd + " " + rfa+ add;
+  }
+  for (  String cmd : commands)   runTest(cmd,args.resultDB,out,true);
+}

@@ -1,0 +1,91 @@
+{
+  int curCol=-1;
+  double curNum=Double.NaN;
+  ValueString curStr=null;
+switch (record.getSid()) {
+case BoundSheetRecord.sid:
+case BOFRecord.sid:
+    break;
+case SSTRecord.sid:
+  _sstRecord=(SSTRecord)record;
+break;
+case BlankRecord.sid:
+BlankRecord brec=(BlankRecord)record;
+curCol=brec.getColumn();
+curStr=_str.setTo("");
+break;
+case BoolErrRecord.sid:
+BoolErrRecord berec=(BoolErrRecord)record;
+curCol=berec.getColumn();
+curStr=_str.setTo("");
+break;
+case FormulaRecord.sid:
+FormulaRecord frec=(FormulaRecord)record;
+curCol=frec.getColumn();
+curNum=frec.getValue();
+if (Double.isNaN(curNum)) {
+_outputNextStringRecord=true;
+_nextCol=frec.getColumn();
+}
+break;
+case StringRecord.sid:
+if (_outputNextStringRecord) {
+StringRecord srec=(StringRecord)record;
+curStr=_str.setTo(srec.getString());
+curCol=_nextCol;
+_outputNextStringRecord=false;
+}
+break;
+case LabelRecord.sid:
+LabelRecord lrec=(LabelRecord)record;
+curCol=lrec.getColumn();
+curStr=_str.setTo(lrec.getValue());
+break;
+case LabelSSTRecord.sid:
+LabelSSTRecord lsrec=(LabelSSTRecord)record;
+if (_sstRecord == null) {
+System.err.println("[ExcelParser] Missing SST record");
+}
+ else {
+curCol=lsrec.getColumn();
+curStr=_str.setTo(_sstRecord.getString(lsrec.getSSTIndex()).toString());
+}
+break;
+case NoteRecord.sid:
+System.err.println("[ExcelParser] Warning cell notes are unsupported");
+break;
+case NumberRecord.sid:
+NumberRecord numrec=(NumberRecord)record;
+curCol=numrec.getColumn();
+curNum=numrec.getValue();
+break;
+case RKRecord.sid:
+System.err.println("[ExcelParser] Warning RK records are unsupported");
+break;
+default :
+break;
+}
+if (record instanceof MissingCellDummyRecord) {
+MissingCellDummyRecord mc=(MissingCellDummyRecord)record;
+curCol=mc.getColumn();
+curNum=Double.NaN;
+}
+if (record instanceof LastCellOfRowDummyRecord) {
+if (_firstRow) {
+_firstRow=false;
+String[] arr=new String[_columnNames.size()];
+arr=_columnNames.toArray(arr);
+_callback.setColumnNames(arr);
+}
+_callback.newLine();
+}
+if (curCol == -1) return;
+if (_firstRow) {
+_columnNames.add(curStr == null ? "" : curStr.toString());
+}
+ else {
+if (curStr == null) if (Double.isNaN(curNum)) _callback.addInvalidCol(curCol);
+ else _callback.addCol(curCol,curNum);
+ else _callback.addStrCol(curCol,curStr);
+}
+}

@@ -1,0 +1,16 @@
+{
+  String name=elementName(contextName);
+  StringBuilder sb=new StringBuilder();
+  sb.append(caption(object,name));
+  sb.append(header(object,name));
+  sb.append("<td>").append(object.get(JSON_LAST_TIME).getAsString()).append("</td>");
+  sb.append("<td>lots</td>");
+  sb.append("<td>many ??? many</td>");
+  sb.append("<td>heartbeat</td>");
+  sb.append("<td>");
+  sb.append(object.get(JSON_SENDS).getAsLong()).append(" sends, ");
+  sb.append(object.get(JSON_RECVS).getAsLong()).append(" recvs");
+  sb.append("</td>");
+  sb.append(footer(object,name));
+  return sb.toString();
+}

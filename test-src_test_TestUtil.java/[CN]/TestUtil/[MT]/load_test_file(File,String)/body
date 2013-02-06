@@ -1,0 +1,13 @@
+{
+  Key key=null;
+  FileInputStream fis=null;
+  try {
+    fis=new FileInputStream(file);
+    key=ValueArray.readPut(keyname,fis);
+  }
+ catch (  IOException e) {
+    Closeables.closeQuietly(fis);
+  }
+  if (key == null)   fail("failed load to " + file.getName());
+  return key;
+}

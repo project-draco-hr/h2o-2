@@ -1,0 +1,11 @@
+def test_exec_assign(self):
+    trial = 0
+    while (trial < 200):
+        for execExpr in initList:
+            nodeX = 0
+            resultKey = ('Result' + str((trial % period)))
+            (execResultInspect, min_value) = h2e.exec_expr(h2o.nodes[nodeX], execExpr, resultKey=resultKey, timeoutSecs=4)
+            print ('trial: #' + str(trial)), min_value, execExpr
+            h2o.verboseprint('min: ', min_value, 'trial:', trial)
+            self.assertEqual(float(min_value), float(((trial % period) - 1)), "exec constant assigns don't seem to be getting done and visible to Inspect")
+            trial += 1

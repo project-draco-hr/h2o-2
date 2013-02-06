@@ -1,0 +1,10 @@
+{
+  Result result=_expr.eval();
+  ValueArray v=getValueArray(result._key);
+  if (v.numCols() <= _colIndex) {
+    result.dispose();
+    throw new EvaluationException(_pos,"Column " + _colIndex + " not present in expression (has "+ v.numCols()+ ")");
+  }
+  result.setColIndex(_colIndex);
+  return result;
+}

@@ -1,0 +1,12 @@
+def exec_expr(node, execExpr, resultKey='Result.hex', timeoutSecs=10):
+    start = time.time()
+    resultExec = h2o_cmd.runExecOnly(node, expression=execExpr, timeoutSecs=timeoutSecs, escape_nan=0)
+    h2o.verboseprint(resultExec)
+    h2o.verboseprint('exec took', (time.time() - start), 'seconds')
+    h2o.verboseprint('\nfirst look at the default Result key')
+    defaultInspectM1 = h2o_cmd.runInspect(None, 'Result.hex', offset=(-1))
+    checkScalarResult(defaultInspectM1, 'Result.hex')
+    h2o.verboseprint((('\nNow look at the assigned ' + resultKey) + ' key'))
+    resultInspectM1 = h2o_cmd.runInspect(None, resultKey, offset=(-1))
+    min_value = checkScalarResult(resultInspectM1, resultKey)
+    return (resultInspectM1, min_value)

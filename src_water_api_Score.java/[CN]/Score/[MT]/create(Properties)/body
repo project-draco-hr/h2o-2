@@ -1,0 +1,26 @@
+{
+  Score S=new Score();
+  String mstr=parms.getProperty(MODEL_KEY);
+  if (mstr == null)   return S;
+  Model M=null;
+  try {
+    M=S._modelKey.parse(mstr);
+  }
+ catch (  IllegalArgumentException iae) {
+    return S;
+  }
+  for (int i=0; i < M._va._cols.length - 1; i++) {
+    ValueArray.Column C=M._va._cols[i];
+    String name=Str2JSON(C._name);
+    if (C._domain != null) {
+      S.new FactorSelect(name,true,C._domain,(int)C._mean);
+    }
+ else     if (C.isFloat()) {
+      S.new Real(name,C._mean,"range: " + C._min + " - "+ C._max);
+    }
+ else {
+      S.new LongInt(name,(long)C._mean,"range: " + C._min + " - "+ C._max);
+    }
+  }
+  return S;
+}

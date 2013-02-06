@@ -1,0 +1,12 @@
+@classmethod
+def setUpClass(cls):
+    global SEED
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    global local_host
+    local_host = (not ('hosts' in os.getcwd()))
+    if local_host:
+        h2o.build_cloud(1, java_heap_GB=4)
+    else:
+        h2o_hosts.build_cloud_with_hosts()

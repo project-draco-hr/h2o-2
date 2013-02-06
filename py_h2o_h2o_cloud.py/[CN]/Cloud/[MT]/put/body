@@ -1,0 +1,7 @@
+def put(self, key, what):
+    ' Puts the given list to the H2O as a key with given name. '
+    if (type(what) == list):
+        res = self._remoteSend(PAGE_PUT, {KEY: key, VALUE: ' '.join([str(x) for x in what]), })
+        return self.get(key)
+    else:
+        raise NotImplementedError('At the moment only lists can be stored to H2O clouds.')

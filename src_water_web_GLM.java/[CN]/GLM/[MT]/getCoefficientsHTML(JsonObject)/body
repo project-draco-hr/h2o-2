@@ -1,0 +1,9 @@
+{
+  StringBuilder bldr=new StringBuilder();
+  bldr.append("<div>");
+  for (  Entry<String,JsonElement> e : coefs.entrySet()) {
+    bldr.append(" <span><b>" + e.getKey() + "</b>="+ dformat.format(e.getValue().getAsDouble())+ "</span> ");
+  }
+  bldr.append("</div>");
+  return bldr.toString();
+}

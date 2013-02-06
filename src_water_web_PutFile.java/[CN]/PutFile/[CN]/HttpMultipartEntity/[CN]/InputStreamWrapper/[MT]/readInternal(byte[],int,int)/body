@@ -1,0 +1,10 @@
+{
+  if (lookAheadLen > 0) {
+    System.arraycopy(lookAheadBuf,0,b,off,lookAheadLen);
+    off+=lookAheadLen;
+    len-=lookAheadLen;
+  }
+  int readLen=wrappedIs.read(b,off,len) + lookAheadLen;
+  lookAheadLen=0;
+  return readLen;
+}

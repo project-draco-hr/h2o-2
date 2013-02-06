@@ -1,0 +1,12 @@
+{
+  super.init();
+  shared_init();
+  long l=ValueArray.getChunkIndex(_keys[_keys.length - 1]) + 1;
+  _chunk_row_mapping=new int[Ints.checkedCast(l)];
+  int off=0;
+  for (  Key k : _keys)   if (k.home()) {
+    l=ValueArray.getChunkIndex(k);
+    _chunk_row_mapping[(int)l]=off;
+    off+=_data.rpc(l);
+  }
+}

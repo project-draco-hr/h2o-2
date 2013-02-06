@@ -1,0 +1,13 @@
+{
+  ++_counter;
+  JsonObject resp=new JsonObject();
+  resp.addProperty("hoho",_haha.value());
+  resp.addProperty("counter",_counter);
+  if (_counter == 10) {
+    _counter=0;
+    return Response.done(resp);
+  }
+ else {
+    return Response.poll(resp,_counter,10);
+  }
+}

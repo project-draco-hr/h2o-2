@@ -1,0 +1,14 @@
+def test_prostate_binomial(self):
+    errors = []
+    key = h2o_cmd.parseFile(csvPathname=h2o.find_file('smalldata/logreg/prostate.csv'), key2='prostate_b')
+    binomial_coefficients = {'Intercept': (-8.126278), 'ID': 0.001609, 'AGE': (-0.008138), 'RACE': (-0.617597), 'DPROS': 0.553065, 'DCAPS': 0.546087, 'PSA': 0.027297, 'VOL': (-0.01154), 'GLEASON': 1.010125, }
+    binomial_nd = 512.3
+    binomial_rd = 376.9
+    binomial_aic = 394.9
+    errors = self.process_dataset(key, 'CAPSULE', binomial_coefficients, binomial_nd, binomial_rd, binomial_aic, family='binomial')
+    if errors:
+        self.fail(str(errors))
+    key = h2o_cmd.parseFile(csvPathname=h2o.find_file('smalldata/logreg/prostate_long.csv.gz'), key2='prostate_long_b')
+    errors = self.process_dataset(key, 'CAPSULE', binomial_coefficients, binomial_nd, binomial_rd, binomial_aic, family='binomial')
+    if errors:
+        self.fail(str(errors))

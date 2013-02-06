@@ -1,0 +1,62 @@
+{
+  Result res=Result.temporary();
+  ValueArray vl=getValueArray(l._key);
+  ValueArray vr=getValueArray(r._key);
+  if (l.rawColIndex() == -1) {
+    l.setColIndex(0);
+    if (vl.numCols() != 1)     throw new EvaluationException(_pos,"Column must be specified for left operand");
+  }
+  if (r.rawColIndex() == -1) {
+    r.setColIndex(0);
+    if (vr.numCols() != 1)     throw new EvaluationException(_pos,"Column must be specified for right operand");
+  }
+  long resultRows=Math.max(vl.numRows(),vr.numRows());
+  VABuilder b=new VABuilder("temp",resultRows).addDoubleColumn("0").createAndStore(res._key);
+  MRVectorBinaryOperator op;
+switch (_type) {
+case ttOpAdd:
+    op=new AddOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+  break;
+case ttOpSub:
+op=new SubOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpMul:
+op=new MulOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpDiv:
+op=new DivOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpMod:
+op=new ModOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpLess:
+op=new LessOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpLessOrEq:
+op=new LessOrEqOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpGreater:
+op=new GreaterOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpGreaterOrEq:
+op=new GreaterOrEqOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpEq:
+op=new EqOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpNeq:
+op=new NeqOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpAnd:
+op=new AndOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+case ttOpOr:
+op=new OrOperator(l._key,r._key,res._key,l.rawColIndex(),r.rawColIndex());
+break;
+default :
+throw new EvaluationException(_pos,"Unknown operator to be used for binary operator evaluation: " + _type.toString());
+}
+op.invoke(res._key);
+b.setColumnStats(0,op._min,op._max,op._tot / resultRows).createAndStore(res._key);
+return res;
+}

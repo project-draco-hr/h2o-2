@@ -1,0 +1,5 @@
+def runGLM(node=None, csvPathname=None, key=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
+    pto = max((timeoutSecs / 5), 10)
+    parseKey = parseFile(node, csvPathname, key, timeoutSecs=pto)
+    glm = runGLMOnly(node, parseKey, timeoutSecs, retryDelaySecs, **kwargs)
+    return glm

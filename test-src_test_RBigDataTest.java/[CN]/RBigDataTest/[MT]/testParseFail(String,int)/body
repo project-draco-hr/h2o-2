@@ -1,0 +1,10 @@
+{
+  try {
+    RLikeParser parser=new RLikeParser();
+    parser.parse(expr);
+    assertTrue("An exception should have been thrown.",false);
+  }
+ catch (  ParserException e) {
+    if (errorPos != -1)     assertEquals(errorPos,e._pos);
+  }
+}

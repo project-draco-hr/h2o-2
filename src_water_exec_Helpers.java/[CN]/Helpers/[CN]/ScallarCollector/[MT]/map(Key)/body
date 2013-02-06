@@ -1,0 +1,11 @@
+{
+  _result=0;
+  ValueArray va=ValueArray.value(_key);
+  Column c=va._cols[_col];
+  AutoBuffer bits=va.getChunk(key);
+  int rowSize=va._rowsize;
+  for (int i=0; i < bits.remaining() / rowSize; ++i) {
+    double x=va.datad(bits,i,c);
+    if (!Double.isNaN(x))     collect(x);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  JsonArray array=new JsonArray();
+  if (PersistS3.S3 == null)   return array;
+  filter=Strings.nullToEmpty(filter);
+  for (  Bucket b : PersistS3.S3.listBuckets()) {
+    if (b.getName().startsWith(filter))     array.add(new JsonPrimitive(b.getName()));
+    if (array.size() == limit)     break;
+  }
+  return array;
+}

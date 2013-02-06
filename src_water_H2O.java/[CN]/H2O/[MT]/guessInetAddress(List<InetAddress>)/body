@@ -1,0 +1,21 @@
+{
+  System.err.println("Multiple local IPs detected:");
+  for (  InetAddress ip : ips)   System.err.println("  " + ip);
+  System.err.println("Attempting to determine correct address...");
+  Socket s=null;
+  try {
+    s=new Socket("8.8.8.8",53);
+    System.err.println("Using " + s.getLocalAddress());
+    return s.getLocalAddress();
+  }
+ catch (  Throwable t) {
+    return null;
+  }
+ finally {
+    try {
+      if (s != null)       s.close();
+    }
+ catch (    Throwable t) {
+    }
+  }
+}

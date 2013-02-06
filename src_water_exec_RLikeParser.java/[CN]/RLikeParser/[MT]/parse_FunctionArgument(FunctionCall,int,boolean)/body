@@ -1,0 +1,17 @@
+{
+  Token t=top();
+  if (argIndex >= f._function.numArgs())   throw new ParserException(t._pos,"Too many arguments to function");
+  if ((t._type == Token.Type.ttIdent) && (f._function.argIndex(t._id) != -1)) {
+    pop();
+    if (condPop(Token.Type.ttOpAssign)) {
+      Expr e=parse_S();
+      f.addArgument(e,t._id);
+      return true;
+    }
+    _s.position(t._pos);
+  }
+  if (seenNamedArgsBefore)   throw new ParserException(t._pos,"After a named argument is used, only named arguments can follow");
+  Expr e=parse_S();
+  f.addArgument(e,argIndex);
+  return false;
+}

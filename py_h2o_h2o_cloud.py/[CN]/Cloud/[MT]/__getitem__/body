@@ -1,0 +1,6 @@
+def __getitem__(self, key):
+    ' Returns a given key, or None if the key does not exist '
+    result = self.get(key)
+    if (result == None):
+        raise KeyError(('Key %s not found in %s' % (key, self._h2o)))
+    return result

@@ -1,0 +1,9 @@
+{
+  ValueArray ary=ValueArray.value(args[0]._key);
+  long rows=(long)args[1]._const;
+  if (rows < 0 || rows > ary.numRows())   throw new Exception("Unable to sample more rows that are already present in the data frame");
+  Result bVect=Function.FUNCTIONS.get("randomBitVector").eval(Result.scalar(ary.numRows()),args[1],args[2]);
+  Result result=Function.FUNCTIONS.get("filter").eval(args[0],bVect);
+  bVect.dispose();
+  return result;
+}

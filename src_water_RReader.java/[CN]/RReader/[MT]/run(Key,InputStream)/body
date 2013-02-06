@@ -1,0 +1,34 @@
+{
+  try {
+    DataInputStream in=new DataInputStream(new GZIPInputStream(stream));
+    header(in);
+    HashMap<Object,String[]> attribs=new HashMap<Object,String[]>();
+    Object value=read(in,attribs);
+    Object[] values=(Object[])((Object[])value)[0];
+    String[] classes=(String[])values[INDEX_CLASSES];
+    Object[] forest=(Object[])values[INDEX_FOREST];
+    int[] jump=(int[])forest[FOREST_MAX_TREE];
+    double[] count=(double[])forest[FOREST_COUNT];
+    int num_trees=(int)count[0];
+    String[] headers=attribs.get(forest[FOREST_COLUMNS]);
+    Key[] keys=new Key[num_trees];
+    for (int i=0; i < num_trees; i++) {
+      AutoBuffer buffer=build(classes,forest,jump[0],i);
+      Key key=Key.make();
+      keys[i]=key;
+      DKV.put(key,new Value(key,buffer.buf()));
+      if (i % 128 == 0) {
+        RModel model=new RModel();
+        model._progress=i / (float)num_trees;
+      }
+    }
+    RModel model=new RModel(dest,headers,classes,keys,1,100.0f);
+    model._progress=1f;
+    UKV.put(dest,model);
+  }
+ catch (  Exception ex) {
+    RModel model=new RModel();
+    model._error=ex.toString();
+    UKV.put(dest,model);
+  }
+}

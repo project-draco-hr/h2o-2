@@ -1,0 +1,11 @@
+{
+  Key k=loadAndParseKey("cars.hex","smalldata/cars.csv");
+  Key k2=executeExpression("cars.hex");
+  testDataFrameStructure(k2,406,8);
+  UKV.remove(k2);
+  k2=executeExpression("a5 = cars.hex[2]");
+  testVectorExpression("a5",8,8,8,4,6,6);
+  UKV.remove(k2);
+  UKV.remove(k);
+  UKV.remove(Key.make("a5"));
+}

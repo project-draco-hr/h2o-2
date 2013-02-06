@@ -1,0 +1,10 @@
+def refresh(self):
+    res = self._h2o._remoteSend(PAGE_INSPECT, {KEY: self.name, })
+    self.rows = res['rows']
+    self._rowSize = res['rowsize']
+    self.cols = res['cols']
+    self._priorKey = res['priorKey']
+    self.key = res['key']
+    self.type = res['type']
+    self._size = res['size']
+    self.columns = Columns(res['columns'])

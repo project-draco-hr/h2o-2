@@ -1,0 +1,8 @@
+{
+  _treeBits=model.tree(treeNum);
+  _columns=ary._cols;
+  _domain=_columns[classCol]._domain;
+  long dl=Tree.depth_leaves(new AutoBuffer(_treeBits));
+  int leaves=(int)(dl & 0xFFFFFFFFL);
+  _nodeCount=leaves * 2 - 1;
+}

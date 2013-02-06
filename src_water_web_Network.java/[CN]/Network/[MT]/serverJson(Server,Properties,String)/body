@@ -1,0 +1,29 @@
+{
+  JsonObject res=new JsonObject();
+  final H2O cloud=H2O.CLOUD;
+  res.addProperty("cloud_name",H2O.NAME);
+  res.addProperty("node_name",H2O.SELF.toString());
+  res.addProperty("cloud_size",cloud._memary.length);
+  HeartBeat hb=H2O.SELF._heartbeat;
+  res.addProperty("total_in_conn",toPosNumber(hb._total_in_conn));
+  res.addProperty("total_out_conn",toPosNumber(hb._total_out_conn));
+  res.addProperty("tcp_in_conn",toPosNumber(hb._tcp_in_conn));
+  res.addProperty("tcp_out_conn",toPosNumber(hb._tcp_out_conn));
+  res.addProperty("udp_in_conn",toPosNumber(hb._udp_in_conn));
+  res.addProperty("udp_out_conn",toPosNumber(hb._udp_out_conn));
+  res.addProperty("total_packets_recv",toPosNumber(hb._total_packets_recv));
+  res.addProperty("total_bytes_recv",PrettyPrint.bytes(hb._total_bytes_recv));
+  res.addProperty("total_bytes_recv_rate",PrettyPrint.bytesPerSecond(hb._total_bytes_recv_rate));
+  res.addProperty("total_packets_sent",toPosNumber(hb._total_packets_sent));
+  res.addProperty("total_bytes_sent",PrettyPrint.bytes(hb._total_bytes_sent));
+  res.addProperty("total_bytes_sent_rate",PrettyPrint.bytesPerSecond(hb._total_bytes_sent_rate));
+  res.addProperty("tcp_packets_recv",toPosNumber(hb._tcp_packets_recv));
+  res.addProperty("tcp_bytes_recv",PrettyPrint.bytes(hb._tcp_bytes_recv));
+  res.addProperty("tcp_packets_sent",toPosNumber(hb._tcp_packets_sent));
+  res.addProperty("tcp_bytes_sent",PrettyPrint.bytes(hb._tcp_bytes_sent));
+  res.addProperty("udp_packets_recv",toPosNumber(hb._udp_packets_recv));
+  res.addProperty("udp_bytes_recv",PrettyPrint.bytes(hb._udp_bytes_recv));
+  res.addProperty("udp_packets_sent",toPosNumber(hb._udp_packets_sent));
+  res.addProperty("udp_bytes_sent",PrettyPrint.bytes(hb._udp_bytes_sent));
+  return res;
+}

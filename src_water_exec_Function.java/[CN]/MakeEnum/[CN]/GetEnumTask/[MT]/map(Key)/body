@@ -1,0 +1,7 @@
+{
+  ValueArray ary=ValueArray.value(_aryKey);
+  AutoBuffer bits=ary.getChunk(key);
+  Column c=ary._cols[_colIndex];
+  final int rowsInChunk=ary.rpc(ValueArray.getChunkIndex(key));
+  for (int i=0; i < rowsInChunk; ++i)   if (!ary.isNA(bits,i,c))   _domain.addKey(c._size < 0 ? String.valueOf(ary.datad(bits,i,c)) : String.valueOf(ary.data(bits,i,c)));
+}

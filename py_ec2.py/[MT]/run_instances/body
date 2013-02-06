@@ -1,0 +1,29 @@
+def run_instances(count=1, **kwargs):
+    'Create a new reservation for count instances'
+    kwargs.setdefault('image_id', IMAGE_ID)
+    kwargs.setdefault('security_groups', SECURITY_GROUPS)
+    kwargs.setdefault('key_name', KEY_NAME)
+    kwargs.setdefault('instance_type', INSTANCE_TYPE)
+    kwargs.setdefault('min_count', count)
+    kwargs.setdefault('max_count', count)
+    reservation = None
+    conn = boto.connect_ec2()
+    try:
+        reservation = conn.run_instances(**kwargs)
+        print 'Waiting for ec2 instances to come up, this can take 1-2 minutes.'
+        start = time.time()
+        for instance in reservation.instances:
+            while (instance.update() == 'pending'):
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                time.sleep(1)
+            if (not (instance.state == 'running')):
+                raise Exception('Error waiting for running state')
+        print (' started in %d seconds' % (time.time() - start))
+        return reservation
+    except:
+        try:
+            terminate_instances(reservation)
+        except:
+            pass
+        raise

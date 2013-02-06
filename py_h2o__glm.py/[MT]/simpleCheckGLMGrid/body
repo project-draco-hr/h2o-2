@@ -1,0 +1,23 @@
+def simpleCheckGLMGrid(self, glmGridResult, colX=None, allowFailWarning=False, **kwargs):
+    destination_key = glmGridResult['destination_key']
+    inspectGG = h2o_cmd.runInspect(None, destination_key)
+    h2o.verboseprint('Inspect of destination_key', destination_key, ':\n', h2o.dump_json(inspectGG))
+    type = inspectGG['type']
+    if ('unparsed' in type):
+        print "Warning: GLM Grid result destination_key is unparsed, can't interpret. Ignoring for now"
+        print 'Run with -b arg to look at the browser output, for minimal checking of result'
+    cols = inspectGG['cols']
+    response = inspectGG['response']
+    rows = inspectGG['rows']
+    value_size_bytes = inspectGG['value_size_bytes']
+    model0 = glmGridResult['models'][0]
+    alpha = model0['alpha']
+    area_under_curve = model0['area_under_curve']
+    error_0 = model0['error_0']
+    error_1 = model0['error_1']
+    key = model0['key']
+    print 'best GLM model key:', key
+    glm_lambda = model0['lambda']
+    inspectGLM = h2o_cmd.runInspect(None, key)
+    h2o.verboseprint('GLMGrid inspectGLM:', h2o.dump_json(inspectGLM))
+    simpleCheckGLM(self, inspectGLM, colX, allowFailWarning=allowFailWarning, **kwargs)

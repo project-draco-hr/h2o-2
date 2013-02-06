@@ -1,0 +1,17 @@
+{
+  StringBuilder bldr=new StringBuilder();
+  bldr.append("<span><b>family: </b>" + glmParams.get("family").getAsString() + "</span>");
+  bldr.append(" <span><b>link: </b>" + glmParams.get("link").getAsString() + "</span>");
+  bldr.append(" <span><b>&epsilon;<sub>&beta;</sub>: </b>" + glmParams.get("betaEps").getAsString() + "</span>");
+  if (glmParams.has("weight"))   bldr.append(" <span><b>weight<sub>1</sub>:</b>" + dformat.format(glmParams.get("weight").getAsDouble()) + "</span>");
+  if (glmParams.has("threshold"))   bldr.append(" <span><b>threshold: </b>" + glmParams.get("threshold").getAsString() + "</span>");
+  String[] params=new String[]{"norm","lambda","lambda2","rho","alpha","weights"};
+  String[] paramHTML=new String[]{"norm","&lambda;<sub>1</sub>","&lambda;<sub>2</sub>","&rho;","&alpha;","weights"};
+  for (int i=0; i < params.length; ++i) {
+    if (!lsmParams.has(params[i]))     continue;
+    String s=lsmParams.get(params[i]).getAsString();
+    if (s.equals("0.0"))     continue;
+    bldr.append(" <span><b>" + paramHTML[i] + ":</b>"+ s+ "</span> ");
+  }
+  return bldr.toString();
+}

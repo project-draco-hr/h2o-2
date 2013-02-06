@@ -1,0 +1,9 @@
+{
+  if (clazz == null)   return null;
+  try {
+    return (Freezable)Class.forName(clazz).newInstance();
+  }
+ catch (  Exception e) {
+    throw Throwables.propagate(e);
+  }
+}

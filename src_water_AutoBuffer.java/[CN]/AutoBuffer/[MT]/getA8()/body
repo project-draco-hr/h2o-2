@@ -1,0 +1,15 @@
+{
+  int len=get4();
+  if (len == -1)   return null;
+  long[] buf=new long[len];
+  int sofar=0;
+  while (sofar < buf.length) {
+    LongBuffer as=_bb.asLongBuffer();
+    int more=Math.min(as.remaining(),len - sofar);
+    as.get(buf,sofar,more);
+    sofar+=more;
+    _bb.position(_bb.position() + as.position() * 8);
+    if (sofar < len)     getSp(Math.min(_bb.capacity() - 7,(len - sofar) * 8));
+  }
+  return buf;
+}

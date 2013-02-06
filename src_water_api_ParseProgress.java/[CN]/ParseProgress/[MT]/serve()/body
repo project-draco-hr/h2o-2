@@ -1,0 +1,25 @@
+{
+  Value v=_dest.value();
+  JsonObject response=new JsonObject();
+  Response r;
+  if (v == null) {
+    r=Response.poll(response,0);
+  }
+ else {
+    response.addProperty(RequestStatics.DEST_KEY,v._key.toString());
+    if (v._isArray == 1) {
+      r=Inspect.redirect(response,v._key);
+    }
+ else {
+      ParseStatus ps=v.get(new ParseStatus());
+      if (ps._error != null) {
+        r=Response.error(ps._error);
+      }
+ else {
+        r=Response.poll(response,(float)ps.getProgress());
+      }
+    }
+  }
+  r.setBuilder(RequestStatics.DEST_KEY,new KeyElementBuilder());
+  return r;
+}

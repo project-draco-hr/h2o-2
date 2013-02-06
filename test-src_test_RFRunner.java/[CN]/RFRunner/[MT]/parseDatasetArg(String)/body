@@ -1,0 +1,18 @@
+{
+  ArrayList<File> files=new ArrayList<File>();
+  StringTokenizer tk=new StringTokenizer(str,",");
+  while (tk.hasMoreTokens()) {
+    String path=tk.nextToken();
+    if (path.endsWith("*")) {
+      path=path.substring(0,path.length() - 1);
+      File f=TestUtil.find_test_file(path);
+      if (!f.isDirectory())       throw new Error("invalid path '" + path + "*'");
+      for (      File x : f.listFiles()) {
+        if (x.isFile() && (x.getName().endsWith(".csv") || x.getName().endsWith(".data")))         files.add(x);
+ else         if (x.isDirectory())         files.addAll(parseDatasetArg(x.getAbsolutePath() + "*"));
+      }
+    }
+ else     files.add(TestUtil.find_test_file(path));
+  }
+  return files;
+}

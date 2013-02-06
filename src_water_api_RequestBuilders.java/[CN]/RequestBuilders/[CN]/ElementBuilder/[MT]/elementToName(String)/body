@@ -1,0 +1,7 @@
+{
+  String base=elementName(contextName);
+  for (  String s : new String[]{Suffixes.BYTES_PER_SECOND,Suffixes.BYTES,Suffixes.MILLIS}) {
+    if (base.endsWith(s))     return base.substring(0,base.length() - s.length());
+  }
+  return base;
+}

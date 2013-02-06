@@ -1,0 +1,16 @@
+{
+  String[] domain=col._domain;
+  if ((domain == null) || (domain.length == 0)) {
+    int min=(int)col._min;
+    if (col._min != min)     throw new IllegalArgumentException("Only integer or enum columns can be classes!");
+    int max=(int)col._max;
+    if (col._max != max)     throw new IllegalArgumentException("Only integer or enum columns can be classes!");
+    if (max - min > maxClasses)     throw new IllegalArgumentException("The column has more than " + maxClasses + " values. Are you sure you have that many classes?");
+    String[] result=new String[max - min + 1];
+    for (int i=0; i <= max - min; ++i)     result[i]=String.valueOf(min + i);
+    return result;
+  }
+ else {
+    return domain;
+  }
+}

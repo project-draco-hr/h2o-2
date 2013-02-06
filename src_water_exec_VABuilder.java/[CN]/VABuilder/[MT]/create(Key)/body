@@ -1,0 +1,6 @@
+{
+  Column[] cols=_cols.toArray(new Column[_cols.size()]);
+  int rowSize=0;
+  for (  Column c : cols)   rowSize+=Math.abs(c._size);
+  return new ValueArray(k,_numRows,rowSize,cols);
+}

@@ -1,0 +1,36 @@
+{
+  RString result=new RString(html);
+  result.replace("dataKey",args.getProperty("dataKey"));
+  Value v=DKV.get(Key.make(args.getProperty("dataKey")));
+  if (v == null)   throw new PageError("Key not found!");
+  if (v._isArray == 0)   throw new PageError("Key is not a dataframe");
+  ValueArray va=ValueArray.value(v);
+  if (va._numrows <= 0)   throw new PageError("Key is not a parsed dataframe");
+  int numCols=va._cols.length;
+  assert(numCols >= 2);
+  result.replace("col0",va._cols[0]._name);
+  result.replace("col1",va._cols[1]._name);
+  if (numCols > 2) {
+    result.replace("colLastIdx",numCols - 1);
+    result.replace("colLast",va._cols[numCols - 1]._name);
+    result.replace("checkLast","checked");
+    result.replace("classIdx",numCols - 1);
+    if (numCols > 3) {
+      for (int i=0; i < va._cols.length; ++i) {
+        RString str=result.restartGroup("colClass");
+        str.replace("colIdx",i);
+        str.replace("colName",Objects.firstNonNull(va._cols[i]._name,i));
+        str.append();
+      }
+    }
+ else {
+      result.replace("styleOther","display:none");
+    }
+  }
+ else {
+    result.replace("styleLast","display:none");
+    result.replace("check1","checked");
+    result.replace("classIdx",1);
+  }
+  return result.toString();
+}

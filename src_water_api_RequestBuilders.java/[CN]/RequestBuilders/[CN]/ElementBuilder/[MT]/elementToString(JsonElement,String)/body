@@ -1,0 +1,27 @@
+{
+  String elementName=elementName(contextName);
+  if (elementName.endsWith(Suffixes.BYTES_PER_SECOND)) {
+    return PrettyPrint.bytesPerSecond(elm.getAsLong());
+  }
+ else   if (elementName.endsWith(Suffixes.BYTES)) {
+    return PrettyPrint.bytes(elm.getAsLong());
+  }
+ else   if (elementName.endsWith(Suffixes.MILLIS)) {
+    return PrettyPrint.msecs(elm.getAsLong(),true);
+  }
+ else   if (elm instanceof JsonPrimitive && ((JsonPrimitive)elm).isString()) {
+    return elm.getAsString();
+  }
+ else   if (elm instanceof JsonPrimitive && ((JsonPrimitive)elm).isNumber()) {
+    Number n=elm.getAsNumber();
+    if (n instanceof Double) {
+      Double d=(Double)n;
+      if (Double.isNaN(d))       return "";
+      return _format.get().format(d);
+    }
+    return elm.getAsString();
+  }
+ else {
+    return elm.toString();
+  }
+}

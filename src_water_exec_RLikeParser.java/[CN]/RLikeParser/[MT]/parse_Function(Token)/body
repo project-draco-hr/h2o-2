@@ -1,0 +1,17 @@
+{
+  FunctionCall result=new FunctionCall(fName._pos,fName._id);
+  pop(Token.Type.ttOpParOpen);
+  int argIndex=0;
+  boolean haveSeenNamedArg=false;
+  if (top()._type != Token.Type.ttOpParClose) {
+    haveSeenNamedArg=parse_FunctionArgument(result,argIndex,haveSeenNamedArg);
+    ++argIndex;
+    while (condPop(Token.Type.ttOpComma)) {
+      haveSeenNamedArg=parse_FunctionArgument(result,argIndex,haveSeenNamedArg);
+      ++argIndex;
+    }
+  }
+  pop(Token.Type.ttOpParClose);
+  result.staticArgumentVerification();
+  return result;
+}

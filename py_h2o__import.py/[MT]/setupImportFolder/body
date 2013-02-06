@@ -1,0 +1,6 @@
+def setupImportFolder(node=None, importFolderPath='/home/0xdiag/datasets'):
+    if (not node):
+        node = h2o.nodes[0]
+    importFolderResult = node.import_files(importFolderPath)
+    h2o.dump_json(importFolderResult)
+    return importFolderResult

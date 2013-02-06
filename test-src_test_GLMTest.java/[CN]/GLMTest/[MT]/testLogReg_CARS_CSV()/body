@@ -1,0 +1,34 @@
+{
+  Key k1=null, k2=null;
+  try {
+    k1=loadAndParseKey("h.hex","smalldata/cars.csv");
+    k2=Exec.exec("colSwap(h.hex,2,h.hex$cylinders==3?1:0)","h2.hex");
+    int[] cols=new int[]{3,4,5,6,7,2};
+    ValueArray va=ValueArray.value(DKV.get(k2));
+    LSMSolver lsmsx=LSMSolver.makeElasticNetSolver(LSMSolver.DEFAULT_LAMBDA);
+    JsonObject glm=computeGLM(GLMSolver.Family.binomial,lsmsx,va,false,cols);
+    JsonObject coefs=glm.get("coefficients").getAsJsonObject();
+    double icept=coefs.get("Intercept").getAsDouble();
+    double disp=coefs.get("displacement (cc)").getAsDouble();
+    double power=coefs.get("power (hp)").getAsDouble();
+    double weight=coefs.get("weight (lb)").getAsDouble();
+    double accel=coefs.get("0-60 mph (s)").getAsDouble();
+    double year=coefs.get("year").getAsDouble();
+    AutoBuffer ab=va.getChunk(0);
+    ROWS:     for (int i=0; i < va._numrows; i++) {
+      for (int j=2; j < 8; j++)       if (va.isNA(ab,i,j))       continue ROWS;
+      double x=disp * va.datad(ab,i,3) + power * va.datad(ab,i,4) + weight * va.datad(ab,i,5) + accel * va.datad(ab,i,6) + year * va.datad(ab,i,7) + icept;
+      double p=1.0 / (1.0 + Math.exp(-x));
+      double cyl=va.data(ab,i,2);
+      assertEquals(cyl,p,0.005);
+    }
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+  }
+ catch (  PositionedException pe) {
+    throw new Error(pe);
+  }
+ finally {
+    UKV.remove(k1);
+    if (k2 != null)     UKV.remove(k2);
+  }
+}

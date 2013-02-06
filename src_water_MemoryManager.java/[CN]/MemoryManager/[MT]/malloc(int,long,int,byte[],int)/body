@@ -1,0 +1,36 @@
+{
+  while (true) {
+    if (!CAN_ALLOC && bytes > 256) {
+synchronized (_lock) {
+        try {
+          _lock.wait(1000);
+        }
+ catch (        InterruptedException ex) {
+        }
+      }
+    }
+    try {
+switch (type) {
+case 1:
+        return new byte[elems];
+case 2:
+      return new short[elems];
+case 4:
+    return new int[elems];
+case -4:
+  return new float[elems];
+case -8:
+return new double[elems];
+case 0:
+return new boolean[elems];
+case -1:
+return Arrays.copyOfRange(orig,from,elems);
+default :
+throw H2O.unimpl();
+}
+}
+ catch (OutOfMemoryError e) {
+}
+set_goals("OOM",true);
+}
+}

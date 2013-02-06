@@ -1,0 +1,11 @@
+{
+  ValueArray va=ValueArray.value(DKV.get(k));
+  Assert.assertEquals(expected.length,va._numrows);
+  Assert.assertEquals(expected[0].length,va._cols.length);
+  for (int i=0; i < va._numrows; ++i)   for (int j=0; j < va._cols.length; ++j) {
+    if (Double.isNaN(expected[i][j]))     Assert.assertFalse(i + " -- " + j,!va.isNA(i,j));
+ else     Assert.assertTrue(compareDoubles(expected[i][j],va.datad(i,j),0.001));
+  }
+  UKV.remove(k);
+  UKV.remove(inputkey);
+}

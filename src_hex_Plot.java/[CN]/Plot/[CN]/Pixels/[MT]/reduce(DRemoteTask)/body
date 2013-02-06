@@ -1,0 +1,11 @@
+{
+  if (DEBUG)   System.out.println("pixels reduce " + this);
+  Pixels task=(Pixels)rt;
+  if (_pixels == null)   _pixels=task._pixels;
+ else {
+    for (int i=0; i < _pixels.length; i++) {
+      int value=_pixels[i] & 0xff + task._pixels[i] & 0xff;
+      _pixels[i]=(byte)Math.min(0xff,value);
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  new TAtomic<Progress>(){
+    @Override public Progress atomic(    Progress old){
+      Progress update=new Progress();
+      update._todo=old._todo;
+      update._done=old._done + 1;
+      if (DEBUG)       System.out.println("s3 step " + update._done + " of "+ update._todo);
+      return update;
+    }
+    @Override public Progress alloc(){
+      return new Progress();
+    }
+  }
+.invoke(key);
+}

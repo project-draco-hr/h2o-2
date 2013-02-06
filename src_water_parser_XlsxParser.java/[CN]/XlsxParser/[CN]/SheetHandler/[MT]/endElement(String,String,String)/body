@@ -1,0 +1,37 @@
+{
+  if (_nextIsString) {
+    int idx=Integer.parseInt(_lastContents);
+    _lastContents=new XSSFRichTextString(_sst.getEntryAt(idx)).toString();
+    _nextIsString=false;
+  }
+  if (name.equals("v")) {
+    if (_firstRow) {
+      _colNames.add(_lastContents);
+    }
+ else {
+      try {
+        try {
+          Double d=Double.parseDouble(_lastContents);
+          if (Double.isNaN(d))           _callback.addInvalidCol(_curCol);
+ else           _callback.addCol(_curCol,d);
+        }
+ catch (        NumberFormatException e) {
+          if (_lastContents.isEmpty())           _callback.addInvalidCol(_curCol);
+ else           _callback.addStrCol(_curCol,_str.setTo(_lastContents));
+        }
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+ else   if (name.equals("row")) {
+    if (_firstRow == true) {
+      _callback.setColumnNames(_colNames.toArray(new String[_colNames.size()]));
+      _firstRow=false;
+    }
+ else {
+      _callback.newLine();
+    }
+  }
+}

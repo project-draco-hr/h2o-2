@@ -1,0 +1,72 @@
+{
+  JsonObject result=new JsonObject();
+  result.addProperty(VALUE_TYPE,"parsed");
+  result.addProperty(KEY,va._key.toString());
+  result.addProperty(NUM_ROWS,va._numrows);
+  result.addProperty(NUM_COLS,va._cols.length);
+  result.addProperty(ROW_SIZE,va._rowsize);
+  result.addProperty(VALUE_SIZE,va.length());
+  if (_offset.value() == INFO_PAGE) {
+    JsonArray rows=new JsonArray();
+    JsonObject row;
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,OFFSET);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,(int)va._cols[i]._off);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,SIZE);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,Math.abs(va._cols[i]._size));
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,BASE);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,va._cols[i]._base);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,SCALE);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,(int)va._cols[i]._scale);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,MIN);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,va._cols[i]._min);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,MAX);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,va._cols[i]._max);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,MEAN);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,va._cols[i]._mean);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,VARIANCE);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,va._cols[i]._sigma);
+    rows.add(row=new JsonObject());
+    row.addProperty(ROW,BADAT);
+    for (int i=0; i < va._cols.length; i++)     row.addProperty(va._cols[i]._name,va._numrows - va._cols[i]._n);
+    result.add(ROW_DATA,rows);
+  }
+ else {
+    if (_offset.value() > va._numrows)     return Response.error("Value only has " + va._numrows + " rows");
+    JsonArray rows=new JsonArray();
+    long endRow=Math.min(_offset.value() + _view.value(),va._numrows);
+    long startRow=Math.min(_offset.value(),va._numrows - _view.value());
+    for (long row=Math.max(0,startRow); row < endRow; ++row) {
+      JsonObject obj=new JsonObject();
+      obj.addProperty(ROW,row);
+      for (int i=0; i < va._cols.length; ++i)       format(obj,va,row,i);
+      rows.add(obj);
+    }
+    result.add(ROW_DATA,rows);
+  }
+  Response r=Response.done(result);
+  r.setBuilder(ROOT_OBJECT,new ObjectBuilder(){
+    @Override public String build(    Response response,    JsonObject object,    String contextName){
+      String s=html(va);
+      Table t=new Table(argumentsToJson(),_offset.value(),_view.value(),va);
+      s+=t.build(response,object.get(ROW_DATA),ROW_DATA);
+      return s;
+    }
+  }
+);
+  r.setBuilder(ROW_DATA + "." + ROW,new ArrayRowElementBuilder(){
+    @Override public String elementToString(    JsonElement elm,    String contextName){
+      String s=_displayNames.get(elm.getAsString());
+      return s != null ? s : super.elementToString(elm,contextName);
+    }
+  }
+);
+  return r;
+}

@@ -1,0 +1,14 @@
+def parseImportFolderFile(node=None, csvFilename=None, importFolderPath=None, key2=None, timeoutSecs=None, retryDelaySecs=None, initialDelaySecs=None):
+    if (not node):
+        node = h2o.nodes[0]
+    if (not csvFilename):
+        raise Exception('parseImportFolderFile: No csvFilename')
+    csvPathnameForH2O = ((('nfs:/' + importFolderPath) + '/') + csvFilename)
+    if (key2 is None):
+        myKey2 = (csvFilename + '.hex')
+    else:
+        myKey2 = key2
+    print 'Waiting for the slow parse of the file:', csvFilename
+    parseKey = node.parse(csvPathnameForH2O, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs)
+    print '\nParse result:', parseKey
+    return parseKey

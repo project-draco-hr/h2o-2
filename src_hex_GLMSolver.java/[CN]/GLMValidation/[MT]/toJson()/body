@@ -1,0 +1,27 @@
+{
+  JsonObject res=new JsonObject();
+  if (_dataKey != null)   res.addProperty("dataset",_dataKey.toString());
+ else   res.addProperty("dataset","");
+  if (_s != null)   res.addProperty("sampling",_s.toString());
+  res.addProperty("nrows",_n);
+  res.addProperty("dof",_dof);
+  res.addProperty("resDev",_deviance);
+  res.addProperty("nullDev",_nullDeviance);
+  res.addProperty("auc",_auc);
+  if (_cm != null) {
+    double[] err=_cm[_tid].classErr();
+    JsonArray arr=new JsonArray();
+    for (int i=0; i < err.length; ++i)     arr.add(new JsonPrimitive(err[i]));
+    res.add("classErr",arr);
+    res.addProperty("err",err());
+    res.addProperty("threshold",_thresholds[_tid]);
+    res.add("cm",_cm[_tid].toJson());
+  }
+ else   res.addProperty("err",_err);
+  if (_modelKeys != null) {
+    JsonArray arr=new JsonArray();
+    for (    Key k : _modelKeys)     arr.add(new JsonPrimitive(k.toString()));
+    res.add("xval_models",arr);
+  }
+  return res;
+}

@@ -1,0 +1,6 @@
+{
+  int idx=_function.argIndex(name);
+  if (idx == -1)   throw new ParserException(argument._pos,"Argument " + name + " not recognized for function "+ _function._name);
+  if (_args[idx] != null)   throw new ParserException(argument._pos,"Argument " + name + " already defined for function "+ _function._name);
+  addArgument(argument,idx);
+}

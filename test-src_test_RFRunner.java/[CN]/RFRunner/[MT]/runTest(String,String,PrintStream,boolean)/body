@@ -1,0 +1,28 @@
+{
+  RFProcess p=new RFProcess(cmd);
+  p._stdout=stdout;
+  p.start();
+  p.join(MAX_RUNNING_TIME);
+  p.cleanup();
+  p.join();
+  File resultFile=new File(resultDB);
+  boolean writeColumnNames=!resultFile.exists();
+  FileWriter fw=new FileWriter(resultFile,true);
+  if (writeColumnNames) {
+    fw.write("Timestamp, Command");
+    for (    String s : RESULTS)     fw.write(", " + s);
+    fw.write("\n");
+  }
+  fw.write(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(new Date(System.currentTimeMillis())) + "," + cmd+ ",");
+  if (check) {
+    String expect=errorRates.get(cmd);
+  }
+  if (p.exception != null) {
+    System.err.println("Error: " + p.exception);
+    fw.write("," + p.exception);
+  }
+ else   _im.print(fw);
+  fw.write("\n");
+  fw.close();
+  return true;
+}

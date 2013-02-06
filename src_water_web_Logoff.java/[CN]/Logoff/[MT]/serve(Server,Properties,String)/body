@@ -1,0 +1,7 @@
+{
+  RString r=new RString(Page.html);
+  r.replace("contents",logoff);
+  NanoHTTPD.Response resp=server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_HTML,r.toString());
+  resp.addHeader("Set-cookie",SessionManager.SESSION_COOKIE + "=__void__");
+  return resp;
+}

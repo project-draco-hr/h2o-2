@@ -1,0 +1,21 @@
+def process_dataset(self, key, Y, e_coefs, e_ndev, e_rdev, e_aic, **kwargs):
+    kwargs['alpha'] = 0
+    kwargs['lambda'] = 0
+    glm = h2o_cmd.runGLMOnly(parseKey=key, Y='CAPSULE', timeoutSecs=10, **kwargs)
+    GLMModel = glm['GLMModel']
+    GLMParams = GLMModel['GLMParams']
+    family = GLMParams['family']
+    coefs = GLMModel['coefficients']
+    validationsList = GLMModel['validations']
+    validations = validationsList.pop()
+    err = validations['err']
+    nullDev = validations['nullDev']
+    resDev = validations['resDev']
+    errors = []
+    for x in coefs:
+        h2o.verboseprint('Comparing:', coefs[x], e_coefs[x])
+        if (abs((float(coefs[x]) - e_coefs[x])) > (0.001 * abs(e_coefs[x]))):
+            errors.append(('%s: %f != %f' % (x, e_coefs[x], coefs[x])))
+    h2o.verboseprint('Comparing:', nullDev, e_ndev)
+    h2o.verboseprint('Comparing:', resDev, e_rdev)
+    return errors

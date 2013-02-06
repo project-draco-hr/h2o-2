@@ -1,0 +1,13 @@
+{
+  if (_nodeCount > 10000)   return "<div class='alert'>Tree is too large to print psuedo code</div>";
+  try {
+    StringBuilder sb=new StringBuilder();
+    sb.append("<pre><code>");
+    new CodeTreePrinter(sb,_columns,_domain).walk_serialized_tree(new AutoBuffer(_treeBits));
+    sb.append("</code></pre>");
+    return sb.toString();
+  }
+ catch (  Exception e) {
+    return errorRender(e);
+  }
+}

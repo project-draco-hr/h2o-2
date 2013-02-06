@@ -1,0 +1,12 @@
+{
+  if (senderCnd.isSend() && recvCnd.isRecv() && senderCnd.match(recvCnd)) {
+    ArrayList<Event> recvs=_sends.get(senderCnd);
+    if (recvs.isEmpty() || senderCnd.addrPack().isMulticastAddress()) {
+      for (      Event e : recvs) {
+        if (e.nodeId() == recvCnd.nodeId())         return false;
+      }
+      return true;
+    }
+  }
+  return false;
+}

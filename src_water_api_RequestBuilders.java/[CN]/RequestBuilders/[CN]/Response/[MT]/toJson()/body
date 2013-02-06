@@ -1,0 +1,12 @@
+{
+  JsonObject res=_response;
+  if (_strictJsonCompliance)   res=JsonUtil.escape(res);
+  if (_response == _redirectArgs) {
+    res=new JsonObject();
+    for (    Entry<String,JsonElement> e : _response.entrySet()) {
+      res.add(e.getKey(),e.getValue());
+    }
+  }
+  res.add(RESPONSE,responseToJson());
+  return res;
+}

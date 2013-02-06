@@ -1,0 +1,14 @@
+{
+  Value v=DKV.get(key);
+  if (v != null) {
+    byte[] mem=DKV.get(key).get();
+    for (    byte b : mem) {
+      _res^=b;
+    }
+  }
+ else {
+    ++_missingKeysCount;
+    _minMissingKey=ValueArray.getChunkIndex(key);
+    _maxMissingKey=_minMissingKey;
+  }
+}

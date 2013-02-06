@@ -1,0 +1,7 @@
+def _remoteSend(self, action, args={}):
+    ' Sends the given request to the server and returns the JSON object result. '
+    data = urllib.urlencode(args)
+    c = urllib2.urlopen((self._server + action), data)
+    res = json.loads(c.read())
+    self._checkError(res)
+    return res

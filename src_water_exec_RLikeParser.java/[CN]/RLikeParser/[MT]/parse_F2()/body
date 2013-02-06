@@ -1,0 +1,37 @@
+{
+  int pos=top()._pos;
+switch (top()._type) {
+case ttOpSub:
+    return new UnaryOperator(pos,pop()._type,parse_F());
+case ttFloat:
+  return new FloatLiteral(pos,pop()._value);
+case ttInteger:
+return new FloatLiteral(pos,pop()._value);
+case ttString:
+return new StringLiteral(pos,pop()._id);
+case ttIdent:
+{
+Token t=pop();
+if (top()._type == Token.Type.ttOpAssign) {
+pos=pop()._pos;
+Expr rhs=parse_S();
+return new AssignmentOperator(pos,Key.make(t._id),rhs);
+}
+ else if (top()._type == Token.Type.ttOpParOpen) {
+return parse_Function(t);
+}
+ else {
+return new KeyLiteral(t._pos,t._id);
+}
+}
+case ttOpParOpen:
+{
+pop();
+Expr e=parse_S();
+pop(Token.Type.ttOpParClose);
+return e;
+}
+default :
+throw new ParserException(top()._pos,"Number or parenthesis",top()._type);
+}
+}

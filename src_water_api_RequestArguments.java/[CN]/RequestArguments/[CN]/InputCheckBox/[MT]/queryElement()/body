@@ -1,0 +1,9 @@
+{
+  Record record=record();
+  String value=record._originalValue;
+  if (value == null) {
+    Boolean v=defaultValue();
+    value=((v == null) || (v == false)) ? "" : "1";
+  }
+  return "<input value='1' class='span5' type='checkbox' name='" + _name + "' id='"+ _name+ "' "+ (value.equals("1") ? (" checked />") : "/>")+ "&nbsp;&nbsp;"+ queryDescription();
+}

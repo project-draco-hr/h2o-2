@@ -1,0 +1,20 @@
+{
+  if (key._kb[0] != Key.ARRAYLET_CHUNK)   return null;
+  Key arykey=ValueArray.getArrayKey(key);
+  Value v1=DKV.get(arykey);
+  if (v1 == null)   return null;
+  if (v1._isArray == 0)   return null;
+switch (v1._persist & BACKEND_MASK) {
+case ICE:
+    if (!key.home())     return null;
+  return PersistIce.lazyArrayChunk(key);
+case HDFS:
+return PersistHdfs.lazyArrayChunk(key);
+case NFS:
+return PersistNFS.lazyArrayChunk(key);
+case S3:
+return PersistS3.lazyArrayChunk(key);
+default :
+throw H2O.unimpl();
+}
+}

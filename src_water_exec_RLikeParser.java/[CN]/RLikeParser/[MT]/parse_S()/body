@@ -1,0 +1,9 @@
+{
+  if (top()._type == Token.Type.ttEOF)   return null;
+  Expr result=parse_E();
+  if (top()._type == Token.Type.ttOpRightAssign) {
+    int pos=pop()._pos;
+    result=new AssignmentOperator(pos,Key.make(pop()._id),result);
+  }
+  return result;
+}

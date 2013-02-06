@@ -1,0 +1,34 @@
+{
+  final int[] distR=new int[d.classes()], distL=dist.clone();
+  final double upperBoundReduction=upperBoundReduction(d.classes());
+  double maxReduction=-1;
+  int bestSplit=-1;
+  int min=d.colMinIdx(col);
+  int max=d.colMaxIdx(col);
+  for (int i=min; i < max + 1; ++i) {
+    for (int j=0; j < distR.length; ++j) {
+      int v=_columnDists[col][i][j];
+      distL[j]+=distR[j];
+      distR[j]=v;
+      distL[j]-=v;
+    }
+    int totL=0, totR=0;
+    for (    int e : distL)     totL+=e;
+    if (totL == 0)     continue;
+    for (    int e : distR)     totR+=e;
+    if (totR == 0)     continue;
+    double eL=0, eR=0;
+    for (    int e : distL)     eL+=gain(e,totL);
+    for (    int e : distR)     eR+=gain(e,totR);
+    double eReduction=upperBoundReduction - ((eL * totL + eR * totR) / (totL + totR));
+    if (eReduction == maxReduction) {
+      if (rand.nextInt(10) < 2)       bestSplit=i;
+    }
+ else     if (eReduction > maxReduction) {
+      bestSplit=i;
+      maxReduction=eReduction;
+    }
+    if (i == 0 && d.columnArity(col) == 1)     break;
+  }
+  return bestSplit == -1 ? Split.impossible(Utils.maxIndex(dist,_random)) : Split.exclusion(col,bestSplit,maxReduction);
+}

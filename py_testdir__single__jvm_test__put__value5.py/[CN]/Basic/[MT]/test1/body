@@ -1,0 +1,8 @@
+def test1(self):
+    for x in xrange(1, 2000, 1):
+        if ((x % 100) == 0):
+            sys.stdout.write('.')
+            sys.stdout.flush()
+        trialString = ('Trial' + str(x))
+        trialStringXYZ = (('Trial' + str(x)) + 'XYZ')
+        put = h2o.nodes[0].put_value(trialString, key=trialStringXYZ, repl=None)

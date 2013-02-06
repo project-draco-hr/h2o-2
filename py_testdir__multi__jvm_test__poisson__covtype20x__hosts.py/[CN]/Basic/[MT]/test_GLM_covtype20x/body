@@ -1,0 +1,37 @@
+def test_GLM_covtype20x(self):
+    if local_host:
+        csvFilenameList = [('covtype20x.data', 120)]
+    else:
+        csvFilenameList = [('covtype200x.data', 1000)]
+    h2b.browseTheCloud()
+    importFolderPath = '/home/0xdiag/datasets'
+    h2i.setupImportFolder(None, importFolderPath)
+    for (csvFilename, timeoutSecs) in csvFilenameList:
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000)
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_columns:', '{:,}'.format(inspect['num_columns'])
+        if (1 == 0):
+            print 'WARNING: just doing the first 33 features, for comparison to allstate numbers'
+            x = ','.join(map(str, range(33)))
+        else:
+            x = ''
+        print 'WARNING: max_iter set to 8 for benchmark comparisons'
+        max_iter = 8
+        y = '54'
+        kwargs = {'x': x, 'y': y, 'family': 'poisson', 'link': 'log', 'num_cross_validation_folds': 0, 'max_iter': max_iter, 'beta_eps': 0.001, }
+        kwargs.update({'alpha': 0, 'lambda': 0, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm (L2) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm (Elastic) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm (L1) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)

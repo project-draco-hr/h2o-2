@@ -1,0 +1,9 @@
+{
+  try {
+    String k=URLEncoder.encode(content,"UTF-8");
+    return super.build("<a href='Inspect.html?key=" + k + "'>"+ content+ "</a>",name);
+  }
+ catch (  Throwable e) {
+    throw Throwables.propagate(e);
+  }
+}

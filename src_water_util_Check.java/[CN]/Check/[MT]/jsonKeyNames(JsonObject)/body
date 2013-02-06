@@ -1,0 +1,14 @@
+{
+  if (o == null)   return true;
+  for (  Entry<String,JsonElement> e : o.entrySet()) {
+    Check.paramName(e.getKey());
+    JsonElement v=e.getValue();
+    if (v.isJsonObject()) {
+      Check.jsonKeyNames(v.getAsJsonObject());
+    }
+ else     if (v.isJsonArray()) {
+      Check.jsonKeyNames(v.getAsJsonArray());
+    }
+  }
+  return true;
+}

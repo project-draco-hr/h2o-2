@@ -1,0 +1,17 @@
+{
+  if (other == null)   return -1;
+  int res=other.send_recv() - send_recv();
+  if (res == 0) {
+    if (isSend()) {
+      long myMaxMs=0;
+      long otherMaxMs=0;
+      ArrayList<Event> myRecvs=_sends.get(this);
+      ArrayList<Event> otherRecvs=_sends.get(other);
+      for (      Event e : myRecvs)       if (e.ms() > myMaxMs)       myMaxMs=e.ms();
+      for (      Event e : otherRecvs)       if (e.ms() > otherMaxMs)       otherMaxMs=e.ms();
+      res=(int)(myMaxMs - otherMaxMs);
+    }
+    if (res == 0)     res=(int)(ms() - other.ms());
+  }
+  return res;
+}
