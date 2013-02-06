@@ -20,9 +20,9 @@ def test_GLM_many_cols(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         csvPathname = ((importFolderPath + '/') + csvFilename)
         num_rows = inspect['num_rows']
-        num_columns = inspect['num_columns']
-        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_columns:', '{:,}'.format(num_columns)
-        y = (num_columns - 1)
+        num_cols = inspect['num_cols']
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
+        y = (num_cols - 1)
         kwargs = {'family': 'binomial', 'link': 'logit', 'y': y, 'max_iter': 8, 'num_cross_validation_folds': 0, 'beta_eps': 0.0001, 'alpha': 0, 'lambda': 0, }
         for trial in range(3):
             start = time.time()

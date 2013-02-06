@@ -19,7 +19,7 @@
     obj.addProperty(C._name,C._domain == null ? (C.isFloat() ? Double.toString(d[i]) : Long.toString((long)d[i])) : C._domain[(int)d[i]]);
   }
   rows.add(obj);
-  res.add(ROW_DATA,rows);
+  res.add(ROWS,rows);
   double response=M.score(d,null);
   res.addProperty(CLASS,response);
   Response r=Response.done(res);

@@ -6,12 +6,12 @@
   if (rows_cols != null && rows_cols[1] != 0) {
     double bytes_per_row=(double)bs.length / rows_cols[0];
     long rows=(long)(v.length() / bytes_per_row);
-    result.addProperty(ROWS,"~" + rows);
-    result.addProperty(COLS,rows_cols[1]);
+    result.addProperty(NUM_ROWS,"~" + rows);
+    result.addProperty(NUM_COLS,rows_cols[1]);
   }
  else {
-    result.addProperty(ROWS,"unknown");
-    result.addProperty(COLS,"unknown");
+    result.addProperty(NUM_ROWS,"unknown");
+    result.addProperty(NUM_COLS,"unknown");
   }
   result.addProperty(VALUE_SIZE,v.length());
   Response r=Response.done(result);
