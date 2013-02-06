@@ -1,9 +1,0 @@
-{
-  String key=args.getProperty("Key",UUID.randomUUID().toString());
-  if (key.isEmpty())   key=UUID.randomUUID().toString();
-  String fname=args.getProperty("File","file");
-  int port=uploadFile(fname,key);
-  JsonObject res=new JsonObject();
-  res.addProperty("port",port);
-  return res;
-}

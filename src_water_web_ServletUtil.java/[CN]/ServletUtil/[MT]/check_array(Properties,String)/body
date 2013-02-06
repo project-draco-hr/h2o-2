@@ -1,8 +1,0 @@
-{
-  Key key=check_key(args,s);
-  Value val=DKV.get(key);
-  if (val == null)   throw new PageError("Key not found: " + key);
-  if (val._isArray == 0)   throw new PageError("Key not a structured (parsed) array");
-  ValueArray ary=ValueArray.value(val);
-  return ary;
-}

@@ -1,8 +1,0 @@
-{
-  Key srcKey=ServletUtil.check_key(args,"Key");
-  String err=TaskStore2HDFS.store2Hdfs(srcKey);
-  if (err != null)   return H2OPage.error(err);
-  RString res=new RString("Successfully stored on HDFS into <a href='/Inspect?Key=%$key'>%key</a>");
-  res.replace("key",srcKey);
-  return H2OPage.success(res.toString());
-}
