@@ -1,8 +1,0 @@
-{
-  JsonObject json=serverJson(server,args,sessionID);
-  RString html=new RString("Covariance of <a href='/Inspect?Key=%$Key'>%Key</a> between columns %ColA and %ColB" + "<p>Pass 1 took %p1, pass 2 took %p2" + "<p>Covariance  = %Covariance"+ "<p>Correlation = %Correlation"+ "<p><table><tr><td></td><td>Var %ColA</td><td>Var %ColB</td></tr>"+ "<tr><td>Mean</td><td>%XMean</td><td>%YMean</td></tr>"+ "<tr><td>Standard Deviation</td><td>%XStdDev</td><td>%YStdDev</td></tr>"+ "<tr><td>Variance</td><td>%XVariance</td><td>%YVariance</td></tr>"+ "</table>");
-  html.replace(json);
-  html.replace("p1",PrettyPrint.msecs(json.get("Pass1Msecs").getAsLong(),true));
-  html.replace("p2",PrettyPrint.msecs(json.get("Pass2Msecs").getAsLong(),true));
-  return html.toString();
-}
