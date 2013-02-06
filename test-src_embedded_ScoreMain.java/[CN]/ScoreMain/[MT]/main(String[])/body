@@ -1,0 +1,9 @@
+{
+  sampleAppInit(args);
+  System.out.println("Loading model to score");
+  FileInputStream fis=new FileInputStream("../../demo/SampleScorecard.pmml");
+  water.score.ScorecardModel scm=water.parser.PMMLParser.load(fis);
+  sampleAppDoesStuff(scm);
+  System.out.println("Sample App Shuts Down");
+  System.exit(0);
+}

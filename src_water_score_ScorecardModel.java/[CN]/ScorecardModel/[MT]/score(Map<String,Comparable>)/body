@@ -3,8 +3,8 @@
   for (  String k : _features.keySet()) {
     RuleTable ruleTable=_features.get(k);
     if (ruleTable != null) {
-      System.out.println("ScorecardModel.score(): " + ruleTable.toString());
-      score+=ruleTable.score(row.get(k));
+      double s=ruleTable.score(row.get(k));
+      score+=s;
     }
   }
   return score;

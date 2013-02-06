@@ -1,3 +1,6 @@
 {
+  if (value != null && _value != null && value.getClass() != _value.getClass()) {
+    if (value.getClass() == Long.class && _value.getClass() == Double.class)     return ((Long)value).longValue() <= ((Double)_value).doubleValue();
+  }
   return value != null && _value.compareTo(value) >= 0;
 }

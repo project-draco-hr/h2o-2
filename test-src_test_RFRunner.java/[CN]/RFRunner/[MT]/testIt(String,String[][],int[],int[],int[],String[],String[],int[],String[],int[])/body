@@ -5,17 +5,18 @@
   if (bin_limits == null)   bin_limits=new int[]{10000};
   if (samples == null)   samples=new int[]{67};
   if (stats == null)   stats=new String[]{"entropy"};
-  if (ignores == null)   ignores=new int[]{-1};
+  if (ignores == null)   ignores=new String[]{null};
   if (seeds == null)   seeds=new int[]{3};
   if (stratas == null)   stratas=new String[]{null};
-  int experiments=files.length * tree_size.length * stats.length* samples.length* seeds.length* bin_limits.length* ignores.length* stratas.length;
+  if (features == null)   features=new int[]{-1};
+  int experiments=files.length * tree_size.length * stats.length* samples.length* seeds.length* bin_limits.length* ignores.length* stratas.length* features.length;
   String[] commands=new String[experiments];
   for (int i=0; i < files.length; i++) {
     files[i][0]=path + "/" + files[i][0];
     if (files[i][1] != null)     files[i][1]=path + "/" + files[i][1];
   }
   int i=0;
-  for (  int ig : ignores)   for (  String[] f : files)   for (  int sz : tree_size)   for (  String stat : stats)   for (  int smpl : samples)   for (  int bl : bin_limits)   for (  int seed : seeds)   for (  String strata : stratas) {
+  for (  String ig : ignores)   for (  String[] f : files)   for (  int sz : tree_size)   for (  String stat : stats)   for (  int smpl : samples)   for (  int bl : bin_limits)   for (  int seed : seeds)   for (  String strata : stratas)   for (  int feat : features) {
     RFArgs rfa=new RFArgs();
     rfa.seed=seed;
     rfa.statType=stat;
@@ -24,12 +25,13 @@
     rfa.ntrees=sz;
     rfa.sample=smpl;
     rfa.binLimit=bl;
-    if (ig != -1)     rfa.ignores=Integer.toString(ig);
+    if (ig != null)     rfa.ignores=ig;
+    rfa.features=feat;
     if (strata != null) {
       rfa.stratify=true;
       rfa.strata=strata;
     }
-    String add=special.get(f) == null ? "" : (" " + special.get(f));
+    String add=special.get(f[0]) == null ? "" : (" " + special.get(f[0]));
     commands[i++]=javaCmd_ + " " + rfa+ add;
   }
   try {
