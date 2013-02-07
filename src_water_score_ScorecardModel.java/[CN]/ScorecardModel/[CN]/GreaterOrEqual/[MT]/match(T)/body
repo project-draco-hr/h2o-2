@@ -1,3 +1,8 @@
 {
-  return value != null && !super.match(value);
+  if (_value == value)   return true;
+  if (_value == null || value == null)   return false;
+  if (Double.isNaN(_d)) {
+    return _value.compareTo(getString(value)) <= 0;
+  }
+  return getNumber(value) >= _d;
 }

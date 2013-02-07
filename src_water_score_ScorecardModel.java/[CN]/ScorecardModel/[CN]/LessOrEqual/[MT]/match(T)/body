@@ -1,10 +1,8 @@
 {
-  if (value != null && _value != null && value.getClass() != _value.getClass()) {
-    if (value.getClass() == Long.class && _value.getClass() == Double.class) {
-      long val1=((Long)((Object)value)).longValue();
-      double val2=((Double)((Object)_value)).doubleValue();
-      return val1 <= val2;
-    }
+  if (_value == value)   return true;
+  if (_value == null || value == null)   return false;
+  if (Double.isNaN(_d)) {
+    return _value.compareTo(getString(value)) >= 0;
   }
-  return value != null && _value.compareTo(value) >= 0;
+  return getNumber(value) <= _d;
 }
