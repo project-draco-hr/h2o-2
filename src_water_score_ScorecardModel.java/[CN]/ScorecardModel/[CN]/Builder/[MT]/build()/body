@@ -13,7 +13,7 @@
     String cons="  public " + cname + "() { super(\""+ _scm._name+ "\","+ _scm._initialScore+ "); }";
     CtConstructor happyConst=CtNewConstructor.make(cons,scClass);
     scClass.addConstructor(happyConst);
-    Class myClass=scClass.toClass();
+    Class myClass=scClass.toClass(ScorecardModel.class.getClassLoader(),null);
     ScorecardModel scm=(ScorecardModel)myClass.newInstance();
     scm._features=_scm._features;
     scm._rules=_scm._rules;
