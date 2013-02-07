@@ -1,9 +1,0 @@
-{
-  String pname=getName(_name,_type,vars,sb);
-  sb.append("  if( false ) ;\n");
-  for (  Rule r : _rule)   if (_type == DataTypes.STRING)   r.toJavaStr(sb,pname);
- else   if (_type == DataTypes.BOOLEAN)   r.toJavaBool(sb,pname);
- else   r.toJavaNum(sb,pname);
-  sb.append("\n");
-  return sb;
-}

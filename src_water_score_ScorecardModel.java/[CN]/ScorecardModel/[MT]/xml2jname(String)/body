@@ -1,0 +1,15 @@
+{
+  StringBuilder nn=new StringBuilder();
+  char[] cs=xml.toCharArray();
+  if (!Character.isJavaIdentifierStart(cs[0]))   nn.append('X');
+  for (  char c : cs) {
+    if (!Character.isJavaIdentifierPart(c)) {
+      nn.append('_');
+    }
+ else {
+      nn.append(c);
+    }
+  }
+  String jname=nn.toString();
+  return jname;
+}

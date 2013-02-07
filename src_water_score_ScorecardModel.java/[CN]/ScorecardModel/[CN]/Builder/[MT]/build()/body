@@ -1,24 +1,26 @@
 {
-  String java=_scm.toJava();
-  System.err.println(java);
   _pool=ClassPool.getDefault();
   try {
-    String cname=xml2jname(_scm._name,CLASS_NAMES);
+    String cname=xml2jname(_scm._name);
+    if (CLASS_NAMES.containsKey(cname)) {
+      throw H2O.unimpl();
+    }
     CtClass scClass=_pool.makeClass(cname);
     CtClass baseClass=_pool.get("water.score.ScorecardModel");
     scClass.setSuperclass(baseClass);
-    CtMethod happyMethod=CtMethod.make(java,scClass);
-    scClass.addMethod(happyMethod);
+    _scm.makeScoreHashMethod(scClass);
+    _scm.makeScoreAryMethod(scClass);
     String cons="  public " + cname + "() { super(\""+ _scm._name+ "\","+ _scm._initialScore+ "); }";
-    System.err.println(cons);
     CtConstructor happyConst=CtNewConstructor.make(cons,scClass);
     scClass.addConstructor(happyConst);
     Class myClass=scClass.toClass();
     ScorecardModel scm=(ScorecardModel)myClass.newInstance();
+    scm._features=_scm._features;
+    scm._rules=_scm._rules;
     return scm;
   }
  catch (  Exception e) {
-    System.err.println("javassit failed: " + e);
+    System.err.println("javassist failed: " + e);
     e.printStackTrace();
   }
   return _scm;
