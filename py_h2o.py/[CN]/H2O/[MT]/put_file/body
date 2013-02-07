@@ -1,6 +1,0 @@
-def put_file(self, f, key=None, timeoutSecs=60):
-    resp1 = self.__check_request(requests.get(self.__url('WWWFileUpload.json'), timeout=timeoutSecs, params={'key': key, }), extraComment=((str(f) + ',') + str(key)))
-    verboseprint('\nput_file #1 phase response: ', dump_json(resp1))
-    resp2 = self.__check_request(requests.post(self.__url('Upload.json', port=resp1['port']), files={'file': open(f, 'rb'), }), extraComment=str(f))
-    verboseprint('put_file #2 phase response: ', dump_json(resp2))
-    return resp2[0]
