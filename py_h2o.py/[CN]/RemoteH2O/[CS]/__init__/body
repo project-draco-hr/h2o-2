@@ -2,6 +2,8 @@ def __init__(self, host, *args, **kwargs):
     super(RemoteH2O, self).__init__(*args, **kwargs)
     self.jar = host.upload_file('target/h2o.jar')
     self.flatfile = host.upload_file(flatfile_name())
+    if self.aws_credentials:
+        self.aws_credentials = host.upload_file(self.aws_credentials)
     if self.use_home_for_ice:
         self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
     else:
