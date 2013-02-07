@@ -1,0 +1,9 @@
+{
+  double score=_initialScore;
+  for (int i=0; i < _features.size(); i++) {
+    RuleTable ruleTable=_rules.get(i);
+    double s=ruleTable.score(row.get(_features.get(i)));
+    score+=s;
+  }
+  return score;
+}

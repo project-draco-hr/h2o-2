@@ -3,7 +3,7 @@ def test_GLM_covtype(self):
     csvPathname = h2o.find_dataset(('UCI/UCI-large/covtype/' + csvFilename))
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=10)
     inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
-    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_columns:', '{:,}'.format(inspect['num_columns'])
+    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
     if (1 == 0):
         print 'WARNING: just doing the first 33 features, for comparison to allstate numbers'
         x = ','.join(map(str, range(33)))

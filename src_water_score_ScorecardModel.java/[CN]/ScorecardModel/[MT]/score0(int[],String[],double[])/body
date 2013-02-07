@@ -1,0 +1,12 @@
+{
+  double score=_initialScore;
+  for (int i=0; i < _features.size(); i++) {
+    RuleTable ruleTable=_rules.get(i);
+    int idx=MAP[i];
+    String ss=idx == -1 ? null : SS[idx];
+    double dd=idx == -1 ? Double.NaN : DS[idx];
+    double s=ruleTable.score(ss,dd);
+    score+=s;
+  }
+  return score;
+}

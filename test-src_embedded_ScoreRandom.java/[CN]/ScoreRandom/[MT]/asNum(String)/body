@@ -1,0 +1,15 @@
+{
+  if ("true".equals(x))   return new Boolean(true);
+  if ("false".equals(x))   return new Boolean(false);
+  try {
+    return new Long(Long.valueOf(x));
+  }
+ catch (  NumberFormatException nfe) {
+  }
+  try {
+    return new Double(Double.valueOf(x));
+  }
+ catch (  NumberFormatException nfe) {
+  }
+  return x;
+}

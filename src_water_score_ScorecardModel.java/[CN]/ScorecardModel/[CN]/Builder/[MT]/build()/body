@@ -1,3 +1,30 @@
 {
+  _pool=ClassPool.getDefault();
+  try {
+    String cname=xml2jname(_scm._name);
+    if (CLASS_NAMES.containsKey(cname)) {
+      int i=0;
+      while (CLASS_NAMES.containsKey(cname + i))       i++;
+      cname=cname + i;
+    }
+    CLASS_NAMES.put(cname,cname);
+    CtClass scClass=_pool.makeClass(cname);
+    CtClass baseClass=_pool.get("water.score.ScorecardModel");
+    scClass.setSuperclass(baseClass);
+    _scm.makeScoreHashMethod(scClass);
+    _scm.makeScoreAryMethod(scClass);
+    String cons="  public " + cname + "() { super(\""+ _scm._name+ "\","+ _scm._initialScore+ "); }";
+    CtConstructor happyConst=CtNewConstructor.make(cons,scClass);
+    scClass.addConstructor(happyConst);
+    Class myClass=scClass.toClass(ScorecardModel.class.getClassLoader(),null);
+    ScorecardModel scm=(ScorecardModel)myClass.newInstance();
+    scm._features=_scm._features;
+    scm._rules=_scm._rules;
+    return scm;
+  }
+ catch (  Exception e) {
+    System.err.println("javassist failed: " + e);
+    e.printStackTrace();
+  }
   return _scm;
 }

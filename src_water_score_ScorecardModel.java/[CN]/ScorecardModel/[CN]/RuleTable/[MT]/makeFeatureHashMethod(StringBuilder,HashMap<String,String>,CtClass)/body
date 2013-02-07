@@ -1,0 +1,46 @@
+{
+  String jname=xml2jname(_name);
+  StringBuilder sb=new StringBuilder();
+  sb.append("double ").append(jname).append("( java.util.HashMap row ) {\n" + "  double score = 0;\n");
+switch (_type) {
+case STRING:
+    sb.append("  String ");
+  break;
+case BOOLEAN:
+sb.append("  boolean ");
+break;
+default :
+sb.append("  double ");
+break;
+}
+sb.append(jname);
+switch (_type) {
+case STRING:
+sb.append(" = (String)row.get(\"");
+break;
+case BOOLEAN:
+sb.append(" = getBoolean(row,\"");
+break;
+default :
+sb.append(" = getNumber(row,\"");
+break;
+}
+sb.append(_name).append("\");\n");
+sb.append("  if( false ) ;\n");
+for (Rule r : _rule) if (_type == DataTypes.STRING) r.toJavaStr(sb,jname);
+ else if (_type == DataTypes.BOOLEAN) r.toJavaBool(sb,jname);
+ else r.toJavaNum(sb,jname);
+sb.append("  return score;\n}\n");
+sbParent.append("  score += ").append(jname).append("(row);\n");
+try {
+CtMethod happyMethod=CtMethod.make(sb.toString(),scClass);
+scClass.addMethod(happyMethod);
+}
+ catch (Exception re) {
+System.err.println("=== crashing ===");
+System.err.println(sb.toString());
+throw new Error(re);
+}
+ finally {
+}
+}

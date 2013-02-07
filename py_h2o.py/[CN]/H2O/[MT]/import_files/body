@@ -1,4 +1,4 @@
 def import_files(self, path):
-    a = self.__check_request(requests.get(self.__url('ImportFiles.json', new=True), params={'path': path, }))
+    a = self.__check_request(requests.get(self.__url('ImportFiles.json'), params={'path': path, }))
     verboseprint('\nimport_files result:', dump_json(a))
     return a

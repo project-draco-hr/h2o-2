@@ -9,7 +9,7 @@ def test_rand_inspect(self):
 
     def inspect_and_check(nodeX, destination_key, offset, view, inspect=None):
         inspectNew = h2o_cmd.runInspect(h2o.nodes[nodeX], destination_key, offset=offset, view=view)
-        constantNames = ['num_columns', 'num_rows']
+        constantNames = ['num_cols', 'num_rows']
         if (inspect is not None):
             for i in constantNames:
                 self.assertEqual(inspect[i], inspectNew[i])
@@ -17,11 +17,11 @@ def test_rand_inspect(self):
     origInspect = inspect_and_check(0, destination_key, 0, 1)
     h2o.verboseprint(h2o.dump_json(origInspect))
     num_rows = origInspect['num_rows']
-    num_columns = origInspect['num_columns']
+    num_cols = origInspect['num_cols']
     lenNodes = len(h2o.nodes)
     for i in range(1000):
         offset = good_choices(num_rows)
-        view = good_choices(num_columns)
+        view = good_choices(num_cols)
         nodeX = random.randint(0, (lenNodes - 1))
         print 'nodeX:', nodeX, 'offset:', offset, 'view:', view
         inspect_and_check(nodeX, destination_key, offset, view, origInspect)
