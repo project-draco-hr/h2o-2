@@ -1,0 +1,15 @@
+{
+  HashMap<String,String> vars=new HashMap<String,String>();
+  StringBuilder sb=new StringBuilder();
+  sb.append("double score( java.util.HashMap row ) {\n" + "  double score = " + _initialScore + ";\n");
+  try {
+    for (    String k : _features.keySet())     sb=_features.get(k).toJava(sb,vars);
+    sb.append("  return score;\n}\n");
+  }
+ catch (  RuntimeException re) {
+    System.err.println("=== crashing ===");
+    System.err.println(sb.toString());
+    throw re;
+  }
+  return sb.toString();
+}

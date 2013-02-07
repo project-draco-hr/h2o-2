@@ -1,3 +1,25 @@
 {
+  String java=_scm.toJava();
+  System.err.println(java);
+  _pool=ClassPool.getDefault();
+  try {
+    String cname=xml2jname(_scm._name,CLASS_NAMES);
+    CtClass scClass=_pool.makeClass(cname);
+    CtClass baseClass=_pool.get("water.score.ScorecardModel");
+    scClass.setSuperclass(baseClass);
+    CtMethod happyMethod=CtMethod.make(java,scClass);
+    scClass.addMethod(happyMethod);
+    String cons="  public " + cname + "() { super(\""+ _scm._name+ "\","+ _scm._initialScore+ "); }";
+    System.err.println(cons);
+    CtConstructor happyConst=CtNewConstructor.make(cons,scClass);
+    scClass.addConstructor(happyConst);
+    Class myClass=scClass.toClass();
+    ScorecardModel scm=(ScorecardModel)myClass.newInstance();
+    return scm;
+  }
+ catch (  Exception e) {
+    System.err.println("javassit failed: " + e);
+    e.printStackTrace();
+  }
   return _scm;
 }
