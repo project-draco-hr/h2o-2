@@ -1,3 +1,5 @@
 {
-  return Double.isNaN(_d) ? ((String)((Object)_value)).equals(s) : (d == _d);
+  if (!Double.isNaN(_num))   return d == _num;
+  if (!Double.isNaN(_bool))   return d == _bool;
+  return _value.equals(s);
 }

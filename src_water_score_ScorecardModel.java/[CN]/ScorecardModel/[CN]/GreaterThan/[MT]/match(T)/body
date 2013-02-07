@@ -1,8 +1,5 @@
 {
-  if (_value == value)   return false;
-  if (_value == null || value == null)   return false;
-  if (Double.isNaN(_d)) {
-    return _value.compareTo(getString(value)) < 0;
-  }
-  return getNumber(value) > _d;
+  if (!Double.isNaN(_num))   return getNumber(value) > _num;
+  if (!Double.isNaN(_bool))   return getBoolean(value) > _bool;
+  return _value.compareTo(getString(value)) < 0;
 }

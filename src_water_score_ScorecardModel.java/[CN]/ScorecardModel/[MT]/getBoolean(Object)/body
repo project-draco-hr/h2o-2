@@ -2,7 +2,8 @@
   if (o instanceof Boolean)   return ((Boolean)o) ? 1.0 : 0.0;
   if (o instanceof String) {
     try {
-      return Boolean.parseBoolean((String)o) ? 1.0 : 0.0;
+      if ("true".equalsIgnoreCase((String)o))       return 1.0;
+      if ("false".equalsIgnoreCase((String)o))       return 0.0;
     }
  catch (    Throwable t) {
     }
