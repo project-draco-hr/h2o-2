@@ -1,0 +1,17 @@
+def dump_hosts_config(ec2_config, reservation, filename='ec2-config-{0}.json'):
+    cfg = {}
+    cfg['aws_credentials'] = '/home/ubuntu/.ec2/AwsCredentials.properties'
+    cfg['username'] = ec2_config['username']
+    cfg['key_filename'] = find_file(ec2_config['pem'])
+    cfg['use_flatfile'] = True
+    cfg['h2o_per_host'] = 1
+    cfg['java_heap_GB'] = MEMORY_MAPPING[ec2_config['instance_type']]['xmx']
+    cfg['ip'] = [i.private_ip_address for i in reservation.instances]
+    cfg['instances'] = [{'id': i.id, 'private_ip_address': i.private_ip_address, 'public_ip_address': i.ip_address, 'public_dns_name': i.public_dns_name, } for i in reservation.instances]
+    cfg['reservation_id'] = reservation.id
+    filename = filename.format(reservation.id)
+    with open(filename, 'w+') as f:
+        f.write(json.dumps(cfg, indent=4))
+    log('Host config dumped into {0}'.format(filename))
+    log('To terminate instances call:')
+    log('python ec2_cmd.py terminate --hosts {0}'.format(filename))

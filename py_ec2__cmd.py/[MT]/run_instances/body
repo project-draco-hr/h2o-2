@@ -1,0 +1,30 @@
+def run_instances(count, ec2_config, waitForSSH=True):
+    'Create a new reservation for count instances'
+    ec2_config.setdefault('min_count', count)
+    ec2_config.setdefault('max_count', count)
+    ec2params = inheritparams(ec2_config, EC2_API_RUN_INSTANCE)
+    reservation = None
+    conn = boto.connect_ec2()
+    try:
+        reservation = conn.run_instances(**ec2params)
+        log('Waiting for {0} EC2 instances {1} to come up, this can take 1-2 minutes.'.format(len(reservation.instances), reservation.instances))
+        start = time.time()
+        for instance in reservation.instances:
+            while (instance.update() == 'pending'):
+                time.sleep(1)
+                h2o_cmd.dot()
+            if (not (instance.state == 'running')):
+                raise Exception('[ec2] Error waiting for running state. Instance is in state {0}.'.format(instance.state))
+        log('Instances started in {0} seconds'.format((time.time() - start)))
+        log('Instances: ')
+        for inst in reservation.instances:
+            log('   {0} ({1}) : public ip: {2}, private ip: {3}'.format(inst.public_dns_name, inst.id, inst.ip_address, inst.private_ip_address))
+        if waitForSSH:
+            wait_for_ssh([i.private_ip_address for i in reservation.instances])
+        return reservation
+    except:
+        try:
+            terminate_instances(reservation)
+        except:
+            pass
+        raise
