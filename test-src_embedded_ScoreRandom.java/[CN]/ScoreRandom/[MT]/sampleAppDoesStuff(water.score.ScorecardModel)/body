@@ -1,0 +1,24 @@
+{
+  System.out.println("Initial score0(HashMap)=" + scm.score0(ROW));
+  System.out.println("Initial score (HashMap)=" + scm.score(ROW));
+  System.out.println("Initial score (Arrays )=" + scm.score(MAP,SS,DS));
+  for (int i=0; i < 1000; i++) {
+    loop1000(scm,true);
+    loop1000(scm,false);
+  }
+  try {
+    Thread.sleep(1000);
+  }
+ catch (  Exception e) {
+  }
+  System.out.println("Timing...");
+  Random rand=new Random();
+  for (int i=0; i < 1000; i++) {
+    for (    Entry<String,Comparable> entry : ROW.entrySet()) {
+      if (entry.getValue() instanceof Double)       entry.setValue(rand.nextDouble());
+      if (entry.getValue() instanceof String)       entry.setValue("" + rand.nextDouble());
+    }
+    timeTwo(scm,1000);
+    System.out.println(scm.score(ROW));
+  }
+}

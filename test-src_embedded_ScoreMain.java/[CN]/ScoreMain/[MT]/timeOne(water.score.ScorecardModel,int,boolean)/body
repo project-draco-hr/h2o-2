@@ -1,0 +1,8 @@
+{
+  long start=System.nanoTime();
+  for (int i=0; i < iter; i++)   loop1000(scm,mapOrAry);
+  long now=System.nanoTime();
+  long delta=now - start;
+  double nanos=(double)delta;
+  System.out.println("score(" + (mapOrAry ? "HashMap" : "Arrays ") + ") "+ (iter * 1000)+ " in "+ (long)nanos+ "ns = "+ (nanos / (iter * 1000.0))+ " nanosec/score");
+}

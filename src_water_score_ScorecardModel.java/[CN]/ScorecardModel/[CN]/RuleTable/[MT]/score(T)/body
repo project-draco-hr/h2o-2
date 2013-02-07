@@ -1,5 +1,10 @@
 {
   double score=0;
-  for (  Rule r : _rule)   score+=r.score(value);
+  for (  Rule r : _rule) {
+    if (r.match(value)) {
+      score+=r._score;
+      break;
+    }
+  }
   return score;
 }

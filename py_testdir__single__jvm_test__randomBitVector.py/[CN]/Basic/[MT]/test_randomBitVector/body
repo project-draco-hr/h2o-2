@@ -12,11 +12,10 @@ def test_randomBitVector(self):
             raise Exception(('Wrong num_rows in randomBitVector result.  expected: %d, actual: %d' % (expectedRows, num_rows)))
         if (row_size != 1):
             raise Exception(('Wrong row_size in randomBitVector result.  expected: %d, actual: %d' % (1, row_size)))
+        execResultDataInspect = h2o_cmd.runInspect(key=resultKey, offset=0)
         actualZeroes = 0
         actualOnes = 0
-        rowData = execResultInspect['rows']
-        inspect = h2o_cmd.runInspect(key='Result.hex')
-        rows = inspect['rows'][0]
+        rowData = execResultDataInspect['rows']
         for i in range(expectedRows):
             value = rowData[i]['bits']
             if (value == 0):

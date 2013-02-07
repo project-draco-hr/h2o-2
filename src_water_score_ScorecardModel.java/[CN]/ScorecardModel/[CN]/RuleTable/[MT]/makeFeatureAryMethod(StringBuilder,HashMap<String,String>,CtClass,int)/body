@@ -1,0 +1,46 @@
+{
+  String jname=xml2jname(_name);
+  StringBuilder sb=new StringBuilder();
+  sb.append("double ").append(jname);
+  sb.append("( int[]MAP, java.lang.String[]SS, double[]DS ) {\n" + "  double score = 0;\n" + "  int didx=MAP[").append(fidx).append("];\n");
+switch (_type) {
+case STRING:
+    sb.append("  String ");
+  break;
+case BOOLEAN:
+sb.append("  boolean ");
+break;
+default :
+sb.append("  double ");
+break;
+}
+sb.append(jname);
+switch (_type) {
+case STRING:
+sb.append(" = didx==-1 ? null : SS[didx];\n");
+break;
+case BOOLEAN:
+sb.append(" = didx==-1 ? false : DS[didx]==1.0;\n");
+break;
+default :
+sb.append(" = didx==-1 ? Double.NaN : DS[didx];\n");
+break;
+}
+sb.append("  if( false ) ;\n");
+for (Rule r : _rule) if (_type == DataTypes.STRING) r.toJavaStr(sb,jname);
+ else if (_type == DataTypes.BOOLEAN) r.toJavaBool(sb,jname);
+ else r.toJavaNum(sb,jname);
+sb.append("  return score;\n}\n");
+sbParent.append("  score += ").append(jname).append("(MAP,SS,DS);\n");
+try {
+CtMethod happyMethod=CtMethod.make(sb.toString(),scClass);
+scClass.addMethod(happyMethod);
+}
+ catch (Exception re) {
+System.err.println("=== crashing ===");
+System.err.println(sb.toString());
+throw new Error(re);
+}
+ finally {
+}
+}

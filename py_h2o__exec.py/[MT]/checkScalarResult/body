@@ -18,19 +18,16 @@ def checkScalarResult(resultInspect, resultKey):
             emsg = "Inspect response: 'rows' missing. Look at the json just printed"
             break
         rows = resultInspect0['rows']
+        if ('cols' not in resultInspect0):
+            emsg = "Inspect response: 'cols' missing. Look at the json just printed"
+            break
+        cols = resultInspect0['cols']
         break
     if (emsg is not None):
         print (("\nKey: '" + resultKey) + "' being inspected:\n"), h2o.dump_json(resultInspect)
         sys.stdout.flush()
         raise Exception(('Inspect problem:' + emsg))
-    metaDict = {}
-    for m in rows:
-        for (key, value) in m.items():
-            if (key == 'row'):
-                a = value
-            else:
-                b = value
-        metaDict[a] = b
+    metaDict = cols[0]
     for (key, value) in metaDict.items():
         h2o.verboseprint('Inspect metadata:', key, value)
     min_value = metaDict['min']

@@ -1,8 +1,8 @@
 {
   double score=_initialScore;
-  for (  String k : _features.keySet()) {
-    RuleTable ruleTable=_features.get(k);
-    double s=ruleTable.score(row.get(k));
+  for (int i=0; i < _features.size(); i++) {
+    RuleTable ruleTable=_rules.get(i);
+    double s=ruleTable.score(row.get(_features.get(i)));
     score+=s;
   }
   return score;

@@ -1,5 +1,7 @@
 {
   Object o=row.get(s);
+  if (o instanceof Double)   return ((Double)o).doubleValue();
+  if (o instanceof Long)   return ((Long)o).doubleValue();
   if (o instanceof Number)   return ((Number)o).doubleValue();
   return Double.NaN;
 }
