@@ -1,0 +1,26 @@
+def __init__(self, host, *args, **kwargs):
+    super(RemoteH2O, self).__init__(*args, **kwargs)
+    self.jar = host.upload_file('build/h2o.jar')
+    self.flatfile = host.upload_file(flatfile_name())
+    if self.use_home_for_ice:
+        self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
+    else:
+        self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
+    self.channel = host.open_channel()
+    cmd = ' '.join(self.get_args())
+    self.channel.exec_command(cmd)
+    if self.capture_output:
+        if (self.node_id is not None):
+            logPrefix = ('remote-h2o-' + str(self.node_id))
+        else:
+            logPrefix = 'remote-h2o'
+        (outfd, outpath) = tmp_file((logPrefix + '.stdout.'), '.log')
+        (errfd, errpath) = tmp_file((logPrefix + '.stderr.'), '.log')
+        drain(self.channel.makefile(), outfd)
+        drain(self.channel.makefile_stderr(), errfd)
+        comment = ('Remote on %s, stdout %s, stderr %s' % (self.addr, os.path.basename(outpath), os.path.basename(errpath)))
+    else:
+        drain(self.channel.makefile(), sys.stdout)
+        drain(self.channel.makefile_stderr(), sys.stderr)
+        comment = ('Remote on %s' % self.addr)
+    log(cmd, comment=comment)

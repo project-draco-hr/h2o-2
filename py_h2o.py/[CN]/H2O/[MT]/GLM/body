@@ -1,0 +1,8 @@
+def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, **kwargs):
+    a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, parentName='GLM', **kwargs)
+    browseAlso = kwargs.get('browseAlso', False)
+    if (browseAlso | browse_json):
+        print 'Redoing the GLM through the browser, no results saved though'
+        h2b.browseJsonHistoryAsUrlLastMatch('GLM')
+        time.sleep(5)
+    return a
