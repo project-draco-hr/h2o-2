@@ -1,0 +1,23 @@
+{
+  sampleAppInit(args);
+  System.out.println("Loading model to score");
+  FileInputStream fis=new FileInputStream("../../demo/SampleScorecard.pmml");
+  water.score.ScorecardModel scm=water.parser.PMMLParser.load(fis);
+  FEATURES=ROW.keySet().toArray(new String[0]);
+  SS=new String[FEATURES.length];
+  DS=new double[FEATURES.length];
+  for (int i=0; i < FEATURES.length; i++) {
+    SS[i]=null;
+    DS[i]=Double.NaN;
+    Object o=ROW.get(FEATURES[i]);
+    if (o == null)     ;
+ else     if (o instanceof String)     SS[i]=(String)o;
+ else     if (o instanceof Number)     DS[i]=((Number)o).doubleValue();
+ else     if (o instanceof Boolean)     DS[i]=((Boolean)o).booleanValue() ? 1 : 0;
+ else     throw new IllegalArgumentException("Unknown datatype " + o.getClass());
+  }
+  MAP=scm.columnMapping(FEATURES);
+  sampleAppDoesStuff(scm);
+  System.out.println("Sample App Shuts Down");
+  System.exit(0);
+}
