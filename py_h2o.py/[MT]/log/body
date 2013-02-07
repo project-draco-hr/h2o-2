@@ -1,0 +1,8 @@
+def log(cmd, comment=None):
+    with open((LOG_DIR + '/commands.log'), 'a') as f:
+        f.write((str(datetime.datetime.now()) + ' -- '))
+        f.write(cmd)
+        if comment:
+            f.write('    #')
+            f.write(comment)
+        f.write('\n')

@@ -1,0 +1,8 @@
+def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, parentName=None, **kwargs):
+    browseAlso = kwargs.pop('browseAlso', False)
+    params_dict = {'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', }
+    params_dict.update(kwargs)
+    print '\nGLM params list', params_dict
+    a = self.__check_request(requests.get(self.__url((parentName + '.json')), timeout=timeoutSecs, params=params_dict))
+    verboseprint(parentName, dump_json(a))
+    return a
