@@ -2,6 +2,6 @@ def test_A_putfile(self):
     cvsfile = h2o.find_file(file_to_put())
     node = h2o.nodes[0]
     key = node.put_file(cvsfile)
-    resultSize = node.inspect(key)['value_size']
+    resultSize = node.inspect(key)['value_size_bytes']
     origSize = h2o.get_file_size(cvsfile)
-    self.assertEqual(origSize, returnSize)
+    self.assertEqual(origSize, resultSize)
