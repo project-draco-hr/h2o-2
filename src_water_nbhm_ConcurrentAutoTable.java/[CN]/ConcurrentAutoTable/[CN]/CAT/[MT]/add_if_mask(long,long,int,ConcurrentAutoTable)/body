@@ -3,7 +3,6 @@
   int idx=hash & (t.length - 1);
   long old=t[idx];
   if ((old & mask) != 0)   return old;
-  if (_sum_cache != Long.MIN_VALUE)   _sum_cache=Long.MIN_VALUE;
   boolean ok=CAS(t,idx,old & ~mask,old + x);
   if (ok)   return old;
   int cnt=0;
