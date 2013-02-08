@@ -11,7 +11,6 @@
     Properties pre=new Properties();
     Properties parms=new Properties();
     Properties header=new Properties();
-    Properties files=new Properties();
     decodeHeader(hin,pre,parms,header);
     String method=pre.getProperty("method");
     String uri=pre.getProperty("uri");
@@ -54,7 +53,7 @@
         if (st.countTokens() != 2)         sendError(HTTP_BADREQUEST,"BAD REQUEST: Content type is multipart/form-data but boundary syntax error. Usage: GET /example/file.html");
         st.nextToken();
         String boundary=st.nextToken();
-        decodeMultipartDataInMemory(boundary,is,parms,files);
+        fileUpload(boundary,is,parms);
       }
  else {
         String postLine="";
@@ -71,7 +70,7 @@
         }
       }
     }
-    Response r=serve(uri,method,header,parms,files);
+    Response r=serve(uri,method,header,parms);
     if (r == null)     sendError(HTTP_INTERNALERROR,"SERVER INTERNAL ERROR: Serve() returned a null response.");
  else     sendResponse(r.status,r.mimeType,r.header,r.data);
     in.close();
