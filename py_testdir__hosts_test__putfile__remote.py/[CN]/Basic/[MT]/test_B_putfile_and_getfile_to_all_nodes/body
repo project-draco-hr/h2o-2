@@ -5,9 +5,8 @@ def test_B_putfile_and_getfile_to_all_nodes(self):
         sys.stdout.write('.')
         sys.stdout.flush()
         h2o.verboseprint('put_file', cvsfile, 'to', node)
-        result = node.put_file(cvsfile)
+        key = node.put_file(cvsfile)
         h2o.verboseprint('put_file ok for node', nodeTry)
-        key = result['key']
         r = node.get_key(key)
         f = open(cvsfile)
         self.diff(r, f)

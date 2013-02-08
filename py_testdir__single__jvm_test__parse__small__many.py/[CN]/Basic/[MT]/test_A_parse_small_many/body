@@ -14,9 +14,9 @@ def test_A_parse_small_many(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         writeRows(csvPathname, row, eol, size)
         key = csvFilename
-        put = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
+        pkey = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
         for trial in range(5):
             key2 = (((csvFilename + '_') + str(trial)) + '.hex')
-            node.parse(put['key'], key2, timeoutSecs=timeoutSecs, retryDelaySecs=0.0)
+            node.parse(pkey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=0.0)
             sys.stdout.write('.')
             sys.stdout.flush()
