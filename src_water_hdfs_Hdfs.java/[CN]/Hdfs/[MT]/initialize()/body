@@ -7,7 +7,15 @@
     String version=H2O.OPT_ARGS.hdfs_version == null ? DEFAULT_HDFS_VERSION : H2O.OPT_ARGS.hdfs_version;
     version=version.equals("mapr") || (H2O.OPT_ARGS.hdfs.startsWith("maprfs://")) ? MAPRFS_HDFS_VERSION : version;
     try {
-      if (Boot._init.fromJar())       Boot._init.addInternalJars("hadoop/" + version + "/");
+      if (Boot._init.fromJar()) {
+        File f=new File(version);
+        if (f.exists()) {
+          Boot._init.addExternalJars(f);
+        }
+ else {
+          Boot._init.addInternalJars("hadoop/" + version + "/");
+        }
+      }
     }
  catch (    Exception e) {
       e.printStackTrace();
