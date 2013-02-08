@@ -7,7 +7,7 @@ case STRING:
     sb.append("  String ");
   break;
 case BOOLEAN:
-sb.append("  boolean ");
+sb.append("  double ");
 break;
 default :
 sb.append("  double ");
@@ -16,13 +16,13 @@ break;
 sb.append(jname);
 switch (_type) {
 case STRING:
-sb.append(" = (String)row.get(\"");
+sb.append(" = getString (row,\"");
 break;
 case BOOLEAN:
 sb.append(" = getBoolean(row,\"");
 break;
 default :
-sb.append(" = getNumber(row,\"");
+sb.append(" = getNumber (row,\"");
 break;
 }
 sb.append(_name).append("\");\n");

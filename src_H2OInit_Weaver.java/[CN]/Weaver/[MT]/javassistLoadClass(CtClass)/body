@@ -1,0 +1,10 @@
+{
+  if (cc.isFrozen())   return cc;
+  javassistLoadClass(cc.getSuperclass());
+  for (  CtField ctf : cc.getDeclaredFields()) {
+    CtClass base=ctf.getType();
+    while (base.isArray())     base=base.getComponentType();
+    if (base.subclassOf(_enum) && base != cc)     javassistLoadClass(base);
+  }
+  return addSerializationMethods(cc);
+}

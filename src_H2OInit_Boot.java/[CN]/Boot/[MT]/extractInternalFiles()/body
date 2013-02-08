@@ -3,9 +3,10 @@
   while (entries.hasMoreElements()) {
     ZipEntry e=(ZipEntry)entries.nextElement();
     String name=e.getName();
+    if (e.isDirectory())     continue;
+    if (!name.endsWith(".jar"))     continue;
     File out=internalFile(name);
     out.getParentFile().mkdirs();
-    if (e.isDirectory())     continue;
     try {
       BufferedInputStream is=new BufferedInputStream(_h2oJar.getInputStream(e));
       BufferedOutputStream os=new BufferedOutputStream(new FileOutputStream(out));

@@ -1,0 +1,13 @@
+{
+  if (o instanceof Double)   return ((Double)o).doubleValue();
+  if (o instanceof Long)   return ((Long)o).doubleValue();
+  if (o instanceof Number)   return ((Number)o).doubleValue();
+  if (o instanceof String) {
+    try {
+      return Double.valueOf((String)o);
+    }
+ catch (    Throwable t) {
+    }
+  }
+  return Double.NaN;
+}

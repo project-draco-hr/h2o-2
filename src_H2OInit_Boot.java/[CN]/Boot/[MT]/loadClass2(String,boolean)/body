@@ -1,7 +1,8 @@
 {
   Class z=findLoadedClass(name);
   if (z != null)   return z;
-  z=javassistLoadClass(name);
+  if (_weaver == null)   _weaver=new Weaver();
+  z=_weaver.weaveAndLoad(name,this);
   if (z != null)   return z;
   z=getParent().loadClass(name);
   if (z != null)   return z;

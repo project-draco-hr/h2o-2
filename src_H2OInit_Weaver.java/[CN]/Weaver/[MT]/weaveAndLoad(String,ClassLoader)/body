@@ -1,0 +1,10 @@
+{
+  try {
+    CtClass w=javassistLoadClass(name);
+    if (w == null)     return null;
+    return w.toClass(cl,null);
+  }
+ catch (  CannotCompileException e) {
+    throw new RuntimeException(e);
+  }
+}

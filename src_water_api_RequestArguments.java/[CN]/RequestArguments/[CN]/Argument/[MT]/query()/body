@@ -4,6 +4,7 @@
   result.replace("NAME",JSON2HTML(_name));
   if (disabled())   result.replace("ELEMENT","<div class='alert alert-info' style='padding-top:4px;padding-bottom:4px;margin-bottom:5px'>" + record()._disabledReason + "</div>");
  else   result.replace("ELEMENT",queryElement());
+  result.replace("TOOLTIP_DESCRIPTION",queryDescription());
   result.replace("COMMENT",queryComment());
   if (_required)   result.replace("ASTERISK","<span style='color:#ff0000'>* </span>");
   return result.toString();
