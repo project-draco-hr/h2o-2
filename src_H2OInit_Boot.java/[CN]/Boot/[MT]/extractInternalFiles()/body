@@ -8,12 +8,14 @@
     File out=internalFile(name);
     out.getParentFile().mkdirs();
     try {
+      FileOutputStream fos=new FileOutputStream(out);
       BufferedInputStream is=new BufferedInputStream(_h2oJar.getInputStream(e));
-      BufferedOutputStream os=new BufferedOutputStream(new FileOutputStream(out));
+      BufferedOutputStream os=new BufferedOutputStream(fos);
       int read;
       byte[] buffer=new byte[4096];
       while ((read=is.read(buffer)) != -1)       os.write(buffer,0,read);
       os.flush();
+      fos.getFD().sync();
       os.close();
       is.close();
     }

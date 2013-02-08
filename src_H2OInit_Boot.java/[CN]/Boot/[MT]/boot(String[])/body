@@ -3,6 +3,15 @@
     _systemLoader=(URLClassLoader)getSystemClassLoader();
     _addUrl=URLClassLoader.class.getDeclaredMethod("addURL",URL.class);
     _addUrl.setAccessible(true);
+    String sroot=System.getProperty("java.io.tmpdir");
+    for (int i=0; i < args.length; i++)     if (args[i].startsWith("--ice_root="))     sroot=args[i].substring(11);
+ else     if (args[i].equals("--ice_root") && i < args.length - 1)     sroot=args[i + 1];
+    File tmproot=new File(sroot);
+    File dir=File.createTempFile("h2o-temp-","",tmproot);
+    if (!dir.delete())     throw new IOException("Failed to remove tmp file: " + dir.getAbsolutePath());
+    if (!dir.mkdir())     throw new IOException("Failed to create tmp dir: " + dir.getAbsolutePath());
+    dir.deleteOnExit();
+    _parentDir=dir;
     extractInternalFiles();
     addInternalJars("apache");
     addInternalJars("gson");

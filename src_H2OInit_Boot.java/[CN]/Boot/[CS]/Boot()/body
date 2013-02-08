@@ -8,15 +8,10 @@
     this._jarHash=getMD5(is);
     is.close();
     jar=new ZipFile(path);
-    dir=File.createTempFile("h2o-temp-","");
-    if (!dir.delete())     throw new IOException("Failed to remove tmp file: " + dir.getAbsolutePath());
-    if (!dir.mkdir())     throw new IOException("Failed to create tmp dir: " + dir.getAbsolutePath());
-    dir.deleteOnExit();
   }
  else {
     this._jarHash=new byte[16];
     Arrays.fill(this._jarHash,(byte)0xFF);
   }
   _h2oJar=jar;
-  _parentDir=(dir == null) ? new File(".") : dir;
 }
