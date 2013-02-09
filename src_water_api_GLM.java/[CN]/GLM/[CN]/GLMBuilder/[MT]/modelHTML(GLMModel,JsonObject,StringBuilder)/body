@@ -1,6 +1,6 @@
 {
   sb.append("<div class='alert'>Actions: " + (m.isSolved() ? (GLMScore.link(m._selfKey,m._vals[0].bestThreshold(),"Validate on another dataset") + ", ") : "") + GLM.link(m._dataKey,m,"Compute new model")+ "</div>");
-  RString R=new RString("<div class='alert %succ'>GLM on data <a href='/Inspect.html?" + KEY + "=%key'>%key</a>.<br>"+ "%iterations iterations computed in %time. %xval %warnings %action</div>"+ "<h4>GLM Parameters</h4>"+ " %GLMParams %LSMParams"+ "<h4>Equation: </h4>"+ "<div><code>%modelSrc</code></div>"+ "<h4>Coefficients</h4>"+ "<div>%coefficients</div>");
+  RString R=new RString("<div class='alert %succ'>GLM on data <a href='/Inspect.html?" + KEY + "=%key'>%key</a>.<br>"+ "%iterations iterations computed in %time. %xval %warnings %action</div>"+ "<h4>GLM Parameters</h4>"+ " %GLMParams %LSMParams"+ "<h4>Equation: </h4>"+ "<div><code>%modelSrc</code></div>"+ "<h4>Coefficients</h4>"+ "<div>%coefficients</div>"+ "<h4>Normalized Coefficients</h4>"+ "<div>%normalized_coefficients</div>");
   if (m._warnings != null) {
     StringBuilder wsb=new StringBuilder();
     for (    String s : m._warnings)     wsb.append(s).append("<br>");
@@ -16,7 +16,7 @@
   int count=0;
   long xtime=0;
   for (  GLMValidation v : m._vals) {
-    for (    Key k : v._modelKeys) {
+    if (v._modelKeys != null)     for (    Key k : v._modelKeys) {
       GLMModel m2=UKV.get(k,new GLMModel());
       xtime+=m2._time;
       ++count;
@@ -35,6 +35,7 @@
     JsonObject coefs=json.get("coefficients").getAsJsonObject();
     R.replace("modelSrc",equationHTML(m,coefs));
     R.replace("coefficients",coefsHTML(coefs));
+    R.replace("normalized_coefficients",coefsHTML(json.get("normalized_coefficients").getAsJsonObject()));
   }
   sb.append(R);
   if (m._vals != null)   validationHTML(m._vals,sb);

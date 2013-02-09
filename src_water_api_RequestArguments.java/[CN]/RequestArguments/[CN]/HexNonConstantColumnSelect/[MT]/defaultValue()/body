@@ -1,7 +1,7 @@
 {
-  int classCol=_classCol.value();
   ValueArray va=_key.value();
-  List<Integer> res=Lists.newArrayList();
-  for (int i=0; i < va._cols.length; i++)   if (va._cols[i]._min != va._cols[i]._max && i != classCol)   res.add(i);
-  return Ints.toArray(res);
+  int[] res=new int[va._cols.length];
+  int selected=0;
+  for (int i=0; i < va._cols.length; ++i)   if (!shouldIgnore(i,va._cols[i]))   res[selected++]=i;
+  return Arrays.copyOfRange(res,0,selected);
 }
