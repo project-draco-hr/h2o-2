@@ -6,5 +6,5 @@ def test_A_putfile_to_all_nodes(self):
         sys.stdout.flush()
         h2o.verboseprint('put_file:', cvsfile, 'node:', node, 'origSize:', origSize)
         key = node.put_file(cvsfile)
-        resultSize = node.inspect(key)['value_size']
-        self.assertEqual(origSize, returnSize)
+        resultSize = node.inspect(key)['value_size_bytes']
+        self.assertEqual(origSize, resultSize)
