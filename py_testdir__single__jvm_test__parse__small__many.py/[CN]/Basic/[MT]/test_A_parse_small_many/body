@@ -15,6 +15,7 @@ def test_A_parse_small_many(self):
         writeRows(csvPathname, row, eol, size)
         key = csvFilename
         pkey = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
+        print h2o.dump_json(pkey)
         for trial in range(5):
             key2 = (((csvFilename + '_') + str(trial)) + '.hex')
             node.parse(pkey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=0.0)

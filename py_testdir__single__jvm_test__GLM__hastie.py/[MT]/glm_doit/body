@@ -1,6 +1,6 @@
 def glm_doit(self, csvFilename, csvPathname, timeoutSecs=30):
     print '\nStarting GLM of', csvFilename
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=csvFilename, timeoutSecs=10)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'), timeoutSecs=10)
     y = '10'
     x = ''
     kwargs = {'x': x, 'y': y, 'case': (-1), 'thresholds': 0.5, }
