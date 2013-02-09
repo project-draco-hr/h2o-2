@@ -2,7 +2,7 @@ def test_B_benign(self):
     csvFilename = 'benign.csv'
     print '\nStarting', csvFilename
     csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=csvFilename)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
     y = '3'
     xList = []
     for appendx in xrange(14):

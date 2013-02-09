@@ -2,7 +2,7 @@ def test_C_prostate(self):
     csvFilename = 'prostate.csv'
     print '\nStarting', csvFilename
     csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=csvFilename)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
     y = '1'
     xList = []
     for appendx in xrange(9):
