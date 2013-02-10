@@ -1,5 +1,7 @@
 {
   if (!Double.isNaN(_num))   return getNumber(value) > _num;
   if (!Double.isNaN(_bool))   return getBoolean(value) > _bool;
-  return _value.compareTo(getString(value)) < 0;
+  String s=getString(value);
+  if (s == null)   return false;
+  return _value.compareTo(s) < 0;
 }
