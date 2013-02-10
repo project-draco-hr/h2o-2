@@ -8,5 +8,5 @@ def test_rf_params_rand2(self):
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (30 + (15 * ((kwargs['parallel'] and 1) or 5)))
-        h2o_cmd.runRF(timeoutSecs=120, retryDelaySecs=1, csvPathname=csvPathname, **kwargs)
+        h2o_cmd.runRF(timeoutSecs=timeoutSecs, retryDelaySecs=1, csvPathname=csvPathname, **kwargs)
         print 'Trial #', trial, 'completed'
