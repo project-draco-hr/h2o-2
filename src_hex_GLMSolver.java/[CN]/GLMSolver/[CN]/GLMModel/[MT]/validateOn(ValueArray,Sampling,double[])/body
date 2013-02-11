@@ -1,7 +1,7 @@
 {
   int[] modelDataMap=columnMapping(ary.colNames());
   if (!isCompatible(modelDataMap))   throw new GLMException("incompatible dataset");
-  GLMValidationTask valTsk=new GLMValidationTask(ary,s,_modelDataMap,_colCatMap,_normSub,_normMul);
+  GLMValidationTask valTsk=new GLMValidationTask(ary,s,modelDataMap,_colCatMap,_normSub,_normMul);
   valTsk._beta=_beta;
   valTsk._f=_glmParams._f;
   valTsk._l=_glmParams._l;
