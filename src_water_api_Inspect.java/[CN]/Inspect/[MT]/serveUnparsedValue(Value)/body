@@ -2,19 +2,75 @@
   JsonObject result=new JsonObject();
   result.addProperty(VALUE_TYPE,"unparsed");
   byte[] bs=v.getFirstBytes();
-  int[] rows_cols=CsvParser.inspect(bs);
-  if (rows_cols != null && rows_cols[1] != 0) {
-    double bytes_per_row=(double)bs.length / rows_cols[0];
-    long rows=(long)(v.length() / bytes_per_row);
-    result.addProperty(NUM_ROWS,"~" + rows);
-    result.addProperty(NUM_COLS,rows_cols[1]);
+  int zipped_len=bs.length;
+  int off=0;
+  InputStream is=null;
+  try {
+switch (water.parser.ParseDataset.guessCompressionMethod(v)) {
+case NONE:
+      off=bs.length;
+    break;
+case ZIP:
+{
+    ZipInputStream zis=new ZipInputStream(v.openStream());
+    ZipEntry ze=zis.getNextEntry();
+    if (ze != null || !ze.isDirectory())     is=zis;
+    break;
   }
+case GZIP:
+is=new GZIPInputStream(v.openStream());
+break;
+}
+if (is != null) bs=new byte[bs.length * 2];
+while (off < bs.length) {
+int len=is.read(bs,off,bs.length - off);
+if (len == -1) break;
+off+=len;
+}
+}
+ catch (IOException ioe) {
+}
+ finally {
+try {
+if (is != null) is.close();
+}
+ catch (IOException ioe) {
+}
+}
+if (off < bs.length) bs=Arrays.copyOf(bs,off);
+int[] rows_cols=CsvParser.inspect(bs);
+if (rows_cols != null && rows_cols[1] != 0) {
+System.err.println("zlen=" + zipped_len + " rows="+ rows_cols[0]+ " bs.len="+ bs.length);
+double bytes_per_row=(double)zipped_len / rows_cols[0];
+long rows=(long)(v.length() / bytes_per_row);
+result.addProperty(NUM_ROWS,"~" + rows);
+result.addProperty(NUM_COLS,rows_cols[1]);
+}
  else {
-    result.addProperty(NUM_ROWS,"unknown");
-    result.addProperty(NUM_COLS,"unknown");
-  }
-  result.addProperty(VALUE_SIZE,v.length());
-  Response r=Response.done(result);
-  r.addHeader("<div class='alert'>" + Parse.link(v._key,"Parse into hex format") + " or "+ RReader.link(v._key,"from R data")+ " </div>");
-  return r;
+result.addProperty(NUM_ROWS,"unknown");
+result.addProperty(NUM_COLS,"unknown");
+}
+result.addProperty(VALUE_SIZE,v.length());
+JsonArray ary=new JsonArray();
+boolean bad=false;
+int start=0;
+for (int i=0; i < bs.length; i++) {
+if (bs[i] >= 128 || (bs[i] < 32 && !Character.isWhitespace(bs[i]))) bad=true;
+if (bs[i] == '\n') {
+ary.add(new JsonPrimitive(new String(bs,start,i - start)));
+if (ary.size() >= 5) break;
+start=i + 1;
+}
+}
+if (ary.size() < 5) ary.add(new JsonPrimitive(new String(bs,start,bs.length - start)));
+if (!bad) result.add(ROWS,ary);
+Response r=Response.done(result);
+r.addHeader("<div class='alert'>" + Parse.link(v._key,"Parse into hex format") + " or "+ RReader.link(v._key,"from R data")+ " </div>");
+r.setBuilder(ROWS,new ArrayBuilder(){
+public String caption(JsonArray array,String name){
+return "<h4>First few sample rows</h4>";
+}
+}
+);
+return r;
 }
