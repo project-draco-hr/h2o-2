@@ -1,9 +1,6 @@
 {
-  ValueArray va=_key.value();
-  List<String> res=Lists.newArrayList();
-  for (int i=0; i < va._cols.length; ++i) {
-    if (shouldIgnore(i,va._cols[i]))     continue;
-    res.add(Objects.firstNonNull(va._cols[i]._name,String.valueOf(i)));
-  }
-  return res.toArray(new String[res.size()]);
+  String[] res=new String[_selectedCols.size()];
+  int idx=0;
+  for (  Column c : _selectedCols)   res[idx++]=Objects.firstNonNull(c._name,String.valueOf(idx));
+  return res;
 }

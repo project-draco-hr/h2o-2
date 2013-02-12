@@ -1,0 +1,13 @@
+{
+  ValueArray va=_key.value();
+  String[] res=new String[_selectedCols.size()];
+  int idx=0;
+  for (  Column c : _selectedCols) {
+    double ratio=c._n / (double)va._numrows;
+    if (ratio < 0.99) {
+      res[idx++]=c._name + " (" + Math.round((1 - ratio) * 100)+ "% NAs)";
+    }
+ else     res[idx++]=c._name;
+  }
+  return res;
+}
