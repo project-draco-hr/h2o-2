@@ -3,8 +3,9 @@
   FSDataOutputStream s=null;
   try {
     Path p=getPathForKey(key);
-    _fs.mkdirs(p.getParent());
-    s=_fs.create(p);
+    FileSystem fs=FileSystem.get(p.toUri(),CONF);
+    fs.mkdirs(p.getParent());
+    s=fs.create(p);
     byte[] b=f.write(new AutoBuffer()).buf();
     s.write(b);
   }
@@ -12,11 +13,7 @@
     res=e.getMessage();
   }
  finally {
-    if (s != null)     try {
-      s.close();
-    }
- catch (    IOException e) {
-    }
+    Closeables.closeQuietly(s);
   }
   return res;
 }

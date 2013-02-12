@@ -1,18 +1,16 @@
 {
-  int num=0;
   try {
-    for (    FileStatus fs : _fs.listStatus(p)) {
-      Path pfs=fs.getPath();
-      if (fs.isDir()) {
-        num+=addFolder(pfs);
+    for (    FileStatus file : fs.listStatus(p)) {
+      Path pfs=file.getPath();
+      if (file.isDir()) {
+        addFolder(fs,pfs,succeeded,failed);
       }
  else {
-        num++;
         Key k=getKeyForPathString(pfs.toString());
-        long size=fs.getLen();
+        long size=file.getLen();
         Value val=null;
         if (pfs.getName().endsWith(".hex")) {
-          FSDataInputStream s=_fs.open(pfs);
+          FSDataInputStream s=fs.open(pfs);
           int sz=(int)Math.min(1L << 20,size);
           byte[] mem=MemoryManager.malloc1(sz);
           s.readFully(mem);
@@ -27,12 +25,15 @@
           val=new Value(k,(int)size,Value.HDFS);
         }
         val.setdsk();
-        H2O.putIfAbsent_raw(k,val);
+        DKV.put(k,val);
+        JsonObject o=new JsonObject();
+        o.addProperty(Constants.KEY,k.toString());
+        o.addProperty(Constants.FILE,p.toString());
+        succeeded.add(o);
       }
     }
   }
  catch (  IOException e) {
-    System.err.println("[hdfs] Unable to list the folder " + p.toString() + " : "+ e);
+    failed.add(new JsonPrimitive(p.toString()));
   }
-  return num;
 }

@@ -1,0 +1,5 @@
+{
+  AmazonS3 s3=PersistS3.getClient();
+  if (!s3.doesBucketExist(input))   throw new IllegalArgumentException("S3 Bucket " + input + " not found!");
+  return input;
+}

@@ -3,7 +3,9 @@
   long off=ValueArray.getChunkOffset(key);
   long size=0;
   try {
-    size=_fs.getFileStatus(getPathForKey(arykey)).getLen();
+    Path p=getPathForKey(arykey);
+    FileSystem fs=FileSystem.get(p.toUri(),CONF);
+    size=fs.getFileStatus(p).getLen();
   }
  catch (  IOException e) {
     System.err.println(e);
