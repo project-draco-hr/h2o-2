@@ -1,9 +1,8 @@
 {
   PersistIce.initialize();
   PersistNFS.initialize();
-  PersistHdfs.initialize();
   if (H2O.OPT_ARGS.hdfs != null || H2O.OPT_ARGS.hdfs_config != null) {
-    PersistHdfs.initialize();
+    HdfsLoader.initialize();
   }
   if (OPT_ARGS.aws_credentials != null) {
     try {
