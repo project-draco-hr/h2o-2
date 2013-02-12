@@ -2,7 +2,9 @@
   String res=null;
   FSDataOutputStream s=null;
   try {
-    s=_fs.append(getPathForKey(key));
+    Path p=getPathForKey(key);
+    FileSystem fs=FileSystem.get(p.toUri(),CONF);
+    s=fs.append(p);
     System.err.println("[hdfs] append=" + val.get().length);
     s.write(val.get());
   }
@@ -10,11 +12,7 @@
     res=e.getMessage();
   }
  finally {
-    if (s != null)     try {
-      s.close();
-    }
- catch (    IOException e) {
-    }
+    Closeables.closeQuietly(s);
   }
   return res;
 }

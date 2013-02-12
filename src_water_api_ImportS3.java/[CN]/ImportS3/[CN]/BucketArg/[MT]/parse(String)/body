@@ -1,5 +1,5 @@
 {
-  PersistS3.checkCredentials();
-  if (!PersistS3.S3.doesBucketExist(input))   throw new IllegalArgumentException("S3 Bucket " + input + " not found!");
+  AmazonS3 s3=PersistS3.getClient();
+  if (!s3.doesBucketExist(input))   throw new IllegalArgumentException("S3 Bucket " + input + " not found!");
   return input;
 }

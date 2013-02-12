@@ -1,0 +1,21 @@
+{
+  JsonArray array=new JsonArray();
+  Configuration conf=PersistHdfs.getConf();
+  if (conf == null)   return array;
+  try {
+    Path p=new Path(filter);
+    Path expand=p;
+    if (!filter.endsWith("/"))     expand=p.getParent();
+    FileSystem fs=FileSystem.get(p.toUri(),conf);
+    for (    FileStatus file : fs.listStatus(expand)) {
+      Path fp=file.getPath();
+      if (fp.toString().startsWith(p.toString())) {
+        array.add(new JsonPrimitive(fp.toString()));
+      }
+      if (array.size() == limit)       break;
+    }
+  }
+ catch (  Throwable _) {
+  }
+  return array;
+}

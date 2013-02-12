@@ -1,0 +1,9 @@
+{
+  if (S3 == null) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("Unable to load S3 credentials.");
+    if (H2O.OPT_ARGS.aws_credentials == null)     msg.append(HELP);
+    throw new IllegalArgumentException(msg.toString());
+  }
+  return S3;
+}

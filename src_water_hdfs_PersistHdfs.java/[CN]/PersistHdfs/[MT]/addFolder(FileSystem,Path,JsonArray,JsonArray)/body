@@ -1,0 +1,39 @@
+{
+  try {
+    for (    FileStatus file : fs.listStatus(p)) {
+      Path pfs=file.getPath();
+      if (file.isDir()) {
+        addFolder(fs,pfs,succeeded,failed);
+      }
+ else {
+        Key k=getKeyForPathString(pfs.toString());
+        long size=file.getLen();
+        Value val=null;
+        if (pfs.getName().endsWith(".hex")) {
+          FSDataInputStream s=fs.open(pfs);
+          int sz=(int)Math.min(1L << 20,size);
+          byte[] mem=MemoryManager.malloc1(sz);
+          s.readFully(mem);
+          ValueArray ary=new ValueArray(k,size,Value.HDFS).read(new AutoBuffer(mem));
+          ary._persist=Value.HDFS | Value.ON_dsk;
+          val=ary.value();
+        }
+ else         if (size >= 2 * ValueArray.CHUNK_SZ) {
+          val=new ValueArray(k,size,Value.HDFS).value();
+        }
+ else {
+          val=new Value(k,(int)size,Value.HDFS);
+        }
+        val.setdsk();
+        DKV.put(k,val);
+        JsonObject o=new JsonObject();
+        o.addProperty(Constants.KEY,k.toString());
+        o.addProperty(Constants.FILE,p.toString());
+        succeeded.add(o);
+      }
+    }
+  }
+ catch (  IOException e) {
+    failed.add(new JsonPrimitive(p.toString()));
+  }
+}
