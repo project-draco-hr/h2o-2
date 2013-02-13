@@ -7,11 +7,11 @@ def upload_jar_to_remote_hosts(hosts, slow_connection=False):
             sys.stdout.flush()
     if (not slow_connection):
         for h in hosts:
-            f = find_file('build/h2o.jar')
+            f = find_file('target/h2o.jar')
             h.upload_file(f, progress=prog)
             h.upload_file(flatfile_name())
     else:
-        f = find_file('build/h2o.jar')
+        f = find_file('target/h2o.jar')
         hosts[0].upload_file(f, progress=prog)
         hosts[0].push_file_to_remotes(f, hosts[1:])
         f = find_file(flatfile_name())
