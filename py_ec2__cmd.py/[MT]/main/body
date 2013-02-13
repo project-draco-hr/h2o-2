@@ -3,7 +3,7 @@ def main():
     parser.add_argument('action', choices=['create', 'terminate', 'stop', 'reboot', 'start'], help='EC2 instances action')
     parser.add_argument('--config', help='Configuration file', type=str, default=None)
     parser.add_argument('--instances', help='Number of instances to launch', type=int, default=DEFAULT_NUMBER_OF_INSTANCES)
-    parser.add_argument('--hosts', help='Hosts file describing existing EC2 instances', type=str, default=None)
+    parser.add_argument('--hosts', help='Hosts file describing existing EC2 instances (if not specified default settings are used)', type=str, default=None)
     args = parser.parse_args()
     if (args.action == 'create'):
         ec2_config = load_ec2_config(args.config)
