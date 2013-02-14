@@ -5,16 +5,16 @@ def check_sandbox_for_errors():
     for filename in os.listdir(LOG_DIR):
         if re.search('stdout|stderr', filename):
             sandFile = open(((LOG_DIR + '/') + filename), 'r')
-            regex1 = re.compile('found multiple|exception|error|assert|warn|info|killing|killed|required ports', re.IGNORECASE)
+            regex1 = re.compile('found multiple|exception|error|assert|killing|killed|required ports', re.IGNORECASE)
             regex2 = re.compile('Caused', re.IGNORECASE)
             regex3 = re.compile('warn|info', re.IGNORECASE)
             printing = 0
             lines = 0
             for line in sandFile:
-                printSingleLine = False
+                printSingleWarning = False
                 foundBad = False
                 if (not (' bytes)' in line)):
-                    printSingleLine = regex3.search(line)
+                    printSingleWarning = regex3.search(line)
                     foundBad = (regex1.search(line) and (not ('error rate' in line)))
                 if ((printing == 0) and foundBad):
                     printing = 1
@@ -25,9 +25,12 @@ def check_sandbox_for_errors():
                     foundAt = re.match('[\\t ]+at ', line)
                     if (foundBad and (lines > 4) and (not (foundCaused or foundAt))):
                         printing = 2
-                if ((printing == 1) or printSingleLine):
+                if (printing == 1):
                     errLines.append(line)
                     sys.stdout.write(line)
+                if printSingleWarning:
+                    if (not re.search('Unable to load native-hadoop library for your platform', line)):
+                        sys.stdout.write(line)
             sandFile.close()
     if (len(errLines) != 0):
         emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr.\n' + 'Could have occurred at any prior time\n\n')

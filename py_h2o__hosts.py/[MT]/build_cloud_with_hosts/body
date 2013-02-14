@@ -1,4 +1,4 @@
-def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hdfs_name_node='192.168.1.151', java_heap_GB=None, java_extra_args=None, **kwargs):
+def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hdfs_name_node=None, hdfs_config=None, hdfs_version=None, java_heap_GB=None, java_extra_args=None, **kwargs):
     if h2o.config_json:
         configFilename = find_config(h2o.config_json)
     else:
@@ -16,7 +16,9 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
     sigar = hostDict.setdefault('sigar', False)
     useFlatfile = hostDict.setdefault('use_flatfile', False)
     useHdfs = hostDict.setdefault('use_hdfs', False)
-    hdfs_name_node = hostDict.setdefault('hdfs_name_node', '192.168.1.151')
+    hdfsNameNode = hostDict.setdefault('hdfs_name_node', '192.168.1.151')
+    hdfsVersion = hostDict.setdefault('hdfs_version', 'cdh3u5')
+    hdfsConfig = hostDict.setdefault('hdfs_config', None)
     javaHeapGB = hostDict.setdefault('java_heap_GB', None)
     javaExtraArgs = hostDict.setdefault('java_extra_args', None)
     use_home_for_ice = hostDict.setdefault('use_home_for_ice', False)
@@ -28,11 +30,15 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
         useHdfs = use_hdfs
     if (hdfs_name_node is not None):
         hdfsNameNode = hdfs_name_node
+    if (hdfs_version is not None):
+        hdfsVersion = hdfs_version
+    if (hdfs_config is not None):
+        hdfsConfig = hdfs_config
     if (java_heap_GB is not None):
         javaHeapGB = java_heap_GB
     if (java_extra_args is not None):
         javaExtraArgs = java_extra_args
-    h2o.verboseprint('host config: ', username, password, h2oPerHost, basePort, sigar, useFlatfile, useHdfs, hdfsNameNode, javaHeapGB, use_home_for_ice, hostList, **kwargs)
+    h2o.verboseprint('host config: ', username, password, h2oPerHost, basePort, sigar, useFlatfile, useHdfs, hdfsNameNode, hdfsVersion, hdfsConfig, javaHeapGB, use_home_for_ice, hostList, **kwargs)
     global hosts
     if (hostList == ['127.0.0.1']):
         hosts = None
@@ -48,4 +54,4 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
         timeoutSecs = max(60, (2 * (len(hosts) * h2oPerHost)))
     else:
         timeoutSecs = 60
-    h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, java_heap_GB=javaHeapGB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, **kwargs)
+    h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, hdfs_version=hdfsVersion, hdfs_config=hdfsConfig, java_heap_GB=javaHeapGB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, **kwargs)
