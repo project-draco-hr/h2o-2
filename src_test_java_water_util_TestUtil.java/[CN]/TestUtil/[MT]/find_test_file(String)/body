@@ -1,0 +1,7 @@
+{
+  File file=new File(fname);
+  if (!file.exists())   file=new File("target/" + fname);
+  if (!file.exists())   file=new File("../" + fname);
+  if (!file.exists())   file=new File("../target/" + fname);
+  return file;
+}
