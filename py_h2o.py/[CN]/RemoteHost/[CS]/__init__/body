@@ -11,4 +11,5 @@ def __init__(self, addr, username, password=None, **kwargs):
         self.ssh.connect(self.addr, username=username, **kwargs)
     else:
         self.ssh.connect(self.addr, username=username, password=password, **kwargs)
+    self.ssh.get_transport().set_keepalive(300)
     self.uploaded = {}
