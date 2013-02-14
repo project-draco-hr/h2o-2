@@ -1,0 +1,10 @@
+{
+  String cname=xml2jname(name);
+  if (CLASS_NAMES.contains(cname)) {
+    int i=0;
+    while (CLASS_NAMES.contains(cname + i))     i++;
+    cname=cname + i;
+  }
+  CLASS_NAMES.add(cname);
+  return cname;
+}
