@@ -1,0 +1,7 @@
+{
+  JsonObject obj=new JsonObject();
+  obj.addProperty(ERROR,message);
+  Response r=new Response(Status.error,obj);
+  r.setBuilder(ERROR,new PreFormattedBuilder());
+  return r;
+}

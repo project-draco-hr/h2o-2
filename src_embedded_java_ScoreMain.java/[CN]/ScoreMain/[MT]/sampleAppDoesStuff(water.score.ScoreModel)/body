@@ -1,0 +1,19 @@
+{
+  System.out.println("Initial score_interpreter(HashMap)=" + ((water.score.ScorecardModel)scm).score_interpreter(ROW));
+  System.out.println("Initial score(HashMap)=" + scm.score(ROW));
+  System.out.println("Initial score(Arrays )=" + scm.score(MAP,SS,DS));
+  for (int i=0; i < 1000; i++) {
+    loop1000(scm,true);
+    loop1000(scm,false);
+  }
+  try {
+    Thread.sleep(1000);
+  }
+ catch (  Exception e) {
+  }
+  System.out.println("Timing...");
+  timeTwo(scm,1);
+  timeTwo(scm,1000);
+  timeTwo(scm,10000);
+  timeTwo(scm,100000);
+}

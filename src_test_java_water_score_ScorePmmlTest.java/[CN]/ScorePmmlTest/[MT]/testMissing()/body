@@ -1,0 +1,12 @@
+{
+  String pmml=makePmml(makeDataDictionary(makeDataField("x",DataType.DOUBLE),makeDataField("y",DataType.DOUBLE),makeDataField("res",DataType.DOUBLE)),makeScorecard(makeMiningSchema(makeMiningField("res","predicted"),makeMiningField("x","active"),makeMiningField("y","active")),makeOutputSchema("res",DataType.DOUBLE),makeCharacteristic("x_check",makeAttribute(1.0,makeSimplePredicate("x",SimpleOp.MISSING,0.0))),makeCharacteristic("y_check",makeAttribute(2.0,makeSimplePredicate("y",SimpleOp.MISSING,0.0)))));
+  Double[][] tests=new Double[][]{{1.0,null,2.0},{-1.0,1.0,0.0},{null,-1.0,1.0},{null,null,3.0}};
+  for (  Double[] t : tests) {
+    HashMap<String,Comparable> m=new HashMap<String,Comparable>();
+    m.put("x",t[0]);
+    m.put("y",t[1]);
+    ScorecardModel scm=getSCM(pmml);
+    double predictedScore=score2(scm,m);
+    Assert.assertEquals(t[2],predictedScore,0.00001);
+  }
+}

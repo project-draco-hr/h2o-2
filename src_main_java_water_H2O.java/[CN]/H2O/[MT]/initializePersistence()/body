@@ -1,0 +1,12 @@
+{
+  PersistIce.initialize();
+  PersistNFS.initialize();
+  HdfsLoader.initialize();
+  if (OPT_ARGS.aws_credentials != null) {
+    try {
+      PersistS3.getClient();
+    }
+ catch (    IllegalArgumentException iae) {
+    }
+  }
+}

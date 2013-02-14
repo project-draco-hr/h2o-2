@@ -1,0 +1,26 @@
+{
+  String[] colNames=new String[rules.length];
+  for (int i=0; i < rules.length; i++)   colNames[i]=rules[i]._name;
+  ClassPool _pool=ClassPool.getDefault();
+  try {
+    String cname=uniqueClassName(name);
+    CtClass scClass=_pool.makeClass(cname);
+    CtClass baseClass=_pool.get("water.score.ScorecardModel");
+    scClass.setSuperclass(baseClass);
+    ScorecardModel scm=new ScorecardModel(name,colNames,initialScore,rules);
+    scm.makeScoreHashMethod(scClass);
+    scm.makeScoreAryMethod(scClass);
+    String cons="  public " + cname + "(water.score.ScorecardModel base) { super(base); }";
+    CtConstructor happyConst=CtNewConstructor.make(cons,scClass);
+    scClass.addConstructor(happyConst);
+    Class myClass=scClass.toClass(ScorecardModel.class.getClassLoader(),null);
+    Constructor<ScorecardModel> co=myClass.getConstructor(ScorecardModel.class);
+    ScorecardModel jitted_scm=co.newInstance(scm);
+    return jitted_scm;
+  }
+ catch (  Exception e) {
+    System.err.println("javassist failed: " + e);
+    e.printStackTrace();
+  }
+  return null;
+}

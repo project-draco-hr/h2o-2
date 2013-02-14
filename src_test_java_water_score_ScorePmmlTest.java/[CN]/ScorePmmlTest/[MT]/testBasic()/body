@@ -1,0 +1,12 @@
+{
+  String pmml=simplePmml;
+  double[][] tests=new double[][]{{-1.0,-1.0,2.0},{-1.0,1.0,3.0},{1.0,-1.0,3.0},{1.0,1.0,4.0},{0.0,0.0,3.0}};
+  for (  double[] t : tests) {
+    HashMap<String,Comparable> m=new HashMap<String,Comparable>();
+    m.put("x",t[0]);
+    m.put("y",t[1]);
+    ScorecardModel scm=getSCM(pmml);
+    double predictedScore=score2(scm,m);
+    Assert.assertEquals(t[2],predictedScore,0.00001);
+  }
+}

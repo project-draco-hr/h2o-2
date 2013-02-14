@@ -1,0 +1,11 @@
+{
+  Object[][] tests=new Object[][]{{DataType.DOUBLE,SimpleOp.LT,0.0,-1.0,1.0},{DataType.DOUBLE,SimpleOp.LT,0.0,0.0,0.0},{DataType.DOUBLE,SimpleOp.LT,0.0,1.0,0.0},{DataType.INT,SimpleOp.LT,0L,-1L,1.0},{DataType.INT,SimpleOp.LT,0L,0L,0.0},{DataType.INT,SimpleOp.LT,0L,1L,0.0},{DataType.DOUBLE,SimpleOp.GT,0.0,-1.0,0.0},{DataType.DOUBLE,SimpleOp.GT,0.0,0.0,0.0},{DataType.DOUBLE,SimpleOp.GT,0.0,1.0,1.0},{DataType.INT,SimpleOp.GT,0L,-1L,0.0},{DataType.INT,SimpleOp.GT,0L,0L,0.0},{DataType.INT,SimpleOp.GT,0L,1L,1.0},{DataType.DOUBLE,SimpleOp.LE,0.0,-1.0,1.0},{DataType.DOUBLE,SimpleOp.LE,0.0,0.0,1.0},{DataType.DOUBLE,SimpleOp.LE,0.0,1.0,0.0},{DataType.INT,SimpleOp.LE,0L,-1L,1.0},{DataType.INT,SimpleOp.LE,0L,0L,1.0},{DataType.INT,SimpleOp.LE,0L,1L,0.0},{DataType.DOUBLE,SimpleOp.GE,0.0,-1.0,0.0},{DataType.DOUBLE,SimpleOp.GE,0.0,0.0,1.0},{DataType.DOUBLE,SimpleOp.GE,0.0,1.0,1.0},{DataType.INT,SimpleOp.GE,0L,-1L,0.0},{DataType.INT,SimpleOp.GE,0L,0L,1.0},{DataType.INT,SimpleOp.GE,0L,1L,1.0},{DataType.DOUBLE,SimpleOp.EQ,0.0,-1.0,0.0},{DataType.DOUBLE,SimpleOp.EQ,0.0,0.0,1.0},{DataType.DOUBLE,SimpleOp.EQ,0.0,1.0,0.0},{DataType.INT,SimpleOp.EQ,0L,-1L,0.0},{DataType.INT,SimpleOp.EQ,0L,0L,1.0},{DataType.INT,SimpleOp.EQ,0L,1L,0.0},{DataType.STRING,SimpleOp.EQ,"a","a",1.0},{DataType.STRING,SimpleOp.EQ,"a","b",0.0},{DataType.STRING,SimpleOp.EQ,"a",null,0.0},{DataType.BOOLEAN,SimpleOp.EQ,true,true,1.0},{DataType.BOOLEAN,SimpleOp.EQ,true,false,0.0}};
+  for (  Object[] t : tests) {
+    String pmml=makeBasic((DataType)t[0],(SimpleOp)t[1],t[2]);
+    HashMap<String,Comparable> m=new HashMap<String,Comparable>();
+    m.put("x",(Comparable)t[3]);
+    ScorecardModel scm=getSCM(pmml);
+    double predictedScore=score2(scm,m);
+    Assert.assertEquals((Double)t[4],predictedScore,0.00001);
+  }
+}

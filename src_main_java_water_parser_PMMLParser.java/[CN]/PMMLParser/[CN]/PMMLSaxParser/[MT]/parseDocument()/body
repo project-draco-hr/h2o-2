@@ -1,0 +1,11 @@
+{
+  SAXParserFactory saxFactory=SAXParserFactory.newInstance();
+  SAXParser saxParser=saxFactory.newSAXParser();
+  saxParser.parse(_is,this);
+  if (_isScorecardModel) {
+    return ScorecardModel.make(_modelName,_initialScore,_ruleTables.toArray(new RuleTable[0]));
+  }
+ else {
+    throw H2O.unimpl();
+  }
+}
