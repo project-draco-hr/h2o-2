@@ -14,6 +14,7 @@
       ParseStatus ps=v.get(new ParseStatus());
       if (ps._error != null) {
         r=Response.error(ps._error);
+        UKV.remove(v._key);
       }
  else {
         r=Response.poll(response,(float)ps.getProgress());
