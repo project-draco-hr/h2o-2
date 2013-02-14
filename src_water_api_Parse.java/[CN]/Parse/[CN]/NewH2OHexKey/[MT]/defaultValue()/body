@@ -1,0 +1,9 @@
+{
+  Value src_v=_source.value();
+  if (src_v == null)   return null;
+  String n=src_v._key.toString();
+  int dot=n.lastIndexOf('.');
+  if (dot > 0)   n=n.substring(0,dot);
+  String dst=n + ".hex";
+  return dst;
+}

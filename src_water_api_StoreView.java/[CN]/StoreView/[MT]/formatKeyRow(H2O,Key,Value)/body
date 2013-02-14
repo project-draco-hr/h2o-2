@@ -6,20 +6,24 @@
   JsonObject jcols[]=new JsonObject[]{mt,mt,mt,mt,mt};
   long rows=-1;
   int cols=-1;
+  String str="";
   if (val._isArray != 0) {
     ValueArray ary=ValueArray.value(val);
     if (ary._cols.length > 1 || ary._cols[0]._size != 1) {
       rows=ary._numrows;
       cols=ary._cols.length;
-      for (int i=0; i < 5; ++i) {
+      result.addProperty(ROWS,rows);
+      result.addProperty(COLS,cols);
+      for (int i=0; i < jcols.length; ++i) {
         JsonObject col=new JsonObject();
         if (i < cols) {
           ValueArray.Column c=ary._cols[i];
           if (c._size != 0) {
+            col.addProperty(HEADER,c._name);
             if (c._domain == null) {
-              col.addProperty(MIN,c._min);
-              col.addProperty(MEAN,c._mean);
-              col.addProperty(MAX,c._max);
+              col.addProperty(MIN,noNaN(c._min));
+              col.addProperty(MEAN,noNaN(c._mean));
+              col.addProperty(MAX,noNaN(c._max));
             }
  else             if (c._domain.length > 0) {
               int max=c._domain.length;
@@ -34,43 +38,49 @@
     }
   }
   if (rows == -1) {
-    byte[] bs=DKV.get(key).getFirstBytes();
-    int[] rows_cols=CsvParser.inspect(bs);
-    if (rows_cols != null && rows_cols[1] != 0) {
-      double bytes_per_row=(double)bs.length / rows_cols[0];
+    CsvParser.Setup setup=Inspect.csvGuessValue(val);
+    if (setup != null && setup._data[1].length > 0) {
+      int zipped_len=val.getFirstBytes().length;
+      double bytes_per_row=(double)zipped_len / setup._numlines;
       rows=(long)(val.length() / bytes_per_row);
-      cols=rows_cols[1];
+      cols=setup._data[1].length;
       result.addProperty(ROWS,"~" + rows);
+      result.addProperty(COLS,cols);
+      for (int i=0; i < Math.min(cols,jcols.length); i++) {
+        JsonObject col=new JsonObject();
+        col.addProperty(HEADER,setup._data[0][i]);
+        col.addProperty(MIN,setup._data[1][i]);
+        col.addProperty(MEAN,setup._data[2][i]);
+        col.addProperty(MAX,setup._data[3][i]);
+        jcols[i]=col;
+      }
     }
- else     result.addProperty(ROWS,"");
+ else {
+      result.addProperty(ROWS,"");
+      result.addProperty(COLS,"");
+    }
+    StringBuilder sb=new StringBuilder();
+    byte[] b=setup._bits;
+    int newlines=0;
+    int len=Math.min(b.length,100);
+    for (int i=0; i < len; i++) {
+      byte c=b[i];
+      if (c == '&')       sb.append("&amp;");
+ else       if (c == '<')       sb.append("&lt;");
+ else       if (c == '>')       sb.append("&gt;");
+ else       if (c == '\r')       ;
+ else       if (c == '\n') {
+        if (++newlines >= 4)         break;
+        sb.append("<br>");
+      }
+ else       if (c == ',' && i + 1 < len && b[i + 1] != ' ')       sb.append(", ");
+ else       if (c < 32)       sb.append('?');
+ else       sb.append((char)c);
+    }
+    if (val.length() > len)     sb.append("...");
+    str=sb.toString();
   }
- else   result.addProperty(ROWS,rows);
-  result.addProperty(COLS,rows == -1 ? "" : Integer.toString(cols));
   for (int i=0; i < jcols.length; i++)   result.add("col_" + i,jcols[i]);
-  byte[] b=new byte[100];
-  int len=0;
-  try {
-    len=val.openStream().read(b);
-  }
- catch (  IOException e) {
-  }
-  StringBuilder sb=new StringBuilder();
-  int newlines=0;
-  for (int i=0; i < len; i++) {
-    byte c=b[i];
-    if (c == '&')     sb.append("&amp;");
- else     if (c == '<')     sb.append("&lt;");
- else     if (c == '>')     sb.append("&gt;");
- else     if (c == '\r')     ;
- else     if (c == '\n') {
-      sb.append("<br>");
-      if (newlines++ > 5)       break;
-    }
- else     if (c == ',' && i + 1 < len && b[i + 1] != ' ')     sb.append(", ");
- else     if (c < 32)     sb.append('?');
- else     sb.append((char)c);
-  }
-  if (val.length() > len)   sb.append("...");
-  result.addProperty(VALUE,sb.toString());
+  result.addProperty(VALUE,str);
   return result;
 }

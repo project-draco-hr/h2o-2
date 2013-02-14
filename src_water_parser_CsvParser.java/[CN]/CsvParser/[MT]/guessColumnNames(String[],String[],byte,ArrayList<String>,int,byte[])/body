@@ -1,0 +1,35 @@
+{
+  boolean hasNumber=false;
+  for (  String s : l1) {
+    try {
+      Double.parseDouble(s);
+      hasNumber=true;
+      break;
+    }
+ catch (    NumberFormatException e) {
+    }
+  }
+  boolean hasHeader=false;
+  if (!hasNumber) {
+    for (    String s : l2) {
+      try {
+        Double.parseDouble(s);
+        hasHeader=true;
+        break;
+      }
+ catch (      NumberFormatException e) {
+      }
+    }
+  }
+  String[][] data=new String[lines.size() + (hasHeader ? 0 : 1)][];
+  int l=0;
+  if (!hasHeader) {
+    data[l++]=new String[l1.length];
+    for (int i=0; i < l1.length; i++)     data[0][i]=Integer.toString(i);
+  }
+  data[l++]=l1;
+  data[l++]=l2;
+  int m=2;
+  while (l < lines.size())   data[l++]=determineTokens(lines.get(m++),separator);
+  return new Setup(separator,hasHeader,data,numlines,bits);
+}
