@@ -5,7 +5,7 @@
     HashMap<String,Comparable> m=new HashMap<String,Comparable>();
     m.put("x",t[0]);
     ScorecardModel scm=getSCM(pmml);
-    double predictedScore=scm.score(m);
+    double predictedScore=score2(scm,m);
     Assert.assertEquals(t[1],predictedScore,0.00001);
   }
 }

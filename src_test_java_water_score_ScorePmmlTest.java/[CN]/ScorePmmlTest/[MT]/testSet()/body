@@ -6,7 +6,7 @@
     m.put("x",(Comparable)t[0]);
     m.put("y",(Comparable)t[1]);
     ScorecardModel scm=getSCM(pmml);
-    double predictedScore=scm.score(m);
+    double predictedScore=score2(scm,m);
     Assert.assertEquals((Double)t[2],predictedScore,0.00001);
   }
 }
