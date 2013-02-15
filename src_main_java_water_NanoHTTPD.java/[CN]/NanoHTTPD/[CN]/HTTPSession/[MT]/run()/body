@@ -86,10 +86,6 @@
 catch (  InterruptedException ie) {
   }
  finally {
-    try {
-      mySocket.close();
-    }
- catch (    IOException ex) {
-    }
+    Utils.close(mySocket);
   }
 }

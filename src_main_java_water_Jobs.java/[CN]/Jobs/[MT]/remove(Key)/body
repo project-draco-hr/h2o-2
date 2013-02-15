@@ -1,0 +1,27 @@
+{
+  new TAtomic<List>(){
+    @Override public List alloc(){
+      return new List();
+    }
+    @Override public List atomic(    List old){
+      Job[] jobs=old._jobs;
+      int index=-1;
+      for (int i=0; i < jobs.length; i++) {
+        if (jobs[i]._key.equals(key)) {
+          index=i;
+          break;
+        }
+      }
+      if (index >= 0) {
+        old._jobs=new Job[jobs.length - 1];
+        int n=0;
+        for (int i=0; i < jobs.length; i++) {
+          if (i != index)           old._jobs[n++]=jobs[i];
+ else           UKV.remove(jobs[i]._progress);
+        }
+      }
+      return old;
+    }
+  }
+.invoke(KEY);
+}
