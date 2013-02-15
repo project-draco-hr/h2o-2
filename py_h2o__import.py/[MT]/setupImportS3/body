@@ -1,6 +1,6 @@
 def setupImportS3(node=None, path='test-s3-integration'):
     if (not node):
         node = h2o.nodes[0]
-    importS3Result = node.import_s3(importS3Path)
+    importS3Result = node.import_s3(path)
     h2o.dump_json(importS3Result)
     return importS3Result

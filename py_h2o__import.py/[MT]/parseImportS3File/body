@@ -3,7 +3,7 @@ def parseImportS3File(node=None, csvFilename='covtype.data', path='test-s3-integ
         node = h2o.nodes[0]
     if (not csvFilename):
         raise Exception('parseImportS3File: No csvFilename')
-    csvPathnameForH2O = ((('s3:/' + importS3Path) + '/') + csvFilename)
+    csvPathnameForH2O = ((('s3:/' + path) + '/') + csvFilename)
     if (key2 is None):
         myKey2 = (csvFilename + '.hex')
     else:
