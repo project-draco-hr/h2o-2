@@ -12,11 +12,15 @@
     return r;
   }
   if (_key.originalValue().startsWith(KMeansModel.KEY_PREFIX)) {
-    KMeansModel m=new KMeansModel().read(new AutoBuffer(val.get(),0));
+    KMeansModel m=val.get(new KMeansModel());
     JsonObject res=new JsonObject();
     res.add("KMeansModel",m.toJson());
     Response r=Response.done(res);
     return r;
+  }
+  if (_key.originalValue().startsWith(RFModel.KEY_PREFIX)) {
+    JsonObject res=new JsonObject();
+    return RFView.redirect(res,val._key);
   }
   return serveUnparsedValue(val);
 }
