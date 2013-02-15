@@ -7,5 +7,5 @@ def test_B_hhp_107_01_loop(self):
         sys.stdout.flush()
         csvPathname = h2o.find_file('smalldata/hhp_107_01.data.gz')
         key = n.put_file(csvPathname)
-        parseKey = n.parse(key)
+        parseKey = n.parse(key, (((key + '_') + str(x)) + '.hex'))
         trial += 1
