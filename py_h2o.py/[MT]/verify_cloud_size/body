@@ -1,6 +1,10 @@
 def verify_cloud_size():
     expectedSize = len(nodes)
     cloudSizes = [n.get_cloud()['cloud_size'] for n in nodes]
+    cloudConsensus = [n.get_cloud()['consensus'] for n in nodes]
     for s in cloudSizes:
+        consensusStr = ','.join(map(str, cloudConsensus))
+        sizeStr = ','.join(map(str, cloudSizes))
         if (s != expectedSize):
-            raise Exception(('Inconsistent cloud size. nodes report %s instead of %d' % (','.join(map(str, cloudSizes)), expectedSize)))
+            raise Exception(('Inconsistent cloud size.' + ('nodes report size: %s consensus: %s instead of %d.' % (sizeStr, consensusStr, expectedSize))))
+    return (sizeStr, consensusStr, expectedSize)

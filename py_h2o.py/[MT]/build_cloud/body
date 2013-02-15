@@ -21,12 +21,11 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=20, retry
                     totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
-        stabilize_cloud(node_list[0], len(node_list), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
-        verboseprint(len(node_list), ' Node 0 stabilized in ', (time.time() - start), ' secs')
+        stabilize_cloud(node_list[(-1)], len(node_list), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+        verboseprint(len(node_list), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d node_list, %d hosts, in %d s' % (len(node_list), hostCount, (time.time() - start))))
-        if (hosts is not None):
-            for n in nodes:
-                stabilize_cloud(n, len(nodes), timeoutSecs=15)
+        for n in node_list:
+            stabilize_cloud(n, len(node_list), timeoutSecs=timeoutSecs)
     except:
         if cleanup:
             for n in node_list:
