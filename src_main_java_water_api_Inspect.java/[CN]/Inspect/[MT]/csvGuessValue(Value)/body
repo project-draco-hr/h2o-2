@@ -29,11 +29,7 @@ if (off == bs.length) bs=Arrays.copyOf(bs,bs.length * 2);
  catch (IOException ioe) {
 }
  finally {
-try {
-if (is != null) is.close();
-}
- catch (IOException ioe) {
-}
+Utils.close(is);
 }
 if (off < bs.length) bs=Arrays.copyOf(bs,off);
 return CsvParser.inspect(bs);

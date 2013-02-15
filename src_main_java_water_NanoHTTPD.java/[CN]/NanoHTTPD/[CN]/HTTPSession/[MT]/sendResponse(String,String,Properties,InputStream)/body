@@ -31,10 +31,6 @@
     if (data != null)     data.close();
   }
  catch (  IOException ioe) {
-    try {
-      mySocket.close();
-    }
- catch (    Throwable t) {
-    }
+    Utils.close(mySocket);
   }
 }

@@ -12,10 +12,6 @@
     return null;
   }
  finally {
-    try {
-      if (s != null)       s.close();
-    }
- catch (    Throwable t) {
-    }
+    Utils.close(s);
   }
 }
