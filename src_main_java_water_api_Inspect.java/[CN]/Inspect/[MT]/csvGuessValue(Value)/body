@@ -23,6 +23,7 @@ while (off < bs.length) {
 int len=is.read(bs,off,bs.length - off);
 if (len == -1) break;
 off+=len;
+if (off == bs.length) bs=Arrays.copyOf(bs,bs.length * 2);
 }
 }
  catch (IOException ioe) {
