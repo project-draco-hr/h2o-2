@@ -1,11 +1,5 @@
 def test_B_hdfs_files(self):
     print '\nLoad a list of files from HDFS, parse and do 1 RF tree'
-    print "CAVEAT: apparently there is no H2O output if you don't have user/group permission"
-    print "to inspect the HDFS root specified. This will look like a 'Key not found' fail."
-    print 'You can tell because no keys will have been preloaded from hdfs in the sandbox/*stdout*'
-    print 'The username used will be the one that executed this test'
-    print 'testdir_hosts/test_from_hdfs_hosts.py will use a config json-specified username (0xdiag)'
-    print '\nClicking on the popup browser on the Node page will show no preloaded hdfs keys'
     print '\nYou can try running as hduser/hduser if fail'
     csvFilenameAll = ['TEST-poker1000.csv', 'leads.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.data', 'covtype.4x.shuffle.data', 'covtype4x.shuffle.data', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'covtype.169x.data', 'prostate_2g.csv', 'prostate_long.csv.gz', 'prostate_long_1G.csv', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp2.os.noisy.0_1.data', 'hhp2.os.noisy.9_4.data', 'hhp_9_14_12.data', 'poker_c1s1_testing_refresh.csv', '3G_poker_shuffle', 'billion_rows.csv.gz', 'poker-hand.1244M.shuffled311M.full.txt']
     if (1 == 0):
@@ -15,9 +9,10 @@ def test_B_hdfs_files(self):
     h2b.browseTheCloud()
     timeoutSecs = 200
     firstglm = {}
+    h2i.setupImportHdfs()
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
-        parseKey = h2i.parseHdfsFile(csvFilename=csvFilename, timeoutSecs=1000)
+        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=1000)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print 'parse result:', parseKey['destination_key']
         print ('\n' + csvFilename)
