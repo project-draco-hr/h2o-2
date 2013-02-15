@@ -1,8 +1,10 @@
 {
-  Value source=_source.value();
+  PSetup p=_source.value();
+  CsvParser.Setup q=p._setup;
   Key dest=Key.make(_dest.value());
   try {
-    ParseDataset.forkParseDataset(dest,source);
+    CsvParser.Setup new_setup=new CsvParser.Setup(q._separator,_header.value(),q._data,q._numlines,q._bits);
+    ParseDataset.forkParseDataset(dest,DKV.get(p._key),new_setup);
     JsonObject response=new JsonObject();
     response.addProperty(RequestStatics.DEST_KEY,dest.toString());
     Response r=ParseProgress.redirect(response,dest);

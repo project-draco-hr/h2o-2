@@ -1,6 +1,6 @@
 {
   DParseTask phaseOne=DParseTask.createPassOne(dataset,result,parserType);
-  phaseOne.passOne();
+  phaseOne.passOne(setup);
   if ((phaseOne._error != null) && !phaseOne._error.isEmpty()) {
     System.err.println(phaseOne._error);
     throw new Exception("The dataset format is not recognized/supported");

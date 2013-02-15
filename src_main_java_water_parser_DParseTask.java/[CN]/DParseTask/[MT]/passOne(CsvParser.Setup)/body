@@ -2,7 +2,7 @@
 switch (_parserType) {
 case CSV:
     byte[] bits=_sourceDataset.getFirstBytes();
-  CsvParser.Setup setup=CsvParser.guessCsvSetup(bits);
+  if (setup == null)   setup=CsvParser.guessCsvSetup(bits);
 if (setup._data == null) {
   _error="Unable to determine the separator or number of columns on the dataset";
   return;

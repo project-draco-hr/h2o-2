@@ -2,5 +2,5 @@
   Key k=Key.make(input);
   Value v=DKV.get(k);
   if (v == null)   throw new IllegalArgumentException("Key " + input + " not found!");
-  return Inspect.csvGuessValue(v);
+  return new PSetup(k,Inspect.csvGuessValue(v));
 }

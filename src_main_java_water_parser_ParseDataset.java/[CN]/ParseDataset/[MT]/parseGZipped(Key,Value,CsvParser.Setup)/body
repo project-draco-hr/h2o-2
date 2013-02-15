@@ -10,6 +10,6 @@
   }
   if (key == null)   throw new Error("Cannot uncompressed GZIP-compressed dataset!");
   Value uncompressedDataset=DKV.get(key);
-  parse(result,uncompressedDataset);
+  parse(result,uncompressedDataset,setup);
   UKV.remove(key);
 }
