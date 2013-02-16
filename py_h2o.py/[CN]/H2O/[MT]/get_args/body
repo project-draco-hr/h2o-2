@@ -31,4 +31,6 @@ def get_args(self):
         args += ['--nosigar']
     if self.aws_credentials:
         args += [('--aws_credentials=' + self.aws_credentials)]
+    if (self.random_udp_drop or random_udp_drop):
+        args += ['--random_udp_drop']
     return args

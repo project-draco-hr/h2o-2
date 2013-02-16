@@ -16,7 +16,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=20, retry
             hostCount = len(hosts)
             for h in hosts:
                 for i in xrange(node_count):
-                    verboseprint('ssh starting node', i, 'via', h)
+                    verboseprint('ssh starting node', totalNodes, 'via', h)
                     newNode = h.remote_h2o(port=(base_port + (i * ports_per_node)), node_id=totalNodes, **kwargs)
                     node_list.append(newNode)
                     totalNodes += 1
@@ -27,6 +27,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=20, retry
         verboseprint(('Built cloud: %d node_list, %d hosts, in %d s' % (len(node_list), hostCount, (time.time() - start))))
         for n in node_list:
             stabilize_cloud(n, len(node_list), timeoutSecs=timeoutSecs)
+        check_sandbox_for_errors()
     except:
         if cleanup:
             for n in node_list:
