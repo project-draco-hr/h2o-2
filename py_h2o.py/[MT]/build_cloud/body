@@ -5,6 +5,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=20, retry
     try:
         totalNodes = 0
         if (hosts is None):
+            write_flatfile(node_count=node_count, base_port=base_port)
             hostCount = 1
             for i in xrange(node_count):
                 verboseprint('psutil starting node', i)

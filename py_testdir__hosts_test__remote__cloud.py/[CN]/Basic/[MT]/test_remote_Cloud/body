@@ -2,19 +2,15 @@ def test_remote_Cloud(self):
     trySize = 0
     nodes_per_host = 1
     for i in range(1, 10):
-        sys.stdout.write('.')
-        sys.stdout.flush()
         timeoutSecs = max(60, (2 * (len(h2o_hosts.hosts) * nodes_per_host)))
-        h2o.build_cloud(nodes_per_host, hosts=h2o_hosts.hosts, timeoutSecs=60, retryDelaySecs=1)
+        h2o.build_cloud(nodes_per_host, timeoutSecs=60, retryDelaySecs=1)
+        h2o_hosts.build_cloud_with_hosts(nodes_per_host, use_flatfile=True)
         h2o.verify_cloud_size()
-        trySize += 1
-        print 'Sending shutdown to cloud, trySize', trySize
-        h2o.nodes[0].shutdown_all()
-        time.sleep(1)
-        print 'Tearing down cloud, trySize', trySize
-        sys.stdout.write('.')
-        sys.stdout.flush()
+        h2o.check_sandbox_for_errors()
+        print 'Tearing down cloud of size', len(h2o.nodes)
         h2o.tear_down_cloud()
         h2o.clean_sandbox()
         h2o.verboseprint('Waiting', nodes_per_host, 'seconds to avoid OS sticky port problem')
+        sys.stdout.write('.')
+        sys.stdout.flush()
         time.sleep(nodes_per_host)
