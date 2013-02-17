@@ -1,8 +1,6 @@
 @classmethod
 def setUpClass(cls):
-    print 'Setup for first cloud'
-    h2o_hosts.build_cloud_with_hosts()
+    h2o.write_flatfile(node_count=node_count, base_port=base_port)
+    h2o_hosts.build_cloud_with_hosts(node_count, base_port=base_port, use_flatfile=True)
     h2o.verify_cloud_size()
-    print '\nTearing down first cloud'
-    h2o.tear_down_cloud()
-    h2o.clean_sandbox()
+    h2o.check_sandbox_for_errors()

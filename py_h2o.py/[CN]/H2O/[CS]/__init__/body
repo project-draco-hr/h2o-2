@@ -1,4 +1,4 @@
-def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar=False, use_debugger=None, classpath=None, use_hdfs=False, hdfs_root='/datasets', hdfs_version='cdh3u5', hdfs_name_node='192.168.1.176', hdfs_config=None, hdfs_nopreload=None, aws_credentials=None, use_flatfile=False, java_heap_GB=None, java_extra_args=None, use_home_for_ice=False, node_id=None, username=None):
+def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar=False, use_debugger=None, classpath=None, use_hdfs=False, hdfs_root='/datasets', hdfs_version='cdh3u5', hdfs_name_node='192.168.1.176', hdfs_config=None, hdfs_nopreload=None, aws_credentials=None, use_flatfile=False, java_heap_GB=None, java_extra_args=None, use_home_for_ice=False, node_id=None, username=None, random_udp_drop=False):
     if (use_debugger is None):
         use_debugger = debugger
     self.aws_credentials = aws_credentials
@@ -28,3 +28,4 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar
     self.node_id = node_id
     self.username = username
     self.sandbox_error_was_reported = False
+    self.random_udp_drop = random_udp_drop
