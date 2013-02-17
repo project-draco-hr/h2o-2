@@ -11,6 +11,7 @@ def main():
         log('Instances: {0}'.format(args.instances))
         reservation = run_instances(args.instances, ec2_config)
         dump_hosts_config(ec2_config, reservation)
+        dump_ssh_commands(ec2_config, reservation)
     elif (args.action == 'show_defaults'):
         print 'Config    : {0}'.format(DEFAULT_EC2_INSTANCE_CONF)
         print 'Instances : {0}'.format(DEFAULT_NUMBER_OF_INSTANCES)
