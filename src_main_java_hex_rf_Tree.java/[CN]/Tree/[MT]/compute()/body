@@ -1,4 +1,5 @@
 {
+  if (Jobs.cancelled(_job._key))   return;
   Timer timer=new Timer();
   _stats[0]=new ThreadLocal<Statistic>();
   _stats[1]=new ThreadLocal<Statistic>();
@@ -10,7 +11,7 @@
   _tree=spl.isLeafNode() ? new LeafNode(spl._split,d.rows()) : new FJBuild(spl,d,0,_seed).compute();
   if (_verbose > 1)   Utils.pln(computeStatistics().toString());
   _stats=null;
-  appendKey(_modelKey,toKey());
+  appendKey(_job._key,toKey());
   StringBuilder sb=new StringBuilder("[RF] Tree : ").append(_data_id + 1);
   sb.append(" d=").append(_tree.depth()).append(" leaves=").append(_tree.leaves()).append(" done in ").append(timer).append('\n');
   Utils.pln(_tree.toString(sb,_verbose > 0 ? Integer.MAX_VALUE : 200).toString());

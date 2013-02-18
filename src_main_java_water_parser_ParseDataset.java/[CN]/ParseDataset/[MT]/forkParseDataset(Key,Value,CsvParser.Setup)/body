@@ -1,9 +1,10 @@
 {
-  ParseStatus.initialize(result,dataset.length());
+  final Job job=Jobs.start("Parse",dest);
   H2O.FJP_NORM.submit(new RecursiveAction(){
     @Override protected void compute(){
-      parseImpl(result,dataset,setup);
+      parse(job,dataset,setup);
     }
   }
 );
+  return job;
 }
