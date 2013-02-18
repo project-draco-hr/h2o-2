@@ -6,7 +6,7 @@
   AutoBuffer bits=va.getChunk(0);
   for (int c=0; c < cols.length; c++)   clusters[0][c]=datad(va,bits,0,va._cols[cols[c]]);
   int iteration=0;
-  float expected=20;
+  long expected=20;
   while (iteration < 5) {
     Sqr sqr=new Sqr();
     sqr._arykey=va._key;
@@ -25,7 +25,7 @@
       Jobs.remove(job._key);
       return;
     }
-    UKV.put(job._progress,new Progress(++iteration / expected));
+    UKV.put(job._progress,new Progress(++iteration,expected));
   }
   clusters=recluster(clusters,k);
   boolean moved=true;
@@ -43,8 +43,7 @@
         clusters[cluster][column]=value;
       }
     }
-    float progress=Math.min(++iteration / expected,1f);
-    UKV.put(job._progress,new Progress(progress));
+    UKV.put(job._progress,new Progress(++iteration,expected));
     res._clusters=clusters;
     UKV.put(job._dest,res);
     if (Jobs.cancelled(job._key))     break;

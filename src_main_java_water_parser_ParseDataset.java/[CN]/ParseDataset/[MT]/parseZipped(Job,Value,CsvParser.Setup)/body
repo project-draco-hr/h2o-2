@@ -1,0 +1,19 @@
+{
+  ZipInputStream zis=null;
+  Key key=null;
+  try {
+    zis=new ZipInputStream(dataset.openStream());
+    ZipEntry ze=zis.getNextEntry();
+    if (ze != null && !ze.isDirectory()) {
+      key=Key.make(new String(dataset._key._kb) + "_UNZIPPED");
+      ValueArray.readPut(key,zis,job);
+    }
+  }
+  finally {
+    Closeables.closeQuietly(zis);
+  }
+  if (key == null)   throw new Error("Cannot uncompressed ZIP-compressed dataset!");
+  Value uncompressedDataset=DKV.get(key);
+  parse(job,uncompressedDataset,setup);
+  UKV.remove(key);
+}
