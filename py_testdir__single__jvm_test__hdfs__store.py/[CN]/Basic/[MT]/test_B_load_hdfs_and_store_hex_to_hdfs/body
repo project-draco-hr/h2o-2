@@ -18,7 +18,7 @@ def test_B_load_hdfs_and_store_hex_to_hdfs(self):
         print ('\n' + csvFilename)
         start = time.time()
         print 'Storing', parseKey['destination_key'], 'to HDFS'
-        print 'FIX! temporarily disabling since it causes HDFS corruption'
+        storeKey = h2o_cmd.runStore2HDFS(key=parseKey['destination_key'], timeoutSecs=1000)
         h2b.browseJsonHistoryAsUrlLastMatch('Parse')
         sys.stdout.write('.')
         sys.stdout.flush()
