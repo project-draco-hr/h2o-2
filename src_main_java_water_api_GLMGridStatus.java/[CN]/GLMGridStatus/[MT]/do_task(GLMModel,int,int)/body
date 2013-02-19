@@ -1,7 +1,5 @@
 {
-  m=new GLMModel(GLMModel.makeKey(),m,null);
-  m._solver=LSMSolver.makeSolver(_lambdas[l],_alphas[alpha]);
-  m.build();
+  m=DGLM.buildModel(DGLM.getData(_ary,_xs,null,true),new ADMMSolver(_lambdas[l],_alphas[alpha]),_glmp);
   if (_xfold <= 1)   m.validateOn(_ary,null,_ts);
  else   m.xvalidate(_ary,_xfold,_ts);
   return m;

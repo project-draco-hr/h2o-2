@@ -4,12 +4,12 @@
     k1=loadAndParseKey("h.hex","smalldata/hhp_107_01.data.gz");
     final int class_col=106;
     ValueArray va=ValueArray.value(DKV.get(k1));
-    LSMSolver lsms=LSMSolver.makeSolver(LSMSolver.DEFAULT_LAMBDA,0.5);
-    GLMSolver.GLMParams glmp=new GLMSolver.GLMParams();
+    LSMSolver lsms=new ADMMSolver(1e-5,0.5);
+    GLMParams glmp=new GLMParams(Family.binomial);
     int[] cols=new int[va._cols.length];
     cols(cols,class_col,-1);
-    GLMSolver.GLMModel m=compute_glm_score(va,cols,glmp,lsms,0.5,"initial");
-    GLMSolver.GLMModel best=m.isSolved() ? m : null;
+    GLMModel m=compute_glm_score(va,cols,glmp,lsms,0.5,"initial");
+    GLMModel best=m.isSolved() ? m : null;
     cols=new int[va._cols.length - 1];
     cols(cols,class_col,-1);
     for (int skip=0; skip < va._cols.length; skip++) {

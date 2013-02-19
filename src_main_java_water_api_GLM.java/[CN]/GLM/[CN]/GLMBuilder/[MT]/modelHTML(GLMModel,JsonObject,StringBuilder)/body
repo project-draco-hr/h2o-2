@@ -35,7 +35,7 @@
     JsonObject coefs=json.get("coefficients").getAsJsonObject();
     R.replace("modelSrc",equationHTML(m,coefs));
     R.replace("coefficients",coefsHTML(coefs));
-    R.replace("normalized_coefficients",coefsHTML(json.get("normalized_coefficients").getAsJsonObject()));
+    if (json.has("normalized_coefficients"))     R.replace("normalized_coefficients",coefsHTML(json.get("normalized_coefficients").getAsJsonObject()));
   }
   sb.append(R);
   if (m._vals != null)   validationHTML(m._vals,sb);

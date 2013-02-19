@@ -5,7 +5,7 @@
     for (int i=0; i < 10; i++) {
       double[] coefs=new double[]{R.nextDouble(),R.nextDouble(),R.nextDouble()};
       ValueArray va=va_maker(datakey,2,10,new DataExpr_Dirty(R,coefs));
-      LSMSolver lsms=LSMSolver.makeSolver();
+      LSMSolver lsms=new ADMMSolver(0,0);
       JsonObject glm=computeGLMlog(lsms,va,false);
       JsonObject res=glm.get("coefficients").getAsJsonObject();
       assertEquals(coefs[0],res.get("0").getAsDouble(),0.001);
