@@ -1,11 +1,11 @@
 {
-  int q=skipWS().get();
+  int q=skipWS().qget();
   if (q != '"' && q != '\'')   throw new ParseException("Expected one of ' or \" but found '" + (char)q + "'");
   StringBuilder sb=new StringBuilder();
   int b=get();
   while (b != q) {
     sb.append((char)b);
-    b=get();
+    b=qget();
   }
   return sb.toString();
 }
