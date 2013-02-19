@@ -1,0 +1,52 @@
+{
+  long t1=System.currentTimeMillis();
+  GramMatrixFunc gramF=new GramMatrixFunc(data,params,beta.clone());
+  ArrayList<String> warns=new ArrayList<String>();
+  boolean converged=false;
+  Gram gram=gramF.apply(data);
+  int iter=1;
+  try {
+    lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),gramF._beta);
+  }
+ catch (  NonSPDMatrixException e) {
+    if (!(lsm instanceof GeneralizedGradientSolver)) {
+      lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
+      warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
+      lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),gramF._beta);
+    }
+  }
+  if (params._family != Family.gaussian) {
+    do {
+      gram=gramF.apply(data);
+      double[] b=beta;
+      beta=gramF._beta;
+      gramF._beta=b;
+      try {
+        lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),gramF._beta);
+      }
+ catch (      NonSPDMatrixException e) {
+        if (!(lsm instanceof GeneralizedGradientSolver)) {
+          lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
+          warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
+          lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),gramF._beta);
+        }
+      }
+    }
+ while (++iter != 50 && betaDiff(beta,gramF._beta) > params._betaEps);
+    if (betaDiff(beta,gramF._beta) > params._betaEps)     warns.add("Did not converge!");
+  }
+  double[] newBeta=gramF._beta;
+  String[] warnings=new String[warns.size()];
+  warns.toArray(warnings);
+  if (data._standardized) {
+    newBeta=newBeta.clone();
+    double norm=0.0;
+    for (int i=0; i < newBeta.length - 1; i++) {
+      double b=newBeta[i] * data._normMul[i];
+      norm+=b * data._normSub[i];
+      newBeta[i]=b;
+    }
+    newBeta[newBeta.length - 1]-=norm;
+  }
+  return new GLMModel(data,newBeta,gramF._beta,params,lsm,converged,iter,System.currentTimeMillis() - t1,warnings);
+}

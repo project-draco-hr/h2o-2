@@ -1,0 +1,16 @@
+{
+  int[] modelDataMap=columnMapping(ary.colNames());
+  if (!isCompatible(modelDataMap))   throw new GLMException("incompatible dataset");
+  DataFrame data=new DataFrame(ary,modelDataMap,s,null,true);
+  GLMValidationFunc f=new GLMValidationFunc(_glmParams,_beta,thresholds,ary._cols[modelDataMap[modelDataMap.length - 1]]._mean);
+  GLMValidation val=f.apply(data);
+  val._modelKey=_selfKey;
+  if (_vals == null)   _vals=new GLMValidation[]{val};
+ else {
+    int n=_vals.length;
+    _vals=Arrays.copyOf(_vals,n + 1);
+    _vals[n]=val;
+  }
+  UKV.put(_selfKey,this);
+  return val;
+}

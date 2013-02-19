@@ -1,0 +1,6 @@
+{
+  double div=1 / (1 + ((1 - _alpha) * 0.5 * _lambda* t));
+  shrink(plus(_beta,_betaGradient,newBeta),newBeta,_kappa * t);
+  for (int i=0; i < newBeta.length - 1; ++i)   newBeta[i]*=div;
+  return newBeta;
+}
