@@ -1,7 +1,10 @@
-def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, **kwargs):
+def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, header=False, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
     verboseprint('\nParsing key:', key, 'to key2:', key2, '(if None, means default)')
-    a = self.__check_request(requests.get(url=self.__url('Parse.json'), timeout=timeoutSecs, params={'source_key': key, 'destination_key': key2, }))
+    parseParams = {'source_key': key, 'destination_key': key2, }
+    if header:
+        parseParams['header'] = 1
+    a = self.__check_request(requests.get(url=self.__url('Parse.json'), timeout=timeoutSecs, params=parseParams))
     if (a['response']['redirect_request'] != 'ParseProgress'):
         print dump_json(a)
         raise Exception('H2O parse redirect is not ParseProgress. Parse json response precedes.')
