@@ -1,0 +1,9 @@
+{
+  HashMap<String,String> attrs=pmml.expect("Attribute").attrs();
+  pmml.expect('>').skipWS().expect('<');
+  Predicate pred=pmml.pPredicate();
+  pmml.skipWS().expect("</Attribute>");
+  String ps=attrs.get("partialScore");
+  double partialScore=ps == null ? 0 : PMMLParser.getNumber(ps);
+  return new Rule(partialScore,pred);
+}

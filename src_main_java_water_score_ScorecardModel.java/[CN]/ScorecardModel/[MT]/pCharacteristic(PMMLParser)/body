@@ -1,0 +1,12 @@
+{
+  HashMap<String,String> attrs=pmml.expect("Characteristic").attrs();
+  pmml.expect('>');
+  ArrayList<Rule> rules=new ArrayList();
+  while (pmml.skipWS().expect('<').peek() != '/')   rules.add(pAttribute(pmml));
+  pmml.expect("/Characteristic>");
+  String name=rules.get(0).unique_name();
+  DataTypes t=pmml._types.get(name);
+  String bls=attrs.get("baselineScore");
+  double baseScore=bls == null ? 0 : PMMLParser.getNumber(bls);
+  return new RuleTable(name,t,rules.toArray(new Rule[0]),baseScore);
+}

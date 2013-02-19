@@ -1,0 +1,10 @@
+{
+  if (_idx > 0)   return _buf[_idx - 1];
+  try {
+    int b=_is.read();
+    if (b != -1)     return push(b);
+  }
+ catch (  IOException ioe) {
+  }
+  throw new ParseException("Premature EOF");
+}

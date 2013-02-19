@@ -1,0 +1,10 @@
+{
+  while (true) {
+    int b=skipWS().peek();
+    if (b == '/' || b == '>')     return;
+    while ((b=get()) != '=')     ;
+    int q=skipWS().get();
+    if (q != '"' && q != '\'')     throw new ParseException("Expected one of ' or \" but found '" + (char)q + "'");
+    while ((b=get()) != q)     ;
+  }
+}

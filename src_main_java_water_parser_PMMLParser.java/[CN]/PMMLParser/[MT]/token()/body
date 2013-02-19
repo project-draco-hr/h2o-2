@@ -1,0 +1,13 @@
+{
+  int b=get();
+  if (!Character.isJavaIdentifierStart(b))   throw new ParseException("Expected token start but found '" + (char)b + "'");
+  StringBuilder sb=new StringBuilder();
+  sb.append((char)b);
+  b=get();
+  while (Character.isJavaIdentifierPart(b) || b == ':') {
+    sb.append((char)b);
+    b=get();
+  }
+  push(b);
+  return sb.toString();
+}

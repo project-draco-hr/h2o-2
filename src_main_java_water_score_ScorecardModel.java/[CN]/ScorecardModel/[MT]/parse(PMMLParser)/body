@@ -1,0 +1,12 @@
+{
+  HashMap<String,String> attrs=pmml.attrs();
+  pmml.expect('>');
+  pmml.skipWS().expect('<').pGeneric("MiningSchema");
+  pmml.skipWS().expect('<').pGeneric("Output");
+  pmml.skipWS().expect('<');
+  RuleTable[] rules=pCharacteristics(pmml);
+  pmml.skipWS().expect("</Scorecard>");
+  String is=attrs.get("initialScore");
+  double initialScore=is == null ? 0 : PMMLParser.getNumber(is);
+  return make(attrs.get("modelName"),initialScore,rules);
+}

@@ -1,0 +1,7 @@
+{
+  expect('>');
+  IsIn in=IsIn.make(attrs.get("field"),BooleanOperators.valueOf(attrs.get("booleanOperator")));
+  in._values=skipWS().expect('<').pArray();
+  skipWS().expect("</SimpleSetPredicate>");
+  return in;
+}
