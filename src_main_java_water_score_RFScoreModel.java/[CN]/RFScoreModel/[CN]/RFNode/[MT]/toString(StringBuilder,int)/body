@@ -1,0 +1,12 @@
+{
+  for (int i=0; i < d; i++)   sb.append("  ");
+  if (_l == null && _r == null)   return sb.append("return ").append(_class).append(";\n");
+  sb.append("if( ");
+  _l._pred.toJavaNum(sb,_l._pred.unique_name()).append(" ) {\n");
+  if (_l != null)   _l.toString(sb,d + 1);
+  for (int i=0; i < d; i++)   sb.append("  ");
+  sb.append("} else {\n");
+  if (_r != null)   _r.toString(sb,d + 1);
+  for (int i=0; i < d; i++)   sb.append("  ");
+  return sb.append("}\n");
+}

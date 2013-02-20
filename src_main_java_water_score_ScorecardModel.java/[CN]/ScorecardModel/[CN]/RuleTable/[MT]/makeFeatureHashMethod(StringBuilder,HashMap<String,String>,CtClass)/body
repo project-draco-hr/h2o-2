@@ -1,4 +1,8 @@
 {
+  if (_type == null) {
+    System.out.println("[h2o] Warning: ignore untyped feature " + _name);
+    return;
+  }
   String jname=xml2jname(_name);
   StringBuilder sb=new StringBuilder();
   sb.append("double ").append(jname).append("( java.util.HashMap row ) {\n" + "  double score = 0;\n");
@@ -16,13 +20,13 @@ break;
 sb.append(jname);
 switch (_type) {
 case STRING:
-sb.append(" = getString (row,\"");
+sb.append(" = water.parser.PMMLParser.getString (row,\"");
 break;
 case BOOLEAN:
-sb.append(" = getBoolean(row,\"");
+sb.append(" = water.parser.PMMLParser.getBoolean(row,\"");
 break;
 default :
-sb.append(" = getNumber (row,\"");
+sb.append(" = water.parser.PMMLParser.getNumber (row,\"");
 break;
 }
 sb.append(_name).append("\");\n");

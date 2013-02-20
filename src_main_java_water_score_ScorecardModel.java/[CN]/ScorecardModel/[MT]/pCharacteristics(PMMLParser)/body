@@ -1,0 +1,7 @@
+{
+  pmml.expect("Characteristics>");
+  ArrayList<RuleTable> rts=new ArrayList();
+  while (pmml.skipWS().expect('<').peek() != '/')   rts.add(pCharacteristic(pmml));
+  pmml.expect("/Characteristics>");
+  return rts.toArray(new RuleTable[0]);
+}

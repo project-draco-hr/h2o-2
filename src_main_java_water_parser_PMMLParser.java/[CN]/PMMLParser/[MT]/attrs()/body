@@ -1,0 +1,11 @@
+{
+  HashMap<String,String> attrs=null;
+  while (true) {
+    int b=skipWS().peek();
+    if (b == '/' || b == '>')     return attrs;
+    if (attrs == null)     attrs=new HashMap();
+    String attr=token();
+    String val=skipWS().expect('=').str();
+    attrs.put(attr,val);
+  }
+}

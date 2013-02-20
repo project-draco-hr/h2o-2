@@ -1,0 +1,8 @@
+{
+  expect(">");
+  CompoundPredicate cp=CompoundPredicate.make(BooleanOperators.valueOf(attrs.get("booleanOperator")));
+  cp._l=skipWS().expect('<').pPredicate();
+  cp._r=skipWS().expect('<').pPredicate();
+  skipWS().expect("</CompoundPredicate>");
+  return cp;
+}

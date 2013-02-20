@@ -1,0 +1,13 @@
+{
+  String t=token();
+  HashMap<String,String> attrs=attrs();
+  if ("SimplePredicate".equals(t))   return pSimplePredicate(attrs);
+  if ("CompoundPredicate".equals(t))   return pCompoundPredicate(attrs);
+  if ("SimpleSetPredicate".equals(t))   return pSimpleSetPredicate(attrs);
+  if ("True".equals(t)) {
+    expect("/>");
+    return new True();
+  }
+  expect("unhandled_predicate");
+  return null;
+}

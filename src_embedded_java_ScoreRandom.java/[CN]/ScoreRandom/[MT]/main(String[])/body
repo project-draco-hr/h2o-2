@@ -1,8 +1,8 @@
 {
   sampleAppInit(args);
   System.out.println("Loading model to score");
-  FileInputStream fis=new FileInputStream("../../demo/SampleScorecard.pmml");
-  water.score.ScorecardModel scm=water.parser.PMMLParser.load(fis);
+  InputStream fis=new BufferedInputStream(new FileInputStream("../../../../demo/SampleScorecard.pmml"));
+  water.score.ScoreModel scm=water.parser.PMMLParser.parse(fis);
   FEATURES=ROW.keySet().toArray(new String[0]);
   SS=new String[FEATURES.length];
   DS=new double[FEATURES.length];

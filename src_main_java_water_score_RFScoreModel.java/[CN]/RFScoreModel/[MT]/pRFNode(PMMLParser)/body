@@ -1,0 +1,29 @@
+{
+  HashMap<String,String> attrs=pmml.expect("Node").attrs();
+  RFNode rfn=new RFNode();
+  String cls=attrs.get("score");
+  if (cls != null) {
+    rfn._class=(short)Arrays.binarySearch(_classes,cls,null);
+    if (rfn._class < 0)     throw new ParseException("Unknown class " + cls);
+  }
+ else {
+    rfn._class=-1;
+  }
+  rfn._pred=pmml.expect('>').skipWS().expect('<').pPredicate();
+  String col=rfn._pred.unique_name();
+  if (!col.isEmpty()) {
+    rfn._colnum=(short)_cols.indexOf(col);
+    if (rfn._colnum == -1) {
+      rfn._colnum=(short)_cols.size();
+      _cols.add(col);
+    }
+  }
+  if (pmml.skipWS().expect('<').peek() == 'N') {
+    rfn._l=pRFNode(pmml);
+    pmml.skipWS().expect('<');
+    rfn._r=pRFNode(pmml);
+    pmml.skipWS().expect('<');
+  }
+  pmml.expect("/Node>");
+  return rfn;
+}
