@@ -1,8 +1,13 @@
 {
   final Job job=Jobs.start("Parse",dest);
-  H2O.FJP_NORM.submit(new RecursiveAction(){
-    @Override protected void compute(){
+  H2O.FJP_NORM.submit(new CountedCompleter(){
+    @Override public void compute(){
       parse(job,dataset,setup);
+      tryComplete();
+    }
+    public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      ex.printStackTrace();
+      return true;
     }
   }
 );
