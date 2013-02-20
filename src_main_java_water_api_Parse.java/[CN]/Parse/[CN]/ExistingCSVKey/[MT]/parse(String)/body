@@ -1,5 +1,7 @@
 {
   Key k=Key.make(input);
+  if (input.endsWith(".xlsx") || input.endsWith(".xls"))   return new PSetup(k,new Setup((byte)0,false,null,0,null),true);
+  ;
   Value v=DKV.get(k);
   if (v == null)   throw new IllegalArgumentException("Key " + input + " not found!");
   CsvParser.Setup setup=Inspect.csvGuessValue(v);
