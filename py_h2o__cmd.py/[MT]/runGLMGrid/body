@@ -1,5 +1,6 @@
 def runGLMGrid(node=None, csvPathname=None, key=None, timeoutSecs=60, retryDelaySecs=2, **kwargs):
     pto = max((timeoutSecs / 5), 10)
-    parseKey = parseFile(node, csvPathname, key, timeoutSecs=pto)
+    noise = kwargs.pop('noise', None)
+    parseKey = parseFile(node, csvPathname, key, timeoutSecs=pto, noise=noise)
     glm = runGLMGridOnly(node, parseKey, timeoutSecs, retryDelaySecs, **kwargs)
     return glm

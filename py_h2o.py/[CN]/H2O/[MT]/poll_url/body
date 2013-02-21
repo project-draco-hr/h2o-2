@@ -1,6 +1,10 @@
-def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None):
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, noise=None):
+    verboseprint('poll_url input: response:', dump_json(response))
     url = self.__url(response['redirect_request'])
-    args = response['redirect_request_args']
+    params = response['redirect_request_args']
+    if (noise is not None):
+        (noise_json, noiseParams) = noise
+        noiseUrl = self.__url((noise_json + '.json'))
     status = 'poll'
     start = time.time()
     count = 0
@@ -8,15 +12,27 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         time.sleep(initialDelaySecs)
     while (status == 'poll'):
         time.sleep(retryDelaySecs)
-        r = self.__check_request(requests.get(url=url, timeout=15, params=args))
+        create_noise = ((noise is not None) and ((count % 2) == 0))
+        if create_noise:
+            urlUsed = noiseUrl
+            paramsUsed = noiseParams
+            msgUsed = '\nNoise during polling with'
+        else:
+            urlUsed = url
+            paramsUsed = params
+            msgUsed = '\nPolling with'
+        r = self.__check_request(requests.get(url=urlUsed, timeout=15, params=paramsUsed))
         if ((count % 15) == 0):
-            verboseprint('Polling with', url, 'Response:', dump_json(r['response']))
+            verboseprint(msgUsed, urlUsed, 'Response:', dump_json(r['response']))
         if ((count % 100) == 0):
             check_sandbox_for_errors()
-        status = r['response']['status']
+        if create_noise:
+            status = 'poll'
+        else:
+            status = r['response']['status']
         if ((time.time() - start) > timeoutSecs):
-            argsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in args.items()])
-            emsg = ('Timeout: %d secs while polling. status: %s, url: %s?%s' % (timeoutSecs, status, url, argsStr))
+            argsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in paramsUsed.items()])
+            emsg = ('Timeout: %d secs while polling. status: %s, url: %s?%s' % (timeoutSecs, status, urlUsed, argsStr))
             raise Exception(emsg)
         count += 1
     return r
