@@ -7,8 +7,9 @@ def exec_list_like_other_tests(exprList, lenNodes, csvFilename, key2):
             colX = random.randint(1, 54)
             row = str(random.randint(1, 400000))
             execExpr = h2e.fill_in_expr_template(exprTemplate, colX, trial, row, key2)
-            execResultInspect = h2e.exec_expr(h2o.nodes[nodeX], execExpr, resultKey=('Result' + str(trial)))
-            columns = execResultInspect['cols']
+            execResultInspect = h2e.exec_expr(h2o.nodes[nodeX], execExpr, resultKey=(('Result' + str(trial)) + '.hex'))
+            print '\nexecResult:', h2o.dump_json(execResultInspect)
+            columns = execResultInspect[0]['cols']
             columnsDict = columns.pop()
             min = columnsDict['min']
             h2o.verboseprint('min: ', min, 'trial:', trial)
