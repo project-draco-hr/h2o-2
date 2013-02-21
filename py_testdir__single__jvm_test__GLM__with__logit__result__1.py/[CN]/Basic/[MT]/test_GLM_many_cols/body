@@ -16,7 +16,7 @@ def test_GLM_many_cols(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'y': y, 'max_iter': 60, 'lambda': 1, 'alpha': 0, 'weight': 1.0, 'num_cross_validation_folds': 3, 'beta_epsilon': 0.0001, 'thresholds': 0.5, }
+        kwargs = {'y': y, 'max_iter': 60, 'lambda': 0.0001, 'alpha': 0, 'weight': 1.0, 'num_cross_validation_folds': 3, 'beta_epsilon': 0.0001, 'thresholds': 0.5, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
