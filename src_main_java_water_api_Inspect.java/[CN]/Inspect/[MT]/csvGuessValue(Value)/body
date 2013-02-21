@@ -21,7 +21,7 @@ break;
 if (is != null) bs=new byte[bs.length * 2];
 while (off < bs.length) {
 int len=is.read(bs,off,bs.length - off);
-if (len == -1) break;
+if (len < 0) break;
 off+=len;
 if (off == bs.length) bs=Arrays.copyOf(bs,bs.length * 2);
 }
