@@ -1,0 +1,10 @@
+def scoreRF(scoreParseKey, trainResult, **kwargs):
+    rfModelKey = trainResult['model_key']
+    ntree = trainResult['ntree']
+    start = time.time()
+    scoreResult = h2o_cmd.runRFView(modelKey=rfModelKey, parseKey=scoreParseKey, ntree=ntree, **kwargs)
+    rftime = (time.time() - start)
+    h2o.verboseprint('RF score results: ', scoreResult)
+    h2o.verboseprint('RF computation took {0} sec'.format(rftime))
+    scoreResult['python_call_timer'] = rftime
+    return scoreResult
