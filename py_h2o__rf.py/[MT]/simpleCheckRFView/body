@@ -42,6 +42,4 @@ def simpleCheckRFView(node, rfv, **kwargs):
         raise Exception('number_built in RFView seems wrong. number_built:', number_built)
     h2o.verboseprint('RFView response: number_built:', number_built, 'leaves:', leaves, 'depth:', depth)
     confusion_key = rfv['confusion_key']
-    model_key = rfv['model_key']
-    data_key = rfv['data_key']
     dataInspect = node.inspect(data_key)
