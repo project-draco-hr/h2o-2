@@ -1,0 +1,32 @@
+{
+  String trainKeyName="iris_train.hex";
+  Key trainKey=loadAndParseKey(trainKeyName,trainDS);
+  ValueArray trainData=ValueArray.value(trainKey);
+  int trees=10;
+  int depth=50;
+  StatType statType=StatType.ENTROPY;
+  long seed=0xae44a87f9edf1cbL;
+  int[] cols=new int[]{0,1,2,3,4};
+  String modelName="model";
+  final Key modelKey=Key.make(modelName);
+  DRF drf=hex.rf.DRF.webMain(modelKey,cols,trainData,trees,depth,1.0f,(short)1024,statType,seed,false,null,-1,false,null,0,0);
+  drf.get();
+  RFModel model=UKV.get(modelKey,new RFModel());
+  String testKeyName="iris_test.hex";
+  Key testKey=loadAndParseKey(testKeyName,testDS);
+  ValueArray testData=ValueArray.value(testKey);
+  Confusion confusion=Confusion.make(model,testData._key,model._features - 1,null,false);
+  confusion.report();
+  assertEquals("Error rate",expTestErr,confusion.classError(),0.001);
+  assertEquals("CF dimension",expCM.length,confusion._matrix.length);
+  for (int i=0; i < expCM.length; i++) {
+    assertArrayEquals(expCM[i],confusion._matrix[i]);
+  }
+  assertArrayEquals("Confusion matrix",expCM,confusion._matrix);
+  assertArrayEquals("CM domain",expDomain,confusion.domain());
+  model.deleteKeys();
+  UKV.remove(modelKey);
+  UKV.remove(testKey);
+  UKV.remove(trainKey);
+  UKV.remove(confusion.keyFor());
+}
