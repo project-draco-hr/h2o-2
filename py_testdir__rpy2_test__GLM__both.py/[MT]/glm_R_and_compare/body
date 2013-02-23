@@ -19,11 +19,15 @@ def glm_R_and_compare(csvPathname, family, formula, y, header=False, h2oResults=
         print ('%-20s %-20.5e %8s %5.2f%% %10s %-20.5e' % ((((('R ' + a) + ' ') + b) + ':'), c, 'diff:', (abs((d / c)) * 100), 'abs diff:', d))
     print 
     printit('intercept', '', interceptR, interceptDelta)
+    print 'clistR:', cListR
+    print 'cn:', cn
+    print 'cDelta:', cDelta
     for (i, cValue) in enumerate(cListR):
         if (i >= y):
             cnIndex = (i + 1)
         else:
             cnIndex = i
+        print 'i:', i, 'cnIndex:', cnIndex
         printit('coefficient', cn[cnIndex], cValue, cDelta[i])
     gsummaryIndexDesc = ['call', 'terms', 'family', 'deviance', 'aic', 'contrasts', 'df.residual', 'null.deviance', 'df.null', 'iter', 'deviance.resid', 'coefficients', 'aliased', 'dispersion', 'df', 'cov.unscaled', 'cov.scaled']
     whatIwant = ['family', 'deviance', 'aic', 'df.residual', 'null.deviance', 'df.null', 'iter']
