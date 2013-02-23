@@ -1,7 +1,7 @@
 {
   if (_family.value() == Family.binomial) {
     Column c=_key.value()._cols[_classCol.value()];
-    if (c._min < 0 || c._max > 1)     return CaseMode.gt;
+    if (c._min < 0 || c._max > 1)     return c._domain == null ? CaseMode.gt : CaseMode.eq;
   }
   return CaseMode.none;
 }
