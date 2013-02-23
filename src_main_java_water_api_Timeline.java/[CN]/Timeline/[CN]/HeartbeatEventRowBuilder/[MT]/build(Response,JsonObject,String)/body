@@ -9,7 +9,8 @@
   sb.append("<td>heartbeat</td>");
   sb.append("<td>");
   sb.append(object.get(JSON_SENDS).getAsLong()).append(" sends, ");
-  sb.append(object.get(JSON_RECVS).getAsLong()).append(" recvs");
+  sb.append(object.get(JSON_RECVS).getAsLong()).append(" recvs, ");
+  sb.append(object.get(JSON_DROPS).getAsLong()).append(" drops");
   sb.append("</td>");
   sb.append(footer(object,name));
   return sb.toString();
