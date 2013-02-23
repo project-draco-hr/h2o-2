@@ -2,18 +2,47 @@ def test_rf_params_rand2(self):
     SEED = random.randint(0, sys.maxint)
     random.seed(SEED)
     print '\nUsing random seed:', SEED
-    csvPathname = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
-    for trial in range(20):
+    csvPathnameTrain = h2o.find_file('smalldata/covtype/covtype.20k.data')
+    print 'Train with:', csvPathnameTrain
+    parseKeyTrain = h2o_cmd.parseFile(csvPathname=csvPathnameTrain, key2='covtype.20k.hex', timeoutSecs=10)
+    dataKeyTrain = parseKeyTrain['destination_key']
+    csvPathnameTest = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
+    print 'Test with:', csvPathnameTest
+    parseKeyTest = h2o_cmd.parseFile(csvPathname=csvPathnameTrain, key2='covtype.hex', timeoutSecs=10)
+    dataKeyTest = parseKeyTest['destination_key']
+    for trial in range(5):
         params = {'ntree': 13, 'parallel': 1, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (30 + (15 * ((kwargs['parallel'] and 5) or 10)))
-        rfv = h2o_cmd.runRF(timeoutSecs=timeoutSecs, retryDelaySecs=1, csvPathname=csvPathname, **kwargs)
+        rfv = h2o_cmd.runRFOnly(parseKey=parseKeyTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, **kwargs)
         model_key = rfv['model_key']
         kwargs.pop('model_key', None)
         data_key = rfv['data_key']
         kwargs.pop('data_key', None)
         ntree = rfv['ntree']
         kwargs.pop('ntree', None)
-        h2o_cmd.runRFView(None, data_key, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
+        print '\nRFView scoring data_key:', dataKeyTest, 'params:', kwargs
+        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
+        kwargs['no_confusion_matrix'] = 0
+        kwargs['clear_confusion_matrix'] = 0
+        print '\nRFView scoring dataKeyTest:', dataKeyTest, 'params:', kwargs
+        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
+        kwargs['no_confusion_matrix'] = 0
+        kwargs['clear_confusion_matrix'] = 1
+        print '\nRFView scoring dataKeyTest:', dataKeyTest, 'params:', kwargs
+        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
+        kwargs['no_confusion_matrix'] = 1
+        kwargs['clear_confusion_matrix'] = 0
+        print '\nRFView scoring dataKeyTest:', dataKeyTest, 'params:', kwargs
+        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
+        kwargs['no_confusion_matrix'] = 1
+        kwargs['clear_confusion_matrix'] = 1
+        print '\nRFView scoring dataKeyTest:', dataKeyTest, 'params:', kwargs
+        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
+        kwargs['no_confusion_matrix'] = 0
+        kwargs['clear_confusion_matrix'] = 0
+        kwargs['class_weights'] = '1=1,2=2,3=3,4=4,5=5,6=6,7=7'
+        print '\nRFView scoring dataKeyTest:', dataKeyTest, 'params:', kwargs
+        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
         print 'Trial #', trial, 'completed'
