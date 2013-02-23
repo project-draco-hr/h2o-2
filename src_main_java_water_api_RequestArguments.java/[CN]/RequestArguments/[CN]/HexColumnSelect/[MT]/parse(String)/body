@@ -3,7 +3,7 @@
   ArrayList<Integer> al=new ArrayList();
   for (  String col : input.split(",")) {
     col=col.trim();
-    int idx=Integer.valueOf(col);
+    int idx=vaColumnNameToIndex(va,col);
     if (idx == -1)     throw new IllegalArgumentException("Column " + col + " not part of key "+ va._key);
     if (al.contains(idx))     throw new IllegalArgumentException("Column " + col + " is already ignored.");
     checkLegality(idx,va._cols[idx]);
