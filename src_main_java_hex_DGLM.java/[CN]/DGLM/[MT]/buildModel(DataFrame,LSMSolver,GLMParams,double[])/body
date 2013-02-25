@@ -32,7 +32,7 @@
         }
       }
     }
- while (++iter != 50 && betaDiff(beta,gramF._beta) > params._betaEps);
+ while (++iter < params._maxIter && betaDiff(beta,gramF._beta) > params._betaEps);
     if (betaDiff(beta,gramF._beta) > params._betaEps)     warns.add("Did not converge!");
   }
   double[] newBeta=gramF._beta;

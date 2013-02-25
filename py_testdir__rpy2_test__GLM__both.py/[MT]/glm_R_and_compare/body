@@ -12,6 +12,7 @@ def glm_R_and_compare(csvPathname, family, formula, y, header=False, h2oResults=
         interceptDelta = abs((abs(interceptH2o) - abs(interceptR)))
         cDelta = [abs((abs(a) - abs(b))) for (a, b) in zip(cListH2o, cListR)]
     else:
+        (warningsH2o, cListH2o, interceptH2o) = (None, None, None)
         interceptDelta = None
         cDelta = [None for a in cListR]
 
