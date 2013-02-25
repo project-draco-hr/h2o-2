@@ -1,12 +1,10 @@
 {
-  String name=elementName(contextName);
   StringBuilder sb=new StringBuilder();
-  sb.append(caption(object,name));
   if (object.get(JSON_DROP) == null)   sb.append("<tr>");
  else   sb.append("<tr style='background-color:Pink'>");
-  boolean isSend=object.get(JSON_SR).getAsBoolean();
   sb.append("<td>").append(object.get(JSON_TIME).getAsString()).append("</td>");
   sb.append("<td>").append(object.get(JSON_NANOS).getAsLong()).append("</td>");
+  boolean isSend=object.get(JSON_SR).getAsBoolean();
   String s=object.get(JSON_SEND).getAsString();
   String r=object.get(JSON_RECV).getAsString();
   sb.append("<td>");
