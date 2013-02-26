@@ -1,10 +1,7 @@
 def test_exec_import_hosts(self):
     importFolderPath = '/home/0xdiag/datasets'
     h2o_import.setupImportFolder(None, importFolderPath)
-    if local_host:
-        csvFilenameAll = [('covtype.data', 'cA', 5)]
-    else:
-        csvFilenameAll = [('covtype.data', 'cA', 5), ('covtype.data', 'cB', 5), ('covtype20x.data', 'cC', 50), ('covtype20x.data', 'cD', 50)]
+    csvFilenameAll = [('covtype.data', 'cA', 5)]
     csvFilenameList = csvFilenameAll
     lenNodes = len(h2o.nodes)
     for (csvFilename, key2, timeoutSecs) in csvFilenameList:
