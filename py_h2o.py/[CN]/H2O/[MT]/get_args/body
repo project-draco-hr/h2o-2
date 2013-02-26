@@ -19,15 +19,17 @@ def get_args(self):
         args += ['-jar', self.get_h2o_jar()]
     if (self.addr is not None):
         args += [('--ip=%s' % self.addr)]
-    args += [('--port=%d' % self.port), ('--ice_root=%s' % self.get_ice_dir()), ('--name=' + cloud_name())]
+    if (self.port is not None):
+        args += [('--port=%d' % self.port)]
+    if self.use_flatfile:
+        args += [('--flatfile=' + self.flatfile)]
+    args += [('--ice_root=%s' % self.get_ice_dir()), ('--name=' + cloud_name())]
     if self.use_hdfs:
         args += [('-hdfs hdfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version), ('-hdfs_root=' + self.hdfs_root)]
         if self.hdfs_nopreload:
             args += [('-hdfs_nopreload ' + self.hdfs_nopreload)]
         if self.hdfs_config:
             args += [('-hdfs_config ' + self.hdfs_config)]
-    if self.use_flatfile:
-        args += [('--flatfile=' + self.flatfile)]
     if (not self.sigar):
         args += ['--nosigar']
     if self.aws_credentials:
