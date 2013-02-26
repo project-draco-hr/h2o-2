@@ -1,4 +1,4 @@
-def runGLMScore(node=None, key=None, model_key=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
+def runGLMScore(node=None, key=None, model_key=None, timeoutSecs=20):
     if (not node):
         node = h2o.nodes[0]
-    return node.GLMScore(node, key, model_key, timeoutSecs, **kwargs)
+    return node.GLMScore(key, model_key, timeoutSecs)

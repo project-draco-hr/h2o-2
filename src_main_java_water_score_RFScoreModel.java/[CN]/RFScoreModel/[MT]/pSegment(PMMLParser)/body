@@ -1,0 +1,11 @@
+{
+  pmml.expect("Segment").skipAttrs();
+  pmml.expect('>').skipWS().expect("<True/>").skipWS().expect('<');
+  RFNode rfn=pTreeModel(pmml);
+  AutoBuffer ab=new AutoBuffer();
+  ab.put4(_tnum++);
+  ab.put8(0);
+  rfn.toPackedTree(ab);
+  pmml.skipWS().expect("</Segment>");
+  return ab.buf();
+}

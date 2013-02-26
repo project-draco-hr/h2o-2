@@ -1,0 +1,23 @@
+def test_B_benign(self):
+    print '\nStarting benign.csv'
+    csvFilename = 'benign.csv'
+    csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    y = '3'
+    x = ''
+    for appendx in xrange(14):
+        if (appendx == 3):
+            print '\n3 is output.'
+        else:
+            if (x == ''):
+                x = str(appendx)
+            else:
+                x = ((x + ',') + str(appendx))
+            csvFilename = 'benign.csv'
+            csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
+            print '\nx:', x
+            print 'y:', y
+            kwargs = {'x': x, 'y': y, 'expert': 1, 'lsm_solver': 'GenGradient', 'standardize': 1, }
+            print "Not doing num_cross_validation_folds with benign. Fails with 'unable to solve?'"
+            glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=5, **kwargs)
+            h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

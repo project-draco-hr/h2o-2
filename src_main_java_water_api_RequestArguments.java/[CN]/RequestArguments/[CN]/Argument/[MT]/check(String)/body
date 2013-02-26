@@ -23,9 +23,9 @@
       record._value=parse(input);
       record._valid=true;
     }
- catch (    Exception e) {
+ catch (    IllegalArgumentException e) {
       record._value=defaultValue();
-      throw new IllegalArgumentException(e.getMessage());
+      Throwables.propagate(e);
     }
   }
 }

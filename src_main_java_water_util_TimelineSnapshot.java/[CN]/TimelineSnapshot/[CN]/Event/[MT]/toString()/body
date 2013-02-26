@@ -3,7 +3,7 @@
   UDP.udp udpType=UDP.udp.UDPS[udp_type];
   String operation=isSend() ? " SEND " : " RECV ";
   String host1=addrString();
-  String host2=_cloud._memary[nodeId()]._key.toString() + ":" + _cloud._memary[nodeId()]._key.getPort();
+  String host2=recoH2O().toString();
   String networkPart=isSend() ? (host2 + " -> " + host1) : (host1 + " -> " + host2);
-  return "Node(" + nodeId() + ": "+ ns()+ ") "+ udpType.toString()+ operation+ networkPart+ ", data = '"+ Long.toHexString(this.dataLo())+ ','+ Long.toHexString(this.dataHi())+ "'";
+  return "Node(" + _nodeId + ": "+ ns()+ ") "+ udpType.toString()+ operation+ networkPart+ (isDropped() ? " DROPPED " : "")+ ", data = '"+ Long.toHexString(this.dataLo())+ ','+ Long.toHexString(this.dataHi())+ "'";
 }

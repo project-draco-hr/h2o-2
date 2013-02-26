@@ -7,7 +7,7 @@
       }
     }
 );
-    LSMSolver lsms=LSMSolver.makeSolver();
+    LSMSolver lsms=new ADMMSolver(0,0);
     JsonObject glm=computeGLMlog(lsms,va,false);
     JsonObject coefs=glm.get("coefficients").getAsJsonObject();
     assertEquals(-2.5,coefs.get("Intercept").getAsDouble(),0.000001);

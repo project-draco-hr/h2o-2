@@ -1,0 +1,13 @@
+{
+  HashMap<String,String> attrs=expect("DataField").attrs();
+  String name=attrs.get("name");
+  _types.put(name,DataTypes.parse(attrs.get("dataType")));
+  if (peek() == '/')   return expect("/>");
+  expect('>');
+  ArrayList<String> str=new ArrayList();
+  while (skipWS().expect('<').peek() != '/')   str.add(pDataFieldValue());
+  String[] ss=str.toArray(new String[0]);
+  Arrays.sort(ss,null);
+  _enums.put(name,ss);
+  return expect("/DataField>");
+}

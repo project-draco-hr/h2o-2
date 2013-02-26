@@ -1,0 +1,8 @@
+{
+  expect("?xml");
+  while (peek() != '?') {
+    String attr=skipWS().token();
+    String val=skipWS().expect('=').str();
+  }
+  return expect("?>");
+}

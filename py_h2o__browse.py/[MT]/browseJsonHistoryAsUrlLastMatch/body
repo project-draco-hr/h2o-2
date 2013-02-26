@@ -8,7 +8,7 @@ def browseJsonHistoryAsUrlLastMatch(matchme, swapme=None):
         if (swapme is not None):
             url = re.sub(matchme, swapme, url)
         url = re.sub('GLMGridProgress', 'GLMGridProgress.html', url)
-        url = re.sub('ParseProgress', 'ParseProgress.html', url)
+        url = re.sub('Progress', 'Progress.html', url)
         url = re.sub('.json', '.html', url)
         h2o.verboseprint('browseJsonHistoryAsUrlLastMatch:', url)
         h2o.verboseprint('same, decoded:', urllib.unquote(url))

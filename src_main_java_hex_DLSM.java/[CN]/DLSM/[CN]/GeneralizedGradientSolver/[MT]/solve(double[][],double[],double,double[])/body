@@ -1,0 +1,37 @@
+{
+  if (_beta == null || _beta.length != newBeta.length) {
+    _beta=MemoryManager.malloc8d(newBeta.length);
+    _betaGradient=MemoryManager.malloc8d(newBeta.length);
+  }
+  int i=0;
+  _converged=false;
+  _iterations=0;
+  _objVal=Double.MAX_VALUE;
+  mul(xy,-1,xy);
+  while (!_converged && _iterations != MAX_ITER) {
+    double gbeta=g_beta(xx,xy,yy,_beta);
+    double t=_t;
+    for (int k=0; k < 100; ++k) {
+      g_beta_gradient(xx,xy,t);
+      newBeta=beta_update(newBeta,t);
+      if (g_beta(xx,xy,yy,newBeta) <= backtrack_cond_rs(gbeta,newBeta,t)) {
+        if (_t > t) {
+          _t=t;
+          break;
+        }
+        t=1.25 * t;
+      }
+ else {
+        _t=t;
+        t=0.8 * t;
+      }
+    }
+    double newObjVal=g_beta(xx,xy,yy,newBeta) + _kappa * l1norm(newBeta);
+    System.arraycopy(newBeta,0,_beta,0,_beta.length);
+    _converged=(1 - newObjVal / _objVal) <= EPS;
+    _objVal=newObjVal;
+    _iterations=++i;
+  }
+  mul(xy,-1,xy);
+  return _converged;
+}

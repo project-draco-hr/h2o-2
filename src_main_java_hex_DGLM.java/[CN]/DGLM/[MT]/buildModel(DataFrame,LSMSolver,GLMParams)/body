@@ -1,0 +1,6 @@
+{
+  double[] beta=new double[data.expandedSz()];
+  Arrays.fill(beta,params._link.defaultBeta);
+  if (params._family == Family.gamma)   beta[beta.length - 1]=1;
+  return buildModel(data,lsm,params,beta);
+}

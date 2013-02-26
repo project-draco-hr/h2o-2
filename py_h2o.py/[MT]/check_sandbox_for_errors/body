@@ -14,8 +14,8 @@ def check_sandbox_for_errors():
                 printSingleWarning = False
                 foundBad = False
                 if (not (' bytes)' in line)):
-                    printSingleWarning = regex3.search(line)
-                    foundBad = (regex1.search(line) and (not ('error rate' in line)))
+                    printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)))
+                    foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
                     lines = 1

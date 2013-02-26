@@ -2,6 +2,14 @@
   assert(_bases != null);
   assert(_min != null);
   for (int i=0; i < _ncolumns; ++i) {
+    if ((_colTypes[i] == ICOL || _colTypes[i] == DCOL || _colTypes[i] == FCOL) && (double)_invalidValues[i] / _numRows > 0.2) {
+      _enums[i]=null;
+      _max[i]=_min[i]=0;
+      _scale[i]=0;
+      _bases[i]=0;
+      _colTypes[i]=STRINGCOL;
+      continue;
+    }
 switch (_colTypes[i]) {
 case UCOL:
       _colTypes[i]=BYTE;
@@ -71,4 +79,5 @@ default :
 throw H2O.unimpl();
 }
 }
+_invalidValues=null;
 }

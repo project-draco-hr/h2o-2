@@ -3,11 +3,11 @@ def stabilize(self, test_func, error, timeoutSecs=10, retryDelaySecs=0.5):
     start = time.time()
     numberOfRetries = 0
     while ((time.time() - start) < timeoutSecs):
-        if test_func(self):
+        if test_func(self, tries=numberOfRetries):
             break
         time.sleep(retryDelaySecs)
         numberOfRetries += 1
-        if ((numberOfRetries % 100) == 0):
+        if ((numberOfRetries % 50) == 0):
             check_sandbox_for_errors()
     else:
         timeTakenSecs = (time.time() - start)

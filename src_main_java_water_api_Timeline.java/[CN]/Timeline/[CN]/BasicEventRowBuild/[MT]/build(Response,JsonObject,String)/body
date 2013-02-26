@@ -1,15 +1,21 @@
 {
-  String name=elementName(contextName);
   StringBuilder sb=new StringBuilder();
-  sb.append(caption(object,name));
-  sb.append(header(object,name));
+  if (object.get(JSON_DROP) == null)   sb.append("<tr>");
+ else   sb.append("<tr style='background-color:Pink'>");
   sb.append("<td>").append(object.get(JSON_TIME).getAsString()).append("</td>");
   sb.append("<td>").append(object.get(JSON_NANOS).getAsLong()).append("</td>");
+  boolean isSend=object.get(JSON_SR).getAsBoolean();
   String s=object.get(JSON_SEND).getAsString();
   String r=object.get(JSON_RECV).getAsString();
-  sb.append("<td>" + s + " -> "+ r+ "</td>");
+  sb.append("<td>");
+  if (isSend)   sb.append("<b>").append(s).append("</b>");
+ else   sb.append(s);
+  sb.append(" -> ");
+  if (!isSend)   sb.append("<b>").append(r).append("</b>");
+ else   sb.append(r);
+  sb.append("</td>");
   sb.append("<td>").append(object.get(JSON_TYPE).getAsString()).append("</td>");
   sb.append("<td>").append(object.get(JSON_BYTES).getAsString()).append("</td>");
-  sb.append(footer(object,name));
+  sb.append("</tr>");
   return sb.toString();
 }

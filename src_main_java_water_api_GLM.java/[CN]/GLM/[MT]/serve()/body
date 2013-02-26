@@ -6,29 +6,33 @@
     res.addProperty("key",ary._key.toString());
     res.addProperty("h2o",H2O.SELF.toString());
     GLMParams glmParams=getGLMParams();
-    LSMSolver lsm=LSMSolver.makeSolver(_lambda.value(),_alpha.value());
-    GLMModel m=new GLMModel(ary,columns,lsm,glmParams,null);
-    if (_modelKey.specified()) {
-      GLMModel previousModel=_modelKey.value();
-      if (previousModel.beta() != null && previousModel.beta().length == m.beta().length)       m.setBeta(previousModel.beta());
-    }
-    m.build();
-    if (m.isSolved()) {
-      NumberSequence nseq=_thresholds.value();
-      double[] arr=nseq == null ? null : nseq._arr;
-      if (_xval.specified() && _xval.value() > 1)       m.xvalidate(ary,_xval.value(),arr);
- else       m.validateOn(ary,null,arr);
-    }
-    res.add("GLMModel",m.toJson());
-    Response r=Response.done(res);
-    r.setBuilder("",new GLMBuilder(m));
-    return r;
-  }
- catch (  GLMException e) {
-    return Response.error(e.getMessage());
-  }
-catch (  Throwable t) {
-    t.printStackTrace();
-    return Response.error(t.getMessage());
-  }
+    LSMSolverType t=_lsmSolver.value();
+    LSMSolver lsm=null;
+switch (t) {
+case ADMM:
+      lsm=new ADMMSolver(_lambda.value(),_alpha.value());
+    break;
+case GenGradient:
+  lsm=new GeneralizedGradientSolver(_lambda.value(),_alpha.value());
+}
+DataFrame data=DGLM.getData(ary,columns,null,_standardize.value());
+GLMModel m=DGLM.buildModel(data,lsm,glmParams);
+if (m.isSolved()) {
+NumberSequence nseq=_thresholds.value();
+double[] arr=nseq == null ? null : nseq._arr;
+if (_xval.specified() && _xval.value() > 1) m.xvalidate(ary,_xval.value(),arr);
+ else m.validateOn(ary,null,arr);
+}
+res.add("GLMModel",m.toJson());
+Response r=Response.done(res);
+r.setBuilder("",new GLMBuilder(m));
+return r;
+}
+ catch (GLMException e) {
+return Response.error(e.getMessage());
+}
+catch (Throwable t) {
+t.printStackTrace();
+return Response.error(t.getMessage());
+}
 }

@@ -7,6 +7,8 @@
  catch (    InterruptedException e) {
     }
     HeartBeat hb=new HeartBeat();
+    hb._hb_version=HB_VERSION++;
+    hb._jvm_boot_msec=TimeLine.JVM_BOOT_MSEC;
     final Runtime run=Runtime.getRuntime();
     hb.set_free_mem(run.freeMemory());
     hb.set_max_mem(run.maxMemory());

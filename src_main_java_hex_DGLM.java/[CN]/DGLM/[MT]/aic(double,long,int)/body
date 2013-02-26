@@ -1,0 +1,14 @@
+{
+switch (this) {
+case gaussian:
+    return nobs * (Math.log(dev / nobs * 2 * Math.PI) + 1) + 2 + 2 * betaLen;
+case binomial:
+  return 2 * betaLen + dev;
+case poisson:
+return 2 * betaLen + dev;
+case gamma:
+return Double.NaN;
+default :
+throw new Error("unknown family Id " + this);
+}
+}

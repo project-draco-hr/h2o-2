@@ -1,8 +1,6 @@
 {
-  GLMParams res=new GLMParams();
-  res._f=_family.value();
-  res._l=_link.value();
-  if (res._l == Link.familyDefault)   res._l=res._f.defaultLink;
+  GLMParams res=new GLMParams(_family.value(),_link.value());
+  if (res._link == Link.familyDefault)   res._link=res._family.defaultLink;
   res._maxIter=_maxIter.value();
   res._betaEps=_betaEps.value();
   if (_caseWeight.valid())   res._caseWeight=_caseWeight.value();

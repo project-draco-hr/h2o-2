@@ -6,7 +6,7 @@
     for (    String s : m._warnings)     wsb.append(s).append("<br>");
     R.replace("warnings",wsb);
     R.replace("succ","alert-warning");
-    if (!m.converged())     R.replace("action","Suggested action: Go to " + (m.isSolved() ? (GLMGrid.link(m,"Grid search") + ", ") : "") + " to search for better paramters");
+    if (!m.converged())     R.replace("action","Suggested action: Go to " + (m.isSolved() ? (GLMGrid.link(m,"Grid search") + ", ") : "") + " to search for better parameters");
   }
  else {
     R.replace("succ","alert-success");
@@ -35,7 +35,7 @@
     JsonObject coefs=json.get("coefficients").getAsJsonObject();
     R.replace("modelSrc",equationHTML(m,coefs));
     R.replace("coefficients",coefsHTML(coefs));
-    R.replace("normalized_coefficients",coefsHTML(json.get("normalized_coefficients").getAsJsonObject()));
+    if (json.has("normalized_coefficients"))     R.replace("normalized_coefficients",coefsHTML(json.get("normalized_coefficients").getAsJsonObject()));
   }
   sb.append(R);
   if (m._vals != null)   validationHTML(m._vals,sb);

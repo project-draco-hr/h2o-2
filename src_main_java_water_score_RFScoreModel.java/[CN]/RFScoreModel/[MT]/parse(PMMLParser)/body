@@ -1,0 +1,11 @@
+{
+  HashMap<String,String> attrs=pmml.attrs();
+  pmml.expect('>');
+  pmml.skipWS().expect('<');
+  String cls=pMiningSchema(pmml);
+  RFScoreModel model=new RFScoreModel(attrs.get("modelName"),pmml._enums.get(cls));
+  pmml.skipWS().expect('<');
+  model._trees=model.pSegmentation(pmml);
+  pmml.skipWS().expect("</MiningModel>");
+  return model;
+}

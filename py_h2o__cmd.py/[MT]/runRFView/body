@@ -1,17 +1,9 @@
-def runRFView(node=None, parseKey=None, modelKey=None, ntree=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
-    if (not parseKey):
-        raise Exception('No parse key for RFView specified')
-    if (not modelKey):
-        raise Exception('No model key for RFView specified')
-    if (not ntree):
-        raise Exception('No number of trees for RFView specified')
+def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=15, retryDelaySecs=2, **kwargs):
     if (not node):
         node = h2o.nodes[0]
-    dataKey = parseKey['destination_key']
-    h2o.verboseprint('runRFView dataKey: {0}, modelKey: {1}'.format(modelKey, dataKey))
 
-    def testRFProgress(n):
-        rfView = n.random_forest_view(dataKey, modelKey, timeoutSecs, **kwargs)
+    def test(n, tries=None):
+        rfView = n.random_forest_view(data_key, model_key, timeoutSecs, **kwargs)
         status = rfView['response']['status']
         numberBuilt = rfView['trees']['number_built']
         if (status == 'done'):
@@ -22,13 +14,16 @@ def runRFView(node=None, parseKey=None, modelKey=None, ntree=None, timeoutSecs=2
             raise Exception(('Unexpected status: ' + status))
         progress = rfView['response']['progress']
         progressTotal = rfView['response']['progress_total']
-        if (status != 'done'):
+        errorInResponse = ((numberBuilt < 0) or (ntree < 0) or (numberBuilt > ntree) or (progress < 0) or (progressTotal < 0) or (progress > progressTotal) or (progressTotal != (ntree + 1)) or (ntree != rfView['ntree']))
+        if errorInResponse:
+            raise Exception(('\nBad values in response during RFView polling.\n' + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))
+        if (status == 'poll'):
             if (numberBuilt == 0):
                 h2o.verboseprint('.')
             else:
-                h2o.verboseprint(('\nRFView polling. Status: %s. %s trees done of %s desired' % (status, numberBuilt, ntree)))
-        return (status == 'done')
-    node.stabilize(testRFProgress, ('random forest reporting %d trees' % ntree), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
-    rfView = node.random_forest_view(dataKey, modelKey, timeoutSecs, **kwargs)
+                h2o.verboseprint('\nRFView polling #', tries, ('Status: %s. %s trees done of %s desired' % (status, numberBuilt, ntree)))
+        return (status != 'poll')
+    node.stabilize(test, ('random forest reporting %d trees' % ntree), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+    rfView = node.random_forest_view(data_key, model_key, timeoutSecs, **kwargs)
     h2f.simpleCheckRFView(node, rfView)
     return rfView

@@ -2,7 +2,8 @@
   ValueArray va=_key.value();
   String[] res=new String[_selectedCols.size()];
   int idx=0;
-  for (  Column c : _selectedCols) {
+  for (  int cid : _selectedCols) {
+    Column c=va._cols[cid];
     double ratio=c._n / (double)va._numrows;
     if (ratio < 0.99) {
       res[idx++]=c._name + " (" + Math.round((1 - ratio) * 100)+ "% NAs)";

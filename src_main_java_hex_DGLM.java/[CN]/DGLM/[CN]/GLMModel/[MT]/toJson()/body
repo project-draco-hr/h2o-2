@@ -1,0 +1,45 @@
+{
+  JsonObject res=new JsonObject();
+  res.addProperty("time",_time);
+  res.addProperty(Constants.MODEL_KEY,_selfKey.toString());
+  if (_warnings != null) {
+    JsonArray warnings=new JsonArray();
+    for (    String w : _warnings)     warnings.add(new JsonPrimitive(w));
+    res.add("warnings",warnings);
+  }
+  if (_beta == null)   return res;
+  JsonObject coefs=new JsonObject();
+  JsonObject normalizedCoefs=new JsonObject();
+  int idx=0;
+  JsonArray colNames=new JsonArray();
+  for (int i=0; i < _va._cols.length - 1; i++) {
+    ValueArray.Column C=_va._cols[i];
+    if (C._domain != null)     for (    String d : C._domain) {
+      String cname=C._name + "." + d;
+      colNames.add(new JsonPrimitive(cname));
+      if (_standardized)       normalizedCoefs.addProperty(cname,_normBeta[idx]);
+      coefs.addProperty(cname,_beta[idx++]);
+    }
+ else {
+      colNames.add(new JsonPrimitive(C._name));
+      if (_standardized)       normalizedCoefs.addProperty(C._name,_normBeta[idx]);
+      double b=_beta[idx];
+      coefs.addProperty(C._name,b);
+      idx++;
+    }
+  }
+  res.add("column_names",colNames);
+  if (_standardized)   normalizedCoefs.addProperty("Intercept",_normBeta[_normBeta.length - 1]);
+  coefs.addProperty("Intercept",_beta[_beta.length - 1]);
+  res.add("coefficients",coefs);
+  if (_standardized)   res.add("normalized_coefficients",normalizedCoefs);
+  res.add("LSMParams",_solver.toJson());
+  res.add("GLMParams",_glmParams.toJson());
+  res.addProperty("iterations",_iterations);
+  if (_vals != null) {
+    JsonArray vals=new JsonArray();
+    for (    GLMValidation v : _vals)     vals.add(v.toJson());
+    res.add("validations",vals);
+  }
+  return res;
+}

@@ -1,12 +1,12 @@
-def check_port_group(baseport):
+def check_port_group(base_port):
     if (1 == 0):
         username = getpass.getuser()
         if ((username == 'jenkins') or (username == 'kevin') or (username == 'michal')):
             command1Split = ['netstat', '-anp']
             command2Split = ['egrep']
-            command2Split.append(('(%s | %s | %s)' % (baseport, (baseport + 1), (baseport + 2))))
+            command2Split.append(('(%s | %s | %s)' % (base_port, (base_port + 1), (base_port + 2))))
             command3Split = ['wc', '-l']
-            print 'Checking 3 ports starting at ', baseport
+            print 'Checking 3 ports starting at ', base_port
             print ' '.join(command2Split)
             p1 = Popen(command1Split, stdout=PIPE)
             p2 = Popen(command2Split, stdin=p1.stdout, stdout=PIPE)

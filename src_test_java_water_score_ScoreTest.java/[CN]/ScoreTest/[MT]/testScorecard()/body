@@ -1,2 +1,6 @@
 {
+  File file=find_test_file("smalldata/pmml/SampleScorecard.pmml");
+  ScorecardModel scm=(ScorecardModel)PMMLParser.parse(new FileInputStream(file));
+  Assert.assertEquals(5.505753,scm.score_interpreter(ROW),1e-6);
+  Assert.assertEquals(5.505753,scm.score(ROW),1e-6);
 }
