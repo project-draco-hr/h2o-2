@@ -1,0 +1,11 @@
+{
+  JsonObject r=super.defaultJsonResponse();
+  RFModel model=_modelKey.value();
+  r.addProperty(DATA_KEY,_dataKey.originalValue());
+  r.addProperty(MODEL_KEY,_modelKey.originalValue());
+  r.addProperty(CLASS,_classCol.value());
+  r.addProperty(NUM_TREES,model._totalTrees);
+  r.addProperty(MTRY,model._splitFeatures);
+  r.addProperty(OOBEE,_oobee.value());
+  return r;
+}

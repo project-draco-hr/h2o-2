@@ -5,5 +5,5 @@
     T v=defaultValue();
     value=(v == null) ? "" : v.toString();
   }
-  return "<input class='span5' type='text' name='" + _name + "' id='"+ _name+ "' placeholder='"+ queryDescription()+ "' "+ (!value.isEmpty() ? (" value='" + value + "' />") : "/>");
+  return "<input" + (_readOnly ? " disabled" : "") + " class='span5' type='text' name='"+ _name+ "' id='"+ _name+ "' placeholder='"+ queryDescription()+ "' "+ (!value.isEmpty() ? (" value='" + value + "' />") : "/>");
 }

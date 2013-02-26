@@ -3,14 +3,9 @@
   int finished=0;
   RFModel model=_modelKey.value();
   double[] weights=_weights.value();
-  JsonObject response=new JsonObject();
-  response.addProperty(DATA_KEY,_dataKey.originalValue());
-  response.addProperty(MODEL_KEY,_modelKey.originalValue());
-  response.addProperty(CLASS,_classCol.value());
-  response.addProperty(NUM_TREES,model._totalTrees);
-  response.addProperty(MTRY,-1);
-  tasks+=model._totalTrees;
-  finished+=model.size();
+  tasks=model._totalTrees;
+  finished=model.size();
+  JsonObject response=defaultJsonResponse();
   if (!_noCM.value()) {
     tasks+=1;
     Confusion confusion=Confusion.make(model,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
@@ -44,8 +39,10 @@
     trees.add(Constants.TREE_LEAVES,model.leaves().toJson());
   }
   response.add(Constants.TREES,trees);
-  Response r=(finished == tasks) ? Response.done(response) : Response.poll(response,finished,tasks);
+  Job job=findJob();
+  if (job != null && job._progress != null)   water.Jobs.Progress.set(job._progress,finished / tasks);
+  Response r=(finished == tasks) ? jobDone(response) : Response.poll(response,finished,tasks);
   r.setBuilder(JSON_CM,new ConfusionMatrixBuilder());
-  r.setBuilder(Constants.TREES,new TreeListBuilder());
+  r.setBuilder(TREES,new TreeListBuilder());
   return r;
 }
