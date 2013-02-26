@@ -13,7 +13,7 @@
   }
   long rem=size - off;
   if (arykey.toString().endsWith(".hex")) {
-    int value_len=DKV.get(arykey).get().length;
+    int value_len=DKV.get(arykey).memOrLoad().length;
     rem-=value_len;
   }
   if (rem < ValueArray.CHUNK_SZ && off > 0)   return null;

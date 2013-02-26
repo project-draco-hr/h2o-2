@@ -1,10 +1,10 @@
 {
-  Value v=_taskey.value();
-  GLMGridStatus status=v.get(new GLMGridStatus());
+  Key dest=_dest.value();
+  GLMModels models=UKV.get(dest);
   JsonObject response=new JsonObject();
-  response.addProperty(Constants.DEST_KEY,v._key.toString());
-  JsonArray models=new JsonArray();
-  for (  GLMModel m : status.computedModels()) {
+  response.addProperty(Constants.DEST_KEY,dest.toString());
+  JsonArray array=new JsonArray();
+  for (  GLMModel m : models.sorted()) {
     JsonObject o=new JsonObject();
     LSMSolver lsm=m._solver;
     o.addProperty(KEY,m._selfKey.toString());
@@ -28,10 +28,12 @@
       }
     }
     o.add(WARNINGS,arr);
-    models.add(o);
+    array.add(o);
   }
-  response.add(MODELS,models);
-  Response r=status._working ? Response.poll(response,status.progress()) : Response.done(response);
+  response.add(MODELS,array);
+  Response r;
+  if (DKV.get(_job.value()) != null)   r=Response.poll(response,models.progress());
+ else   r=Response.done(response);
   r.setBuilder(Constants.DEST_KEY,new HideBuilder());
   r.setBuilder(MODELS,new GridBuilder2());
   r.setBuilder(MODELS + "." + KEY,new KeyCellBuilder());

@@ -30,7 +30,7 @@ synchronized (STORE) {
       Value val=(Value)ov;
       byte[] m=val.mem();
       if (m == null)       continue;
-      if (val._isArray != 0 && (val._persist & Value.BACKEND_MASK) != Value.ICE)       continue;
+      if (val.isArray() && (val._persist & Value.BACKEND_MASK) != Value.ICE)       continue;
       long touched=val._lastAccessedTime;
       if (touched > clean_to_age) {
         dirty_store(touched);

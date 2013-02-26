@@ -18,12 +18,16 @@
         hex.KMeans.run(job,va,k,epsilon,cols);
         tryComplete();
       }
+      @Override public boolean onExceptionalCompletion(      Throwable ex,      CountedCompleter caller){
+        ex.printStackTrace();
+        return true;
+      }
     }
 );
     JsonObject response=new JsonObject();
-    response.addProperty(JOB,job._key.toString());
+    response.addProperty(JOB,job.self().toString());
     response.addProperty(DEST_KEY,dest.toString());
-    Response r=Progress.redirect(response,job._key,dest);
+    Response r=Progress.redirect(response,job.self(),dest);
     r.setBuilder(DEST_KEY,new KeyElementBuilder());
     return r;
   }

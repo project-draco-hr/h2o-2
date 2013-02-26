@@ -8,7 +8,7 @@
     if (input.startsWith(GLMModel.KEY_PREFIX))     m=(T)new GLMModel();
     if (input.startsWith(KMeansModel.KEY_PREFIX))     m=(T)new KMeansModel();
     if (input.startsWith(RFModel.KEY_PREFIX))     m=(T)new RFModel();
-    return m.read(new AutoBuffer(v.get()));
+    return m.read(new AutoBuffer(v.memOrLoad()));
   }
  catch (  Throwable t) {
     throw new IllegalArgumentException("Key " + input + " is not a Model key");

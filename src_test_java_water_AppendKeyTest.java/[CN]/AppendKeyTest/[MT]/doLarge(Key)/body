@@ -9,7 +9,7 @@
     Key nk=Key.make(kb);
     new AppendKey(nk).invoke(k);
     v=DKV.get(k);
-    byte[] vb=v.get();
+    byte[] vb=v.memOrLoad();
     Assert.assertArrayEquals(kb,Arrays.copyOfRange(vb,vb.length - kb.length,vb.length));
     total=vb.length;
   }

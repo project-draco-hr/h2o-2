@@ -1,7 +1,7 @@
 {
   Value val=DKV.get(key,32);
   if (val == null)   return;
-  if (val._isArray != 0) {
+  if (val.isArray()) {
     ValueArray ary=ValueArray.value(val);
     for (long i=0; i < ary.chunks(); i++)     remove(ary.getChunkKey(i),fs);
   }

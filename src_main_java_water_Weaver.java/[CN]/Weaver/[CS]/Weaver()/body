@@ -1,0 +1,11 @@
+{
+  try {
+    _pool=ClassPool.getDefault();
+    _enum=_pool.get("java.lang.Enum");
+    _serBases=new CtClass[]{_pool.get("water.Iced"),_pool.get("water.DTask"),_enum};
+    for (    CtClass c : _serBases)     c.freeze();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}

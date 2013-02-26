@@ -13,7 +13,7 @@
     KMeans.run(target,va,8,1e-6,cols);
     long stop=System.currentTimeMillis();
     Log.write("KMeansTest.testGaussian rows:" + rows + ", ms:"+ (stop - start));
-    KMeans.KMeansModel res=UKV.get(target,new KMeans.KMeansModel());
+    KMeans.KMeansModel res=UKV.get(target);
     double[][] clusters=res.clusters();
     for (    double[] goal : goals) {
       boolean found=false;

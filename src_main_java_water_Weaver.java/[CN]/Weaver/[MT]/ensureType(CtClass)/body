@@ -1,0 +1,8 @@
+{
+  CtMethod ccms[]=cc.getDeclaredMethods();
+  if (!hasExisting("frozenType","()I",ccms)) {
+    String field="__h2o_type";
+    cc.addField(CtField.make("static int " + field + " = -1;",cc));
+    cc.addMethod(CtNewMethod.make("public int frozenType() {" + "  if(" + field + "<0)"+ field+ "=water.Types.id("+ cc.getName()+ ".class);"+ "  return "+ field+ ";"+ "}",cc));
+  }
+}

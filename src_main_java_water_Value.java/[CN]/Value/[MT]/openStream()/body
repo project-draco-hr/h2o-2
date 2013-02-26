@@ -1,4 +1,4 @@
 {
-  if (_isArray == 0)   return new ByteArrayInputStream(get());
+  if (!isArray())   return new ByteArrayInputStream(memOrLoad());
   return ValueArray.value(this).openStream();
 }
