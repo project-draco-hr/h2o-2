@@ -55,7 +55,7 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
     h2o.write_flatfile(node_count=h2oPerHost, base_port=basePort, hosts=hosts)
     if (hosts is not None):
         h2o.upload_jar_to_remote_hosts(hosts, slow_connection=slow_connection)
-        timeoutSecs = max(60, (2 * (len(hosts) * h2oPerHost)))
+        timeoutSecs = max(60, (5 * (len(hosts) * h2oPerHost)))
     else:
         timeoutSecs = 60
     h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, hdfs_version=hdfsVersion, hdfs_config=hdfsConfig, java_heap_GB=javaHeapGB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, aws_credentials=aws_credentials, **kwargs)

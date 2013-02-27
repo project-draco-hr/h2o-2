@@ -1,7 +1,10 @@
 {
   int flag=ab.getFlag();
   String clazz="";
-  if (flag == CLIENT_UDP_SEND)   clazz=new String(ab.getA1(Math.min(ab.get2(),ab.remaining())));
+  if (flag == CLIENT_UDP_SEND) {
+    int tid=ab.get2();
+    clazz=TypeMap.MAP.getType(tid).toString();
+  }
   String fs="";
 switch (flag) {
 case SERVER_UDP_SEND:
