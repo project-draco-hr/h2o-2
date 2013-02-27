@@ -3,6 +3,7 @@ import boto
 import os, time, sys, socket
 import h2o_cmd
 import json
+'\n    Simple EC2 utility:\n     \n       * to setup clooud of 5 nodes: ./ec2_cmd.py create --instances 5\n       * to terminated the cloud   : ./ec2_cmd.py terminate --hosts <host file returned by previous command>\n'
 DEFAULT_NUMBER_OF_INSTANCES = 1
 '\nDefault EC2 instance setup\n'
 DEFAULT_EC2_INSTANCE_CONF = {'image_id': 'ami-cd9a11a4', 'security_groups': ['MrJenkinsTest'], 'key_name': 'mrjenkins_test', 'instance_type': 'm1.xlarge', 'pem': '~/.ec2/keys/mrjenkins_test.pem', 'username': '0xdiag', }
