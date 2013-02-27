@@ -1,0 +1,11 @@
+def test_remote_cloud(self):
+    global base_port
+    trySize = 0
+    for i in range(1, 10):
+        base_port += (portsPerNode * node_count)
+        print 'base_port:', base_port
+        timeoutSecs = max(60, (2 * (len(h2o_hosts.hosts) * node_count)))
+        h2o.check_port_group(base_port)
+        h2o.write_flatfile(node_count=node_count, base_port=base_port)
+        h2o.build_cloud(node_count, base_port=base_port, hosts=h2o_hosts.hosts, use_flatfile=False, timeoutSecs=timeoutSecs, retryDelaySecs=0.5)
+        check_cloud_and_setup_next()
