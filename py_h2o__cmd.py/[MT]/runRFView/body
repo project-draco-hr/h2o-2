@@ -2,7 +2,7 @@ def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=
     if (not node):
         node = h2o.nodes[0]
 
-    def test(n):
+    def test(n, tries=None):
         rfView = n.random_forest_view(data_key, model_key, timeoutSecs, **kwargs)
         status = rfView['response']['status']
         numberBuilt = rfView['trees']['number_built']
@@ -17,12 +17,12 @@ def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=
         errorInResponse = ((numberBuilt < 0) or (ntree < 0) or (numberBuilt > ntree) or (progress < 0) or (progressTotal < 0) or (progress > progressTotal) or (progressTotal != (ntree + 1)) or (ntree != rfView['ntree']))
         if errorInResponse:
             raise Exception(('\nBad values in response during RFView polling.\n' + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))
-        if (status != 'done'):
+        if (status == 'poll'):
             if (numberBuilt == 0):
                 h2o.verboseprint('.')
             else:
-                h2o.verboseprint(('\nRFView polling. Status: %s. %s trees done of %s desired' % (status, numberBuilt, ntree)))
-        return (status == 'done')
+                h2o.verboseprint('\nRFView polling #', tries, ('Status: %s. %s trees done of %s desired' % (status, numberBuilt, ntree)))
+        return (status != 'poll')
     node.stabilize(test, ('random forest reporting %d trees' % ntree), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
     rfView = node.random_forest_view(data_key, model_key, timeoutSecs, **kwargs)
     h2f.simpleCheckRFView(node, rfView)

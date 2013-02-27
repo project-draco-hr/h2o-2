@@ -1,7 +1,7 @@
 def wait_for_node_to_accept_connections(self, timeoutSecs=15):
     verboseprint('wait_for_node_to_accept_connections')
 
-    def test(n):
+    def test(n, tries=None):
         try:
             n.get_cloud()
             return True

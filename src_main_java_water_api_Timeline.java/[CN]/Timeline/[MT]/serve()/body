@@ -9,9 +9,9 @@
   resJson.addProperty(JSON_SELF,H2O.SELF.toString());
   JsonArray eventsJson=new JsonArray();
   resJson.add(JSON_EVENTS,eventsJson);
-  List<TimelineSnapshot.Event> heartbeats=Lists.newArrayList();
+  ArrayList<TimelineSnapshot.Event> heartbeats=new ArrayList();
   for (  TimelineSnapshot.Event event : events) {
-    H2ONode h2o=cloud._memary[event.nodeId()];
+    H2ONode h2o=cloud._memary[event._nodeId];
     long l0=event.dataLo();
     long h8=event.dataHi();
     int udp_type=(int)(l0 & 0xff);
@@ -25,16 +25,20 @@
       long lastMs=heartbeats.get(heartbeats.size() - 1).ms();
       int totalSends=0;
       int totalRecvs=0;
+      int totalDrops=0;
       int[] sends=new int[cloud.size()];
       int[] recvs=new int[cloud.size()];
       for (      TimelineSnapshot.Event h : heartbeats) {
         if (h.isSend()) {
           ++totalSends;
-          ++sends[h.nodeId()];
+          ++sends[h._nodeId];
+        }
+ else         if (h.isDropped()) {
+          ++totalDrops;
         }
  else {
           ++totalRecvs;
-          ++recvs[h.nodeId()];
+          ++recvs[h._nodeId];
         }
       }
       heartbeats.clear();
@@ -45,6 +49,7 @@
       hbJson.addProperty(JSON_LAST_TIME,sdf.format(new Date(lastMs)));
       hbJson.addProperty(JSON_SENDS,totalSends);
       hbJson.addProperty(JSON_RECVS,totalRecvs);
+      hbJson.addProperty(JSON_DROPS,totalDrops);
       JsonArray cloudListJson=new JsonArray();
       hbJson.add(JSON_CLOUDS,cloudListJson);
       for (int i=0; i < sends.length; ++i) {
@@ -63,21 +68,16 @@
     eventJson.addProperty(JSON_TIME,date);
     eventJson.addProperty(JSON_NANOS,ns);
     eventJson.addProperty(JSON_TYPE,e.toString());
+    eventJson.addProperty(JSON_SR,event.isSend());
     if (event.isSend()) {
-      String recv="multicast";
-      InetAddress inet=event.addrPack();
-      if (!inet.isMulticastAddress()) {
-        int port=-1;
-        if (events._sends.containsKey(event) && !events._sends.get(event).isEmpty())         port=TimeLine.CLOUD._memary[events._sends.get(event).get(0).nodeId()]._key.getPort();
-        String portStr=":" + ((port != -1) ? port : "?");
-        recv=inet.toString() + portStr;
-      }
       eventJson.addProperty(JSON_SEND,h2o.toString());
+      String recv=event.packH2O() == null ? "multicast" : event.packH2O().toString();
       eventJson.addProperty(JSON_RECV,recv);
     }
  else {
-      eventJson.addProperty(JSON_SEND,event.addrString());
+      eventJson.addProperty(JSON_SEND,event.packH2O().toString());
       eventJson.addProperty(JSON_RECV,h2o.toString());
+      if (event.isDropped())       eventJson.addProperty(JSON_DROP,"1");
     }
     eventJson.addProperty(JSON_BYTES,UDP.printx16(l0,h8));
   }

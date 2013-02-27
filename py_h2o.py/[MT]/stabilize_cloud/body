@@ -1,7 +1,7 @@
 def stabilize_cloud(node, node_count, timeoutSecs=14.0, retryDelaySecs=0.25):
     node.wait_for_node_to_accept_connections(timeoutSecs)
 
-    def test(n):
+    def test(n, tries=None):
         c = n.get_cloud()
         consensus = c['consensus']
         locked = c['locked']
