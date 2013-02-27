@@ -1,0 +1,8 @@
+import unittest
+import random, sys
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_rf, h2o_pp
+paramsTrainRF = {'ntree': 100, 'depth': 300, 'parallel': 1, 'bin_limit': 20000, 'ignore': None, 'gini': 0, 'out_of_bag_error_estimate': 1, 'exclusive_split_limit': 0, 'timeoutSecs': 14800, }
+paramsTestRF = {'timeoutSecs': 14800, }
+if (__name__ == '__main__'):
+    h2o.unit_main()
