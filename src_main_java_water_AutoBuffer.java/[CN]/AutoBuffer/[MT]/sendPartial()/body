@@ -6,7 +6,8 @@
     _bb=ByteBuffer.wrap(MemoryManager.arrayCopyOfRange(ary,0,newlen),oldpos,newlen - oldpos).order(ByteOrder.nativeOrder());
     return _bb;
   }
-  try {
+  int attempts=0;
+  while (true)   try {
     _bb.flip();
     if (_chan == null)     tcpOpen();
     while (_bb.hasRemaining())     _chan.write(_bb);
@@ -17,6 +18,11 @@
   }
  catch (  IOException e) {
     if (e.getMessage().equals("Connection reset by peer"))     UDPRebooted.suicide(UDPRebooted.T.error,_h2o);
-    throw new RuntimeException(e);
+    if (++attempts == 10)     throw new RuntimeException(e);
+    try {
+      Thread.sleep(1000);
+    }
+ catch (    InterruptedException e1) {
+    }
   }
 }
