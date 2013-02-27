@@ -2,7 +2,7 @@
   DKV.write_barrier();
   int leaked=0;
   for (  Key k : H2O.keySet()) {
-    if (!k.equals(Job.LIST) && !k.equals(Types.KEY)) {
+    if (!k.equals(Job.LIST)) {
       System.err.println("Leaked key: " + k);
       leaked++;
     }

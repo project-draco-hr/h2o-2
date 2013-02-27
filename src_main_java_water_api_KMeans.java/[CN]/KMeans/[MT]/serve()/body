@@ -9,7 +9,7 @@
     String n=source.toString();
     int dot=n.lastIndexOf('.');
     if (dot > 0)     n=n.substring(0,dot);
-    dest=Key.make(hex.KMeans.KMeansModel.KEY_PREFIX + n + Extensions.KMEANS);
+    dest=Key.make(n + Extensions.KMEANS);
   }
   final Job job=hex.KMeans.startJob(dest,va,k,epsilon,cols);
   try {
@@ -17,10 +17,6 @@
       @Override public void compute2(){
         hex.KMeans.run(job,va,k,epsilon,cols);
         tryComplete();
-      }
-      @Override public boolean onExceptionalCompletion(      Throwable ex,      CountedCompleter caller){
-        ex.printStackTrace();
-        return true;
       }
     }
 );

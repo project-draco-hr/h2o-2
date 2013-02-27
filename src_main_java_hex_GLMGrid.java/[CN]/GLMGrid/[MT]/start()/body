@@ -1,7 +1,7 @@
 {
   UKV.put(dest(),new GLMModels(_lambdas.length * _alphas.length));
-  H2O.FJP_NORM.submit(new DTask(){
-    @Override public void compute(){
+  H2O.submitTask(new DTask(){
+    @Override public void compute2(){
       final int N=_alphas.length;
       GLMModel m=null;
       try {
@@ -18,7 +18,7 @@
       }
       tryComplete();
     }
-    public GLMGrid invoke(    H2ONode sender){
+    @Override public GLMGrid invoke(    H2ONode sender){
       throw H2O.unimpl();
     }
   }
