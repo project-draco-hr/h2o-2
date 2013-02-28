@@ -13,18 +13,13 @@
   }
   print("hart: mismatched cloud announcement",h2o);
   if (cloud._memset.contains(h2o)) {
-    if (1 == 1) {
-      print("hart: is member but did not get the news1",cloud._memset);
-      print("hart: is member but did not get the news2",PROPOSED_MEMBERS);
-      if (PROPOSED_MEMBERS.equals(cloud._memset)) {
-        _state._members=PROPOSED_MEMBERS.toArray(new H2ONode[0]);
-        UDPPaxosAccepted.build_and_multicast(_state);
-      }
-      return;
+    print("hart: is member but did not get the news1",cloud._memset);
+    print("hart: is member but did not get the news2",PROPOSED_MEMBERS);
+    if (PROPOSED_MEMBERS.equals(cloud._memset)) {
+      _state._members=PROPOSED_MEMBERS.toArray(new H2ONode[0]);
+      UDPPaxosAccepted.build_and_multicast(_state);
     }
- else {
-      PROPOSED_MEMBERS.remove(h2o);
-    }
+    return;
   }
  else {
     if (!addProposedMember(h2o))     print("hart: already part of proposal",PROPOSED_MEMBERS);
