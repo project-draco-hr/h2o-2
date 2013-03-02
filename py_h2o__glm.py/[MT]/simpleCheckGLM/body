@@ -1,4 +1,4 @@
-def simpleCheckGLM(self, glm, colX, allowFailWarning=False, prettyPrint=False, **kwargs):
+def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, **kwargs):
     GLMModel = glm['GLMModel']
     warnings = None
     if ('warnings' in GLMModel):
@@ -43,25 +43,16 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, prettyPrint=False, *
         if prettyPrint:
             cValueString = (('H2O coefficient ' + cValueString) + '\n')
         return (cString + cValueString)
-    foundDot = False
-    for c in coefficients:
-        if (isinstance(c, basestring) and re.search('\\.', c)):
-            foundDot = True
-            break
     cString = ''
     cList = []
-    if foundDot:
-        for c in coefficients:
-            cString = add_to_coefficient_list_and_string(c, cList, cString)
-    else:
-        for c in column_names[:(-1)]:
-            cString = add_to_coefficient_list_and_string(c, cList, cString)
+    for c in column_names:
+        cString = add_to_coefficient_list_and_string(c, cList, cString)
     if prettyPrint:
         print ('\nH2O intercept:\t\t%.5e' % intercept)
         print cString
     else:
         print '\nintercept:', intercept, cString
-    if (colX is not None):
+    if ((not allowZeroCoeff) and (colX is not None)):
         absXCoeff = abs(float(coefficients[str(colX)]))
         self.assertGreater(absXCoeff, 1e-26, ((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)))
     absIntercept = abs(float(intercept))
@@ -70,7 +61,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, prettyPrint=False, *
     print 'H2O Largest abs. coefficient value:', maxKey, coefficients[maxKey]
     minKey = min([(abs(coefficients[x]), x) for x in coefficients])[1]
     print 'H2O Smallest abs. coefficient value:', minKey, coefficients[minKey]
-    if (len(coefficients) > 1):
+    if ((not allowZeroCoeff) and (len(coefficients) > 1)):
         s = 0.0
         for c in coefficients:
             v = coefficients[c]
