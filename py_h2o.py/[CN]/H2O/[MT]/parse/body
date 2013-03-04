@@ -1,14 +1,17 @@
-def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, **kwargs):
+def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, noPoll=False, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
     verboseprint('\nParsing key:', key, 'to key2:', key2, '(if None, means default)')
     params_dict = {'source_key': key, 'destination_key': key2, }
     params_dict.update(kwargs)
     noise = kwargs.pop('noise', None)
-    verboseprint('Parse.Json noise:', noise)
     a = self.__check_request(requests.get(url=self.__url('Parse.json'), timeout=timeoutSecs, params=params_dict))
     if (a['response']['redirect_request'] != 'Progress'):
         print dump_json(a)
         raise Exception('H2O parse redirect is not Progress. Parse json response precedes.')
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, noise=noise)
-    verboseprint('\nParse result:', dump_json(a))
-    return a
+    if noPoll:
+        return None
+    else:
+        verboseprint('Parse.Json noise:', noise)
+        a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, noise=noise)
+        verboseprint('\nParse result:', dump_json(a))
+        return a
