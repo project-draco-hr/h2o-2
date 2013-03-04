@@ -10,7 +10,7 @@ def main():
         log('Config   : {0}'.format(ec2_config))
         log('Instances: {0}'.format(args.instances))
         reservation = run_instances(args.instances, ec2_config)
-        dump_hosts_config(ec2_config, reservation)
+        dump_hosts_config(ec2_config, reservation, args.hosts)
         dump_ssh_commands(ec2_config, reservation)
     elif (args.action == 'show_defaults'):
         print 'Config    : {0}'.format(DEFAULT_EC2_INSTANCE_CONF)
