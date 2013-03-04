@@ -1,4 +1,6 @@
 {
   ab.getPort();
-  return "Proposal# " + ab.get8();
+  String s="Proposal# " + ab.get8();
+  for (int i=0; i < PRINT_PORTS_COUNT; i++)   s+=", " + ab.get1();
+  return s;
 }

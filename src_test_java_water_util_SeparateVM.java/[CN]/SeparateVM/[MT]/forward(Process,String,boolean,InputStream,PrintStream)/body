@@ -1,0 +1,19 @@
+{
+  final BufferedReader stream=new BufferedReader(new InputStreamReader(in));
+  Thread thread=new Thread(){
+    @Override public void run(){
+      if (description != null)       Log.write(out,description,headers);
+      try {
+        for (; ; ) {
+          String line=stream.readLine();
+          if (line == null)           break;
+          Log.write(out,line,headers);
+        }
+      }
+ catch (      IOException e) {
+      }
+    }
+  }
+;
+  thread.start();
+}
