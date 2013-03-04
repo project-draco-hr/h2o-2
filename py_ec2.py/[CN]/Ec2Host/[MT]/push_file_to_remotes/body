@@ -1,9 +1,0 @@
-def push_file_to_remotes(self, f, hosts):
-    pem = self.upload_file(PEM)
-    self.run_cmd(('chmod 400 %s' % pem))
-    dest = self.uploaded[f]
-    for h in hosts:
-        if (h == self):
-            continue
-        self.run_cmd(("scp -o '''StrictHostKeyChecking no''' -o '''CheckHostIP no''' -o '''HashKnownHosts no''' -o '''UserKnownHostsFile /dev/null''' -i %s %s %s@%s:%s" % (pem, dest, h.username, h.addr, dest)))
-        h.record_file(f, dest)

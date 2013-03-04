@@ -1,0 +1,18 @@
+def invoke_hosts_action(action, hosts_config):
+    ids = [inst['id'] for inst in hosts_config['instances']]
+    ips = [inst['private_ip_address'] for inst in hosts_config['instances']]
+    if (action == 'terminate'):
+        terminate_instances(ids)
+    elif (action == 'stop'):
+        stop_instances(ids)
+    elif (action == 'reboot'):
+        reboot_instances(ids)
+        wait_for_ssh(ips, skipAlive=False, requiredsuccess=10)
+    elif (action == 'start'):
+        start_instances(ids)
+    elif (action == 'distribute_h2o'):
+        pass
+    elif (action == 'start_h2o'):
+        pass
+    elif (action == 'stop_h2o'):
+        pass
