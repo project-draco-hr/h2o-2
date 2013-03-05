@@ -6,7 +6,7 @@
     AutoBuffer ab=new AutoBuffer(kb,2);
     for (int i=0; i <= repl; i++)     h2o=h2otmp.read(ab);
     int idx=nidx(h2o);
-    if (idx != -1)     return idx;
+    if (idx >= 0)     return idx;
   }
   return ((key._hash + repl) & 0x7FFFFFFF) % size();
 }

@@ -33,7 +33,7 @@
     local=arg;
   }
  else {
-    List<InetAddress> validIps=Lists.newArrayList();
+    ArrayList<InetAddress> validIps=new ArrayList();
     for (    InetAddress ip : ips) {
       if (ip instanceof Inet4Address && !ip.isLoopbackAddress() && !ip.isLinkLocalAddress()) {
         validIps.add(ip);
