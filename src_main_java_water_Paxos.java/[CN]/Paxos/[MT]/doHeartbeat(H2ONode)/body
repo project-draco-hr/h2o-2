@@ -1,28 +1,2 @@
 {
-  addProposedMember(h2o);
-  H2O cloud=H2O.CLOUD;
-  if (h2o.is_cloud_member(cloud)) {
-    boolean ck=true;
-    for (    H2ONode h2o2 : cloud._memary)     if (!h2o2.is_cloud_member(cloud))     ck=false;
-    if (ck == false && _commonKnowledge == true && _cloudLocked)     killCloud();
-    if (!_commonKnowledge && ck) {
-      Paxos.class.notify();
-      System.out.printf("[h2o] Paxos Cloud of size %d formed: %s\n",cloud._memset.size(),cloud._memset.toString());
-    }
-    _commonKnowledge=ck;
-    return;
-  }
-  print("hart: mismatched cloud announcement",h2o);
-  if (cloud._memset.contains(h2o)) {
-    print("hart: is member but did not get the news1",cloud._memset);
-    print("hart: is member but did not get the news2",PROPOSED_MEMBERS);
-    if (PROPOSED_MEMBERS.equals(cloud._memset)) {
-      _state._members=PROPOSED_MEMBERS.toArray(new H2ONode[0]);
-      UDPPaxosAccepted.build_and_multicast(_state);
-    }
-    return;
-  }
- else {
-  }
-  doChangeAnnouncement(cloud);
 }
