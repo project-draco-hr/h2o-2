@@ -1,0 +1,9 @@
+def handleRemoveReadonly(func, path, exc):
+    time.sleep(2)
+    excvalue = exc[1]
+    if ((func in (shutil.rmtree, os.rmdir, os.remove)) and (excvalue.errno == errno.EACCES)):
+        pardir = os.path.abspath(os.path.join(path, os.path.pardir))
+        if (not os.access(pardir, os.W_OK)):
+            os.chmod(pardir, ((stat.S_IRWXU | stat.S_IRWXG) | stat.S_IRWXO))
+        os.chmod(path, ((stat.S_IRWXU | stat.S_IRWXG) | stat.S_IRWXO))
+    func(path)
