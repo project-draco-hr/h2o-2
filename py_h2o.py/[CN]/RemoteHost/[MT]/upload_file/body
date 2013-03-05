@@ -7,7 +7,14 @@ def upload_file(self, f, progress=None):
         m.update(getpass.getuser())
         dest = ((('/tmp/' + m.hexdigest()) + '-') + os.path.basename(f))
         sftp = self.ssh.open_sftp()
-        sftp.put(f, dest, callback=progress)
-        sftp.close()
+        try:
+            try:
+                sftp.stat(dest)
+                verboseprint('Skipping upload of file {0} because file {1} exists on remote side!'.format(f, dest))
+            except IOError as e:
+                if (e.errno == errno.ENOENT):
+                    sftp.put(f, dest, callback=progress)
+        finally:
+            sftp.close()
         self.uploaded[f] = dest
     return self.uploaded[f]

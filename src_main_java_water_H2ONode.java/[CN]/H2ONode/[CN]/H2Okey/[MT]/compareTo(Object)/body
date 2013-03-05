@@ -1,0 +1,8 @@
+{
+  if (x == null)   return -1;
+  H2Okey key=((H2ONode)x)._key;
+  if (key == this)   return 0;
+  int res=_ipv4 - key._ipv4;
+  if (res != 0)   return res;
+  return udp_port() - key.udp_port();
+}

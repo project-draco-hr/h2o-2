@@ -1,23 +1,4 @@
 {
-  final BufferedReader input=new BufferedReader(new InputStreamReader(process.getInputStream()));
-  Thread thread=new Thread(){
-    @Override public void run(){
-      if (description != null) {
-        if (addLogHeader)         Log.write(description);
- else         System.out.println(description);
-      }
-      try {
-        for (; ; ) {
-          String line=input.readLine();
-          if (line == null)           break;
-          if (addLogHeader)           Log.write(line);
- else           System.out.println(line);
-        }
-      }
- catch (      IOException e) {
-      }
-    }
-  }
-;
-  thread.start();
+  forward(process,description,addLogHeader,process.getInputStream(),System.out);
+  forward(process,description,addLogHeader,process.getErrorStream(),System.err);
 }

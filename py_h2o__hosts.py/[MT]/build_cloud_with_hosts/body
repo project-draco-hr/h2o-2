@@ -22,6 +22,8 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
     javaHeapGB = hostDict.setdefault('java_heap_GB', None)
     javaExtraArgs = hostDict.setdefault('java_extra_args', None)
     use_home_for_ice = hostDict.setdefault('use_home_for_ice', False)
+    key_filename = hostDict.setdefault('key_filename', None)
+    aws_credentials = hostDict.setdefault('aws_credentials', None)
     if (node_count is not None):
         h2oPerHost = node_count
     if (use_flatfile is not None):
@@ -40,7 +42,7 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
         javaExtraArgs = java_extra_args
     if (base_port is not None):
         basePort = base_port
-    h2o.verboseprint('host config: ', username, password, h2oPerHost, basePort, sigar, useFlatfile, useHdfs, hdfsNameNode, hdfsVersion, hdfsConfig, javaHeapGB, use_home_for_ice, hostList, **kwargs)
+    h2o.verboseprint('host config: ', username, password, h2oPerHost, basePort, sigar, useFlatfile, useHdfs, hdfsNameNode, hdfsVersion, hdfsConfig, javaHeapGB, use_home_for_ice, hostList, key_filename, aws_credentials, **kwargs)
     global hosts
     if (hostList == ['127.0.0.1']):
         hosts = None
@@ -49,11 +51,11 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
         hosts = []
         for h in hostList:
             h2o.verboseprint('Connecting to:', h)
-            hosts.append(h2o.RemoteHost(h, username, password))
+            hosts.append(h2o.RemoteHost(addr=h, username=username, password=password, key_filename=key_filename))
     h2o.write_flatfile(node_count=h2oPerHost, base_port=basePort, hosts=hosts)
     if (hosts is not None):
         h2o.upload_jar_to_remote_hosts(hosts, slow_connection=slow_connection)
         timeoutSecs = max(60, (8 * (len(hosts) * h2oPerHost)))
     else:
         timeoutSecs = 60
-    h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, hdfs_version=hdfsVersion, hdfs_config=hdfsConfig, java_heap_GB=javaHeapGB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, **kwargs)
+    h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, hdfs_version=hdfsVersion, hdfs_config=hdfsConfig, java_heap_GB=javaHeapGB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, aws_credentials=aws_credentials, **kwargs)

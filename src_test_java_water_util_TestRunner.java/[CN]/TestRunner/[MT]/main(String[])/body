@@ -2,9 +2,13 @@
   ArrayList<Separate> sites=new ArrayList<Separate>();
   int nodes=1 + 2;
   for (int i=0; i < nodes - 1; i++) {
-    sites.add(new SeparateVM("VM" + i,null));
+    sites.add(new SeparateVM("VM" + i,args));
   }
-  org.junit.runner.JUnitCore.runClasses(KMeansTest.class);
+  H2O.main(args);
+  Desktop desktop=Desktop.getDesktop();
+  desktop.browse(new URI("http://localhost:54321/Timeline.html"));
+  BufferedReader console=new BufferedReader(new InputStreamReader(System.in));
+  console.readLine();
   for (  Separate site : sites)   site.close();
   System.exit(0);
 }

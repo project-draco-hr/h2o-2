@@ -1,26 +1,33 @@
-def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=20, retryDelaySecs=0.5, cleanup=True, **kwargs):
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=0.5, cleanup=True, rand_shuffle=True, **kwargs):
     clean_sandbox()
     ports_per_node = 2
     node_list = []
     try:
         totalNodes = 0
+        portList = [(base_port + (ports_per_node * i)) for i in range(node_count)]
         if (hosts is None):
             write_flatfile(node_count=node_count, base_port=base_port)
             hostCount = 1
-            for i in xrange(node_count):
+            if rand_shuffle:
+                random.shuffle(portList)
+            for p in portList:
                 verboseprint('psutil starting node', i)
-                newNode = LocalH2O(port=(base_port + (i * ports_per_node)), node_id=totalNodes, **kwargs)
+                newNode = LocalH2O(port=p, node_id=totalNodes, **kwargs)
                 node_list.append(newNode)
                 totalNodes += 1
         else:
             hostCount = len(hosts)
+            hostPortList = []
             for h in hosts:
-                for i in xrange(node_count):
-                    verboseprint('ssh starting node', totalNodes, 'via', h)
-                    newNode = h.remote_h2o(port=(base_port + (i * ports_per_node)), node_id=totalNodes, **kwargs)
-                    node_list.append(newNode)
-                    totalNodes += 1
-                    time.sleep(1)
+                for port in portList:
+                    hostPortList.append((h, port))
+            if rand_shuffle:
+                random.shuffle(hostPortList)
+            for (h, p) in hostPortList:
+                verboseprint('ssh starting node', totalNodes, 'via', h)
+                newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)
+                node_list.append(newNode)
+                totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
         stabilize_cloud(node_list[(-1)], len(node_list), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)

@@ -1,0 +1,8 @@
+def reboot_instances(instances):
+    'Reboot all the instances given by its ids'
+    if (not instances):
+        return
+    conn = boto.connect_ec2()
+    log('Rebooting instances {0}.'.format(instances))
+    conn.reboot_instances(instances)
+    log('Done')

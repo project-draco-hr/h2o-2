@@ -1,0 +1,23 @@
+def main():
+    parser = argparse.ArgumentParser(description='H2O EC2 instances launcher')
+    parser.add_argument('action', choices=['create', 'terminate', 'stop', 'reboot', 'start', 'distribute_h2o', 'start_h2o', 'stop_h2o', 'show_defaults'], help='EC2 instances action')
+    parser.add_argument('--config', help='Configuration file to configure NEW EC2 instances (if not specified default is used - see --show_defaults)', type=str, default=None)
+    parser.add_argument('--instances', help='Number of instances to launch', type=int, default=DEFAULT_NUMBER_OF_INSTANCES)
+    parser.add_argument('--hosts', help='Hosts file describing existing "EXISTING" EC2 instances ', type=str, default=None)
+    args = parser.parse_args()
+    if (args.action == 'create'):
+        ec2_config = load_ec2_config(args.config)
+        log('Config   : {0}'.format(ec2_config))
+        log('Instances: {0}'.format(args.instances))
+        reservation = run_instances(args.instances, ec2_config)
+        dump_hosts_config(ec2_config, reservation, args.hosts)
+        dump_ssh_commands(ec2_config, reservation)
+    elif (args.action == 'show_defaults'):
+        print 'Config    : {0}'.format(DEFAULT_EC2_INSTANCE_CONF)
+        print 'Instances : {0}'.format(DEFAULT_NUMBER_OF_INSTANCES)
+    else:
+        hosts_config = load_hosts_config(args.hosts)
+        invoke_hosts_action(args.action, hosts_config)
+        if (args.action == 'terminate'):
+            log('Deleting {0} host file.'.format(args.hosts))
+            os.remove(args.hosts)

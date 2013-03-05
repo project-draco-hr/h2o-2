@@ -1,0 +1,9 @@
+def test_rf_iris(self):
+    trainParseKey = self.loadTrainData()
+    kwargs = paramsTrainRF.copy()
+    trainResult = h2o_rf.trainRF(trainParseKey, **kwargs)
+    scoreParseKey = self.loadScoreData()
+    kwargs = paramsTestRF.copy()
+    scoreResult = h2o_rf.scoreRF(scoreParseKey, trainResult, **kwargs)
+    print '\nTrain\n=========={0}'.format(h2o_rf.pp_rf_result(trainResult))
+    print '\nScoring\n========={0}'.format(h2o_rf.pp_rf_result(scoreResult))

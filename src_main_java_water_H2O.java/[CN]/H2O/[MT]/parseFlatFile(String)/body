@@ -33,7 +33,7 @@
       }
       InetAddress inet=InetAddress.getByName(ip);
       if (!(inet instanceof Inet4Address))       Log.die("Only IP4 addresses allowed: given " + ip);
-      if (!Strings.isNullOrEmpty(portStr)) {
+      if (portStr != null && !portStr.equals("")) {
         try {
           port=Integer.decode(portStr);
         }
