@@ -4,9 +4,9 @@
   final String object=_object.value();
   try {
     final Key dest=MultipartUpload.init(value);
-    H2O.FJP_NORM.submit(new RecursiveAction(){
-      @Override protected void compute(){
-        MultipartUpload.run(dest,value,bucket,object);
+    H2O.submitFJTsk(new H2OCountedCompleter(){
+      @Override public void compute2(){
+        throw new RuntimeException("TODO Auto-generated method stub");
       }
     }
 );

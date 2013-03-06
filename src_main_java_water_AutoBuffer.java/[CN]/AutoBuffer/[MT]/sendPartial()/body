@@ -7,22 +7,30 @@
     return _bb;
   }
   int attempts=0;
-  while (true)   try {
-    _bb.flip();
+  _bb.flip();
+  _bb.mark();
+  try {
     if (_chan == null)     tcpOpen();
     while (_bb.hasRemaining())     _chan.write(_bb);
-    if (_bb.capacity() < 16 * 1024)     _bb=bbMake();
-    _firstPage=false;
-    _bb.clear();
-    return _bb;
   }
  catch (  IOException e) {
-    if (e.getMessage().equals("Connection reset by peer"))     UDPRebooted.suicide(UDPRebooted.T.error,_h2o);
-    if (++attempts == 10)     throw new RuntimeException(e);
+    if (++attempts == TCP_WRITE_ATTEMPTS)     throw new RuntimeException(e);
+    System.err.println("TCP Open/Write attempt # " + attempts + " failed, reason: "+ e.getMessage());
+    if (_chan != null && _chan.isOpen())     try {
+      _chan.close();
+      _bb.reset();
+      _chan=null;
+    }
+ catch (    IOException e1) {
+    }
     try {
       Thread.sleep(1000);
     }
  catch (    InterruptedException e1) {
     }
   }
+  if (_bb.capacity() < 16 * 1024)   _bb=bbMake();
+  _firstPage=false;
+  _bb.clear();
+  return _bb;
 }

@@ -1,0 +1,16 @@
+{
+  TaskQEntry priorityTask=null;
+  FJWThr t=(FJWThr)Thread.currentThread();
+  try {
+    priorityTask=_taskQ.take();
+  }
+ catch (  InterruptedException e) {
+    throw new Error(e);
+  }
+  H2O.FJP_HI.submit(this);
+  do {
+    t._fjPriorityLvl=priorityTask._priority;
+    priorityTask._tsk.compute2();
+  }
+ while ((priorityTask=_taskQ.poll()) != null);
+}

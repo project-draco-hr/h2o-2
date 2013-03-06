@@ -1,3 +1,6 @@
 {
-  return new RPC(target,dtask).call();
+  Thread cThread=Thread.currentThread();
+  int priority=0;
+  if (cThread instanceof FJWThr)   priority=(((FJWThr)cThread).fjPriority() + 1);
+  return new RPC(target,dtask,priority).call();
 }

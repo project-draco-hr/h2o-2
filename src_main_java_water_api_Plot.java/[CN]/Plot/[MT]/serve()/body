@@ -14,9 +14,9 @@
   try {
     final Key dest_=dest;
     UKV.put(dest,new hex.KMeans.KMeansModel());
-    H2O.FJP_NORM.submit(new RecursiveAction(){
-      @Override protected void compute(){
-        hex.Plot.run(dest_,va,width,height,cols);
+    H2O.submitFJTsk(new H2OCountedCompleter(){
+      @Override public void compute2(){
+        throw new RuntimeException("TODO Auto-generated method stub");
       }
     }
 );

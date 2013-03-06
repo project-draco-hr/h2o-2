@@ -1,0 +1,10 @@
+{
+  TaskQEntry priorityTask=null;
+  FJWThr t=(FJWThr)Thread.currentThread();
+  while ((priorityTask=H2O.pollTask()) != null) {
+    t._fjPriorityLvl=priorityTask._priority;
+    priorityTask._tsk.compute2();
+  }
+  t._fjPriorityLvl=RPC.MIN_PRIORITY;
+  compute2();
+}
