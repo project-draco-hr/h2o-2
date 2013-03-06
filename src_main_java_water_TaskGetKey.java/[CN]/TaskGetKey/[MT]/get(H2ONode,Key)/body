@@ -4,6 +4,8 @@
     rpc=TGKS.get(key);
     if (rpc != null)     break;
     rpc=new RPC(target,new TaskGetKey(key),RPC.GET_KEY_PRIORITY);
+    rpc._dt._priority=111;
+    rpc._dt._repliedTcp=true;
     if (TGKS.putIfMatchUnlocked(key,rpc,null) == null) {
       rpc.call();
       break;

@@ -20,7 +20,7 @@
       ab._h2o._last_heard_from=System.currentTimeMillis();
 switch (UDP.udp.UDPS[ctrl]) {
 case exec:
-        RPC.tcp_exec(ab);
+        H2O.submitTsk(new FJPacket(ab));
       break;
 case ack:
     RPC.tcp_ack(ab);

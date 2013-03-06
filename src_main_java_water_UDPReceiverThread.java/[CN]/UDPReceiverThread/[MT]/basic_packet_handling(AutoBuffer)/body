@@ -12,10 +12,8 @@
   if (drop != 0)   return;
   H2O cloud=H2O.CLOUD;
   boolean is_member=cloud.contains(ab._h2o);
-  final int ACK=UDP.udp.ack.ordinal();
   if (UDP.udp.UDPS[ctrl]._paxos || is_member) {
-    int priority=(ctrl < ACK) ? RPC.MAX_PRIORITY : RPC.MAX_PRIORITY - 1;
-    H2O.submitHiPriorityTsk(new FJPacket(ab),priority);
+    H2O.submitTsk(new FJPacket(ab));
     return;
   }
   if (!is_member) {
