@@ -39,8 +39,6 @@
     trees.add(Constants.TREE_LEAVES,model.leaves().toJson());
   }
   response.add(Constants.TREES,trees);
-  Job job=findJob();
-  if (job != null && job._progress != null)   water.Jobs.Progress.set(job._progress,finished / tasks);
   Response r=(finished == tasks) ? jobDone(response) : Response.poll(response,finished,tasks);
   r.setBuilder(JSON_CM,new ConfusionMatrixBuilder());
   r.setBuilder(TREES,new TreeListBuilder());
