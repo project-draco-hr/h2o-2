@@ -2,5 +2,5 @@
   if (keys.size() == 0)   return null;
   DRemoteTask rpc=clone();
   rpc._keys=keys.toArray(new Key[keys.size()]);
-  return RPC.call(keys.get(0).home_node(),rpc,_fjPriorityLvl);
+  return RPC.call(keys.get(0).home_node(),rpc,priority());
 }
