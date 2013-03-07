@@ -1,12 +1,9 @@
 {
   final Job job=Jobs.start("Parse",dest);
-  H2O.submitTsk(new H2OCountedCompleter(){
+  H2O.submitTask(new H2OCountedCompleter(){
     @Override public void compute2(){
       parse(job,dataset,setup);
       tryComplete();
-    }
-    @Override public int priority(){
-      return RPC.MIN_PRIORITY;
     }
   }
 );

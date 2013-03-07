@@ -13,7 +13,7 @@
   H2O cloud=H2O.CLOUD;
   boolean is_member=cloud.contains(ab._h2o);
   if (UDP.udp.UDPS[ctrl]._paxos || is_member) {
-    H2O.submitTsk(new FJPacket(ab));
+    H2O.submitTask(new FJPacket(ab));
     return;
   }
   if (!is_member) {

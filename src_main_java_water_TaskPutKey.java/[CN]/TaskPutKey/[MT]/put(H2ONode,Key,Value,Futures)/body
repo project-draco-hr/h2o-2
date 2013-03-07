@@ -1,4 +1,4 @@
 {
-  Future f=RPC.call(h2o,new TaskPutKey(key,val),(val == null) ? RPC.INVALIDATE_KEY_PRIORITY : RPC.PUT_KEY_PRIORITY);
+  Future f=RPC.call(h2o,new TaskPutKey(key,val));
   if (fs != null)   fs.add(f);
 }

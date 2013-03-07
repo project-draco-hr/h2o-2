@@ -14,12 +14,9 @@
   try {
     final Key dest_=dest;
     UKV.put(dest,new hex.KMeans.KMeansModel());
-    H2O.submitTsk(new H2OCountedCompleter(){
+    H2O.submitTask(new H2OCountedCompleter(){
       @Override public void compute2(){
         hex.Plot.run(dest_,va,width,height,cols);
-      }
-      @Override public int priority(){
-        return RPC.MIN_PRIORITY;
       }
     }
 );
