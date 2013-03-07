@@ -2,18 +2,35 @@ def test_B_importFolder_files(self):
     importFolderPath = '/home/0xdiag/datasets'
     h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 500
-    csvFilenameAll = ['billion_rows.csv.gz']
+    csvFilenameAll = ['covtype.data', 'billion_rows.csv.gz']
     csvFilenameList = csvFilenameAll
     h2b.browseTheCloud()
     for csvFilename in csvFilenameList:
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500, pollTimeoutSecs=60)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
-        RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
-        h2b.browseJsonHistoryAsUrlLastMatch('RFView')
-        time.sleep(10)
-        sys.stdout.write('.')
+        kwargs = {'x': 0, 'y': 1, 'num_cross_validation_folds': 0, 'case_mode': '=', 'case': 1, }
+        colX = 0
+        kwargs.update({'alpha': 0, 'lambda': 0, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'glm (L2) end on ', csvFilename, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        h2o_glm.simpleCheckGLM(self, glm, colX, **kwargs)
+        kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'glm (Elastic) end on ', csvFilename, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        h2o_glm.simpleCheckGLM(self, glm, colX, **kwargs)
+        kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'glm (L1) end on ', csvFilename, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        h2o_glm.simpleCheckGLM(self, glm, colX, **kwargs)
+        sys.stdout.write('\n.')
         sys.stdout.flush()
