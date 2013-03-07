@@ -6,25 +6,17 @@
       return new List();
     }
     @Override public void onSuccess(){
-      UKV.remove(_progress);
+      if (_progress != null)       UKV.remove(_progress);
     }
     @Override public List atomic(    List old){
       Job[] jobs=old._jobs;
-      int index=-1;
-      for (int i=0; i < jobs.length; i++) {
-        if (jobs[i]._key.equals(key)) {
-          index=i;
-          break;
-        }
-      }
-      if (index >= 0) {
-        old._jobs=new Job[jobs.length - 1];
-        int n=0;
-        for (int i=0; i < jobs.length; i++) {
-          if (i != index)           old._jobs[n++]=jobs[i];
- else           _progress=jobs[i]._progress;
-        }
-      }
+      int i;
+      for (i=0; i < jobs.length; i++)       if (jobs[i]._key.equals(key))       break;
+      if (i == jobs.length)       return old;
+      _progress=jobs[i]._progress;
+      jobs[i]=jobs[jobs.length - 1];
+      old._jobs=Arrays.copyOf(jobs,jobs.length - 1);
+      old._jobs=new Job[jobs.length - 1];
       return old;
     }
   }
