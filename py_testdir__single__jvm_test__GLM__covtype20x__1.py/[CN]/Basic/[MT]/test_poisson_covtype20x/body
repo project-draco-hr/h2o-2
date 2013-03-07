@@ -7,7 +7,7 @@ def test_poisson_covtype20x(self):
     importFolderPath = '/home/0xdiag/datasets'
     h2i.setupImportFolder(None, importFolderPath)
     for (csvFilename, timeoutSecs) in csvFilenameList:
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000)
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, pollTimeoutSecs=60)
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         csvPathname = ((importFolderPath + '/') + csvFilename)
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
