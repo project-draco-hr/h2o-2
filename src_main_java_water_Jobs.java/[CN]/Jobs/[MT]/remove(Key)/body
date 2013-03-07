@@ -1,8 +1,12 @@
 {
   DKV.remove(key);
   new TAtomic<List>(){
+    transient Key _progress;
     @Override public List alloc(){
       return new List();
+    }
+    @Override public void onSuccess(){
+      UKV.remove(_progress);
     }
     @Override public List atomic(    List old){
       Job[] jobs=old._jobs;
@@ -18,7 +22,7 @@
         int n=0;
         for (int i=0; i < jobs.length; i++) {
           if (i != index)           old._jobs[n++]=jobs[i];
- else           UKV.remove(jobs[i]._progress);
+ else           _progress=jobs[i]._progress;
         }
       }
       return old;
