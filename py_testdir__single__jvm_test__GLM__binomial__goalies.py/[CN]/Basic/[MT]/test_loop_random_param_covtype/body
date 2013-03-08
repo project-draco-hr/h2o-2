@@ -1,0 +1,24 @@
+def test_loop_random_param_covtype(self):
+    csvPathname = h2o.find_file('smalldata/poisson/Goalies.csv')
+    print '\nParsing', csvPathname
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname)
+    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+    info_from_inspect(inspect, csvPathname)
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    paramDict = define_params()
+    print '\nUsing random seed:', SEED
+    for trial in range(20):
+        params = {'y': 6, 'num_cross_validation_folds': 3, 'family': 'binomial', 'case_mode': ['>'], 'case': ['20'], 'alpha': 0, 'lambda': 0, 'beta_eps': 0.001, 'max_iter': 8, }
+        colX = h2o_glm.pickRandGlmParams(paramDict, params)
+        kwargs = params.copy()
+        timeoutSecs = (60 + (kwargs['num_cross_validation_folds'] * 20))
+        timeoutSecs = max(timeoutSecs, (8 * (kwargs['max_iter'] + 1)))
+        start = time.time()
+        print 'This may not solve because of the expanded categorical columns causing a large # cols, small # of rows'
+        glm = h2o_cmd.runGLMOnly(timeoutSecs=timeoutSecs, parseKey=parseKey, **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        start = time.time()
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        print 'simpleCheckGLM end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'Trial #', trial, 'completed\n'
