@@ -6,11 +6,7 @@
     _bb=ByteBuffer.wrap(MemoryManager.arrayCopyOfRange(ary,0,newlen),oldpos,newlen - oldpos).order(ByteOrder.nativeOrder());
     return _bb;
   }
-  if (!_tcpStarted) {
-    TimeLine.record_send(this,true);
-    _tcpStarted=true;
-  }
-  int attempts=0;
+  if (_chan == null)   TimeLine.record_send(this,true);
   _bb.flip();
   _bb.mark();
   try {
@@ -18,20 +14,8 @@
     while (_bb.hasRemaining())     _chan.write(_bb);
   }
  catch (  IOException e) {
-    if (++attempts == TCP_WRITE_ATTEMPTS)     throw new RuntimeException(e);
-    System.err.println("TCP Open/Write attempt # " + attempts + " failed, reason: "+ e.getMessage());
-    if (_chan != null && _chan.isOpen())     try {
-      _chan.close();
-      _bb.reset();
-      _chan=null;
-    }
- catch (    IOException e1) {
-    }
-    try {
-      Thread.sleep(1000);
-    }
- catch (    InterruptedException e1) {
-    }
+    System.err.println("TCP Open/Write failed: " + e.getMessage());
+    throw new Error(e);
   }
   if (_bb.capacity() < 16 * 1024)   _bb=bbMake();
   _firstPage=false;
