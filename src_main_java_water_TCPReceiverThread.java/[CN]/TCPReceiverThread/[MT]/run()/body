@@ -9,7 +9,7 @@
         errsock=null;
         tmp2.close();
       }
-      if (saw_error)       Thread.sleep(1000);
+      if (saw_error)       Thread.sleep(100);
       saw_error=false;
       if (SOCK == null) {
         SOCK=ServerSocketChannel.open();
@@ -21,7 +21,7 @@
       TimeLine.record_recv(ab,true,0);
 switch (UDP.udp.UDPS[ctrl]) {
 case exec:
-        H2O.submitTask(new FJPacket(ab));
+        H2O.submitTask(new FJPacket(ab,ctrl));
       break;
 case ack:
     RPC.tcp_ack(ab);
