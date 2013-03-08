@@ -6,6 +6,10 @@
     _bb=ByteBuffer.wrap(MemoryManager.arrayCopyOfRange(ary,0,newlen),oldpos,newlen - oldpos).order(ByteOrder.nativeOrder());
     return _bb;
   }
+  if (!_tcpStarted) {
+    TimeLine.record_send(this,true);
+    _tcpStarted=true;
+  }
   int attempts=0;
   _bb.flip();
   _bb.mark();

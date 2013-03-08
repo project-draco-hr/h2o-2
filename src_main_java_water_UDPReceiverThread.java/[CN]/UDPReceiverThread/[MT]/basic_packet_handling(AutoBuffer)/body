@@ -1,6 +1,6 @@
 {
   int drop=H2O.OPT_ARGS.random_udp_drop != null && RANDOM_UDP_DROP.nextInt(5) == 0 ? 2 : 0;
-  TimeLine.record_recv(ab,drop);
+  TimeLine.record_recv(ab,false,drop);
   ab._h2o._last_heard_from=System.currentTimeMillis();
   int ctrl=ab.getCtrl();
   ab.getPort();

@@ -18,6 +18,7 @@
       AutoBuffer ab=new AutoBuffer(SOCK.accept());
       int ctrl=ab.getCtrl();
       ab._h2o._last_heard_from=System.currentTimeMillis();
+      TimeLine.record_recv(ab,true,0);
 switch (UDP.udp.UDPS[ctrl]) {
 case exec:
         H2O.submitTask(new FJPacket(ab));
