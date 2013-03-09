@@ -11,8 +11,7 @@ def test_rf_params_rand2(self):
     parseKeyTest = h2o_cmd.parseFile(csvPathname=csvPathnameTrain, key2='covtype.hex', timeoutSecs=10)
     dataKeyTest = parseKeyTest['destination_key']
     for trial in range(5):
-        params = {'ntree': 13, 'parallel': 1, }
-        params['out_of_bag_error_estimate'] = 1
+        params = {'ntree': 13, 'parallel': 1, 'out_of_bag_error_estimate': 0, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (30 + (15 * ((kwargs['parallel'] and 5) or 10)))

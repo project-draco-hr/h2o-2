@@ -25,8 +25,8 @@ def check_sandbox_for_errors():
                     foundCaused = regex2.search(line)
                     foundAt = re.match('[\\t ]+at ', line)
                     if re.match('NOPTask', line):
-                        foundNopTaskCnt += 1
-                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt or (foundNopTaskCnt == 1)))):
+                        foundNOPTaskCnt += 1
+                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt or (foundNOPTaskCnt == 1)))):
                         printing = 2
                 if (printing == 1):
                     errLines.append(line)
