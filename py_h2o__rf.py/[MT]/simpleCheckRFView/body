@@ -12,6 +12,18 @@ def simpleCheckRFView(node, rfv, **kwargs):
         raise Exception('class in RFView seems wrong. class:', oclass)
     cm = rfv['confusion_matrix']
     header = cm['header']
+    classification_error = cm['classification_error']
+    print 'classification_error:', classification_error
+    rows_skipped = cm['rows_skipped']
+    print 'rows_skipped:', rows_skipped
+    cm_type = cm['type']
+    print 'type:', cm_type
+    used_trees = cm['used_trees']
+    if (used_trees <= 0):
+        raise Exception('used_trees should be >0. used_trees:', used_trees)
+    ntree = kwargs.get('ntree', None)
+    if ((ntree is not None) and (used_trees != ntree)):
+        raise Exception('used_trees should == ntree. used_trees:', used_trees)
     scoresList = cm['scores']
     totalScores = 0
     for s in scoresList:
@@ -43,3 +55,4 @@ def simpleCheckRFView(node, rfv, **kwargs):
     h2o.verboseprint('RFView response: number_built:', number_built, 'leaves:', leaves, 'depth:', depth)
     confusion_key = rfv['confusion_key']
     dataInspect = node.inspect(data_key)
+    return classification_error

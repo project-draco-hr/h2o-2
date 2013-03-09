@@ -16,7 +16,7 @@
   double[] u=new double[N - 1];
   Matrix xm=null;
   Matrix xyPrime=(Matrix)xy.clone();
-  OUTER:   for (int a=0; a < 20; ++a) {
+  OUTER:   for (int a=0; a < 5; ++a) {
     double kappa=_lambda * _alpha / _rho;
     for (int i=0; i < 10000; ++i) {
       for (int j=0; j < N - 1; ++j) {
@@ -62,5 +62,5 @@
     }
     return z;
   }
-  throw new LSMSolverException("Unexpected error when solving LSM. Can't solve this problem.");
+  throw new NonSPDMatrixException();
 }
