@@ -14,7 +14,7 @@
     while (_bb.hasRemaining())     _chan.write(_bb);
   }
  catch (  IOException e) {
-    System.err.println("TCP Open/Write failed: " + e.getMessage());
+    System.err.println("TCP Open/Write failed: " + e.getMessage() + " talking to "+ _h2o);
     throw new Error(e);
   }
   if (_bb.capacity() < 16 * 1024)   _bb=bbMake();

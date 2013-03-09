@@ -21,7 +21,7 @@
       TimeLine.record_recv(ab,true,0);
 switch (UDP.udp.UDPS[ctrl]) {
 case exec:
-        H2O.submitTask(new FJPacket(ab,ctrl));
+        RPC.remote_exec(ab).close();
       break;
 case ack:
     RPC.tcp_ack(ab);
