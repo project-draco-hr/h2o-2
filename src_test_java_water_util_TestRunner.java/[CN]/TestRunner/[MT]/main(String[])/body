@@ -5,6 +5,7 @@
     sites.add(new SeparateVM("VM" + i,args));
   }
   H2O.main(args);
+  org.junit.runner.JUnitCore.runClasses(KVTest.class);
   Desktop desktop=Desktop.getDesktop();
   desktop.browse(new URI("http://localhost:54321/Timeline.html"));
   BufferedReader console=new BufferedReader(new InputStreamReader(System.in));

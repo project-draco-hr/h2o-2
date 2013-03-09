@@ -1,12 +1,12 @@
 {
   new TAtomic<Progress>(){
+    @Override public Progress alloc(){
+      return new Progress();
+    }
     @Override public Progress atomic(    Progress old){
       old._value+=delta;
       return old;
     }
-    @Override public Progress alloc(){
-      return new Progress();
-    }
   }
-.invoke(key);
+.fork(key);
 }

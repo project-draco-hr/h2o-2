@@ -4,8 +4,8 @@
   final String object=_object.value();
   try {
     final Key dest=MultipartUpload.init(value);
-    H2O.FJP_NORM.submit(new RecursiveAction(){
-      @Override protected void compute(){
+    H2O.submitTask(new H2OCountedCompleter(){
+      @Override public void compute2(){
         MultipartUpload.run(dest,value,bucket,object);
       }
     }
