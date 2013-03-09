@@ -1,5 +1,11 @@
 {
   ValueArray va=_key.value();
-  ValueArray.Column classCol=va._cols[_classCol.value()];
-  return vaCategoryNames(classCol,maxClasses);
+  ValueArray.Column dataCol=va._cols[_classCol.value()];
+  if (_modelKey != null) {
+    ValueArray.Column modelCol=_modelKey.value().response();
+    return vaCategoryNames(modelCol,dataCol,maxClasses);
+  }
+ else {
+    return vaCategoryNames(dataCol,maxClasses);
+  }
 }

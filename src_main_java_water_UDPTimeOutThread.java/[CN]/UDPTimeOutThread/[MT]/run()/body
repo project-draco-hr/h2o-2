@@ -3,7 +3,7 @@
   while (true) {
     try {
       RPC t=PENDING.take();
-      if (H2O.CLOUD._memset.contains(t._target))       t.call();
+      if (H2O.CLOUD.contains(t._target))       t.call();
  else       t.cancel(true);
     }
  catch (    InterruptedException e) {

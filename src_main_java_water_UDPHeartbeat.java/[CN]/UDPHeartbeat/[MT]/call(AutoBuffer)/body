@@ -1,5 +1,7 @@
 {
-  ab._h2o._heartbeat=new HeartBeat().read(ab);
-  Paxos.doHeartbeat(ab._h2o);
+  if (ab._h2o != H2O.SELF) {
+    ab._h2o._heartbeat=new HeartBeat().read(ab);
+    Paxos.doHeartbeat(ab._h2o);
+  }
   return ab;
 }

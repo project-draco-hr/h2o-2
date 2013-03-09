@@ -6,6 +6,6 @@
   _numSplitFeatures=howManySplitFeatures(t);
   int ntrees=howManyTrees();
   Utils.pln("[RF] Building " + ntrees + " trees");
-  new RandomForest(this,t,ntrees,_depth,0.0,StatType.values()[_stat],_parallel,_numSplitFeatures);
+  RandomForest.build(this,t,ntrees,_depth,0.0,StatType.values()[_stat],_parallel,_numSplitFeatures);
   tryComplete();
 }

@@ -1,8 +1,13 @@
 def decide_if_localhost():
+    hostsFile = default_hosts_file()
+    if os.path.exists(hostsFile):
+        verboseprint('* Using config JSON file {0}.'.format(hostsFile))
+        return False
     if config_json:
-        print 'config_json:', config_json
+        verboseprint('* Using config JSON:', config_json)
         return False
     if ('hosts' in os.getcwd()):
-        print "Will use the username's config json"
+        verboseprint("* Using the username's config json")
         return False
+    verboseprint('Launching local cloud...')
     return True

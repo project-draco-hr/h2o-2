@@ -1,4 +1,4 @@
-def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, noise=None):
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=15, noise=None):
     verboseprint('poll_url input: response:', dump_json(response))
     url = self.__url(response['redirect_request'])
     params = response['redirect_request_args']
@@ -21,7 +21,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             urlUsed = url
             paramsUsed = params
             msgUsed = '\nPolling with'
-        r = self.__check_request(requests.get(url=urlUsed, timeout=15, params=paramsUsed))
+        r = self.__check_request(requests.get(url=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed))
         if ((count % 5) == 0):
             verboseprint(msgUsed, urlUsed, 'Response:', dump_json(r['response']))
         if ((count % 15) == 0):
