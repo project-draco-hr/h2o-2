@@ -7,7 +7,7 @@
     byte[] kb=new byte[Key.KEY_LENGTH];
     r.nextBytes(kb);
     Key nk=Key.make(kb);
-    new AppendKey(nk).invoke(k);
+    Append.append(k,nk);
     v=DKV.get(k);
     byte[] vb=v.get();
     Assert.assertArrayEquals(kb,Arrays.copyOfRange(vb,vb.length - kb.length,vb.length));

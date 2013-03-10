@@ -1,0 +1,11 @@
+{
+  new Atomic(){
+    @Override public byte[] atomic(    byte[] bits){
+      Key[] ks=bits == null ? new Key[0] : new AutoBuffer(bits).getA(Key.class);
+      ks=Arrays.copyOf(ks,ks.length + 1);
+      ks[ks.length - 1]=k;
+      return new AutoBuffer().putA(ks).buf();
+    }
+  }
+.invoke(keys);
+}
