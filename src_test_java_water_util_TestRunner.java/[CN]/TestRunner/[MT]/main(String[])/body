@@ -5,6 +5,8 @@
   for (int i=0; i < nodes - 1; i++) {
     sites.add(new SeparateVM("VM" + i,args));
   }
+  TestUtil.stall_till_cloudsize(nodes);
+  org.junit.runner.JUnitCore.runClasses(GLMGridTest.class);
   org.junit.runner.JUnitCore.runClasses(KVTest.class);
   Desktop desktop=Desktop.getDesktop();
   desktop.browse(new URI("http://localhost:54321/Cloud.html"));

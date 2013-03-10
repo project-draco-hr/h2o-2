@@ -1,25 +1,27 @@
 {
   Value val=_key.value();
   if (val.isHex())   return serveValueArray(ValueArray.value(val));
-  Freezable f=val.get();
-  if (f instanceof GLMModel) {
-    GLMModel m=(GLMModel)f;
-    JsonObject res=new JsonObject();
-    res.add("GLMModel",m.toJson());
-    Response r=Response.done(res);
-    r.setBuilder("",new GLMBuilder(m));
-    return r;
-  }
-  if (f instanceof KMeansModel) {
-    KMeansModel m=(KMeansModel)f;
-    JsonObject res=new JsonObject();
-    res.add("KMeansModel",m.toJson());
-    Response r=Response.done(res);
-    return r;
-  }
-  if (f instanceof RFModel) {
-    JsonObject res=new JsonObject();
-    return RFView.redirect(res,val._key);
+  if (!val.isArray()) {
+    Freezable f=val.get();
+    if (f instanceof GLMModel) {
+      GLMModel m=(GLMModel)f;
+      JsonObject res=new JsonObject();
+      res.add("GLMModel",m.toJson());
+      Response r=Response.done(res);
+      r.setBuilder("",new GLMBuilder(m));
+      return r;
+    }
+    if (f instanceof KMeansModel) {
+      KMeansModel m=(KMeansModel)f;
+      JsonObject res=new JsonObject();
+      res.add("KMeansModel",m.toJson());
+      Response r=Response.done(res);
+      return r;
+    }
+    if (f instanceof RFModel) {
+      JsonObject res=new JsonObject();
+      return RFView.redirect(res,val._key);
+    }
   }
   return serveUnparsedValue(val);
 }
