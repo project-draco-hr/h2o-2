@@ -1,0 +1,15 @@
+{
+  Thread.currentThread().setPriority(Thread.NORM_PRIORITY);
+  while (true) {
+    try {
+      RPC.RPCCall r=PENDING.take();
+      if (H2O.CLOUD.contains(r._client)) {
+        r.resend_ack();
+        PENDING.add(r);
+      }
+ else       H2O.SELF.remove_task_tracking(r._tsknum);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
+}

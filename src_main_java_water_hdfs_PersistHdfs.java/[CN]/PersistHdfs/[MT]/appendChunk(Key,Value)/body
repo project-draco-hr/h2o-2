@@ -5,8 +5,8 @@
     Path p=getPathForKey(key);
     FileSystem fs=FileSystem.get(p.toUri(),CONF);
     s=fs.append(p);
-    System.err.println("[hdfs] append=" + val.get().length);
-    s.write(val.get());
+    System.err.println("[hdfs] append=" + val.memOrLoad().length);
+    s.write(val.memOrLoad());
   }
  catch (  IOException e) {
     res=e.getMessage();

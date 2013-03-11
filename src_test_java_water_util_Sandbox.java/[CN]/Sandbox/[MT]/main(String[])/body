@@ -1,11 +1,10 @@
 {
   H2O.main(new String[]{});
-  File f=new File("../../aaaa/datasets/millionx7_logreg.data.gz");
+  TestUtil.stall_till_cloudsize(1);
+  File f=new File("smalldata/covtype/covtype.20k.data");
   Key key=TestUtil.load_test_file(f,"test");
   Key dest=Key.make("test.hex");
   ParseDataset.parse(dest,DKV.get(key));
   Desktop desktop=Desktop.getDesktop();
-  desktop.browse(new URI("http://localhost:54321/Timeline.html"));
-  BufferedReader console=new BufferedReader(new InputStreamReader(System.in));
-  console.readLine();
+  desktop.browse(new URI("http://localhost:54321/Inspect.html?key=test.hex"));
 }

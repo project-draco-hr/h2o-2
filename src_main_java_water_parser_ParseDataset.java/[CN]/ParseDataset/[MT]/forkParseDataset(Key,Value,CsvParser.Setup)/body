@@ -1,13 +1,10 @@
 {
-  final Job job=Jobs.start("Parse",dest);
-  H2O.FJP_NORM.submit(new CountedCompleter(){
-    @Override public void compute(){
+  final ParseDataset job=new ParseDataset(dest,dataset);
+  job.start();
+  H2O.submitTask(new H2OCountedCompleter(){
+    @Override public void compute2(){
       parse(job,dataset,setup);
       tryComplete();
-    }
-    public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
-      ex.printStackTrace();
-      return true;
     }
   }
 );

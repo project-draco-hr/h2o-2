@@ -10,7 +10,7 @@
   q.invoke(key);
   Value val3=DKV.get(key);
   assertNotSame(v1,val3);
-  AutoBuffer ab=new AutoBuffer(val3.get());
+  AutoBuffer ab=new AutoBuffer(val3.memOrLoad());
   assertEquals(2,ab.get8(0));
   assertEquals(2,ab.get8(8));
   DKV.remove(key);

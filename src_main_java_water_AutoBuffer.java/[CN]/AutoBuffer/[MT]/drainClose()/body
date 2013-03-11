@@ -2,8 +2,8 @@
   try {
     while (_chan.read(_bb) != -1)     _bb.clear();
     _chan.close();
-    TCPS.decrementAndGet();
     restorePriority();
+    TCPS.decrementAndGet();
     bbFree();
   }
  catch (  IOException e) {

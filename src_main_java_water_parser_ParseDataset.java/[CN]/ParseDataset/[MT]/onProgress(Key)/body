@@ -1,0 +1,10 @@
+{
+  new TAtomic<Progress>(){
+    @Override public Progress atomic(    Progress old){
+      if (old == null)       return new Progress();
+      old._value+=DKV.get(chunk).length();
+      return old;
+    }
+  }
+.fork(_progress);
+}

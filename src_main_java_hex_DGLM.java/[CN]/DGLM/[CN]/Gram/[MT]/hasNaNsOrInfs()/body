@@ -1,0 +1,7 @@
+{
+  for (int i=0; i < _xy.length; ++i) {
+    if (Double.isInfinite(_xy[i]) || Double.isNaN(_xy[i]))     return true;
+    for (int j=0; j < _xx[i].length; ++j)     if (Double.isInfinite(_xx[i][j]) || Double.isNaN(_xx[i][j]))     return true;
+  }
+  return false;
+}

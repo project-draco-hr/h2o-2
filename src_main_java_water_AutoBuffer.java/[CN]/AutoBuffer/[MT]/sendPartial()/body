@@ -6,17 +6,19 @@
     _bb=ByteBuffer.wrap(MemoryManager.arrayCopyOfRange(ary,0,newlen),oldpos,newlen - oldpos).order(ByteOrder.nativeOrder());
     return _bb;
   }
+  if (_chan == null)   TimeLine.record_send(this,true);
+  _bb.flip();
+  _bb.mark();
   try {
-    _bb.flip();
     if (_chan == null)     tcpOpen();
     while (_bb.hasRemaining())     _chan.write(_bb);
-    if (_bb.capacity() < 16 * 1024)     _bb=bbMake();
-    _firstPage=false;
-    _bb.clear();
-    return _bb;
   }
  catch (  IOException e) {
-    if (e.getMessage().equals("Connection reset by peer"))     UDPRebooted.suicide(UDPRebooted.T.error,_h2o);
-    throw new RuntimeException(e);
+    System.err.println("TCP Open/Write failed: " + e.getMessage() + " talking to "+ _h2o);
+    throw new Error(e);
   }
+  if (_bb.capacity() < 16 * 1024)   _bb=bbMake();
+  _firstPage=false;
+  _bb.clear();
+  return _bb;
 }
