@@ -1,0 +1,6 @@
+{
+  CtMethod ccms[]=cc.getDeclaredMethods();
+  if (!hasExisting("frozenType","()I",ccms) && (cc.getModifiers() & Modifier.ABSTRACT) == 0) {
+    cc.addMethod(CtNewMethod.make("public int frozenType() {" + "  return " + TypeMap.onLoad(cc.getName()) + ";"+ "}",cc));
+  }
+}

@@ -1,0 +1,11 @@
+{
+  while (DKV.get(_self) != null) {
+    try {
+      Thread.sleep(1);
+    }
+ catch (    InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  return (T)UKV.get(_dest);
+}
