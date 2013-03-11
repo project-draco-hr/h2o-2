@@ -52,6 +52,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print cString
     else:
         print '\nintercept:', intercept, cString
+    print '\nTotal # of coefficients:', len(column_names)
     if ((not allowZeroCoeff) and (colX is not None)):
         absXCoeff = abs(float(coefficients[str(colX)]))
         self.assertGreater(absXCoeff, 1e-26, ((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)))
