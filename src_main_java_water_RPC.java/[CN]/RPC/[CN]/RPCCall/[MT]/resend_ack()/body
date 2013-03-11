@@ -1,7 +1,2 @@
 {
-  AutoBuffer rab=new AutoBuffer(_client).putTask(UDP.udp.ack,_tsknum);
-  if (_dt._repliedTcp)   rab.put1(RPC.SERVER_TCP_SEND);
- else   _dt.write(rab.put1(RPC.SERVER_UDP_SEND));
-  rab.close();
-  _retry+=(_retry < 5000) ? _retry : 5000;
 }
