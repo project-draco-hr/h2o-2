@@ -1,3 +1,24 @@
 {
-  return start(description,dest,new Progress());
+  final Job job=new Job();
+  job._key=Key.make(UUID.randomUUID().toString());
+  UKV.put(job._key,new Value(job._key,""));
+  job._description=description;
+  job._startTime=System.currentTimeMillis();
+  job._progress=Key.make(UUID.randomUUID().toString());
+  UKV.put(job._progress,new Progress());
+  job._dest=dest;
+  new TAtomic<List>(){
+    @Override public List alloc(){
+      return new List();
+    }
+    @Override public List atomic(    List old){
+      if (old == null)       old=new List();
+      Job[] jobs=old._jobs;
+      old._jobs=Arrays.copyOf(jobs,jobs.length + 1);
+      old._jobs[jobs.length]=job;
+      return old;
+    }
+  }
+.invoke(KEY);
+  return job;
 }

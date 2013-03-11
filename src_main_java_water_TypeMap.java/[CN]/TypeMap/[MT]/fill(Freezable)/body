@@ -1,6 +1,0 @@
-{
-  String clazz=f.getClass().getName();
-  if (H2O.CLOUD.leader() == H2O.SELF)   return registerType(clazz);
-  FillRequest fr=new FillRequest(clazz,-1);
-  return RPC.call(H2O.CLOUD.leader(),fr).get()._index;
-}
