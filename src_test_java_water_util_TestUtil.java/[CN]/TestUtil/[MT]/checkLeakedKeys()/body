@@ -1,4 +1,5 @@
 {
+  DKV.get(Jobs.KEY);
   DKV.write_barrier();
   int leaked_keys=H2O.store_size() - _initial_keycnt;
   if (leaked_keys != 0)   for (  Key k : H2O.keySet())   System.err.println("Leaked key: " + k);
