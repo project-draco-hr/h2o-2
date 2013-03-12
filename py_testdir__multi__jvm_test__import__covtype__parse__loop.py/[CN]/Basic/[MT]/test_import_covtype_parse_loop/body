@@ -7,6 +7,7 @@ def test_import_covtype_parse_loop(self):
     trialMax = 20
     for trial in range(trialMax):
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=20)
+        nodeX = random.randint(0, (lenNodes - 1))
+        parseKey = h2i.parseImportFolderFile(h2o.nodes[nodeX], csvFilename, importFolderPath, key2=key2, timeoutSecs=20)
         sys.stdout.write('.')
         sys.stdout.flush()
