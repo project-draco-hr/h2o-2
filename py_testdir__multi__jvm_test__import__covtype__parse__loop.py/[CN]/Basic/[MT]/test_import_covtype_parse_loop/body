@@ -1,0 +1,12 @@
+def test_import_covtype_parse_loop(self):
+    print "put file 'covtype.data' once, then loop parsing to unique keys"
+    csvFilename = 'covtype.data'
+    importFolderPath = '/home/0xdiag/datasets'
+    h2i.setupImportFolder(None, importFolderPath)
+    lenNodes = len(h2o.nodes)
+    trialMax = 20
+    for trial in range(trialMax):
+        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=20)
+        sys.stdout.write('.')
+        sys.stdout.flush()
