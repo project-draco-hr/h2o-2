@@ -5,7 +5,8 @@
   glmp._caseMode=_caseMode.valid() ? _caseMode.value() : CaseMode.none;
   glmp._caseVal=_case.valid() ? _case.value() : Double.NaN;
   Key dest=GLMModel.makeKey();
-  hex.GLMGrid job=new hex.GLMGrid(dest,_key.value(),glmp,getCols(_x.value(),_y.value()),_lambda.value()._arr,_alpha.value()._arr,_thresholds.value()._arr,_xval.value());
+  double[] ts=glmp._family == Family.binomial ? _thresholds.value()._arr : null;
+  hex.GLMGrid job=new hex.GLMGrid(dest,_key.value(),glmp,getCols(_x.value(),_y.value()),_lambda.value()._arr,_alpha.value()._arr,ts,_xval.value());
   job.start();
   JsonObject j=new JsonObject();
   j.addProperty(Constants.DEST_KEY,dest.toString());
