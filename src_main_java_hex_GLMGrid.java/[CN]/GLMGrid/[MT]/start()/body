@@ -1,27 +1,28 @@
 {
   super.start();
   UKV.put(dest(),new GLMModels(_lambdas.length * _alphas.length));
-  H2O.submitTask(new DTask(){
-    @Override public void compute2(){
-      final int N=_alphas.length;
-      GLMModel m=null;
-      try {
-        OUTER:         for (int l1=1; l1 <= _lambdas.length; l1++) {
-          for (int a=0; a < _alphas.length; a++) {
-            if (cancelled())             break OUTER;
-            m=do_task(m,_lambdas.length - l1,a);
-            update(dest(),m,(_lambdas.length - l1) * N + a);
+  for (int a=0; a < _alphas.length; ++a) {
+    final int aidx=a;
+    H2O.submitTask(new DTask(){
+      @Override public void compute2(){
+        final int N=_alphas.length;
+        GLMModel m=null;
+        try {
+          for (int l1=1; l1 <= _lambdas.length; l1++) {
+            if (cancelled())             break;
+            m=do_task(m,_lambdas.length - l1,aidx);
+            update(dest(),m,(_lambdas.length - l1) * N + aidx);
           }
         }
-      }
   finally {
-        remove();
+          remove();
+        }
+        tryComplete();
       }
-      tryComplete();
+      @Override public GLMGrid invoke(      H2ONode sender){
+        throw H2O.unimpl();
+      }
     }
-    @Override public GLMGrid invoke(    H2ONode sender){
-      throw H2O.unimpl();
-    }
-  }
 );
+  }
 }
