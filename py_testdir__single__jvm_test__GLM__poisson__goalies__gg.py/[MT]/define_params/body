@@ -1,3 +1,4 @@
 def define_params():
-    paramDict = {'family': ['poisson'], 'num_cross_validation_folds': [2, 3, 4, 9], 'thresholds': [0.1, 0.5, 0.7, 0.9], 'lambda': [1e-08, 0.0001], 'alpha': [0, 0.5, 0.75], 'beta_epsilon': [0.001, 0.0001], 'max_iter': [5, 10, 19, 31], 'weight': [None, 1, 2, 4], 'expert': [None, 0, 1], 'lsm_solver': ['GenGradient'], 'standardize': [None, 0, 1], }
+    print 'Always using standardize=1. Unable to solve sometimes if not?'
+    paramDict = {'family': ['poisson'], 'num_cross_validation_folds': [1], 'thresholds': [0.5], 'lambda': [1e-08], 'alpha': [0], 'beta_epsilon': [0.001, 0.0001], 'max_iter': [3], 'weight': [2], 'expert': [1], 'lsm_solver': ['GenGradient'], 'standardize': [1], }
     return paramDict
