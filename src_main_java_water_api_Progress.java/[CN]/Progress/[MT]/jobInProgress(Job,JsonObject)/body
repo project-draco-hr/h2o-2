@@ -1,7 +1,6 @@
 {
-  Jobs.Progress progress=UKV.get(job._progress,new Jobs.Progress());
-  Response r=Response.poll(jsonResp,progress != null ? progress.get() : 1f);
-  final String description=job._description;
+  Response r=Response.poll(jsonResp,job.progress());
+  final String description=job.description();
   r.setBuilder(ROOT_OBJECT,defaultProgressBuilder(description));
   r.setBuilder(RequestStatics.DEST_KEY,new KeyElementBuilder());
   return r;

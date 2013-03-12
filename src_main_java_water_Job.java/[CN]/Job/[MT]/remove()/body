@@ -1,0 +1,16 @@
+{
+  DKV.remove(_self);
+  new TAtomic<List>(){
+    @Override public List atomic(    List old){
+      if (old == null)       old=new List();
+      Job[] jobs=old._jobs;
+      int i;
+      for (i=0; i < jobs.length; i++)       if (jobs[i]._self.equals(_self))       break;
+      if (i == jobs.length)       return null;
+      jobs[i]=jobs[jobs.length - 1];
+      old._jobs=Arrays.copyOf(jobs,jobs.length - 1);
+      return old;
+    }
+  }
+.fork(LIST);
+}

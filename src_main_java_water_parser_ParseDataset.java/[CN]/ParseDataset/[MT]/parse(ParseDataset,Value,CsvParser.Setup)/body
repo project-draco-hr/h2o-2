@@ -1,0 +1,40 @@
+{
+  if (dataset.isHex())   throw new IllegalArgumentException("This is a binary structured dataset; " + "parse() only works on text files.");
+  try {
+    try {
+      parseUncompressed(job,dataset,CustomParser.Type.XLS,setup);
+      return;
+    }
+ catch (    Exception e) {
+    }
+    Compression compression=guessCompressionMethod(dataset);
+    if (compression == Compression.ZIP) {
+      try {
+        parseUncompressed(job,dataset,CustomParser.Type.XLSX,setup);
+        return;
+      }
+ catch (      Exception e) {
+      }
+    }
+switch (compression) {
+case NONE:
+      parseUncompressed(job,dataset,CustomParser.Type.CSV,setup);
+    break;
+case ZIP:
+  parseZipped(job,dataset,setup);
+break;
+case GZIP:
+parseGZipped(job,dataset,setup);
+break;
+default :
+throw new Error("Unknown compression of dataset!");
+}
+}
+ catch (Exception e) {
+UKV.put(job.dest(),new Fail(e.getMessage()));
+throw Throwables.propagate(e);
+}
+ finally {
+job.remove();
+}
+}

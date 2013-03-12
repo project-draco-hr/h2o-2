@@ -1,3 +1,5 @@
 {
-  return Jobs.start("KMeans K: " + k + ", Cols: "+ cols.length,dest);
+  Job job=new Job("KMeans K: " + k + ", Cols: "+ cols.length,dest);
+  job.start();
+  return job;
 }

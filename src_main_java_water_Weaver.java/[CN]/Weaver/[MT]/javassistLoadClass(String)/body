@@ -1,0 +1,17 @@
+{
+  try {
+    if (name.equals("water.Boot"))     return null;
+    CtClass cc=_pool.get(name);
+    if (cc == null)     return null;
+    String pack=cc.getPackageName();
+    if (!pack.startsWith("water") && !pack.startsWith("hex") && !pack.startsWith("org.junit")&& true)     return null;
+    for (    CtClass base : _serBases)     if (cc.subclassOf(base))     return javassistLoadClass(cc);
+    return cc;
+  }
+ catch (  NotFoundException nfe) {
+    return null;
+  }
+catch (  CannotCompileException cce) {
+    throw new RuntimeException(cce);
+  }
+}
