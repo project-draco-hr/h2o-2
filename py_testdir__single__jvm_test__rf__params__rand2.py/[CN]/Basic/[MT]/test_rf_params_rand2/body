@@ -7,6 +7,8 @@ def test_rf_params_rand2(self):
         params = {'ntree': 13, 'parallel': 1, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
-        timeoutSecs = (30 + (15 * ((kwargs['parallel'] and 5) or 10)))
+        timeoutSecs = (30 + (15 * ((kwargs['parallel'] and 6) or 10)))
+        start = time.time()
         h2o_cmd.runRF(timeoutSecs=timeoutSecs, retryDelaySecs=1, csvPathname=csvPathname, **kwargs)
-        print 'Trial #', trial, 'completed'
+        elapsed = (time.time() - start)
+        print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
