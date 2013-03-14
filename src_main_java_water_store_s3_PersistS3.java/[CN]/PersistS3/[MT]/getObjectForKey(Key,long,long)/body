@@ -6,6 +6,7 @@
     return S3.getObject(r);
   }
  catch (  AmazonClientException e) {
+    H2O.ignore(e);
     return null;
   }
 }
