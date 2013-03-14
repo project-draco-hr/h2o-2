@@ -1,15 +1,32 @@
 {
   Key datakey=Key.make("datakey");
+  Key datakey2=Key.make("datakey2");
   try {
     ValueArray va=va_maker(datakey,new byte[]{0,1,2,3,4,5,6,7},new double[]{2.718282,7.389056,20.085537,54.598150,148.413159,403.428793,1096.633158,2980.957987});
-    LSMSolver lsms=new ADMMSolver(0,0);
-    JsonObject glm=computeGLM(Family.poisson,lsms,va,false,null);
+    JsonObject glm=computeGLM(Family.poisson,new ADMMSolver(0,0),va,false,null);
     JsonObject coefs=glm.get("coefficients").getAsJsonObject();
     assertEquals(1.0,coefs.get("Intercept").getAsDouble(),0.000001);
     assertEquals(1.0,coefs.get("0").getAsDouble(),0.000001);
     UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    glm=computeGLM(Family.poisson,new GeneralizedGradientSolver(0,0),va,false,null);
+    coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(1.0,coefs.get("Intercept").getAsDouble(),0.0001);
+    assertEquals(1.0,coefs.get("0").getAsDouble(),0.0001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    va=va_maker(datakey2,new byte[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14},new byte[]{0,1,2,3,1,4,9,18,23,31,20,25,37,45});
+    glm=computeGLM(Family.poisson,new ADMMSolver(0,0),va,false,null);
+    coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(0.3396,coefs.get("Intercept").getAsDouble(),0.0001);
+    assertEquals(0.2565,coefs.get("0").getAsDouble(),0.0001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    glm=computeGLM(Family.poisson,new GeneralizedGradientSolver(0,0),va,false,null);
+    coefs=glm.get("coefficients").getAsJsonObject();
+    assertEquals(0.3396,coefs.get("Intercept").getAsDouble(),0.0001);
+    assertEquals(0.2565,coefs.get("0").getAsDouble(),0.0001);
+    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
   }
   finally {
     UKV.remove(datakey);
+    UKV.remove(datakey2);
   }
 }
