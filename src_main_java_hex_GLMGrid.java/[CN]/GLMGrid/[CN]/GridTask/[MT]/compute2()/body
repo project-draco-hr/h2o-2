@@ -1,0 +1,15 @@
+{
+  GLMModel m=null;
+  Futures fs=new Futures();
+  try {
+    for (int l1=1; l1 <= _lambdas.length; l1++) {
+      if (cancelled())       break;
+      m=do_task(m,_lambdas.length - l1,_aidx);
+      update(dest(),m,(_lambdas.length - l1) * _alphas.length + _aidx,System.currentTimeMillis() - startTime(),fs);
+    }
+    fs.blockForPending();
+  }
+  finally {
+    tryComplete();
+  }
+}

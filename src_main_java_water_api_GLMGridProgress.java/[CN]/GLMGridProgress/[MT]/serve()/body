@@ -4,6 +4,7 @@
   if (models == null)   return Response.doneEmpty();
   JsonObject response=new JsonObject();
   response.addProperty(Constants.DEST_KEY,dest.toString());
+  response.addProperty("computation_time",getTimeStr(models.runTime()));
   JsonArray array=new JsonArray();
   for (  GLMModel m : models.sorted()) {
     JsonObject o=new JsonObject();
