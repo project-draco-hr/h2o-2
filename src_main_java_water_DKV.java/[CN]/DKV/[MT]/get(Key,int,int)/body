@@ -1,0 +1,18 @@
+{
+  while (true) {
+    H2O cloud=H2O.CLOUD;
+    Value val=H2O.get(key);
+    if (val != null) {
+      if (len > val._max)       len=val._max;
+      if (len == 0 || val.mem() != null || val.isPersisted())       return val;
+    }
+    H2ONode home=cloud._memary[key.home(cloud)];
+    if (home == H2O.SELF)     return null;
+    for (    RPC<?> rpc : RPC.TASKS.values())     if (rpc._target == home && rpc._dt instanceof TaskPutKey) {
+      TaskPutKey tpk=(TaskPutKey)rpc._dt;
+      Key k=tpk._key;
+      if (k != null && key.equals(k))       return tpk._xval;
+    }
+    return TaskGetKey.get(home,key,priority);
+  }
+}

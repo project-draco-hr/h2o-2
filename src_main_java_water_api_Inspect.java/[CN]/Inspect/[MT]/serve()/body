@@ -2,7 +2,13 @@
   Value val=_key.value();
   if (val.isHex())   return serveValueArray(ValueArray.value(val));
   if (!val.isArray()) {
-    Freezable f=val.get();
+    Freezable f;
+    try {
+      f=val.get();
+    }
+ catch (    Exception ex) {
+      f=null;
+    }
     if (f instanceof GLMModel) {
       GLMModel m=(GLMModel)f;
       JsonObject res=new JsonObject();
