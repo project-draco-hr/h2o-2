@@ -1,3 +1,4 @@
 def dump_ssh_commands(ec2_config, reservation):
-    for i in reservation.instances:
-        print 'ssh -i ~/.ec2/keys/mrjenkins_test.pem ubuntu@{0}'.format(i.private_ip_address)
+    cmds = get_ssh_commands(ec2_config, reservation)
+    for cmd in cmds:
+        print cmd
