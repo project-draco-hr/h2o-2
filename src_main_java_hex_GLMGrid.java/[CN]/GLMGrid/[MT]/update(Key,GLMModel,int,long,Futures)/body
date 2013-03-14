@@ -1,10 +1,11 @@
 {
-  new TAtomic<GLMModels>(){
+  fs.add(new TAtomic<GLMModels>(){
     @Override public GLMModels atomic(    GLMModels old){
       old._ms[idx]=m._selfKey;
       old._count++;
+      old._runTime=Math.max(runTime,old._runTime);
       return old;
     }
   }
-.invoke(dest);
+.fork(dest));
 }
