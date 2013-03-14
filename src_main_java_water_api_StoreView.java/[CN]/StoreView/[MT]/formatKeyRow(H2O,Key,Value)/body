@@ -46,12 +46,13 @@
       cols=setup._data[1].length;
       result.addProperty(ROWS,"~" + rows);
       result.addProperty(COLS,cols);
+      final int len=setup._data.length;
       for (int i=0; i < Math.min(cols,jcols.length); i++) {
         JsonObject col=new JsonObject();
-        col.addProperty(HEADER,setup._data[0][i]);
-        col.addProperty(MIN,setup._data[1][i]);
-        col.addProperty(MEAN,setup._data[2][i]);
-        col.addProperty(MAX,setup._data[3][i]);
+        if (len > 0)         col.addProperty(HEADER,setup._data[0][i]);
+        if (len > 1)         col.addProperty(MIN,setup._data[1][i]);
+        if (len > 2)         col.addProperty(MEAN,setup._data[2][i]);
+        if (len > 3)         col.addProperty(MAX,setup._data[3][i]);
         jcols[i]=col;
       }
     }

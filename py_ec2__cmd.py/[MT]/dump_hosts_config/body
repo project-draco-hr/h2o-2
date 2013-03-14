@@ -13,6 +13,11 @@ def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME):
     cfg['ip'] = [i.private_ip_address for i in reservation.instances]
     cfg['instances'] = [{'id': i.id, 'private_ip_address': i.private_ip_address, 'public_ip_address': i.ip_address, 'public_dns_name': i.public_dns_name, } for i in reservation.instances]
     cfg['reservation_id'] = reservation.id
+    cmds = get_ssh_commands(ec2_config, reservation)
+    idx = 1
+    for cmd in cmds:
+        cfg['comment_ssh_{0}'.format(idx)] = cmd
+        idx += 1
     filename = filename.format(reservation.id)
     with open(filename, 'w+') as f:
         f.write(json.dumps(cfg, indent=4))
