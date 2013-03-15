@@ -4,7 +4,9 @@
   if (_lambda != 0)   for (int i=0; i < N - 1; ++i)   xx.set(i,i,xx.get(i,i) + lambda);
   CholeskyDecomposition lu=new CholeskyDecomposition(xx);
   if (_alpha == 0 || _lambda == 0)   try {
-    return lu.solve(xy).getColumnPackedCopy();
+    double[] res=lu.solve(xy).getColumnPackedCopy();
+    _converged=true;
+    return res;
   }
  catch (  Exception e) {
     if (!e.getMessage().equals("Matrix is not symmetric positive definite."))     throw new Error(e);
@@ -18,7 +20,7 @@
   Matrix xyPrime=(Matrix)xy.clone();
   OUTER:   for (int a=0; a < 5; ++a) {
     double kappa=_lambda * _alpha / _rho;
-    for (int i=0; i < 10000; ++i) {
+    for (int i=0; i < 1000; ++i) {
       for (int j=0; j < N - 1; ++j) {
         xyPrime.set(j,0,xy.get(j,0) + _rho * (z[j] - u[j]));
       }
@@ -58,7 +60,10 @@
       s_norm=_rho * Math.sqrt(s_norm);
       eps_pri=ABSTOL + RELTOL * Math.sqrt(Math.max(x_norm,z_norm));
       eps_dual=ABSTOL + _rho * RELTOL * Math.sqrt(u_norm);
-      if (r_norm < eps_pri && s_norm < eps_dual)       break;
+      if (r_norm < eps_pri && s_norm < eps_dual) {
+        _converged=true;
+        break;
+      }
     }
     return z;
   }
