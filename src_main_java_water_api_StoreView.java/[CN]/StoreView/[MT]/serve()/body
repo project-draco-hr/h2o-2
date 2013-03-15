@@ -21,7 +21,7 @@
   for (int i=offset; i < offset + _view.value(); i++) {
     if (i >= len)     break;
     Value val=H2O.get(keys[i]);
-    ary.add(formatKeyRow(cloud,keys[i],val));
+    if (val != null)     ary.add(formatKeyRow(cloud,keys[i],val));
   }
   result.add(KEYS,ary);
   result.addProperty(NUM_KEYS,len);

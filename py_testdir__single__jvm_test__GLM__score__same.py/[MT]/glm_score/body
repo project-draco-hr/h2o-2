@@ -9,10 +9,8 @@ def glm_score(self, csvFilename, csvPathname, modelKey, timeoutSecs=3):
     glmScore = h2o_cmd.runGLMScore(key=key2, model_key=modelKey, timeoutSecs=timeoutSecs)
     print 'GLMScore in', (time.time() - start), 'secs (python)'
     h2o.verboseprint(h2o.dump_json(glmScore))
-    GLMModel = glmScore['GLMModel']
-    validationsList = glmScore['GLMModel']['validations']
-    validations = validationsList[0]
+    validation = glmScore['validation']
     if self.validations1:
-        h2o_glm.compareToFirstGlm(self, 'err', validations, self.validations1)
+        h2o_glm.compareToFirstGlm(self, 'err', validation, self.validations1)
     else:
-        self.validations1 = copy.deepcopy(validations)
+        self.validations1 = copy.deepcopy(validation)

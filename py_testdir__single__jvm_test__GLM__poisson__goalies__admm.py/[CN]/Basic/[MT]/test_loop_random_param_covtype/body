@@ -8,7 +8,7 @@ def test_loop_random_param_covtype(self):
     paramDict = define_params()
     print '\nUsing random seed:', SEED
     for trial in range(20):
-        params = {'y': 5, 'num_cross_validation_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 1e-08, 'beta_epsilon': 0.001, 'max_iter': 3, 'standardize': 1, }
+        params = {'y': 5, 'num_cross_validation_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 0, 'beta_epsilon': 0.001, 'max_iter': 3, 'standardize': 1, 'expert': 1, 'lsm_solver': 'ADMM', }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (60 + (kwargs['num_cross_validation_folds'] * 20))
