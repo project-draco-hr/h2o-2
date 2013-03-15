@@ -30,7 +30,10 @@ default :
 throw new Error("Unknown compression of dataset!");
 }
 }
- catch (Exception e) {
+ catch (java.io.EOFException eof) {
+UKV.put(job.dest(),new Fail(eof.getMessage()));
+}
+catch (Exception e) {
 UKV.put(job.dest(),new Fail(e.getMessage()));
 throw Throwables.propagate(e);
 }
