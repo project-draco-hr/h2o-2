@@ -1,7 +1,7 @@
-def glm_score(self, csvFilename, csvPathname, modelKey, timeoutSecs=3):
+def glm_score(self, csvFilename, csvPathname, modelKey, timeoutSecs=30, pollTimeoutSecs=30):
     print '\nStarting GLM score of', csvFilename
     key2 = (csvFilename + '.hex')
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=10)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutSecs=pollTimeoutSecs)
     y = '10'
     x = ''
     kwargs = {'x': x, 'y': y, 'case': (-1), 'thresholds': 0.5, }
