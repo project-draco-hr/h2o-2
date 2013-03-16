@@ -8,6 +8,6 @@
     }
     res+=(0.5 * x + xy[i]) * beta[i];
   }
-  if (res <= 0)   throw new LSMSolverException("Generalized Gradient: Can not solved this problem.");
+  if (!(res >= 0))   throw new LSMSolverException("Generalized Gradient: Can not solved this problem.");
   return res;
 }

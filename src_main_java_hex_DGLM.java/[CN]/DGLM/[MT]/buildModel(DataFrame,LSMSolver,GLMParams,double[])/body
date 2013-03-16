@@ -31,15 +31,14 @@
       }
  catch (      NonSPDMatrixException e) {
         if (!(lsm instanceof GeneralizedGradientSolver)) {
-          System.err.println("swapping solvers!");
           lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
           warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
-          lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),gramF._beta);
+          lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
         }
       }
     }
  while (++iter < params._maxIter && betaDiff(newBeta,oldBeta) > params._betaEps);
-    converged=(betaDiff(oldBeta,gramF._beta) < params._betaEps);
+    converged=converged && (betaDiff(oldBeta,newBeta) < params._betaEps);
   }
   String[] warnings=new String[warns.size()];
   warns.toArray(warnings);
