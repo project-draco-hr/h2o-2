@@ -13,7 +13,7 @@ def test_rf_covtype_train_oobe(self):
     h2o_cmd.info_from_inspect(inspect, csvPathname)
     for trial in range(1):
         kwargs = paramDict
-        timeoutSecs = (30 + (kwargs['ntree'] * 10))
+        timeoutSecs = (30 + (kwargs['ntree'] * 20))
         start = time.time()
         rfView = h2o_cmd.runRFOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
