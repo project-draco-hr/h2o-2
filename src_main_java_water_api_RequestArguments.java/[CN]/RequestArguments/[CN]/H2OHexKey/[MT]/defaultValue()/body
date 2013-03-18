@@ -1,9 +1,4 @@
 {
-  try {
-    if (_defaultKey == null)     return null;
-    return ValueArray.value(DKV.get(_defaultKey));
-  }
- catch (  Exception e) {
-    return null;
-  }
+  if (_defaultKey == null)   return null;
+  return DKV.get(_defaultKey).get(ValueArray.class);
 }

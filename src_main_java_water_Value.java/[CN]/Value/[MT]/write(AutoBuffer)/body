@@ -1,5 +1,5 @@
 {
   byte p=_persist;
   if (onICE())   p&=~ON_dsk;
-  return bb.put1(p).put1(_type).putA1(memOrLoad());
+  return bb.put1(p).put2(_type).putA1(memOrLoad());
 }

@@ -3,12 +3,10 @@
   String sk=key.toString();
   Value v=DKV.get(key);
   if (v == null)   throw new IllegalArgumentException("Key " + sk + " not found!");
-  Model M=null;
   try {
-    M=v.get();
+    return scoreModel(v.get(Model.class),colNames,row);
   }
  catch (  Throwable t) {
     throw new IllegalArgumentException("Key " + sk + " is not a Model key");
   }
-  return scoreModel(M,colNames,row);
 }
