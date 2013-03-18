@@ -8,6 +8,6 @@ def pickRandRfParams(paramDict, params):
         params[randomKey] = randomValue
         if (randomKey == 'x'):
             colX = randomValue
-        if (('sample' in params) and (params['sample'] == 100)):
-            params['out_of_bag_error_estimate'] = 0
+        if (('out_of_bag_error_estimate' in params) and ('sample' in params) and (params['sample'] == 100)):
+            params['sample'] = 90
     return colX
