@@ -1,0 +1,8 @@
+{
+  byte[] mem=_bits;
+  int len=Math.max(_dst_off + mem.length,val1 == null ? 0 : val1._max);
+  byte[] bits2=MemoryManager.malloc1(len);
+  if (val1 != null)   System.arraycopy(val1.memOrLoad(),0,bits2,0,val1._max);
+  System.arraycopy(mem,0,bits2,_dst_off,mem.length);
+  return new Value(val1._key,bits2);
+}

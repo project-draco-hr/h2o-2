@@ -12,7 +12,7 @@ setColumnNames(_colNames);
 _skipFirstLine=setup._header;
 this._sep=setup._separator;
 if (_sourceDataset.isArray()) {
-ValueArray ary=ValueArray.value(_sourceDataset);
+ValueArray ary=_sourceDataset.get(ValueArray.class);
 _nrows=new int[(int)ary.chunks()];
 }
 this.invoke(_sourceDataset._key);
