@@ -1,7 +1,7 @@
 def test_categorical_expand_and_probability_output(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     translateList = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u']
-    tryList = [(7919, 53, 'cA', 600), (2659, 1049, 'cB', 600)]
+    tryList = [(7919, 53, 'cA', 600), (2659, 513, 'cB', 600)]
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -18,7 +18,7 @@ def test_categorical_expand_and_probability_output(self):
         for k in paramDict:
             paramDict2[k] = paramDict[k][0]
         y = colCount
-        kwargs = {'y': y, 'max_iter': 50, }
+        kwargs = {'y': y, 'max_iter': 20, }
         kwargs.update(paramDict2)
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
