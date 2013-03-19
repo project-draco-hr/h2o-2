@@ -1,0 +1,21 @@
+def test_rf_params_rand2(self):
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    csvPathname = h2o.find_file('smalldata/space_shuttle_damage.csv')
+    for trial in range(10):
+        params = {'sample': 80, 'gini': 0, 'class_weights': 'yes=1000', 'ntree': 50, 'parallel': 1, 'response_variable': 'damage', 'ignore': 'flight', 'ntree': 25, 'out_of_bag_error_estimate': 1, }
+        print 'params:', params
+        colX = h2o_rf.pickRandRfParams(paramDict, params)
+        print 'params:', params
+        kwargs = params.copy()
+        timeoutSecs = (30 + (15 * ((kwargs['parallel'] and 6) or 10)))
+        start = time.time()
+        rfView = h2o_cmd.runRF(timeoutSecs=timeoutSecs, retryDelaySecs=1, csvPathname=csvPathname, **kwargs)
+        elapsed = (time.time() - start)
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(None, rfView, noprint=True)
+        print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs)), '\n'
+        self.assertEqual(totalScores, 23)
+        self.assertLess(classErrorPctList[0], 82)
+        self.assertLess(classErrorPctList[1], 29)
+        self.assertLess(classification_error, 61)

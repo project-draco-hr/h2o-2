@@ -11,11 +11,13 @@ def test_loop_random_param_covtype(self):
         params = {'y': 5, 'num_cross_validation_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 0, 'beta_epsilon': 0.001, 'max_iter': 3, 'standardize': 1, 'expert': 1, 'lsm_solver': 'GenGradient', }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
-        timeoutSecs = (60 + (kwargs['num_cross_validation_folds'] * 20))
+        timeoutSecs = (120 + (kwargs['num_cross_validation_folds'] * 30))
         timeoutSecs = max(timeoutSecs, (8 * (kwargs['max_iter'] + 1)))
         start = time.time()
+        print 'May not solve. Expanded categorical columns causing a large # cols, small # of rows'
         glm = h2o_cmd.runGLMOnly(timeoutSecs=timeoutSecs, parseKey=parseKey, **kwargs)
-        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        elapsed = (time.time() - start)
+        print 'glm end on ', csvPathname, 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         start = time.time()
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         print 'simpleCheckGLM end on ', csvPathname, 'took', (time.time() - start), 'seconds'
