@@ -5,7 +5,7 @@ def test_B_GenParity1(self):
     for x in xrange(161, 240, 20):
         y = (10000 * x)
         shCmdString = (((('perl ' + h2o.find_file('syn_scripts/parity.pl')) + ' 128 4 ') + str(y)) + ' quad')
-        h2o.spawn_cmd_and_wait('parity.pl', shCmdString.split(), timeout=30)
+        h2o.spawn_cmd_and_wait('parity.pl', shCmdString.split(), timeout=90)
         csvFilename = (('parity_128_4_' + str(x)) + '_quad.data')
         sys.stdout.write('.')
         sys.stdout.flush()
