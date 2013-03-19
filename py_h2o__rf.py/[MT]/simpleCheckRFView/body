@@ -31,11 +31,15 @@ def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
     classErrorPctList = []
     for (classIndex, s) in enumerate(scoresList):
         classSum = sum(s)
-        classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
-        classErrorPct = (100 - classRightPct)
-        classErrorPctList.append(classErrorPct)
-        if (not noprint):
-            print 'class:', classIndex, 'classSum', classSum, 'classErrorPct:', ('%4.2f' % classErrorPct)
+        if (classSum == 0):
+            if (not noprint):
+                print 'class:', classIndex, 'classSum', classSum, '<- why 0?'
+        else:
+            classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
+            classErrorPct = (100 - classRightPct)
+            classErrorPctList.append(classErrorPct)
+            if (not noprint):
+                print 'class:', classIndex, 'classSum', classSum, 'classErrorPct:', ('%4.2f' % classErrorPct)
         totalScores += classSum
     if (not noprint):
         print 'totalScores:', totalScores
