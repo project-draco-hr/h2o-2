@@ -5,7 +5,7 @@
   long rem=size - off;
   if (rem < ValueArray.CHUNK_SZ && off > 0)   return null;
   int sz=(rem >= ValueArray.CHUNK_SZ * 2) ? (int)ValueArray.CHUNK_SZ : (int)rem;
-  Value val=new Value(key,Value.NFS,sz);
+  Value val=new Value(key,sz,Value.NFS);
   val.setdsk();
   return val;
 }

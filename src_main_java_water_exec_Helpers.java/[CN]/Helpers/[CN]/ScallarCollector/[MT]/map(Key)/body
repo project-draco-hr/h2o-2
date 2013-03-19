@@ -1,6 +1,6 @@
 {
   _result=0;
-  ValueArray va=ValueArray.value(_key);
+  ValueArray va=DKV.get(_key).get();
   Column c=va._cols[_col];
   AutoBuffer bits=va.getChunk(key);
   int rowSize=va._rowsize;

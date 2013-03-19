@@ -1,5 +1,4 @@
 {
-  Futures fs=new Futures();
-  readPut(k,is,job,fs);
-  fs.blockForPending();
+  readPut(k,is,job,new Futures()).blockForPending();
+  return k;
 }

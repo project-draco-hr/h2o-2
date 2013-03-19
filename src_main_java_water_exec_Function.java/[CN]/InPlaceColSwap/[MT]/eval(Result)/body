@@ -1,8 +1,8 @@
 {
   Key oldKey=args[0]._key;
   Key newKey=args[2]._key;
-  ValueArray oldAry=ValueArray.value(oldKey);
-  ValueArray newAry=ValueArray.value(newKey);
+  ValueArray oldAry=DKV.get(oldKey).get();
+  ValueArray newAry=DKV.get(newKey).get();
   assert(oldAry != null);
   assert(newAry != null);
   int oldCol=Helpers.checkedColumnIndex(oldAry,args[1]);
@@ -23,7 +23,7 @@
   }
   Result result=Result.temporary();
   ValueArray ary=new ValueArray(result._key,oldAry.numRows(),off,cols);
-  DKV.put(result._key,ary.value());
+  DKV.put(result._key,ary);
   DKV.write_barrier();
   ColSwapTask task=new ColSwapTask(result._key,oldKey,newKey,oldCol,newCol);
   task.invoke(result._key);

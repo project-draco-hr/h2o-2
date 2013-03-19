@@ -2,7 +2,7 @@
   _source=source;
   _start=start;
   _length=length;
-  ValueArray ary=ValueArray.value(source);
+  ValueArray ary=DKV.get(source).get();
   assert(start + length <= ary.numRows());
   _rowSize=ary._rowsize;
 }

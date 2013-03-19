@@ -14,12 +14,11 @@
           int sz=(int)Math.min(1L << 20,size);
           byte[] mem=MemoryManager.malloc1(sz);
           s.readFully(mem);
-          ValueArray ary=new ValueArray(k,size,Value.HDFS).read(new AutoBuffer(mem));
-          ary._persist=Value.HDFS | Value.ON_dsk;
-          val=ary.value();
+          ValueArray ary=new ValueArray(k,0).read(new AutoBuffer(mem));
+          val=new Value(k,ary,Value.HDFS);
         }
  else         if (size >= 2 * ValueArray.CHUNK_SZ) {
-          val=new ValueArray(k,size,Value.HDFS).value();
+          val=new Value(k,new ValueArray(k,size),Value.HDFS);
         }
  else {
           val=new Value(k,(int)size,Value.HDFS);

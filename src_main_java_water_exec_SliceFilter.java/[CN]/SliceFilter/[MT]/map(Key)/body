@@ -1,5 +1,5 @@
 {
-  ValueArray ary=ValueArray.value(_source);
+  ValueArray ary=DKV.get(_source).get();
   long cidx=ValueArray.getChunkIndex(key);
   long startRow=ary.startRow(cidx);
   int rowsInChunk=chunkSize(key,_length * _rowSize,_rowSize) / _rowSize;
