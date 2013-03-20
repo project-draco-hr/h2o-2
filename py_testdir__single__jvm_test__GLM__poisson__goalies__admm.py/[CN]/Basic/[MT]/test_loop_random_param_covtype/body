@@ -11,7 +11,7 @@ def test_loop_random_param_covtype(self):
         params = {'y': 5, 'num_cross_validation_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 0, 'beta_epsilon': 0.001, 'max_iter': 3, 'standardize': 1, 'expert': 1, 'lsm_solver': 'ADMM', }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
-        timeoutSecs = (120 + (kwargs['num_cross_validation_folds'] * 30))
+        timeoutSecs = (180 + (kwargs['num_cross_validation_folds'] * 30))
         timeoutSecs = max(timeoutSecs, (8 * (kwargs['max_iter'] + 1)))
         start = time.time()
         print 'May not solve. Expanded categorical columns causing a large # cols, small # of rows'
