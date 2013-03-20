@@ -12,7 +12,7 @@
     if (f instanceof GLMModel) {
       GLMModel m=(GLMModel)f;
       JsonObject res=new JsonObject();
-      res.add("GLMModel",m.toJson());
+      res.add(GLMModel.NAME,m.toJson());
       Response r=Response.done(res);
       r.setBuilder("",new GLMBuilder(m));
       return r;
@@ -20,8 +20,9 @@
     if (f instanceof KMeansModel) {
       KMeansModel m=(KMeansModel)f;
       JsonObject res=new JsonObject();
-      res.add("KMeansModel",m.toJson());
+      res.add(KMeansModel.NAME,m.toJson());
       Response r=Response.done(res);
+      r.setBuilder(KMeansModel.NAME,new KMeans.Builder(m));
       return r;
     }
     if (f instanceof RFModel) {
