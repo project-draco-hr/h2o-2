@@ -1,5 +1,5 @@
 def random_forest(self, data_key, trees, timeoutSecs=300, **kwargs):
-    params_dict = {'data_key': data_key, 'ntree': trees, 'model_key': 'pytest_model', }
+    params_dict = {'data_key': data_key, 'ntree': trees, 'model_key': 'pytest_model', 'out_of_bag_error_estimate': 1, }
     browseAlso = kwargs.pop('browseAlso', False)
     params_dict.update(kwargs)
     print '\nrandom_forest parameters:', params_dict

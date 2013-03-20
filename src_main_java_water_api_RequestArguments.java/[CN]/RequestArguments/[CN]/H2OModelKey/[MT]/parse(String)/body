@@ -1,12 +1,6 @@
 {
-  if (input.indexOf(_filter_string) == -1)   throw new IllegalArgumentException("Key " + input + " is not a Model key");
   Key k=Key.make(input);
   Value v=DKV.get(k);
   if (v == null)   throw new IllegalArgumentException("Key " + input + " not found!");
-  try {
-    return v.get();
-  }
- catch (  Throwable t) {
-    throw new IllegalArgumentException("Key " + input + " is not a Model key");
-  }
+  return v.get();
 }

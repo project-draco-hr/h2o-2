@@ -1,3 +1,5 @@
 {
-  return get(null);
+  short id=(short)get2();
+  if (id == TypeMap.NULL)   return null;
+  return TypeMap.newInstance(id).read(this);
 }

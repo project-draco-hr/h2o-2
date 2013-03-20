@@ -1,5 +1,5 @@
 {
-  ValueArray va=ValueArray.value(_key);
+  ValueArray va=DKV.get(_key).get();
   long cidx=ValueArray.getChunkIndex(key);
   int rows=va.rpc(cidx);
   long start=va.startRow(cidx);

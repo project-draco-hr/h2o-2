@@ -28,7 +28,7 @@ synchronized (STORE) {
       Key key=(Key)ok;
       if (!(ov instanceof Value))       continue;
       Value val=(Value)ov;
-      byte[] m=val.mem();
+      byte[] m=val.rawMem();
       if (m == null)       continue;
       if (val.isArray() && (val._persist & Value.BACKEND_MASK) != Value.ICE)       continue;
       long touched=val._lastAccessedTime;

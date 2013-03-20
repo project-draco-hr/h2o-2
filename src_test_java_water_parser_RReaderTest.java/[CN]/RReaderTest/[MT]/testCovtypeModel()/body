@@ -1,10 +1,10 @@
 {
   Key prok=TestUtil.loadAndParseKey("covtype.hex","smalldata/covtype/covtype.20k.data");
-  ValueArray pro=ValueArray.value(DKV.get(prok));
+  ValueArray pro=DKV.get(prok).get();
   File file=TestUtil.find_test_file("smalldata/test/rmodels/covtype-rf-50tree-as-factor-X5.rdata");
   Key key=Key.make("covtypeModel");
   RReader.run(key,new FileInputStream(file));
-  RModel model=UKV.get(key,new RModel());
+  RFModel model=UKV.get(key);
   int[] map=new int[pro._cols.length];
   for (int i=0; i < map.length; i++)   map[i]=i;
   final int classCol=map.length - 1;

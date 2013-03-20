@@ -1,5 +1,5 @@
 {
-  ValueArray ary=ValueArray.value(DKV.get(_arykey));
+  ValueArray ary=DKV.get(_arykey).get(ValueArray.class);
   AutoBuffer bits=ary.getChunk(key);
   final int rows=bits.remaining() / ary._rowsize;
   ValueArray.Column A=ary._cols[_colA];

@@ -1,6 +1,6 @@
 {
   try {
-    ValueArray oldAry=ValueArray.value(args[0]._key);
+    ValueArray oldAry=DKV.get(args[0]._key).get();
     GetEnumTask etask=new GetEnumTask(args[0]._key,args[0].colIndex());
     etask.invoke(args[0]._key);
     if (etask._domain.isKilled())     throw new Exception("More than 65535 unique values found. The column is too big for enums.");
@@ -20,13 +20,13 @@
     c._n=oldCol._n;
     Result result=Result.temporary();
     ValueArray ary=new ValueArray(result._key,oldAry.numRows(),c._size,new Column[]{c});
-    DKV.put(result._key,ary.value());
+    DKV.put(result._key,ary);
     DKV.write_barrier();
     PackToEnumTask ptask=new PackToEnumTask(result._key,args[0]._key,args[0].colIndex(),etask._domain);
     ptask.invoke(result._key);
     c._mean=ptask._tot / c._n;
     ary=new ValueArray(result._key,oldAry.numRows(),c._size,new Column[]{c});
-    DKV.put(result._key,ary.value());
+    DKV.put(result._key,ary);
     DKV.write_barrier();
     return result;
   }

@@ -1,6 +1,0 @@
-def test_A_claim_prediction_binomial(self):
-    print 'nan/fail to solve if alpha=0/lambda=0. Using alpha=0/lambda=0.5'
-    csvPathname = h2o.find_file('smalldata/allstate/claim_prediction_train_set_10000_int.csv.gz')
-    kwargs = {'family': 'poisson', 'y': 'Claim_Amount', 'alpha': 0, 'lambda': 0.5, }
-    glm = h2o_cmd.runGLM(timeoutSecs=50, csvPathname=csvPathname, **kwargs)
-    h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

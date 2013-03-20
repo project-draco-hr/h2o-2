@@ -1,10 +1,10 @@
 {
   Key prok=TestUtil.loadAndParseKey("prostate.hex","smalldata/logreg/prostate.csv");
-  ValueArray pro=ValueArray.value(DKV.get(prok));
+  ValueArray pro=DKV.get(prok).get();
   File file=TestUtil.find_test_file("smalldata/test/rmodels/prostate-rf-10tree-asFactorCapsule.rdata");
   Key key=Key.make("prostateModel");
   RReader.run(key,new FileInputStream(file));
-  RModel model=UKV.get(key,new RModel());
+  RFModel model=UKV.get(key);
   int[] map=model.columnMapping(pro.colNames());
   final int classCol=1;
   map[map.length - 1]=classCol;

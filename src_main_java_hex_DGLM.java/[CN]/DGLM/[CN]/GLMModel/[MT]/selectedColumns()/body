@@ -1,0 +1,10 @@
+{
+  if (DKV.get(_dataKey) == null)   return null;
+  ValueArray ary=DKV.get(_dataKey).get();
+  HashSet<String> colNames=new HashSet<String>();
+  for (  Column c : _va._cols)   colNames.add(c._name);
+  int[] res=new int[colNames.size()];
+  int j=0;
+  for (int i=0; i < ary._cols.length; ++i)   if (colNames.contains(ary._cols[i]._name))   res[j++]=i;
+  return res;
+}

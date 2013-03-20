@@ -2,10 +2,10 @@
   Key k1=null, k2=null, kg=null;
   try {
     k1=loadAndParseKey("kaggle.hex","smalldata/kaggle/creditsample-training.csv.gz");
-    ValueArray.value(k1);
+    ValueArray va1=DKV.get(k1).get();
     k2=executeExpression("g=randomFilter(kaggle.hex,5432,1232123)");
     kg=Key.make("g");
-    ValueArray va2=ValueArray.value(kg);
+    ValueArray va2=DKV.get(kg).get();
     assertEquals(va2.data(0,0),5);
     assertEquals(va2.data(1,0),29);
     assertEquals(va2.data(2,0),46);

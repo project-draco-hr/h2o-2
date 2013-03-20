@@ -1,5 +1,5 @@
 {
-  ValueArray va=ValueArray.value(_key);
+  ValueArray va=DKV.get(_key).get();
   Column c=va._cols[_col];
   double mean=c._mean;
   AutoBuffer bits=va.getChunk(key);

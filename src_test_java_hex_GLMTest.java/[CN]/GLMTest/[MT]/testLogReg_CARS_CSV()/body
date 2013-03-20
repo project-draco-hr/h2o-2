@@ -4,7 +4,7 @@
     k1=loadAndParseKey("h.hex","smalldata/cars.csv");
     k2=Exec.exec("colSwap(h.hex,2,h.hex$cylinders==3?1:0)","h2.hex");
     int[] cols=new int[]{3,4,5,6,7,2};
-    ValueArray va=ValueArray.value(DKV.get(k2));
+    ValueArray va=DKV.get(k2).get();
     LSMSolver lsmsx=new ADMMSolver(0,0.0);
     JsonObject glm=computeGLM(Family.binomial,lsmsx,va,false,cols);
     JsonObject coefs=glm.get("coefficients").getAsJsonObject();
