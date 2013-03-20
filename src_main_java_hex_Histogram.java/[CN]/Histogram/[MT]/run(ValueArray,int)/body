@@ -1,0 +1,29 @@
+{
+  long start=System.currentTimeMillis();
+  OutlineTask t1=new OutlineTask();
+  t1._arykey=ary._key;
+  t1._col=col;
+  t1.invoke(ary._key);
+  long pass1=System.currentTimeMillis();
+  double sd=Math.sqrt(t1._sumsq / t1._n - (t1._sum / t1._n) * (t1._sum / t1._n));
+  double binsz=3.5 * sd / Math.cbrt(t1._n);
+  int nbin=(int)((t1._max - t1._min) / binsz);
+  Bins bins=Bins.makePrettyBins(t1._min,t1._max,nbin);
+  BinningTask t2=new BinningTask();
+  t2._hist=bins;
+  t2._arykey=ary._key;
+  t2._col=col;
+  t2.invoke(ary._key);
+  long pass2=System.currentTimeMillis();
+  JsonObject res=new JsonObject();
+  res.addProperty("Key",ary._key.toString());
+  res.addProperty("Pass1Msecs",pass1 - start);
+  res.addProperty("Pass2Msecs",pass2 - pass1);
+  res.addProperty("Rows",t1._n);
+  res.addProperty("SD",sd);
+  res.addProperty("Hist_Start",bins._start);
+  res.addProperty("Hist_End",bins._end);
+  res.addProperty("Hist_Bins",bins._bins.length);
+  for (int i=0; i < bins._bins.length; i++)   res.addProperty("Bin_" + i,bins._bins[i]);
+  return res;
+}
