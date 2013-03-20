@@ -44,14 +44,14 @@
     @Override public Iterator<GLMModel> iterator(){
       return new Iterator<GLMModel>(){
         int _idx=0;
-        @Override public void remove(){
-          throw new UnsupportedOperationException();
-        }
         @Override public GLMModel next(){
           return DKV.get(keys[_idx++]).get();
         }
         @Override public boolean hasNext(){
           return _idx < N;
+        }
+        @Override public void remove(){
+          throw new UnsupportedOperationException();
         }
       }
 ;

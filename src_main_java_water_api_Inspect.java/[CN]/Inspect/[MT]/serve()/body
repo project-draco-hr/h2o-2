@@ -11,6 +11,12 @@
     r.setBuilder("",new GLMBuilder(m));
     return r;
   }
+  if (f instanceof hex.GLMGrid.GLMModels) {
+    hex.GLMGrid.GLMModels m=(hex.GLMGrid.GLMModels)f;
+    JsonObject resp=new JsonObject();
+    resp.addProperty(Constants.DEST_KEY,val._key.toString());
+    return GLMGridProgress.redirect(resp,null,val._key);
+  }
   if (f instanceof KMeansModel) {
     KMeansModel m=(KMeansModel)f;
     JsonObject res=new JsonObject();
