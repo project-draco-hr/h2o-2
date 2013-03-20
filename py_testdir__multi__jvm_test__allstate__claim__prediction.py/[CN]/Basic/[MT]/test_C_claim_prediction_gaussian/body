@@ -1,5 +1,0 @@
-def test_C_claim_prediction_gaussian(self):
-    csvPathname = h2o.find_file('smalldata/allstate/claim_prediction_train_set_10000_int.csv.gz')
-    kwargs = {'family': 'gaussian', 'y': 'Claim_Amount', }
-    glm = h2o_cmd.runGLM(timeoutSecs=50, csvPathname=csvPathname, **kwargs)
-    h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

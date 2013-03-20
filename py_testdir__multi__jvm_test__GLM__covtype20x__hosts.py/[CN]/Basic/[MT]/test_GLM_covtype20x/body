@@ -1,8 +1,8 @@
 def test_GLM_covtype20x(self):
     if localhost:
-        csvFilenameList = [('covtype20x.data', 240, 'cA'), ('covtype20x.data', 240, 'cB'), ('covtype20x.data', 240, 'cC'), ('covtype20x.data', 240, 'cD')]
+        csvFilenameList = [('covtype20x.data', 240, 'cA')]
     else:
-        csvFilenameList = [('covtype20x.data', 240, 'cA'), ('covtype200x.data', 1000, 'cE')]
+        csvFilenameList = [('covtype20x.data', 240, 'cA')]
     h2b.browseTheCloud()
     importFolderPath = '/home/0xdiag/datasets'
     h2i.setupImportFolder(None, importFolderPath)
@@ -20,7 +20,7 @@ def test_GLM_covtype20x(self):
         else:
             x = ''
         print 'WARNING: max_iter set to 8 for benchmark comparisons'
-        max_iter = 8
+        max_iter = 50
         y = '54'
         kwargs = {'x': x, 'y': y, 'family': 'binomial', 'link': 'logit', 'num_cross_validation_folds': 0, 'case_mode': '=', 'case': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
         kwargs.update({'alpha': 0, 'lambda': 0, })
