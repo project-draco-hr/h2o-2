@@ -17,18 +17,11 @@
       Key key=Key.make();
       keys[i]=key;
       DKV.put(key,new Value(key,buffer.buf()));
-      if (i % 128 == 0) {
-        RModel model=new RModel();
-        model._progress=i / (float)num_trees;
-      }
     }
-    RModel model=new RModel(dest,headers,classes,keys,1,100.0f);
-    model._progress=1f;
+    RFModel model=new RFModel(dest,headers,classes,keys,1,100.0f);
     UKV.put(dest,model);
   }
  catch (  Exception ex) {
-    RModel model=new RModel();
-    model._error=ex.toString();
-    UKV.put(dest,model);
+    UKV.put(dest,new Job.Fail(ex.toString()));
   }
 }

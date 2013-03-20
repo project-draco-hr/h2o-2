@@ -1,6 +1,6 @@
 {
   Key key=loadAndParseKey("poker.hex","smalldata/poker/poker-hand-testing.data");
-  ValueArray data=ValueArray.value(key);
+  ValueArray data=DKV.get(key).get();
   UnbalancedClass[] uClasses=MinorityClasses.extractUnbalancedClasses(data,10,new int[]{0,9});
   assertTrue(uClasses.length == 2);
   assertTrue(uClasses[0]._chunks.length == 6);

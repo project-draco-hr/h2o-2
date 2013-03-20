@@ -1,0 +1,12 @@
+{
+  Freezable f=GOLD[id];
+  if (f == null) {
+    try {
+      GOLD[id]=f=(Freezable)Class.forName(CLAZZES[id]).newInstance();
+    }
+ catch (    Exception e) {
+      throw new Error(e);
+    }
+  }
+  return f.newInstance();
+}

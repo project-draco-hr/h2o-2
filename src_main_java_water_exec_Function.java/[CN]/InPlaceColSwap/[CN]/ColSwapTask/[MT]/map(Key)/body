@@ -1,5 +1,5 @@
 {
-  ValueArray result=ValueArray.value(_resultKey);
+  ValueArray result=DKV.get(_resultKey).get();
   long cidx=ValueArray.getChunkIndex(key);
   int rowSize=result._rowsize;
   long rowOffset=result.startRow(cidx);

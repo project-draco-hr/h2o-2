@@ -5,6 +5,9 @@
   for (  Key key : H2O.keySet()) {
     if (filter != null && key.toString().indexOf(filter) == -1)     continue;
     if (!key.user_allowed())     continue;
+    Value val=DKV.get(key);
+    if (val == null)     continue;
+    if (_typeid != 0 && val.type() != _typeid)     continue;
     if (!shouldIncludeKey(key))     continue;
     keys[len++]=key;
     if (len == keys.length)     break;

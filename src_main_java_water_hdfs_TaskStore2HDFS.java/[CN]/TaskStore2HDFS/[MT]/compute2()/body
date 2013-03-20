@@ -1,6 +1,6 @@
 {
   String path=null;
-  ValueArray ary=ValueArray.value(_arykey);
+  ValueArray ary=DKV.get(_arykey).get();
   Key self=selfKey();
   while (_indexFrom < ary.chunks()) {
     Key ckey=ary.getChunkKey(_indexFrom++);
