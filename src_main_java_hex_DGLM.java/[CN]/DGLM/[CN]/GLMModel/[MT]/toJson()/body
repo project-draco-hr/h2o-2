@@ -14,7 +14,8 @@
   JsonArray colNames=new JsonArray();
   for (int i=0; i < _va._cols.length - 1; i++) {
     ValueArray.Column C=_va._cols[i];
-    if (C._domain != null)     for (    String d : C._domain) {
+    if (C._domain != null)     for (int j=1; j < C._domain.length; ++j) {
+      String d=C._domain[j];
       String cname=C._name + "." + d;
       colNames.add(new JsonPrimitive(cname));
       if (_standardized)       normalizedCoefs.addProperty(cname,_normBeta[idx]);

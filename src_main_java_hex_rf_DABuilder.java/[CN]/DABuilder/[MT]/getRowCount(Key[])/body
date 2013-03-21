@@ -1,6 +1,6 @@
 {
   int num_rows=0;
-  ValueArray ary=ValueArray.value(_drf._rfmodel._dataKey);
+  ValueArray ary=DKV.get(_drf._rfmodel._dataKey).get();
   for (  Key key : keys)   if (key.home())   num_rows+=ary.rpc(ValueArray.getChunkIndex(key));
   return num_rows;
 }

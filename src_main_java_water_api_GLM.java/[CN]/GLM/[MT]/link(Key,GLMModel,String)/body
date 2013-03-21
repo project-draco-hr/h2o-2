@@ -1,9 +1,12 @@
 {
+  int[] colIds=m.selectedColumns();
+  if (colIds == null)   return "";
   try {
     StringBuilder sb=new StringBuilder("<a href='GLM.query?");
     sb.append(KEY + "=" + k.toString());
     sb.append("&y=" + m.responseName());
-    sb.append("&x=" + URLEncoder.encode(m.xcolNames(),"utf8"));
+    sb.append("&x=" + colIds[0]);
+    for (int i=1; i < colIds.length - 1; ++i)     sb.append("," + colIds[i]);
     sb.append("&family=" + m._glmParams._family.toString());
     sb.append("&link=" + m._glmParams._link.toString());
     sb.append("&lambda=" + m._solver._lambda);

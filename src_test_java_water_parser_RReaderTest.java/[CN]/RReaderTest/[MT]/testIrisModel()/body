@@ -1,10 +1,10 @@
 {
   Key irisk=TestUtil.loadAndParseKey("iris.hex","smalldata/iris/iris2.csv");
-  ValueArray iris=ValueArray.value(DKV.get(irisk));
+  ValueArray iris=DKV.get(irisk).get();
   File file=TestUtil.find_test_file("smalldata/test/rmodels/iris_x-iris-1-4_y-species_ntree-500.rdata");
   Key key=Key.make("irisModel");
   RReader.run(key,new FileInputStream(file));
-  RModel model=UKV.get(key,new RModel());
+  RFModel model=UKV.get(key);
   int[] map=model.columnMapping(iris.colNames());
   Assert.assertTrue(Model.isCompatible(map));
   double[] row=new double[map.length];

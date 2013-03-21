@@ -2,9 +2,9 @@
   Value val=DKV.get(key,32,H2O.GET_KEY_PRIORITY);
   if (val == null)   return;
   if (val.isArray()) {
-    ValueArray ary=ValueArray.value(val);
+    ValueArray ary=val.get();
     for (long i=0; i < ary.chunks(); i++)     DKV.remove(ary.getChunkKey(i),fs);
   }
-  if (key._kb[0] == Key.KEY_OF_KEYS)   for (  Key k : val.flatten())   remove(k,fs);
+  if (key._kb[0] == Key.KEY_OF_KEYS)   for (  Key k : key.flatten())   remove(k,fs);
   DKV.remove(key,fs);
 }

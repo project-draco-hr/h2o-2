@@ -1,8 +1,8 @@
 {
   SigmaCalc sc=new SigmaCalc(key,col);
   sc.invoke(key);
-  ValueArray va=ValueArray.value(key);
+  ValueArray va=DKV.get(key).get();
   va._cols[col]._sigma=sc.sigma();
-  DKV.put(va._key,va.value());
+  DKV.put(va._key,va);
   DKV.write_barrier();
 }

@@ -1,6 +1,6 @@
 {
   if (r._type != Result.Type.rtKey)   throw new Exception("Expected vector (value)");
   if (r.rawColIndex() >= 0)   return;
-  ValueArray va=ValueArray.value(DKV.get(r._key));
+  ValueArray va=DKV.get(r._key).get();
   if (va.numCols() != 1)   throw new Exception("Expected single column vector, but " + va.numCols() + " columns found.");
 }

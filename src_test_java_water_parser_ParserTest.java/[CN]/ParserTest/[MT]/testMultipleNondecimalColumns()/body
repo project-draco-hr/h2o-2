@@ -6,7 +6,7 @@
     Key key=k("MultipleNondecimalColumns",dataset);
     Key r=Key.make();
     ParseDataset.parse(r,DKV.get(key));
-    ValueArray va=ValueArray.value(DKV.get(r));
+    ValueArray va=DKV.get(r).get();
     String[] cd=va._cols[2]._domain;
     Assert.assertEquals("one",cd[0]);
     Assert.assertEquals("three",cd[1]);

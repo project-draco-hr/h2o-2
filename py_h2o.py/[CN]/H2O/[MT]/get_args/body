@@ -5,6 +5,12 @@ def get_args(self):
             raise Exception(('java_heap_GB <1 or >63  (GB): %s' % self.java_heap_GB))
         args += [('-Xms%dG' % self.java_heap_GB)]
         args += [('-Xmx%dG' % self.java_heap_GB)]
+    if (self.java_heap_MB is not None):
+        if (1 > self.java_heap_MB > 63000):
+            raise Exception(('java_heap_MB <1 or >63000  (MB): %s' % self.java_heap_MB))
+        args += [('-Xms%dm' % self.java_heap_MB)]
+        args += [('-Xmx%dm' % self.java_heap_MB)]
+        print 'crikey', self.java_heap_MB
     if (self.java_extra_args is not None):
         args += [('%s' % self.java_extra_args)]
     if self.use_debugger:
@@ -25,9 +31,7 @@ def get_args(self):
         args += [('--flatfile=' + self.flatfile)]
     args += [('--ice_root=%s' % self.get_ice_dir()), ('--name=' + cloud_name())]
     if self.use_hdfs:
-        args += [('-hdfs hdfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version), ('-hdfs_root=' + self.hdfs_root)]
-        if self.hdfs_nopreload:
-            args += [('-hdfs_nopreload ' + self.hdfs_nopreload)]
+        args += [('-hdfs hdfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
         if self.hdfs_config:
             args += [('-hdfs_config ' + self.hdfs_config)]
     if (not self.sigar):

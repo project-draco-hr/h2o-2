@@ -1,0 +1,32 @@
+{
+  Key k1=null;
+  try {
+    k1=loadAndParseKey("h.hex","smalldata/hhp_107_01.data.gz");
+    final int class_col=106;
+    ValueArray va=DKV.get(k1).get();
+    LSMSolver lsms=new ADMMSolver(1e-5,0.5);
+    GLMParams glmp=new GLMParams(Family.binomial);
+    int[] cols=new int[va._cols.length];
+    cols(cols,class_col,-1);
+    GLMModel m=compute_glm_score(va,cols,glmp,lsms,0.5,"initial");
+    GLMModel best=m.isSolved() ? m : null;
+    cols=new int[va._cols.length - 1];
+    cols(cols,class_col,-1);
+    for (int skip=0; skip < va._cols.length; skip++) {
+      if (skip != class_col) {
+        cols(cols,class_col,skip);
+        m=compute_glm_score(va,cols,glmp,lsms,0.5,"ignoring col " + skip);
+        if (better(best,m)) {
+          best=m;
+          System.out.println("Picking better model");
+        }
+      }
+    }
+    cols(cols,class_col,0);
+    compute_glm_score(va,cols,glmp,lsms,0.5,"ignoring col " + 0);
+    for (double t=0.0; t <= 1.0; t+=0.1)     compute_glm_score(va,cols,glmp,lsms,t,"thresh=" + t);
+  }
+  finally {
+    UKV.remove(k1);
+  }
+}

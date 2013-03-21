@@ -7,7 +7,7 @@
   for (int i=0; i < colIds.length - 1; i++) {
     _colCatMap[i]=len;
     ValueArray.Column C=ary._cols[colIds[i]];
-    len+=(expandCat && C._domain != null) ? C._domain.length : 1;
+    len+=(expandCat && C._domain != null) ? C._domain.length - 1 : 1;
   }
   _colCatMap[colIds.length - 1]=len++;
   _colCatMap[colIds.length]=len;

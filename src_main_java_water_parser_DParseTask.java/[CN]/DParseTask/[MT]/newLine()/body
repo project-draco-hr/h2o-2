@@ -1,17 +1,2 @@
 {
-  ++_myrows;
-  if (_phase == Pass.TWO) {
-    while (_colIdx < _ncolumns)     addInvalidCol(_colIdx);
-    _colIdx=0;
-    if (_ab.eof()) {
-      _outputStreams2[_outputIdx].store();
-      ++_outputIdx;
-      if (_outputIdx < _outputStreams2.length) {
-        _ab=_outputStreams2[_outputIdx].initialize();
-      }
- else {
-        _ab=null;
-      }
-    }
-  }
 }

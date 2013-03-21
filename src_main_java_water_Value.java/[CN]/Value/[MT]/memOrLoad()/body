@@ -1,6 +1,8 @@
 {
   byte[] mem=_mem;
   if (mem != null)   return mem;
+  Freezable pojo=_pojo;
+  if (pojo != null)   return (_mem=pojo.write(new AutoBuffer()).buf());
   if (_max == 0)   return (_mem=new byte[0]);
   return (_mem=loadPersist());
 }

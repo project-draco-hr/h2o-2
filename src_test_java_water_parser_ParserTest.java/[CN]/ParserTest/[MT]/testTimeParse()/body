@@ -3,6 +3,6 @@
   Key okey=Key.make("bestbuy.hex");
   ParseDataset.parse(okey,DKV.get(fkey));
   UKV.remove(fkey);
-  ValueArray va=ValueArray.value(DKV.get(okey));
+  ValueArray va=DKV.get(okey).get();
   UKV.remove(okey);
 }

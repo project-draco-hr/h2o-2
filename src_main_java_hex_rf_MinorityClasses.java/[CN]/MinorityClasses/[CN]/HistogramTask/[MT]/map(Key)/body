@@ -1,5 +1,5 @@
 {
-  ValueArray ary=ValueArray.value(_aryKey);
+  ValueArray ary=DKV.get(_aryKey).get();
   _histogram=new int[H2O.CLOUD.size()][_n];
   AutoBuffer bits=ary.getChunk(key);
   Column c=ary._cols[_classIdx];

@@ -13,7 +13,7 @@
     if (!(ok instanceof Key))     continue;
     if (!(ov instanceof Value))     continue;
     Value val=(Value)ov;
-    byte[] m=val.mem();
+    byte[] m=val.rawMem();
     if (m == null)     continue;
     if (val.isArray() && (val._persist & Value.BACKEND_MASK) != Value.ICE)     continue;
     cached+=m.length;
