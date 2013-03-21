@@ -1,5 +1,5 @@
 {
-  ValueArray ary=ValueArray.value(_aryKey);
+  ValueArray ary=DKV.get(_aryKey).get();
   AutoBuffer bits=ary.getChunk(key);
   Column c=ary._cols[_colIndex];
   final int rowsInChunk=ary.rpc(ValueArray.getChunkIndex(key));

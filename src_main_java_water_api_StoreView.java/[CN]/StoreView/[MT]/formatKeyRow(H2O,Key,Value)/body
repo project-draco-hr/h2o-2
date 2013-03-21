@@ -8,7 +8,7 @@
   int cols=-1;
   String str="";
   if (val.isArray()) {
-    ValueArray ary=ValueArray.value(val);
+    ValueArray ary=val.get();
     if (ary._cols.length > 1 || ary._cols[0]._size != 1) {
       rows=ary._numrows;
       cols=ary._cols.length;

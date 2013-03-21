@@ -3,7 +3,7 @@
   Key okey=Key.make("HTWO-87-two-lines-dataset.hex");
   ParseDataset.parse(okey,DKV.get(fkey));
   UKV.remove(fkey);
-  ValueArray val=ValueArray.value(DKV.get(okey));
+  ValueArray val=DKV.get(okey).get();
   assertEquals("Number of chunks == 1",1,val.chunks());
   assertEquals("Number of rows   == 2",2,val._numrows);
   assertEquals("Number of cols   == 9",9,val._cols.length);
@@ -19,7 +19,7 @@
     final Key modelKey=Key.make("model");
     DRFFuture result=hex.rf.DRF.execute(modelKey,cols,val,ntrees,depth,1.0f,(short)1024,statType,seed,true,null,-1,false,null,0,0);
     result.get();
-    RFModel model=UKV.get(modelKey,new RFModel());
+    RFModel model=UKV.get(modelKey);
     assertEquals("Number of classes == 1",1,model.classes());
     assertTrue("Number of trees > 0 ",model.size() > 0);
     model.deleteKeys();

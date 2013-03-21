@@ -16,8 +16,7 @@
     Number n=elm.getAsNumber();
     if (n instanceof Double) {
       Double d=(Double)n;
-      if (Double.isNaN(d))       return "";
-      return _format.get().format(d);
+      return format(d);
     }
     return elm.getAsString();
   }

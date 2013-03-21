@@ -14,8 +14,9 @@
       throw H2O.unimpl();
     }
  else     if (what.rawColIndex() != -1) {
-      ValueArray v=ValueArray.value(what._key);
-      if (v == null)       throw new EvaluationException(pos,"Key " + what._key + " not found");
+      Value v1=DKV.get(what._key);
+      if (v1 == null)       throw new EvaluationException(pos,"Key " + what._key + " not found");
+      ValueArray v=v1.get();
       int col=what.rawColIndex();
       Column c=v._cols[col];
       VABuilder b=new VABuilder(to.toString(),v.numRows()).addColumn(c._name,c._size,c._scale,c._min,c._max,c._mean,c._sigma).createAndStore(to);
@@ -23,11 +24,12 @@
       da.invoke(to);
     }
  else {
-      ValueArray v=ValueArray.value(what._key);
-      if (v == null)       throw new EvaluationException(pos,"Key " + what._key + " not found");
+      Value v1=DKV.get(what._key);
+      if (v1 == null)       throw new EvaluationException(pos,"Key " + what._key + " not found");
+      ValueArray v=v1.get();
       ValueArray r=v.clone();
       r._key=to;
-      DKV.put(to,r.value());
+      DKV.put(to,r);
       DKV.write_barrier();
       MRTask copyTask=new MRTask(){
         @Override public void map(        Key fromk){

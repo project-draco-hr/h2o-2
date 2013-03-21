@@ -1,6 +1,6 @@
 {
   long srcIdx=ValueArray.getChunkIndex(key);
-  ValueArray srcAry=ValueArray.value(DKV.get(_src));
+  ValueArray srcAry=DKV.get(_src).get();
   final int rows=srcAry.rpc(srcIdx);
   AutoBuffer srcBits=srcAry.getChunk(key);
   AutoBuffer dstBits=new AutoBuffer(srcBits.remaining());
