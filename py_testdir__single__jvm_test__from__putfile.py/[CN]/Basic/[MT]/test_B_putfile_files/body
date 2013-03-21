@@ -1,18 +1,19 @@
 def test_B_putfile_files(self):
     timeoutSecs = 500
-    csvFilenameList = [('covtype.data', 1), ('covtype20x.data', 1)]
+    csvFilenameList = [('covtype.data', 'UCI/UCI-large/covtype/covtype.data', 1)]
     h2b.browseTheCloud()
-    for (csvFilename, trees) in csvFilenameList:
-        csvPathname = h2o.find_file(('/home/0xdiag/datasets/' + csvFilename))
-        parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key=csvFilename, timeoutSecs=500)
+    for (csvFilename, datasetPath, trees) in csvFilenameList:
+        csvPathname = h2o.find_dataset(datasetPath)
+        node = h2o.nodes[0]
+        key = node.put_file(csvPathname, key=csvFilename, timeoutSecs=timeoutSecs)
+        inspect1 = h2o_cmd.runInspect(key=csvFilename)
+        parseKey = node.parse(key, timeoutSecs=500)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
+        inspect2 = h2o_cmd.runInspect(key=parseKey['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
         if (trees is not None):
             RFview = h2o_cmd.runRFOnly(trees=trees, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
-        h2b.browseJsonHistoryAsUrlLastMatch('RFView')
-        time.sleep(10)
         sys.stdout.write('.')
         sys.stdout.flush()
