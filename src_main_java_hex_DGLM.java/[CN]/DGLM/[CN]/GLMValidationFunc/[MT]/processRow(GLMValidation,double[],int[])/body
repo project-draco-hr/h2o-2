@@ -1,2 +1,28 @@
 {
+  ++res._n;
+  double yr=x[x.length - 1];
+  x[x.length - 1]=1.0;
+  if (_glmp._caseMode != CaseMode.none)   yr=(_glmp._caseMode.isCase(yr,_glmp._caseVal)) ? 1 : 0;
+  if (yr == 1)   ++res._caseCount;
+  double ym=0;
+  for (int i=0; i < x.length; ++i)   ym+=_beta[indexes[i]] * x[i];
+  ym=_glmp._link.linkInv(ym);
+  res._deviance+=_glmp._family.deviance(yr,ym);
+  res._nullDeviance+=_glmp._family.deviance(yr,_ymu);
+  if (_glmp._family == Family.poisson) {
+    res._err+=(ym - yr) * (ym - yr);
+    long y=(long)yr;
+    double logfactorial=0;
+    for (long i=2; i <= y; ++i)     logfactorial+=Math.log(i);
+    res._aic+=(yr * Math.log(ym) - logfactorial - ym);
+  }
+ else   if (_glmp._family == Family.binomial) {
+    if (yr < 0 || yr > 1)     throw new Error("response variable value out of range: " + yr);
+    int i=0;
+    for (    double t : _thresholds) {
+      int p=ym >= t ? 1 : 0;
+      res._cm[i++].add((int)yr,p);
+    }
+  }
+ else   res._err+=(ym - yr) * (ym - yr);
 }
