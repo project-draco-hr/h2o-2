@@ -1,4 +1,4 @@
-def parseImportS3File(node=None, csvFilename='covtype.data', path='test-s3-integration', key2=None, timeoutSecs=30, retryDelaySecs=0.5):
+def parseImportS3File(node=None, csvFilename='covtype.data', path='test-s3-integration', key2=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=1, pollTimeoutSecs=15):
     if (not node):
         node = h2o.nodes[0]
     if (not csvFilename):
@@ -9,6 +9,6 @@ def parseImportS3File(node=None, csvFilename='covtype.data', path='test-s3-integ
     else:
         myKey2 = key2
     print 'Waiting for the slow parse of the file:', csvFilename
-    parseKey = node.parse(csvPathnameForH2O, myKey2, timeoutSecs, retryDelaySecs)
+    parseKey = node.parse(csvPathnameForH2O, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
     print '\nParse result:', parseKey
     return parseKey
