@@ -8,16 +8,18 @@ def test_sort_of_prostate_with_row_schmoo(self):
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON'
     rowData = rand_rowData()
     print 'Hold on, creating a large base file, that we then append rows to'
-    write_syn_dataset(csvPathname, 1000000, headerData, rowData)
+    totalRows = 1000000
+    write_syn_dataset(csvPathname, totalRows, headerData, rowData)
     print 'This is the same format/data file used by test_same_parse, but the non-gzed version'
     print '\nSchmoo the # of rows'
     for trial in range(75):
         rowData = rand_rowData()
         num = random.randint(4096, 5096)
         append_syn_dataset(csvPathname, rowData, num)
+        totalRows += num
         start = time.time()
         key = ((csvFilename + '_') + str(trial))
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         key = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=70, pollTimeoutSecs=60, noPoll=True)
-        print 'trial #', trial, 'with num rows:', num, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
