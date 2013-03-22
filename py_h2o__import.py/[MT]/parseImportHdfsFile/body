@@ -1,4 +1,4 @@
-def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600, retryDelaySecs=1.0):
+def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600, retryDelaySecs=2, initialDelaySecs=1, pollTimeoutSecs=60):
     if (not csvFilename):
         raise Exception('No csvFilename parameter in parseImportHdfsFile')
     if (not node):
