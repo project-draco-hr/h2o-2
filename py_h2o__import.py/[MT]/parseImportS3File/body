@@ -3,7 +3,7 @@ def parseImportS3File(node=None, csvFilename='covtype.data', path='home-0xdiag-d
         node = h2o.nodes[0]
     if (not csvFilename):
         raise Exception('parseImportS3File: No csvFilename')
-    s3Key = ((('s3:/' + path) + '/') + csvFilename)
+    s3Key = ((('s3:' + path) + '/') + csvFilename)
     if (key2 is None):
         myKey2 = (csvFilename + '.hex')
     else:
