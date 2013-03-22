@@ -1,0 +1,9 @@
+{
+  Key k=loadAndParseKey("h.hex","smalldata/kaggle/creditsample-test.csv.gz");
+  try {
+    ValueArray ary=DKV.get(k).get();
+  }
+  finally {
+    UKV.remove(k);
+  }
+}
