@@ -1,9 +1,9 @@
 def setupImportFolder(node=None, path='/home/0xdiag/datasets'):
-    if h2o.nodes[0].redirect_import_folder_to_s3_path:
-        path = (h2o.nodes[0].redirect_import_folder_to_s3_path + path)
-        setupImportFolder(node=node, path=path)
-        return
     if (not node):
         node = h2o.nodes[0]
+    if node.redirect_import_folder_to_s3_path:
+        bucket = 'home_0xdiag_datasets'
+        setupImportFolderS3(node=node, bucket=bucket)
+        return
     importFolderResult = node.import_files(path)
     return importFolderResult
