@@ -1,4 +1,8 @@
 def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=1, pollTimeoutSecs=15):
+    if h2o.nodes[0].redirect_import_folder_to_s3_path:
+        path = (h2o.nodes[0].redirect_import_folder_to_s3_path + path)
+        parseImportS3File(node, csvFilename, path, key2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
+        return
     if (not node):
         node = h2o.nodes[0]
     if (not csvFilename):
