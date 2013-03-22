@@ -1,0 +1,14 @@
+def tryThemAll(self, set, rows):
+    for eolCase in range(len(self.eolDict)):
+        eol = self.eolDict[eolCase]
+        for tokenCase in range(len(self.tokenChangeDict)):
+            newRows1 = self.changeTokens(rows, tokenCase)
+            for sepCase in range(len(self.sepChangeDict)):
+                newRows2 = self.changeSep(newRows1, sepCase)
+                csvPathname = (((((((((SYNDATASETS_DIR + '/parsetmp_') + str(set)) + '_') + str(eolCase)) + '_') + str(tokenCase)) + '_') + str(sepCase)) + '.data')
+                self.writeRows(csvPathname, newRows2, eol)
+                h2o_cmd.runRF(trees=1, csvPathname=csvPathname, timeoutSecs=10, retryDelaySecs=0.1)
+                h2o.verboseprint('Set', set)
+                h2o.check_sandbox_for_errors()
+                sys.stdout.write('.')
+                sys.stdout.flush()
