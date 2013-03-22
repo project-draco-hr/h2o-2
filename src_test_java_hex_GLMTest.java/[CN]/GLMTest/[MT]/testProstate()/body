@@ -1,0 +1,15 @@
+{
+  Key k=loadAndParseKey("h.hex","smalldata/glm_test/prostate_cat_replaced.csv");
+  try {
+    ValueArray ary=DKV.get(k).get();
+    String[] cfs1=new String[]{"Intercept","AGE","RACE.R2","RACE.R3","DPROS","DCAPS","PSA","VOL","GLEASON"};
+    double[] vals=new double[]{-8.14867,-0.01368,0.32337,-0.38028,0.55964,0.49548,0.02794,-0.01104,0.97704};
+    int[] cols=ary.getColumnIds(new String[]{"AGE","DPROS","DCAPS","PSA","VOL","GLEASON","RACE","CAPSULE"});
+    DataFrame data=DGLM.getData(ary,cols,null,true);
+    runGLMTest(data,new ADMMSolver(0,0),new GLMParams(Family.binomial),1,cfs1,vals,512.3,378.3,Double.NaN,396.3,Double.NaN,1e-3,5e-1);
+    runGLMTest(data,new GeneralizedGradientSolver(0,0),new GLMParams(Family.binomial),1,cfs1,vals,512.3,378.3,Double.NaN,396.3,Double.NaN,1e-1,5e-1);
+  }
+  finally {
+    UKV.remove(k);
+  }
+}

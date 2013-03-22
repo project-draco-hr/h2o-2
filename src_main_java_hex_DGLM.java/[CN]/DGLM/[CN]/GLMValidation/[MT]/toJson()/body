@@ -7,7 +7,8 @@
   res.addProperty("dof",_dof);
   res.addProperty("resDev",_deviance);
   res.addProperty("nullDev",_nullDeviance);
-  res.addProperty("auc",_auc);
+  if (!Double.isNaN(_auc))   res.addProperty("auc",_auc);
+  if (!Double.isNaN(_aic))   res.addProperty("aic",_aic);
   if (_cm != null) {
     double[] err=_cm[_tid].classErr();
     JsonArray arr=new JsonArray();

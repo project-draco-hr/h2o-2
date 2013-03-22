@@ -15,7 +15,7 @@ def check_sandbox_for_errors():
                 foundBad = False
                 foundNOPTaskCnt = 0
                 if (not (' bytes)' in line)):
-                    printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)))
+                    printSingleWarning = ((regex3.search(line) and (not ('[Loaded ' in line))) or ('Non-member packets' in line))
                     foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1

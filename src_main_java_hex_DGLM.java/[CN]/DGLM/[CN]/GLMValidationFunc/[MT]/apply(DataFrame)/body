@@ -1,12 +1,2 @@
 {
-  NewRowVecTask<GLMValidation> tsk=new NewRowVecTask<GLMValidation>(this,data);
-  tsk.invoke(data._ary._key);
-  GLMValidation res=tsk._result;
-  res._dataKey=data._ary._key;
-  res._thresholds=_thresholds;
-  res._s=data.getSampling();
-  res.computeBestThreshold(ErrMetric.SUMC);
-  res.computeAUC();
-  res._aic=_glmp._family.aic(res._deviance,res._n,_beta.length);
-  return res;
 }

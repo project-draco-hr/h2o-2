@@ -1,0 +1,9 @@
+{
+  HashMap<String,Integer> colMap=new HashMap<String,Integer>();
+  for (int i=0; i < colNames.length; ++i)   colMap.put(colNames[i],i);
+  int[] res=new int[colNames.length];
+  Arrays.fill(res,-1);
+  Integer idx=null;
+  for (int i=0; i < _cols.length; ++i)   if ((idx=colMap.get(_cols[i]._name)) != null)   res[idx]=i;
+  return res;
+}

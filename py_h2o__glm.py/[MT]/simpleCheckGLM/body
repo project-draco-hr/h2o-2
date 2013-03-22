@@ -21,11 +21,13 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     validations = validationsList[0]
     print 'GLMModel/validations'
     print ('%15s %s' % ('err:\t', validations['err']))
-    print ('%15s %s' % ('auc:\t', validations['auc']))
     print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
     print ('%15s %s' % ('resDev:\t', validations['resDev']))
     if (family == 'binomial'):
+        print ('%15s %s' % ('auc:\t', validations['auc']))
         print ('%15s %s' % ('threshold:\t', validations['threshold']))
+    if ((family == 'poisson') or (family == 'gaussian') or (family == 'gamma')):
+        print ('%15s %s' % ('aic:\t', validations['aic']))
     coefficients = GLMModel['coefficients'].copy()
     column_names = GLMModel['column_names']
     intercept = coefficients.pop('Intercept', None)

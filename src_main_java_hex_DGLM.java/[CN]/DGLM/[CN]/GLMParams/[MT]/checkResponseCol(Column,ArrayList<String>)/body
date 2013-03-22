@@ -1,0 +1,17 @@
+{
+switch (_family) {
+case poisson:
+    if (ycol._min < 0)     throw new GLMException("Invalid response variable " + ycol._name + ", Poisson family requires response to be >= 0. ");
+  if (ycol._domain != null && ycol._domain.length > 0)   throw new GLMException("Invalid response variable " + ycol._name + ", Poisson family requires response to be integer number >= 0. Got categorical.");
+if (ycol.isFloat()) warnings.add("Running family=Poisson on non-integer response column. Poisson is dicrete distribution, consider using gamma or gaussian instead.");
+break;
+case gamma:
+if (ycol._min <= 0) throw new GLMException("Invalid response variable " + ycol._name + ", Gamma family requires response to be > 0. ");
+if (ycol._domain != null && ycol._domain.length > 0) throw new GLMException("Invalid response variable " + ycol._name + ", Poisson family requires response to be integer number >= 0. Got categorical.");
+break;
+case binomial:
+if (_caseMode == CaseMode.none && (ycol._min < 0 || ycol._max > 1)) if (ycol._min <= 0) throw new GLMException("Invalid response variable " + ycol._name + ", Binomial family requires response to be from [0,1] or have Case predicate. ");
+break;
+default :
+}
+}

@@ -1,7 +1,6 @@
 {
   if (_constantColumns.get() == null || _constantColumns.get().isEmpty())   return "";
-  ArrayList<String> ignoredCols=_constantColumns.get();
-  Collections.sort(ignoredCols);
+  TreeSet<String> ignoredCols=_constantColumns.get();
   if (_badColumns.get() != null && _badColumns.get() > 0)   return "<div class='alert'><b> There were " + _badColumns.get() + " bad columns not selected by default. Ignoring "+ _constantColumns.get().size()+ " constant columns</b>: "+ ignoredCols.toString()+ "</div>";
  else   return "<div class='alert'><b>Ignoring " + _constantColumns.get().size() + " constant columns</b>: "+ ignoredCols.toString()+ "</div>";
 }

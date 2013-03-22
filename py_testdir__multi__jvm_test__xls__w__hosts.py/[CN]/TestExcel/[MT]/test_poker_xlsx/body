@@ -1,2 +1,3 @@
 def test_poker_xlsx(self):
-    h2o_cmd.runRF(None, h2o.find_dataset('poker/poker-hand-testing.xlsx'), trees=31, timeoutSecs=120)
+    parseKey = h2o_cmd.parseFile(None, h2o.find_dataset('poker/poker-hand-testing.xlsx'), timeoutSecs=120, pollTimeoutSecs=60)
+    h2o_cmd.runRFOnly(None, parseKey=parseKey, trees=31, timeoutSecs=120)

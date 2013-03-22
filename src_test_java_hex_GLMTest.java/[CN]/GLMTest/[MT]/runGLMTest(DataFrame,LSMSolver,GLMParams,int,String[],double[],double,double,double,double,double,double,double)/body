@@ -1,0 +1,19 @@
+{
+  GLMModel m=DGLM.buildModel(data,lsm,glmp);
+  try {
+    if (xval <= 1)     m.validateOn(data._ary,null,thresholds);
+ else     m.xvalidate(data._ary,xval,thresholds);
+    JsonObject mjson=m.toJson();
+    JsonObject jcoefs=mjson.get("coefficients").getAsJsonObject();
+    for (int i=0; i < coefs.length; ++i)     assertEquals(values[i],jcoefs.get(coefs[i]).getAsDouble(),betaPrecision);
+    JsonObject validation=mjson.get("validations").getAsJsonArray().get(0).getAsJsonObject();
+    if (!Double.isNaN(ndev))     assertEquals(ndev,validation.get("nullDev").getAsDouble(),validationPrecision);
+    if (!Double.isNaN(resdev))     assertEquals(resdev,validation.get("resDev").getAsDouble(),validationPrecision);
+    if (!Double.isNaN(aic))     assertEquals(aic,validation.get("aic").getAsDouble(),validationPrecision);
+    if (!Double.isNaN(auc))     assertEquals(auc,validation.get("auc").getAsDouble(),validationPrecision);
+    if (!Double.isNaN(err))     assertEquals(err,validation.get("err").getAsDouble(),validationPrecision);
+  }
+  finally {
+    if (m != null && m._selfKey != null)     UKV.remove(m._selfKey);
+  }
+}
