@@ -1,0 +1,7 @@
+{
+  Freezable pojo=_pojo;
+  if (pojo != null)   return pojo;
+  pojo=TypeMap.newFreezable(_type);
+  pojo.read(new AutoBuffer(memOrLoad()));
+  return (_pojo=pojo);
+}
