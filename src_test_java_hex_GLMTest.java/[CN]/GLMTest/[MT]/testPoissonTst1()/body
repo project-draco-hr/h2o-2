@@ -1,0 +1,16 @@
+{
+  Key k=loadAndParseKey("h.hex","smalldata/glm_test/poisson_tst1.csv");
+  try {
+    ValueArray ary=DKV.get(k).get();
+    String[] colnames=new String[]{"prog","math","num_awards"};
+    String[] coefs=new String[]{"Intercept","prog.General","prog.Vocational","math"};
+    double[] vals=new double[]{-4.1627,-1.08386,-0.71405,0.07015};
+    int[] cols=ary.getColumnIds(colnames);
+    DataFrame data=DGLM.getData(ary,cols,null,true);
+    runGLMTest(data,new ADMMSolver(0,0),new GLMParams(Family.poisson),1,coefs,vals,Double.NaN,Double.NaN,Double.NaN,Double.NaN,Double.NaN,1e-3,1e-1);
+    runGLMTest(data,new GeneralizedGradientSolver(0,0),new GLMParams(Family.poisson),1,coefs,vals,Double.NaN,Double.NaN,Double.NaN,Double.NaN,Double.NaN,1e-3,1e-1);
+  }
+  finally {
+    UKV.remove(k);
+  }
+}
