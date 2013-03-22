@@ -8,7 +8,7 @@
     models[i]=buildModel(DGLM.getData(ary,modelDataMap,new Sampling(i,folds,false),true),_solver,_glmParams);
     if (models[i].isSolved())     models[i].validateOn(ary,new Sampling(i,folds,true),thresholds);
   }
-  GLMValidation res=new GLMValidation(models,ErrMetric.SUMC,thresholds);
+  GLMValidation res=new GLMValidation(_selfKey,models,ErrMetric.SUMC,thresholds);
   if (_vals == null)   _vals=new GLMValidation[]{res};
  else {
     _vals=Arrays.copyOf(_vals,_vals.length + 1);
