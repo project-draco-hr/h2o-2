@@ -4,7 +4,7 @@ def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600
     if (not node):
         node = h2o.nodes[0]
     print '\nHacked the test to match the new behavior for key names created from hdfs files'
-    hdfsPrefix = ('hdfs:hdfs://' + h2o.nodes[0].hdfs_name_node)
+    hdfsPrefix = ('hdfs:hdfs://' + node.hdfs_name_node)
     if (path is None):
         URI = (hdfsPrefix + '/datasets')
     else:
