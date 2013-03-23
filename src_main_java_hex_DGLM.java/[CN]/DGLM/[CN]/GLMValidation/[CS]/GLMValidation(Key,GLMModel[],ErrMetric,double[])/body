@@ -1,6 +1,6 @@
 {
   _errMetric=m;
-  _modelKey=models[0]._selfKey;
+  _modelKey=modelKey;
   _dataKey=models[0]._dataKey;
   _modelKeys=new Key[models.length];
   int i=0;
@@ -28,7 +28,7 @@
   if (models[0]._vals[0]._cm != null) {
     int nthresholds=models[0]._vals[0]._cm.length;
     _cm=new ConfusionMatrix[nthresholds];
-    for (int t=0; t < nthresholds; ++t)     _cm[t]=models[0]._vals[0]._cm[t];
+    for (int t=0; t < nthresholds; ++t)     _cm[t]=models[0]._vals[0]._cm[t].clone();
     n+=models[0]._vals[0]._n;
     dev=models[0]._vals[0]._deviance;
     rank=models[0].rank();
