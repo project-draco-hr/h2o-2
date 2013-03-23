@@ -15,3 +15,5 @@ def test_GenParity1(self):
         start = time.time()
         cmd.runRFOnly(parseKey=parseKey, trees=1000, depth=2, timeoutSecs=600, retryDelaySecs=3)
         print 'RF #', trial, 'end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+    print 'Waiting 60 secs for TIME_WAIT sockets to go away'
+    time.sleep(60)
