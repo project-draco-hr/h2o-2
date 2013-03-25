@@ -1,0 +1,14 @@
+def compareToFirstKMeans(self, clusters, firstclusters):
+    if (type(clusters) is list):
+        kList = clusters
+        firstkList = firstclusters
+    elif (type(clusters) is dict):
+        raise Exception(('compareToFirstGLm: Not expecting dict for ' + key))
+    else:
+        kList = [clusters]
+        firstkList = [firstclusters]
+    for (k, firstk) in zip(kList, firstkList):
+        delta = (0.1 * abs(float(firstk)))
+        msg = ((((('Too large a delta (>' + str(delta)) + ') comparing current and first clusters: ') + str(float(k))) + ', ') + str(float(firstk)))
+        self.assertAlmostEqual(float(k), float(firstk), delta=delta, msg=msg)
+        self.assertGreaterEqual(abs(float(k)), 0.0, (str(k) + ' abs not >= 0.0 in current'))

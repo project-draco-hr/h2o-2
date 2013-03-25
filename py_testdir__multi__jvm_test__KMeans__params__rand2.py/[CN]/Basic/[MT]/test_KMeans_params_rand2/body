@@ -1,0 +1,34 @@
+def test_KMeans_params_rand2(self):
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    if localhost:
+        csvFilenameList = [('covtype20x.data', 400)]
+    else:
+        csvFilenameList = [('covtype20x.data', 400), ('covtype200x.data', 2000)]
+    importFolderPath = '/home/0xdiag/datasets'
+    h2i.setupImportFolder(None, importFolderPath)
+    for (csvFilename, timeoutSecs) in csvFilenameList:
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, pollTimeoutSecs=60)
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        paramDict = define_params()
+        for trial in range(3):
+            randomV = paramDict['k']
+            k = random.choice(randomV)
+            randomV = paramDict['y']
+            y = random.choice(randomV)
+            randomV = paramDict['epsilon']
+            epsilon = random.choice(randomV)
+            randomV = paramDict['cols']
+            cols = random.choice(randomV)
+            kwargs = {'k': k, 'epsilon': epsilon, 'cols': cols, 'destination_key': (((csvFilename + '_') + str(trial)) + '.hex'), }
+            start = time.time()
+            kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+            elapsed = (time.time() - start)
+            print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+            h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
+            inspect = h2o_cmd.runInspect(None, key=kmeans['destination_key'])
+            print h2o.dump_json(inspect)
+            print 'Trial #', trial, 'completed\n'
