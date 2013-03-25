@@ -36,8 +36,12 @@ def check_sandbox_for_errors():
                         sys.stdout.write(line)
             sandFile.close()
     if (len(errLines) != 0):
-        emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr.\n' + 'Could have occurred at any prior time\n\n')
-        emsg2 = ''.join(errLines)
-        if nodes:
-            nodes[0].sandbox_error_report(True)
-        raise Exception(((python_test_name + emsg1) + emsg2))
+        justInfo = True
+        for e in errLines:
+            justInfo &= (re.match('INFO:', e) or ('apache' in e))
+        if (not justInfo):
+            emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr.\n' + 'Could have occurred at any prior time\n\n')
+            emsg2 = ''.join(errLines)
+            if nodes:
+                nodes[0].sandbox_error_report(True)
+            raise Exception(((python_test_name + emsg1) + emsg2))
