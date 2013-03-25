@@ -15,6 +15,9 @@ def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME):
     cfg['ec2_reservation_id'] = reservation.id
     cfg['ec2_region'] = ec2_config['region']
     cfg['redirect_import_folder_to_s3_path'] = True
+    if ec2_config['hdfs_config']:
+        cfg['hdfs_config'] = find_file(ec2_config['hdfs_config'])
+        cfg['use_hdfs'] = True
     cmds = get_ssh_commands(ec2_config, reservation)
     idx = 1
     for cmd in cmds:

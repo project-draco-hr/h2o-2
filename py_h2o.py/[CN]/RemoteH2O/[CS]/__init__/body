@@ -4,6 +4,8 @@ def __init__(self, host, *args, **kwargs):
     self.flatfile = host.upload_file(flatfile_name())
     if self.aws_credentials:
         self.aws_credentials = host.upload_file(self.aws_credentials)
+    if self.hdfs_config:
+        self.hdfs_config = host.upload_file(self.hdfs_config)
     if self.use_home_for_ice:
         self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
     else:
