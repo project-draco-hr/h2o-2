@@ -16,15 +16,12 @@
     H2O.submitTask(new FJPacket(ab,ctrl));
     return;
   }
-  if (!is_member) {
-    _unknown_packets_per_sec++;
-    long timediff=ab._h2o._last_heard_from - _unknown_packet_time;
-    if (timediff > 1000) {
-      System.err.println("Non-member packets: " + _unknown_packets_per_sec + "/sec, last one from "+ ab._h2o);
-      _unknown_packets_per_sec=0;
-      _unknown_packet_time=ab._h2o._last_heard_from;
-    }
-    ab.close();
-    return;
+  _unknown_packets_per_sec++;
+  long timediff=ab._h2o._last_heard_from - _unknown_packet_time;
+  if (timediff > 1000) {
+    System.err.println("[h2o] *WARNING* UDP packets from outside the cloud: " + _unknown_packets_per_sec + "/sec, last one from "+ ab._h2o+ " @ "+ new Date());
+    _unknown_packets_per_sec=0;
+    _unknown_packet_time=ab._h2o._last_heard_from;
   }
+  ab.close();
 }
