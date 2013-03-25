@@ -9,7 +9,6 @@
     Closeables.closeQuietly(gzis);
   }
   if (key == null)   throw new Error("Cannot uncompressed GZIP-compressed dataset!");
-  Value uncompressedDataset=DKV.get(key);
-  parse(job,uncompressedDataset,setup);
+  parse(job,new Key[]{key},setup);
   UKV.remove(key);
 }

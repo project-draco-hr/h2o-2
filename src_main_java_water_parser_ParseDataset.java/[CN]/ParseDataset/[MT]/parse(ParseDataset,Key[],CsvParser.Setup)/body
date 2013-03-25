@@ -1,4 +1,6 @@
 {
+  if (keys.length > 1)   throw H2O.unimpl();
+  Value dataset=DKV.get(keys[0]);
   if (dataset.isHex())   throw new IllegalArgumentException("This is a binary structured dataset; " + "parse() only works on text files.");
   try {
     try {
