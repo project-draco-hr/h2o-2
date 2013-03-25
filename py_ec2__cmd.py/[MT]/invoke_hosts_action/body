@@ -1,15 +1,16 @@
 def invoke_hosts_action(action, hosts_config):
-    ids = [inst['id'] for inst in hosts_config['instances']]
-    ips = [inst['private_ip_address'] for inst in hosts_config['instances']]
+    ids = [inst['id'] for inst in hosts_config['ec2_instances']]
+    ips = [inst['private_ip_address'] for inst in hosts_config['ec2_instances']]
+    region = hosts_config['ec2_region']
     if (action == 'terminate'):
-        terminate_instances(ids)
+        terminate_instances(ids, region)
     elif (action == 'stop'):
-        stop_instances(ids)
+        stop_instances(ids, region)
     elif (action == 'reboot'):
-        reboot_instances(ids)
+        reboot_instances(ids, region)
         wait_for_ssh(ips, skipAlive=False, requiredsuccess=10)
     elif (action == 'start'):
-        start_instances(ids)
+        start_instances(ids, region)
     elif (action == 'distribute_h2o'):
         pass
     elif (action == 'start_h2o'):
