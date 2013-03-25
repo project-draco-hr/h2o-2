@@ -7,7 +7,7 @@
     String[] dataset=getDataForSeparator(separator,data);
     Key key=k("NondecimalColumns",dataset);
     Key r=Key.make();
-    ParseDataset.parse(r,DKV.get(key));
+    ParseDataset.parse(r,new Key[]{key});
     ValueArray va=DKV.get(r).get();
     String[] cd=va._cols[2]._domain;
     Assert.assertEquals(" four",cd[0]);

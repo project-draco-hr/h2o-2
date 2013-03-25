@@ -1,7 +1,7 @@
 {
   Key fkey=load_test_file("smalldata/test/HTWO-87-two-lines-dataset.csv");
   Key okey=Key.make("HTWO-87-two-lines-dataset.hex");
-  ParseDataset.parse(okey,DKV.get(fkey));
+  ParseDataset.parse(okey,new Key[]{fkey});
   UKV.remove(fkey);
   ValueArray val=DKV.get(okey).get();
   assertEquals("Number of chunks == 1",1,val.chunks());

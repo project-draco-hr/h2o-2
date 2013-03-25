@@ -5,7 +5,7 @@
     String[] dataset=getDataForSeparator(separator,data);
     Key key=k("NumberFormats",dataset);
     Key r=Key.make();
-    ParseDataset.parse(r,DKV.get(key));
+    ParseDataset.parse(r,new Key[]{key});
     testParsed(r,expDouble,key);
   }
 }

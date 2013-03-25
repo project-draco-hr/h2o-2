@@ -9,7 +9,7 @@
     Key k=Key.make();
     UKV.put(k,new Value(k,sb.toString()));
     Key r5=Key.make();
-    ParseDataset.parse(r5,DKV.get(k));
+    ParseDataset.parse(r5,new Key[]{k});
     testParsed(r5,exp,k);
   }
 }

@@ -4,15 +4,15 @@
   ValueArray.Column c=va._cols[colIdx];
   String name=c._name != null ? c._name : "" + colIdx;
   if (va.isNA(rowIdx,colIdx)) {
-    obj.addProperty(name,"NA");
+    obj.add(new JsonPrimitive("NA"));
   }
  else   if (c._domain != null) {
-    obj.addProperty(name,c._domain[(int)va.data(rowIdx,colIdx)]);
+    obj.add(new JsonPrimitive(c._domain[(int)va.data(rowIdx,colIdx)]));
   }
- else   if ((c._size > 0) && (c._scale == 1)) {
-    obj.addProperty(name,va.data(rowIdx,colIdx));
+ else   if (c.isFloat()) {
+    obj.add(new JsonPrimitive(va.datad(rowIdx,colIdx)));
   }
  else {
-    obj.addProperty(name,va.datad(rowIdx,colIdx));
+    obj.add(new JsonPrimitive(va.data(rowIdx,colIdx)));
   }
 }

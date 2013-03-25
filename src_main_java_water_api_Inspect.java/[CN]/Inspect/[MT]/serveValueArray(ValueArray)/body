@@ -30,8 +30,8 @@
     long endRow=Math.min(_offset.value() + _view.value(),va._numrows);
     long startRow=Math.min(_offset.value(),va._numrows - _view.value());
     for (long row=Math.max(0,startRow); row < endRow; ++row) {
-      JsonObject obj=new JsonObject();
-      obj.addProperty(ROW,row);
+      JsonArray obj=new JsonArray();
+      obj.add(new JsonPrimitive(row));
       for (int i=0; i < va._cols.length; ++i)       format(obj,va,row,i);
       rows.add(obj);
     }
