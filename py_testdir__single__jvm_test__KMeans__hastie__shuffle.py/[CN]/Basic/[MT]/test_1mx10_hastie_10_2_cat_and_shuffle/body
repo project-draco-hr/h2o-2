@@ -1,0 +1,21 @@
+def test_1mx10_hastie_10_2_cat_and_shuffle(self):
+    csvFilename = '1mx10_hastie_10_2.data.gz'
+    csvPathname = h2o.find_dataset((('logreg' + '/') + csvFilename))
+    kmeans_doit(self, csvFilename, csvPathname, timeoutSecs=60)
+    filename1x = 'hastie_1x.data'
+    pathname1x = ((SYNDATASETS_DIR + '/') + filename1x)
+    h2o_util.file_gunzip(csvPathname, pathname1x)
+    filename1xShuf = 'hastie_1x.data_shuf'
+    pathname1xShuf = ((SYNDATASETS_DIR + '/') + filename1xShuf)
+    h2o_util.file_shuffle(pathname1x, pathname1xShuf)
+    filename2x = 'hastie_2x.data'
+    pathname2x = ((SYNDATASETS_DIR + '/') + filename2x)
+    h2o_util.file_cat(pathname1xShuf, pathname1xShuf, pathname2x)
+    filename2xShuf = 'hastie_2x.data_shuf'
+    pathname2xShuf = ((SYNDATASETS_DIR + '/') + filename2xShuf)
+    h2o_util.file_shuffle(pathname2x, pathname2xShuf)
+    kmeans_doit(self, filename2xShuf, pathname2xShuf, timeoutSecs=90)
+    filename4x = 'hastie_4x.data'
+    pathname4x = ((SYNDATASETS_DIR + '/') + filename4x)
+    h2o_util.file_cat(pathname2xShuf, pathname2xShuf, pathname4x)
+    kmeans_doit(self, filename4x, pathname4x, timeoutSecs=120)
