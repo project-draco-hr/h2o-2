@@ -13,7 +13,6 @@
     Closeables.closeQuietly(zis);
   }
   if (key == null)   throw new Error("Cannot uncompressed ZIP-compressed dataset!");
-  Value uncompressedDataset=DKV.get(key);
-  parse(job,uncompressedDataset,setup);
+  parse(job,new Key[]{key},setup);
   UKV.remove(key);
 }
