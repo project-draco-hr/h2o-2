@@ -1,7 +1,8 @@
 {
   super("Parse",dest);
-  Value dataset=DKV.get(keys[0]);
-  _total=dataset.length() * Pass.values().length;
+  long t=dataset[0].length();
+  for (int i=1; i < dataset.length; ++i)   t+=dataset[i].length();
+  _total=t * Pass.values().length;
   _progress=Key.make(UUID.randomUUID().toString(),(byte)0,Key.JOB);
   UKV.put(_progress,new Progress());
 }
