@@ -6,12 +6,14 @@ def test_from_import(self):
     for trial in range(3):
         for csvFilename in csvFilenameList:
             h2i.setupImportFolder(None, importFolderPath)
+            start = time.time()
             parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
-            print csvFilename, 'parse time:', parseKey['response']['time']
+            elapsed = (time.time() - start)
+            print csvFilename, 'parsed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs)), '\n'
+            print csvFilename, 'H2O reports parse time:', parseKey['response']['time']
             print "Parse result['source_key']:", parseKey['source_key']
             print "Parse result['destination_key']:", parseKey['destination_key']
             print ('\n' + csvFilename)
-            start = time.time()
             storeView = h2o.nodes[0].store_view()
             print 'Removing', parseKey['source_key'], 'so we can re-import it'
             removeKeyResult = h2o.nodes[0].remove_key(key=parseKey['source_key'])
