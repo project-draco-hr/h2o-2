@@ -14,5 +14,6 @@ def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600
     inspect = h2o_cmd.runInspect(key=hdfsKey)
     print 'parseHdfsFile:', inspect
     parseKey = node.parse(hdfsKey, (csvFilename + '.hex'), timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
+    parseKey['source_key'] = hdfsKey
     print 'parseHdfsFile:', parseKey
     return parseKey
