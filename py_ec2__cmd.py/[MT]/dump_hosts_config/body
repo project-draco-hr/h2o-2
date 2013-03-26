@@ -2,9 +2,22 @@ def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME):
     if (not filename):
         filename = DEFAULT_HOSTS_FILENAME
     cfg = {}
-    cfg['aws_credentials'] = find_file(ec2_config['aws_credentials'])
+    f = find_file(ec2_config['aws_credentials'])
+    if f:
+        cfg['aws_credentials'] = f
+    else:
+        warn_file_miss(ec2_config['aws_credentials'])
+    f = find_file(ec2_config['pem'])
+    if f:
+        cfg['key_filename'] = f
+    else:
+        warn_file_miss(ec2_config['key_filename'])
+    f = find_file(ec2_config['hdfs_config'])
+    if f:
+        cfg['hdfs_config'] = f
+    else:
+        warn_file_miss(ec2_config['hdfs_config'])
     cfg['username'] = ec2_config['username']
-    cfg['key_filename'] = find_file(ec2_config['pem'])
     cfg['use_flatfile'] = True
     cfg['h2o_per_host'] = 1
     cfg['java_heap_GB'] = MEMORY_MAPPING[ec2_config['instance_type']]['xmx']
@@ -15,8 +28,6 @@ def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME):
     cfg['ec2_reservation_id'] = reservation.id
     cfg['ec2_region'] = ec2_config['region']
     cfg['redirect_import_folder_to_s3_path'] = True
-    if ec2_config['hdfs_config']:
-        cfg['hdfs_config'] = find_file(ec2_config['hdfs_config'])
     cmds = get_ssh_commands(ec2_config, reservation)
     idx = 1
     for cmd in cmds:

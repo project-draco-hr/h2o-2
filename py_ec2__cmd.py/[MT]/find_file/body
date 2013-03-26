@@ -5,5 +5,5 @@ def find_file(base):
     if (not os.path.exists(f)):
         f = ((os.path.expanduser('~') + '/') + base)
     if (not os.path.exists(f)):
-        raise Exception(('\x1b[91m[ec2] Unable to find config %s \x1b[0m' % base))
+        return None
     return f
