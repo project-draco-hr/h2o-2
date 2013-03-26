@@ -1,0 +1,8 @@
+{
+  Key[] keys=load_test_folder(path);
+  Key okey=Key.make(keyName);
+  Job j=ParseDataset.forkParseDataset(okey,keys,null);
+  j.get();
+  for (  Key k : keys)   UKV.remove(k);
+  return okey;
+}

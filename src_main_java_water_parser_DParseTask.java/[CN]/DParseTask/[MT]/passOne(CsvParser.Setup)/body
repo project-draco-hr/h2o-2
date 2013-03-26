@@ -1,12 +1,14 @@
 {
 switch (_parserType) {
 case CSV:
-    byte[] bits=_sourceDataset.getFirstBytes();
-  if (setup == null)   setup=CsvParser.guessCsvSetup(bits);
-if (setup._data == null) {
-  _error="Unable to determine the separator or number of columns on the dataset";
-  return;
-}
+    if (setup == null) {
+      byte[] bits=_sourceDataset.getFirstBytes();
+      setup=CsvParser.guessCsvSetup(bits);
+    }
+  if (setup._data == null) {
+    _error="Unable to determine the separator or number of columns on the dataset";
+    return;
+  }
 _colNames=setup._data[0];
 setColumnNames(_colNames);
 _skipFirstLine=setup._header;
@@ -29,15 +31,4 @@ break;
 default :
 throw new Error("NOT IMPLEMENTED");
 }
-if (_nrows != null) {
-_numRows=0;
-for (int i=0; i < _nrows.length; ++i) {
-_numRows+=_nrows[i];
-_nrows[i]=_numRows;
-}
-}
- else {
-_numRows=_myrows;
-}
-for (int i=0; i < _ncolumns; ++i) _mean[i]=_mean[i] / (_numRows - _invalidValues[i]);
 }

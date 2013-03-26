@@ -1,0 +1,5 @@
+{
+  ValueArray origAry=DKV.get(_origDataset).get();
+  long idx=ValueArray.getChunkIndex(key);
+  _res=Arrays.equals(DKV.get(key).getBytes(),DKV.get(origAry.getChunkKey(idx)).getBytes());
+}

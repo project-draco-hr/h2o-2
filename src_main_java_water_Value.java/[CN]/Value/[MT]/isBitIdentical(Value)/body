@@ -1,0 +1,14 @@
+{
+  if (this == v)   return true;
+  if (!isArray() && !v.isArray())   return Arrays.equals(getBytes(),v.getBytes());
+  if (isArray() && v.isArray()) {
+    ValueArray thisAry=get();
+    ValueArray otherAry=v.get();
+    if (thisAry.length() == otherAry.length() && thisAry._numrows == otherAry._numrows && thisAry._rowsize == otherAry._rowsize && thisAry._cols.length == otherAry._cols.length) {
+      BitsCmpTask res=new BitsCmpTask(thisAry);
+      res.invoke(v._key);
+      return res._res;
+    }
+  }
+  return false;
+}
