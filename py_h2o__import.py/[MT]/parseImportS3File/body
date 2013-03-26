@@ -10,6 +10,6 @@ def parseImportS3File(node=None, csvFilename='covtype.data', path='home-0xdiag-d
         myKey2 = key2
     print 'Waiting for the slow parse of the file:', csvFilename
     parseKey = node.parse(s3Key, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
-    parseKey['source_key'] = importKey
+    parseKey['source_key'] = s3Key
     print '\nParse result:', parseKey
     return parseKey
