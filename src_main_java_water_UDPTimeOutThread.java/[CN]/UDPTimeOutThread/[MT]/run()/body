@@ -3,7 +3,9 @@
   while (true) {
     try {
       RPC t=PENDING.take();
-      if (H2O.CLOUD.contains(t._target))       t.call();
+      if (H2O.CLOUD.contains(t._target)) {
+        if (!t.isDone())         t.call();
+      }
  else       t.cancel(true);
     }
  catch (    InterruptedException e) {
