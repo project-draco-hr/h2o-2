@@ -1,10 +1,5 @@
 {
   int flag=ab.getFlag();
-  String clazz="";
-  if (flag == CLIENT_UDP_SEND) {
-    int tid=ab.get2();
-    clazz=TypeMap.newInstance(tid).toString();
-    clazz=clazz.substring(clazz.lastIndexOf('.') + 1,clazz.indexOf('@'));
-  }
+  String clazz=(flag == CLIENT_UDP_SEND) ? TypeMap.className(ab.get2()) : "";
   return "task# " + ab.getTask() + " "+ clazz+ " "+ COOKIES[flag - SERVER_UDP_SEND];
 }
