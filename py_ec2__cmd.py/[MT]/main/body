@@ -6,14 +6,17 @@ def main():
     parser.add_argument('-H', '--hosts', help='Hosts file describing existing "EXISTING" EC2 instances ', type=str, default=None)
     parser.add_argument('-r', '--region', help='Specifies target create region', type=str, default=DEFAULT_REGION)
     parser.add_argument('--reservation', help='Reservation ID, for example "r-1824ec65"', type=str, default=None)
+    parser.add_argument('--name', help='Name for launched instances', type=str, default=DEFAULT_INSTANCE_NAME)
     args = parser.parse_args()
     if (args.action == 'create'):
         ec2_region = load_ec2_region(args.region)
         ec2_config = load_ec2_config(args.config, ec2_region)
+        tags = create_tags(Name=args.name)
         log('Region   : {0}'.format(ec2_region))
         log('Config   : {0}'.format(ec2_config))
         log('Instances: {0}'.format(args.instances))
-        reservation = run_instances(args.instances, ec2_config, ec2_region)
+        log('Tags     : {0}'.format(tags))
+        reservation = run_instances(args.instances, ec2_config, ec2_region, tags=tags)
         dump_hosts_config(ec2_config, reservation, args.hosts)
         dump_ssh_commands(ec2_config, reservation)
     elif (args.action == 'show_defaults'):
