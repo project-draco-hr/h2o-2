@@ -35,6 +35,7 @@ def check_sandbox_for_errors():
                     if (not re.search('Unable to load native-hadoop library for your platform', line)):
                         sys.stdout.write(line)
             sandFile.close()
+    sys.stdout.flush()
     if (len(errLines) != 0):
         justInfo = True
         for e in errLines:
