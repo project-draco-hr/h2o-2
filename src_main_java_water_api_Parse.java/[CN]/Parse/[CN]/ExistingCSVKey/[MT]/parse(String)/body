@@ -1,15 +1,16 @@
 {
   Key k1=Key.make(input);
   Value v1=DKV.get(k1);
-  if (v1 != null && (input.endsWith(".xlsx") || input.endsWith(".xls")))   return new PSetup(k1,new Setup((byte)0,false,null,0,null),true);
-  String patternStr=input.replace("?",".?").replace("*",".*?").replace("\\","\\\\");
-  System.out.println(patternStr);
-  Pattern p=Pattern.compile(patternStr);
+  if (v1 != null && (input.endsWith(".xlsx") || input.endsWith(".xls")))   return new PSetup(k1,new Setup((byte)0,false,null,0,null));
+  Pattern p=makePattern(input);
+  Pattern exclude=null;
+  if (_excludeExpression.specified())   exclude=makePattern(_excludeExpression.value());
   ArrayList<Key> keys=new ArrayList();
   for (  Key key : H2O.keySet()) {
     if (!key.user_allowed())     continue;
     String ks=key.toString();
     if (!p.matcher(ks).matches())     continue;
+    if (exclude != null && exclude.matcher(ks).matches())     continue;
     Value v2=DKV.get(key);
     if (v2 == null || input.endsWith(".xlsx") || input.endsWith(".xls"))     continue;
     keys.add(key);
