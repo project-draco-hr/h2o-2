@@ -17,4 +17,5 @@ def upload_file(self, f, progress=None):
         finally:
             sftp.close()
         self.uploaded[f] = dest
+    sys.stdout.flush()
     return self.uploaded[f]
