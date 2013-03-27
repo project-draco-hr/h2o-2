@@ -2,40 +2,25 @@
   Key k1=Key.make(input);
   Value v1=DKV.get(k1);
   if (v1 != null && (input.endsWith(".xlsx") || input.endsWith(".xls")))   return new PSetup(k1,new Setup((byte)0,false,null,0,null),true);
-  Pattern p=Pattern.compile(input.replace("?",".?").replace("*",".*?").replace("\\","\\\\"));
+  String patternStr=input.replace("?",".?").replace("*",".*?").replace("\\","\\\\");
+  System.out.println(patternStr);
+  Pattern p=Pattern.compile(patternStr);
   ArrayList<Key> keys=new ArrayList();
-  boolean badkeys=false;
-  Key key2=null;
-  CsvParser.Setup setup2=null;
   for (  Key key : H2O.keySet()) {
     if (!key.user_allowed())     continue;
     String ks=key.toString();
     if (!p.matcher(ks).matches())     continue;
     Value v2=DKV.get(key);
     if (v2 == null || input.endsWith(".xlsx") || input.endsWith(".xls"))     continue;
-    CsvParser.Setup setup=Inspect.csvGuessValue(v2);
-    if (setup._data == null || setup._data[0].length == 0) {
-      badkeys=true;
-      continue;
-    }
-    if (setup2 == null) {
-      setup2=setup;
-      key2=key;
-    }
- else     if (!setup2.equals(setup) || setup._header && setup2._header) {
-      throw new IllegalArgumentException("Matching keys<br> " + key + "; "+ setup+ " and<br> "+ key2+ "; "+ setup2+ " have different formats");
-    }
- else     if (!setup2._header && setup._header) {
-      setup2=setup;
-      keys.add(key2);
-      key2=key;
-    }
- else {
-      keys.add(key);
-    }
+    keys.add(key);
   }
-  if (key2 == null && keys.size() == 0)   throw new IllegalArgumentException(badkeys ? "The dataset format is not recognized/supported" : "Key " + input + " not found!");
+  if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
   Collections.sort(keys);
-  keys.add(0,key2);
-  return new PSetup(keys,setup2);
+  Key hKey=keys.get(0);
+  Value v=DKV.get(hKey);
+  CsvParser.Setup setup=Inspect.csvGuessValue(v);
+  if (setup._data == null || setup._data[0].length == 0) {
+    throw new Error("Illegal format of the data! (First file does not parse)");
+  }
+  return new PSetup(keys,setup);
 }
