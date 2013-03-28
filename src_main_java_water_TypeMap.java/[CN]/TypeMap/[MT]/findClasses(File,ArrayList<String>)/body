@@ -6,7 +6,7 @@
       name=name.replace('\\','/').replace('/','.').replace(".class","");
       try {
         Class c=Class.forName(name);
-        if (Iced.class.isAssignableFrom(c))         list.add(c.getName());
+        if (Freezable.class.isAssignableFrom(c))         list.add(c.getName());
       }
  catch (      Throwable _) {
         System.out.println("Skipped: " + name);
