@@ -13,9 +13,8 @@ def check_sandbox_for_errors():
             for line in sandFile:
                 printSingleWarning = False
                 foundBad = False
-                foundNOPTaskCnt = 0
                 if (not (' bytes)' in line)):
-                    printSingleWarning = ((regex3.search(line) and (not ('[Loaded ' in line))) or ('Non-member packets' in line))
+                    printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)))
                     foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
@@ -24,9 +23,7 @@ def check_sandbox_for_errors():
                     lines += 1
                     foundCaused = regex2.search(line)
                     foundAt = re.match('[\\t ]+at ', line)
-                    if re.match('NOPTask', line):
-                        foundNOPTaskCnt += 1
-                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt or (foundNOPTaskCnt == 1)))):
+                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt))):
                         printing = 2
                 if (printing == 1):
                     errLines.append(line)

@@ -1,0 +1,9 @@
+def test_hdfs_multi_copies(self):
+    print '\nUse the new regex capabilities for selecting hdfs: try *copies* at /datasets'
+    print 'This should match to a folder with about twenty covtype10x?'
+    h2b.browseTheCloud()
+    h2i.setupImportHdfs()
+    parseKey = h2o.nodes[0].parse('*copies*', key2='copies.hex', exclude=None, header=None, timeoutSecs=300)
+    print '*copies* regex to hdfs /datasets', 'parse time:', parseKey['response']['time']
+    print 'parse result:', parseKey['destination_key']
+    sys.stdout.flush()
