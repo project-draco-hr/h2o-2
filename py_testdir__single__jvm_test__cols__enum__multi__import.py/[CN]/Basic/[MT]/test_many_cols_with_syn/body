@@ -1,0 +1,19 @@
+def test_many_cols_with_syn(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    translateList = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u']
+    tryList = [(1000, 100, 'cA', 5)]
+    h2b.browseTheCloud()
+    cnum = 0
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        cnum += 1
+        for fileN in range(500):
+            rowxcol = ((str(rowCount) + 'x') + str(colCount))
+            csvFilename = (((((('syn_' + str(fileN)) + '_') + str(SEED)) + '_') + rowxcol) + '.csv')
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            write_syn_dataset(csvPathname, rowCount, colCount, SEED, translateList)
+        h2i.setupImportFolder(None, SYNDATASETS_DIR)
+        parseKey = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, exclude=None, header=1, timeoutSecs=30)
+        print ("parseKey['destination_key']: " + parseKey['destination_key'])
+        print 'parse time:', parseKey['response']['time']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print (('\n' + parseKey['destination_key']) + ':'), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
