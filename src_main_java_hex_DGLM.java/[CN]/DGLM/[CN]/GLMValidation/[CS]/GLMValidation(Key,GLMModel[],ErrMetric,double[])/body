@@ -33,19 +33,21 @@
     dev=models[0]._vals[0]._deviance;
     rank=models[0].rank();
     aic=models[0]._vals[0]._aic - 2 * rank;
+    _auc=models[0]._vals[0]._auc;
     nDev=models[0]._vals[0]._nullDeviance;
     for (i=1; i < models.length; ++i) {
       int xm_rank=models[i].rank();
       rank=Math.max(xm_rank,rank);
       n+=models[i]._vals[0]._n;
-      dev+=models[0]._vals[0]._deviance;
-      aic+=models[0]._vals[0]._aic - 2 * xm_rank;
-      nDev+=models[0]._vals[0]._nullDeviance;
+      dev+=models[i]._vals[0]._deviance;
+      aic+=models[i]._vals[0]._aic - 2 * xm_rank;
+      nDev+=models[i]._vals[0]._nullDeviance;
+      _auc+=models[i]._vals[0]._auc;
       for (int t=0; t < nthresholds; ++t)       _cm[t].add(models[i]._vals[0]._cm[t]);
     }
     _thresholds=thresholds;
     computeBestThreshold(m);
-    computeAUC();
+    _auc/=models.length;
   }
  else {
     for (    GLMModel xm : models) {
