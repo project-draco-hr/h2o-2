@@ -13,6 +13,7 @@
     if (exclude != null && exclude.matcher(ks).matches())     continue;
     Value v2=DKV.get(key);
     if (v2 == null || input.endsWith(".xlsx") || input.endsWith(".xls"))     continue;
+    if (v2.isHex())     continue;
     keys.add(key);
   }
   if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
