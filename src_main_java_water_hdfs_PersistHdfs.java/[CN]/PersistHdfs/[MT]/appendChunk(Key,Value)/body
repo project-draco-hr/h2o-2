@@ -12,7 +12,11 @@
     res=e.getMessage();
   }
  finally {
-    Closeables.closeQuietly(s);
+    try {
+      if (s != null)       s.close();
+    }
+ catch (    IOException e) {
+    }
   }
   return res;
 }
