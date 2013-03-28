@@ -7,5 +7,5 @@ def setupImportHdfs(node=None, path=None):
     else:
         URI = (hdfsPrefix + path)
     importHdfsResult = node.import_hdfs(URI)
-    print h2o.dump_json(importHdfsResult)
+    h2o.verboseprint(h2o.dump_json(importHdfsResult))
     return importHdfsResult
