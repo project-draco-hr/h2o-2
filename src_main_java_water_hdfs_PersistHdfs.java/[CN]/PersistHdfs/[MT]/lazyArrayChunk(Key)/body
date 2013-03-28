@@ -8,7 +8,7 @@
     size=fs.getFileStatus(p).getLen();
   }
  catch (  IOException e) {
-    System.err.println(e);
+    H2O.ignore(e);
     return null;
   }
   long rem=size - off;

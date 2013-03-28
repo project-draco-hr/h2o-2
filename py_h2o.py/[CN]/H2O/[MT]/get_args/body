@@ -10,7 +10,6 @@ def get_args(self):
             raise Exception(('java_heap_MB <1 or >63000  (MB): %s' % self.java_heap_MB))
         args += [('-Xms%dm' % self.java_heap_MB)]
         args += [('-Xmx%dm' % self.java_heap_MB)]
-        print 'crikey', self.java_heap_MB
     if (self.java_extra_args is not None):
         args += [('%s' % self.java_extra_args)]
     if self.use_debugger:
