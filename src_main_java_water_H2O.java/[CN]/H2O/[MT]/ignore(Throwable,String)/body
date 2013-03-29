@@ -1,4 +1,11 @@
 {
-  System.err.println("Exception ignored: " + msg);
-  e.printStackTrace();
+  StackTraceElement[] stack=e.getStackTrace();
+  StringBuffer sb=new StringBuffer();
+  sb.append(msg).append('\n').append(e).append('\n');
+  for (  StackTraceElement el : stack) {
+    sb.append("\tat ");
+    sb.append(el.toString().replaceFirst("Exception","Problem"));
+    sb.append('\n');
+  }
+  System.err.println(sb);
 }
