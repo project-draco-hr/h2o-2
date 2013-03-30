@@ -17,7 +17,7 @@ def test_many_cols_int2cat(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         print '\nNow running the int 2 enum exec command across all input cols'
-        colResultList = h2e.exec_expr_list_across_cols(None, exprList, key2, maxCol=colCount, timeoutSecs=4, incrementingResult=False)
+        colResultList = h2e.exec_expr_list_across_cols(None, exprList, key2, maxCol=colCount, timeoutSecs=30, incrementingResult=False)
         print '\nexec colResultList', colResultList
         if (not h2o.browse_disable):
             h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
