@@ -1,12 +1,18 @@
 {
   final Model model=m;
+  final Key jobKey=self();
   fs.add(new TAtomic<GLMModels>(){
+    final Key _job=jobKey;
+    boolean done=false;
     @Override public GLMModels atomic(    GLMModels old){
       old._ms[idx]=model._selfKey;
-      old._count++;
+      done=++old._count == old._ms.length;
       old._runTime=Math.max(runTime,old._runTime);
       return old;
     }
+    @Override public void onSuccess(){
+      if (done)       DKV.remove(_job);
+    }
   }
-.fork(dest));
+.fork(dest()));
 }

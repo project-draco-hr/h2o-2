@@ -1,20 +1,12 @@
 {
   super.start();
   UKV.put(dest(),new GLMModels(_lambdas.length * _alphas.length));
-  final int N=_alphas.length;
-  H2O.submitTask(new H2OCountedCompleter(){
-    @Override public void compute2(){
-      setPendingCount(N);
-      for (int a=0; a < _alphas.length; a++) {
-        GridTask t=new GridTask(a);
-        t.setCompleter(this);
-        H2O.submitTask(t);
-      }
-      tryComplete();
-    }
-    @Override public void onCompletion(    CountedCompleter caller){
-      remove();
-    }
+  final int cloudsize=H2O.CLOUD._memary.length;
+  int myId=H2O.SELF.index();
+  for (int a=0; a < _alphas.length; a++) {
+    GridTask t=new GridTask(this,a);
+    int nodeId=(myId + a) % cloudsize;
+    if (nodeId == myId)     H2O.submitTask(t);
+ else     RPC.call(H2O.CLOUD._memary[nodeId],t);
   }
-);
 }
