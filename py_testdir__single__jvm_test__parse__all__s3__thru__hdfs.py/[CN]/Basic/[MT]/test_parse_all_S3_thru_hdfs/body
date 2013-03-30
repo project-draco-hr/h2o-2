@@ -3,7 +3,7 @@ def test_parse_all_S3_thru_hdfs(self):
     print "In EC2, michal's config always passes the right config xml"
     print 'as arg to the java -jar h2o.jar. Only works in EC2'
     timeoutSecs = 200
-    URI = 'S3://home-0xdiag-datasets'
+    URI = 's3://home-0xdiag-datasets'
     importHDFSResult = h2o.nodes[0].import_hdfs(URI)
     S3FullList = importHDFSResult['succeeded']
     print 'S3FullList:', h2o.dump_json(S3FullList)
