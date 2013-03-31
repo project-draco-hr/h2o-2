@@ -1,0 +1,16 @@
+{
+  String[] classpath=System.getProperty("java.class.path").split(File.pathSeparator);
+  try {
+    final List<URL> list=new ArrayList<URL>();
+    if (classpath != null) {
+      for (      final String element : classpath) {
+        list.addAll(getDirectoryClassPath(element));
+        list.add(new File(element).toURI().toURL());
+      }
+    }
+    return list.toArray(new URL[list.size()]);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}

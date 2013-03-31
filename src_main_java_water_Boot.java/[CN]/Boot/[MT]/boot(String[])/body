@@ -22,11 +22,5 @@
     addInternalJars("s3");
     addInternalJars("jets3t");
   }
-  String mainClass="water.H2O";
-  if (args.length >= 2 && args[0].equals("-mainClass")) {
-    mainClass=args[1];
-    args=Arrays.copyOfRange(args,2,args.length);
-  }
-  Class h2oclazz=loadClass(mainClass,true);
-  h2oclazz.getMethod("main",String[].class).invoke(null,(Object)args);
+  run(args);
 }

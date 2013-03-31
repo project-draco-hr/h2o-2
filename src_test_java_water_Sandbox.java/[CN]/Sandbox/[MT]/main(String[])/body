@@ -1,0 +1,17 @@
+{
+  args=(String[])ArrayUtils.addAll(args,new String[]{"--log_headers"});
+  ArrayList<Node> workers=new ArrayList<Node>();
+  for (int i=0; i < 2; i++) {
+    workers.add(new NodeVM(args));
+  }
+  for (  Node worker : workers) {
+    worker.inheritIO();
+    worker.start();
+  }
+  H2O.main(args);
+  TestUtil.stall_till_cloudsize(1 + workers.size());
+  File f=new File("smalldata/covtype/covtype.20k.data");
+  Key key=TestUtil.load_test_file(f,"test");
+  Key dest=Key.make("test.hex");
+  ParseDataset.parse(dest,new Key[]{key});
+}
