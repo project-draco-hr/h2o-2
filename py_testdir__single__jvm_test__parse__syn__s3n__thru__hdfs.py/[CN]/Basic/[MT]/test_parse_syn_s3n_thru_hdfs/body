@@ -1,0 +1,22 @@
+def test_parse_syn_s3n_thru_hdfs(self):
+    csvFilename = 'syn_datasets/*_10000x200*'
+    trialMax = 3
+    timeoutSecs = 500
+    URI = 's3n://home-0xdiag-datasets'
+    s3nKey = ((URI + '/') + csvFilename)
+    for trial in range(trialMax):
+        importHDFSResult = h2o.nodes[0].import_hdfs(URI)
+        s3nFullList = importHDFSResult['succeeded']
+        self.assertGreater(len(s3nFullList), 8, "Didn't see more than 8 files in s3n?")
+        key2 = (('syn_datasets_' + str(trial)) + '.hex')
+        print 'Loading s3n key: ', s3nKey, 'thru HDFS'
+        start = time.time()
+        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=500, retryDelaySecs=10, pollTimeoutSecs=60)
+        elapsed = (time.time() - start)
+        print s3nKey, 'parse time:', parseKey['response']['time']
+        print 'parse result:', parseKey['destination_key']
+        print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
+        storeView = h2o.nodes[0].store_view()
+        print 'Removing', s3nKey
+        removeKeyResult = h2o.nodes[0].remove_key(key=s3nKey)
