@@ -1,4 +1,4 @@
-def check_sandbox_for_errors():
+def check_sandbox_for_errors(sandbox_ignore_errors=False):
     if (nodes and nodes[0].sandbox_error_report()):
         return
     errLines = []
@@ -13,10 +13,9 @@ def check_sandbox_for_errors():
             for line in sandFile:
                 printSingleWarning = False
                 foundBad = False
-                foundNOPTaskCnt = 0
                 if (not (' bytes)' in line)):
-                    printSingleWarning = ((regex3.search(line) and (not ('[Loaded ' in line))) or ('Non-member packets' in line))
-                    foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line))))
+                    printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)))
+                    foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
                     lines = 1
@@ -24,9 +23,7 @@ def check_sandbox_for_errors():
                     lines += 1
                     foundCaused = regex2.search(line)
                     foundAt = re.match('[\\t ]+at ', line)
-                    if re.match('NOPTask', line):
-                        foundNOPTaskCnt += 1
-                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt or (foundNOPTaskCnt == 1)))):
+                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt))):
                         printing = 2
                 if (printing == 1):
                     errLines.append(line)
@@ -45,4 +42,7 @@ def check_sandbox_for_errors():
             emsg2 = ''.join(errLines)
             if nodes:
                 nodes[0].sandbox_error_report(True)
-            raise Exception(((python_test_name + emsg1) + emsg2))
+            if (sandbox_ignore_errors or (nodes and nodes[0].sandbox_ignore_errors)):
+                pass
+            else:
+                raise Exception(((python_test_name + emsg1) + emsg2))

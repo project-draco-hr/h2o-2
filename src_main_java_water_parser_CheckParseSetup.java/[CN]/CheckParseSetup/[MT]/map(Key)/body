@@ -1,0 +1,16 @@
+{
+  if (!_job.cancelled()) {
+    try {
+      CsvParser.Setup setup=Inspect.csvGuessValue(DKV.get(key));
+      _res=(setup._separator == _separator) && (setup._data[0].length == _ncols);
+      if (!_res) {
+        _job.cancel();
+        UKV.put(_job.dest(),new Job.Fail("Attempting to parse incompatible files!"));
+      }
+    }
+ catch (    Throwable t) {
+      t.printStackTrace();
+      _res=false;
+    }
+  }
+}

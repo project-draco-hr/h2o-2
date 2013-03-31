@@ -1,16 +1,15 @@
 {
+  final int N=_job._lambdas.length;
   double[] beta=null;
   Futures fs=new Futures();
-  try {
-    for (int l1=1; l1 <= _lambdas.length; l1++) {
-      if (cancelled())       break;
-      GLMModel m=do_task(beta,_lambdas.length - l1,_aidx);
-      beta=m._normBeta.clone();
-      update(dest(),m,(_lambdas.length - l1) * _alphas.length + _aidx,System.currentTimeMillis() - _startTime,fs);
-    }
-    fs.blockForPending();
+  ValueArray ary=DKV.get(_aryKey).get();
+  for (int l1=1; l1 <= _job._lambdas.length; l1++) {
+    if (_job.cancelled())     break;
+    GLMModel m=DGLM.buildModel(DGLM.getData(ary,_job._xs,null,true),new ADMMSolver(_job._lambdas[N - l1],_job._alphas[_aidx]),_job._glmp,beta);
+    if (_job._xfold <= 1)     m.validateOn(ary,null,_job._ts);
+ else     m.xvalidate(ary,_job._xfold,_job._ts);
+    beta=m._normBeta.clone();
+    _job.update(m,(_job._lambdas.length - l1) + _aidx * _job._lambdas.length,System.currentTimeMillis() - _job._startTime,fs);
   }
-  finally {
-    tryComplete();
-  }
+  fs.blockForPending();
 }

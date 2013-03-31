@@ -12,6 +12,8 @@ def exec_expr_list_across_cols(lenNodes, exprList, key2, minCol=0, maxCol=54, ti
             else:
                 resultKey = key2
             execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, resultKey, timeoutSecs)
+            execResultKey = execResultInspect[0]['key']
+            resultInspect = h2o_cmd.runInspect(None, execResultKey)
             if incrementingResult:
                 min_value = checkScalarResult(execResultInspect, resultKey)
                 h2o.verboseprint('min_value: ', min_value, 'col:', colX)

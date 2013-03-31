@@ -1,0 +1,25 @@
+def test_parse_all_s3n_thru_hdfs(self):
+    print '\nLoad a list of files from s3n, parse it thru HDFS'
+    print "In EC2, michal's config always passes the right config xml"
+    print 'as arg to the java -jar h2o.jar. Only works in EC2'
+    timeoutSecs = 200
+    URI = 's3n://home-0xdiag-datasets'
+    importHDFSResult = h2o.nodes[0].import_hdfs(URI)
+    s3nFullList = importHDFSResult['succeeded']
+    print 's3nFullList:', h2o.dump_json(s3nFullList)
+    self.assertGreater(len(s3nFullList), 8, "Didn't see more than 8 files in s3n?")
+    if (1 == 0):
+        s3nList = random.sample(s3nFullList, 8)
+    else:
+        s3nList = s3nFullList
+    for s in s3nList:
+        s3nKey = s['key']
+        s3nFilename = s['file']
+        if (('csv' not in s3nKey) or ('syn_dataset' in s3nKey) or ('.gz' in s3nKey)):
+            continue
+        print 'Loading s3n key: ', s3nKey, 'thru HDFS'
+        parseKey = h2o.nodes[0].parse(s3nKey, (s3nFilename + '.hex'), timeoutSecs=500, retryDelaySecs=10, pollTimeoutSecs=60)
+        print s3nFilename, 'parse time:', parseKey['response']['time']
+        print 'parse result:', parseKey['destination_key']
+        start = time.time()
+        sys.stdout.flush()

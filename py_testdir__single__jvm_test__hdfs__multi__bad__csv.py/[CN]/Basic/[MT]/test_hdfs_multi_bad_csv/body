@@ -2,7 +2,7 @@ def test_hdfs_multi_bad_csv(self):
     print '\nUse the new regex capabilities for selecting hdfs: try *csv* at /datasets'
     h2b.browseTheCloud()
     h2i.setupImportHdfs()
-    parseKey = h2o.nodes[0].parse('*csv*', key2='random_csv.hex', exclude=None, header=None, timeoutSecs=200)
+    parseKey = h2o.nodes[0].parse('*airlines_all*csv', key2='random_csv.hex', exclude=None, header=None, timeoutSecs=600)
     print '*csv* regex to hdfs /datasets', 'parse time:', parseKey['response']['time']
     print 'parse result:', parseKey['destination_key']
     sys.stdout.flush()
