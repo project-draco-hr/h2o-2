@@ -2,9 +2,11 @@ def test_exec_import_hosts(self):
     importFolderPath = '/home/0xdiag/datasets'
     h2i.setupImportFolder(None, importFolderPath)
     if localhost:
+        maxTrials = 200
         csvFilenameAll = [('covtype.data', 'cA', 15), ('covtype.data', 'cB', 15)]
     else:
-        csvFilenameAll = [('covtype.data', 'cA', 15), ('covtype.data', 'cB', 15), ('covtype20x.data', 'cC', 60), ('covtype20x.data', 'cD', 60)]
+        maxTrials = 20
+        csvFilenameAll = [('covtype.data', 'cA', 15), ('covtype20x.data', 'cC', 60)]
     csvFilenameList = csvFilenameAll
     h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
@@ -15,4 +17,4 @@ def test_exec_import_hosts(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         h2e.exec_zero_list(zeroList)
-        h2e.exec_expr_list_rand(lenNodes, exprList, key2, maxCol=54, maxRow=400000, maxTrials=100, timeoutSecs=timeoutSecs)
+        h2e.exec_expr_list_rand(lenNodes, exprList, key2, maxCol=54, maxRow=400000, maxTrials=maxTrials, timeoutSecs=timeoutSecs)
