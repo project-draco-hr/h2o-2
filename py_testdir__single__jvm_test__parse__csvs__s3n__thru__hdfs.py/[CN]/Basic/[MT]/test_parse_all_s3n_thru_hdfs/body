@@ -15,7 +15,7 @@ def test_parse_all_s3n_thru_hdfs(self):
     for s in s3nList:
         s3nKey = s['key']
         s3nFilename = s['file']
-        if (('csv' not in s3nKey) or ('syn_dataset' in s3nKey)):
+        if (('csv' not in s3nKey) or ('syn_dataset' in s3nKey) or ('.gz' in s3nKey)):
             continue
         print 'Loading s3n key: ', s3nKey, 'thru HDFS'
         parseKey = h2o.nodes[0].parse(s3nKey, (s3nFilename + '.hex'), timeoutSecs=500, retryDelaySecs=10, pollTimeoutSecs=60)
