@@ -42,4 +42,7 @@ def check_sandbox_for_errors():
             emsg2 = ''.join(errLines)
             if nodes:
                 nodes[0].sandbox_error_report(True)
-            raise Exception(((python_test_name + emsg1) + emsg2))
+            if (nodes and nodes[0].sandbox_ignore_errors):
+                pass
+            else:
+                raise Exception(((python_test_name + emsg1) + emsg2))
