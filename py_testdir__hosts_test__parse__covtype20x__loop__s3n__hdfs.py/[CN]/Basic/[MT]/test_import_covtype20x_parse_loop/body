@@ -6,7 +6,7 @@ def test_import_covtype20x_parse_loop(self):
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import folder,', "then parse 'covtype20x.data'"
         h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
         h2o.nodes[0].sandbox_ignore_errors = True
-        timeoutSecs = 300
+        timeoutSecs = 500
         URI = 's3n://home-0xdiag-datasets'
         s3nKey = ((URI + '/') + csvFilename)
         for trial in range(trialMax):
