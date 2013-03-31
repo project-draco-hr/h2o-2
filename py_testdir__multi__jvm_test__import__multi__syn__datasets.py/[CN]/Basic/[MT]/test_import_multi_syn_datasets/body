@@ -6,7 +6,10 @@ def test_import_multi_syn_datasets(self):
     print 'to import S3, there is a syn_datasets with 100 files'
     print 'FIX! When run locally, I should have some multi-files in', importFolderPath, '/syn_datasets?'
     timeoutSecs = 500
-    csvFilenameAll = ['syn_datasets/*']
+    if h2o.nodes[0].redirect_import_folder_to_s3_path:
+        csvFilenameAll = ['syn_datasets/*_10000x200*']
+    else:
+        csvFilenameAll = ['syn_datasets/*']
     csvFilenameList = csvFilenameAll
     for csvFilename in csvFilenameList:
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2='syn_datasets.hex', timeoutSecs=500)
