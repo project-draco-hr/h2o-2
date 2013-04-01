@@ -1,0 +1,13 @@
+from pprint import pprint
+from boto import ec2
+import os
+AWS_ACCESS_KEY_ID = 'XXXXXXXXXXXXXXXXXX'
+AWS_SECRET_ACCESS_KEY = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+check_required_env_variables()
+ec2conn = ec2.connection.EC2Connection(os.environ['AWS_ACCESS_KEY_ID'], os.environ['AWS_SECRET_ACCESS_KEY'])
+reservations = ec2conn.get_all_instances()
+instances = [i for r in reservations for i in r.instances]
+for i in instances:
+    print '\n'
+    pprint(i.__dict__)
+print len(instances), 'instances at aws'
