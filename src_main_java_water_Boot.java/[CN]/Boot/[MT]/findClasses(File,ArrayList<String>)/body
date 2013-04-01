@@ -1,0 +1,6 @@
+{
+  for (  File file : folder.listFiles()) {
+    if (file.isDirectory())     findClasses(file,names);
+ else     if (file.getPath().endsWith(".class"))     names.add(file.getPath().substring(CLASSES.length() + 1));
+  }
+}

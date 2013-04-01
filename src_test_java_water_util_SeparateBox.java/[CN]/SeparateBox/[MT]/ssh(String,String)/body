@@ -1,8 +1,0 @@
-{
-  String ssh="ssh";
-  File onWindows=new File("C:/cygwin/bin/ssh.exe");
-  if (onWindows.exists()) {
-    ssh=onWindows.getAbsolutePath();
-  }
-  return ssh + " -l " + user+ " -i "+ key+ " -o UserKnownHostsFile=/dev/null"+ " -o StrictHostKeyChecking=no"+ " -o LogLevel=quiet";
-}

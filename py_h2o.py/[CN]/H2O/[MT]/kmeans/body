@@ -1,4 +1,4 @@
-def kmeans(self, key, key2=None, timeoutSecs=10, retryDelaySecs=0.2, **kwargs):
+def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=30, **kwargs):
     params_dict = {'epsilon': 1e-06, 'k': 1, 'source_key': key, 'destination_key': None, }
     if (key2 is not None):
         params_dict['destination_key'] = key2
@@ -8,6 +8,6 @@ def kmeans(self, key, key2=None, timeoutSecs=10, retryDelaySecs=0.2, **kwargs):
     if (a['response']['redirect_request'] != 'Progress'):
         print dump_json(a)
         raise Exception('H2O kmeans redirect is not Progress. KMeans json response precedes.')
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
     verboseprint('\nKMeans result:', dump_json(a))
     return a

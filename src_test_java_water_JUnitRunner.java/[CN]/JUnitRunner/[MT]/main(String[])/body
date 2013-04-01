@@ -1,0 +1,26 @@
+{
+  ArrayList<Node> nodes=new ArrayList<Node>();
+  args=(String[])ArrayUtils.addAll(args,new String[]{"--log_headers"});
+  nodes.add(new NodeVM(args));
+  nodes.add(new NodeVM(args));
+  args=(String[])ArrayUtils.addAll(args,new String[]{"-mainClass",Master.class.getName()});
+  Node master=new NodeVM(args);
+  nodes.add(master);
+  File out=null, err=null, sandbox=new File("sandbox");
+  sandbox.mkdirs();
+  for (int i=0; i < nodes.size(); i++) {
+    out=File.createTempFile("junit-" + i + "-out-",null,sandbox);
+    err=File.createTempFile("junit-" + i + "-err-",null,sandbox);
+    nodes.get(i).persistIO(out.getAbsolutePath(),err.getAbsolutePath());
+    nodes.get(i).start();
+  }
+  int exit=master.waitFor();
+  if (exit != 0) {
+    Log.log(out,System.out);
+    Thread.sleep(100);
+    Log.log(err,System.err);
+  }
+  for (  Node node : nodes)   node.kill();
+  if (exit == 0)   System.out.println("OK");
+  System.exit(exit);
+}

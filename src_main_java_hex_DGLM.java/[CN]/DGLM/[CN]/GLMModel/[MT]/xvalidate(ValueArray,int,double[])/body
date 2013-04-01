@@ -1,8 +1,6 @@
 {
-  String[] colNames=ary.colNames();
-  int[] modelDataMap=columnMapping(colNames);
+  int[] modelDataMap=ary.getColumnIds(_va.colNames());
   if (!isCompatible(modelDataMap))   throw new GLMException("incompatible dataset");
-  ;
   GLMModel[] models=new GLMModel[folds];
   for (int i=0; i < folds; ++i) {
     models[i]=buildModel(DGLM.getData(ary,modelDataMap,new Sampling(i,folds,false),true),_solver,_glmParams);

@@ -12,7 +12,8 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
         path = re.sub('/home/0xdiag/datasets', 'home-0xdiag-datasets', path)
         parseKey = parseImportS3File(node, csvFilename, path, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
     else:
-        csvPathnameForH2O = ((('nfs:/' + path) + '/') + csvFilename)
-        parseKey = node.parse(csvPathnameForH2O, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
-    print '\nParse result:', parseKey
+        importKey = ((('nfs:/' + path) + '/') + csvFilename)
+        parseKey = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
+        parseKey['source_key'] = importKey
+        print '\nParse result:', parseKey
     return parseKey

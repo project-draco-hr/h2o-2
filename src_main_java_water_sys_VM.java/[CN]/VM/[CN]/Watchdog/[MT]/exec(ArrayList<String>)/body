@@ -1,0 +1,13 @@
+{
+  ProcessBuilder builder=new ProcessBuilder(list);
+  builder.environment().put("CYGWIN","nodosfilewarning");
+  final Process process=builder.start();
+  NodeVM.inheritIO(process,null);
+  Runtime.getRuntime().addShutdownHook(new Thread(){
+    @Override public void run(){
+      process.destroy();
+    }
+  }
+);
+  process.waitFor();
+}

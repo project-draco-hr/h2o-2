@@ -5,7 +5,7 @@
     String[] dataset=getDataForSeparator(separator,data);
     Key k=k("ChunkBoundaries",dataset);
     Key r3=Key.make();
-    ParseDataset.parse(r3,DKV.get(k));
+    ParseDataset.parse(r3,new Key[]{k});
     testParsed(r3,exp,k);
   }
 }

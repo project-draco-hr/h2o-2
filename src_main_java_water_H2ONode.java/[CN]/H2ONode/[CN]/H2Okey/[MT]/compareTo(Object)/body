@@ -2,7 +2,7 @@
   if (x == null)   return -1;
   H2Okey key=((H2ONode)x)._key;
   if (key == this)   return 0;
-  int res=_ipv4 - key._ipv4;
-  if (res != 0)   return res;
+  long res=(_ipv4 & 0xFFFFFFFFL) - (key._ipv4 & 0xFFFFFFFFL);
+  if (res != 0)   return res < 0 ? -1 : 1;
   return udp_port() - key.udp_port();
 }

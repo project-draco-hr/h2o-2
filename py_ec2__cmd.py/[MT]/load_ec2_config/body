@@ -1,10 +1,10 @@
-def load_ec2_config(config_file):
+def load_ec2_config(config_file, region):
     if config_file:
         f = find_file(config_file)
         with open(f, 'rb') as fp:
             ec2_cfg = json.load(fp)
     else:
         ec2_cfg = {}
-    for (k, v) in DEFAULT_EC2_INSTANCE_CONF.items():
+    for (k, v) in DEFAULT_EC2_INSTANCE_CONFIGS[region].items():
         ec2_cfg.setdefault(k, v)
     return ec2_cfg

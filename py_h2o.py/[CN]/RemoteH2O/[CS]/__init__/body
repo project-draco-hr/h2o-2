@@ -4,13 +4,15 @@ def __init__(self, host, *args, **kwargs):
     self.flatfile = host.upload_file(flatfile_name())
     if self.aws_credentials:
         self.aws_credentials = host.upload_file(self.aws_credentials)
+    if self.hdfs_config:
+        self.hdfs_config = host.upload_file(self.hdfs_config)
     if self.use_home_for_ice:
         self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
     else:
         self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
     self.channel = host.open_channel()
     cmd = ' '.join(self.get_args())
-    self.channel.exec_command(cmd)
+    self.channel.exec_command(((('cd /tmp; ls -ltr ' + self.jar) + '; ') + re.sub('/tmp/', '', cmd)))
     if self.capture_output:
         if (self.node_id is not None):
             logPrefix = ('remote-h2o-' + str(self.node_id))

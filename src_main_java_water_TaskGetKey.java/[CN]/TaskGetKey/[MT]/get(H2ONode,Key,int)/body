@@ -4,9 +4,9 @@
     rpc=TGKS.get(key);
     if (rpc != null && rpc._dt._priority >= priority)     break;
     old=rpc;
-    rpc=new RPC(target,new TaskGetKey(key,priority));
+    rpc=new RPC(target,new TaskGetKey(key,priority),1.0f);
     if (TGKS.putIfMatchUnlocked(key,rpc,old) == old) {
-      rpc.call();
+      rpc.setTaskNum().call();
       break;
     }
   }

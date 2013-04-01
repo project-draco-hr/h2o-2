@@ -26,6 +26,7 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
     key_filename = hostDict.setdefault('key_filename', None)
     aws_credentials = hostDict.setdefault('aws_credentials', None)
     redirect_import_folder_to_s3_path = hostDict.setdefault('redirect_import_folder_to_s3_path', None)
+    enable_h2o_log = hostDict.setdefault('enable_h2o_log', False)
     if (node_count is not None):
         h2oPerHost = node_count
     if (use_flatfile is not None):
@@ -62,4 +63,4 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
         timeoutSecs = max(60, (8 * (len(hosts) * h2oPerHost)))
     else:
         timeoutSecs = 60
-    h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, hdfs_version=hdfsVersion, hdfs_config=hdfsConfig, java_heap_GB=javaHeapGB, java_heap_MB=javaHeapMB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, aws_credentials=aws_credentials, redirect_import_folder_to_s3_path=redirect_import_folder_to_s3_path, **kwargs)
+    h2o.build_cloud(h2oPerHost, base_port=basePort, hosts=hosts, timeoutSecs=timeoutSecs, sigar=sigar, use_flatfile=useFlatfile, use_hdfs=useHdfs, hdfs_name_node=hdfsNameNode, hdfs_version=hdfsVersion, hdfs_config=hdfsConfig, java_heap_GB=javaHeapGB, java_heap_MB=javaHeapMB, java_extra_args=javaExtraArgs, use_home_for_ice=use_home_for_ice, aws_credentials=aws_credentials, redirect_import_folder_to_s3_path=redirect_import_folder_to_s3_path, enable_h2o_log=enable_h2o_log, **kwargs)

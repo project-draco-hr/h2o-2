@@ -1,0 +1,12 @@
+{
+  final ParseDataset job=new ParseDataset(dest,keys);
+  job.start();
+  H2O.submitTask(new H2OCountedCompleter(){
+    @Override public void compute2(){
+      parse(job,keys,setup);
+      tryComplete();
+    }
+  }
+);
+  return job;
+}

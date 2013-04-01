@@ -1,0 +1,24 @@
+{
+  ZipInputStream zis=null;
+  Key keys[]=new Key[dataset.length];
+  try {
+    for (int i=0; i < dataset.length; ++i) {
+      try {
+        zis=new ZipInputStream(dataset[i].openStream());
+        ZipEntry ze=zis.getNextEntry();
+        if (ze != null && !ze.isDirectory()) {
+          keys[i]=Key.make(new String(dataset[i]._key._kb) + "_UNZIPPED");
+          ValueArray.readPut(keys[i],zis,job);
+        }
+      }
+  finally {
+        Closeables.closeQuietly(zis);
+      }
+    }
+    for (int i=0; i < keys.length; ++i)     if (keys[i] == null)     throw new Error("Cannot uncompressed ZIP-compressed dataset!");
+    parse(job,keys,setup);
+  }
+  finally {
+    for (int i=0; i < keys.length; ++i)     if (keys[i] != null)     UKV.remove(keys[i]);
+  }
+}

@@ -8,13 +8,13 @@
     Key k=Key.make();
     UKV.put(k,new Value(k,sb.toString()));
     Key r1=Key.make("r1");
-    ParseDataset.parse(r1,DKV.get(k));
+    ParseDataset.parse(r1,new Key[]{k});
     testParsed(r1,exp,k);
     sb=new StringBuilder();
     for (int i=0; i < dataset.length; ++i)     sb.append(dataset[i]).append("\r\n");
     UKV.put(k,new Value(k,sb.toString()));
     Key r2=Key.make("r2");
-    ParseDataset.parse(r2,DKV.get(k));
+    ParseDataset.parse(r2,new Key[]{k});
     testParsed(r2,exp,k);
   }
 }

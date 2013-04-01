@@ -1,0 +1,19 @@
+{
+  _args=new ArrayList<String>();
+  _args.add(System.getProperty("java.home") + "/bin/java");
+  defaultParams(_args);
+  _args.add("-cp");
+  String cp="";
+  for (  URL url : ((URLClassLoader)ClassLoader.getSystemClassLoader()).getURLs()) {
+    try {
+      cp+=new File(new URI(url.toString())) + File.pathSeparator;
+    }
+ catch (    URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  _args.add(cp);
+  if (javaArgs != null)   _args.addAll(Arrays.asList(javaArgs));
+  _args.add(getClass().getName());
+  if (appArgs != null)   _args.addAll(Arrays.asList(appArgs));
+}

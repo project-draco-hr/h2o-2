@@ -10,7 +10,6 @@ def get_args(self):
             raise Exception(('java_heap_MB <1 or >63000  (MB): %s' % self.java_heap_MB))
         args += [('-Xms%dm' % self.java_heap_MB)]
         args += [('-Xmx%dm' % self.java_heap_MB)]
-        print 'crikey', self.java_heap_MB
     if (self.java_extra_args is not None):
         args += [('%s' % self.java_extra_args)]
     if self.use_debugger:
@@ -32,12 +31,14 @@ def get_args(self):
     args += [('--ice_root=%s' % self.get_ice_dir()), ('--name=' + cloud_name())]
     if self.use_hdfs:
         args += [('-hdfs hdfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
-        if self.hdfs_config:
-            args += [('-hdfs_config ' + self.hdfs_config)]
+    if self.hdfs_config:
+        args += [('-hdfs_config ' + self.hdfs_config)]
     if (not self.sigar):
         args += ['--nosigar']
     if self.aws_credentials:
         args += [('--aws_credentials=' + self.aws_credentials)]
     if (self.random_udp_drop or random_udp_drop):
         args += ['--random_udp_drop']
+    if self.enable_h2o_log:
+        args += ['--log']
     return args

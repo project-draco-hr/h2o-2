@@ -1,6 +1,6 @@
 def test_GLM_moneypuck(self):
     if (1 == 1):
-        csvFilenameList = [('hdb-2007-02-05/Goalies.csv', 120, 'Goalies'), ('hdb-2007-02-05/GoaliesSC.csv', 120, 'GoaliesSC'), ('hdb-2007-02-05/Scoring.csv', 120, 'Scoring'), ('hdb-2007-02-05/ScoringSC.csv', 120, 'ScoringSC'), ('hdb-2007-02-05/Teams.csv', 120, 'Teams'), ('hdb-2007-02-05/TeamsHalf.csv', 120, 'TeamsHalf'), ('hdb-2007-02-05/TeamsPost.csv', 120, 'TeamsPost'), ('hdb-2007-02-05/TeamsSC.csv', 120, 'TeamsSC'), ('tricks-2012-06-23/HatTricks.csv', 120, 'HatTricks'), ('bkb090621/abbrev.csv', 120, 'abbrev'), ('bkb090621/AwardsCoaches.csv', 120, 'AwardsCoaches'), ('bkb090621/AwardsPlayers.csv', 120, 'AwardsPlayers'), ('bkb090621/Coaches.csv', 120, 'Coaches'), ('bkb090621/PlayersAllstar.csv', 120, 'PlayersAllstar'), ('bkb090621/Players.csv', 120, 'Players'), ('bkb090621/PlayersPlayoffs.csv', 120, 'PlayersPlayoffs'), ('bkb090621/Teams.csv', 120, 'Teams'), ('hdb-2007-02-05/abbrev.csv', 120, 'abbrev'), ('hdb-2007-02-05/AwardsPlayers.csv', 120, 'AwardsPlayers')]
+        csvFilenameList = [('hdb-2007-02-05/Scoring.csv', 240, 'Scoring'), ('hdb-2007-02-05/ScoringSC.csv', 240, 'ScoringSC'), ('hdb-2007-02-05/Teams.csv', 240, 'Teams'), ('hdb-2007-02-05/TeamsHalf.csv', 240, 'TeamsHalf'), ('hdb-2007-02-05/TeamsPost.csv', 240, 'TeamsPost'), ('hdb-2007-02-05/TeamsSC.csv', 240, 'TeamsSC'), ('tricks-2012-06-23/HatTricks.csv', 240, 'HatTricks'), ('bkb090621/abbrev.csv', 240, 'abbrev'), ('bkb090621/AwardsCoaches.csv', 240, 'AwardsCoaches'), ('bkb090621/AwardsPlayers.csv', 240, 'AwardsPlayers'), ('bkb090621/Coaches.csv', 240, 'Coaches'), ('bkb090621/PlayersAllstar.csv', 240, 'PlayersAllstar'), ('bkb090621/Players.csv', 240, 'Players'), ('bkb090621/PlayersPlayoffs.csv', 240, 'PlayersPlayoffs'), ('bkb090621/Teams.csv', 240, 'Teams'), ('hdb-2007-02-05/abbrev.csv', 240, 'abbrev'), ('hdb-2007-02-05/AwardsPlayers.csv', 240, 'AwardsPlayers')]
     h2b.browseTheCloud()
     importFolderPath = '/home/0xdiag/datasets/hockey'
     h2i.setupImportFolder(None, importFolderPath)
@@ -11,7 +11,7 @@ def test_GLM_moneypuck(self):
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
-        max_iter = 30
+        max_iter = 9
         y = (num_cols - 1)
         kwargs = {'y': y, 'family': 'poisson', 'link': 'log', 'num_cross_validation_folds': 0, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
         if (1 == 0):

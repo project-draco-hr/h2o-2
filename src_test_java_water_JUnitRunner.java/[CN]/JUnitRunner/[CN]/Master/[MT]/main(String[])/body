@@ -1,0 +1,35 @@
+{
+  try {
+    H2O.main(args);
+    TestUtil.stall_till_cloudsize(3);
+    List<String> names=Boot.getClasses();
+    Collections.sort(names);
+    ArrayList<Class> tests=new ArrayList<Class>();
+    for (    String name : names) {
+      try {
+        Class c=Class.forName(name);
+        if (isTest(c))         tests.add(c);
+      }
+ catch (      Throwable _) {
+      }
+    }
+    if (tests.size() == 0)     throw new Exception("Failed to find tests");
+    filter(tests);
+    Result r=org.junit.runner.JUnitCore.runClasses(tests.toArray(new Class[0]));
+    if (r.getFailureCount() == 0) {
+      System.out.println("Successfully ran the following tests in " + (r.getRunTime() / 1000) + "s");
+      for (      Class c : tests)       System.out.println(c.getName());
+    }
+ else {
+      for (      Failure f : r.getFailures()) {
+        System.err.println(f.getDescription());
+        if (f.getException() != null)         f.getException().printStackTrace();
+      }
+    }
+    System.exit(r.getFailureCount());
+  }
+ catch (  Throwable t) {
+    t.printStackTrace();
+    System.exit(1);
+  }
+}

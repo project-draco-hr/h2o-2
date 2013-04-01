@@ -2,6 +2,6 @@
   double[][] exp=new double[][]{d(NaN,1,1),d(NaN,2,NaN),d(3,NaN,3),d(4,NaN,NaN),d(NaN,NaN,NaN),d(NaN,NaN,NaN),d(NaN,NaN,6)};
   Key fkey=load_test_file("smalldata/test/is_NA.csv");
   Key okey=Key.make("NA.hex");
-  ParseDataset.parse(okey,DKV.get(fkey));
+  ParseDataset.parse(okey,new Key[]{fkey});
   testParsed(okey,exp,fkey,25);
 }

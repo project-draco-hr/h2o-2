@@ -1,20 +1,39 @@
 def main():
     parser = argparse.ArgumentParser(description='H2O EC2 instances launcher')
-    parser.add_argument('action', choices=['create', 'terminate', 'stop', 'reboot', 'start', 'distribute_h2o', 'start_h2o', 'stop_h2o', 'show_defaults'], help='EC2 instances action')
-    parser.add_argument('--config', help='Configuration file to configure NEW EC2 instances (if not specified default is used - see --show_defaults)', type=str, default=None)
-    parser.add_argument('--instances', help='Number of instances to launch', type=int, default=DEFAULT_NUMBER_OF_INSTANCES)
-    parser.add_argument('--hosts', help='Hosts file describing existing "EXISTING" EC2 instances ', type=str, default=None)
+    parser.add_argument('action', choices=['create', 'terminate', 'stop', 'reboot', 'start', 'distribute_h2o', 'start_h2o', 'stop_h2o', 'show_defaults', 'dump_reservation', 'show_reservations'], help='EC2 instances action')
+    parser.add_argument('-c', '--config', help='Configuration file to configure NEW EC2 instances (if not specified default is used - see "show_defaults")', type=str, default=None)
+    parser.add_argument('-i', '--instances', help='Number of instances to launch', type=int, default=DEFAULT_NUMBER_OF_INSTANCES)
+    parser.add_argument('-H', '--hosts', help='Hosts file describing existing "EXISTING" EC2 instances ', type=str, default=None)
+    parser.add_argument('-r', '--region', help='Specifies target create region', type=str, default=DEFAULT_REGION)
+    parser.add_argument('--reservation', help='Reservation ID, for example "r-1824ec65"', type=str, default=None)
+    parser.add_argument('--name', help='Name for launched instances', type=str, default=DEFAULT_INSTANCE_NAME)
     args = parser.parse_args()
     if (args.action == 'create'):
-        ec2_config = load_ec2_config(args.config)
+        ec2_region = load_ec2_region(args.region)
+        ec2_config = load_ec2_config(args.config, ec2_region)
+        tags = create_tags(Name=args.name)
+        log('Region   : {0}'.format(ec2_region))
         log('Config   : {0}'.format(ec2_config))
         log('Instances: {0}'.format(args.instances))
-        reservation = run_instances(args.instances, ec2_config)
+        log('Tags     : {0}'.format(tags))
+        reservation = run_instances(args.instances, ec2_config, ec2_region, tags=tags)
         dump_hosts_config(ec2_config, reservation, args.hosts)
         dump_ssh_commands(ec2_config, reservation)
     elif (args.action == 'show_defaults'):
-        print 'Config    : {0}'.format(DEFAULT_EC2_INSTANCE_CONF)
-        print 'Instances : {0}'.format(DEFAULT_NUMBER_OF_INSTANCES)
+        print 
+        print '\x1b[92mConfig\x1b[0m : {0}'.format(json.dumps(DEFAULT_EC2_INSTANCE_CONFIGS, indent=2))
+        print '\x1b[92mInstances\x1b[0m         : {0}'.format(DEFAULT_NUMBER_OF_INSTANCES)
+        print '\x1b[92mSupported regions\x1b[0m : {0}'.format([i for i in DEFAULT_EC2_INSTANCE_CONFIGS])
+        print 
+    elif (args.action == 'merge_reservations'):
+        merge_reservations(args.reservations, args.region)
+    elif (args.action == 'dump_reservation'):
+        ec2_region = load_ec2_region(args.region)
+        ec2_config = load_ec2_config(args.config, ec2_region)
+        ec2_reservation = load_ec2_reservation(args.reservation, ec2_region)
+        dump_hosts_config(ec2_config, ec2_reservation, args.hosts)
+    elif (args.action == 'show_reservations'):
+        report_reservations(args.region, args.reservation)
     else:
         hosts_config = load_hosts_config(args.hosts)
         invoke_hosts_action(args.action, hosts_config)

@@ -1,0 +1,58 @@
+{
+  Value[] dataset=new Value[keys.length];
+  int j=0;
+  for (int i=0; i < keys.length; ++i) {
+    Value v=DKV.get(keys[i]);
+    if (v.length() > 0)     dataset[j++]=v;
+  }
+  if (j < dataset.length)   dataset=Arrays.copyOf(dataset,j);
+  if (setup == null)   setup=Inspect.csvGuessValue(dataset[0]);
+  if (keys.length > 1) {
+    CheckParseSetup tst=new CheckParseSetup(job,setup);
+    tst.invoke(keys);
+    if (!tst._res) {
+      job.remove();
+      return;
+    }
+  }
+  try {
+    try {
+      parseUncompressed(job,dataset,CustomParser.Type.XLS,setup);
+      return;
+    }
+ catch (    Exception e) {
+    }
+    Compression compression=guessCompressionMethod(dataset[0]);
+    if (compression == Compression.ZIP) {
+      try {
+        parseUncompressed(job,dataset,CustomParser.Type.XLSX,setup);
+        return;
+      }
+ catch (      Exception e) {
+      }
+    }
+switch (compression) {
+case NONE:
+      parseUncompressed(job,dataset,CustomParser.Type.CSV,setup);
+    break;
+case ZIP:
+  parseZipped(job,dataset,setup);
+break;
+case GZIP:
+parseGZipped(job,dataset,setup);
+break;
+default :
+throw new Error("Unknown compression of dataset!");
+}
+}
+ catch (java.io.EOFException eof) {
+UKV.put(job.dest(),new Fail(eof.getMessage()));
+}
+catch (Exception e) {
+UKV.put(job.dest(),new Fail(e.getMessage()));
+throw Throwables.propagate(e);
+}
+ finally {
+job.remove();
+}
+}

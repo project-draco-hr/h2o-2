@@ -1,4 +1,4 @@
-def tear_down_cloud(node_list=None):
+def tear_down_cloud(node_list=None, sandbox_ignore_errors=False):
     if (not node_list):
         node_list = nodes
     try:
@@ -6,5 +6,5 @@ def tear_down_cloud(node_list=None):
             n.terminate()
             verboseprint('tear_down_cloud n:', n)
     finally:
-        check_sandbox_for_errors()
+        check_sandbox_for_errors(sandbox_ignore_errors=sandbox_ignore_errors)
         node_list[:] = []

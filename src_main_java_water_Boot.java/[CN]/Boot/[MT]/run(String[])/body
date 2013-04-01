@@ -1,0 +1,12 @@
+{
+  String mainClass="water.H2O";
+  if (args != null) {
+    int index=Arrays.asList(args).indexOf("-mainClass");
+    if (index >= 0 && args.length > index + 1) {
+      mainClass=args[index + 1];
+      args=Arrays.copyOfRange(args,2,args.length);
+    }
+  }
+  Class h2oclazz=_init.loadClass(mainClass,true);
+  h2oclazz.getMethod("main",String[].class).invoke(null,(Object)args);
+}

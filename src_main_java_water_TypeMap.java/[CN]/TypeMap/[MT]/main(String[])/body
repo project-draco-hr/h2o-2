@@ -1,7 +1,14 @@
 {
-  Log._dontDie=true;
-  File classes=new File(CLASSES);
   ArrayList<String> list=new ArrayList<String>();
-  findClasses(classes,list);
+  for (  String name : Boot.getClasses()) {
+    try {
+      Class c=Class.forName(name);
+      if (Freezable.class.isAssignableFrom(c))       list.add(c.getName());
+    }
+ catch (    Throwable _) {
+      System.out.println("Skipped: " + name);
+    }
+  }
+  Collections.sort(list);
   for (  String s : list)   System.out.println("    \"" + s + "\",");
 }
