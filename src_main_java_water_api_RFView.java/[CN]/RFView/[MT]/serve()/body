@@ -8,9 +8,11 @@
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value()) {
     tasks+=1;
-    Confusion confusion=Confusion.make(model,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
+    int modelSize=tasks * _refreshTresholdCM.value() / 100;
+    modelSize=modelSize * (finished / modelSize);
+    Confusion confusion=Confusion.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
     response.addProperty(JSON_CONFUSION_KEY,confusion.keyFor().toString());
-    if (confusion.isValid() && finished > 0) {
+    if (confusion.isValid() && modelSize > 0) {
       finished+=1;
       JsonObject cm=new JsonObject();
       JsonArray cmHeader=new JsonArray();
@@ -42,7 +44,7 @@
   Response r;
   if (finished == tasks) {
     r=jobDone(response);
-    r.addHeader("<div class='alert'>" + RFScore.link(model._selfKey,MODEL_KEY,"Use model for scoring.") + " </div>");
+    r.addHeader("<div class='alert'>" + RFScore.link(model._selfKey,MODEL_KEY,"Use this model for scoring.") + " </div>");
   }
  else {
     r=Response.poll(response,finished,tasks);
