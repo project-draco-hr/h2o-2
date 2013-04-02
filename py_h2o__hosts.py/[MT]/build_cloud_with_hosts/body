@@ -26,7 +26,7 @@ def build_cloud_with_hosts(node_count=None, use_flatfile=None, use_hdfs=None, hd
     key_filename = hostDict.setdefault('key_filename', None)
     aws_credentials = hostDict.setdefault('aws_credentials', None)
     redirect_import_folder_to_s3_path = hostDict.setdefault('redirect_import_folder_to_s3_path', None)
-    enable_h2o_log = hostDict.setdefault('enable_h2o_log', False)
+    enable_h2o_log = hostDict.setdefault('enable_h2o_log', True)
     if (node_count is not None):
         h2oPerHost = node_count
     if (use_flatfile is not None):
