@@ -1,0 +1,42 @@
+def test_GLM_covtype20x(self):
+    if localhost:
+        csvFilenameList = [('covtype20x.data', 480, 'cA')]
+    else:
+        csvFilenameList = [('covtype2000x.data', 3600, 'cA')]
+    h2b.browseTheCloud()
+    importFolderPath = '/home2/0xdiag/datasets'
+    h2i.setupImportFolder(None, importFolderPath)
+    for (csvFilename, timeoutSecs, key2) in csvFilenameList:
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        start = time.time()
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, key2=key2)
+        print 'parse end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o.check_sandbox_for_errors()
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        if (1 == 0):
+            print 'WARNING: just first 33 features. Comparison to allstate'
+            x = ','.join(map(str, range(33)))
+        else:
+            x = ''
+        y = '54'
+        kwargs = {'x': x, 'y': y, 'family': 'binomial', 'link': 'logit', 'num_cross_validation_folds': 0, 'case_mode': '=', 'case': 1, 'max_iter': 8, 'beta_epsilon': 0.001, }
+        print 'WARNING: max_iter set to 8 for benchmark comparisons'
+        kwargs.update({'alpha': 0, 'lambda': 0, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm (L2) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        h2o.check_sandbox_for_errors()
+        kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm (Elastic) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        h2o.check_sandbox_for_errors()
+        kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm (L1) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        h2o.check_sandbox_for_errors()
