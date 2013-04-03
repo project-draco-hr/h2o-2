@@ -4,12 +4,7 @@
   glmp._betaEps=0.000001;
   glmp._maxIter=100;
   System.out.print(msg);
-  GLMModel m=DGLM.buildModel(DGLM.getData(va,cols,null,true),lsms,glmp);
+  GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0).get();
   if (m._warnings != null)   for (  String s : m._warnings)   System.err.println(s);
-  if (m.isSolved()) {
-    m.validateOn(va,null,thresholds);
-    long[][] arr=m._vals[0].bestCM()._arr;
-    System.out.println(", score=" + score(m) + Arrays.deepToString(arr));
-  }
   return m;
 }
