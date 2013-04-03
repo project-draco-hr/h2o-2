@@ -1,8 +1,8 @@
 def test_parse_covtype20x_s3n_thru_hdfs(self):
     csvFilename = 'covtype20x.data'
-    csvPathname = ('/' + csvFilename)
-    URI = 's3n://home-0xdiag-datasets'
-    s3nKey = ((URI + '/') + csvPathname)
+    csvPathname = csvFilename
+    URI = 's3n://home-0xdiag-datasets/'
+    s3nKey = (URI + csvPathname)
     trialMax = 3
     timeoutSecs = 500
     for trial in range(trialMax):
