@@ -1,4 +1,5 @@
 {
+  for (  Annotation a : c.getAnnotations())   if (a instanceof Ignore)   return false;
   for (  Method m : c.getMethods())   for (  Annotation a : m.getAnnotations())   if (a instanceof Test)   return true;
   return false;
 }
