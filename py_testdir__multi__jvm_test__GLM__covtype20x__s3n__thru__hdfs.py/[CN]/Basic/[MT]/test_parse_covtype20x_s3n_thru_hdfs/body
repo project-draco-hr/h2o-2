@@ -4,7 +4,6 @@ def test_parse_covtype20x_s3n_thru_hdfs(self):
     URI = 's3n://home-0xdiag-datasets/'
     s3nKey = (URI + csvPathname)
     trialMax = 3
-    timeoutSecs = 500
     for trial in range(trialMax):
         trialStart = time.time()
         importHDFSResult = h2o.nodes[0].import_hdfs(URI)
@@ -12,32 +11,34 @@ def test_parse_covtype20x_s3n_thru_hdfs(self):
         self.assertGreater(len(s3nFullList), 8, "Didn't see more than 8 files in s3n?")
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         print 'Loading s3n key: ', s3nKey, 'thru HDFS'
+        timeoutSecs = 500
         start = time.time()
-        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=500, retryDelaySecs=10, pollTimeoutSecs=60)
+        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
-        print s3nKey, 'parse time:', parseKey['response']['time']
+        print s3nKey, 'h2o reported parse time:', parseKey['response']['time']
+        print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseKey['destination_key']
-        kwargs = {'y': 54, 'family': 'binomial', 'link': 'logit', 'num_cross_validation_folds': 2, 'case_mode': '=', 'case': 1, 'max_iter': 50, 'beta_epsilon': 0.001, }
-        timeoutSecs = 300
+        kwargs = {'y': 54, 'family': 'binomial', 'link': 'logit', 'num_cross_validation_folds': 2, 'case_mode': '=', 'case': 1, 'max_iter': 8, 'beta_epsilon': 0.001, }
+        timeoutSecs = 500
         kwargs.update({'alpha': 0, 'lambda': 0, })
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = time.time()
-        print 'glm (L2) end on ', csvPathname, 'took', (elapsed - start), 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'glm (L2) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
         h2o.check_sandbox_for_errors()
         kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = time.time()
-        print 'glm (Elastic) end on ', csvPathname, 'took', (elapsed - start), 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'glm (Elastic) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
         h2o.check_sandbox_for_errors()
         kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = time.time()
-        print 'glm (L1) end on ', csvPathname, 'took', (elapsed - start), 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'glm (L1) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
         h2o.check_sandbox_for_errors()
         print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
