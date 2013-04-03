@@ -1,0 +1,12 @@
+{
+  if (!_standardized)   return beta;
+  double[] newBeta=beta.clone();
+  double norm=0.0;
+  for (int i=0; i < newBeta.length - 1; i++) {
+    double b=newBeta[i] * _normMul[i];
+    norm+=b * _normSub[i];
+    newBeta[i]=b;
+  }
+  newBeta[newBeta.length - 1]-=norm;
+  return newBeta;
+}
