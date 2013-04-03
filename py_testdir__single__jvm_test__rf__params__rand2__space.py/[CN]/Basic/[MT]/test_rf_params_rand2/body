@@ -16,6 +16,6 @@ def test_rf_params_rand2(self):
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(None, rfView, noprint=True)
         print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs)), '\n'
         self.assertEqual(totalScores, 23)
-        self.assertLess(classErrorPctList[0], 82)
+        self.assertLess(classErrorPctList[0], 95)
         self.assertLess(classErrorPctList[1], 29)
         self.assertLess(classification_error, 61)

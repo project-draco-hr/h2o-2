@@ -2,5 +2,5 @@
   String[] bk=decodeKey(k);
   GetObjectRequest r=new GetObjectRequest(bk[0],bk[1]);
   r.setRange(offset,offset + length - 1);
-  return S3.getObject(r);
+  return getClient().getObject(r);
 }

@@ -1,35 +1,3 @@
 {
-  final ValueArray va=_source.value();
-  final Key source=va._key;
-  final int width=_width.value();
-  final int height=_height.value();
-  final int[] cols=_columns.value();
-  Key dest=_dest.value();
-  if (dest == null) {
-    String n=source.toString();
-    int dot=n.lastIndexOf('.');
-    if (dot > 0)     n=n.substring(0,dot);
-    dest=Key.make(n + ".plot");
-  }
-  try {
-    final Key dest_=dest;
-    UKV.put(dest,new hex.KMeans.KMeansModel());
-    H2O.submitTask(new H2OCountedCompleter(){
-      @Override public void compute2(){
-        hex.Plot.run(dest_,va,width,height,cols);
-      }
-    }
-);
-    JsonObject response=new JsonObject();
-    response.addProperty(RequestStatics.DEST_KEY,dest.toString());
-    Response r=Progress.redirect(response,null,dest);
-    r.setBuilder(RequestStatics.DEST_KEY,new KeyElementBuilder());
-    return r;
-  }
- catch (  IllegalArgumentException e) {
-    return Response.error(e.getMessage());
-  }
-catch (  Error e) {
-    return Response.error(e.getMessage());
-  }
+  throw new RuntimeException();
 }
