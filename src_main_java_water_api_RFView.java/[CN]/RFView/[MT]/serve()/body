@@ -9,7 +9,7 @@
   if (!_noCM.value()) {
     tasks+=1;
     int modelSize=tasks * _refreshTresholdCM.value() / 100;
-    modelSize=modelSize * (finished / modelSize);
+    modelSize=modelSize == 0 ? finished : modelSize * (finished / modelSize);
     Confusion confusion=Confusion.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
     response.addProperty(JSON_CONFUSION_KEY,confusion.keyFor().toString());
     if (confusion.isValid() && modelSize > 0) {

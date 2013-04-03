@@ -1,0 +1,45 @@
+{
+  checkArguments(args,type);
+  ValueArray va=_source.value();
+  Key source=va._key;
+  int width=_width.value();
+  int height=_height.value();
+  int[] cols=_columns.value();
+switch (type) {
+case www:
+{
+      String k=source.toString();
+      String s="" + "<div class='container' style='margin: 0px auto'>" + "<h3>" + k + "</h3>"+ "<img href='Plot.png?source="+ k+ "'></img>"+ "</div>";
+      return wrap(server,s);
+    }
+case png:
+{
+    byte[] pixels=hex.Plot.run(va,width,height,cols);
+    BufferedImage image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+    WritableRaster raster=image.getRaster();
+    int[] pixel=new int[3];
+    for (int y=0; y < height; y++) {
+      for (int x=0; x < width; x++) {
+        int v=pixels[y * width + x] & 0xff;
+        if (v != 0)         v=128 + v / 2;
+        pixel[0]=255 - v;
+        pixel[1]=255 - v;
+        pixel[2]=255 - v;
+        raster.setPixel(x,y,pixel);
+      }
+    }
+    ByteArrayOutputStream buffer=new ByteArrayOutputStream();
+    try {
+      boolean res=ImageIO.write(image,"png",buffer);
+      if (!res)       throw new RuntimeException();
+    }
+ catch (    IOException e) {
+      throw new RuntimeException(e);
+    }
+    InputStream in=new ByteArrayInputStream(buffer.toByteArray());
+    return server.new Response(NanoHTTPD.HTTP_OK,"image/png",in);
+  }
+default :
+throw new RuntimeException();
+}
+}

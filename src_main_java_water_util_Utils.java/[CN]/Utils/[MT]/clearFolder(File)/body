@@ -1,0 +1,8 @@
+{
+  if (folder.exists()) {
+    for (    File child : folder.listFiles()) {
+      if (child.isDirectory())       clearFolder(child);
+      if (!child.delete())       throw new RuntimeException("Cannot delete " + child);
+    }
+  }
+}
