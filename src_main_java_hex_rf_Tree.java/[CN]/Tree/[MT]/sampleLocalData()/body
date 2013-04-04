@@ -1,0 +1,12 @@
+{
+switch (_samplingStrategy) {
+case STRATIFIED_LOCAL:
+case STRATIFIED_DISTRIB:
+    float[] s=new float[_data._dapt.classes()];
+  for (int i=0; i < s.length; i++)   s[i]=_strata[i];
+return _data.sample(s,_seed,_numrows);
+case RANDOM:
+default :
+return _data.sample(_sample,_seed,_numrows);
+}
+}
