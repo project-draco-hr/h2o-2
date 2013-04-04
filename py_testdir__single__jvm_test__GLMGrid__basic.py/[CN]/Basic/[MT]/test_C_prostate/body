@@ -15,7 +15,7 @@ def test_C_prostate(self):
     x = ','.join(map(str, xList))
     print '\nx:', x
     print 'y:', y
-    kwargs = {'x': x, 'y': y, 'num_cross_validation_folds': 2, 'beta_epsilon': 0.0001, 'lambda': '1e-8:1e3:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
+    kwargs = {'x': x, 'y': y, 'n_folds': 2, 'beta_epsilon': 0.0001, 'lambda': '1e-8:1e3:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
     gg = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=120, **kwargs)
     colNames = ['D', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
     h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)
