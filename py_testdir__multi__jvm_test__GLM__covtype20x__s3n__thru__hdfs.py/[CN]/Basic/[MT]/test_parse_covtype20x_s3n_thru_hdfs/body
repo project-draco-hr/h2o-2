@@ -19,10 +19,10 @@ def test_parse_covtype20x_s3n_thru_hdfs(self):
         print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseKey['destination_key']
         kwargs = {'y': 54, 'family': 'binomial', 'link': 'logit', 'num_cross_validation_folds': 2, 'case_mode': '=', 'case': 1, 'max_iter': 8, 'beta_epsilon': 0.001, }
-        timeoutSecs = 500
+        timeoutSecs = 720
         kwargs.update({'alpha': 0, 'lambda': 0, })
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, initialDelaySecs=15, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = time.time()
         print 'glm (L2) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
