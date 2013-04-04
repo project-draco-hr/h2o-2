@@ -6,6 +6,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         (noise_json, noiseParams) = noise
         noiseUrl = self.__url((noise_json + '.json'))
     status = 'poll'
+    r = {}
     start = time.time()
     count = 0
     if initialDelaySecs:
@@ -32,7 +33,10 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             status = r['response']['status']
         if ((time.time() - start) > timeoutSecs):
             argsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in paramsUsed.items()])
-            emsg = ('Exceeded timeoutSecs: %d secs while polling. status: %s, url: %s?%s' % (timeoutSecs, status, urlUsed, argsStr))
+            emsg = ('Exceeded timeoutSecs: %d secs while polling.' + ('status: %s, url: %s?%s' % (timeoutSecs, status, urlUsed, argsStr)))
             raise Exception(emsg)
         count += 1
+    if ((status == 'poll') and ('GLMModel' in r)):
+        emsg = ("\nHey! I'm seeing 'status' = 'poll' at the same time the response has 'GLMModel'" + "...assuming we're done. see https://0xdata.atlassian.net/browse/HEX-618\n")
+        raise Exception((emsg + dump_json(r)))
     return r
