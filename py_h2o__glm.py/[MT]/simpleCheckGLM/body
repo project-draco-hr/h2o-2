@@ -1,4 +1,4 @@
-def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, **kwargs):
+def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, **kwargs):
     GLMModel = glm['GLMModel']
     warnings = None
     if ('warnings' in GLMModel):
@@ -52,7 +52,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if prettyPrint:
         print ('\nH2O intercept:\t\t%.5e' % intercept)
         print cString
-    else:
+    elif (not noPrint):
         print '\nintercept:', intercept, cString
     print '\nTotal # of coefficients:', len(column_names)
     if ((not allowZeroCoeff) and (colX is not None)):
