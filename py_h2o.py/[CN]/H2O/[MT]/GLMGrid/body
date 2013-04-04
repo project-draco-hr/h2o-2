@@ -1,7 +1,5 @@
 def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, **kwargs):
     a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, parentName='GLMGrid', **kwargs)
-    if kwargs.get('norm'):
-        print '\nWARNING: norm param is ignored by GLMGrid. Always uses LASSO (L1+L2).'
     if (a['response']['redirect_request'] != 'GLMGridProgress'):
         print dump_json(a)
         raise Exception('H2O GLMGrid redirect is not GLMGridProgress. GLMGrid json response precedes.')
