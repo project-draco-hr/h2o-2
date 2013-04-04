@@ -1,5 +1,5 @@
-def train(num_cross_validation_foldss, y_values, weights):
-    x_float_vector = [ro.FloatVector(x) for x in np.array(num_cross_validation_foldss).transpose()]
+def train(x_data, y_values, weights):
+    x_float_vector = [ro.FloatVector(x) for x in np.array(x_data).transpose()]
     y_float_vector = ro.FloatVector(y_values)
     weights_float_vector = ro.FloatVector(weights)
     names = [('v' + str(i)) for i in xrange(len(x_float_vector))]

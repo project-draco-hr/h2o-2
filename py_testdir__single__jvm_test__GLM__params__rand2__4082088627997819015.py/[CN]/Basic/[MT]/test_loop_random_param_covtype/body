@@ -6,7 +6,7 @@ def test_loop_random_param_covtype(self):
     print '\nUsing random seed:', SEED
     paramDict = define_params()
     for trial in range(40):
-        params = {'y': 54, 'num_cross_validation_folds': 3, 'family': 'binomial', 'max_iter': 5, 'case': 1, 'alpha': 0, 'lambda': 0, }
+        params = {'y': 54, 'n_folds': 3, 'family': 'binomial', 'max_iter': 5, 'case': 1, 'alpha': 0, 'lambda': 0, }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
         start = time.time()

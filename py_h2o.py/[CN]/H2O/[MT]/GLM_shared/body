@@ -1,7 +1,6 @@
 def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=30, parentName=None, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
-    num_cross_validation_folds = kwargs.pop('num_cross_validation_folds', None)
-    params_dict = {'n_folds': num_cross_validation_folds, 'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', }
+    params_dict = {'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', }
     params_dict.update(kwargs)
     print '\nGLM params list', params_dict
     a = self.__check_request(requests.get(self.__url((parentName + '.json')), timeout=timeoutSecs, params=params_dict))
