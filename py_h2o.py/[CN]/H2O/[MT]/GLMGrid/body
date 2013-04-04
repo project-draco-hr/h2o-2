@@ -1,9 +1,9 @@
-def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, **kwargs):
-    a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, parentName='GLMGrid', **kwargs)
+def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=30, **kwargs):
+    a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName='GLMGrid', **kwargs)
     if (a['response']['redirect_request'] != 'GLMGridProgress'):
         print dump_json(a)
         raise Exception('H2O GLMGrid redirect is not GLMGridProgress. GLMGrid json response precedes.')
-    a = self.poll_url(a['response'], timeoutSecs, retryDelaySecs)
+    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
     verboseprint('GLMGrid done:', dump_json(a))
     browseAlso = kwargs.get('browseAlso', False)
     if (browseAlso | browse_json):
