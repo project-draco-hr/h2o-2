@@ -35,7 +35,7 @@ def test_C_hhp_107_01(self):
         print '\nx:', x
         print 'y:', y
         start = time.time()
-        kwargs = {'x': x, 'y': y, 'num_cross_validation_folds': 6, }
+        kwargs = {'x': x, 'y': y, 'n_folds': 6, }
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=300, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 57, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'

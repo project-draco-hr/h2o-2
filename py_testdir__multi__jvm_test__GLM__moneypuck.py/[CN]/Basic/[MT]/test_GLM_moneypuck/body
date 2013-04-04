@@ -13,7 +13,7 @@ def test_GLM_moneypuck(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
         max_iter = 9
         y = (num_cols - 1)
-        kwargs = {'y': y, 'family': 'poisson', 'link': 'log', 'num_cross_validation_folds': 0, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
+        kwargs = {'y': y, 'family': 'poisson', 'link': 'log', 'n_folds': 0, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
         if (1 == 0):
             kwargs.update({'alpha': 0, 'lambda': 0, })
             start = time.time()
