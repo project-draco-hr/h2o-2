@@ -1,0 +1,13 @@
+{
+  Key dest=_dest.value();
+  GLMModel m=(GLMModel)UKV.get(dest);
+  if (m == null)   return Response.doneEmpty();
+  JsonObject response=new JsonObject();
+  response.addProperty(Constants.DEST_KEY,dest.toString());
+  response.addProperty("computation_time",getTimeStr(m._time));
+  JsonObject res=response;
+  res.add("GLMModel",m.toJson());
+  Response r=(DKV.get(_job.value()) == null) ? Response.done(res) : Response.poll(res,(float)getProgress());
+  r.setBuilder("",new GLMBuilder(m,_job.value()));
+  return r;
+}

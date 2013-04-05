@@ -14,7 +14,7 @@ def test_tnc3_ignore(self):
         print '\ncolResultList after num swap', colResultList
     if (1 == 1):
         start = time.time()
-        kwargs = {'y': 13, 'num_cross_validation_folds': 6, }
+        kwargs = {'y': 13, 'n_folds': 6, }
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=300, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
@@ -25,7 +25,7 @@ def test_tnc3_ignore(self):
         print '\ncolResultList after char swap', colResultList
     if (1 == 1):
         start = time.time()
-        kwargs = {'y': 13, 'num_cross_validation_folds': 6, }
+        kwargs = {'y': 13, 'n_folds': 6, }
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=300, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'

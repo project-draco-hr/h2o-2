@@ -1,0 +1,61 @@
+{
+  GLMModel currentModel=null;
+  ArrayList<String> warns=new ArrayList<String>();
+  long t1=System.currentTimeMillis();
+  Column ycol=data._ary._cols[data._modelDataMap[data._modelDataMap.length - 1]];
+  params.checkResponseCol(ycol,warns);
+  GramMatrixFunc gramF=new GramMatrixFunc(data,params,oldBeta);
+  double[] newBeta=MemoryManager.malloc8d(data.expandedSz());
+  boolean converged=true;
+  Gram gram=gramF.apply(job,data);
+  int iter=1;
+  try {
+    lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
+  }
+ catch (  NonSPDMatrixException e) {
+    if (!(lsm instanceof GeneralizedGradientSolver)) {
+      lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
+      warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
+      lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
+    }
+  }
+  if (params._family == Family.gaussian) {
+    currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,converged,iter,System.currentTimeMillis() - t1,null);
+  }
+ else   do {
+    if (oldBeta == null)     oldBeta=MemoryManager.malloc8d(data.expandedSz());
+    if (job.cancelled())     throw new JobCancelledException();
+    double[] b=oldBeta;
+    oldBeta=(gramF._beta=newBeta);
+    newBeta=b;
+    gram=gramF.apply(job,data);
+    if (gram.hasNaNsOrInfs())     break;
+    try {
+      lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
+    }
+ catch (    NonSPDMatrixException e) {
+      if (!(lsm instanceof GeneralizedGradientSolver)) {
+        lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
+        warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
+        lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
+      }
+    }
+    String[] warnings=new String[warns.size()];
+    warns.toArray(warnings);
+    double betaDiff=betaDiff(oldBeta,newBeta);
+    converged=(betaDiff < params._betaEps);
+    float progress=Math.max((float)iter / params._maxIter,Math.min((float)(params._betaEps / betaDiff),1.0f));
+    currentModel=new GLMModel(Status.ComputingModel,progress,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,converged,iter,System.currentTimeMillis() - t1,warnings);
+    currentModel.store();
+  }
+ while (++iter < params._maxIter && !converged);
+  currentModel._status=Status.ComputingValidation;
+  currentModel.store();
+  if (xval > 1)   currentModel.xvalidate(job,data._ary,xval,DEFAULT_THRESHOLDS);
+ else   currentModel.validateOn(job,data._ary,data.getSamplingComplement(),DEFAULT_THRESHOLDS);
+  currentModel._status=Status.Done;
+  currentModel.store();
+  String[] warnings=new String[warns.size()];
+  warns.toArray(warnings);
+  return currentModel;
+}

@@ -13,12 +13,8 @@ def test_GLM_many_cols_enum(self):
         print "Parse result['destination_key']:", parseKey['destination_key']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
-        paramDict2 = {}
-        for k in paramDict:
-            paramDict2[k] = paramDict[k][0]
         y = colCount
-        kwargs = {'y': y, 'max_iter': 50, 'case': 1, }
-        kwargs.update(paramDict2)
+        kwargs = {'y': y, 'max_iter': 50, 'case': 1, 'family': 'binomial', 'lambda': 0, 'alpha': 0, 'max_iter': 50, 'weight': 1.0, 'thresholds': 0.5, 'n_folds': 2, 'beta_epsilon': 0.0001, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
@@ -26,6 +22,6 @@ def test_GLM_many_cols_enum(self):
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         if (not h2o.browse_disable):
             h2b.browseJsonHistoryAsUrlLastMatch('GLM')
-            time.sleep(15)
+            time.sleep(10)
             h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
-            time.sleep(15)
+            time.sleep(10)

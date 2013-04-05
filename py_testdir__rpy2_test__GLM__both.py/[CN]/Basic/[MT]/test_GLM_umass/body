@@ -32,7 +32,7 @@ def test_GLM_umass(self):
         print 'formula:', formula
         print 'col_names:', col_names
         print 'x:', x
-        kwargs = {'num_cross_validation_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_epsilon': 0.0001, 'max_iter': 50, }
+        kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_epsilon': 0.0001, 'max_iter': 50, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end (w/check) on ', csvPathname2, 'took', (time.time() - start), 'seconds'

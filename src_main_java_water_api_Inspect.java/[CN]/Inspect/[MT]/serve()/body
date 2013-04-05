@@ -12,7 +12,7 @@
     JsonObject res=new JsonObject();
     res.add(GLMModel.NAME,m.toJson());
     Response r=Response.done(res);
-    r.setBuilder(ROOT_OBJECT,new GLMBuilder(m));
+    r.setBuilder(ROOT_OBJECT,new GLMBuilder(m,null));
     return r;
   }
   if (f instanceof hex.GLMGrid.GLMModels) {

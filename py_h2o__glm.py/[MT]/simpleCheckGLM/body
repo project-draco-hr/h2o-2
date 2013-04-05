@@ -1,4 +1,4 @@
-def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, **kwargs):
+def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, **kwargs):
     GLMModel = glm['GLMModel']
     warnings = None
     if ('warnings' in GLMModel):
@@ -19,6 +19,20 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     print 'GLMModel/iterations:', iterations
     validationsList = GLMModel['validations']
     validations = validationsList[0]
+    n_folds = kwargs.setdefault('n_folds', None)
+    if (not ('xval_models' in validations)):
+        if (n_folds > 1):
+            raise Exception(('No cross validation models returned. Asked for ' + n_folds))
+    else:
+        xval_models = validations['xval_models']
+        if (n_folds and (n_folds > 1)):
+            if (len(xval_models) != n_folds):
+                raise Exception(((len(xval_models) + ' cross validation models returned. Asked for ') + n_folds))
+        elif (len(xval_models) != 10):
+            raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
+    if math.isnan(validations['err']):
+        emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validations['err']))
+        raise Exception(emsg)
     print 'GLMModel/validations'
     print ('%15s %s' % ('err:\t', validations['err']))
     print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
@@ -26,7 +40,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if (family == 'binomial'):
         print ('%15s %s' % ('auc:\t', validations['auc']))
         print ('%15s %s' % ('threshold:\t', validations['threshold']))
-    if ((family == 'poisson') or (family == 'gaussian') or (family == 'gamma')):
+    if ((family == 'poisson') or (family == 'gaussian')):
         print ('%15s %s' % ('aic:\t', validations['aic']))
     coefficients = GLMModel['coefficients'].copy()
     column_names = GLMModel['column_names']
@@ -52,7 +66,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if prettyPrint:
         print ('\nH2O intercept:\t\t%.5e' % intercept)
         print cString
-    else:
+    elif (not noPrint):
         print '\nintercept:', intercept, cString
     print '\nTotal # of coefficients:', len(column_names)
     if ((not allowZeroCoeff) and (colX is not None)):

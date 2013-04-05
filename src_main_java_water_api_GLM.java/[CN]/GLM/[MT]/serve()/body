@@ -18,16 +18,11 @@ break;
 case GenGradient:
 lsm=new GeneralizedGradientSolver(_lambda.value(),_alpha.value());
 }
-GLMModel m=DGLM.buildModel(data,lsm,glmParams);
-if (m.isSolved()) {
-NumberSequence nseq=_thresholds.value();
-double[] arr=nseq == null ? null : nseq._arr;
-if (_xval.specified() && _xval.value() > 1) m.xvalidate(ary,_xval.value(),arr);
- else m.validateOn(ary,null,arr);
-}
-res.add("GLMModel",m.toJson());
-Response r=Response.done(res);
-r.setBuilder("",new GLMBuilder(m));
+GLMJob job=DGLM.startGLMJob(data,lsm,glmParams,null,_xval.value());
+JsonObject j=new JsonObject();
+j.addProperty(Constants.DEST_KEY,job.dest().toString());
+Response r=GLMProgress.redirect(j,job.self(),job.dest(),job.progressKey());
+r.setBuilder(Constants.DEST_KEY,new KeyElementBuilder());
 return r;
 }
  catch (GLMException e) {

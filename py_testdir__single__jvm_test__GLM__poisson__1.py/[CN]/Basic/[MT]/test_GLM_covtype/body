@@ -12,7 +12,7 @@ def test_GLM_covtype(self):
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
     max_iter = 8
     y = '54'
-    kwargs = {'x': x, 'y': y, 'family': 'poisson', 'link': 'log', 'num_cross_validation_folds': 0, 'max_iter': max_iter, 'beta_eps': 0.001, }
+    kwargs = {'x': x, 'y': y, 'family': 'poisson', 'link': 'log', 'n_folds': 0, 'max_iter': max_iter, 'beta_eps': 0.001, }
     timeoutSecs = 120
     start = time.time()
     kwargs.update({'alpha': 0, 'lambda': 0, })

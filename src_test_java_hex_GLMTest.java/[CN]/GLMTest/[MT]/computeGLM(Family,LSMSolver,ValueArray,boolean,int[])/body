@@ -7,8 +7,6 @@
   glmp._link=glmp._family.defaultLink;
   glmp._betaEps=0.000001;
   glmp._maxIter=100;
-  GLMModel m=DGLM.buildModel(DGLM.getData(va,cols,null,true),lsms,glmp);
-  m.validateOn(va,null,THRESHOLDS);
-  JsonObject glm=m.toJson();
-  return glm;
+  GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0).get();
+  return m.toJson();
 }

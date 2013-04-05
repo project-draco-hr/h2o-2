@@ -1,0 +1,70 @@
+{
+  _time=time;
+  _errMetric=m;
+  _modelKey=modelKey;
+  _dataKey=models[0]._dataKey;
+  _modelKeys=new Key[models.length];
+  int i=0;
+  boolean solved=true;
+  for (  GLMModel xm : models) {
+    _modelKeys[i++]=xm._selfKey;
+    if (!xm.isSolved())     solved=false;
+  }
+  if (!solved) {
+    _aic=Double.NaN;
+    _dof=-1;
+    _auc=Double.NaN;
+    _deviance=Double.NaN;
+    _nullDeviance=Double.NaN;
+    _err=Double.NaN;
+    _n=-1;
+    return;
+  }
+  long n=0;
+  double nDev=0;
+  double dev=0;
+  double aic=0;
+  double err=0;
+  int rank=-1;
+  if (models[0]._vals[0]._cm != null) {
+    int nthresholds=models[0]._vals[0]._cm.length;
+    _cm=new ConfusionMatrix[nthresholds];
+    for (int t=0; t < nthresholds; ++t)     _cm[t]=models[0]._vals[0]._cm[t].clone();
+    n+=models[0]._vals[0]._n;
+    dev=models[0]._vals[0]._deviance;
+    rank=models[0].rank();
+    aic=models[0]._vals[0]._aic - 2 * rank;
+    _auc=models[0]._vals[0]._auc;
+    nDev=models[0]._vals[0]._nullDeviance;
+    for (i=1; i < models.length; ++i) {
+      int xm_rank=models[i].rank();
+      rank=Math.max(xm_rank,rank);
+      n+=models[i]._vals[0]._n;
+      dev+=models[i]._vals[0]._deviance;
+      aic+=models[i]._vals[0]._aic - 2 * xm_rank;
+      nDev+=models[i]._vals[0]._nullDeviance;
+      _auc+=models[i]._vals[0]._auc;
+      for (int t=0; t < nthresholds; ++t)       _cm[t].add(models[i]._vals[0]._cm[t]);
+    }
+    _thresholds=thresholds;
+    computeBestThreshold(m);
+    _auc/=models.length;
+  }
+ else {
+    for (    GLMModel xm : models) {
+      int xm_rank=xm.rank();
+      rank=Math.max(xm_rank,rank);
+      n+=xm._vals[0]._n;
+      dev+=xm._vals[0]._deviance;
+      nDev+=xm._vals[0]._nullDeviance;
+      err+=xm._vals[0]._err;
+      aic+=(xm._vals[0]._aic - 2 * xm_rank);
+    }
+  }
+  _err=err / models.length;
+  _deviance=dev;
+  _nullDeviance=nDev;
+  _n=n;
+  _aic=aic + 2 * rank;
+  _dof=_n - models[0]._beta.length - 1;
+}
