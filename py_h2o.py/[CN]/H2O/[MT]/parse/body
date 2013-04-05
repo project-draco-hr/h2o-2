@@ -1,9 +1,8 @@
-def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=30, noPoll=False, **kwargs):
+def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=30, noPoll=False, noise=None, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
     verboseprint('\nParsing key:', key, 'to key2:', key2, '(if None, means default)')
     params_dict = {'source_key': key, 'destination_key': key2, }
     params_dict.update(kwargs)
-    noise = kwargs.pop('noise', None)
     a = self.__check_request(requests.get(url=self.__url('Parse.json'), timeout=timeoutSecs, params=params_dict))
     if (a['response']['redirect_request'] != 'Progress'):
         print dump_json(a)
