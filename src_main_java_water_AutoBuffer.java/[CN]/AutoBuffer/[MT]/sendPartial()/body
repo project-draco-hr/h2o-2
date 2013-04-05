@@ -6,6 +6,7 @@
     _bb=ByteBuffer.wrap(MemoryManager.arrayCopyOfRange(ary,0,newlen),oldpos,newlen - oldpos).order(ByteOrder.nativeOrder());
     return _bb;
   }
+  _size+=_bb.position();
   if (_chan == null)   TimeLine.record_send(this,true);
   _bb.flip();
   _bb.mark();
