@@ -6,11 +6,12 @@ def test_GLM_params_rand2_8977501266014959103(self):
     print '\nUsing random seed:', SEED
     paramDict = define_params()
     for trial in range(20):
-        params = {'y': 54, 'alpha': 0, 'lambda': 0, 'case': 1, }
+        params = {'y': 54, 'alpha': 0, 'lambda': 0, 'case': 1, 'n_folds': 1, }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
         start = time.time()
         glm = h2o_cmd.runGLMOnly(timeoutSecs=70, parseKey=parseKey, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        h2o.check_sandbox_for_errors()
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print 'Trial #', trial, 'completed\n'

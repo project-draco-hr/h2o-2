@@ -1,0 +1,10 @@
+{
+  FileIntegrityChecker c=FileIntegrityChecker.check(new File(path));
+  Futures fs=new Futures();
+  Key k=c.importFile(0,fs);
+  fs.blockForPending();
+  ParseDataset.parse(okey,new Key[]{k});
+  UKV.remove(k);
+  ValueArray res=DKV.get(okey).get();
+  return res;
+}

@@ -4,20 +4,16 @@ def test_B_benign(self):
     csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
     y = '3'
-    x = ''
-    for appendx in xrange(14):
-        if (appendx == 3):
-            print '\n3 is output.'
-        else:
-            if (x == ''):
-                x = str(appendx)
-            else:
-                x = ((x + ',') + str(appendx))
-            csvFilename = 'benign.csv'
-            csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-            print '\nx:', x
-            print 'y:', y
-            kwargs = {'x': x, 'y': y, 'expert': 1, 'lsm_solver': 'GenGradient', 'standardize': 1, }
-            print "Not doing n_folds with benign. Fails with 'unable to solve?'"
-            glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=30, **kwargs)
-            h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+    for maxx in range(4, 14):
+        x = range(maxx)
+        x.remove(3)
+        x = ','.join(map(str, x))
+        print '\nx:', x
+        print 'y:', y
+        kwargs = {'x': x, 'y': y, 'expert': 1, 'lsm_solver': 'GenGradient', 'standardize': 1, 'n_folds': 1, }
+        print "Not doing n_folds with benign. Fails with 'unable to solve?'"
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=30, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        h2o.check_sandbox_for_errors()
+        sys.stdout.write('.')
+        sys.stdout.flush()
