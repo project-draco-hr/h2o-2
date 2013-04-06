@@ -36,6 +36,4 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, argsStr)))
             raise Exception(emsg)
         count += 1
-        if (('GLMProgress' in urlUsed) and ('GLMModel' in r)):
-            print 'INFO: GLM returning partial results during polling. Continuing..'
     return r
