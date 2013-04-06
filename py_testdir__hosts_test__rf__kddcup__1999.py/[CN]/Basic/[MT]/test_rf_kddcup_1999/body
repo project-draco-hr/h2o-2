@@ -1,0 +1,19 @@
+def test_rf_kddcup_1999(self):
+    h2b.browseTheCloud()
+    importFolderPath = '/home/0xdiag/datasets'
+    h2i.setupImportFolder(None, importFolderPath)
+    csvFilename = 'kddcup_1999.data'
+    for trials in range(2):
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=300)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print ('\n' + csvFilename)
+        start = time.time()
+        kwargs = {'response_variable': 'classifier', 'ntree': 50, 'gini': 0, 'class_weights': None, 'stratify': 0, 'features': None, 'ignore': None, 'sample': 67, 'bin_limit': 1024, 'depth': 2147483647, 'seed': 784834182943470027, 'parallel': 1, 'exclusive_split_limit': None, }
+        if (trials == 2):
+            kwargs['out_of_bag_error_estimate'] = None
+        else:
+            kwargs['out_of_bag_error_estimate'] = trials
+        RFview = h2o_cmd.runRFOnly(trees=50, parseKey=parseKey, timeoutSecs=300, retryDelaySecs=1.0, **kwargs)
+        print 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
