@@ -1,4 +1,4 @@
-def parseImportS3File(node=None, csvFilename='covtype.data', path='home-0xdiag-datasets', key2=None, timeoutSecs=360, retryDelaySecs=2, initialDelaySecs=1, pollTimeoutSecs=60):
+def parseImportS3File(node=None, csvFilename='covtype.data', path='home-0xdiag-datasets', key2=None, timeoutSecs=360, retryDelaySecs=2, initialDelaySecs=1, pollTimeoutSecs=60, noise=None):
     if (not node):
         node = h2o.nodes[0]
     if (not csvFilename):
@@ -9,7 +9,7 @@ def parseImportS3File(node=None, csvFilename='covtype.data', path='home-0xdiag-d
     else:
         myKey2 = key2
     print 'Waiting for the slow parse of the file:', csvFilename
-    parseKey = node.parse(s3Key, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
+    parseKey = node.parse(s3Key, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise=noise)
     parseKey['source_key'] = s3Key
     print '\nParse result:', parseKey
     return parseKey

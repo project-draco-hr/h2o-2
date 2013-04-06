@@ -1,9 +1,9 @@
-def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=15, retryDelaySecs=2, **kwargs):
+def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=15, retryDelaySecs=2, noise=None, **kwargs):
     if (not node):
         node = h2o.nodes[0]
 
     def test(n, tries=None):
-        rfView = n.random_forest_view(data_key, model_key, timeoutSecs, **kwargs)
+        rfView = n.random_forest_view(data_key, model_key, timeoutSecs, noise=noise, **kwargs)
         status = rfView['response']['status']
         numberBuilt = rfView['trees']['number_built']
         if (status == 'done'):
@@ -24,6 +24,6 @@ def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=
                 h2o.verboseprint('\nRFView polling #', tries, ('Status: %s. %s trees done of %s desired' % (status, numberBuilt, ntree)))
         return (status != 'poll')
     node.stabilize(test, ('random forest reporting %d trees' % ntree), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
-    rfView = node.random_forest_view(data_key, model_key, timeoutSecs, **kwargs)
+    rfView = node.random_forest_view(data_key, model_key, timeoutSecs, noise=noise, **kwargs)
     h2f.simpleCheckRFView(node, rfView)
     return rfView

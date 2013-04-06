@@ -1,4 +1,4 @@
-def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=1, pollTimeoutSecs=60):
+def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=1, pollTimeoutSecs=60, noise=None):
     if (not node):
         node = h2o.nodes[0]
     if (not csvFilename):
@@ -10,10 +10,10 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
     print 'Waiting for the slow parse of the file:', csvFilename
     if node.redirect_import_folder_to_s3_path:
         path = re.sub('/home/0xdiag/datasets', 'home-0xdiag-datasets', path)
-        parseKey = parseImportS3File(node, csvFilename, path, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
+        parseKey = parseImportS3File(node, csvFilename, path, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise=noise)
     else:
         importKey = ((('nfs:/' + path) + '/') + csvFilename)
-        parseKey = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs)
+        parseKey = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise=noise)
         parseKey['source_key'] = importKey
         print '\nParse result:', parseKey
     return parseKey

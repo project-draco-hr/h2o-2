@@ -1,4 +1,4 @@
-def runRFOnly(node=None, parseKey=None, trees=5, timeoutSecs=20, retryDelaySecs=2, rfview=True, **kwargs):
+def runRFOnly(node=None, parseKey=None, trees=5, timeoutSecs=20, retryDelaySecs=2, rfview=True, noise=None, **kwargs):
     if (not parseKey):
         raise Exception('No parsed key for RF specified')
     if (not node):
@@ -16,5 +16,5 @@ def runRFOnly(node=None, parseKey=None, trees=5, timeoutSecs=20, retryDelaySecs=
     rfClass = rf['response_variable']
     rfViewResult = None
     if rfview:
-        rfViewResult = runRFView(node, data_key, model_key, ntree, timeoutSecs, retryDelaySecs, **kwargs)
+        rfViewResult = runRFView(node, data_key, model_key, ntree, timeoutSecs, retryDelaySecs, noise=noise, **kwargs)
     return rfViewResult

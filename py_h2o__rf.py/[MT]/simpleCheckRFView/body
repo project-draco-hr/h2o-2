@@ -28,6 +28,7 @@ def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
         raise Exception('used_trees should == ntree. used_trees:', used_trees)
     scoresList = cm['scores']
     totalScores = 0
+    totalRight = 0
     classErrorPctList = []
     for (classIndex, s) in enumerate(scoresList):
         classSum = sum(s)
@@ -36,6 +37,7 @@ def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
                 print 'class:', classIndex, 'classSum', classSum, '<- why 0?'
         else:
             classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
+            totalRight += s[classIndex]
             classErrorPct = (100 - classRightPct)
             classErrorPctList.append(classErrorPct)
             if (not noprint):
@@ -43,6 +45,10 @@ def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
         totalScores += classSum
     if (not noprint):
         print 'totalScores:', totalScores
+        print 'totalRight:', totalRight
+        pctRight = ((100.0 * totalRight) / totalScores)
+        print 'pctRight:', pctRight
+        print 'pctWrong:', (100.0 - pctRight)
     if ((totalScores <= 0) or (totalScores > 5000000000.0)):
         raise Exception('scores in RFView seems wrong. scores:', scoresList)
     type = cm['type']
