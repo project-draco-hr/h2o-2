@@ -4,8 +4,6 @@ case STRATIFIED_LOCAL:
     float[] s=new float[_strataSamples.length];
   for (int i=0; i < _strataSamples.length; i++)   s[i]=_strataSamples[i] / 100.0f;
 return _data.sample(s,_seed,_numrows);
-case STRATIFIED_DISTRIBUTED:
-return _data.sample(_strataSamples,_seed);
 case RANDOM:
 default :
 return _data.sample(_sample,_seed,_numrows);
