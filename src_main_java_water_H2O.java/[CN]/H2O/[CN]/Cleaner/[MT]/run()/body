@@ -1,4 +1,5 @@
 {
+  boolean diskFull=false;
   while (true) {
     Histo h=_myHisto.histo(false);
     long now=System.currentTimeMillis();
@@ -16,6 +17,7 @@ synchronized (STORE) {
     now=System.currentTimeMillis();
     _dirty=Long.MAX_VALUE;
     boolean force=(h._cached >= DESIRED);
+    if (force && diskFull)     diskFull=isDiskFull();
     long clean_to_age=h.clean_to(force ? DESIRED : (DESIRED >> 1));
     if (!force)     clean_to_age=Math.max(clean_to_age,now - 5000);
     if (VERBOSE)     System.out.println("[clean >>>] " + h + " DESIRED="+ (DESIRED >> 20)+ "M dirtysince="+ (now - dirty)+ " force="+ force+ " clean2age="+ (now - clean_to_age));
@@ -36,16 +38,28 @@ synchronized (STORE) {
         dirty_store(touched);
         continue;
       }
-      if (force || lazy_clean(key)) {
-        if (VERBOSE && !val.isPersisted()) {
+      if (!val.isPersisted() && !diskFull && (force || (lazyPersist() && lazy_clean(key)))) {
+        if (VERBOSE) {
           System.out.print('.');
           cleaned+=m.length;
         }
-        val.storePersist();
-        if (force)         val.freeMem();
-        if (VERBOSE)         freed+=m.length;
+        try {
+          val.storePersist();
+        }
+ catch (        IOException e) {
+          if (diskFull=isDiskFull())           System.err.println("Disk full! Disabling swapping to disk." + ((force) ? " Memory low! Please free some space in " + PersistIce.ROOT + "!" : ""));
+ else {
+            System.err.println("Disk swapping failed! " + e.getMessage());
+            diskFull=true;
+          }
+        }
+      }
+      if (force && val.isPersisted()) {
+        val.freeMem();
+        freed+=m.length;
       }
     }
+    if (force && (freed < DESIRED) && isDiskFull())     UDPRebooted.suicide(UDPRebooted.T.oom,H2O.SELF);
     h=_myHisto.histo(true);
     MemoryManager.set_goals("postclean",false);
     if (VERBOSE)     System.out.println("[clean <<<] " + h + " cleaned="+ (cleaned >> 20)+ "M, freed="+ (freed >> 20)+ "M, DESIRED="+ (DESIRED >> 20)+ "M");
