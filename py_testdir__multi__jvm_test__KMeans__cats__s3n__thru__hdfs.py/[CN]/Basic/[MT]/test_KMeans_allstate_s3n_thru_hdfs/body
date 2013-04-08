@@ -1,0 +1,36 @@
+def test_KMeans_allstate_s3n_thru_hdfs(self):
+    csvFilename = 'CAT*'
+    csvPathname = ('cats/' + csvFilename)
+    URI = 's3n://home-0xdiag-datasets/'
+    s3nKey = (URI + csvPathname)
+    trialMax = 1
+    for trial in range(trialMax):
+        trialStart = time.time()
+        importHDFSResult = h2o.nodes[0].import_hdfs(URI)
+        s3nFullList = importHDFSResult['succeeded']
+        self.assertGreater(len(s3nFullList), 8, "Didn't see more than 8 files in s3n?")
+        storeView = h2o.nodes[0].store_view()
+        for s in storeView['keys']:
+            print '\nkey:', s['key']
+            if ('rows' in s):
+                print 'rows:', s['rows'], 'value_size_bytes:', s['value_size_bytes']
+        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        print 'Loading s3n key: ', s3nKey, 'thru HDFS'
+        timeoutSecs = 600
+        start = time.time()
+        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noise=('JStack', None))
+        elapsed = (time.time() - start)
+        print s3nKey, 'h2o reported parse time:', parseKey['response']['time']
+        print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseKey['destination_key']
+        kwargs = {'cols': None, 'epsilon': 1e-06, 'k': 12, }
+        start = time.time()
+        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=120, **kwargs)
+        elapsed = (time.time() - start)
+        print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
+        inspect = h2o_cmd.runInspect(None, key=kmeans['destination_key'])
+        print h2o.dump_json(inspect)
+        print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
+        storeView = h2o.nodes[0].store_view()
+        print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.',

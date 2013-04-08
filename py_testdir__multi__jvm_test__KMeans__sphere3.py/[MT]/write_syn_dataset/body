@@ -1,0 +1,29 @@
+def write_syn_dataset(csvPathname, n, SEED):
+    print 'Make 3 spheres, well separated, with different 1x, 2x, 3x #of entries'
+    print '6M rows total'
+    dsf = open(csvPathname, 'w+')
+    R1 = 10
+    R2 = 20
+    R3 = 30
+    print 'Centers of synthetic:'
+    A = (x1, y1, z1) = (100, 100, 100)
+    print A
+    B = (x2, y2, z2) = (200, 200, 200)
+    print B
+    C = (x3, y3, z3) = (300, 300, 300)
+    print C
+    for i in range(n):
+        (x, y, z) = get_xyz_sphere(R1)
+        dsf.write(('%s %s %s\n' % ((x + x1), (y + y1), (z + z1))))
+        (x, y, z) = get_xyz_sphere(R2)
+        dsf.write(('%s %s %s\n' % ((x + x2), (y + y2), (z + z2))))
+        (x, y, z) = get_xyz_sphere(R2)
+        dsf.write(('%s %s %s\n' % ((x + x2), (y + y2), (z + z2))))
+        (x, y, z) = get_xyz_sphere(R3)
+        dsf.write(('%s %s %s\n' % ((x + x3), (y + y3), (z + z3))))
+        (x, y, z) = get_xyz_sphere(R3)
+        dsf.write(('%s %s %s\n' % ((x + x3), (y + y3), (z + z3))))
+        (x, y, z) = get_xyz_sphere(R3)
+        dsf.write(('%s %s %s\n' % ((x + x3), (y + y3), (z + z3))))
+    dsf.close()
+    return
