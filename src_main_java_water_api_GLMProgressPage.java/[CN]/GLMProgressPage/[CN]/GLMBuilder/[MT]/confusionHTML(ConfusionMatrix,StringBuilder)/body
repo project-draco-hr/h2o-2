@@ -1,0 +1,13 @@
+{
+  if (cm == null)   return;
+  sb.append("<table class='table table-bordered table-condensed'>");
+  sb.append("<tr><th>Actual / Predicted</th><th>false</th><th>true</th><th>Err</th></tr>");
+  double err0=cm._arr[0][1] / (double)(cm._arr[0][0] + cm._arr[0][1]);
+  cmRow(sb,"false",cm._arr[0][0],cm._arr[0][1],err0);
+  double err1=cm._arr[1][0] / (double)(cm._arr[1][0] + cm._arr[1][1]);
+  cmRow(sb,"true ",cm._arr[1][0],cm._arr[1][1],err1);
+  double err2=cm._arr[1][0] / (double)(cm._arr[0][0] + cm._arr[1][0]);
+  double err3=cm._arr[0][1] / (double)(cm._arr[0][1] + cm._arr[1][1]);
+  cmRow(sb,"Err ",err2,err3,cm.err());
+  sb.append("</table>");
+}
