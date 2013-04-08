@@ -39,5 +39,7 @@ def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME):
     log('Host config dumped into {0}'.format(filename))
     log('To terminate instances call:')
     log('\x1b[93mpython ec2_cmd.py terminate --hosts {0}\x1b[0m'.format(filename))
+    log('To start H2O cloud call:')
+    log('\x1b[93mpython ec2_cmd.py start_h2o --hosts {0}\x1b[0m'.format(filename))
     log('To watch cloud in browser follow address:')
     log('   http://{0}:{1}'.format(reservation.instances[0].public_dns_name, cfg['base_port']))
