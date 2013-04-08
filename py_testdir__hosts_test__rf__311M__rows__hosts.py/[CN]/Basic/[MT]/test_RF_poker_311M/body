@@ -10,5 +10,5 @@ def test_RF_poker_311M(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
-        RFview = h2o_cmd.runRFOnly(trees=5, depth=5, parseKey=parseKey, timeoutSecs=300, retryDelaySecs=1.0)
+        RFview = h2o_cmd.runRFOnly(trees=5, depth=5, parseKey=parseKey, timeoutSecs=600, retryDelaySecs=10.0)
         print 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
