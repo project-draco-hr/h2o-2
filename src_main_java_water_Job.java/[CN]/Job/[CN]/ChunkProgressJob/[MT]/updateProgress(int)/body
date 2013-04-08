@@ -1,8 +1,10 @@
 {
-  new TAtomic<ChunkProgress>(){
-    @Override public ChunkProgress atomic(    ChunkProgress old){
-      return old.update(c);
+  if (!cancelled()) {
+    new TAtomic<ChunkProgress>(){
+      @Override public ChunkProgress atomic(      ChunkProgress old){
+        return old.update(c);
+      }
     }
-  }
 .invoke(_progress);
+  }
 }

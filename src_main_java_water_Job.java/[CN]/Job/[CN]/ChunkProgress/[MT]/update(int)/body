@@ -1,3 +1,5 @@
 {
-  return new ChunkProgress(_totalInv,_count + count);
+  if (_status == Status.Cancelled || _status == Status.Error)   return this;
+  long c=_count + count;
+  return new ChunkProgress(_nchunks,c,(c == _nchunks) ? Status.Done : Status.Computing,null);
 }
