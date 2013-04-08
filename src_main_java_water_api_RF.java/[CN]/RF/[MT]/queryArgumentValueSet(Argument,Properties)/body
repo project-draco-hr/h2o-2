@@ -1,15 +1,18 @@
 {
-  if (arg == _stratify) {
-    if (_stratify.value()) {
-      _oobee.disable("OOBEE is only meaningful if stratify is not specified.",inputArgs);
-      _oobee.record()._value=false;
-    }
- else {
-      _strata.disable("Strata is only meaningful if stratify is on.",inputArgs);
-    }
-  }
-  if (arg == _ignore) {
-    int[] ii=_ignore.value();
-    if (ii != null && ii.length >= _dataKey.value()._cols.length - 1)     throw new IllegalArgumentException("Cannot ignore all columns");
-  }
+  if (arg == _samplingStrategy) {
+    _sample._hideInQuery=true;
+    _strataSamples._hideInQuery=true;
+switch (_samplingStrategy.value()) {
+case RANDOM:
+      _sample._hideInQuery=false;
+    break;
+case STRATIFIED_LOCAL:
+  _strataSamples._hideInQuery=false;
+break;
+}
+}
+if (arg == _ignore) {
+int[] ii=_ignore.value();
+if (ii != null && ii.length >= _dataKey.value()._cols.length - 1) throw new IllegalArgumentException("Cannot ignore all columns");
+}
 }
