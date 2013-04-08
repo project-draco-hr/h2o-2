@@ -4,7 +4,7 @@ def test_rf_params_rand2(self):
     print '\nUsing random seed:', SEED
     csvPathname = h2o.find_file('smalldata/space_shuttle_damage.csv')
     for trial in range(10):
-        params = {'sample': 80, 'gini': 0, 'class_weights': 'yes=1000', 'ntree': 50, 'parallel': 1, 'response_variable': 'damage', 'ignore': 'flight', 'ntree': 25, 'out_of_bag_error_estimate': 1, }
+        params = {'sample': 80, 'stat_type': 'ENTROPY', 'class_weights': 'yes=1000', 'ntree': 50, 'parallel': 1, 'response_variable': 'damage', 'ignore': 'flight', 'ntree': 25, 'out_of_bag_error_estimate': 1, }
         print 'params:', params
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         print 'params:', params

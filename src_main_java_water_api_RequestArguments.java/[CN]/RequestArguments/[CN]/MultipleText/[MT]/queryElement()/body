@@ -4,7 +4,13 @@
   String[] prefixes=textPrefixes();
   String[] values=textValues();
   String[] names=textNames();
+  String[] suffixes=textSuffixes();
   if (prefixes == null)   prefixes=names;
+  if (suffixes == null && textSuffix() != null) {
+    suffixes=new String[names.length];
+    String suffix=textSuffix();
+    for (int i=0; i < names.length; i++)     suffixes[i]=suffix;
+  }
   if (values == null) {
     values=new String[prefixes.length];
     for (int i=0; i < values.length; ++i)     values[i]="";
@@ -12,7 +18,11 @@
   assert(prefixes.length == values.length);
   if (values.length == 0)   sb.append("<div class='alert alert-error'>No editable controls under current setup</div>");
   for (int i=0; i < values.length; ++i) {
-    sb.append("<div class='input-append'>" + "<input class='span3' name='" + names[i] + "' id='"+ _name+ String.valueOf(i)+ "' type='text' value='"+ values[i]+ "' placeholder='"+ queryDescription()+ "'>"+ "<span class='add-on'>"+ prefixes[i]+ "</span>"+ "</div>");
+    sb.append("<div class='input-prepend" + (suffixes != null ? " input-append" : "") + "'>");
+    sb.append("<span class='add-on'>" + prefixes[i] + "</span>");
+    sb.append("<input class='span3' name='" + names[i] + "' id='"+ _name+ String.valueOf(i)+ "' type='text' value='"+ values[i]+ "' placeholder='"+ queryDescription()+ "'>");
+    if (suffixes != null)     sb.append("<span class='add-on'>" + suffixes[i] + "</span>");
+    sb.append("</div>");
   }
   sb.append("</div>");
   return sb.toString();

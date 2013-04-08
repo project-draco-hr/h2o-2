@@ -1,3 +1,8 @@
 {
-  return drf._useStratifySampling ? new StratifiedDABuilder(drf) : new DABuilder(drf);
+switch (drf._samplingStrategy) {
+case RANDOM:
+case STRATIFIED_LOCAL:
+default :
+    return new DABuilder(drf);
+}
 }

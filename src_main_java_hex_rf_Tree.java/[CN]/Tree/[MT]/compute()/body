@@ -3,7 +3,7 @@
     Timer timer=new Timer();
     _stats[0]=new ThreadLocal<Statistic>();
     _stats[1]=new ThreadLocal<Statistic>();
-    Data d=(true && _stratify) ? _data.sample(_strata,_seed) : _data.sample(_sample,_seed,_numrows);
+    Data d=_sampler.sample(_data,_seed);
     Statistic left=getStatistic(0,d,_seed,_exclusiveSplitLimit);
     for (    Row r : d)     left.addQ(r);
     left.applyClassWeights();
