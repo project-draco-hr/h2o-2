@@ -23,7 +23,7 @@
       tryComplete();
     }
     @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
-      job.cancel();
+      if (job != null)       job.onException(ex);
       return super.onExceptionalCompletion(ex,caller);
     }
   }

@@ -5,20 +5,15 @@ def test_C_prostate(self):
     csvFilename = 'prostate.csv'
     csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
-    for appendx in xrange(9):
-        if (appendx == 0):
-            print '\n0 is member ID. not used'
-        elif (appendx == 1):
-            print '\n1 is output.'
-        else:
-            if (x == ''):
-                x = str(appendx)
-            else:
-                x = ((x + ',') + str(appendx))
-            sys.stdout.write('.')
-            sys.stdout.flush()
-            print '\nx:', x
-            print 'y:', y
-            kwargs = {'x': x, 'y': y, 'n_folds': 5, }
-            glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=2, **kwargs)
-            h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
+    for maxx in range(2, 9):
+        x = range(maxx)
+        x.remove(0)
+        x.remove(1)
+        x = ','.join(map(str, x))
+        print '\nx:', x
+        print 'y:', y
+        kwargs = {'x': x, 'y': y, 'n_folds': 5, }
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=15, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
+        sys.stdout.write('.')
+        sys.stdout.flush()

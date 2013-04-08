@@ -1,0 +1,10 @@
+{
+  UKV.remove(dest());
+  Value v=DKV.get(progressKey());
+  if (v != null) {
+    ChunkProgress p=v.get();
+    p=p.error(ex.getMessage());
+    DKV.put(progressKey(),p);
+  }
+  cancel();
+}

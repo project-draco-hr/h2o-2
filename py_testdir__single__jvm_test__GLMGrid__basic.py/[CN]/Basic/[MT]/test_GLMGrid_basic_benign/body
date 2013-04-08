@@ -1,0 +1,17 @@
+def test_GLMGrid_basic_benign(self):
+    csvFilename = 'benign.csv'
+    print '\nStarting', csvFilename
+    csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    y = '3'
+    x = range(14)
+    x.remove(0)
+    x.remove(3)
+    x = ','.join(map(str, x))
+    print '\nx:', x
+    print 'y:', y
+    kwargs = {'x': x, 'y': y, 'n_folds': 0, 'lambda': '1e-8:1e-2:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
+    print "Not doing n_folds with benign. Fails with 'unable to solve?'"
+    gg = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=120, **kwargs)
+    colNames = ['STR', 'OBS', 'AGMT', 'FNDX', 'HIGD', 'DEG', 'CHK', 'AGP1', 'AGMN', 'NLV', 'LIV', 'WT', 'AGLP', 'MST']
+    h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)

@@ -45,4 +45,5 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
         check_sandbox_for_errors()
         raise
     nodes[:] = node_list
+    print len(node_list), 'total jvms in H2O cloud'
     return node_list
