@@ -3,6 +3,6 @@ import random, sys, time
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_rf, h2o_hosts
 print 'Temporarily not using bin_limit=1 to 4'
-paramDict = {'depth': [None, 1, 10, 20, 100], 'bin_limit': [None, 5, 10, 100, 1000], 'parallel': [None, 0, 1], 'seed': [None, '0', '1', '11111', '19823134', '1231231'], 'features': [None, 1], 'exclusive_split_limit': [None], 'sampling_strategy': [None, 'RANDOM', 'STRATIFIED_LOCAL'], 'strata_samples': [None, '0:10', '1:5', '0:7,2:3', '0:1,1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1,9:1', '0:100,1:100,2:100,3:100,4:100,5:100,6:100,7:100,8:100,9:100', '0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0'], }
+paramDict = {'depth': [None, 1, 10, 20, 100], 'bin_limit': [None, 5, 10, 100, 1000], 'parallel': [None, 0, 1], 'seed': [None, '0', '1', '11111', '19823134', '1231231'], 'features': [None, 1], 'exclusive_split_limit': [None], 'sampling_strategy': [None, 'RANDOM', 'STRATIFIED_LOCAL'], 'strata_samples': [None, '0=10', '1=5', '0=7,2=3', '0=1,1=1,2=1,3=1,4=1,5=1,6=1,7=1,8=1,9=1', '0=100,1=100,2=100,3=100,4=100,5=100,6=100,7=100,8=100,9=100', '0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0'], }
 if (__name__ == '__main__'):
     h2o.unit_main()
