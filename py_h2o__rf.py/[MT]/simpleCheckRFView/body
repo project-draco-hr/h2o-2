@@ -1,10 +1,10 @@
-def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
+def simpleCheckRFView(node, rfv, noPrint=False, **kwargs):
     if (not node):
         node = h2o.nodes[0]
     if ('warnings' in rfv):
         warnings = rfv['warnings']
         for w in warnings:
-            if (not noprint):
+            if (not noPrint):
                 print '\nwarning:', w
             if (('Failed' in w) or ('failed' in w)):
                 raise Exception(w)
@@ -16,7 +16,7 @@ def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
     classification_error = cm['classification_error']
     rows_skipped = cm['rows_skipped']
     cm_type = cm['type']
-    if (not noprint):
+    if (not noPrint):
         print 'classification_error * 100 (pct):', (classification_error * 100)
         print 'rows_skipped:', rows_skipped
         print 'type:', cm_type
@@ -30,29 +30,29 @@ def simpleCheckRFView(node, rfv, noprint=False, **kwargs):
     totalScores = 0
     totalRight = 0
     classErrorPctList = []
-    predictedClassList = []
+    predictedClassDict = {}
     for (classIndex, s) in enumerate(scoresList):
         classSum = sum(s)
         if (classSum == 0):
-            if (not noprint):
+            if (not noPrint):
                 print 'class:', classIndex, 'classSum', classSum, '<- why 0?'
         else:
             classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
             totalRight += s[classIndex]
             classErrorPct = (100 - classRightPct)
             classErrorPctList.append(classErrorPct)
-            if (not noprint):
+            if (not noPrint):
                 print 'class:', classIndex, 'classSum', classSum, 'classErrorPct:', ('%4.2f' % classErrorPct)
             for (pIndex, p) in enumerate(s):
-                if (classIndex == 0):
-                    predictedClassList.append(p)
+                if (pIndex not in predictedClassDict):
+                    predictedClassDict[pIndex] = p
                 else:
-                    predictedClassList[pIndex] += p
+                    predictedClassDict[pIndex] += p
         totalScores += classSum
-    print 'Predicted summary:'
-    for (predictedClass, p) in enumerate(predictedClassList):
-        print (str(predictedClass) + ':'), p
-    if (not noprint):
+    if (not noPrint):
+        print 'Predicted summary:'
+        for (predictedClass, p) in predictedClassDict.items():
+            print (str(predictedClass) + ':'), p
         print 'totalScores:', totalScores
         print 'totalRight:', totalRight
         pctRight = ((100.0 * totalRight) / totalScores)
