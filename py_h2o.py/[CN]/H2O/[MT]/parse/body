@@ -8,9 +8,8 @@ def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDela
         print dump_json(a)
         raise Exception('H2O parse redirect is not Progress. Parse json response precedes.')
     if noPoll:
-        return None
-    else:
-        verboseprint('Parse.Json noise:', noise)
-        a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise)
-        verboseprint('\nParse result:', dump_json(a))
         return a
+    verboseprint('Parse.Json noise:', noise)
+    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise)
+    verboseprint('\nParse result:', dump_json(a))
+    return a
