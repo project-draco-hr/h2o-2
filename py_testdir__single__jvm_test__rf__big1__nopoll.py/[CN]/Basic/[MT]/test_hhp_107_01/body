@@ -1,0 +1,32 @@
+def test_hhp_107_01(self):
+    csvPathname = h2o.find_file('smalldata/hhp_107_01.data.gz')
+    print ('\n' + csvPathname)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=15)
+    rfViewInitial = []
+    for jobDispatch in range(1):
+        start = time.time()
+        kwargs = {}
+        rfView = h2o_cmd.runRFOnly(parseKey=parseKey, model_key=('RF_model' + str(jobDispatch)), timeoutSecs=300, noPoll=True, **kwargs)
+        rfViewInitial.append(rfView)
+        print 'rf job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print '\njobDispatch #', jobDispatch
+    anyBusy = True
+    while anyBusy:
+        anyBusy = False
+        a = h2o.nodes[0].jobs_admin()
+        print 'jobs_admin():', h2o.dump_json(a)
+        jobs = a['jobs']
+        RFModelKeys = []
+        for j in jobs:
+            if ('RF' in j['destination_key']):
+                RFModelKeys.append(j['destination_key'])
+            if (j['end_time'] == ''):
+                anyBusy = True
+                print 'Not done - ', 'destination_key:', j['destination_key'], 'progress:', j['progress'], 'cancelled:', j['cancelled'], 'end_time:', j['end_time']
+        print '\n'
+        h2b.browseJsonHistoryAsUrlLastMatch('Jobs')
+        time.sleep(5)
+    for rfView in rfViewInitial:
+        print 'Checking completed job, with no polling:', rfView
+        a = h2o.nodes[0].poll_url(rf['response'], noPoll=True)
+        h2o_rf.simpleCheckRFView(None, a)
