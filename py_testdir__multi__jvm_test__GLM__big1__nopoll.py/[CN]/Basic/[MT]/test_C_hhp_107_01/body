@@ -5,9 +5,9 @@ def test_C_hhp_107_01(self):
     x = ''
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=15)
     glmInitial = []
-    for jobDispatch in xrange(3):
+    for jobDispatch in range(40):
         start = time.time()
-        kwargs = {'x': x, 'y': y, 'n_folds': 5, }
+        kwargs = {'x': x, 'y': y, 'n_folds': 1, }
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=300, noPoll=True, **kwargs)
         glmInitial.append(glm)
         print 'glm job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
