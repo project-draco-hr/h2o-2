@@ -7,28 +7,30 @@ def test_kmeans_sphere100(self):
     centersList = write_spheres_dataset(csvPathname, CLUSTERS, SPHERE_PTS)
     print '\nStarting', csvFilename
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
-    kwargs = {'k': CLUSTERS, 'epsilon': 1e-06, 'cols': None, 'destination_key': 'syn_spheres100.hex', }
-    timeoutSecs = 30
-    start = time.time()
-    kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
-    elapsed = (time.time() - start)
-    print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-    kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')
-    h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-    clusters = kmeansResult['KMeansModel']['clusters']
-    clustersSorted = sorted(clusters, key=itemgetter(0))
-    print '\nh2o result, centers sorted'
-    print clustersSorted
-    print '\ngenerated centers'
-    print centersList
-    for (i, center) in enumerate(centersList):
-        a = center
-        b = clustersSorted[i]
-        print '\nexpected:', a
-        print 'h2o:', b
-        aStr = ','.join(map(str, a))
-        bStr = ','.join(map(str, b))
-        iStr = str(i)
-        self.assertAlmostEqual(a[0], b[0], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' x not correct.'))
-        self.assertAlmostEqual(a[1], b[1], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' y not correct.'))
-        self.assertAlmostEqual(a[2], b[2], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' z not correct.'))
+    for trial in range(5):
+        kwargs = {'k': CLUSTERS, 'epsilon': 1e-06, 'cols': None, 'destination_key': 'syn_spheres100.hex', }
+        timeoutSecs = 30
+        start = time.time()
+        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')
+        h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
+        clusters = kmeansResult['KMeansModel']['clusters']
+        clustersSorted = sorted(clusters, key=itemgetter(0))
+        print '\nh2o result, centers sorted'
+        print clustersSorted
+        print '\ngenerated centers'
+        print centersList
+        for (i, center) in enumerate(centersList):
+            a = center
+            b = clustersSorted[i]
+            print '\nexpected:', a
+            print 'h2o:', b
+            aStr = ','.join(map(str, a))
+            bStr = ','.join(map(str, b))
+            iStr = str(i)
+            self.assertAlmostEqual(a[0], b[0], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' x not correct.'))
+            self.assertAlmostEqual(a[1], b[1], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' y not correct.'))
+            self.assertAlmostEqual(a[2], b[2], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' z not correct.'))
+        print 'Trial #', trial, 'completed'
