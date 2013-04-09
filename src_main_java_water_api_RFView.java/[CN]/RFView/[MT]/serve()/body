@@ -7,13 +7,11 @@
   finished=model.size();
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value()) {
-    tasks+=1;
     int modelSize=tasks * _refreshTresholdCM.value() / 100;
-    modelSize=modelSize == 0 ? finished : modelSize * (finished / modelSize);
+    modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
     Confusion confusion=Confusion.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
     response.addProperty(JSON_CONFUSION_KEY,confusion.keyFor().toString());
     if (confusion.isValid() && modelSize > 0) {
-      finished+=1;
       JsonObject cm=new JsonObject();
       JsonArray cmHeader=new JsonArray();
       JsonArray matrix=new JsonArray();
@@ -24,11 +22,18 @@
       for (      String s : cfDomain(confusion,1024))       cmHeader.add(new JsonPrimitive(s));
       cm.add(JSON_CM_HEADER,cmHeader);
       final int nclasses=confusion.dimension();
+      JsonArray classErrors=new JsonArray();
       for (int crow=0; crow < nclasses; ++crow) {
         JsonArray row=new JsonArray();
-        for (int ccol=0; ccol < nclasses; ++ccol)         row.add(new JsonPrimitive(confusion._matrix[crow][ccol]));
+        int classHitScore=0;
+        for (int ccol=0; ccol < nclasses; ++ccol) {
+          row.add(new JsonPrimitive(confusion._matrix[crow][ccol]));
+          if (crow != ccol)           classHitScore+=confusion._matrix[crow][ccol];
+        }
+        classErrors.add(new JsonPrimitive((float)classHitScore / (classHitScore + confusion._matrix[crow][crow])));
         matrix.add(row);
       }
+      cm.add(JSON_CM_CLASSES_ERRORS,classErrors);
       cm.add(JSON_CM_MATRIX,matrix);
       cm.addProperty(JSON_CM_TREES,confusion._treesUsed);
       response.add(JSON_CM,cm);
