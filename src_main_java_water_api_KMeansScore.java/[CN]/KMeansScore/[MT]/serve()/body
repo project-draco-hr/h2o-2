@@ -1,0 +1,18 @@
+{
+  try {
+    JsonObject res=new JsonObject();
+    ValueArray ary=_dataKey.value();
+    KMeansModel m=_modelKey.value();
+    hex.KMeans.KMeansScore kms=hex.KMeans.KMeansScore.score(m,ary);
+    res.add("score",new JsonPrimitive("some kmeans score should be here"));
+    for (int i=0; i < kms._rows.length; i++) {
+      System.err.println("Cluster " + i + " rows: "+ kms._rows[i]+ " norm mean dist:"+ Math.sqrt(kms._dist[i] / kms._rows[i]));
+    }
+    Response r=Response.done(res);
+    r.setBuilder("",new KMeansScoreBuilder(null,null));
+    return r;
+  }
+ catch (  Error e) {
+    return Response.error(e.getMessage());
+  }
+}

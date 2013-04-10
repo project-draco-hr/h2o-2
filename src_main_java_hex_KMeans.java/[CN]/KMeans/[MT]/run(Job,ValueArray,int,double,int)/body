@@ -1,10 +1,12 @@
 {
-  KMeansModel res=new KMeansModel(job.dest(),cols,va._key);
+  int cols2[]=Arrays.copyOf(cols,cols.length + 1);
+  cols2[cols.length]=-1;
+  KMeansModel res=new KMeansModel(job.dest(),cols2,va._key);
   cols=res.columnMapping(va.colNames());
   double[][] clusters=new double[1][];
   clusters[0]=new double[cols.length];
   AutoBuffer bits=va.getChunk(0);
-  for (int c=0; c < cols.length; c++)   clusters[0][c]=datad(va,bits,0,va._cols[cols[c]]);
+  datad(va,bits,0,cols,clusters[0]);
   while (res._iteration < 5) {
     Sqr sqr=new Sqr();
     sqr._arykey=va._key;
@@ -18,7 +20,7 @@
     sampler._sqr=sqr._sqr;
     sampler._probability=k * 3;
     sampler.invoke(va._key);
-    clusters=DRemoteTask.merge(clusters,sampler._newClusters);
+    clusters=DRemoteTask.merge(clusters,sampler._clust2);
     if (job.cancelled()) {
       job.remove();
       return;

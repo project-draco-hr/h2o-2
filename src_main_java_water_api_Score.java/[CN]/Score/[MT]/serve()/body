@@ -1,7 +1,7 @@
 {
   Model M=_modelKey.value();
-  double d[]=new double[M._va._cols.length - 1];
-  for (int i=0; i < d.length; i++) {
+  double d[]=new double[M._va._cols.length];
+  for (int i=0; i < d.length - 1; i++) {
     Argument arg=_arguments.get(i + 1);
     if (false)     ;
  else     if (arg instanceof FactorSelect)     d[i]=(Integer)arg.value();
@@ -14,7 +14,7 @@
   JsonArray rows=new JsonArray();
   JsonObject obj=new JsonObject();
   obj.addProperty(ROW,0);
-  for (int i=0; i < d.length; i++) {
+  for (int i=0; i < d.length - 1; i++) {
     ValueArray.Column C=M._va._cols[i];
     obj.addProperty(C._name,C._domain == null ? (C.isFloat() ? Double.toString(d[i]) : Long.toString((long)d[i])) : C._domain[(int)d[i]]);
   }
