@@ -1,0 +1,22 @@
+def test_sort_of_prostate_with_row_schmoo(self):
+    SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_prostate.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON'
+    totalRows = 1000
+    write_syn_dataset(csvPathname, totalRows, headerData)
+    for trial in range(5):
+        rowData = rand_rowData()
+        num = random.randint(4096, 10096)
+        append_syn_dataset(csvPathname, num)
+        totalRows += num
+        start = time.time()
+        key = ((csvFilename + '_') + str(trial))
+        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        kwargs = {'ntree': 5, 'depth': 5, }
+        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=15, pollTimeoutSecs=5, **kwargs)
+        print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        h2o.check_sandbox_for_errors()

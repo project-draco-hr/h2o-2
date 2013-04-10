@@ -1,9 +1,10 @@
 {
-  for (int i=0; i < data.length; i++) {
+  for (int i=0; i < data.length - 1; i++) {
     ValueArray.Column C=_va._cols[i];
     double d=data[i] - C._mean;
     if (C._sigma != 0.0 && !Double.isNaN(C._sigma))     d/=C._sigma;
     data[i]=d;
   }
-  return closest(_clusters,data);
+  data[data.length - 1]=Double.NaN;
+  return closest(_clusters,data,new ClusterDist())._cluster;
 }

@@ -1,12 +1,13 @@
 {
-  if (DEBUG)   System.out.println("KMeans reduce " + this);
   Lloyds task=(Lloyds)rt;
   if (_sums == null) {
-    _sums=new double[_clusters.length][_cols.length];
-    _counts=new int[_clusters.length];
+    _sums=task._sums;
+    _counts=task._counts;
   }
-  for (int cluster=0; cluster < _clusters.length; cluster++) {
-    for (int column=0; column < _cols.length; column++)     _sums[cluster][column]+=task._sums[cluster][column];
-    _counts[cluster]+=task._counts[cluster];
+ else {
+    for (int cluster=0; cluster < _counts.length; cluster++) {
+      for (int column=0; column < _sums[0].length; column++)       _sums[cluster][column]+=task._sums[cluster][column];
+      _counts[cluster]+=task._counts[cluster];
+    }
   }
 }

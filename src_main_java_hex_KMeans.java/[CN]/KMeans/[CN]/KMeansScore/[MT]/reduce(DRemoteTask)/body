@@ -1,0 +1,13 @@
+{
+  KMeansScore kms=(KMeansScore)rt;
+  if (_rows == null) {
+    _rows=kms._rows;
+    _dist=kms._dist;
+  }
+ else {
+    for (int i=0; i < _rows.length; i++) {
+      _rows[i]+=kms._rows[i];
+      _dist[i]+=kms._dist[i];
+    }
+  }
+}

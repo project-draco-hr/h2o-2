@@ -1,15 +1,13 @@
 def test_kmeans_sphere100(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    CLUSTERS = 5
-    SPHERE_PTS = 10000
     csvFilename = 'syn_spheres100.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     centersList = write_spheres_dataset(csvPathname, CLUSTERS, SPHERE_PTS)
     print '\nStarting', csvFilename
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
-    for trial in range(5):
+    for trial in range(3):
         kwargs = {'k': CLUSTERS, 'epsilon': 1e-06, 'cols': None, 'destination_key': 'syn_spheres100.hex', }
-        timeoutSecs = 30
+        timeoutSecs = 100
         start = time.time()
         kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
@@ -17,12 +15,16 @@ def test_kmeans_sphere100(self):
         kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
         clusters = kmeansResult['KMeansModel']['clusters']
-        clustersSorted = sorted(clusters, key=itemgetter(0))
-        print '\nh2o result, centers sorted'
-        print clustersSorted
-        print '\ngenerated centers'
-        print centersList
-        for (i, center) in enumerate(centersList):
+        clustersSorted = sorted(clusters, key=sum)
+        centersSorted = sorted(centersList, key=sum)
+        print '\nh2o result, centers (sorted by key=sum)'
+        s = '{0:6.2f} {1:6.2f} {2:6.2f}'
+        for c in clustersSorted:
+            print s.format(*c)
+        print '\ngenerated centers (sorted by key=sum)'
+        for c in centersSorted:
+            print s.format(*c)
+        for (i, center) in enumerate(centersSorted):
             a = center
             b = clustersSorted[i]
             print '\nexpected:', a
@@ -30,7 +32,10 @@ def test_kmeans_sphere100(self):
             aStr = ','.join(map(str, a))
             bStr = ','.join(map(str, b))
             iStr = str(i)
-            self.assertAlmostEqual(a[0], b[0], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' x not correct.'))
-            self.assertAlmostEqual(a[1], b[1], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' y not correct.'))
-            self.assertAlmostEqual(a[2], b[2], delta=1, msg=(((((aStr + '!=') + bStr) + '. Sorted cluster center ') + iStr) + ' z not correct.'))
+            emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' x not correct.')
+            self.assertAlmostEqual(a[0], b[0], delta=ALLOWED_DELTA, msg=emsg)
+            emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' y not correct.')
+            self.assertAlmostEqual(a[1], b[1], delta=ALLOWED_DELTA, msg=emsg)
+            emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' z not correct.')
+            self.assertAlmostEqual(a[2], b[2], delta=ALLOWED_DELTA, msg=emsg)
         print 'Trial #', trial, 'completed'
