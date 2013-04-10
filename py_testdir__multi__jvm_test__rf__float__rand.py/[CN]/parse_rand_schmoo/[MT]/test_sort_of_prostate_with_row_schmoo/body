@@ -17,6 +17,6 @@ def test_sort_of_prostate_with_row_schmoo(self):
         key = ((csvFilename + '_') + str(trial))
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         kwargs = {'ntree': 5, 'depth': 5, }
-        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=70, pollTimeoutSecs=60, **kwargs)
+        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=15, pollTimeoutSecs=5, **kwargs)
         print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
