@@ -1,15 +1,33 @@
 def write_spheres_dataset(csvPathname, CLUSTERS, n):
     dsf = open(csvPathname, 'w+')
+    print 'To keep life interesting:'
+    print 'make the multiplier, between 3 and 9 in just one direction'
+    print 'pick x, y, or z direction randomly'
+    print "We tack the centers created, and assert against the H2O results, so 'correct' is checked"
+    print 'Increasing radius for each basketball. (R)'
     centersList = []
     currentCenter = None
     totalRows = 0
     for sphereCnt in range(CLUSTERS):
         R = (10 * (sphereCnt + 1))
-        newOffset = [(3 * R), (3 * R), (3 * R)]
+        if (1 == 0):
+            jump = random.randint((3 * R), ((3 * R) + 9))
+            xyzChoice = random.randint(0, 2)
+        else:
+            print 'FIX! temporarily limiting the center jumps to z dimension for easy understanding'
+            jump = (3 * R)
+            xyzChoice = 2
+        newOffset = [0, 0, 0]
+        newOffset[xyzChoice] = jump
         if (currentCenter is None):
             currentCenter = [0, 0, 0]
         else:
+            lastCenter = currentCenter
             currentCenter = [(a + b) for (a, b) in zip(currentCenter, newOffset)]
+            if ((sum(currentCenter) - sum(lastCenter)) < (len(currentCenter) * ALLOWED_DELTA)):
+                print 'ERROR: adjacent centers are too close for our sort algorithm'
+                print 'currentCenter:', currentCenter, 'lastCenter:', lastCenter
+                raise Exception
         centersList.append(currentCenter)
         numPts = random.randint(int((0.5 * n)), int((1.5 * n)))
         print 'currentCenter:', currentCenter, 'R:', R, 'numPts', numPts

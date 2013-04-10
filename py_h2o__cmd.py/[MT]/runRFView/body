@@ -14,7 +14,7 @@ def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=
             raise Exception(('Unexpected status: ' + status))
         progress = rfView['response']['progress']
         progressTotal = rfView['response']['progress_total']
-        errorInResponse = ((numberBuilt < 0) or (ntree < 0) or (numberBuilt > ntree) or (progress < 0) or (progressTotal < 0) or (progress > progressTotal) or (progressTotal != (ntree + 1)) or (ntree != rfView['ntree']))
+        errorInResponse = ((numberBuilt < 0) or (ntree < 0) or (numberBuilt > ntree) or (progress < 0) or (progressTotal < 0) or (progress > progressTotal) or (ntree != rfView['ntree']))
         if errorInResponse:
             raise Exception(('\nBad values in response during RFView polling.\n' + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))
         if (status == 'poll'):

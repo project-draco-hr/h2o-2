@@ -1,6 +1,4 @@
 {
-  if (DEBUG)   System.out.println("sampler reduce " + this);
   Sampler task=(Sampler)rt;
-  if (_newClusters != null)   _newClusters=merge(_newClusters,task._newClusters);
- else   _newClusters=task._newClusters;
+  _clust2=_clust2 == null ? task._clust2 : merge(_clust2,task._clust2);
 }
