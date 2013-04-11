@@ -6,9 +6,12 @@ def test_B_importFolder_files(self):
     csvFilenameList = csvFilenameAll
     h2b.browseTheCloud()
     for csvFilename in csvFilenameList:
+        start = time.time()
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500, pollTimeoutSecs=60)
+        elapsed = (time.time() - start)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
+        print csvFilename, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
