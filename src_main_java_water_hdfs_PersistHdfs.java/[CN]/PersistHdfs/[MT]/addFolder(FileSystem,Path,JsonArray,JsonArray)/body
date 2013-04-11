@@ -1,5 +1,6 @@
 {
   try {
+    if (fs == null)     return;
     for (    FileStatus file : fs.listStatus(p)) {
       Path pfs=file.getPath();
       if (file.isDir()) {
