@@ -2,12 +2,12 @@ def test_from_import(self):
     importFolderPath = '/home/0xdiag/datasets'
     h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 500
-    csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz'), ('covtype.data', 'covtype.data'), ('covtype20x.data', 'covtype20x.data')]
+    csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz'), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz')]
     csvFilenameList = csvFilenameAll
     h2b.browseTheCloud()
     for (csvFilepattern, csvFilename) in csvFilenameList:
         start = time.time()
-        parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=csvFilename, timeoutSecs=500)
+        parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=500)
         elapsed = (start - time.time())
         print 'parse end on ', csvFilepattern, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         print csvFilepattern, 'parse time:', parseKey['response']['time']
