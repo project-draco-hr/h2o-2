@@ -1,6 +1,9 @@
 def get_xyz_sphere(R):
     u = random.random()
     r = (R * (u ** (1.0 / 3)))
+    if R_NOISE:
+        rNoise = ((random.random() * 0.1) * r)
+        r += rNoise
     costheta = random.uniform((-1), 1)
     theta = math.acos(costheta)
     phi = random.uniform(0, (2 * math.pi))
@@ -8,5 +11,4 @@ def get_xyz_sphere(R):
     y = ((r * math.sin(theta)) * math.sin(phi))
     z = (r * math.cos(theta))
     xyz = [x, y, z]
-    print xyz[:DIMENSIONS]
     return xyz[:DIMENSIONS]
