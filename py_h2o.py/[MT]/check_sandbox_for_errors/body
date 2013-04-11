@@ -1,4 +1,6 @@
 def check_sandbox_for_errors(sandbox_ignore_errors=False):
+    if (not os.path.exists(LOG_DIR)):
+        return
     if (nodes and nodes[0].sandbox_error_report()):
         return
     errLines = []
