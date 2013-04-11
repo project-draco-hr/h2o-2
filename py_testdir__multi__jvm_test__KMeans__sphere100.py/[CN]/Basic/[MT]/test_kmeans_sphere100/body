@@ -3,8 +3,15 @@ def test_kmeans_sphere100(self):
     csvFilename = 'syn_spheres100.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     centersList = write_spheres_dataset(csvPathname, CLUSTERS, SPHERE_PTS)
+    if SHUFFLE_SPHERES:
+        csvFilename2 = 'syn_spheres100_shuffled.csv'
+        csvPathname2 = ((SYNDATASETS_DIR + '/') + csvFilename2)
+        h2o_util.file_shuffle(csvPathname, csvPathname2)
+    else:
+        csvFilename2 = csvFilename
+        csvPathname2 = csvPathname
     print '\nStarting', csvFilename
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname2, key2=(csvFilename2 + '.hex'))
     for trial in range(3):
         kwargs = {'k': CLUSTERS, 'epsilon': 1e-06, 'cols': None, 'destination_key': 'syn_spheres100.hex', }
         timeoutSecs = 100
@@ -33,10 +40,7 @@ def test_kmeans_sphere100(self):
             aStr = ','.join(map(str, a))
             bStr = ','.join(map(str, b))
             iStr = str(i)
-            emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' x not correct.')
-            self.assertAlmostEqual(a[0], b[0], delta=CENTER_DELTA, msg=emsg)
-            emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' y not correct.')
-            self.assertAlmostEqual(a[1], b[1], delta=CENTER_DELTA, msg=emsg)
-            emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' z not correct.')
-            self.assertAlmostEqual(a[2], b[2], delta=CENTER_DELTA, msg=emsg)
+            for (i, v) in enumerate(a):
+                emsg = (((((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' axis ') + str(i)) + ' not correct.')
+                self.assertAlmostEqual(a[i], b[i], delta=CENTER_DELTA, msg=emsg)
         print 'Trial #', trial, 'completed'
