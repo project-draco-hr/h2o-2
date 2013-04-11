@@ -1,6 +1,4 @@
 {
-  Key[] keys=new Key[dataset.length];
-  for (int i=0; i < keys.length; ++i)   keys[i]=dataset[i]._key;
   UnzipTask tsk=new UnzipTask();
   tsk._comp=comp;
   tsk.invoke(keys);
@@ -13,5 +11,8 @@
       for (int i=0; i < keys.length; ++i)       if (keys[i] != null)       UKV.remove(keys[i]);
     }
   }
- else   throw new EOFException();
+ else {
+    System.err.println("unzipping of keys " + Arrays.toString(keys) + " + key[0] = "+ keys[0]+ " failed!");
+    throw new RuntimeException();
+  }
 }

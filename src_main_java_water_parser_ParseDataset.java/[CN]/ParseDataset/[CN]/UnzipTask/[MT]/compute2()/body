@@ -6,13 +6,14 @@
       @Override public void compute2(){
         InputStream is=null;
         Key okey=Key.make(new String(key._kb) + "_UNZIPPED");
+        Value v=DKV.get(key);
         try {
 switch (_comp) {
 case ZIP:
-            is=new ZipInputStream(DKV.get(key).openStream());
+            is=new ZipInputStream(v.openStream());
           break;
 case GZIP:
-        is=new GZIPInputStream(DKV.get(key).openStream());
+        is=new GZIPInputStream(v.openStream());
       break;
 default :
     throw H2O.unimpl();
