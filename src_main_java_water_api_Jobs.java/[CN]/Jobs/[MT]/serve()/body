@@ -9,9 +9,10 @@
     json.addProperty(DEST_KEY,jobs[i].dest() != null ? jobs[i].dest().toString() : "");
     json.addProperty(START_TIME,RequestBuilders.ISO8601.get().format(new Date(jobs[i]._startTime)));
     long end=jobs[i]._endTime;
+    boolean cancelled=(end == 0 ? jobs[i].cancelled() : end == Job.CANCELLED_END_TIME);
     json.addProperty(END_TIME,end == 0 ? "" : RequestBuilders.ISO8601.get().format(new Date(end)));
-    json.addProperty(PROGRESS,end == 0 ? jobs[i].progress() : 0);
-    json.addProperty(CANCELLED,end == 0 ? jobs[i].cancelled() : end == Job.CANCELLED_END_TIME);
+    json.addProperty(PROGRESS,end == 0 ? (cancelled ? -2 : jobs[i].progress()) : (cancelled ? -2 : -1));
+    json.addProperty(CANCELLED,cancelled);
     array.add(json);
   }
   result.add(JOBS,array);
@@ -31,6 +32,20 @@
         html="<a href='Cancel.html?" + keyParam + "'><button class='btn btn-danger btn-mini'>X</button></a>";
       }
       return html;
+    }
+  }
+);
+  r.setBuilder(JOBS + "." + DEST_KEY,new ArrayRowElementBuilder(){
+    @Override public String elementToString(    JsonElement elm,    String contextName){
+      String str=elm.getAsString();
+      String key=null;
+      try {
+        key=URLEncoder.encode(str,"UTF-8");
+      }
+ catch (      UnsupportedEncodingException e) {
+        key=str;
+      }
+      return "".equals(key) ? key : "<a href='Inspect.html?" + KEY + "="+ key+ "'>"+ str+ "</a>";
     }
   }
 );

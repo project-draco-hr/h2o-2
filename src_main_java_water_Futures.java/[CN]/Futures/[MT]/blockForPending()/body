@@ -1,6 +1,13 @@
 {
   try {
-    while (_pending_cnt > 0)     _pending[--_pending_cnt].get();
+    while (true) {
+      Future f=null;
+synchronized (this) {
+        if (_pending_cnt == 0)         return;
+        f=_pending[--_pending_cnt];
+      }
+      f.get();
+    }
   }
  catch (  InterruptedException ie) {
     throw new RuntimeException(ie);
