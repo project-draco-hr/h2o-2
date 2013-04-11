@@ -5,8 +5,10 @@
     for (int i=0; i < ds.length; i++) {
       ValueArray.Column C=_va._cols[i];
       double d=ds[i];
-      if (C._sigma != 0.0 && !Double.isNaN(C._sigma))       d*=C._sigma;
-      d+=C._mean;
+      if (NORMALIZE) {
+        if (C._sigma != 0.0 && !Double.isNaN(C._sigma))         d*=C._sigma;
+        d+=C._mean;
+      }
       dd[j][i]=d;
     }
   }
