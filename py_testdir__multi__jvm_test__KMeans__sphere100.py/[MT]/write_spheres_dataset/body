@@ -14,9 +14,11 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
             jump = random.randint((10 * R), ((10 * R) + 10))
             xyzChoice = random.randint(0, (DIMENSIONS - 1))
         else:
-            jump = (10 * R)
-            if (DIMENSIONS == 3):
-                xyzChoice = 2
+            jump = (3 * R)
+            if (DIMENSIONS == 5):
+                xyzChoice = 4
+            elif (DIMENSIONS == 3):
+                xyzChoice = 0
             else:
                 xyzChoice = 0
         zeroes = ([0] * DIMENSIONS)
@@ -27,7 +29,7 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
         else:
             lastCenter = currentCenter
             currentCenter = [(a + b) for (a, b) in zip(currentCenter, newOffset)]
-            if ((sum(currentCenter) - sum(lastCenter)) < (len(currentCenter) * CENTER_DELTA)):
+            if ((sum(currentCenter) - sum(lastCenter)) < (len(currentCenter) * ALLOWED_CENTER_DELTA)):
                 print 'ERROR: adjacent centers are too close for our sort algorithm'
                 print 'currentCenter:', currentCenter, 'lastCenter:', lastCenter
                 raise Exception
