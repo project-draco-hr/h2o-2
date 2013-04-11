@@ -10,13 +10,16 @@
         try {
 switch (_comp) {
 case ZIP:
-            is=new ZipInputStream(v.openStream());
-          break;
+            ZipInputStream zis=new ZipInputStream(v.openStream());
+          ZipEntry ze=zis.getNextEntry();
+        if (ze == null || ze.isDirectory())         throw new Exception("Unsupported zip file: " + ((ze == null) ? "No entry found" : "Files containing directory arte not supported."));
+      is=zis;
+    break;
 case GZIP:
-        is=new GZIPInputStream(v.openStream());
-      break;
+  is=new GZIPInputStream(v.openStream());
+break;
 default :
-    throw H2O.unimpl();
+throw H2O.unimpl();
 }
 ValueArray.readPut(okey,is,_job);
 }
