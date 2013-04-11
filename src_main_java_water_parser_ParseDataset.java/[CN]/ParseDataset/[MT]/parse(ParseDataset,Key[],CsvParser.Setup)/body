@@ -6,6 +6,10 @@
     if (v == null || v.length() > 0)     dataset[j++]=v;
   }
   if (j < dataset.length)   dataset=Arrays.copyOf(dataset,j);
+  if (dataset.length == 0) {
+    job.cancel();
+    return;
+  }
   if (setup == null)   setup=Inspect.csvGuessValue(dataset[0]);
   if (keys.length > 1) {
     CheckParseSetup tst=new CheckParseSetup(job,setup);
@@ -23,14 +27,6 @@
  catch (    Exception e) {
     }
     Compression compression=guessCompressionMethod(dataset[0]);
-    if (compression == Compression.ZIP) {
-      try {
-        parseUncompressed(job,dataset,CustomParser.Type.XLSX,setup);
-        return;
-      }
- catch (      Exception e) {
-      }
-    }
 switch (compression) {
 case NONE:
       parseUncompressed(job,dataset,CustomParser.Type.CSV,setup);

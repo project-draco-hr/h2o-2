@@ -47,11 +47,9 @@ synchronized (STORE) {
           val.storePersist();
         }
  catch (        IOException e) {
-          if (diskFull=isDiskFull())           System.err.println("Disk full! Disabling swapping to disk." + ((force) ? " Memory low! Please free some space in " + PersistIce.ROOT + "!" : ""));
- else {
-            System.err.println("Disk swapping failed! " + e.getMessage());
-            diskFull=true;
-          }
+          if (isDiskFull())           System.err.println("Disk full! Disabling swapping to disk." + ((force) ? " Memory low! Please free some space in " + PersistIce.ROOT + "!" : ""));
+ else           System.err.println("Disk swapping failed! " + e.getMessage());
+          diskFull=true;
         }
       }
       if (force && val.isPersisted()) {
@@ -59,7 +57,6 @@ synchronized (STORE) {
         freed+=m.length;
       }
     }
-    if (force && (freed < DESIRED) && isDiskFull())     UDPRebooted.suicide(UDPRebooted.T.oom,H2O.SELF);
     h=_myHisto.histo(true);
     MemoryManager.set_goals("postclean",false);
     if (VERBOSE)     System.out.println("[clean <<<] " + h + " cleaned="+ (cleaned >> 20)+ "M, freed="+ (freed >> 20)+ "M, DESIRED="+ (DESIRED >> 20)+ "M");

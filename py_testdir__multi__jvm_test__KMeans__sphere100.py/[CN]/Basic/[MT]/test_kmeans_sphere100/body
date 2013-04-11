@@ -42,5 +42,5 @@ def test_kmeans_sphere100(self):
             iStr = str(i)
             for (i, v) in enumerate(a):
                 emsg = (((((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' axis ') + str(i)) + ' not correct.')
-                self.assertAlmostEqual(a[i], b[i], delta=CENTER_DELTA, msg=emsg)
+                self.assertAlmostEqual(a[i], b[i], delta=ALLOWED_CENTER_DELTA, msg=emsg)
         print 'Trial #', trial, 'completed'
