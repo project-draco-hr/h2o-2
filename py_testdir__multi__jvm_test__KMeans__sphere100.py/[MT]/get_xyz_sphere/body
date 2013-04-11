@@ -1,10 +1,12 @@
 def get_xyz_sphere(R):
-    phi = random.uniform(0, (2 * math.pi))
-    costheta = random.uniform((-1), 1)
     u = random.random()
-    theta = math.acos(costheta)
     r = (R * (u ** (1.0 / 3)))
+    costheta = random.uniform((-1), 1)
+    theta = math.acos(costheta)
+    phi = random.uniform(0, (2 * math.pi))
     x = ((r * math.sin(theta)) * math.cos(phi))
     y = ((r * math.sin(theta)) * math.sin(phi))
     z = (r * math.cos(theta))
-    return [x, y, z]
+    xyz = [x, y, z]
+    print xyz[:DIMENSIONS]
+    return xyz[:DIMENSIONS]

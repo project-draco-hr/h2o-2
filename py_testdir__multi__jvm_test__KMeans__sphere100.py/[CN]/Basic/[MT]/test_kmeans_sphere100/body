@@ -13,17 +13,18 @@ def test_kmeans_sphere100(self):
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')
+        print h2o.dump_json(kmeansResult)
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
         clusters = kmeansResult['KMeansModel']['clusters']
         clustersSorted = sorted(clusters, key=sum)
         centersSorted = sorted(centersList, key=sum)
         print '\nh2o result, centers (sorted by key=sum)'
-        s = '{0:6.2f} {1:6.2f} {2:6.2f}'
+        cf = '{0:6.2f}'
         for c in clustersSorted:
-            print s.format(*c)
+            print ' '.join(map(cf.format, c))
         print '\ngenerated centers (sorted by key=sum)'
         for c in centersSorted:
-            print s.format(*c)
+            print ' '.join(map(cf.format, c))
         for (i, center) in enumerate(centersSorted):
             a = center
             b = clustersSorted[i]
@@ -33,9 +34,9 @@ def test_kmeans_sphere100(self):
             bStr = ','.join(map(str, b))
             iStr = str(i)
             emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' x not correct.')
-            self.assertAlmostEqual(a[0], b[0], delta=ALLOWED_DELTA, msg=emsg)
+            self.assertAlmostEqual(a[0], b[0], delta=CENTER_DELTA, msg=emsg)
             emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' y not correct.')
-            self.assertAlmostEqual(a[1], b[1], delta=ALLOWED_DELTA, msg=emsg)
+            self.assertAlmostEqual(a[1], b[1], delta=CENTER_DELTA, msg=emsg)
             emsg = (((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' z not correct.')
-            self.assertAlmostEqual(a[2], b[2], delta=ALLOWED_DELTA, msg=emsg)
+            self.assertAlmostEqual(a[2], b[2], delta=CENTER_DELTA, msg=emsg)
         print 'Trial #', trial, 'completed'
