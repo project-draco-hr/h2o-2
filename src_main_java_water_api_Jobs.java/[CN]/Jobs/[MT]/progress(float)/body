@@ -1,4 +1,13 @@
 {
-  String pct="" + (int)(value * 100);
-  return "" + "<div style='margin-bottom:0px;padding-bottom:0xp;margin-top:8px;height:5px;width:180px' class='progress progress-stripped'>" + "<div class='bar' style='width:" + pct + "%;'>"+ "</div>"+ "</div>";
+  int pct=(int)(value * 100);
+  String type="progress-stripped active";
+  if (pct == -100) {
+    pct=100;
+    type="progress-success";
+  }
+ else   if (pct == -200) {
+    pct=100;
+    type="progress-warning";
+  }
+  return "" + "<div style='margin-bottom:0px;padding-bottom:0xp;margin-top:8px;height:5px;width:180px' class='progress " + type + "'>"+ "<div class='bar' style='width:"+ pct+ "%;'>"+ "</div>"+ "</div>";
 }
