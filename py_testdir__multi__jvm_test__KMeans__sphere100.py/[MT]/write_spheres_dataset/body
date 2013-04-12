@@ -14,7 +14,7 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
             jump = random.randint((10 * R), ((10 * R) + 10))
             xyzChoice = random.randint(0, (DIMENSIONS - 1))
         else:
-            jump = (3 * R)
+            jump = (10 * R)
             if (DIMENSIONS == 5):
                 xyzChoice = 4
             elif (DIMENSIONS == 3):
@@ -23,7 +23,7 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
                 xyzChoice = 0
         zeroes = ([0] * DIMENSIONS)
         newOffset = zeroes
-        newOffset[xyzChoice] = jump
+        newOffset = ([jump] * DIMENSIONS)
         if (currentCenter is None):
             currentCenter = zeroes
         else:
