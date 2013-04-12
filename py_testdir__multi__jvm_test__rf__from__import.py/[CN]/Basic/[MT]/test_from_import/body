@@ -1,9 +1,10 @@
 def test_from_import(self):
     importFolderPath = '/home/0xdiag/datasets'
-    csvFilenameAll = [('manyfiles-nflx-gz/file_*.dat.gz', 'file_10.dat.gz')]
+    avgMichalSize = 116561140
+    csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize)), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize)), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize)), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50.dat.gz', (50 * avgMichalSize)), ('manyfiles-nflx-gz/file_*.dat.gz', 'file_100.dat.gz', (100 * avgMichalSize))]
     csvFilenameList = csvFilenameAll
     trialMax = 2
-    for (csvFilepattern, csvFilename) in csvFilenameList:
+    for (csvFilepattern, csvFilename, totalBytes) in csvFilenameList:
         for trial in range(trialMax):
             importFolderResult = h2i.setupImportFolder(None, importFolderPath)
             importFullList = importFolderResult['succeeded']
@@ -14,6 +15,9 @@ def test_from_import(self):
             parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+            if (totalBytes is not None):
+                fileMBS = ((totalBytes / 1000000.0) / elapsed)
+                print '\nMB/sec (before uncompress)', ('%6.2f' % fileMBS)
             print csvFilepattern, 'parse time:', parseKey['response']['time']
             print "Parse result['destination_key']:", parseKey['destination_key']
             inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
