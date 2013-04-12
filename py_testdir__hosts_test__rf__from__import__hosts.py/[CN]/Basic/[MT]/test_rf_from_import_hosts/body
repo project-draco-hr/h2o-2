@@ -1,10 +1,9 @@
-def test_B_importFolder_files(self):
+def test_rf_from_import_hosts(self):
     importFolderPath = '/home/0xdiag/datasets'
     h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 500
     csvFilenameAll = ['billion_rows.csv.gz']
     csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
     for csvFilename in csvFilenameList:
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
         print csvFilename, 'parse time:', parseKey['response']['time']

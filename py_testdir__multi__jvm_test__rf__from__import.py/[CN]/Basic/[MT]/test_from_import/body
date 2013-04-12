@@ -1,24 +1,31 @@
 def test_from_import(self):
     importFolderPath = '/home/0xdiag/datasets'
-    h2i.setupImportFolder(None, importFolderPath)
-    timeoutSecs = 500
-    csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz'), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz')]
+    csvFilenameAll = [('manyfiles-nflx-gz/file_1[0-9].dat.gz', 'file_10.dat.gz')]
     csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
+    trialMax = 2
     for (csvFilepattern, csvFilename) in csvFilenameList:
-        start = time.time()
-        parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=500)
-        elapsed = (time.time() - start)
-        print 'parse end on ', csvFilepattern, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-        print csvFilepattern, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
-        origKey = parseKey['destination_key']
-        execExpr = (('a = slice(' + origKey) + ',1,200)')
-        h2e.exec_expr(h2o.nodes[0], execExpr, 'a', timeoutSecs=30)
-        newParseKey = {'destination_key': 'a', }
-        print ('\n' + csvFilepattern)
-        start = time.time()
-        print 'Temporarily hacking to do nothing instead of RF on the parsed file'
-        sys.stdout.write('.')
-        sys.stdout.flush()
+        for trial in range(trialMax):
+            importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+            importFullList = importFolderResult['succeeded']
+            timeoutSecs = 500
+            start = time.time()
+            parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=500)
+            elapsed = (time.time() - start)
+            print 'Parse #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+            print csvFilepattern, 'parse time:', parseKey['response']['time']
+            print "Parse result['destination_key']:", parseKey['destination_key']
+            inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
+            origKey = parseKey['destination_key']
+            execExpr = (('a = slice(' + origKey) + ',1,200)')
+            h2e.exec_expr(h2o.nodes[0], execExpr, 'a', timeoutSecs=30)
+            newParseKey = {'destination_key': 'a', }
+            print ('\n' + csvFilepattern)
+            start = time.time()
+            print 'Temporarily hacking to do nothing instead of RF on the parsed file'
+            for k in importFullList:
+                deleteKey = k['key']
+                if ((csvFilename in deleteKey) and (not ('.hex' in deleteKey))):
+                    print '\nRemoving', deleteKey
+                    removeKeyResult = h2o.nodes[0].remove_key(key=deleteKey)
+            sys.stdout.write('.')
+            sys.stdout.flush()
