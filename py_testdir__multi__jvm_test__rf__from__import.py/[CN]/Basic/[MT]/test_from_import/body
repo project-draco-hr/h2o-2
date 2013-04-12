@@ -7,6 +7,8 @@ def test_from_import(self):
         for trial in range(trialMax):
             importFolderResult = h2i.setupImportFolder(None, importFolderPath)
             importFullList = importFolderResult['succeeded']
+            importFailList = importFolderResult['failed']
+            print '\n Problem if this is not empty: importFailList:', h2o.dump_json(importFailList)
             timeoutSecs = 500
             start = time.time()
             parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=500)
