@@ -1,7 +1,8 @@
 def test_import_nflx_parse_loop(self):
     print 'Using the -.gz files from s3'
     csvFilename = 'file_1.dat.gz'
-    csvPathname = ('manyfiles-nflx-gz/' + csvFilename)
+    csvFilepattern = 'file_1[0-9].dat.gz'
+    csvPathname = ('manyfiles-nflx-gz/' + csvFilepattern)
     trialMax = 2
     for tryHeap in [10, 4]:
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import hdfs/s3n, then parse'
