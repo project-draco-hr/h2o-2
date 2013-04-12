@@ -1,4 +1,4 @@
-def test_C_hhp_107_01(self):
+def test_GLM_big1_nopoll(self):
     csvPathname = h2o.find_file('smalldata/hhp_107_01.data.gz')
     print ('\n' + csvPathname)
     y = '106'
@@ -13,6 +13,7 @@ def test_C_hhp_107_01(self):
         print 'glm job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print '\njobDispatch #', jobDispatch
     anyBusy = True
+    waitLoop = 0
     while anyBusy:
         anyBusy = False
         a = h2o.nodes[0].jobs_admin()
@@ -23,10 +24,14 @@ def test_C_hhp_107_01(self):
                 GLMModelKeys.append(j['destination_key'])
             if (j['end_time'] == ''):
                 anyBusy = True
-                print 'Not done - ', 'destination_key:', j['destination_key'], 'progress:', j['progress'], 'cancelled:', j['cancelled'], 'end_time:', j['end_time']
+                print 'Loop', waitLoop, 'Not done - ', 'destination_key:', j['destination_key'], 'progress:', j['progress'], 'cancelled:', j['cancelled'], 'end_time:', j['end_time']
         print '\n'
         h2b.browseJsonHistoryAsUrlLastMatch('Jobs')
+        if (anyBusy and (waitLoop > 20)):
+            print h2o.dump_json(jobs)
+            raise Exception("Some queued jobs haven't completed after", waitLoop, 'wait loops')
         time.sleep(5)
+        waitLoop += 1
     for glm in glmInitial:
         print 'Checking completed job, with no polling:', glm
         a = h2o.nodes[0].poll_url(glm['response'], noPoll=True)
