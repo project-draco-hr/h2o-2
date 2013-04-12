@@ -5,13 +5,13 @@ def test_B_hdfs_files(self):
     else:
         csvFilenameList = csvFilenameAll
     h2b.browseTheCloud()
-    timeoutSecs = 200
+    timeoutSecs = 1000
     firstglm = {}
     h2i.setupImportHdfs()
     for csvFilename in csvFilenameList:
         start = time.time()
         print 'Parsing', csvFilename
-        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=1000, retryDelaySecs=1.0)
+        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=timeoutSecs, retryDelaySecs=1.0)
         print csvFilename, '\nparse time (python)', (time.time() - start), 'seconds'
         print csvFilename, '\nparse time (h2o):', parseKey['response']['time']
         print 'parse result:', parseKey['destination_key']

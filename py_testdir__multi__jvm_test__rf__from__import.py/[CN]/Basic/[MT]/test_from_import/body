@@ -9,9 +9,9 @@ def test_from_import(self):
             importFullList = importFolderResult['succeeded']
             importFailList = importFolderResult['failed']
             print '\n Problem if this is not empty: importFailList:', h2o.dump_json(importFailList)
-            timeoutSecs = 500
+            timeoutSecs = 700
             start = time.time()
-            parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=500)
+            parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             print 'Parse #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             print csvFilepattern, 'parse time:', parseKey['response']['time']
