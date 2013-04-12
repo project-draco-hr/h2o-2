@@ -1,11 +1,11 @@
 def test_import_nflx_parse_loop(self):
     print 'Using the -.gz files from s3'
     csvFilename = 'file_10.dat.gz'
-    csvFilepattern = 'file_1[0-9].dat.gz'
+    csvFilepattern = 'file_1[0-9][0-9].dat.gz'
     URI = 's3n://home-0xdiag-datasets'
     s3nKey = ((URI + '/manyfiles-nflx-gz/') + csvFilepattern)
     trialMax = 2
-    for tryHeap in [10, 4]:
+    for tryHeap in [28]:
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import hdfs/s3n, then parse'
         h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
         h2o.nodes[0].sandbox_ignore_errors = True
