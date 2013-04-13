@@ -1,8 +1,9 @@
-def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=15, noPoll=False, noise=None):
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=15, noise=None, benchmarkLogging=False, noPoll=False):
     verboseprint('poll_url input: response:', dump_json(response))
     url = self.__url(response['redirect_request'])
     params = response['redirect_request_args']
     if (noise is not None):
+        print noise
         (noise_json, noiseParams) = noise
         noiseUrl = self.__url((noise_json + '.json'))
     status = 'poll'
@@ -38,4 +39,8 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         count += 1
         if noPoll:
             return r
+        if benchmarkLogging:
+            cpup = psutil.cpu_percent(percpu=True)
+            l = ('%s %s %s' % (python_test_name, 'psutil.cpu_percent:', cpup))
+            logging.critical(l)
     return r

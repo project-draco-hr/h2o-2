@@ -1,4 +1,4 @@
-def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=30, noPoll=False, noise=None, **kwargs):
+def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=30, noise=None, noPoll=False, **kwargs):
     a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName='GLM', **kwargs)
     if (a['response']['redirect_request'] != 'GLMProgressPage'):
         print dump_json(a)
