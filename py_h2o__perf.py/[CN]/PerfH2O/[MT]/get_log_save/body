@@ -2,44 +2,49 @@ def get_log_save(self, benchmarkLogging=None):
     (cpu_percent, dioc, nioc, snapshotTime) = self.get()
     pollStats = self.pollStats
     elapsedTime = (snapshotTime - pollStats['time'])
-    enable = {'cpu': False, 'disk': False, 'network': False, 'jstack': False, }
+    logEnable = {'cpu': False, 'disk': False, 'network': False, 'jstack': False, }
     for e in benchmarkLogging:
-        enable[e] = True
-    if (enable['jstack'] and ((snapshotTime - pollStats['lastJstackTime']) >= 10)):
+        logEnable[e] = True
+    if (logEnable['jstack'] and ((snapshotTime - pollStats['lastJstackTime']) >= 10)):
         self.pollStats['lastJstackTime'] = snapshotTime
-        stats = h2o.nodes[0].jstack()
-        node0 = stats['nodes'][0]
+        jstackResult = h2o.nodes[0].jstack()
+        node0 = jstackResult['nodes'][0]
         stack_traces = node0['stack_traces']
-        slines = stack_traces.split('\n')
-        MINCACHETOPRINT = 7
-        cache = []
-        jstackCache = False
-        last = ''
+        stackLines = stack_traces.split('\n')
 
-        def check_cache():
-            if ((not jstackCache) and (len(cache) >= MINCACHETOPRINT)):
-                for c in cache:
+        def init_cache(self):
+            self.cache = []
+            self.cacheHasJstack = False
+            self.cacheHasTCP = False
+
+        def log_and_init_cache(self):
+            MINCACHETOPRINT = 7
+            if (self.cacheHasTCP or ((not self.cacheHasJstack) and (len(self.cache) >= MINCACHETOPRINT))):
+                for c in self.cache:
                     logging.critical(c)
-        for s in slines:
-            if (last == ''):
-                check_cache()
-                cache = []
-                jstackCache = False
+            init_cache(self)
+        init_cache(self)
+        lastLine = ''
+        for s in stackLines:
+            if (lastLine == ''):
+                log_and_init_cache(self)
             else:
-                cache.append(s)
+                self.cache.append(s)
                 if ('JStack' in s):
-                    jstackCache = True
-            last = s
-        check_cache()
+                    self.cacheHasJstack = True
+                if ('TCP' in s):
+                    self.cacheHasTCP = True
+            lastLine = s
+        log_and_init_cache(self)
     l = ('%s %s' % ('cpu_percent:', cpu_percent))
-    if enable['cpu']:
+    if logEnable['cpu']:
         logging.critical(l)
     diocSpotRdMBSec = ((dioc.read_bytes - pollStats['read_bytes']) / (1000000.0 * elapsedTime))
     diocSpotWrMBSec = ((dioc.write_bytes - pollStats['write_bytes']) / (1000000.0 * elapsedTime))
     diocSpotRdTime = ((dioc.read_time - pollStats['read_time']) / 1000.0)
     diocSpotWrTime = ((dioc.write_time - pollStats['write_time']) / 1000.0)
-    l = 'Disk. Spot RdMB/s:{:6.2f} Spot WrMB/s:{:6.2f} {!s} {!s}'.format(diocSpotRdMBSec, diocSpotWrMBSec, diocSpotRdTime, diocSpotWrTime)
-    if (enable['disk'] and (pollStats['count'] > 0)):
+    l = 'Disk. Spot RdMB/s: {:<6.2f} Spot WrMB/s: {:<6.2f} {!s} {!s} elapsed: {:<6.2f}'.format(diocSpotRdMBSec, diocSpotWrMBSec, diocSpotRdTime, diocSpotWrTime, elapsedTime)
+    if (logEnable['disk'] and (pollStats['count'] > 0)):
         logging.critical(l)
     niocSpotSentMBSec = ((nioc.bytes_sent - pollStats['bytes_sent']) / (1000000.0 * elapsedTime))
     niocSpotRecvMBSec = ((nioc.bytes_recv - pollStats['bytes_recv']) / (1000000.0 * elapsedTime))
@@ -47,7 +52,7 @@ def get_log_save(self, benchmarkLogging=None):
     niocSpotDropOut = 0
     niocSpotErrIn = 0
     niocSpotErrOut = 0
-    l = 'Network. Spot RecvMB/s:{:6.2f} Spot SentMB/s:{:6.2f} {!s} {!s} {!s} {!s}'.format(niocSpotRecvMBSec, niocSpotSentMBSec, niocSpotDropIn, niocSpotDropOut, niocSpotErrIn, niocSpotErrOut)
-    if (enable['network'] and (pollStats['count'] > 0)):
+    l = 'Network. Spot RecvMB/s: {:<6.2f} Spot SentMB/s: {:<6.2f} {!s} {!s} {!s} {!s}'.format(niocSpotRecvMBSec, niocSpotSentMBSec, niocSpotDropIn, niocSpotDropOut, niocSpotErrIn, niocSpotErrOut)
+    if (logEnable['network'] and (pollStats['count'] > 0)):
         logging.critical(l)
     self.save(cpu_percent, dioc, nioc, snapshotTime)
