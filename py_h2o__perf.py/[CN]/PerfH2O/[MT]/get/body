@@ -1,0 +1,6 @@
+def get(self):
+    cpu_percent = psutil.cpu_percent(percpu=True)
+    dioc = psutil.disk_io_counters()
+    nioc = psutil.network_io_counters()
+    snapshotTime = time.time()
+    return (cpu_percent, dioc, nioc, snapshotTime)

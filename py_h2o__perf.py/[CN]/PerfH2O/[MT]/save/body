@@ -1,0 +1,14 @@
+def save(self, cpu_percent, dioc, nioc, snapshotTime):
+    self.pollStats['cpu_percent'] = cpu_percent
+    self.pollStats['read_bytes'] = dioc.read_bytes
+    self.pollStats['write_bytes'] = dioc.write_bytes
+    self.pollStats['read_time'] = dioc.read_time
+    self.pollStats['write_time'] = dioc.write_time
+    self.pollStats['bytes_sent'] = nioc.bytes_sent
+    self.pollStats['bytes_recv'] = nioc.bytes_recv
+    self.pollStats['dropin'] = nioc.dropin
+    self.pollStats['dropout'] = nioc.dropout
+    self.pollStats['errin'] = nioc.errin
+    self.pollStats['errout'] = nioc.errout
+    self.pollStats['count'] += 1
+    self.pollStats['time'] = snapshotTime
