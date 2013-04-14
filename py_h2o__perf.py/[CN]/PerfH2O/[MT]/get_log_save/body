@@ -31,7 +31,7 @@ def get_log_save(self, benchmarkLogging=None):
                     jstackCache = True
             last = s
         check_cache()
-    l = ('%s %s %s' % (self.python_test_name, 'cpu_percent:', cpu_percent))
+    l = ('%s %s' % ('cpu_percent:', cpu_percent))
     if enable['cpu']:
         logging.critical(l)
     diocSpotRdMBSec = ((dioc.read_bytes - pollStats['read_bytes']) / (1000000.0 * elapsedTime))
