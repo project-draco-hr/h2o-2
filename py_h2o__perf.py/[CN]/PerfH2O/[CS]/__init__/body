@@ -1,0 +1,10 @@
+def __init__(self, python_test_name):
+    blog = (('benchmark_' + python_test_name) + '.log')
+    self.python_test_name = python_test_name
+    print ('Appending to %s.' % blog), 'Between tests, you may want to delete it if it gets too big'
+    logging.basicConfig(filename=blog, level=logging.CRITICAL, format='%(asctime)s %(message)s')
+    statsList = ['read_bytes', 'write_bytes', 'read_time', 'write_time', 'bytes_sent', 'bytes_recv', 'dropin', 'dropout', 'errin', 'errout']
+    self.pollStats = {}
+    for s in statsList:
+        self.pollStats[s] = 0
+    self.pollStats['count'] = 0

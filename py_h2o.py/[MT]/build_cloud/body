@@ -1,9 +1,8 @@
 def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=0.5, cleanup=True, rand_shuffle=True, **kwargs):
     clean_sandbox()
     if kwargs.setdefault('enable_benchmark_log', False):
-        blog = (('benchmark_' + python_test_name) + '.log')
-        print ('Appending to %s.' % blog), 'Between tests, you may want to delete it if it gets too big'
-        logging.basicConfig(filename=blog, level=logging.CRITICAL, format='%(asctime)s %(message)s')
+        global cloudPerfH2O
+        cloudPerfH2O = h2o_perf.PerfH2O(python_test_name)
     ports_per_node = 2
     node_list = []
     try:
