@@ -13,6 +13,7 @@
     if (!dir.mkdir())     throw new IOException("Failed to create tmp dir: " + dir.getAbsolutePath());
     dir.deleteOnExit();
     _parentDir=dir;
+    System.out.println("[h2o,debug] Extracting jar into " + _parentDir);
     extractInternalFiles();
     addInternalJars("apache");
     addInternalJars("gson");
