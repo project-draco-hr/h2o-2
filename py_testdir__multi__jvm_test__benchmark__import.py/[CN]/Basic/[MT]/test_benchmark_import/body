@@ -13,7 +13,7 @@ def test_benchmark_import(self):
         importFolderPath = '/home/0xdiag/datasets'
         print "Using .gz'ed files in", importFolderPath
         avgMichalSize = 237270000
-        csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_10.dat.gz', 'file_10_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_11.dat.gz', 'file_11_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_1[0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50.dat.gz', (50 * avgMichalSize), 700), ('covtype200x.data', 'covtype200x.data', 15033863400, 700)]
+        csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50.dat.gz', (50 * avgMichalSize), 700)]
     csvFilenameList = csvFilenameAll
     trialMax = 1
     base_port = 54321
@@ -24,14 +24,14 @@ def test_benchmark_import(self):
             h2o.build_cloud(1, java_heap_GB=tryHeap, base_port=base_port, enable_benchmark_log=True)
         else:
             h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=tryHeap, base_port=base_port, enable_benchmark_log=True)
-        base_port += 2
         for trial in range(trialMax):
             importFolderResult = h2i.setupImportFolder(None, importFolderPath)
             importFullList = importFolderResult['succeeded']
             importFailList = importFolderResult['failed']
             print '\n Problem if this is not empty: importFailList:', h2o.dump_json(importFailList)
-            logging.critical('')
-            logging.critical((('Parse ' + csvFilename) + ' Start--------------------------------'))
+            h2o.cloudPerfH2O.change_logfile(csvFilename)
+            h2o.cloudPerfH2O.message('')
+            h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
             start = time.time()
             parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=5, benchmarkLogging=['cpu', 'disk', 'jstack'])
             elapsed = (time.time() - start)
@@ -39,7 +39,7 @@ def test_benchmark_import(self):
             if (totalBytes is not None):
                 fileMBS = ((totalBytes / 1000000.0) / elapsed)
                 print '\nMB/sec (before uncompress)', ('%6.2f' % fileMBS)
-                logging.critical('{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed))
+                h2o.cloudPerfH2O.message('{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed))
             print csvFilepattern, 'parse time:', parseKey['response']['time']
             print "Parse result['destination_key']:", parseKey['destination_key']
             inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])

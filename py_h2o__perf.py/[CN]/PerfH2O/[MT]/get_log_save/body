@@ -5,7 +5,7 @@ def get_log_save(self, benchmarkLogging=None):
     logEnable = {'cpu': False, 'disk': False, 'network': False, 'jstack': False, }
     for e in benchmarkLogging:
         logEnable[e] = True
-    if (logEnable['jstack'] and ((snapshotTime - pollStats['lastJstackTime']) >= 10)):
+    if (logEnable['jstack'] and ((snapshotTime - pollStats['lastJstackTime']) >= self.JSTACKINTERVAL)):
         self.pollStats['lastJstackTime'] = snapshotTime
         jstackResult = h2o.nodes[0].jstack()
         node0 = jstackResult['nodes'][0]
@@ -18,8 +18,7 @@ def get_log_save(self, benchmarkLogging=None):
             self.cacheHasTCP = False
 
         def log_and_init_cache(self):
-            MINCACHETOPRINT = 7
-            if (self.cacheHasTCP or ((not self.cacheHasJstack) and (len(self.cache) >= MINCACHETOPRINT))):
+            if (self.cacheHasTCP or ((not self.cacheHasJstack) and (len(self.cache) >= self.MINCACHETOPRINT))):
                 for c in self.cache:
                     logging.critical(c)
             init_cache(self)
@@ -29,7 +28,7 @@ def get_log_save(self, benchmarkLogging=None):
             if (lastLine == ''):
                 log_and_init_cache(self)
             else:
-                self.cache.append(s)
+                self.cache.append(('#' + s))
                 if ('JStack' in s):
                     self.cacheHasJstack = True
                 if ('TCP' in s):
