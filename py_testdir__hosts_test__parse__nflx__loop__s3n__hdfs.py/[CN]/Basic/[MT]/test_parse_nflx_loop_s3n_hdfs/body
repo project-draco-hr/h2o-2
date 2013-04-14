@@ -6,7 +6,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
     trialMax = 1
     for (csvFilepattern, csvFilename, totalBytes) in csvFilenameList:
         s3nKey = ((URI + '/') + csvFilepattern)
-        for tryHeap in [28]:
+        for tryHeap in [54]:
             print '\n', tryHeap, 'GB heap, 1 jvm per host, import hdfs/s3n, then parse'
             h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, enable_benchmark_log=True, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
             h2o.nodes[0].sandbox_ignore_errors = True
@@ -30,7 +30,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                 if (totalBytes is not None):
                     fileMBS = ((totalBytes / 1000000.0) / elapsed)
                     print '\nMB/sec (before uncompress)', ('%6.2f' % fileMBS)
-                    logging.critical('{!s} jvms, {:s}GB heap, {:s} {:s} {:6.2f} MB/sec for {!s} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed))
+                    logging.critical('{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} MB/sec for {:6.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed))
                 print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
                 storeView = h2o.nodes[0].store_view()
                 for k in s3nFullList:

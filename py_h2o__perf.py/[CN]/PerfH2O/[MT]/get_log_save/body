@@ -43,10 +43,10 @@ def get_log_save(self, benchmarkLogging=None):
         logging.critical(l)
     niocSpotSentMBSec = ((nioc.bytes_sent - pollStats['bytes_sent']) / (1000000.0 * elapsedTime))
     niocSpotRecvMBSec = ((nioc.bytes_recv - pollStats['bytes_recv']) / (1000000.0 * elapsedTime))
-    niocSpotDropIn = (nioc.dropin - pollStats['dropin'])
-    niocSpotDropOut = (nioc.dropout - pollStats['dropout'])
-    niocSpotErrIn = (nioc.errin - pollStats['errin'])
-    niocSpotErrOut = (nioc.errout - pollStats['errout'])
+    niocSpotDropIn = 0
+    niocSpotDropOut = 0
+    niocSpotErrIn = 0
+    niocSpotErrOut = 0
     l = 'Network. Spot RecvMB/s:{:6.2f} Spot SentMB/s:{:6.2f} {!s} {!s} {!s} {!s}'.format(niocSpotRecvMBSec, niocSpotSentMBSec, niocSpotDropIn, niocSpotDropOut, niocSpotErrIn, niocSpotErrOut)
     if (enable['network'] and (pollStats['count'] > 0)):
         logging.critical(l)
