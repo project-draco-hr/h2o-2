@@ -2,6 +2,8 @@
   _time=time;
   _errMetric=m;
   _modelKey=modelKey;
+  GLMModel[] models=new GLMModel[modelKeys.length];
+  for (int i=0; i < models.length; ++i)   models[i]=DKV.get(modelKeys[i]).get();
   _dataKey=models[0]._dataKey;
   _modelKeys=new Key[models.length];
   int i=0;
