@@ -1,4 +1,4 @@
-def pollWaitJobs(pattern=None, timeoutSecs=30, retryDelaySecs=5):
+def pollWaitJobs(pattern=None, timeoutSecs=30, retryDelaySecs=5, benchmarkLogging=None):
     anyBusy = True
     waitTime = 0
     while anyBusy:
@@ -19,4 +19,6 @@ def pollWaitJobs(pattern=None, timeoutSecs=30, retryDelaySecs=5):
         sys.stdout.flush()
         time.sleep(retryDelaySecs)
         waitTime += retryDelaySecs
+        if benchmarkLogging:
+            h2o.cloudPerfH2O.get_log_save(benchmarkLogging)
     return patternKeys
