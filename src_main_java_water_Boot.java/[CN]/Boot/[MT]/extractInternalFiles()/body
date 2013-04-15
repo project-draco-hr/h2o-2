@@ -22,7 +22,8 @@
  catch (    FileNotFoundException ex) {
     }
 catch (    IOException ex) {
-      System.err.println("Unable to extract file " + name + " because "+ ex);
+      Log.die("Unable to extract file " + name + " because of "+ ex+ ". Make sure that directory "+ _parentDir+ " contains at least 50MB of free space to unpack H2O libraries.");
+      throw ex;
     }
   }
 }

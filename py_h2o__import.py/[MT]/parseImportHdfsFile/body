@@ -1,4 +1,4 @@
-def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600, retryDelaySecs=2, initialDelaySecs=1, pollTimeoutSecs=60, noise=None):
+def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600, retryDelaySecs=2, initialDelaySecs=1, pollTimeoutSecs=60, noise=None, benchmarkLogging=None, noPoll=False):
     if (not csvFilename):
         raise Exception('No csvFilename parameter in parseImportHdfsFile')
     if (not node):
@@ -12,7 +12,7 @@ def parseImportHdfsFile(node=None, csvFilename=None, path=None, timeoutSecs=3600
     print 'parseHdfsFile hdfsKey:', hdfsKey
     inspect = h2o_cmd.runInspect(key=hdfsKey)
     print 'parseHdfsFile:', inspect
-    parseKey = node.parse(hdfsKey, (csvFilename + '.hex'), timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise=noise)
+    parseKey = node.parse(hdfsKey, (csvFilename + '.hex'), timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll)
     parseKey['source_key'] = hdfsKey
     print 'parseHdfsFile:', parseKey
     return parseKey

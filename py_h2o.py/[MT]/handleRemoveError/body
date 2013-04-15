@@ -1,6 +1,6 @@
 def handleRemoveError(func, path, exc):
     excvalue = exc[1]
-    print 'Retrying shutil.rmtree of sandbox after 2 secs. Will ignore errors. exception was', excvalue.errno
+    print 'Retrying shutil.rmtree of sandbox (2 sec delay). Will ignore errors. Exception was', excvalue.errno
     time.sleep(2)
     try:
         func(path)

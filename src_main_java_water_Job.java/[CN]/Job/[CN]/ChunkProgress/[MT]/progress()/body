@@ -1,3 +1,4 @@
 {
-  return (float)((double)_count / (double)_nchunks);
+  if (_status == Status.Done)   return 1.0f;
+  return Math.min(0.99f,(float)((double)_count / (double)_nchunks));
 }

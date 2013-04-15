@@ -1,3 +1,7 @@
 {
-  _taskMem.addAndGet(-m);
+  if (m == 0)   return;
+  _taskMem.addAndGet(m);
+synchronized (_taskMemLock) {
+    _taskMemLock.notifyAll();
+  }
 }

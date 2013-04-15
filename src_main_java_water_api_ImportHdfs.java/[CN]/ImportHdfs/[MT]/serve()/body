@@ -14,7 +14,9 @@
   }
   DKV.write_barrier();
   JsonObject json=new JsonObject();
+  json.add(NUM_SUCCEEDED,new JsonPrimitive(succ.size()));
   json.add(SUCCEEDED,succ);
+  json.add(NUM_FAILED,new JsonPrimitive(fail.size()));
   json.add(FAILED,fail);
   Response r=Response.done(json);
   r.setBuilder(SUCCEEDED + "." + KEY,new KeyCellBuilder());

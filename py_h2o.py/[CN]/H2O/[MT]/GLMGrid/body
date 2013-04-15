@@ -1,4 +1,4 @@
-def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=30, noPoll=False, noise=None, **kwargs):
+def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=30, noise=None, noPoll=False, **kwargs):
     a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName='GLMGrid', **kwargs)
     if (a['response']['redirect_request'] != 'GLMGridProgress'):
         print dump_json(a)

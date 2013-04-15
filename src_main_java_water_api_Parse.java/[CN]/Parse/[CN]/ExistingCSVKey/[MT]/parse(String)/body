@@ -20,7 +20,8 @@
   Collections.sort(keys);
   Key hKey=keys.get(0);
   Value v=DKV.get(hKey);
-  CsvParser.Setup setup=Inspect.csvGuessValue(v);
+  byte separator=_separator.specified() ? _separator.value() : CsvParser.NO_SEPARATOR;
+  CsvParser.Setup setup=Inspect.csvGuessValue(v,separator);
   if (setup._data == null || setup._data[0].length == 0)   throw new IllegalArgumentException("I cannot figure out this file; I only handle common CSV formats: " + hKey);
   return new PSetup(keys,setup);
 }

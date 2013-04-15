@@ -1,0 +1,28 @@
+{
+  final ProgressMonitor progress=p;
+  return new InputStream(){
+    private AutoBuffer _ab;
+    private long _chkidx;
+    private long _currentChunkSz;
+    @Override public int available() throws IOException {
+      if (_ab == null || _ab.remaining() == 0) {
+        if (progress != null)         progress.update(_currentChunkSz);
+        if (_chkidx >= chunks())         return 0;
+        _ab=getChunk(_chkidx++);
+        _currentChunkSz=_ab.remaining();
+      }
+      return _ab.remaining();
+    }
+    @Override public void close(){
+      _chkidx=chunks();
+      _ab=null;
+    }
+    @Override public int read() throws IOException {
+      return available() == 0 ? -1 : _ab.get1();
+    }
+    @Override public int read(    byte[] b,    int off,    int len) throws IOException {
+      return available() == 0 ? -1 : _ab.read(b,off,len);
+    }
+  }
+;
+}

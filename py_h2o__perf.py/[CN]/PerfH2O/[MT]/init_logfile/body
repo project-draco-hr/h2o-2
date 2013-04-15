@@ -1,0 +1,5 @@
+def init_logfile(self, subtest_name):
+    blog = (('benchmark_' + subtest_name) + '.log')
+    self.subtest_name = subtest_name
+    print ('\nAppending to %s.' % blog), 'Between tests, you may want to delete it if it gets too big'
+    logging.basicConfig(filename=blog, level=logging.CRITICAL, format='%(asctime)s %(message)s')
