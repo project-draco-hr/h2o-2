@@ -11,31 +11,15 @@
       return Response.error(p.error());
     }
   }
- else {
-  }
   GLMModel m=(GLMModel)UKV.get(dest);
   if (m != null) {
     response.addProperty("computation_time",getTimeStr(m._time));
     response.add("GLMModel",m.toJson());
   }
   Response r=null;
-  if (p == null)   r=Response.done(response);
- else switch (p.status()) {
-case Computing:
-    r=Response.poll(response,p.progress());
-  break;
-case Done:
-UKV.remove(_progress.value());
-r=Response.done(response);
-break;
-case Error:
-UKV.remove(_progress.value());
-r=Response.error(p.error());
-break;
-case Cancelled:
-UKV.remove(_progress.value());
-r=Response.error("Cancelled!");
-}
-r.setBuilder("",new GLMBuilder(m,_job.value()));
-return r;
+  if (DKV.get(_job.value()) == null)   r=Response.done(response);
+ else   if (p != null)   r=Response.poll(response,p.progress());
+ else   r=Response.poll(response,0);
+  r.setBuilder("",new GLMBuilder(m,_job.value()));
+  return r;
 }

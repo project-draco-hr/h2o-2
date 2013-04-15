@@ -54,8 +54,9 @@
   if (xval > 1)   currentModel.xvalidate(job,data._ary,xval,DEFAULT_THRESHOLDS);
  else   currentModel.validateOn(job,data._ary,data.getSamplingComplement(),DEFAULT_THRESHOLDS);
   currentModel._status=Status.Done;
-  currentModel.store();
   String[] warnings=new String[warns.size()];
   warns.toArray(warnings);
+  currentModel.store();
+  DKV.write_barrier();
   return currentModel;
 }
