@@ -7,16 +7,23 @@
         InputStream is=null;
         Key okey=Key.make(new String(key._kb) + "_UNZIPPED");
         Value v=DKV.get(key);
+        final Key progressKey=_job._progress;
+        ProgressMonitor pmon=new ProgressMonitor(){
+          @Override public void update(          long n){
+            onProgress(n,progressKey);
+          }
+        }
+;
         try {
 switch (_comp) {
 case ZIP:
-            ZipInputStream zis=new ZipInputStream(v.openStream());
+            ZipInputStream zis=new ZipInputStream(v.openStream(pmon));
           ZipEntry ze=zis.getNextEntry();
         if (ze == null || ze.isDirectory())         throw new Exception("Unsupported zip file: " + ((ze == null) ? "No entry found" : "Files containing directory arte not supported."));
       is=zis;
     break;
 case GZIP:
-  is=new GZIPInputStream(v.openStream());
+  is=new GZIPInputStream(v.openStream(pmon));
 break;
 default :
 throw H2O.unimpl();
