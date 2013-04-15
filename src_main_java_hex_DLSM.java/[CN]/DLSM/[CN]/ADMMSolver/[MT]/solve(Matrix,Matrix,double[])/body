@@ -5,6 +5,7 @@
   CholeskyDecomposition lu=new CholeskyDecomposition(xx);
   if (_alpha == 0 || _lambda == 0)   try {
     double[] res=lu.solve(xy).getColumnPackedCopy();
+    System.arraycopy(res,0,z,0,res.length);
     _converged=true;
     return res;
   }
@@ -14,8 +15,7 @@
   }
   final double ABSTOL=Math.sqrt(N) * 1e-4;
   final double RELTOL=1e-2;
-  double[] z=new double[N];
-  double[] u=new double[N - 1];
+  double[] u=MemoryManager.malloc8d(N - 1);
   Matrix xm=null;
   Matrix xyPrime=(Matrix)xy.clone();
   OUTER:   for (int a=0; a < 5; ++a) {
