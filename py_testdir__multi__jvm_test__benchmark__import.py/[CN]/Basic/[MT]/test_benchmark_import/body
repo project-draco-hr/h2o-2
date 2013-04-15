@@ -33,7 +33,7 @@ def test_benchmark_import(self):
             h2o.cloudPerfH2O.message('')
             h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
             start = time.time()
-            parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=5, benchmarkLogging=['cpu', 'disk', 'jstack'])
+            parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, noPoll=True, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=5, benchmarkLogging=['cpu', 'disk', 'jstack'])
             elapsed = (time.time() - start)
             print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             if (totalBytes is not None):
@@ -42,6 +42,8 @@ def test_benchmark_import(self):
                 h2o.cloudPerfH2O.message('{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed))
             print csvFilepattern, 'parse time:', parseKey['response']['time']
             print "Parse result['destination_key']:", parseKey['destination_key']
+            time.sleep(2)
+            h2o_jobs.pollWaitJobs(pattern=csvFilename)
             inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
             print 'num_rows:', inspect['num_rows']
             print 'num_cols:', inspect['num_cols']
