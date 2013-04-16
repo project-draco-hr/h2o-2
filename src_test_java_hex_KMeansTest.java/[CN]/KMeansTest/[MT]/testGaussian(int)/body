@@ -2,7 +2,7 @@
   Key source=Key.make("datakey");
   Key target=Key.make("datakey.kmeans");
   try {
-    KMeans.RAND_SEED=8683452581122892189L;
+    KMeans.RAND_SEED=8683452581122892188L;
     final int columns=100;
     double[][] goals=new double[8][columns];
     double[][] array=gauss(columns,rows,goals);
@@ -10,7 +10,7 @@
     for (int i=0; i < cols.length; i++)     cols[i]=i;
     ValueArray va=va_maker(source,(Object[])array);
     long start=System.currentTimeMillis();
-    KMeans.run(target,va,8,1e-6,cols);
+    KMeans.run(target,va,goals.length,1e-6,cols);
     long stop=System.currentTimeMillis();
     Log.write("KMeansTest.testGaussian rows:" + rows + ", ms:"+ (stop - start));
     KMeans.KMeansModel res=UKV.get(target);
