@@ -1,11 +1,4 @@
 {
   Key key=Key.make(_job.value());
-  Job job=null;
-  for (  Job current : Job.all()) {
-    if (current.self().equals(key)) {
-      job=current;
-      break;
-    }
-  }
-  return job;
+  return Job.findJob(key);
 }

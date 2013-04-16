@@ -1,6 +1,6 @@
 {
   Job job=findJob();
   JsonObject jsonResponse=defaultJsonResponse();
-  if (job == null || job._endTime != 0)   return jobDone(jsonResponse);
+  if (job == null || job._endTime != 0)   return jobDone(job,jsonResponse);
   return jobInProgress(job,jsonResponse);
 }
