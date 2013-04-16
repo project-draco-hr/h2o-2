@@ -1,6 +1,7 @@
 def __init__(self, python_test_name):
-    self.python_test_name = python_test_name
-    self.init_logfile(python_test_name)
+    short_python_test_name = os.path.basename(python_test_name)
+    self.python_test_name = short_python_test_name
+    self.init_logfile(short_python_test_name)
     self.MINCACHETOPRINT = 7
     self.JSTACKINTERVAL = 20
     statsList = ['read_bytes', 'write_bytes', 'read_time', 'write_time', 'bytes_sent', 'bytes_recv', 'dropin', 'dropout', 'errin', 'errout']

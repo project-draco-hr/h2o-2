@@ -1,5 +1,6 @@
 def change_logfile(self, subtest_name):
-    blog = (('benchmark_' + subtest_name) + '.log')
+    short_subtest_name = os.path.basename(subtest_name)
+    blog = (('benchmark_' + short_subtest_name) + '.log')
     print ('\nSwitch. Now appending to %s.' % blog), 'Between tests, you may want to delete it if it gets too big'
     logger = logging.getLogger()
     logger.handlers[0].stream.close()
