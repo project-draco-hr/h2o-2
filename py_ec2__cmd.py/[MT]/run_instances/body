@@ -10,6 +10,7 @@ def run_instances(count, ec2_config, region, waitForSSH=True, tags=None):
         log('Reservation: {0}'.format(reservation.id))
         log('Waiting for {0} EC2 instances {1} to come up, this can take 1-2 minutes.'.format(len(reservation.instances), reservation.instances))
         start = time.time()
+        time.sleep(1)
         for instance in reservation.instances:
             while (instance.update() == 'pending'):
                 time.sleep(1)
