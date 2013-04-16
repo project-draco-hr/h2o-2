@@ -1,7 +1,10 @@
 def pp_rf_result(rf):
     jcm = rf['confusion_matrix']
     header = jcm['header']
-    cm = ' '.join(header)
+    cm = '{0:<15}'.format('')
+    for h in header:
+        cm = '{0}|{1:<15}'.format(cm, h)
+    cm = '{0}|{1:<15}'.format(cm, 'error')
     c = 0
     for line in jcm['scores']:
         lineSum = sum(line)
@@ -10,6 +13,10 @@ def pp_rf_result(rf):
             err = (float(errorSum) / lineSum)
         else:
             err = 0.0
-        cm = '{0}\n {1} {2} {3}'.format(cm, header[c], ' '.join(map(str, line)), err)
+        fl = '{0:<15}'.format(header[c])
+        for num in line:
+            fl = '{0}|{1:<15}'.format(fl, num)
+        fl = '{0}|{1:<15}'.format(fl, err)
+        cm = '{0}\n{1}'.format(cm, fl)
         c += 1
-    return '\n Leaves: {0} / {1} / {2}\n  Depth: {3} / {4} / {5}\n   mtry: {6}\n   Type: {7}\n    Err: {8} %\n   Time: {9} seconds\n\n   Confusion matrix:\n      {10}\n'.format(rf['trees']['leaves']['min'], rf['trees']['leaves']['mean'], rf['trees']['leaves']['max'], rf['trees']['depth']['min'], rf['trees']['depth']['mean'], rf['trees']['depth']['max'], rf['mtry'], rf['confusion_matrix']['type'], (rf['confusion_matrix']['classification_error'] * 100), rf['response']['time'], cm)
+    return '\n Leaves: {0} / {1} / {2}\n  Depth: {3} / {4} / {5}\n   mtry: {6}\n   Type: {7}\n    Err: {8} %\n   Time: {9} seconds\n\n   Confusion matrix:\n{10}\n'.format(rf['trees']['leaves']['min'], rf['trees']['leaves']['mean'], rf['trees']['leaves']['max'], rf['trees']['depth']['min'], rf['trees']['depth']['mean'], rf['trees']['depth']['max'], rf['mtry'], rf['confusion_matrix']['type'], (rf['confusion_matrix']['classification_error'] * 100), rf['response']['time'], cm)
