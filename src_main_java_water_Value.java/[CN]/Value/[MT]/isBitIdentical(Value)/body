@@ -3,11 +3,9 @@
   if (!isArray() && !v.isArray())   return Arrays.equals(getBytes(),v.getBytes());
   if (isArray() && v.isArray()) {
     ValueArray thisAry=get();
-    ValueArray otherAry=v.get();
-    if (thisAry.length() == otherAry.length() && thisAry._numrows == otherAry._numrows && thisAry._rowsize == otherAry._rowsize && thisAry._cols.length == otherAry._cols.length) {
-      for (int i=0; i < thisAry._cols.length; ++i) {
-        if (!thisAry._cols[i].equals(otherAry._cols[i]))         return false;
-      }
+    ValueArray thatAry=v.get();
+    if (thisAry.length() == thatAry.length() && thisAry._numrows == thatAry._numrows && thisAry._rowsize == thatAry._rowsize && thisAry._cols.length == thatAry._cols.length) {
+      for (int i=0; i < thisAry._cols.length; ++i)       if (!thisAry._cols[i].equals(thatAry._cols[i]))       return false;
       BitsCmpTask res=new BitsCmpTask(thisAry);
       res.invoke(v._key);
       return res._res;
