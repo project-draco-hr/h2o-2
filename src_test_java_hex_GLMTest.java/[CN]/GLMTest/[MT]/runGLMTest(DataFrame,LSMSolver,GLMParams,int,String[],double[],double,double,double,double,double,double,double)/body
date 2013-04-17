@@ -1,5 +1,5 @@
 {
-  GLMModel m=DGLM.startGLMJob(data,lsm,glmp,null,0).get();
+  GLMModel m=DGLM.startGLMJob(data,lsm,glmp,null,0,true).get();
   try {
     JsonObject mjson=m.toJson();
     JsonObject jcoefs=mjson.get("coefficients").getAsJsonObject();
