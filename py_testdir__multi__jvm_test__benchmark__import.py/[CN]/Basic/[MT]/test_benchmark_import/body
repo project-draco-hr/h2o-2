@@ -75,6 +75,7 @@ def test_benchmark_import(self):
             newParseKey = {'destination_key': 'a', }
             print ('\n' + csvFilepattern)
             print 'Temporarily hacking to do nothing instead of RF on the parsed file'
+            check_key_distribution()
             delete_csv_key(csvFilename, importFullList)
             h2o.tear_down_cloud()
             if (not localhost):
