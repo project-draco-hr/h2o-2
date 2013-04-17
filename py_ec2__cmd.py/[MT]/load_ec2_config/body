@@ -1,4 +1,4 @@
-def load_ec2_config(config_file, region):
+def load_ec2_config(config_file, region, instance_type=None):
     if config_file:
         f = find_file(config_file)
         with open(f, 'rb') as fp:
@@ -7,4 +7,6 @@ def load_ec2_config(config_file, region):
         ec2_cfg = {}
     for (k, v) in DEFAULT_EC2_INSTANCE_CONFIGS[region].items():
         ec2_cfg.setdefault(k, v)
+    if instance_type:
+        ec2_cfg['instance_type'] = instance_type
     return ec2_cfg
