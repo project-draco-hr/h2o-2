@@ -1,14 +1,23 @@
 def test_GLM_many_cols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(10000, 100, 'cD', 300), (10000, 200, 'cE', 300), (10000, 300, 'cF', 300), (10000, 400, 'cG', 300), (10000, 500, 'cH', 300), (10000, 1000, 'cI', 300)]
+    tryList = [(10000, 1, 'cD', 300), (10000, 2, 'cE', 300), (10000, 3, 'cF', 300), (10000, 4, 'cG', 300), (10000, 5, 'cH', 300), (10000, 1, 'cI', 300)]
     lenNodes = len(h2o.nodes)
+    colSepHexString = '01'
+    colSepHexString = '0a'
+    colSepChar = colSepHexString.decode('hex')
+    colSepInt = int(colSepHexString, base=16)
+    print 'colSepChar:', colSepChar
+    print 'colSepInt', colSepInt
+    rowSepHexString = '01'
+    rowSepChar = rowSepHexString.decode('hex')
+    print 'rowSepChar:', rowSepChar
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
-        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
