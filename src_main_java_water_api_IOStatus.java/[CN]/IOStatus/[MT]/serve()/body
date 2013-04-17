@@ -1,0 +1,70 @@
+{
+  JsonObject response=new JsonObject();
+  final long[][] snapshot=TimeLine.system_snapshot();
+  final H2O cloud=TimeLine.CLOUD;
+  final int csz=cloud.size();
+  SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss:SSS");
+  long durs[][][][]=new long[csz][8][2][dts.length];
+  long blks[][][][]=new long[csz][8][2][dts.length];
+  long sizs[][][][]=new long[csz][8][2][dts.length];
+  int cnts[][][][]=new int[csz][8][2][dts.length];
+  JsonArray iops=new JsonArray();
+  TimelineSnapshot events=new TimelineSnapshot(cloud,snapshot);
+  long now=System.currentTimeMillis();
+  for (  TimelineSnapshot.Event event : events) {
+    int flavor=event.is_io();
+    if (flavor == -1)     continue;
+    int nidx=event._nodeId;
+    int rw=event.send_recv();
+    long ctms=event.ms();
+    long dura=event.ms_io();
+    long blkd=event.ns();
+    long size=event.size_io();
+    for (int i=0; i < dts.length; i++) {
+      int dt=dts[i] * 1000;
+      if (ctms + dt >= now) {
+        durs[nidx][flavor][rw][i]+=dura;
+        blks[nidx][flavor][rw][i]+=blkd;
+        sizs[nidx][flavor][rw][i]+=size;
+        cnts[nidx][flavor][rw][i]++;
+      }
+    }
+    JsonObject iop=new JsonObject();
+    iop.addProperty("closeTime",sdf.format(new Date(ctms)));
+    iop.addProperty(Constants.NODE,cloud._memary[nidx].toString());
+    iop.addProperty("i_o",Value.nameOfPersist(flavor));
+    iop.addProperty("r_w",rw == 0 ? "write" : "read");
+    iop.addProperty("duration" + Constants.Suffixes.MILLIS,dura);
+    iop.addProperty("blocked_ns",blkd);
+    iop.addProperty("size" + Constants.Suffixes.BYTES,size);
+    iops.add(iop);
+  }
+  JsonArray histo=new JsonArray();
+  for (int n=0; n < csz; n++) {
+    for (int i=0; i < 8; i++) {
+      for (int j=0; j < 2; j++) {
+        for (int k=0; k < dts.length; k++) {
+          if (cnts[n][i][j][k] != 0) {
+            JsonObject sum=new JsonObject();
+            sum.addProperty("cloud_node_idx",n);
+            sum.addProperty("i_o",Value.nameOfPersist(i));
+            sum.addProperty("r_w",j == 0 ? "write" : "read");
+            sum.addProperty("window",dts[k]);
+            double dur=durs[n][i][j][k] / 1e3;
+            double blk=blks[n][i][j][k] / 1e9;
+            double siz=sizs[n][i][j][k] * 1.0;
+            if (dur == 0.0)             dur=blk;
+            sum.addProperty("effective" + Constants.Suffixes.BYTES_PER_SECOND,siz / dur);
+            sum.addProperty("peak" + Constants.Suffixes.BYTES_PER_SECOND,siz / blk);
+            histo.add(sum);
+          }
+        }
+      }
+    }
+  }
+  response.add(HISTOGRAM,histo);
+  response.add("raw_iops",iops);
+  Response r=Response.done(response);
+  r.setBuilder(HISTOGRAM,new HistogramBuilder());
+  return r;
+}
