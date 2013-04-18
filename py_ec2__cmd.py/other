@@ -11,6 +11,7 @@ DEFAULT_NUMBER_OF_INSTANCES = 4
 DEFAULT_HOSTS_FILENAME = 'ec2-config-{0}.json'
 DEFAULT_REGION = 'us-east-1'
 DEFAULT_INSTANCE_NAME = 'node_{0}'.format(os.getenv('USER'))
+ADVANCED_SSH_OPTIONS = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null'
 '\nDefault EC2 instance setup\n'
 DEFAULT_EC2_INSTANCE_CONFIGS = {'us-east-1': {'image_id': 'ami-30c6a059', 'security_groups': ['MrJenkinsTest'], 'key_name': 'mrjenkins_test', 'instance_type': 'm1.xlarge', 'region': 'us-east-1', 'pem': '~/.ec2/keys/mrjenkins_test.pem', 'username': '0xdiag', 'aws_credentials': '~/.ec2/AwsCredentials.properties', 'hdfs_config': '~/.ec2/core-site.xml', }, 'us-west-1': {'image_id': 'ami-a6cbe6e3', 'security_groups': ['MrJenkinsTest'], 'key_name': 'mrjenkins_test', 'instance_type': 'm1.xlarge', 'pem': '~/.ec2/keys/mrjenkins_test.pem', 'username': '0xdiag', 'aws_credentials': '~/.ec2/AwsCredentials.properties', 'hdfs_config': '~/.ec2/core-site.xml', 'region': 'us-west-1', }, }
 ' Memory mappings for instance kinds '
