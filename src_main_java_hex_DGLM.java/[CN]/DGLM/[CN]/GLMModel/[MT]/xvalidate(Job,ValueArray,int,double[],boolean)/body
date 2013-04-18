@@ -6,9 +6,20 @@
   Key[] keys=new Key[folds];
   for (int i=0; i < folds; ++i)   DKV.put(keys[i]=Key.make(Key.make()._kb,(byte)0,Key.DFJ_INTERNAL_USER,H2O.CLOUD._memary[(myNodeId + i) % cloudsize]),new GLMXvalSetup(i));
   DKV.write_barrier();
-  GLMXValTask tsk=new GLMXValTask(job,folds,ary,modelDataMap,_standardized,_solver,_glmParams,_normBeta,thresholds);
+  GLMXValTask tsk=new GLMXValTask(job,folds,ary,modelDataMap,_standardized,_solver,_glmParams,_normBeta,thresholds,parallel);
   long t1=System.currentTimeMillis();
-  tsk.invoke(keys);
+  if (parallel)   tsk.invoke(keys);
+ else {
+    tsk.keys(keys);
+    tsk.init();
+    for (int i=0; i < keys.length; i++) {
+      GLMXValTask child=new GLMXValTask(job,folds,ary,modelDataMap,_standardized,_solver,_glmParams,_normBeta,thresholds,parallel);
+      child.keys(keys);
+      child.init();
+      child.map(keys[i]);
+      tsk.reduce(child);
+    }
+  }
   if (job.cancelled())   throw new JobCancelledException();
   GLMValidation res=new GLMValidation(_selfKey,tsk._models,ErrMetric.SUMC,thresholds,System.currentTimeMillis() - t1);
   if (_vals == null)   _vals=new GLMValidation[]{res};

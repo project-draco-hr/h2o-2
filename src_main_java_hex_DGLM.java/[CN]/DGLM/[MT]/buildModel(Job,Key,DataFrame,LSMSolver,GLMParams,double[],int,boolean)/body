@@ -51,7 +51,7 @@
  while (++iter < params._maxIter && !converged);
   currentModel._status=Status.ComputingValidation;
   currentModel.store();
-  if (xval > 1)   currentModel.xvalidate(job,data._ary,xval,DEFAULT_THRESHOLDS);
+  if (xval > 1)   currentModel.xvalidate(job,data._ary,xval,DEFAULT_THRESHOLDS,parallel);
  else   currentModel.validateOn(job,data._ary,data.getSamplingComplement(),DEFAULT_THRESHOLDS);
   currentModel._status=Status.Done;
   String[] warnings=new String[warns.size()];

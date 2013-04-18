@@ -10,13 +10,8 @@
   }
   H2O.main(args);
   TestUtil.stall_till_cloudsize(1 + workers.size());
-  Key key=Key.make("test.hex");
-  final int columns=100;
-  double[][] goals=new double[8][columns];
-  double[][] array=KMeansTest.gauss(columns,10000,goals);
-  ValueArray va=TestUtil.va_maker(key,(Object[])array);
-  Key km=Key.make("test.kmeans");
-  int[] cols=new int[va._cols.length];
-  for (int i=0; i < cols.length; i++)   cols[i]=i;
-  KMeans.run(km,va,5,1e-3,cols);
+  File f=new File("smalldata/covtype/covtype.20k.data");
+  Key key=TestUtil.load_test_file(f,"test");
+  Key dest=Key.make("test.hex");
+  ParseDataset.parse(dest,new Key[]{key});
 }

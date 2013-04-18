@@ -4,7 +4,7 @@
   glmp._betaEps=0.000001;
   glmp._maxIter=100;
   System.out.print(msg);
-  GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0).get();
+  GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0,true).get();
   if (m._warnings != null)   for (  String s : m._warnings)   System.err.println(s);
   return m;
 }
