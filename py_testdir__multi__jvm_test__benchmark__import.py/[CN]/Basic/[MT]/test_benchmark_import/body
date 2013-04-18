@@ -68,15 +68,15 @@ def test_benchmark_import(self):
             print csvFilepattern, 'parse time:', parseKey['response']['time']
             print "Parse result['destination_key']:", parseKey['destination_key']
             if (not noPoll):
-                check_enums_from_inspect(parseKey)
+                h2o_cmd.check_enums_from_inspect(parseKey)
             origKey = parseKey['destination_key']
             execExpr = (('a = slice(' + origKey) + ',1,200)')
             h2e.exec_expr(h2o.nodes[0], execExpr, 'a', timeoutSecs=30)
             newParseKey = {'destination_key': 'a', }
             print ('\n' + csvFilepattern)
             print 'Temporarily hacking to do nothing instead of RF on the parsed file'
-            check_key_distribution()
-            delete_csv_key(csvFilename, importFullList)
+            h2o_cmd.check_key_distribution()
+            h2o_cmd.delete_csv_key(csvFilename, importFullList)
             h2o.tear_down_cloud()
             if (not localhost):
                 print 'Waiting 30 secs before building cloud again (sticky ports?)'

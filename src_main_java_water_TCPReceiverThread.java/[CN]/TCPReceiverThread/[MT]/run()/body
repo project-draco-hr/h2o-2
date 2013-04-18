@@ -13,6 +13,7 @@
       saw_error=false;
       if (SOCK == null) {
         SOCK=ServerSocketChannel.open();
+        SOCK.socket().setReceiveBufferSize(AutoBuffer.BBSIZE);
         SOCK.socket().bind(H2O.SELF._key);
       }
       AutoBuffer ab=new AutoBuffer(SOCK.accept());

@@ -4,8 +4,13 @@
     is.mark(8192);
     int bufsize=8192;
     byte[] buf=new byte[bufsize];
-    int rlen=is.read(buf,0,bufsize);
-    if (rlen <= 0)     return;
+    int rlen=0;
+    while (true) {
+      int b=is.read();
+      if (b == -1)       return;
+      buf[rlen++]=(byte)b;
+      if (b == '\n')       break;
+    }
     ByteArrayInputStream hbis=new ByteArrayInputStream(buf,0,rlen);
     BufferedReader hin=new BufferedReader(new InputStreamReader(hbis));
     Properties pre=new Properties();

@@ -16,6 +16,8 @@ case exec:
 case heartbeat:
   if ((int)(myl0 >> 24) != (int)(evl0 >> 24))   return false;
 break;
+case i_o:
+return false;
 default :
 throw new Error("unexpected udp packet type " + e.toString());
 }

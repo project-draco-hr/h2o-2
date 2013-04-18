@@ -12,7 +12,9 @@
   _bb.mark();
   try {
     if (_chan == null)     tcpOpen();
+    long ns=System.nanoTime();
     while (_bb.hasRemaining())     _chan.write(_bb);
+    _time_io_ns+=(System.nanoTime() - ns);
   }
  catch (  IOException e) {
     System.err.println("TCP Open/Write failed: " + e.getMessage() + " talking to "+ _h2o);

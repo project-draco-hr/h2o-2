@@ -65,7 +65,7 @@
     String date=sdf.format(new Date(ms));
     JsonObject eventJson=new JsonObject();
     eventsJson.add(eventJson);
-    eventJson.addProperty(JSON_UDPTCP,event.isTCP() ? "TCP" : "UDP");
+    eventJson.addProperty(JSON_UDPTCP,event.ioflavor());
     eventJson.addProperty(JSON_TIME,date);
     eventJson.addProperty(JSON_NANOS,ns);
     eventJson.addProperty(JSON_TYPE,e.toString());
