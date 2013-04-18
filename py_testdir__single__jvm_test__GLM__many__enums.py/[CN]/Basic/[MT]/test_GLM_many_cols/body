@@ -1,7 +1,11 @@
 def test_GLM_many_cols(self):
-    SYNDATASETS_DIR = h2o.make_syn_dir()
+    GEN_SYN = True
+    if GEN_SYN:
+        SYNDATASETS_DIR = h2o.make_syn_dir()
+    else:
+        SYNDATASETS_DIR = 'syn_datasets'
     if localhost:
-        n = 800
+        n = 50
         tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300)]
     else:
         n = 8000
@@ -26,10 +30,13 @@ def test_GLM_many_cols(self):
         rowSepChar = rowSepHexString.decode('hex')
         print 'rowSepChar:', rowSepChar
         SEEDPERFILE = random.randint(0, sys.maxint)
-        csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-        print 'Creating random', csvPathname
-        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, extraChars=extraChars)
+        if GEN_SYN:
+            print 'Creating random', csvPathname
+            write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, extraChars=extraChars)
+        else:
+            print 'Using presumed existing', csvPathname
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
