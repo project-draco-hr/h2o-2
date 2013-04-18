@@ -1,6 +1,9 @@
 def test_GLM_many_cols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(2000, 1, 'cD', 300), (2000, 2, 'cE', 300), (2000, 3, 'cF', 300), (2000, 4, 'cG', 300), (2000, 5, 'cH', 300), (2000, 6, 'cI', 300), (2000, 7, 'cJ', 300), (2000, 8, 'cK', 300)]
+    if localhost:
+        tryList = [(2000, 1, 'cD', 300), (2000, 2, 'cE', 300)]
+    else:
+        tryList = [(2000, 1, 'cD', 300), (2000, 2, 'cE', 300), (2000, 3, 'cF', 300), (2000, 4, 'cG', 300), (2000, 5, 'cH', 300), (2000, 6, 'cI', 300), (2000, 7, 'cJ', 300), (2000, 8, 'cK', 300)]
     lenNodes = len(h2o.nodes)
     colSepHexString = '01'
     colSepHexString = '2c'
