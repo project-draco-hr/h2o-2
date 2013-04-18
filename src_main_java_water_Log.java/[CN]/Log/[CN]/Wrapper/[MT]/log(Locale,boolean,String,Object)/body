@@ -1,12 +1,10 @@
 {
   StringBuilder sb=new StringBuilder();
   String date=_utcFormat.get().format(new Date());
-  sb.append(date).append(", ");
+  sb.append(date).append(" ");
   sb.append(HOST_AND_PID);
-  String thr=Thread.currentThread().getName();
+  String thr=fixedLength(Thread.currentThread().getName() + " ",15);
   sb.append(thr);
-  int len=thr.length();
-  for (int i=len; i < 26; i++)   sb.append(' ');
   String msg=String.format(l,format,args);
   sb.append(msg);
   if (nl)   sb.append(NL);
