@@ -3,6 +3,7 @@ def check_enums_from_inspect(parseKey):
     print 'num_rows:', inspect['num_rows']
     print 'num_cols:', inspect['num_cols']
     cols = inspect['cols']
+    missingValues = []
     for (i, c) in enumerate(cols):
         msg = ('column %d' % i)
         msg = (msg + (' type: %s' % c['type']))
@@ -10,5 +11,7 @@ def check_enums_from_inspect(parseKey):
             msg = (msg + (' enum_domain_size: %d' % c['enum_domain_size']))
         if (c['num_missing_values'] != 0):
             msg = (msg + (' num_missing_values: %s' % c['num_missing_values']))
+            missingValues.append(c['num_missing_values'])
         if ((c['type'] != 'int') or (c['num_missing_values'] != 0)):
             print msg
+    return missingValues

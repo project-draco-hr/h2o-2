@@ -1,6 +1,6 @@
-def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n'):
+def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n', extraChars='', listSize=11000):
     r1 = random.Random(SEED)
-    enumList = create_enum_list()
+    enumList = create_enum_list(extraChars=extraChars, maxEnumSize=8, listSize=listSize)
     dsf = open(csvPathname, 'w+')
     for i in range(rowCount):
         rowData = []

@@ -1,35 +1,43 @@
 def test_GLM_many_cols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     if localhost:
-        tryList = [(2000, 1, 'cD', 300), (2000, 2, 'cE', 300)]
+        n = 800
+        tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300)]
     else:
-        tryList = [(2000, 1, 'cD', 300), (2000, 2, 'cE', 300), (2000, 3, 'cF', 300), (2000, 4, 'cG', 300), (2000, 5, 'cH', 300), (2000, 6, 'cI', 300), (2000, 7, 'cJ', 300), (2000, 8, 'cK', 300)]
-    lenNodes = len(h2o.nodes)
-    colSepHexString = '01'
-    colSepHexString = '2c'
-    colSepChar = colSepHexString.decode('hex')
-    colSepInt = int(colSepHexString, base=16)
-    print 'colSepChar:', colSepChar
-    print 'colSepInt', colSepInt
-    rowSepHexString = '11'
-    rowSepHexString = '0a'
-    rowSepHexString = '0d0a'
-    rowSepChar = rowSepHexString.decode('hex')
-    print 'rowSepChar:', rowSepChar
+        n = 8000
+        tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300), (n, 7, 'cJ', 300), (n, 9, 'cK', 300), (n, 10, 'cLA', 300), (n, 11, 'cDA', 300), (n, 12, 'cEA', 300), (n, 13, 'cFA', 300), (n, 14, 'cGA', 300), (n, 15, 'cHA', 300), (n, 16, 'cIA', 300), (n, 17, 'cJA', 300), (n, 19, 'cKA', 300), (n, 20, 'cLA', 300)]
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        colSepCase = random.randint(0, 1)
+        if (1 == 0):
+            colSepHexString = '01'
+            extraChars = ',\'"'
+        else:
+            colSepHexString = '2c'
+            extraChars = ''
+        colSepChar = colSepHexString.decode('hex')
+        colSepInt = int(colSepHexString, base=16)
+        print 'colSepChar:', colSepChar
+        print 'colSepInt', colSepInt
+        rowSepCase = random.randint(0, 1)
+        if (rowSepCase == 0):
+            rowSepHexString = '0a'
+        else:
+            rowSepHexString = '0d0a'
+        rowSepChar = rowSepHexString.decode('hex')
+        print 'rowSepChar:', rowSepChar
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
-        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, extraChars=extraChars)
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         print ('\n' + csvFilename)
-        h2o_cmd.check_enums_from_inspect(parseKey)
+        missingValues = h2o_cmd.check_enums_from_inspect(parseKey)
+        if missingValues:
+            raise Exception(('Looks like a column got flipped to NAs: ' + ' '.join(map(str, missingValues))))
         y = colCount
         kwargs = {'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
-        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

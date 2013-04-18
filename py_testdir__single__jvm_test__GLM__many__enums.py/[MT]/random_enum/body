@@ -1,2 +1,8 @@
-def random_enum(maxEnumSize=8, randChars=(string.letters + '012')):
-    return ''.join((random.choice(randChars) for x in range(maxEnumSize)))
+def random_enum(maxEnumSize, randChars=((string.letters + string.digits) + '%+-.;|\t '), extraChars=''):
+    while True:
+        r = ''.join((random.choice((randChars + extraChars)) for x in range(maxEnumSize)))
+        if re.match('^[ \t]*[\\$]?[+-]?[0-9]*\\.?[0-9]*[eE]?[0-9]*[\\%]?[ \t]*$', r):
+            pass
+        else:
+            break
+    return r
