@@ -1,14 +1,16 @@
 def test_GLM_many_cols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(10000, 1, 'cD', 300), (10000, 2, 'cE', 300), (10000, 3, 'cF', 300), (10000, 4, 'cG', 300), (10000, 5, 'cH', 300), (10000, 1, 'cI', 300)]
+    tryList = [(2000, 1, 'cD', 300), (2000, 2, 'cE', 300), (2000, 3, 'cF', 300), (2000, 4, 'cG', 300), (2000, 5, 'cH', 300), (2000, 6, 'cI', 300), (2000, 7, 'cJ', 300), (2000, 8, 'cK', 300)]
     lenNodes = len(h2o.nodes)
     colSepHexString = '01'
-    colSepHexString = '0a'
+    colSepHexString = '2c'
     colSepChar = colSepHexString.decode('hex')
     colSepInt = int(colSepHexString, base=16)
     print 'colSepChar:', colSepChar
     print 'colSepInt', colSepInt
-    rowSepHexString = '01'
+    rowSepHexString = '11'
+    rowSepHexString = '0a'
+    rowSepHexString = '0d0a'
     rowSepChar = rowSepHexString.decode('hex')
     print 'rowSepChar:', rowSepChar
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
@@ -20,11 +22,11 @@ def test_GLM_many_cols(self):
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
+        h2o_cmd.check_enums_from_inspect(parseKey)
         y = colCount
-        kwargs = {'y': y, 'max_iter': 50, 'n_folds': 3, 'alpha': 0.2, 'lambda': 1e-05, }
+        kwargs = {'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

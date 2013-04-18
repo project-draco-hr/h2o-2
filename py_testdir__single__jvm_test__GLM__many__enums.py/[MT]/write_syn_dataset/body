@@ -10,6 +10,5 @@ def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSep
         ri = r1.randint(0, 1)
         rowData.append(ri)
         rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
-        print rowDataCsv
         dsf.write(rowDataCsv)
     dsf.close()
