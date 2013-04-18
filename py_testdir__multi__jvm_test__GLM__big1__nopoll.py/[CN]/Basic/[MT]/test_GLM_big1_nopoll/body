@@ -5,14 +5,17 @@ def test_GLM_big1_nopoll(self):
     x = ''
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=15)
     glmInitial = []
+    start = time.time()
     for jobDispatch in range(40):
-        start = time.time()
         kwargs = {'x': x, 'y': y, 'n_folds': 1, }
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=300, noPoll=True, **kwargs)
         glmInitial.append(glm)
         print 'glm job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print '\njobDispatch #', jobDispatch
-    h2o_jobs.pollWaitJobs(pattern='GLMModel', timeoutSecs=100, retryDelaySecs=10)
+        timeoutSecs = 200
+    h2o_jobs.pollWaitJobs(pattern='GLMModel', timeoutSecs=timeoutSecs, retryDelaySecs=10)
+    elapsed = (time.time() - start)
+    print ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
     for glm in glmInitial:
         print 'Checking completed job, with no polling:', glm
         a = h2o.nodes[0].poll_url(glm['response'], noPoll=True)
