@@ -1,7 +1,16 @@
-def random_enum(maxEnumSize, randChars=((string.letters + string.digits) + '%+-.;|\t '), extraChars=''):
+def random_enum(maxEnumSize, randChars=(string.letters + '%+-.;|\t '), quoteChars='\'"'):
+    choiceStr = (randChars + quoteChars)
     while True:
-        r = ''.join((random.choice((randChars + extraChars)) for x in range(maxEnumSize)))
-        if re.match('^[ \t]*[\\$]?[+-]?[0-9]*\\.?[0-9]*[eE]?[0-9]*[\\%]?[ \t]*$', r):
+        r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
+        if whitespaceRegex.match(r):
+            break
+        if whole1Regex.match(r):
+            pass
+        if whole2Regex.match(r):
+            pass
+        if fractionalRegex.match(r):
+            pass
+        if nanRegex.match(r):
             pass
         else:
             break
