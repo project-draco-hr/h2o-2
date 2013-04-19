@@ -2,7 +2,7 @@ def test_GLM_many_enums(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     if localhost:
         n = 4000
-        tryList = [(n, 3000, 'cI', 300)]
+        tryList = [(n, 1000, 'cI', 300)]
     else:
         n = 5
         tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300), (n, 7, 'cJ', 300), (n, 9, 'cK', 300), (n, 10, 'cLA', 300), (n, 11, 'cDA', 300), (n, 12, 'cEA', 300), (n, 13, 'cFA', 300), (n, 14, 'cGA', 300), (n, 15, 'cHA', 300), (n, 16, 'cIA', 300), (n, 17, 'cJA', 300), (n, 19, 'cKA', 300), (n, 20, 'cLA', 300)]
@@ -39,8 +39,12 @@ def test_GLM_many_enums(self):
         if missingValuesDict:
             pass
         y = colCount
-        kwargs = {'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
+        x = range(colCount)
+        x = ','.join(map(str, x))
+        kwargs = {'x': x, 'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        if (not h2o.browse_disable):
+            h2b.browseJsonHistoryAsUrlLastMatch('GLM.json')
