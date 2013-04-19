@@ -1,11 +1,17 @@
-def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n'):
+def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n', quoteChars=''):
     r1 = random.Random(SEED)
-    enumList = create_enum_list()
+    enumList = create_enum_list(quoteChars=quoteChars)
     dsf = open(csvPathname, 'w+')
-    for i in range(rowCount):
+    for row in range(rowCount):
         rowData = []
-        for j in range(colCount):
+        for col in range(colCount):
             ri = random.choice(enumList)
+            if (row < 2):
+                while True:
+                    if (("'" in ri) or ('"' in ri) or specialRegex.match(ri)):
+                        ri = random.choice(enumList)
+                    else:
+                        break
             rowData.append(ri)
         ri = r1.randint(0, 1)
         rowData.append(ri)

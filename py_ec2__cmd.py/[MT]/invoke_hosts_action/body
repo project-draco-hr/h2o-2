@@ -1,4 +1,4 @@
-def invoke_hosts_action(action, hosts_config, args):
+def invoke_hosts_action(action, hosts_config, args, ec2_reservation=None):
     ids = [inst['id'] for inst in hosts_config['ec2_instances']]
     ips = [inst['private_ip_address'] for inst in hosts_config['ec2_instances']]
     region = hosts_config['ec2_region']
@@ -37,3 +37,7 @@ def invoke_hosts_action(action, hosts_config, args):
             log('Cloud is gone.')
     elif (action == 'stop_h2o'):
         pass
+    elif (action == 'clean_tmp'):
+        execute_using_ssh_commands(hosts_config, ec2_reservation, command_string='sudo rm -rf /tmp/*; df')
+    elif (action == 'nexec'):
+        execute_using_ssh_commands(hosts_config, ec2_reservation, command_string=args.cmd)

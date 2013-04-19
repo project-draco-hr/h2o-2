@@ -1,10 +1,13 @@
 def test_GLM_many_cols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(10000, 100, 'cD', 300), (10000, 200, 'cE', 300), (10000, 300, 'cF', 300), (10000, 400, 'cG', 300), (10000, 500, 'cH', 300), (10000, 1000, 'cI', 300)]
+    if localhost:
+        tryList = [(10000, 100, 'cD', 300), (10000, 200, 'cE', 300), (10000, 300, 'cF', 300), (10000, 400, 'cG', 300), (10000, 500, 'cH', 300), (10000, 1000, 'cI', 300)]
+    else:
+        tryList = [(10000, 100, 'cD', 300), (10000, 200, 'cE', 300), (10000, 300, 'cF', 300), (10000, 400, 'cG', 300), (10000, 500, 'cH', 300), (10000, 1000, 'cI', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
-        csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
@@ -15,7 +18,7 @@ def test_GLM_many_cols(self):
         print ('\n' + csvFilename)
         y = colCount
         x = ','.join(map(str, range(colCount)))
-        kwargs = {'x': x, 'y': y, 'max_iter': 50, 'n_folds': 3, 'alpha': 0.2, 'lambda': 1e-05, }
+        kwargs = {'x': x, 'y': y, 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'

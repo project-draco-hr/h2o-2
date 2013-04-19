@@ -1,2 +1,21 @@
-def random_enum(maxEnumSize=8, randChars=(string.letters + '012')):
-    return ''.join((random.choice(randChars) for x in range(maxEnumSize)))
+def random_enum(maxEnumSize, randChars=(string.letters + '.;|\t '), quoteChars='\'"'):
+    choiceStr = (randChars + quoteChars)
+    mightBeNumber = True
+    while mightBeNumber:
+        r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
+        mightBeNumber = False
+        if specialRegex.match(r):
+            mightBeNumber = True
+        if whole1Regex.match(r):
+            mightBeNumber = True
+        if whole2Regex.match(r):
+            mightBeNumber = True
+        if fractional1Regex.match(r):
+            mightBeNumber = True
+        if fractional2Regex.match(r):
+            mightBeNumber = True
+        if fractional3Regex.match(r):
+            mightBeNumber = True
+        if nanRegex.match(r):
+            mightBeNumber = True
+    return r
