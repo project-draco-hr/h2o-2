@@ -75,7 +75,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                     h2o.cloudPerfH2O.message(l)
                 if (not noPoll):
                     h2o_cmd.check_enums_from_inspect(parseKey)
-                x = range(541)
+                x = range(542)
                 x.remove(3)
                 x.remove(4)
                 x.remove(5)
@@ -96,9 +96,10 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                 x.remove(426)
                 x.remove(540)
                 x.remove(541)
+                x.remove(378)
                 x = ','.join(map(str, x))
                 if DO_GLM:
-                    GLMkwargs = {'x': x, 'y': 541, 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
+                    GLMkwargs = {'x': x, 'y': 378, 'case': 15, 'case_mode': '>', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
                     start = time.time()
                     glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=1800, **GLMkwargs)
                     h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
