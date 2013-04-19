@@ -1,0 +1,10 @@
+def test_iostatus(self):
+    for n in h2o.nodes:
+        stats = n.iostatus()
+        h2o.verboseprint(json.dumps(stats, indent=2))
+        histogram = stats['histogram']
+        for k in histogram:
+            print k
+        raw_iops = stats['raw_iops']
+        for k in raw_iops:
+            print k
