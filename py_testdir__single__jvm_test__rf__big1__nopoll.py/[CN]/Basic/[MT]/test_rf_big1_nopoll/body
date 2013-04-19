@@ -10,7 +10,7 @@ def test_rf_big1_nopoll(self):
         rfViewInitial.append(rfView)
         print 'rf job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print '\njobDispatch #', jobDispatch
-    h2o_jobs.pollWaitJobs(pattern='GLMModel', timeoutSecs=10, retryDelaySecs=5)
+    h2o_jobs.pollWaitJobs(pattern='GLMModel', timeoutSecs=30, pollTimeoutSecs=120, retryDelaySecs=5)
     for rfView in rfViewInitial:
         print 'Checking completed job, with no polling:', rfView
         a = h2o.nodes[0].poll_url(rf['response'], noPoll=True)
