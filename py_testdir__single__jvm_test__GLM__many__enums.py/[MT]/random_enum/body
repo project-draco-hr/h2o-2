@@ -1,17 +1,21 @@
-def random_enum(maxEnumSize, randChars=(string.letters + '%+-.;|\t '), quoteChars='\'"'):
+def random_enum(maxEnumSize, randChars=(string.letters + '.;|\t '), quoteChars='\'"'):
     choiceStr = (randChars + quoteChars)
-    while True:
+    mightBeNumber = True
+    while mightBeNumber:
         r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
-        if whitespaceRegex.match(r):
-            break
+        mightBeNumber = False
+        if specialRegex.match(r):
+            mightBeNumber = True
         if whole1Regex.match(r):
-            pass
+            mightBeNumber = True
         if whole2Regex.match(r):
-            pass
-        if fractionalRegex.match(r):
-            pass
+            mightBeNumber = True
+        if fractional1Regex.match(r):
+            mightBeNumber = True
+        if fractional2Regex.match(r):
+            mightBeNumber = True
+        if fractional3Regex.match(r):
+            mightBeNumber = True
         if nanRegex.match(r):
-            pass
-        else:
-            break
+            mightBeNumber = True
     return r
