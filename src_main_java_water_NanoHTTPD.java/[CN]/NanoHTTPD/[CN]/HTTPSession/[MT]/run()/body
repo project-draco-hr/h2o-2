@@ -1,12 +1,12 @@
 {
   try {
     InputStream is=new BufferedInputStream(mySocket.getInputStream());
-    is.mark(8192);
+    is.mark(MAX_HEADER_BUFFER_SIZE);
     int bufsize=8192;
     byte[] buf=new byte[bufsize];
     boolean nl=false;
     int rlen=0;
-    while (true) {
+    while (rlen < MAX_HEADER_BUFFER_SIZE) {
       int b=is.read();
       if (b == -1)       return;
       buf[rlen++]=(byte)b;
@@ -15,7 +15,9 @@
         nl=true;
       }
  else       if (b != '\r')       nl=false;
+      if (rlen == buf.length)       buf=Arrays.copyOf(buf,2 * buf.length);
     }
+    if (rlen == MAX_HEADER_BUFFER_SIZE)     sendError(HTTP_TOOLONGREQUEST,"Requested URL is too long!");
     ByteArrayInputStream hbis=new ByteArrayInputStream(buf,0,rlen);
     BufferedReader hin=new BufferedReader(new InputStreamReader(hbis));
     Properties pre=new Properties();
