@@ -4,5 +4,10 @@ import string
 import re
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_glm
+whitespaceRegex = re.compile('\n    \\s*  # white or empty space \n    \\Z   # end of string\n    ', re.VERBOSE)
+fractionalRegex = re.compile('\n    \\s*     # white space or empty space\n    [+-]?   # plus or minus\n    [0-9]*  # whole digits\n    (\\.[0-9]*)? # decimal point and fractional digits\n    ([eE][-+]?[0-9]*)? # scientific notation exponent\n    \\s*     # white space or empty space\n    ', re.VERBOSE)
+whole1Regex = re.compile('\n    \\s*     # white space or empty space\n    [$]?    # number can have dollar sign\n    [+-]?   # plus or minus\n    [0-9]*  # whole digits\n    (\\.[0-9]*)? # decimal point and fractional digits\n    %?    # can have a percent\n    \\s*     # white space or empty space\n    ', re.VERBOSE)
+whole2Regex = re.compile('\n    \\s*     # white space or empty space\n    [0-9]+  # whole digits\n    \\s*     # white space or empty space\n    ', re.VERBOSE)
+nanRegex = re.compile('\n    \\s*     # white space or empty space\n    [$]?    # number can have dollar sign\n    [+-]?   # plus or minus\n    [Nn][Aa][Nn]* # nan or na\n    %?    # can have a percent\n    \\s*     # white space or empty space\n    ', re.VERBOSE)
 if (__name__ == '__main__'):
     h2o.unit_main()

@@ -1,16 +1,16 @@
-def random_enum(maxEnumSize, randChars=((string.letters + string.digits) + '\t '), extraChars=''):
+def random_enum(maxEnumSize, randChars=((string.letters + string.digits) + '\\$%+-.;|\t '), quoteChars='\'"'):
+    choiceStr = (randChars + quoteChars)
     while True:
-        r = ''.join((random.choice((randChars + extraChars)) for x in range(maxEnumSize)))
-        numberRegex = re.compile('^[ \t]*[\\$]?[+-]?[0-9]*\\.?[0-9]*[eE]?[0-9]*[\\%]?[ \t]*$')
-        nanRegex = re.compile('^[ \t]*[\\$]?[+-]?[Nn][Aa][Nn]?[\\%]?[ \t]*$')
-        if numberRegex.search(r):
-            for i in numberRegex.findall(r):
-                print i
+        r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
+        if whitespaceRegex.match(r):
+            break
+        if whole1Regex.match(r):
             pass
-        if nanRegex.search(r):
-            print (("regenerate due to WARNING: generated enum is a possible NA/NAN/NaN pattern: '" + r) + "'")
-            for i in nanRegex.findall(r):
-                print i
+        if whole2Regex.match(r):
+            pass
+        if fractionalRegex.match(r):
+            pass
+        if nanRegex.match(r):
             pass
         else:
             break

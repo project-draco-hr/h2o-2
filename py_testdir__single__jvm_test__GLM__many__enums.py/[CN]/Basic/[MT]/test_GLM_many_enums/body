@@ -1,23 +1,24 @@
-def test_GLM_many_cols(self):
+def test_GLM_many_enums(self):
     GEN_SYN = True
     if GEN_SYN:
         SYNDATASETS_DIR = h2o.make_syn_dir()
     else:
         SYNDATASETS_DIR = 'syn_datasets'
     if localhost:
-        n = 50
+        n = 100
         tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300)]
     else:
         n = 8000
         tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300), (n, 7, 'cJ', 300), (n, 9, 'cK', 300), (n, 10, 'cLA', 300), (n, 11, 'cDA', 300), (n, 12, 'cEA', 300), (n, 13, 'cFA', 300), (n, 14, 'cGA', 300), (n, 15, 'cHA', 300), (n, 16, 'cIA', 300), (n, 17, 'cJA', 300), (n, 19, 'cKA', 300), (n, 20, 'cLA', 300)]
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         colSepCase = random.randint(0, 1)
-        if (1 == 0):
+        colSepCase = 0
+        if (colSepCase == 0):
             colSepHexString = '01'
-            extraChars = ',\'"'
+            quoteChars = ',\'"'
         else:
             colSepHexString = '2c'
-            extraChars = ''
+            quoteChars = ''
         colSepChar = colSepHexString.decode('hex')
         colSepInt = int(colSepHexString, base=16)
         print 'colSepChar:', colSepChar
@@ -34,16 +35,17 @@ def test_GLM_many_cols(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         if GEN_SYN:
             print 'Creating random', csvPathname
-            write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, extraChars=extraChars)
+            write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, quoteChars=quoteChars)
         else:
             print 'Using presumed existing', csvPathname
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         print ('\n' + csvFilename)
-        missingValues = h2o_cmd.check_enums_from_inspect(parseKey)
-        if missingValues:
-            raise Exception(('Looks like a column got flipped to NAs: ' + ' '.join(map(str, missingValues))))
+        missingValuesDict = h2o_cmd.check_enums_from_inspect(parseKey)
+        if missingValuesDict:
+            m = [((str(k) + ':') + str(v)) for (k, v) in missingValuesDict.iteritems()]
+            raise Exception(('Looks like columns got flipped to NAs: ' + ', '.join(m)))
         y = colCount
         kwargs = {'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
         start = time.time()
