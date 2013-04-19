@@ -1,4 +1,4 @@
-def random_enum(maxEnumSize, randChars=(string.letters + '.;|\t '), quoteChars='\'"'):
+def random_enum(maxEnumSize, randChars=('nanNANeE01' + '%$+-.;|\t '), quoteChars='\'"'):
     choiceStr = (randChars + quoteChars)
     mightBeNumber = True
     while mightBeNumber:
@@ -6,15 +6,9 @@ def random_enum(maxEnumSize, randChars=(string.letters + '.;|\t '), quoteChars='
         mightBeNumber = False
         if specialRegex.match(r):
             mightBeNumber = True
-        if whole1Regex.match(r):
+        if number1Regex.match(r):
             mightBeNumber = True
-        if whole2Regex.match(r):
-            mightBeNumber = True
-        if fractional1Regex.match(r):
-            mightBeNumber = True
-        if fractional2Regex.match(r):
-            mightBeNumber = True
-        if fractional3Regex.match(r):
+        if number2Regex.match(r):
             mightBeNumber = True
         if nanRegex.match(r):
             mightBeNumber = True
