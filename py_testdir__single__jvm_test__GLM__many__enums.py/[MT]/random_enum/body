@@ -1,4 +1,4 @@
-def random_enum(maxEnumSize, randChars=((string.letters + string.digits) + '\\$%+-.;|\t '), quoteChars='\'"'):
+def random_enum(maxEnumSize, randChars=(string.letters + '%+-.;|\t '), quoteChars='\'"'):
     choiceStr = (randChars + quoteChars)
     while True:
         r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
