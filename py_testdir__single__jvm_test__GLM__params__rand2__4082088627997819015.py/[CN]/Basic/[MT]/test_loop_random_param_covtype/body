@@ -11,7 +11,7 @@ def test_loop_random_param_covtype(self):
         kwargs = params.copy()
         start = time.time()
         timeoutSecs = max(150, ((params['n_folds'] * 10) + (params['max_iter'] * 10)))
-        glm = h2o_cmd.runGLMOnly(timeoutSecs=150, parseKey=parseKey, **kwargs)
+        glm = h2o_cmd.runGLMOnly(timeoutSecs=timeoutSecs, parseKey=parseKey, **kwargs)
         elapsed = (time.time() - start)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         h2o.check_sandbox_for_errors()
