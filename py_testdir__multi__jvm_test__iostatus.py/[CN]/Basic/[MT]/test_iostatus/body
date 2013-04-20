@@ -1,0 +1,42 @@
+def test_iostatus(self):
+    time.sleep(5)
+    for node in h2o.nodes:
+        stats = node.iostatus()
+        h2o.verboseprint(h2o.dump_json(stats))
+        histogram = stats['histogram']
+        print '\nProbing node:', ((str(node.addr) + ':') + str(node.port))
+        for k in histogram:
+            if (k['window'] == 10):
+                i_o = k['i_o']
+                node = k['cloud_node_idx']
+                r_w = k['r_w']
+                for (l, v) in k.iteritems():
+                    fmt = 'iostats: window10 node {:d} {:s} {:s} {:s} MB/sec: {:.2f}'
+                    if ('peak' in l):
+                        print fmt.format(node, i_o, r_w, 'peak', (v / 1000000.0))
+                    if ('effective' in l):
+                        print fmt.format(node, i_o, r_w, 'eff.', (v / 1000000.0))
+        iopList = []
+        raw_iops = stats['raw_iops']
+        print 
+        for k in raw_iops:
+            node = k['node']
+            i_o = k['i_o']
+            r_w = k['r_w']
+            size = k['size_bytes']
+            blocked = k['blocked_ns']
+            duration = (k['duration_ms'] * 1000000.0)
+            if (duration != 0):
+                blockedPct = (('%.2f' % ((100 * blocked) / duration)) + '%')
+            else:
+                blockedPct = 'no duration'
+            iopMsg = ('node: %s %s %s %d bytes. blocked: %s' % (node, i_o, r_w, size, blockedPct))
+            iopList.append([node, iopMsg])
+        iopList.sort(key=(lambda iop: iop[0]))
+        totalSockets = len(iopList)
+        if (totalSockets == 0):
+            print 'WARNING: is something wrong with this io stats response?'
+            print h2o.dump_json(stats)
+        print 'iostats: Total sockets:', totalSockets
+        for i in iopList:
+            print 'iostats:', i[1]

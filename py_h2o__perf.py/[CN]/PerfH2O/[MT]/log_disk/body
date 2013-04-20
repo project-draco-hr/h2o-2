@@ -1,0 +1,10 @@
+def log_disk(self, initOnly=False):
+    dioc = psutil.disk_io_counters()
+    diocSpotRdMBSec = ((dioc.read_bytes - self.pollStats['read_bytes']) / (1000000.0 * self.elapsedTime))
+    diocSpotWrMBSec = ((dioc.write_bytes - self.pollStats['write_bytes']) / (1000000.0 * self.elapsedTime))
+    diocSpotRdTime = ((dioc.read_time - self.pollStats['read_time']) / 1000.0)
+    diocSpotWrTime = ((dioc.write_time - self.pollStats['write_time']) / 1000.0)
+    l = 'Disk. Spot RdMB/s: {:>6.2f} Spot WrMB/s: {:>6.2f} {!s} {!s} elapsed: {:<6.2f}'.format(diocSpotRdMBSec, diocSpotWrMBSec, diocSpotRdTime, diocSpotWrTime, self.elapsedTime)
+    if (not initOnly):
+        logging.critical(l)
+    self.save(dioc=dioc)
