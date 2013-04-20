@@ -49,7 +49,7 @@
   Response r;
   if (finished == tasks) {
     r=jobDone(response);
-    r.addHeader("<div class='alert'>" + RFScore.link(model._selfKey,MODEL_KEY,"Use this model for scoring.") + " </div>");
+    r.addHeader("<div class='alert'>" + RFScore.link(MODEL_KEY,model._selfKey,"Use this model for scoring.") + " </div>");
   }
  else {
     r=Response.poll(response,finished,tasks);
