@@ -1,0 +1,26 @@
+def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n', quoteChars=''):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    for row in range(rowCount):
+        rowData = []
+
+        def doRandomOrFixed():
+            if RANDOM_LENGTH:
+                return random_enum(random.randint(2, MAX_ENUM_SIZE), quoteChars=quoteChars)
+            else:
+                return random_enum(MAX_ENUM_SIZE, quoteChars=quoteChars)
+        for col in range(colCount):
+            ri = doRandomOrFixed()
+            if (row < 2):
+                while True:
+                    if (("'" in ri) or ('"' in ri) or h2o_util.might_h2o_think_whitespace(ri)):
+                        ri = doRandomOrFixed()
+                    else:
+                        break
+            rowData.append(ri)
+        ri = r1.randint(0, 1)
+        rowData.append(ri)
+        rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
+        sys.stdout.write(rowDataCsv)
+        dsf.write(rowDataCsv)
+    dsf.close()
