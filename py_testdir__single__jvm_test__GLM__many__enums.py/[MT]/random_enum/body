@@ -1,15 +1,7 @@
-def random_enum(maxEnumSize, randChars=('aeE01' + '$+-.;|\t '), quoteChars='\'"'):
+def random_enum(maxEnumSize, randChars=('abeE01' + '$%+-.;|\t '), quoteChars='\'"'):
     choiceStr = (randChars + quoteChars)
-    mightBeNumber = True
-    while mightBeNumber:
+    mightBeNumberOrWhite = True
+    while mightBeNumberOrWhite:
         r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
-        mightBeNumber = False
-        if specialRegex.match(r):
-            mightBeNumber = True
-        if number1Regex.match(r):
-            mightBeNumber = True
-        if number2Regex.match(r):
-            mightBeNumber = True
-        if nanRegex.match(r):
-            mightBeNumber = True
+        mightBeNumberOrWhite = h2o_util.might_h2o_think_number_or_whitespace(r)
     return r

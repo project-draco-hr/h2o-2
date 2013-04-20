@@ -8,7 +8,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSep
             ri = random.choice(enumList)
             if (row < 2):
                 while True:
-                    if (("'" in ri) or ('"' in ri) or whitespaceRegex.match(ri)):
+                    if (("'" in ri) or ('"' in ri) or h2o_util.might_h2o_think_whitespace(ri)):
                         ri = random.choice(enumList)
                     else:
                         break
