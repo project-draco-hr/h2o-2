@@ -5,7 +5,7 @@ def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=Non
         raise Exception('H2O GLMGrid redirect is not GLMGridProgress. GLMGrid json response precedes.')
     if noPoll:
         return a
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, **kwargs)
+    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     verboseprint('GLMGrid done:', dump_json(a))
     browseAlso = kwargs.get('browseAlso', False)
     if (browseAlso | browse_json):
