@@ -1,0 +1,54 @@
+def log_iostats(self, initOnly=False):
+    if ((self.snapshotTime - self.pollStats['lastJstackTime']) < self.IOSTATSINTERVAL):
+        return
+    DO_IO_RW = True
+    DO_IOP = False
+    node = h2o.nodes[0]
+    stats = node.iostatus()
+    histogram = stats['histogram']
+
+    def log_window(w):
+        if (k['window'] == w):
+            i_o = k['i_o']
+            node = k['cloud_node_idx']
+            if (k['r_w'] == 'read'):
+                r_w = 'rd'
+            elif (k['r_w'] == 'write'):
+                r_w = 'wr'
+            else:
+                r_w = k['r_w']
+            for (l, v) in k.iteritems():
+                fmt = 'iostats: window{:<2d} node {:d} {:<4s} {:s} {:s} MB/sec: {:6.2f}'
+                if ('peak' in l):
+                    pass
+                if ('effective' in l):
+                    logging.critical(fmt.format(w, node, i_o, r_w, 'eff.', (v / 1000000.0)))
+    if DO_IO_RW:
+        print '\nlog_iotstats probing node:', ((str(node.addr) + ':') + str(node.port))
+        for k in histogram:
+            log_window(10)
+    if DO_IOP:
+        iopList = []
+        raw_iops = stats['raw_iops']
+        for k in raw_iops:
+            node = k['node']
+            i_o = k['i_o']
+            r_w = k['r_w']
+            size = k['size_bytes']
+            blocked = k['blocked_ns']
+            duration = (k['duration_ms'] * 1000000.0)
+            if (duration != 0):
+                blockedPct = (('%.2f' % ((100 * blocked) / duration)) + '%')
+            else:
+                blockedPct = 'no duration'
+            iopMsg = ('node: %s %s %s %d bytes. blocked: %s' % (node, i_o, r_w, size, blockedPct))
+            iopList.append([node, iopMsg])
+        iopList.sort(key=(lambda iop: iop[0]))
+        totalSockets = len(iopList)
+        if (totalSockets == 0):
+            print 'WARNING: is something wrong with this io stats response?'
+            print h2o.dump_json(stats)
+        logging.critical((('iostats: ' + 'Total sockets: ') + str(totalSockets)))
+        for i in iopList:
+            logging.critical(('iostats:' + i[1]))
+    self.save(iostats=True)

@@ -6,6 +6,6 @@
     Job job=Job.findJob(Key.make(_producer.value()));
     if (job != null)     sb.append("<div class='alert alert-success'>" + "<b>Produced in ").append(PrettyPrint.msecs(job.executionTime(),true)).append(".</b></div>");
   }
-  sb.append("<div class='alert'>" + "Build models using " + RF.link(ary._key,"Random Forest") + ", "+ GLM.link(ary._key,"GLM")+ ", "+ GLMGrid.link(ary._key,"GLM Grid Search")+ ", or "+ KMeans.link(ary._key,"KMeans")+ "<br />"+ "Score data using "+ RFScore.link(ary._key,"Random Forest")+ "."+ "</div>"+ "<p><b><font size=+1>"+ ary._cols.length+ " columns, "+ ary._rowsize+ " bytes-per-row * "+ ary._numrows+ " rows = "+ PrettyPrint.bytes(ary.length())+ "</font></b></p>");
+  sb.append("<div class='alert'>" + "Build models using " + RF.link(ary._key,"Random Forest") + ", "+ GLM.link(ary._key,"GLM")+ ", "+ GLMGrid.link(ary._key,"GLM Grid Search")+ ", or "+ KMeans.link(ary._key,"KMeans")+ "<br />"+ "Score data using "+ RFScore.link(ary._key,"Random Forest")+ ", "+ GLMScore.link(KEY,ary._key,0.0,"GLM")+ "</div>"+ "<p><b><font size=+1>"+ ary._cols.length+ " columns, "+ ary._rowsize+ " bytes-per-row * "+ ary._numrows+ " rows = "+ PrettyPrint.bytes(ary.length())+ "</font></b></p>");
   return sb.toString();
 }

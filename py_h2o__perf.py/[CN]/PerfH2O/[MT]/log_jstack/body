@@ -1,0 +1,33 @@
+def log_jstack(self, initOnly=False):
+    if ((self.snapshotTime - self.pollStats['lastJstackTime']) < self.JSTACKINTERVAL):
+        return
+    jstackResult = h2o.nodes[0].jstack()
+    node0 = jstackResult['nodes'][0]
+    stack_traces = node0['stack_traces']
+    stackLines = stack_traces.split('\n')
+
+    def init_cache(self):
+        self.cache = []
+        self.cacheHasJstack = False
+        self.cacheHasTCP = False
+
+    def log_and_init_cache(self):
+        if (self.cacheHasTCP or ((not self.cacheHasJstack) and (len(self.cache) >= self.MINCACHETOPRINT))):
+            for c in self.cache:
+                logging.critical(c)
+        init_cache(self)
+    init_cache(self)
+    lastLine = ''
+    for s in stackLines:
+        if (lastLine == ''):
+            log_and_init_cache(self)
+        else:
+            self.cache.append(('#' + s))
+            if ('JStack' in s):
+                self.cacheHasJstack = True
+            if ('TCP' in s):
+                self.cacheHasTCP = True
+        lastLine = s
+    log_and_init_cache(self)
+    self.pollStats['lastJstackTime'] = self.snapshotTime
+    self.save(jstack=True)

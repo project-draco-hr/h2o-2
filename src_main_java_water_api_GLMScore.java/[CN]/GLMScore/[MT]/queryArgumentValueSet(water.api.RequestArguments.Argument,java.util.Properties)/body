@@ -9,7 +9,7 @@
       _thresholds._hideInQuery=true;
     }
   }
-  if (arg == _dataKey) {
+  if (arg == _dataKey && _modelKey.specified()) {
     ValueArray va=_dataKey.value();
     GLMModel model=_modelKey.value();
     int colIds[]=model.columnMapping(va.colNames());

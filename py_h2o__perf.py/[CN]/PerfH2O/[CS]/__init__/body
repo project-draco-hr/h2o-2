@@ -4,9 +4,14 @@ def __init__(self, python_test_name):
     self.init_logfile(short_python_test_name)
     self.MINCACHETOPRINT = 7
     self.JSTACKINTERVAL = 20
+    self.IOSTATSINTERVAL = 10
     statsList = ['read_bytes', 'write_bytes', 'read_time', 'write_time', 'bytes_sent', 'bytes_recv', 'dropin', 'dropout', 'errin', 'errout']
     self.pollStats = {}
     for s in statsList:
         self.pollStats[s] = 0
     self.pollStats['count'] = 0
-    self.pollStats['lastJstackTime'] = time.time()
+    self.snapshotTime = time.time()
+    self.pollStats['lastJstackTime'] = self.snapshotTime
+    self.pollStats['lastIOstatsTime'] = self.snapshotTime
+    self.pollStats['time'] = self.snapshotTime
+    self.elapsedTime = 0
