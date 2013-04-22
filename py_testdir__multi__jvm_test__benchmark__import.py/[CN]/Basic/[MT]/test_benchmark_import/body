@@ -10,11 +10,12 @@ def test_benchmark_import(self):
     if (1 == 1):
         importFolderPath = '/home/0xdiag/datasets'
         print "Using .gz'ed files in", importFolderPath
-        csvFilenameAll = [('covtype200x.data', 'covtype200x.data', covtype200xSize, 700), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50.dat.gz', (50 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_*.dat.gz', 'file_100.dat.gz', (100 * avgMichalSize), 1200)]
+        csvFilenameAll = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50.dat.gz', (50 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_*.dat.gz', 'file_100.dat.gz', (100 * avgMichalSize), 1200), ('covtype200x.data', 'covtype200x.data', covtype200xSize, 700)]
     csvFilenameList = csvFilenameAll
     trialMax = 1
     base_port = 54321
     tryHeap = 28
+    DO_GLM = True
     noPoll = False
     benchmarkLogging = ['cpu', 'disk']
     pollTimeoutSecs = 120
@@ -75,6 +76,20 @@ def test_benchmark_import(self):
             newParseKey = {'destination_key': 'a', }
             print ('\n' + csvFilepattern)
             print 'Temporarily hacking to do nothing instead of RF on the parsed file'
+            if DO_GLM:
+                x = range(542)
+                for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, 378]:
+                    x.remove(i)
+                x = ','.join(map(str, x))
+                GLMkwargs = {'x': x, 'y': 378, 'case': 15, 'case_mode': '>', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
+                start = time.time()
+                glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **GLMkwargs)
+                h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
+                elapsed = (time.time() - start)
+                h2o.check_sandbox_for_errors()
+                l = '{:d} jvms, {:d}GB heap, {:s} {:s} GLM: {:6.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, elapsed)
+                print l
+                h2o.cloudPerfH2O.message(l)
             h2o_cmd.check_key_distribution()
             h2o_cmd.delete_csv_key(csvFilename, importFullList)
             h2o.tear_down_cloud()
