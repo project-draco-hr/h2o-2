@@ -2,7 +2,8 @@ def log_iostats(self, initOnly=False):
     if ((self.snapshotTime - self.pollStats['lastJstackTime']) < self.IOSTATSINTERVAL):
         return
     DO_IO_RW = True
-    DO_IOP = False
+    DO_IOP = True
+    DO_BLOCKED = False
     node = h2o.nodes[0]
     stats = node.iostatus()
     histogram = stats['histogram']
@@ -26,7 +27,7 @@ def log_iostats(self, initOnly=False):
     if DO_IO_RW:
         print '\nlog_iotstats probing node:', ((str(node.addr) + ':') + str(node.port))
         for k in histogram:
-            log_window(10)
+            log_window(60)
     if DO_IOP:
         iopList = []
         raw_iops = stats['raw_iops']
@@ -35,8 +36,8 @@ def log_iostats(self, initOnly=False):
             i_o = k['i_o']
             r_w = k['r_w']
             size = k['size_bytes']
-            blocked = k['blocked_ns']
-            duration = (k['duration_ms'] * 1000000.0)
+            blocked = k['blocked_ms']
+            duration = k['duration_ms']
             if (duration != 0):
                 blockedPct = (('%.2f' % ((100 * blocked) / duration)) + '%')
             else:
@@ -49,6 +50,7 @@ def log_iostats(self, initOnly=False):
             print 'WARNING: is something wrong with this io stats response?'
             print h2o.dump_json(stats)
         logging.critical((('iostats: ' + 'Total sockets: ') + str(totalSockets)))
-        for i in iopList:
-            logging.critical(('iostats:' + i[1]))
+        if DO_BLOCKED:
+            for i in iopList:
+                logging.critical(('iostats:' + i[1]))
     self.save(iostats=True)
