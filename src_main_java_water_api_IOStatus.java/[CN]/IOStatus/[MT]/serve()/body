@@ -35,7 +35,7 @@
     iop.addProperty("i_o",Value.nameOfPersist(flavor));
     iop.addProperty("r_w",rw == 0 ? "write" : "read");
     iop.addProperty("duration" + Constants.Suffixes.MILLIS,dura);
-    iop.addProperty("blocked_ns",blkd);
+    iop.addProperty("blocked" + Constants.Suffixes.MILLIS,TimeUnit.MILLISECONDS.convert(blkd,TimeUnit.NANOSECONDS));
     iop.addProperty("size" + Constants.Suffixes.BYTES,size);
     iops.add(iop);
   }
