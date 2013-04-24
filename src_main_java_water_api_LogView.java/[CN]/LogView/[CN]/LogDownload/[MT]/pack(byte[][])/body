@@ -1,0 +1,14 @@
+{
+  int l=0;
+  for (int i=0; i < results.length; i++)   l+=results[i].length;
+  l+=2 * results.length;
+  byte[] pack=new byte[l];
+  l=0;
+  for (int i=0; i < results.length; i++) {
+    System.arraycopy(results[i],0,pack,l,results[i].length);
+    l+=results[i].length;
+    pack[l++]=(byte)'-';
+    pack[l++]=(byte)'\n';
+  }
+  return pack;
+}

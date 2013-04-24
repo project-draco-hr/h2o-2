@@ -16,5 +16,7 @@
   }
   JsonObject result=new JsonObject();
   result.add("log",ary);
-  return Response.done(result);
+  Response response=Response.done(result);
+  response.addHeader("<a class='btn btn-primary' href='LogDownload.html'>Download all logs</a>");
+  return response;
 }
