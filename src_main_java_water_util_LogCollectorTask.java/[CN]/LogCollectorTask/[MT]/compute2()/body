@@ -1,0 +1,29 @@
+{
+  _result=new byte[H2O.CLOUD._memary.length][];
+  int idx=H2O.SELF.index();
+  File logFile=PersistIce.logFile;
+  InputStream is=null;
+  int length=(int)Math.min(MAX_SIZE,logFile.length());
+  try {
+    _result[idx]=new byte[length];
+    is=new FileInputStream(logFile);
+    is.skip(logFile.length() - length);
+    int off=0;
+    while (length > 0) {
+      int l=is.read(_result[idx],off,length);
+      off+=l;
+      length-=l;
+    }
+  }
+ catch (  IOException e) {
+    H2O.ignore(e);
+  }
+ finally {
+    try {
+      is.close();
+    }
+ catch (    Exception _) {
+    }
+    tryComplete();
+  }
+}
