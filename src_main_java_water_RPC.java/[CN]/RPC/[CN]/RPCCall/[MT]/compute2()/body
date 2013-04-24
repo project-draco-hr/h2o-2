@@ -1,9 +1,10 @@
 {
-  _dt.invoke(_client);
+  _dt.dinvoke(_client);
   AutoBuffer ab=new AutoBuffer(_client).putTask(UDP.udp.ack,_tsknum).put1(SERVER_UDP_SEND);
   _dt.write(ab);
   _dt._repliedTcp=ab.hasTCP();
   _computed=true;
-  ab.close();
+  ab.close(_dt._repliedTcp);
   _client.record_task_answer(this);
+  tryComplete();
 }
