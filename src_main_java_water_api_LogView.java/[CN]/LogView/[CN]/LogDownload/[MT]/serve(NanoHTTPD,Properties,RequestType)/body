@@ -1,0 +1,10 @@
+{
+  LogCollectorTask collector=new LogCollectorTask();
+  collector.invokeOnAllNodes();
+  String outputFile="h2o.log";
+  byte[] result=pack(collector._result);
+  NanoHTTPD.Response res=server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_DEFAULT_BINARY,new ByteArrayInputStream(result));
+  res.addHeader("Content-Length",Long.toString(result.length));
+  res.addHeader("Content-Disposition","attachment; filename=" + outputFile);
+  return res;
+}
