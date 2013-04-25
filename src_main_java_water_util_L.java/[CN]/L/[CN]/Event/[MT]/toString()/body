@@ -2,15 +2,22 @@
   StringBuffer buf=new StringBuffer(120);
   buf.append(when.startAsString()).append(" ").append(HOST_AND_PID);
   buf.append(kind.toString()).append(" ").append(sys.toString()).append(": ");
+  int headroom=buf.length();
   for (  Object m : message)   buf.append(m.toString());
   if (buf.indexOf("\n") != -1) {
     String s=buf.toString();
     String[] lines=s.split("\n");
     StringBuffer buf2=new StringBuffer(2 * buf.length());
     buf2.append(lines[0]);
-    for (int i=1; i < lines.length; i++)     buf2.append("\n+   ").append(lines[i]);
+    if (where != null)     buf2.append(" (at ").append(classOf(where)).append(")");
+    for (int i=1; i < lines.length; i++) {
+      buf2.append("\n+");
+      for (int j=1; j < headroom; j++)       buf2.append(" ");
+      buf2.append(lines[i]);
+    }
     buf=buf2;
   }
+ else   if (where != null)   buf.append(" (at ").append(classOf(where)).append(")");
   if (ouch != null) {
     buf.append("\n");
     Writer wr=new StringWriter();
@@ -19,7 +26,9 @@
     String mess=wr.toString();
     String[] lines=mess.split("\n");
     for (int i=0; i < lines.length; i++) {
-      buf.append("+   ").append(lines[i]);
+      buf.append("+");
+      for (int j=1; j < headroom; j++)       buf.append(" ");
+      buf.append(lines[i]);
       if (i != lines.length - 1)       buf.append("\n");
     }
   }
