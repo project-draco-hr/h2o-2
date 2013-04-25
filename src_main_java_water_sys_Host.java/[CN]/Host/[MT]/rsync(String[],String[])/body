@@ -22,7 +22,7 @@
     builder.environment().put("CYGWIN","nodosfilewarning");
     process=builder.start();
     String log="rsync " + VM.localIP() + " -> "+ _address;
-    if (!LOG_RSYNC)     System.out.println(log);
+    if (!LOG_RSYNC)     L.info(log);
     NodeVM.inheritIO(process,Log.padRight(log + ": ",24));
     process.waitFor();
   }

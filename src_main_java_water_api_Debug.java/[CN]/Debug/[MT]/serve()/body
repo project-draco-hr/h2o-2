@@ -3,7 +3,7 @@
   for (  Key key : H2O.keySet()) {
     kcnt++;
     Value v=H2O.raw_get(key);
-    System.out.println("K: " + key + " V:"+ (v == null ? "null" : "" + v._max));
+    L.debug(this,Sys.WATER,"K: ",key," V:",(v == null ? "null" : "" + v._max));
   }
   return Response.error("Dumped " + kcnt + " keys");
 }

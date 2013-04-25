@@ -20,7 +20,7 @@ synchronized (STORE) {
     if (force && diskFull)     diskFull=isDiskFull();
     long clean_to_age=h.clean_to(force ? DESIRED : (DESIRED >> 1));
     if (!force)     clean_to_age=Math.max(clean_to_age,now - 5000);
-    if (VERBOSE)     System.out.println("[clean >>>] " + h + " DESIRED="+ (DESIRED >> 20)+ "M dirtysince="+ (now - dirty)+ " force="+ force+ " clean2age="+ (now - clean_to_age));
+    L.debug2(this,Sys.CLEANR,h," DESIRED=",(DESIRED >> 20),"M dirtysince=",(now - dirty)," force=",force," clean2age=",(now - clean_to_age));
     long cleaned=0;
     long freed=0;
     Object[] kvs=STORE.raw_array();
@@ -39,10 +39,8 @@ synchronized (STORE) {
         continue;
       }
       if (!val.isPersisted() && !diskFull && (force || (lazyPersist() && lazy_clean(key)))) {
-        if (VERBOSE) {
-          System.out.print('.');
-          cleaned+=m.length;
-        }
+        L.debug2(this,Sys.CLEANR,".");
+        cleaned+=m.length;
         try {
           val.storePersist();
         }
@@ -59,6 +57,6 @@ synchronized (STORE) {
     }
     h=_myHisto.histo(true);
     MemoryManager.set_goals("postclean",false);
-    if (VERBOSE)     System.out.println("[clean <<<] " + h + " cleaned="+ (cleaned >> 20)+ "M, freed="+ (freed >> 20)+ "M, DESIRED="+ (DESIRED >> 20)+ "M");
+    L.debug2(this,Sys.CLEANR,h," cleaned=" + (cleaned >> 20),"M, freed=",(freed >> 20),"M, DESIRED=",(DESIRED >> 20),"M");
   }
 }
