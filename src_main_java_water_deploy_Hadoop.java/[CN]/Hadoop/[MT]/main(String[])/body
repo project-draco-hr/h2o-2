@@ -1,0 +1,10 @@
+{
+  Arguments arguments=new Arguments(args);
+  Config config=new Config();
+  arguments.extract(config);
+  String[] remaining=new String[0];
+  if (arguments.firstFlag() >= 0)   remaining=Arrays.copyOfRange(args,arguments.firstFlag(),args.length);
+  H2O.OPT_ARGS.hdfs_version=config.version;
+  HdfsLoader.initialize();
+  HadoopTool.main(config,remaining);
+}

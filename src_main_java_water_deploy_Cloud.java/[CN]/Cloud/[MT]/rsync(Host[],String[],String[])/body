@@ -1,0 +1,23 @@
+{
+  ArrayList<Thread> threads=new ArrayList<Thread>();
+  for (int i=0; i < hosts.length; i++) {
+    final int i_=i;
+    Thread t=new Thread(){
+      @Override public void run(){
+        hosts[i_].rsync(includes,excludes);
+      }
+    }
+;
+    t.setDaemon(true);
+    t.start();
+    threads.add(t);
+  }
+  for (  Thread t : threads) {
+    try {
+      t.join();
+    }
+ catch (    InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+}

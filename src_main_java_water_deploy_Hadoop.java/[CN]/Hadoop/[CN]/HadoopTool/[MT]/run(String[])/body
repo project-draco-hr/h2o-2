@@ -1,0 +1,10 @@
+{
+  Job job=new Job(getConf());
+  job.setJobName("H2O");
+  job.setMapperClass(H2OMapper.class);
+  job.setInputFormatClass(NopInputFormat.class);
+  job.setOutputFormatClass(NopOutputFormat.class);
+  job.setNumReduceTasks(0);
+  job.waitForCompletion(true);
+  return 0;
+}
