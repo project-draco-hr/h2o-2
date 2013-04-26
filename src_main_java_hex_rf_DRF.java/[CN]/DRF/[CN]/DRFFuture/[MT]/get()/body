@@ -1,5 +1,6 @@
 {
-  final DRF drf=(DRF)_future.get();
+  _future.join();
+  final DRF drf=(DRF)_future;
   if (drf._job != null)   drf._job.remove();
   return drf;
 }

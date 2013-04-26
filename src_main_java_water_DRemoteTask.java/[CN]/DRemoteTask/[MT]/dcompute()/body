@@ -17,11 +17,16 @@
  else     if (idx < mid)     lokeys.add(k);
  else     hikeys.add(k);
   }
-  DFuture f=new DFuture(remote_compute(lokeys),remote_compute(hikeys));
-  _keys=locals.toArray(new Key[locals.size()]);
-  if (_keys.length != 0) {
-    init();
-    H2O.submitTask(this);
+  _lo=remote_compute(lokeys);
+  _hi=remote_compute(hikeys);
+  if (locals.size() != 0) {
+    _local=clone();
+    _local._is_local=true;
+    _local._keys=locals.toArray(new Key[locals.size()]);
+    _local.init();
+    H2O.submitTask(_local);
   }
-  return f;
+ else {
+    tryComplete();
+  }
 }
