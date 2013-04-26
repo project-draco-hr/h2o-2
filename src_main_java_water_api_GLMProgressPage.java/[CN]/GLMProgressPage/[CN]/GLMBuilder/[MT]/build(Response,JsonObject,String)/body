@@ -1,6 +1,8 @@
 {
   StringBuilder sb=new StringBuilder();
   ;
-  modelHTML(_m,json.get(GLMModel.NAME).getAsJsonObject(),sb);
+  JsonElement mje=json.get(GLMModel.NAME);
+  if (mje == null)   return "<div class='error'>Cancelled!</div>";
+  modelHTML(_m,mje.getAsJsonObject(),sb);
   return sb.toString();
 }
