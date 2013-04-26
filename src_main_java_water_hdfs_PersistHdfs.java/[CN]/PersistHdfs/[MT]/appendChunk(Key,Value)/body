@@ -9,7 +9,6 @@
     s.write(val.memOrLoad());
   }
  catch (  IOException e) {
-    Log.err(e);
     res=e.getMessage();
   }
  finally {
@@ -17,7 +16,6 @@
       if (s != null)       s.close();
     }
  catch (    IOException e) {
-      Log.err(e);
     }
   }
   return res;

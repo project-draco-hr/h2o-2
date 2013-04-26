@@ -37,7 +37,7 @@
       }
     }
  catch (    NumberFormatException e) {
-      throw Log.err(new IllegalArgumentException("Invalid integer format for strata value"));
+      throw new IllegalArgumentException("Invalid integer format for strata value");
     }
     if (!classNames.containsKey(className))     throw new IllegalArgumentException("Category " + className + " not found!");
     result[classNames.get(className)]=classWeight;

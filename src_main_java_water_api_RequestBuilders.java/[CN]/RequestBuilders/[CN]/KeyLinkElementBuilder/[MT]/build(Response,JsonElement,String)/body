@@ -4,7 +4,7 @@
     String k=URLEncoder.encode(key,"UTF-8");
     return "<a href='Inspect.html?key=" + k + "'>"+ key+ "</a>";
   }
- catch (  Throwable e) {
-    throw Throwables.propagate(Log.err(e));
+ catch (  UnsupportedEncodingException e) {
+    throw Log.errRTExcept(e);
   }
 }

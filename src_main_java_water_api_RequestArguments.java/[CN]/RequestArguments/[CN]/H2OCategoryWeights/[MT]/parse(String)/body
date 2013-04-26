@@ -37,9 +37,9 @@
       }
     }
  catch (    NumberFormatException e) {
-      throw Log.err(new IllegalArgumentException("Invalid double format for weight value"));
+      throw new IllegalArgumentException("Invalid double format for weight value");
     }
-    if (!classNames.containsKey(className))     throw Log.err(new IllegalArgumentException("Category " + className + " not found!"));
+    if (!classNames.containsKey(className))     throw new IllegalArgumentException("Category " + className + " not found!");
     result[classNames.get(className)]=classWeight;
   }
   return result;

@@ -3,18 +3,17 @@
   try {
     field=cc.getField("$VALUES");
   }
- catch (  NotFoundException e) {
-    Log.err(e);
+ catch (  NotFoundException nfe) {
     field=cc.getField("ENUM$VALUES");
   }
   String body="static " + cc.getName() + " raw_enum(int i) { return i==255?null:"+ field.getName()+ "[i]; } ";
   try {
     cc.addMethod(CtNewMethod.make(body,cc));
   }
- catch (  CannotCompileException e) {
+ catch (  CannotCompileException ce) {
     System.out.println("--- Compilation failure while compiler raw_enum for " + cc.getName());
     System.out.println(body);
     System.out.println("------");
-    throw Log.err(e);
+    throw ce;
   }
 }
