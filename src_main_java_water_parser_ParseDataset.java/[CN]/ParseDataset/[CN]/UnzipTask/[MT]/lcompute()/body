@@ -19,19 +19,19 @@ switch (_comp) {
 case ZIP:
             ZipInputStream zis=new ZipInputStream(v.openStream(pmon));
           ZipEntry ze=zis.getNextEntry();
-        if (ze == null || ze.isDirectory())         throw new Exception("Unsupported zip file: " + ((ze == null) ? "No entry found" : "Files containing directory arte not supported."));
+        if (ze == null || ze.isDirectory())         throw L.err(Sys.PARSE,new Exception("Unsupported zip file: " + ((ze == null) ? "No entry found" : "Files containing directory arte not supported.")));
       is=zis;
     break;
 case GZIP:
   is=new GZIPInputStream(v.openStream(pmon));
 break;
 default :
-throw H2O.unimpl();
+throw L.err(Sys.PARSE,H2O.unimpl());
 }
 ValueArray.readPut(okey,is,_job);
 }
  catch (Throwable t) {
-System.err.println("failed decompressing data " + key.toString() + " with compression "+ _comp);
+L.err(Sys.PARSE,"failed decompressing data " + key.toString() + " with compression "+ _comp,t);
 UKV.remove(okey);
 throw new RuntimeException(t);
 }

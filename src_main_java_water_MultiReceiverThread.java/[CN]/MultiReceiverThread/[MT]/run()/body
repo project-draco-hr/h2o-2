@@ -30,8 +30,7 @@
       UDPReceiverThread.basic_packet_handling(new AutoBuffer(pack));
     }
  catch (    Exception e) {
-      System.err.println("Multicast " + H2O.CLOUD_MULTICAST_GROUP + ":"+ H2O.CLOUD_MULTICAST_PORT);
-      e.printStackTrace(System.err);
+      L.err("Multicast " + H2O.CLOUD_MULTICAST_GROUP + ":"+ H2O.CLOUD_MULTICAST_PORT,e);
       saw_error=true;
       errsock=sock;
       sock=null;

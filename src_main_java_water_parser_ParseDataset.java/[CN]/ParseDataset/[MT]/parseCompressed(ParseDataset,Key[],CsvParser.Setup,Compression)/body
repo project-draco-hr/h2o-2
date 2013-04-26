@@ -17,8 +17,5 @@
       for (int i=0; i < keys.length; ++i)       if (keys[i] != null)       UKV.remove(keys[i]);
     }
   }
- else {
-    System.err.println("unzipping of keys " + Arrays.toString(keys) + " + key[0] = "+ keys[0]+ " failed!");
-    throw new RuntimeException();
-  }
+ else   throw L.err(Sys.PARSE,"unzipping of keys " + Arrays.toString(keys) + " + key[0] = "+ keys[0]+ " failed!",new RuntimeException());
 }

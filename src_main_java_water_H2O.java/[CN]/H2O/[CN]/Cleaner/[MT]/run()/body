@@ -44,8 +44,8 @@ synchronized (STORE) {
           val.storePersist();
         }
  catch (        IOException e) {
-          if (isDiskFull())           System.err.println("Disk full! Disabling swapping to disk." + ((force) ? " Memory low! Please free some space in " + PersistIce.ROOT + "!" : ""));
- else           System.err.println("Disk swapping failed! " + e.getMessage());
+          if (isDiskFull())           L.warn(this,Sys.CLEANR,"Disk full! Disabling swapping to disk." + ((force) ? " Memory low! Please free some space in " + PersistIce.ROOT + "!" : ""));
+ else           L.warn(this,Sys.CLEANR,"Disk swapping failed! " + e.getMessage());
           diskFull=true;
         }
       }

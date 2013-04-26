@@ -24,8 +24,7 @@ catch (    java.nio.channels.ClosedChannelException ex) {
       break;
     }
 catch (    Exception e) {
-      System.err.println("UDP Receiver error on port " + H2O.UDP_PORT);
-      e.printStackTrace(System.err);
+      L.err("UDP Receiver error on port " + H2O.UDP_PORT,e);
       saw_error=true;
       errsock=sock;
       sock=null;
