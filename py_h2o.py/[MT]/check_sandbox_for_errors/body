@@ -17,6 +17,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
                 foundBad = False
                 if (not (' bytes)' in line)):
                     printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)) and (not ('RestS3Service' in line)))
+                    printSingleWarning = False
                     foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
