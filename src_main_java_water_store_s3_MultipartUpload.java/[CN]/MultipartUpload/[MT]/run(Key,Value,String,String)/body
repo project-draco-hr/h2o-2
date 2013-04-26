@@ -26,9 +26,9 @@
       s3.abortMultipartUpload(new AbortMultipartUploadRequest(bucket,object,uploadId));
     }
  catch (    Exception _) {
-      L.err(_);
+      Log.err(_);
     }
-    L.err(e);
+    Log.err(e);
     Progress progress=new Progress();
     progress._error=e.toString();
     UKV.put(dest,progress);

@@ -34,7 +34,7 @@ case png:
       if (!res)       throw new RuntimeException();
     }
  catch (    IOException e) {
-      throw L.errRTExcept(e);
+      throw Log.errRTExcept(e);
     }
     InputStream in=new ByteArrayInputStream(buffer.toByteArray());
     return server.new Response(NanoHTTPD.HTTP_OK,"image/png",in);

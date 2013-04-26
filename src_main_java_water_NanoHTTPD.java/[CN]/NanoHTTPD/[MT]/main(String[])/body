@@ -12,7 +12,7 @@
     new NanoHTTPD(new ServerSocket(port),wwwroot);
   }
  catch (  IOException ioe) {
-    L.err(Sys.HTTPD,"Couldn't start server:\n",ioe);
+    Log.err(Sys.HTTPD,"Couldn't start server:\n",ioe);
     System.exit(-1);
   }
   myOut.println("Now serving files in port " + port + " from \""+ wwwroot+ "\"");
@@ -21,6 +21,6 @@
     System.in.read();
   }
  catch (  Throwable t) {
-    L.err(t);
+    Log.err(t);
   }
 }

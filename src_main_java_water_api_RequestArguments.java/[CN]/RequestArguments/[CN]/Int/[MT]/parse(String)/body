@@ -1,10 +1,10 @@
 {
   try {
     int i=Integer.parseInt(input);
-    if ((i < _min) || (i > _max))     throw L.err(new IllegalArgumentException("Value " + i + " is not between "+ _min+ " and "+ _max+ " (inclusive)"));
+    if ((i < _min) || (i > _max))     throw Log.err(new IllegalArgumentException("Value " + i + " is not between "+ _min+ " and "+ _max+ " (inclusive)"));
     return i;
   }
  catch (  NumberFormatException e) {
-    throw L.err(new IllegalArgumentException("Value " + input + " is not a valid integer."));
+    throw Log.err(new IllegalArgumentException("Value " + input + " is not a valid integer."));
   }
 }

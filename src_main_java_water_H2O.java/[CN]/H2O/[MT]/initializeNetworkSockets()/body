@@ -15,7 +15,7 @@
         if (_apiSocket != null)         _apiSocket.close();
       }
  catch (      IOException ohwell) {
-        L.err(ohwell);
+        Log.err(ohwell);
       }
       Closeables.closeQuietly(_udpSocket);
       _apiSocket=null;
@@ -25,7 +25,7 @@
     API_PORT+=2;
   }
   SELF=H2ONode.self(inet);
-  L.info("Internal communication uses port: ",UDP_PORT,"\nListening for HTTP and REST traffic on  http:/",inet,":" + _apiSocket.getLocalPort() + "/");
+  Log.info("Internal communication uses port: ",UDP_PORT,"\nListening for HTTP and REST traffic on  http:/",inet,":" + _apiSocket.getLocalPort() + "/");
   NAME=OPT_ARGS.name == null ? System.getProperty("user.name") : OPT_ARGS.name;
   STATIC_H2OS=parseFlatFile(OPT_ARGS.flatfile);
   int hash=NAME.hashCode() & 0x7fffffff;
@@ -36,7 +36,7 @@
     CLOUD_MULTICAST_GROUP=InetAddress.getByAddress(ip);
   }
  catch (  UnknownHostException e) {
-    throw L.errRTExcept(e);
+    throw Log.errRTExcept(e);
   }
   CLOUD_MULTICAST_PORT=(port >>> 16);
 }

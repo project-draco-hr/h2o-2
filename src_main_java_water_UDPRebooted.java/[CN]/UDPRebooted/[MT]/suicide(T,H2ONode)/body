@@ -7,7 +7,7 @@ case reboot:
   return;
 case shutdown:
 closeAll();
-L.info("Orderly shutdown command from " + killer);
+Log.info("Orderly shutdown command from " + killer);
 System.exit(0);
 return;
 case oom:
@@ -27,6 +27,6 @@ m="Received kill " + cause;
 break;
 }
 closeAll();
-L.warn(m + " from " + killer);
+Log.warn(m + " from " + killer);
 System.exit(-1);
 }

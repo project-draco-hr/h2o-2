@@ -44,7 +44,7 @@ break;
 case LabelSSTRecord.sid:
 LabelSSTRecord lsrec=(LabelSSTRecord)record;
 if (_sstRecord == null) {
-L.warn(this,Sys.EXCEL,"[ExcelParser] Missing SST record");
+Log.warn(this,Sys.EXCEL,"[ExcelParser] Missing SST record");
 }
  else {
 curCol=lsrec.getColumn();
@@ -52,7 +52,7 @@ curStr=_str.setTo(_sstRecord.getString(lsrec.getSSTIndex()).toString());
 }
 break;
 case NoteRecord.sid:
-L.warn(this,Sys.EXCEL,"Warning cell notes are unsupported");
+Log.warn(this,Sys.EXCEL,"Warning cell notes are unsupported");
 break;
 case NumberRecord.sid:
 NumberRecord numrec=(NumberRecord)record;
@@ -60,7 +60,7 @@ curCol=numrec.getColumn();
 curNum=numrec.getValue();
 break;
 case RKRecord.sid:
-L.warn(this,Sys.EXCEL,"Warning RK records are unsupported");
+Log.warn(this,Sys.EXCEL,"Warning RK records are unsupported");
 break;
 default :
 break;

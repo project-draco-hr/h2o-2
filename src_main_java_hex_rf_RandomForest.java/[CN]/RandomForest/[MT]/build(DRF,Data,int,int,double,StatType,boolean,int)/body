@@ -1,8 +1,8 @@
 {
   Timer t_alltrees=new Timer();
   Tree[] trees=new Tree[ntrees];
-  L.info(Sys.RANDF,"Number of split features: " + drf.numSplitFeatures());
-  L.info(Sys.RANDF,"Starting RF computation with " + data.rows() + " rows ");
+  Log.info(Sys.RANDF,"Number of split features: " + drf.numSplitFeatures());
+  Log.info(Sys.RANDF,"Starting RF computation with " + data.rows() + " rows ");
   Random rnd=Utils.getRNG(data.seed() + ROOT_SEED_ADD);
   Sampling sampler=createSampler(drf);
   for (int i=0; i < ntrees; ++i) {
@@ -11,5 +11,5 @@
     if (!parallelTrees)     DRemoteTask.invokeAll(new Tree[]{trees[i]});
   }
   if (parallelTrees)   DRemoteTask.invokeAll(trees);
-  L.info(Sys.RANDF,"All trees (" + ntrees + ") done in "+ t_alltrees);
+  Log.info(Sys.RANDF,"All trees (" + ntrees + ") done in "+ t_alltrees);
 }

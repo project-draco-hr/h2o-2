@@ -11,7 +11,7 @@
     }
   }
  catch (  SocketException e) {
-    L.err(e);
+    Log.err(e);
   }
   InetAddress local=null;
   InetAddress arg=null;
@@ -20,15 +20,15 @@
       arg=InetAddress.getByName(OPT_ARGS.ip);
     }
  catch (    UnknownHostException e) {
-      L.err(e);
+      Log.err(e);
       System.exit(-1);
     }
     if (!(arg instanceof Inet4Address)) {
-      L.err("Only IP4 addresses allowed.");
+      Log.err("Only IP4 addresses allowed.");
       System.exit(-1);
     }
     if (!ips.contains(arg)) {
-      L.err("IP address not found on this machine");
+      Log.err("IP address not found on this machine");
       System.exit(-1);
     }
     local=arg;
@@ -49,11 +49,11 @@
   }
   if (local == null) {
     try {
-      L.err("Failed to determine IP, falling back to localhost.");
+      Log.err("Failed to determine IP, falling back to localhost.");
       local=InetAddress.getByName("127.0.0.1");
     }
  catch (    UnknownHostException e) {
-      throw L.errRTExcept(e);
+      throw Log.errRTExcept(e);
     }
   }
   return local;

@@ -2,7 +2,7 @@
   if (CAN_ALLOC)   return;
 synchronized (_lock) {
     CAN_ALLOC=true;
-    L.info(Sys.CLEANR,"Continuing after swapping");
+    Log.info(Sys.CLEANR,"Continuing after swapping");
     _lock.notifyAll();
   }
 }

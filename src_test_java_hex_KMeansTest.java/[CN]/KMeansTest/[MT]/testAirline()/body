@@ -4,7 +4,7 @@
   ValueArray va=UKV.get(k1);
   Timer t=new Timer();
   KMeans.run(target,va,8,1e-2,0);
-  L.info(this,Sys.KMEAN,"ms= " + t);
+  Log.info(this,Sys.KMEAN,"ms= " + t);
   KMeans.KMeansModel res=UKV.get(target);
   double[][] clusters=res.clusters();
   UKV.remove(k1);

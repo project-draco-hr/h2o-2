@@ -16,7 +16,7 @@
           water.RReader.run(dest_,source_.openStream());
         }
  catch (        IOException e) {
-          L.err(e);
+          Log.err(e);
         }
       }
     }
@@ -28,11 +28,11 @@
     return r;
   }
  catch (  IllegalArgumentException e) {
-    L.err(e);
+    Log.err(e);
     return Response.error(e.getMessage());
   }
 catch (  Error e) {
-    L.err(e);
+    Log.err(e);
     return Response.error(e.getMessage());
   }
 }
