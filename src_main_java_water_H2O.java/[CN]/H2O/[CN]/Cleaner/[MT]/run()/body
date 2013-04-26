@@ -39,7 +39,6 @@ synchronized (STORE) {
         continue;
       }
       if (!val.isPersisted() && !diskFull && (force || (lazyPersist() && lazy_clean(key)))) {
-        L.debug2(this,Sys.CLEANR,".");
         cleaned+=m.length;
         try {
           val.storePersist();
