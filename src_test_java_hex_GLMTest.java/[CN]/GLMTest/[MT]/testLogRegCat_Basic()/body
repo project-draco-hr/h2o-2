@@ -3,7 +3,7 @@
   try {
     ValueArray va=va_maker(datakey,new String[]{"Low","Med","High","Low","Med","High","Low","Med","High"},new byte[]{0,0,1,0,1,1,0,0,1});
     LSMSolver lsms=new ADMMSolver(0,0.0);
-    JsonObject glm=computeGLMlog(lsms,va,true);
+    JsonObject glm=computeGLMlog(lsms,va);
     JsonObject jcoefs=glm.get("coefficients").getAsJsonObject();
     double icept=jcoefs.get("Intercept").getAsDouble();
     assertCat(jcoefs,icept,"Med",0.3333333);
