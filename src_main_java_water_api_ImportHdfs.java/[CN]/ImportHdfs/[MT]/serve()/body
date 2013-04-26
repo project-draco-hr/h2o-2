@@ -10,6 +10,7 @@
     PrintWriter pw=new PrintWriter(Streams.writerForAppendable(sb));
     e.printStackTrace(pw);
     pw.flush();
+    L.err(e);
     return Response.error(sb.toString());
   }
   DKV.write_barrier();

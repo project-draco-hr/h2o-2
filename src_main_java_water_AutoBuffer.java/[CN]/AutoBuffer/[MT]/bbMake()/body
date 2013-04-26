@@ -3,8 +3,8 @@
   try {
     bb=BBS.pollFirst(0,TimeUnit.SECONDS);
   }
- catch (  InterruptedException ie) {
-    throw new Error(ie);
+ catch (  InterruptedException e) {
+    throw L.errRTExcept(e);
   }
   if (bb != null) {
     bbstats(BBCACHE);

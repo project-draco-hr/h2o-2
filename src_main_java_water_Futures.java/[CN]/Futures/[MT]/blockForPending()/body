@@ -9,10 +9,10 @@ synchronized (this) {
       f.get();
     }
   }
- catch (  InterruptedException ie) {
-    throw new RuntimeException(ie);
+ catch (  InterruptedException e) {
+    throw L.errRTExcept(e);
   }
-catch (  ExecutionException ee) {
-    throw new RuntimeException(ee);
+catch (  ExecutionException e) {
+    throw L.errRTExcept(e);
   }
 }

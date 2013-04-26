@@ -17,7 +17,7 @@
     _time_io_ns+=(System.nanoTime() - ns);
   }
  catch (  IOException e) {
-    throw new Error(L.err("TCP Open/Write talking to " + _h2o + " failed with ",e));
+    throw new RuntimeException(L.err("TCP Open/Write talking to " + _h2o + " failed with ",e));
   }
   if (_bb.capacity() < 16 * 1024)   _bb=bbMake();
   _firstPage=false;

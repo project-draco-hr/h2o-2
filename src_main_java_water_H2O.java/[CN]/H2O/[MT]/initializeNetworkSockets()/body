@@ -15,6 +15,7 @@
         if (_apiSocket != null)         _apiSocket.close();
       }
  catch (      IOException ohwell) {
+        L.err(ohwell);
       }
       Closeables.closeQuietly(_udpSocket);
       _apiSocket=null;
@@ -35,7 +36,7 @@
     CLOUD_MULTICAST_GROUP=InetAddress.getByAddress(ip);
   }
  catch (  UnknownHostException e) {
-    throw new Error(e);
+    throw L.errRTExcept(e);
   }
   CLOUD_MULTICAST_PORT=(port >>> 16);
 }

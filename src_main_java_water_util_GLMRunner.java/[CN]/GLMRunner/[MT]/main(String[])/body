@@ -56,10 +56,10 @@
     }
   }
  catch (  Throwable t) {
-    t.printStackTrace();
+    L.err(t);
   }
  finally {
-    System.out.println("==================<GLMRunner DONE>===================");
+    L.info("==================<GLMRunner DONE>===================");
     UDPRebooted.suicide(UDPRebooted.T.shutdown,H2O.SELF);
   }
 }

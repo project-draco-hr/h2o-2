@@ -7,7 +7,7 @@
     return md5.digest();
   }
  catch (  NoSuchAlgorithmException e) {
-    throw new RuntimeException(e);
+    throw L.errRTExcept(e);
   }
  finally {
     Utils.close(is);

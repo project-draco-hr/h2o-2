@@ -11,6 +11,7 @@
     }
   }
  catch (  SocketException e) {
+    L.err(e);
   }
   InetAddress local=null;
   InetAddress arg=null;
@@ -52,7 +53,7 @@
       local=InetAddress.getByName("127.0.0.1");
     }
  catch (    UnknownHostException e) {
-      throw new Error(e);
+      throw L.errRTExcept(e);
     }
   }
   return local;

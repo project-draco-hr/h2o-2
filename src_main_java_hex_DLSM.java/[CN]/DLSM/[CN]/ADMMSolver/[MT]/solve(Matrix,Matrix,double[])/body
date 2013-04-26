@@ -10,7 +10,7 @@
     return res;
   }
  catch (  Exception e) {
-    if (!e.getMessage().equals("Matrix is not symmetric positive definite."))     throw new Error(e);
+    if (!e.getMessage().equals("Matrix is not symmetric positive definite."))     throw L.errRTExcept(e);
     throw new NonSPDMatrixException();
   }
   final double ABSTOL=Math.sqrt(N) * 1e-4;
@@ -28,7 +28,7 @@
         xm=lu.solve(xyPrime);
       }
  catch (      Exception e) {
-        if (!e.getMessage().equals("Matrix is not symmetric positive definite."))         throw new Error(e);
+        if (!e.getMessage().equals("Matrix is not symmetric positive definite."))         throw L.errRTExcept(e);
         _rho*=10;
         lambda=(_lambda * (1 - _alpha) + _rho) - lambda;
         for (int j=0; j < N - 1; ++j)         xx.set(j,j,xx.get(j,j) + lambda);

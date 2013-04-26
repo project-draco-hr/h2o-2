@@ -19,7 +19,7 @@ break;
 case i_o:
 return false;
 default :
-throw new Error("unexpected udp packet type " + e.toString());
+throw new RuntimeException("unexpected udp packet type " + e.toString());
 }
 if (_packh2o != null && _packh2o.index() != ev._nodeId) return false;
 if (ev._packh2o != null && ev._packh2o.index() != _nodeId) return false;

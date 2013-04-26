@@ -93,9 +93,11 @@
       sendError(HTTP_INTERNALERROR,"SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
     }
  catch (    Throwable t) {
+      L.err(t);
     }
   }
-catch (  InterruptedException ie) {
+catch (  InterruptedException e) {
+    L.err(e);
   }
  finally {
     Utils.close(mySocket);

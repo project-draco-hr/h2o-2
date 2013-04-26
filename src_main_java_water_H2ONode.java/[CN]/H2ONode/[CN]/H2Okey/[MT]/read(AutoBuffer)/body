@@ -4,7 +4,7 @@
     inet=InetAddress.getByAddress(ab.getA1(4));
   }
  catch (  UnknownHostException e) {
-    throw new Error(e);
+    throw L.errRTExcept(e);
   }
   int port=ab.get2();
   return new H2Okey(inet,port);

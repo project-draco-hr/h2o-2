@@ -2,16 +2,19 @@
   try {
     H2O._udpSocket.close();
   }
- catch (  IOException x) {
+ catch (  IOException e) {
+    L.err(e);
   }
   try {
     H2O._apiSocket.close();
   }
- catch (  IOException x) {
+ catch (  IOException e) {
+    L.err(e);
   }
   try {
     TCPReceiverThread.SOCK.close();
   }
- catch (  IOException x) {
+ catch (  IOException e) {
+    L.err(e);
   }
 }

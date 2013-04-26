@@ -7,7 +7,8 @@
   try {
     return intern(InetAddress.getByAddress(b),port);
   }
- catch (  UnknownHostException uhe) {
+ catch (  UnknownHostException e) {
+    L.err(e);
     return null;
   }
 }

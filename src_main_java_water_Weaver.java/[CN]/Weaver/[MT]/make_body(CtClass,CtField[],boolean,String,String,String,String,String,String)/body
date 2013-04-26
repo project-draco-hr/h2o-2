@@ -36,10 +36,10 @@
   try {
     cc.addMethod(CtNewMethod.make(body,cc));
   }
- catch (  CannotCompileException ce) {
+ catch (  CannotCompileException e) {
     System.out.println("--- Compilation failure while compiler serializers for " + cc.getName());
     System.out.println(body);
     System.out.println("------");
-    throw ce;
+    throw L.err(e);
   }
 }

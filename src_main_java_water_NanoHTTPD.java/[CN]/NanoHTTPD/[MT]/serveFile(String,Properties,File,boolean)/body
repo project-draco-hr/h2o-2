@@ -74,7 +74,8 @@
               endAt=Long.parseLong(range.substring(minus + 1));
             }
           }
- catch (          NumberFormatException nfe) {
+ catch (          NumberFormatException e) {
+            L.err(e);
           }
         }
       }
@@ -118,7 +119,8 @@
       }
     }
   }
- catch (  IOException ioe) {
+ catch (  IOException e) {
+    L.err(e);
     res=new Response(HTTP_FORBIDDEN,MIME_PLAINTEXT,"FORBIDDEN: Reading file failed.");
   }
   res.addHeader("Accept-Ranges","bytes");

@@ -6,14 +6,14 @@
     return r.readLine();
   }
  catch (  IOException e) {
-    throw new RuntimeException(e);
+    throw L.errRTExcept(e);
   }
  finally {
     if (r != null)     try {
       r.close();
     }
  catch (    IOException e) {
-      throw new RuntimeException(e);
+      throw L.errRTExcept(e);
     }
   }
 }

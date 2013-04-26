@@ -10,10 +10,11 @@
     return r;
   }
  catch (  GLMException e) {
+    L.err(e);
     return Response.error(e.getMessage());
   }
 catch (  Throwable t) {
-    t.printStackTrace();
+    L.err(t);
     return Response.error(t.getMessage());
   }
 }

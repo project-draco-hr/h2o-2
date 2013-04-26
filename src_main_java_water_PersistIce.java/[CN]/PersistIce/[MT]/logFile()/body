@@ -2,7 +2,8 @@
   try {
     return new FileWriter(iceRoot + File.separator + LOG_FILENAME);
   }
- catch (  IOException ioe) {
+ catch (  IOException e) {
+    L.err(e);
     return null;
   }
 }
