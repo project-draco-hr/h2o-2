@@ -10,7 +10,7 @@
       }
       protected Tree.TreeVisitor pre(      int col,      float fcmp,      int off0,      int offl,      int offr) throws IOException {
         byte b=(byte)_ts.get1(off0);
-        _dest.append(String.format("if( fs[%s] %s %f ) \n",_cols[col]._name,((b == 'E') ? "==" : "<="),fcmp)).incrementIndent();
+        _dest.append(String.format("if( fs[%s] %s %f ) \n",colNameConstant(col),((b == 'E') ? "==" : "<="),fcmp)).incrementIndent();
         return this;
       }
       protected Tree.TreeVisitor mid(      int col,      float fcmp) throws IOException {
@@ -28,4 +28,5 @@
  catch (  IOException e) {
     throw new Error(e);
   }
+  return this;
 }

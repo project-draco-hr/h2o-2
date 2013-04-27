@@ -4,7 +4,7 @@
   try {
     RString img=new RString("<img src=\"data:image/svg+xml;base64,%rawImage\" width='80%%' ></img><p>");
     Process exec=Runtime.getRuntime().exec(new String[]{DOT_PATH,"-Tsvg"});
-    new GraphvizTreePrinter(exec.getOutputStream(),_columns,_domain).walk_serialized_tree(new AutoBuffer(_treeBits));
+    new GraphvizTreePrinter(exec.getOutputStream(),_columns,_mapping,_domain).walk_serialized_tree(new AutoBuffer(_treeBits));
     exec.getOutputStream().close();
     byte[] data=ByteStreams.toByteArray(exec.getInputStream());
     img.replace("rawImage",new String(Base64.encodeBase64(data),"UTF-8"));
