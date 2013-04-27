@@ -1,0 +1,11 @@
+{
+  Timer t_extract=new Timer();
+  DataAdapter dapt=DABuilder.create(this).build(_keys);
+  Log.debug2(Sys.RANDF,"Data adapter built in " + t_extract);
+  Data localData=Data.make(dapt);
+  int numSplitFeatures=howManySplitFeatures(localData);
+  int ntrees=howManyTrees();
+  updateRFModel(_job.dest(),numSplitFeatures);
+  RandomForest.build(_job,_params,localData,ntrees,numSplitFeatures);
+  tryComplete();
+}

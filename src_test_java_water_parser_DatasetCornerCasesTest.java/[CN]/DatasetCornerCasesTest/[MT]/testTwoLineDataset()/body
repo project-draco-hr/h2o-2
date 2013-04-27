@@ -17,9 +17,8 @@
   int cols[]=new int[]{0,1,2,3,4,5,6,7,8};
   try {
     final Key modelKey=Key.make("model");
-    Job job=hex.rf.DRF.execute(modelKey,cols,val,ntrees,depth,1024,statType,seed,true,null,-1,Sampling.Strategy.RANDOM,1.0f,null,0,0);
-    job.get();
-    RFModel model=UKV.get(modelKey);
+    DRFJob result=hex.rf.DRF.execute(modelKey,cols,val,ntrees,depth,1024,statType,seed,true,null,-1,Sampling.Strategy.RANDOM,1.0f,null,0,0);
+    RFModel model=result.get();
     assertEquals("Number of classes == 1",1,model.classes());
     assertTrue("Number of trees > 0 ",model.size() > 0);
     model.deleteKeys();
