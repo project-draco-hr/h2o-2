@@ -20,7 +20,7 @@ synchronized (STORE) {
     if (force && diskFull)     diskFull=isDiskFull();
     long clean_to_age=h.clean_to(force ? DESIRED : (DESIRED >> 1));
     if (!force)     clean_to_age=Math.max(clean_to_age,now - 5000);
-    Log.debug2(this,Sys.CLEAN,h," DESIRED=",(DESIRED >> 20),"M dirtysince=",(now - dirty)," force=",force," clean2age=",(now - clean_to_age));
+    Log.debug2(Sys.CLEAN,h," DESIRED=",(DESIRED >> 20),"M dirtysince=",(now - dirty)," force=",force," clean2age=",(now - clean_to_age));
     long cleaned=0;
     long freed=0;
     Object[] kvs=STORE.raw_array();
@@ -56,6 +56,6 @@ synchronized (STORE) {
     }
     h=_myHisto.histo(true);
     MemoryManager.set_goals("postclean",false);
-    Log.debug2(this,Sys.CLEAN,h," cleaned=" + (cleaned >> 20),"M, freed=",(freed >> 20),"M, DESIRED=",(DESIRED >> 20),"M");
+    Log.debug2(Sys.CLEAN,h," cleaned=" + (cleaned >> 20),"M, freed=",(freed >> 20),"M, DESIRED=",(DESIRED >> 20),"M");
   }
 }

@@ -9,7 +9,7 @@
     left.applyClassWeights();
     Statistic.Split spl=left.split(d,false);
     _tree=spl.isLeafNode() ? new LeafNode(_data.unmapClass(spl._split),d.rows()) : new FJBuild(spl,d,0,_seed).compute();
-    if (_verbose > 1)     Log.info(this,Sys.RANDF,computeStatistics().toString());
+    if (_verbose > 1)     Log.info(Sys.RANDF,computeStatistics().toString());
     _stats=null;
     appendKey(_job.dest(),toKey());
     StringBuilder sb=new StringBuilder("[RF] Tree : ").append(_data_id + 1);
