@@ -10,5 +10,5 @@
     }
   }
   if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.toString());
-  if (e.kind == Kind.INFO || e.kind == Kind.WARN)   out.println(e.toShortString());
+  if (printOnOut)   out.println(e.toShortString());
 }

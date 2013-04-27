@@ -12,7 +12,7 @@ if (H2O.OPT_ARGS.no_requests_log == null) {
     if (value instanceof Value)     value=((Value)value)._key;
     log+=" " + arg._name + "="+ value;
   }
-  Log.info(this,Sys.HTTPD,log);
+  Log.debug(Sys.HTTPD,log);
 }
 if (query != null) return wrap(server,query,type);
 long time=System.currentTimeMillis();

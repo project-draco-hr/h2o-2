@@ -1,5 +1,4 @@
 {
-  if (body != null)   return body;
   StringBuffer buf=new StringBuffer(120);
   for (  Object m : message)   buf.append(m.toString());
   if (buf.indexOf(NL) != -1) {
@@ -7,7 +6,6 @@
     String[] lines=s.split(NL);
     StringBuffer buf2=new StringBuffer(2 * buf.length());
     buf2.append(lines[0]);
-    if (where != null)     buf2.append(" (at ").append(classOf(where)).append(")");
     for (int i=1; i < lines.length; i++) {
       buf2.append(NL).append("+");
       for (int j=1; j < headroom; j++)       buf2.append(" ");
@@ -15,7 +13,6 @@
     }
     buf=buf2;
   }
- else   if (where != null)   buf.append(" (at ").append(classOf(where)).append(")");
   if (ouch != null) {
     buf.append(NL);
     Writer wr=new StringWriter();

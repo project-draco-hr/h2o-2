@@ -5,7 +5,7 @@
     Path p=getPathForKey(key);
     FileSystem fs=FileSystem.get(p.toUri(),CONF);
     s=fs.append(p);
-    Log.info(Sys.HDFS_,"append=" + val.memOrLoad().length);
+    Log.debug(Sys.HDFS_,"append=" + val.memOrLoad().length);
     s.write(val.memOrLoad());
   }
  catch (  IOException e) {

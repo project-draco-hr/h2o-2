@@ -28,7 +28,7 @@
     _strataSamples[clsIdx]=Math.min(_gHist[clsIdx],clsVal);
   }
   for (  int i : nodesIdxs) {
-    if (_gHist[i] < (int)(_strataSamples[i] / _sample))     Log.info(this,Sys.RANDF,"There is not enough samples of class " + i + ".");
+    if (_gHist[i] < (int)(_strataSamples[i] / _sample))     Log.warn(Sys.RANDF,"There are not enough samples of class " + i + ".");
   }
   SortedSet<Integer> uClasses=new TreeSet<Integer>();
   for (  int i : nodesIdxs) {

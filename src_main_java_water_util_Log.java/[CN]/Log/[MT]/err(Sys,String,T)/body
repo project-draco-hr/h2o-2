@@ -1,3 +1,5 @@
 {
-  return err(null,t,msg,exception);
+  Event e=new Event(t,Kind.ERRR,exception,new Object[]{msg});
+  write(e,false);
+  return exception;
 }

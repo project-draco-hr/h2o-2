@@ -47,7 +47,7 @@
       for (int i=0; i < dots; ++i)       System.out.print('.');
       Thread.sleep(250);
     }
-    System.out.println("DONE.");
+    Log.debug(Sys.GENLM,"DONE.");
     GLMModel m=j.get();
     String[] colnames=ary.colNames();
     System.out.println("Intercept" + " = " + m._beta[ncols - 1]);
@@ -59,7 +59,7 @@
     Log.err(t);
   }
  finally {
-    Log.info("==================<GLMRunner DONE>===================");
+    Log.debug(Sys.GENLM,"==================<GLMRunner DONE>===================");
     UDPRebooted.suicide(UDPRebooted.T.shutdown,H2O.SELF);
   }
 }
