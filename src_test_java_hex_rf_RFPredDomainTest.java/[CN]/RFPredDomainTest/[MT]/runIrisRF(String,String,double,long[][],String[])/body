@@ -9,7 +9,7 @@
   int[] cols=new int[]{0,1,2,3,4};
   String modelName="model";
   final Key modelKey=Key.make(modelName);
-  DRFFuture drf=hex.rf.DRF.execute(modelKey,cols,trainData,trees,depth,1024,statType,seed,false,null,-1,Sampling.Strategy.RANDOM,1.0f,null,0,0);
+  Job drf=hex.rf.DRF.execute(modelKey,cols,trainData,trees,depth,1024,statType,seed,false,null,-1,Sampling.Strategy.RANDOM,1.0f,null,0,0);
   drf.get();
   RFModel model=UKV.get(modelKey);
   String testKeyName="iris_test.hex";
