@@ -1,0 +1,12 @@
+{
+  final int[] message=new int[count];
+  System.arraycopy(clusters,0,message,0,message.length);
+  new Atomic(){
+    @Override public Value atomic(    Value val){
+      AutoBuffer b=new AutoBuffer(val.memOrLoad());
+      for (int i=0; i < message.length; i++)       b.put4(offset + i,message[i]);
+      return new Value(val._key,val._max,b.buf(),(short)val.type(),val._persist);
+    }
+  }
+.invoke(chunkKey);
+}

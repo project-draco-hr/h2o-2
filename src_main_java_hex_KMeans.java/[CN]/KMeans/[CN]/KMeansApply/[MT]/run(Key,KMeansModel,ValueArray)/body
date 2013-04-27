@@ -1,0 +1,23 @@
+{
+  Column c=new Column();
+  c._name=Constants.CLASS;
+  c._size=4;
+  c._scale=1;
+  c._min=Double.NaN;
+  c._max=Double.NaN;
+  c._mean=Double.NaN;
+  c._sigma=Double.NaN;
+  c._domain=null;
+  c._n=ary.numRows();
+  ValueArray res=new ValueArray(dest,ary.numRows(),c._size,new Column[]{c});
+  DKV.put(dest,res);
+  DKV.write_barrier();
+  Job job=new Job("KMeans apply model: " + model._selfKey + " to "+ ary._key,dest);
+  KMeansApply kms=new KMeansApply();
+  kms._job=job._self;
+  kms._arykey=ary._key;
+  kms._cols=model.columnMapping(ary.colNames());
+  kms._clusters=model._clusters;
+  H2O.submitTask(job.start(kms));
+  return job;
+}
