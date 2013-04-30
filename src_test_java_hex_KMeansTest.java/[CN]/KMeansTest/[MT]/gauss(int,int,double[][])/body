@@ -1,10 +1,7 @@
 {
-  double[][] array=new double[columns][rows];
   Random rand=KMeans.RAND_SEED == 0 ? new Random() : new Random(KMeans.RAND_SEED);
   for (int goal=0; goal < goals.length; goal++)   for (int c=0; c < columns; c++)   goals[goal][c]=rand.nextDouble() * 100;
-  for (int r=0; r < rows; r++) {
-    final int goal=rand.nextInt(goals.length);
-    for (int c=0; c < columns; c++)     array[c][r]=goals[goal][c] + rand.nextGaussian();
-  }
+  double[][] array=new double[columns][rows];
+  gauss(goals,array);
   return array;
 }

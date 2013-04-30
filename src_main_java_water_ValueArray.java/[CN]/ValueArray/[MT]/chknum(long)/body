@@ -1,8 +1,5 @@
 {
-  if (_rpc == null) {
-    int rpc=(int)(CHUNK_SZ / _rowsize);
-    return Math.min(rownum / rpc,Math.max(1,_numrows / rpc) - 1);
-  }
+  if (_rpc == null)   return chknum(rownum,_numrows,_rowsize);
   int bs=Arrays.binarySearch(_rpc,rownum);
   if (bs < 0)   bs=-bs - 2;
   while (_rpc[bs + 1] == rownum)   bs++;
