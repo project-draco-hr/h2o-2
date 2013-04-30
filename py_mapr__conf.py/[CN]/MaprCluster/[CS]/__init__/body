@@ -1,2 +1,6 @@
-def __init__(self, nodes_conf):
+def __init__(self, name, nodes_conf):
+    self.name = name
     self.nodes_conf = nodes_conf
+    self.cldbs = [inst['private_ip'] for inst in filter((lambda x: (x['cldb'] == True)), self.nodes_conf)]
+    self.zookeepers = [inst['private_ip'] for inst in filter((lambda x: (x['zookeeper'] == True)), self.nodes_conf)]
+    self.nodes = [MaprNode(conf) for conf in self.nodes_conf]

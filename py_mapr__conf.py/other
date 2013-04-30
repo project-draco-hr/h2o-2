@@ -2,14 +2,9 @@ import boto
 import time, sys
 import pprint
 import paramiko
-import h2o
 import argparse
-SECURITY_GROUPS = ['h2ocloud']
-KEY_NAME = '0xdata_Big'
-INSTANCE_TYPE = 'm2.4xlarge'
-DEFAULT_MAPR_HOME = '/opt/mapr'
-MAPR_CLUSTER_NAME = 'mapr_0xdata'
-EC2_PKEY_FILE = h2o.find_file('0xdata_Big.pem')
-INSTANCES_IDs = [{'name': 'BigInstance21', 'id': 'i-3b3da947', 'cldb': True, 'zookeeper': True, 'public_ip': None, 'private_ip': None, 'username': 'ubuntu', 'need_sudo': True, 'mapr_home': DEFAULT_MAPR_HOME, }, {'name': 'BigInstance22', 'id': 'i-353da949', 'cldb': False, 'zookeeper': True, 'public_ip': None, 'private_ip': None, 'username': 'ubuntu', 'need_sudo': True, 'mapr_home': DEFAULT_MAPR_HOME, }, {'name': 'BigInstance23', 'id': 'i-373da94b', 'cldb': False, 'zookeeper': True, 'public_ip': None, 'private_ip': None, 'username': 'ubuntu', 'need_sudo': True, 'mapr_home': DEFAULT_MAPR_HOME, }, {'name': 'BigInstance24', 'id': 'i-313da94d', 'cldb': False, 'zookeeper': False, 'public_ip': None, 'private_ip': None, 'username': 'ubuntu', 'need_sudo': True, 'mapr_home': DEFAULT_MAPR_HOME, }]
+import ec2_cmd as ec2
+EC2_PKEY_FILE = '/home/michal/.ec2/keys/0xdata_Big.pem'
+DEFAULT_MAPR_CLUSTER_CONF = {'need_sudo': True, 'username': 'mapr', 'name': 'mapr_h2o', 'mapr_home': '/opt/mapr', 'mapr_disks': '/home/mapr/disks.txt', 'layout': {'zookeepers': 3, 'cldbs': 2, 'jobtrackers': 2, 'hbases': 2, 'nfss': 2, }, }
 if (__name__ == '__main__'):
     main()

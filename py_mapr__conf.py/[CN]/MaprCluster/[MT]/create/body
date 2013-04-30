@@ -1,0 +1,31 @@
+@classmethod
+def create(clazz, mapr_conf, reservation_id):
+    reservation = ec2.load_ec2_reservation(reservation_id, ec2.DEFAULT_REGION)
+    nodes_conf = []
+    remaining = len(reservation.instances)
+    if (remaining < 3):
+        zookeepers = 1
+    else:
+        zookeepers = mapr_conf['layout']['zookeepers']
+    cldbs = mapr_conf['layout']['cldbs']
+    jobtrackers = mapr_conf['layout']['jobtrackers']
+    for instance in reservation.instances:
+        node_conf = {}
+        node_conf['private_ip'] = instance.private_ip_address
+        node_conf['public_ip'] = instance.ip_address
+        node_conf['need_sudo'] = mapr_conf['need_sudo']
+        node_conf['mapr_home'] = mapr_conf['mapr_home']
+        node_conf['mapr_disks'] = mapr_conf['mapr_disks']
+        node_conf['username'] = mapr_conf['username']
+        node_conf['zookeeper'] = False
+        node_conf['cldb'] = False
+        node_conf['jobtracker'] = False
+        if (zookeepers > 0):
+            node_conf['zookeeper'] = True
+            zookeepers -= 1
+        if ((cldbs > 0) and (cldbs >= remaining)):
+            node_conf['cldb'] = True
+            cldbs -= 1
+        remaining -= 1
+        nodes_conf.append(node_conf)
+    return MaprCluster(mapr_conf['name'], nodes_conf)
