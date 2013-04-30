@@ -1,4 +1,4 @@
-def load_ec2_config(config_file, region, instance_type=None):
+def load_ec2_config(config_file, region, instance_type=None, image_id=None):
     if config_file:
         f = find_file(config_file)
         with open(f, 'rb') as fp:
@@ -9,4 +9,6 @@ def load_ec2_config(config_file, region, instance_type=None):
         ec2_cfg.setdefault(k, v)
     if instance_type:
         ec2_cfg['instance_type'] = instance_type
+    if image_id:
+        ec2_cfg['image_id'] = image_id
     return ec2_cfg
