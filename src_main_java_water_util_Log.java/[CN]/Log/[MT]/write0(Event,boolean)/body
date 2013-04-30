@@ -1,0 +1,16 @@
+{
+  String s=e.toString();
+  if (H2O.SELF != null && LOG_FILE == null)   LOG_FILE=new BufferedWriter(PersistIce.logFile());
+  if (LOG_FILE != null) {
+    try {
+      LOG_FILE.write(s,0,s.length());
+      LOG_FILE.write(NL,0,1);
+      LOG_FILE.flush();
+    }
+ catch (    IOException ioe) {
+    }
+  }
+  if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.toString());
+  if (printOnOut)   unwrap(System.out,e.toShortString());
+  e.printMe=false;
+}
