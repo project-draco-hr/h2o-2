@@ -1,7 +1,7 @@
 {
+  Logger.getRootLogger().setLevel(Level.ALL);
   System.setProperty("HADOOP_USER_NAME",config.user);
   Configuration conf=new Configuration();
-  conf.set("fs.default.name",config.name_server);
   conf.set("mapred.job.tracker",config.tracker);
   conf.set("mapreduce.framework.name","classic");
   conf.setInt("mapred.tasktracker.map.tasks.maximum",1);
@@ -10,6 +10,7 @@
   conf.set("mapred.job.map.memory.mb","4096");
   conf.set("mapred.job.reduce.memory.mb","1024");
   conf.set("mapred.fairscheduler.locality.delay","120000");
+  conf.set("fs.maprfs.impl","com.mapr.fs.MapRFileSystem");
   String hosts="";
   URI tracker=new URI(config.tracker);
   JobClient client=new JobClient(new InetSocketAddress(tracker.getHost(),tracker.getPort()),conf);
