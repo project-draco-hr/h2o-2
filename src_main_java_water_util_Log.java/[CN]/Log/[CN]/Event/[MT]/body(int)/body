@@ -1,6 +1,7 @@
 {
   StringBuffer buf=new StringBuffer(120);
-  for (  Object m : message)   buf.append(m.toString());
+  if (messages != null)   for (  Object m : messages)   buf.append(m.toString());
+ else   if (message != null)   buf.append(message.toString());
   if (buf.indexOf(NL) != -1) {
     String s=buf.toString();
     String[] lines=s.split(NL);
