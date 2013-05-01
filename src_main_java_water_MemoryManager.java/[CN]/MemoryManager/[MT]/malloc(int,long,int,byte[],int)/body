@@ -1,9 +1,9 @@
 {
   while (true) {
-    if (!CAN_ALLOC && bytes > 256) {
+    if (!CAN_ALLOC && bytes > 256 && !(Thread.currentThread() instanceof H2O.Cleaner)) {
 synchronized (_lock) {
         try {
-          _lock.wait(1000);
+          _lock.wait(3 * 1000);
         }
  catch (        InterruptedException ex) {
         }

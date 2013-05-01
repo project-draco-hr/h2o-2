@@ -1,2 +1,8 @@
 {
+  String notifType=notification.getType();
+  if (notifType.equals(MemoryNotificationInfo.MEMORY_COLLECTION_THRESHOLD_EXCEEDED)) {
+    Boot.TIME_AT_LAST_GC=System.currentTimeMillis();
+    Boot.HEAP_USED_AT_LAST_GC=_allMemBean.getHeapMemoryUsage().getUsed();
+    Boot.kick_store_cleaner();
+  }
 }

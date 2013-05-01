@@ -1,7 +1,7 @@
 {
   int len=get4();
   if (len == -1)   return null;
-  int[] buf=new int[len];
+  int[] buf=MemoryManager.malloc4(len);
   int sofar=0;
   while (sofar < buf.length) {
     IntBuffer as=_bb.asIntBuffer();

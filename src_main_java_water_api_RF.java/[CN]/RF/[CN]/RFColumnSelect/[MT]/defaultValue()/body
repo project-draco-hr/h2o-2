@@ -4,7 +4,6 @@
   int selected=0;
   for (int i=0; i < va._cols.length; ++i)   if (shouldIgnore(i,va._cols[i]))   res[selected++]=i;
  else   if ((1.0 - (double)va._cols[i]._n / va._numrows) >= _maxNAsRatio) {
-    res[selected++]=i;
     int val=0;
     if (_badColumns.get() != null)     val=_badColumns.get();
     _badColumns.set(val + 1);

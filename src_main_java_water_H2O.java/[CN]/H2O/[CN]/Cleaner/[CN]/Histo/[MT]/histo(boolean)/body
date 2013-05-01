@@ -1,8 +1,7 @@
 {
-  Histo h=H.get();
+  final Histo h=H;
   if (!force && System.currentTimeMillis() < h._when + 100)   return h;
   if (h._clean && _dirty == Long.MAX_VALUE)   return h;
   compute(h._oldest);
-  while (h._when <= _when && !H.compareAndSet(h,this))   h=H.get();
-  return H.get();
+  return (H=this);
 }
