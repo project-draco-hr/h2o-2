@@ -1,12 +1,3 @@
 {
-  long start=System.currentTimeMillis();
-  while (System.currentTimeMillis() - start < 10000) {
-    if (H2O.CLOUD.size() >= x)     break;
-    try {
-      Thread.sleep(100);
-    }
- catch (    InterruptedException ie) {
-    }
-  }
-  assertTrue("Cloud size of " + x,H2O.CLOUD.size() >= x);
+  stall_till_cloudsize(x,10000);
 }

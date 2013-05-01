@@ -1,2 +1,6 @@
 {
+  if ((long)(int)chunknum != chunknum)   throw H2O.unimpl();
+  if (_rpc != null)   return (int)(_rpc[(int)chunknum + 1] - _rpc[(int)chunknum]);
+  int rpc=(int)(CHUNK_SZ / _rowsize);
+  return rpc(chunknum,rpc,_numrows);
 }
