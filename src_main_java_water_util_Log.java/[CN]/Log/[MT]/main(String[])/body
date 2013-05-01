@@ -3,7 +3,7 @@
   Log.info("h","i");
   unwrap(System.out,"hi");
   unwrap(System.err,"hi");
-  Log.info("ho",new Object(){
+  Log.info("ho ",new Object(){
     int i;
     public String toString(){
       if (i++ == 0)       throw new OutOfMemoryError();
@@ -11,5 +11,15 @@
     }
   }
 );
+  Log.info("ha ",new Object(){
+    int i;
+    public String toString(){
+      if (i++ == 0)       throw new OutOfMemoryError();
+ else       return super.toString();
+    }
+  }
+);
+  Log.info("hi");
+  Log.info("hi");
   Log.info("hi");
 }
