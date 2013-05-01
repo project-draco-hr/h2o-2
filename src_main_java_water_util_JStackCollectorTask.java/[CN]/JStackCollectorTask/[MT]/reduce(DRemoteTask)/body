@@ -1,6 +1,5 @@
 {
   JStackCollectorTask another=(JStackCollectorTask)drt;
-  for (int i=0; i < result.length; ++i) {
-    if (result[i] == null)     result[i]=another.result[i];
-  }
+  if (_result == null)   _result=another._result;
+ else   for (int i=0; i < _result.length; ++i)   if (_result[i] == null)   _result[i]=another._result[i];
 }
