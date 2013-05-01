@@ -1,0 +1,5 @@
+{
+  TreeSet<String> ignoredCols=_constantColumns.get();
+  if (_badColumns.get() != null && _badColumns.get() > 0)   return "<div class='alert'><b> There are " + _badColumns.get() + " columns with more than "+ _maxNAsRatio * 100 + "% of NAs.<br/>\nIgnoring " + _constantColumns.get().size() + " constant columns</b>: " + ignoredCols.toString() + "</div>";
+  return super.queryComment();
+}
