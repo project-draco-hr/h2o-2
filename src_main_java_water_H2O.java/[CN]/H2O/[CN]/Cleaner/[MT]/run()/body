@@ -15,9 +15,9 @@
     if (force && diskFull)     diskFull=isDiskFull();
     long clean_to_age=h.clean_to(force ? DESIRED : (DESIRED >> 1));
     if (!force)     clean_to_age=Math.max(clean_to_age,now - 5000);
-    if (Log.level(Sys.CLEAN) > 1) {
+    if (Log.flag(Sys.CLEAN)) {
       String s=h + " DESIRED=" + (DESIRED >> 20)+ "M dirtysince="+ (now - dirty)+ " force="+ force+ " clean2age="+ (now - clean_to_age);
-      if (MemoryManager.canAlloc())       Log.debug2(Sys.CLEAN,s);
+      if (MemoryManager.canAlloc())       Log.debug(Sys.CLEAN,s);
  else       Log.unwrap(System.err,s);
     }
     long cleaned=0;
@@ -75,9 +75,9 @@
     }
     h=_myHisto.histo(true);
     MemoryManager.set_goals("postclean",false);
-    if (Log.level(Sys.CLEAN) > 1) {
+    if (Log.flag(Sys.CLEAN)) {
       String s=h + " cleaned=" + (cleaned >> 20)+ "M, freed="+ (freed >> 20)+ "M, DESIRED="+ (DESIRED >> 20)+ "M";
-      if (MemoryManager.canAlloc())       Log.debug2(Sys.CLEAN,s);
+      if (MemoryManager.canAlloc())       Log.debug(Sys.CLEAN,s);
  else       Log.unwrap(System.err,s);
     }
   }

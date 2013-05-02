@@ -24,11 +24,11 @@
       System.exit(-1);
     }
     if (!(arg instanceof Inet4Address)) {
-      Log.err("Only IP4 addresses allowed.");
+      Log.warn("Only IP4 addresses allowed.");
       System.exit(-1);
     }
     if (!ips.contains(arg)) {
-      Log.err("IP address not found on this machine");
+      Log.warn("IP address not found on this machine");
       System.exit(-1);
     }
     local=arg;
@@ -49,7 +49,7 @@
   }
   if (local == null) {
     try {
-      Log.err("Failed to determine IP, falling back to localhost.");
+      Log.warn("Failed to determine IP, falling back to localhost.");
       local=InetAddress.getByName("127.0.0.1");
     }
  catch (    UnknownHostException e) {
