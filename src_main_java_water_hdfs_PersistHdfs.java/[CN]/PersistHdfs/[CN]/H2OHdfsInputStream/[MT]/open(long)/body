@@ -1,0 +1,10 @@
+{
+  try {
+    FSDataInputStream is=_fs.open(_path);
+    is.seek(offset);
+    return is;
+  }
+ catch (  IOException e) {
+    throw new RuntimeException("Opening Hdfs path " + _path.toString() + " failed!");
+  }
+}

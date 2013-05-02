@@ -3,7 +3,7 @@
   ArrayList<OutputStreamRecord> result=new ArrayList();
   int rpc=(int)ValueArray.CHUNK_SZ / _rowsize;
   int rowInChunk=(int)firstRow % rpc;
-  int lastChunk=Math.max(1,this._numRows / rpc) - 1;
+  long lastChunk=Math.max(1,this._numRows / rpc) - 1;
   int chunkIndex=(int)firstRow / rpc;
   if (chunkIndex > lastChunk) {
     assert(chunkIndex == lastChunk + 1);

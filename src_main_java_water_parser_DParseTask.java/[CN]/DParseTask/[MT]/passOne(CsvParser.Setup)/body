@@ -7,7 +7,7 @@ case CSV:
     }
   if (setup._data == null) {
     _error="Unable to determine the separator or number of columns on the dataset";
-    return;
+    throw new Error(_error);
   }
 _colNames=setup._data[0];
 setColumnNames(_colNames);
@@ -15,21 +15,14 @@ _skipFirstLine=setup._header;
 this._sep=setup._separator;
 if (_sourceDataset.isArray()) {
 ValueArray ary=_sourceDataset.get();
-_nrows=new int[(int)ary.chunks()];
+_nrows=new long[(int)ary.chunks() + 1];
 }
- else _nrows=new int[1];
-this.invoke(_sourceDataset._key);
+ else _nrows=new long[2];
+dfork(_sourceDataset._key);
 break;
 case XLS:
-CustomParser p=new XlsParser(this);
-p.parse(_sourceDataset._key);
---_myrows;
-break;
 case XLSX:
-CustomParser px=new XlsxParser(this);
-px.parse(_sourceDataset._key);
-break;
 default :
-throw new RuntimeException("NOT IMPLEMENTED");
+throw H2O.unimpl();
 }
 }

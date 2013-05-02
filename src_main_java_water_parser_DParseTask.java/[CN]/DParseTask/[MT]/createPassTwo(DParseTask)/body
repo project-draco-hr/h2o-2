@@ -1,15 +1,5 @@
 {
   DParseTask t=new DParseTask(phaseOneTask);
-  if (t._nrows != null) {
-    t._numRows=0;
-    for (int i=0; i < t._nrows.length; ++i) {
-      t._numRows+=t._nrows[i];
-      t._nrows[i]=t._numRows;
-    }
-  }
- else {
-    t._numRows=t._myrows;
-  }
   for (int i=0; i < t._ncolumns; ++i)   t._mean[i]=t._mean[i] / (t._numRows - t._invalidValues[i]);
   t._colDomains=new String[t._ncolumns][];
   t._bases=new int[t._ncolumns];
