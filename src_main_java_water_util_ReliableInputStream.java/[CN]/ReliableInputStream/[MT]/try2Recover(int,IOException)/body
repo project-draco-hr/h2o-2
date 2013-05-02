@@ -1,0 +1,24 @@
+{
+  System.out.println("[H2OS3InputStream] Attempt(" + attempt + ") to recover from "+ e.getMessage()+ ")");
+  e.printStackTrace();
+  while (attempt < _retries) {
+    try {
+      close();
+    }
+ catch (    IOException ex) {
+    }
+    if (attempt > 0)     try {
+      Thread.sleep(256 << attempt);
+    }
+ catch (    InterruptedException ex) {
+    }
+    try {
+      _is=open(_off);
+      return;
+    }
+ catch (    IOException ex) {
+      ++attempt;
+    }
+  }
+  Throwables.propagate(e);
+}

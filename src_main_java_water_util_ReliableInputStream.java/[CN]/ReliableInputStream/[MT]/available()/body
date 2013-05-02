@@ -1,0 +1,11 @@
+{
+  int attempts=0;
+  while (true) {
+    try {
+      return _is.available();
+    }
+ catch (    IOException e) {
+      try2Recover(attempts++,e);
+    }
+  }
+}
