@@ -15,11 +15,15 @@ def test_rf_covtype_train_oobe(self):
     last10 = (num_rows - rowsForPct[9])
     rowsForPct[10] = last10
     rowsForPct[0] = rowsForPct[10]
+    expectTrainPctRightList = [0, 85.16, 88.45, 90.24, 91.27, 92.03, 92.64, 93.11, 93.48, 93.79]
+    expectScorePctRightList = [0, 88.81, 91.72, 93.06, 94.02, 94.52, 95.09, 95.41, 95.77, 95.78]
     print 'Creating the key of the last 10% data, for scoring'
     dataKeyTest = 'rTest'
     execExpr = (((((dataKeyTest + ' = slice(') + key2) + ',') + str((rowsForPct[9] + 1))) + ')')
     h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTest, timeoutSecs=10)
-    for trial in range(10):
+    actualTrainPctRightList = [0]
+    actualScorePctRightList = [0]
+    for trial in range(1, 10):
         rowsToUse = rowsForPct[(trial % 10)]
         resultKey = ('r' + str(trial))
         execExpr = (((((resultKey + ' = slice(') + key2) + ',1,') + str(rowsToUse)) + ')')
@@ -33,8 +37,9 @@ def test_rf_covtype_train_oobe(self):
         rfv = h2o_cmd.runRFOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'RF end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-        classification_error = rfv['confusion_matrix']['classification_error']
-        self.assertGreater(classification_error, 0.01, 'train.csv should have out of bag error estimate greater than 0.01')
+        oobeTrainPctRight = (100 * (1.0 - rfv['confusion_matrix']['classification_error']))
+        self.assertAlmostEqual(oobeTrainPctRight, expectTrainPctRightList[trial], msg=('OOBE: pct. right for %s pct. training not close enough %6.2f %6.2f' % ((trial * 10), oobeTrainPctRight, expectTrainPctRightList[trial])), delta=0.2)
+        actualTrainPctRightList.append(oobeTrainPctRight)
         print 'Now score on the last 10%'
         model_key = rfv['model_key']
         kwargs.pop('model_key', None)
@@ -45,5 +50,20 @@ def test_rf_covtype_train_oobe(self):
         kwargs['clear_confusion_matrix'] = 1
         kwargs['no_confusion_matrix'] = 0
         kwargs['out_of_bag_error_estimate'] = 0
-        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
+        rfv = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
+        fullScorePctRight = (100 * (1.0 - rfv['confusion_matrix']['classification_error']))
+        self.assertAlmostEqual(fullScorePctRight, expectScorePctRightList[trial], msg=('Full: pct. right for scoring after %s pct. training not close enough %6.2f %6.2f' % ((trial * 10), fullScorePctRight, expectScorePctRightList[trial])), delta=0.2)
+        actualScorePctRightList.append(fullScorePctRight)
         print 'Trial #', trial, 'completed', ('using %6.2f' % ((rowsToUse * 100.0) / num_rows)), 'pct. of all rows'
+    actualDelta = [abs((a - b)) for (a, b) in zip(expectTrainPctRightList, actualTrainPctRightList)]
+    niceFp = ['{0:0.2f}'.format(i) for i in actualTrainPctRightList]
+    print 'maybe should update with actual. Remove single quotes'
+    print 'expectTrainPctRightList =', niceFp
+    niceFp = ['{0:0.2f}'.format(i) for i in actualDelta]
+    print 'actualDelta =', niceFp
+    actualDelta = [abs((a - b)) for (a, b) in zip(expectScorePctRightList, actualScorePctRightList)]
+    niceFp = ['{0:0.2f}'.format(i) for i in actualScorePctRightList]
+    print 'maybe should update with actual. Remove single quotes'
+    print 'expectScorePctRightList =', niceFp
+    niceFp = ['{0:0.2f}'.format(i) for i in actualDelta]
+    print 'actualDelta =', niceFp
