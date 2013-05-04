@@ -6,18 +6,19 @@ def test_rf_big1_nopoll(self):
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=15)
     rfViewInitial = []
     rfView = {}
-    for jobDispatch in range(3):
+    for jobDispatch in range(25):
         start = time.time()
         kwargs = {}
         model_key = ('RF_model' + str(jobDispatch))
-        h2o_cmd.runRFOnly(parseKey=parseKey, model_key=model_key, timeoutSecs=300, noPoll=True, **kwargs)
+        randomNode = h2o.nodes[random.randint(0, (len(h2o.nodes) - 1))]
+        h2o_cmd.runRFOnly(node=randomNode, parseKey=parseKey, model_key=model_key, timeoutSecs=300, noPoll=True, **kwargs)
         print 'rfView:', h2o.dump_json(rfView)
         rfView['data_key'] = key2
         rfView['model_key'] = model_key
         rfViewInitial.append(rfView)
         print 'rf job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print '\njobDispatch #', jobDispatch
-    h2o_jobs.pollWaitJobs(pattern='RF_model', timeoutSecs=30, pollTimeoutSecs=120, retryDelaySecs=5)
+    h2o_jobs.pollWaitJobs(pattern='RF_model', timeoutSecs=180, pollTimeoutSecs=120, retryDelaySecs=5)
     for rfView in rfViewInitial:
         print 'Checking completed job, with no polling:', rfView
         print 'rfView', h2o.dump_json(rfView)

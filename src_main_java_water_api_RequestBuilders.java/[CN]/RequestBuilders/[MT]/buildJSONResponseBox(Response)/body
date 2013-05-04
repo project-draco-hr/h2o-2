@@ -1,0 +1,13 @@
+{
+switch (response._status) {
+case done:
+    RString result=new RString(_jsonResponseBox);
+  result.replace("JSON_RESPONSE_BOX",response.toJson().toString());
+return result.toString();
+case error:
+case redirect:
+case poll:
+default :
+return "";
+}
+}

@@ -2,6 +2,7 @@
   Thread.currentThread().setPriority(Thread.MAX_PRIORITY - 1);
   ServerSocketChannel errsock=null;
   boolean saw_error=false;
+  _timeRun=System.currentTimeMillis();
   while (true) {
     try {
       if (errsock != null) {
@@ -16,9 +17,18 @@
         SOCK.socket().setReceiveBufferSize(AutoBuffer.BBSIZE);
         SOCK.socket().bind(H2O.SELF._key);
       }
-      AutoBuffer ab=new AutoBuffer(SOCK.accept());
+      _timeBlock=System.currentTimeMillis();
+      int runMS=(int)Math.min(_timeBlock - _timeRun,Integer.MAX_VALUE);
+      _dms[_idx]=runMS;
+      _idx=(_idx + 1) & (_dms.length - 1);
+      SocketChannel sock=SOCK.accept();
+      _timeRun=System.currentTimeMillis();
+      int blockMS=(int)Math.min(_timeRun - _timeBlock,Integer.MAX_VALUE);
+      _dms[_idx]=blockMS;
+      _idx=(_idx + 1) & (_dms.length - 1);
+      AutoBuffer ab=new AutoBuffer(sock);
       int ctrl=ab.getCtrl();
-      ab._h2o._last_heard_from=System.currentTimeMillis();
+      ab._h2o._last_heard_from=_timeRun;
       TimeLine.record_recv(ab,true,0);
 switch (UDP.udp.UDPS[ctrl]) {
 case exec:

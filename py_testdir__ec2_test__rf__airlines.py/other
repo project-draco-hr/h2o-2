@@ -1,10 +1,10 @@
 import os, json, unittest, time, shutil, sys
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_hosts, h2o_rf
-paramsTrainRF = {'ntree': 100, 'depth': 300, 'parallel': 1, 'bin_limit': 20000, 'ignore': 'ArrDelay,DepDelay', 'stat_type': 'ENTROPY', 'out_of_bag_error_estimate': 1, 'exclusive_split_limit': 0, 'timeoutSecs': 14800, }
+paramsTrainRF = {'ntree': 50, 'depth': 30, 'parallel': 1, 'bin_limit': 10000, 'ignore': 'AirTime,ArrDelay,DepDelay,CarrierDelay,IsArrDelayed', 'stat_type': 'ENTROPY', 'out_of_bag_error_estimate': 1, 'exclusive_split_limit': 0, 'timeoutSecs': 14800, 'iterative_cm': 0, }
 paramsScoreRF = {'out_of_bag_error_estimate': 0, 'timeoutSecs': 14800, }
-trainDS = {'s3bucket': 'h2o-airlines-unpacked', 'filename': 'year1987.csv', 'timeoutSecs': 14800, 'header': 1, }
-scoreDS = {'s3bucket': 'h2o-airlines-unpacked', 'filename': 'year1988.csv', 'timeoutSecs': 14800, 'header': 1, }
+trainDS = {'s3bucket': 'h2o-airlines-unpacked', 'filename': 'allyears1987to2007.csv', 'timeoutSecs': 14800, 'header': 1, }
+scoreDS = {'s3bucket': 'h2o-airlines-unpacked', 'filename': 'year2008.csv', 'timeoutSecs': 14800, 'header': 1, }
 PARSE_TIMEOUT = 14800
 if (__name__ == '__main__'):
     h2o.unit_main()
