@@ -21,6 +21,17 @@ _nrows=new long[(int)ary.chunks() + 1];
 dfork(_sourceDataset._key);
 break;
 case XLS:
+try {
+XlsParser p=new XlsParser(this);
+System.out.println("parsing " + _sourceDataset._key);
+p.parse(_sourceDataset._key);
+--_myrows;
+_numRows=_myrows;
+}
+ catch (Exception e) {
+throw new RuntimeException(e);
+}
+break;
 case XLSX:
 default :
 throw H2O.unimpl();
