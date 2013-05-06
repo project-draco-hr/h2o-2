@@ -14,7 +14,7 @@
     list.add(cp);
   }
  catch (  IOException e) {
-    throw new RuntimeException(e);
+    throw Log.errRTExcept(e);
   }
   String command="cd " + Host.FOLDER + ";java";
   for (  String s : list)   command+=" " + s;

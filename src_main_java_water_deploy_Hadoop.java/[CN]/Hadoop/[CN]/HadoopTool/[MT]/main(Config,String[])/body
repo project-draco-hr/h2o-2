@@ -2,6 +2,7 @@
   Logger.getRootLogger().setLevel(Level.ALL);
   System.setProperty("HADOOP_USER_NAME",config.user);
   Configuration conf=new Configuration();
+  conf.set("fs.default.name",config.name_server);
   conf.set("mapred.job.tracker",config.tracker);
   conf.set("mapreduce.framework.name","classic");
   conf.setInt("mapred.tasktracker.map.tasks.maximum",1);
@@ -10,12 +11,27 @@
   conf.set("mapred.job.map.memory.mb","4096");
   conf.set("mapred.job.reduce.memory.mb","1024");
   conf.set("mapred.fairscheduler.locality.delay","120000");
-  conf.set("fs.maprfs.impl","com.mapr.fs.MapRFileSystem");
   String hosts="";
   URI tracker=new URI(config.tracker);
   JobClient client=new JobClient(new InetSocketAddress(tracker.getHost(),tracker.getPort()),conf);
-  for (  String name : client.getClusterStatus(true).getActiveTrackerNames())   hosts+=name.substring("tracker_".length(),name.indexOf(':')) + ',';
+  Collection<String> names=client.getClusterStatus(true).getActiveTrackerNames();
+  for (  String name : names)   hosts+=name.substring("tracker_".length(),name.indexOf(':')) + ',';
   conf.set(HOSTS_KEY,hosts);
   conf.set(PORT_KEY,"" + config.port);
   ToolRunner.run(conf,new HadoopTool(),args);
+  if (config.script != null) {
+    String url="http://" + hosts.substring(0,hosts.indexOf(',')) + ":"+ config.port+ "/";
+    for (; ; ) {
+      if (size(url) == names.size())       break;
+      Thread.sleep(300);
+    }
+    String res=post(url,config.script,0);
+    JSONObject json=new JSONObject(res);
+    JSONObject resp=json.getJSONObject(Constants.RESPONSE);
+    String status=resp.getString(Constants.STATUS);
+    System.out.println("Status: " + status);
+    if (status == Status.error.name()) {
+      System.out.println("Response: " + res);
+    }
+  }
 }

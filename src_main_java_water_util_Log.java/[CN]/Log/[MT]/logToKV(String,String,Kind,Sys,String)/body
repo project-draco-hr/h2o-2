@@ -1,0 +1,12 @@
+{
+  if (Paxos._cloudLocked) {
+    final long pid=PID;
+    final H2ONode h2o=H2O.SELF;
+    new TAtomic<LogStr>(){
+      @Override public LogStr atomic(      LogStr l){
+        return new LogStr(l,date,h2o,pid,thr,kind,sys,msg);
+      }
+    }
+.fork(LOG_KEY);
+  }
+}

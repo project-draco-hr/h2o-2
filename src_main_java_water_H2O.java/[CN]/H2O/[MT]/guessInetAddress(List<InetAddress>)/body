@@ -1,11 +1,11 @@
 {
   String m="Multiple local IPs detected:\n";
   for (  InetAddress ip : ips)   m+="  " + ip;
-  m+="Attempting to determine correct address...";
+  m+="Attempting to determine correct address...\n";
   Socket s=null;
   try {
     s=new Socket("8.8.8.8",53);
-    m+="Using " + s.getLocalAddress();
+    m+="Using " + s.getLocalAddress() + "\n";
     return s.getLocalAddress();
   }
  catch (  Throwable t) {

@@ -10,7 +10,7 @@
  catch (    IOException ioe) {
     }
   }
-  if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.toString());
+  logToKV(e.when.startAsString(),e.thread,e.kind,e.sys,e.body(0));
   if (printOnOut || printAll)   unwrap(System.out,e.toShortString());
   e.printMe=false;
 }
