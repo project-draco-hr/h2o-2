@@ -18,6 +18,7 @@ def __init__(self, host, *args, **kwargs):
             logPrefix = ('remote-h2o-' + str(self.node_id))
         else:
             logPrefix = 'remote-h2o'
+        logPrefix += ('-' + host.addr)
         (outfd, outpath) = tmp_file((logPrefix + '.stdout.'), '.log')
         (errfd, errpath) = tmp_file((logPrefix + '.stderr.'), '.log')
         drain(self.channel.makefile(), outfd)
