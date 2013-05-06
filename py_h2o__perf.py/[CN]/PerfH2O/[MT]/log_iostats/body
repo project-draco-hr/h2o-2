@@ -24,9 +24,16 @@ def log_iostats(self, initOnly=False):
                     pass
                 if ('effective' in l):
                     logging.critical(fmt.format(w, node, i_o, r_w, 'eff.', (v / 1000000.0)))
+            return True
+        else:
+            return False
     if DO_IO_RW:
         print '\nlog_iotstats probing node:', ((str(node.addr) + ':') + str(node.port))
+        found = False
         for k in histogram:
+            found |= log_window(30)
+        if (not found):
+            print 'iostats: desired window not found in histogram'
             log_window(60)
     if DO_IOP:
         iopList = []

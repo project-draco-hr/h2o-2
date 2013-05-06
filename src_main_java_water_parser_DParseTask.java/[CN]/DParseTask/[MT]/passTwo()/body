@@ -7,14 +7,19 @@ case CSV:
 case XLS:
 case XLSX:
 phaseTwoInitialize();
-_outputStreams2=createRecords(0,_myrows);
+_outputStreams2=createRecords(0,(int)_numRows);
 assert(_outputStreams2.length > 0);
 _ab=_outputStreams2[0].initialize();
+try {
 CustomParser p=(_parserType == CustomParser.Type.XLS) ? new XlsParser(this) : new XlsxParser(this);
 p.parse(_sourceDataset._key);
+}
+ catch (Exception e) {
+throw new RuntimeException(e);
+}
 if (_ab != null) _outputStreams2[_outputIdx].store();
 break;
 default :
-throw new RuntimeException("NOT IMPLEMENTED");
+throw new Error("NOT IMPLEMENTED");
 }
 }
