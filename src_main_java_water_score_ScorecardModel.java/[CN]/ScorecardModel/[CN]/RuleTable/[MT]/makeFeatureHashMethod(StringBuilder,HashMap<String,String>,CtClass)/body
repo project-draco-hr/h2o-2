@@ -1,6 +1,6 @@
 {
   if (_type == null) {
-    System.out.println("[h2o] Warning: ignore untyped feature " + _name);
+    Log.warn("Ignore untyped feature " + _name);
     return;
   }
   String jname=xml2jname(_name);
@@ -41,10 +41,6 @@ CtMethod happyMethod=CtMethod.make(sb.toString(),scClass);
 scClass.addMethod(happyMethod);
 }
  catch (Exception re) {
-System.err.println("=== crashing ===");
-System.err.println(sb.toString());
-throw new Error(re);
-}
- finally {
+Log.err(Sys.SCOREM,"Crashing:" + sb.toString(),new RuntimeException(re));
 }
 }

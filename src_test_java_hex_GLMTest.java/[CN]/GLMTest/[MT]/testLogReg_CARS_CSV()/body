@@ -6,7 +6,7 @@
     int[] cols=new int[]{3,4,5,6,7,2};
     ValueArray va=DKV.get(k2).get();
     LSMSolver lsmsx=new ADMMSolver(0,0.0);
-    JsonObject glm=computeGLM(Family.binomial,lsmsx,va,false,cols);
+    JsonObject glm=computeGLM(Family.binomial,lsmsx,va,cols);
     JsonObject coefs=glm.get("coefficients").getAsJsonObject();
     double icept=coefs.get("Intercept").getAsDouble();
     double disp=coefs.get("displacement (cc)").getAsDouble();

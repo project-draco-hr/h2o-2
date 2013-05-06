@@ -10,15 +10,14 @@
   if (_chan == null)   TimeLine.record_send(this,true);
   _bb.flip();
   _bb.mark();
+  if (_chan == null)   tcpOpen();
   try {
-    if (_chan == null)     tcpOpen();
     long ns=System.nanoTime();
     while (_bb.hasRemaining())     _chan.write(_bb);
     _time_io_ns+=(System.nanoTime() - ns);
   }
  catch (  IOException e) {
-    System.err.println("TCP Open/Write failed: " + e.getMessage() + " talking to "+ _h2o);
-    throw new Error(e);
+    throw new RuntimeException(Log.err("TCP Write to " + _h2o + " AB="+ this+ " failed with ",e));
   }
   if (_bb.capacity() < 16 * 1024)   _bb=bbMake();
   _firstPage=false;

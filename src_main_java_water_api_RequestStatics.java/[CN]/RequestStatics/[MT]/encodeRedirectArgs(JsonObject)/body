@@ -1,2 +1,18 @@
 {
+  if (args == null)   return "";
+  StringBuilder sb=new StringBuilder();
+  sb.append("?");
+  for (  Map.Entry<String,JsonElement> entry : args.entrySet()) {
+    JsonElement e=entry.getValue();
+    if (sb.length() != 1)     sb.append("&");
+    sb.append(entry.getKey());
+    sb.append("=");
+    try {
+      sb.append(URLEncoder.encode(e.getAsString(),"UTF-8"));
+    }
+ catch (    UnsupportedEncodingException ex) {
+      throw Log.errRTExcept(ex);
+    }
+  }
+  return sb.toString();
 }

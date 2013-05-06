@@ -4,7 +4,8 @@
     int b=_is.read();
     if (b != -1)     return push(b);
   }
- catch (  IOException ioe) {
+ catch (  IOException e) {
+    Log.err(e);
   }
   throw new ParseException("Premature EOF");
 }

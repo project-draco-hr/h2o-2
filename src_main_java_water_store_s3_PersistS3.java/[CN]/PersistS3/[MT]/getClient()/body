@@ -10,7 +10,7 @@ synchronized (_lock) {
           msg.append(e.getMessage() + "\n");
           msg.append("Unable to load S3 credentials.");
           if (H2O.OPT_ARGS.aws_credentials == null)           msg.append(HELP);
-          throw new RuntimeException(msg.toString());
+          throw Log.err(new RuntimeException(msg.toString()));
         }
       }
     }

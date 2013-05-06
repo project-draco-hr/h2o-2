@@ -1,5 +1,5 @@
-def mapr_conf_cmd(self, cldbs, zookeepers, sudo_required=False, mapr_home=DEFAULT_MAPR_HOME):
+def mapr_conf_cmd(self, cldbs, zookeepers, mapr_home, sudo_required=False):
     sudo_cmd = ''
     if sudo_required:
         sudo_cmd = 'sudo '
-    return ('%s%s/server/configure.sh -C %s -Z %s -N %s' % (sudo_cmd, mapr_home, ','.join(cldbs), ','.join(zookeepers), MAPR_CLUSTER_NAME))
+    return ('%s%s/server/configure.sh -C %s -Z %s -N %s' % (sudo_cmd, mapr_home, ','.join(cldbs), ','.join(zookeepers), self.name))

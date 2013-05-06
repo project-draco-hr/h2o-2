@@ -1,2 +1,14 @@
 {
+  try {
+    for (    Field f : c.getFields()) {
+      if (!Modifier.isFinal(f.getModifiers()))       continue;
+      if (!Modifier.isStatic(f.getModifiers()))       continue;
+      if (!f.getType().equals(String.class))       continue;
+      Check.paramName((String)f.get(null));
+    }
+    return true;
+  }
+ catch (  Exception e) {
+    throw Log.errRTExcept(e);
+  }
 }

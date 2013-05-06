@@ -1,0 +1,5 @@
+def mapr_disk_cmd(self, mapr_home, mapr_disks, sudo_required=False):
+    sudo_cmd = ''
+    if sudo_required:
+        sudo_cmd = 'sudo '
+    return ('%s%s/server/disksetup -F %s' % (sudo_cmd, mapr_home, mapr_disks))

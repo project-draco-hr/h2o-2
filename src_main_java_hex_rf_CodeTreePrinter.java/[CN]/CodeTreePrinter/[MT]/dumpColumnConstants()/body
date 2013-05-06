@@ -1,0 +1,10 @@
+{
+  try {
+    _dest.append("// Column constants\n");
+    for (int i=0; i < _cols.length - 1; i++)     _dest.append(String.format("int %s = %d;\n",colNameConstant(i),_colMapping[i]));
+  }
+ catch (  IOException e) {
+    throw new Error(e);
+  }
+  return this;
+}

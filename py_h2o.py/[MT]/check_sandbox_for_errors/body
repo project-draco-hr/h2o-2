@@ -7,7 +7,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
     for filename in os.listdir(LOG_DIR):
         if re.search('stdout|stderr', filename):
             sandFile = open(((LOG_DIR + '/') + filename), 'r')
-            regex1 = re.compile('found multiple|exception|error|assert|killing|killed|required ports', re.IGNORECASE)
+            regex1 = re.compile('found multiple|exception|error|ERRR|assert|killing|killed|required ports', re.IGNORECASE)
             regex2 = re.compile('Caused', re.IGNORECASE)
             regex3 = re.compile('warn|info|TCP', re.IGNORECASE)
             printing = 0
@@ -17,6 +17,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
                 foundBad = False
                 if (not (' bytes)' in line)):
                     printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)) and (not ('RestS3Service' in line)))
+                    printSingleWarning = False
                     foundBad = (regex1.search(line) and (not (('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1

@@ -1,11 +1,6 @@
 {
-  while (DKV.get(_self) != null) {
-    try {
-      Thread.sleep(10);
-    }
- catch (    InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-  }
-  return (T)UKV.get(_dest);
+  _fjtask.join();
+  T ans=(T)UKV.get(_dest);
+  remove();
+  return ans;
 }

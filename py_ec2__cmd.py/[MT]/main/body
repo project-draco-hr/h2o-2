@@ -10,15 +10,17 @@ def main():
     parser.add_argument('--timeout', help='Timeout in seconds.', type=int, default=None)
     parser.add_argument('--instance_type', help='Enfore a type of EC2 to launch (e.g., m2.2xlarge).', type=str, default=None)
     parser.add_argument('--cmd', help='Shell command to be executed by nexec.', type=str, default=None)
+    parser.add_argument('--image_id', help='Override defautl image_id', type=str, default=None)
     args = parser.parse_args()
     ec2_region = load_ec2_region(args.region)
     if (args.action == 'help'):
         parser.print_help()
     elif ((args.action == 'create') or (args.action == 'demo')):
-        ec2_config = load_ec2_config(args.config, ec2_region, args.instance_type)
+        ec2_config = load_ec2_config(args.config, ec2_region, args.instance_type, args.image_id)
         tags = create_tags(Name=args.name)
         log('EC2 region : {0}'.format(ec2_region))
         log('EC2 itype  : {0}'.format(ec2_config['instance_type']))
+        log('EC2 ami    : {0}'.format(ec2_config['image_id']))
         log('EC2 config : {0}'.format(ec2_config))
         log('Instances  : {0}'.format(args.instances))
         log('Tags       : {0}'.format(tags))

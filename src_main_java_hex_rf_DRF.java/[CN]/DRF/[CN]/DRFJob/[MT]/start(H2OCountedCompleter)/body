@@ -1,0 +1,12 @@
+{
+  H2OCountedCompleter jobRemoval=new H2O.H2OCountedCompleter(){
+    @Override public void compute2(){
+    }
+    @Override public void onCompletion(    CountedCompleter caller){
+      DRFJob.this.remove();
+    }
+  }
+;
+  fjtask.setCompleter(jobRemoval);
+  return super.start(jobRemoval);
+}

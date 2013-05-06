@@ -1,7 +1,7 @@
 {
   int validCols=_drf._rfmodel._va._cols.length - 1;
-  if (validCols < _drf._numSplitFeatures) {
-    Utils.pln("Limiting features from " + _drf._numSplitFeatures + " to "+ validCols+ " because there are no more valid columns in the dataset");
-    _drf._numSplitFeatures=validCols;
+  if (validCols < _drf._params._numSplitFeatures) {
+    Log.warn(Sys.RANDF,"Limiting features from " + _drf._params._numSplitFeatures + " to "+ validCols+ " because there are no more valid columns in the dataset");
+    _drf._params._numSplitFeatures=validCols;
   }
 }

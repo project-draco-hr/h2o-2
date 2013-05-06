@@ -2,7 +2,7 @@
   double[] ds=new double[_cols.size()];
   for (int i=0; i < ds.length; i++) {
     Double D=(Double)row.get(_cols.get(i));
-    if (D == null)     throw new Error("row is missing column " + _cols.get(i) + ", contains "+ row.keySet());
+    if (D == null)     throw new RuntimeException("row is missing column " + _cols.get(i) + ", contains "+ row.keySet());
     ds[i]=D;
   }
   int votes[]=new int[_classes.length + 1];

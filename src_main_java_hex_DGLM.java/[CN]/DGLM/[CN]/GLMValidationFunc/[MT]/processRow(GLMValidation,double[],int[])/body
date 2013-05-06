@@ -17,7 +17,7 @@
     res._aic+=(yr * Math.log(ym) - logfactorial - ym);
   }
  else   if (_glmp._family == Family.binomial) {
-    if (yr < 0 || yr > 1)     throw new Error("response variable value out of range: " + yr);
+    if (yr < 0 || yr > 1)     throw new RuntimeException("response variable value out of range: " + yr);
     int i=0;
     for (    double t : _thresholds) {
       int p=ym >= t ? 1 : 0;

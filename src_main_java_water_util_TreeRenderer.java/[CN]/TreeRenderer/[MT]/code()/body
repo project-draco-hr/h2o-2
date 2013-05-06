@@ -3,7 +3,7 @@
   try {
     StringBuilder sb=new StringBuilder();
     sb.append("<pre><code>");
-    new CodeTreePrinter(sb,_columns,_domain).walk_serialized_tree(new AutoBuffer(_treeBits));
+    new CodeTreePrinter(sb,_columns,_mapping,_domain).dumpColumnConstants().dumpClassConstants().walkSerializedTree(new AutoBuffer(_treeBits));
     sb.append("</code></pre>");
     return sb.toString();
   }

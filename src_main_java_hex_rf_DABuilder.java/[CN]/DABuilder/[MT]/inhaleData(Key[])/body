@@ -3,7 +3,7 @@
   RFModel rfmodel=_drf._rfmodel;
   final ValueArray ary=DKV.get(rfmodel._dataKey).get();
   final int[] modelDataMap=rfmodel.columnMapping(ary.colNames());
-  final DataAdapter dapt=new DataAdapter(ary,rfmodel,modelDataMap,getRowCount(keys),getChunkId(keys),_drf._seed,_drf._binLimit,_drf._classWt);
+  final DataAdapter dapt=new DataAdapter(ary,rfmodel,modelDataMap,getRowCount(keys),getChunkId(keys),_drf._params._seed,_drf._params._binLimit,_drf._params._classWt);
   checkAndLimitFeatureUsedPerSplit(dapt);
   final int ncolumns=rfmodel._va._cols.length;
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
@@ -41,6 +41,6 @@
   }
   ForkJoinTask.invokeAll(dataInhaleJobs);
   dapt.shrink();
-  Utils.pln("[RF] Inhale done in " + t_inhale);
+  Log.debug(Sys.RANDF,"Inhale done in " + t_inhale);
   return dapt;
 }

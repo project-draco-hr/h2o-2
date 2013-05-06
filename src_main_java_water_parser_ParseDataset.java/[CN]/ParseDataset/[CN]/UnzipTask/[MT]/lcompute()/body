@@ -1,0 +1,49 @@
+{
+  setPendingCount(_keys.length);
+  for (  Key k : _keys) {
+    final Key key=k;
+    H2OCountedCompleter subtask=new H2OCountedCompleter(){
+      @Override public void compute2(){
+        InputStream is=null;
+        Key okey=Key.make(new String(key._kb) + "_UNZIPPED");
+        Value v=DKV.get(key);
+        final Key progressKey=_job._progress;
+        ProgressMonitor pmon=new ProgressMonitor(){
+          @Override public void update(          long n){
+            onProgress(n,progressKey);
+          }
+        }
+;
+        try {
+switch (_comp) {
+case ZIP:
+            ZipInputStream zis=new ZipInputStream(v.openStream(pmon));
+          ZipEntry ze=zis.getNextEntry();
+        if (ze == null || ze.isDirectory())         throw Log.err(Sys.PARSE,new Exception("Unsupported zip file: " + ((ze == null) ? "No entry found" : "Files containing directory arte not supported.")));
+      is=zis;
+    break;
+case GZIP:
+  is=new GZIPInputStream(v.openStream(pmon));
+break;
+default :
+throw Log.err(Sys.PARSE,H2O.unimpl());
+}
+ValueArray.readPut(okey,is,_job);
+}
+ catch (Throwable t) {
+Log.err(Sys.PARSE,"failed decompressing data " + key.toString() + " with compression "+ _comp,t);
+UKV.remove(okey);
+throw new RuntimeException(t);
+}
+ finally {
+Closeables.closeQuietly(is);
+tryComplete();
+}
+}
+}
+;
+subtask.setCompleter(this);
+H2O.submitTask(subtask);
+}
+tryComplete();
+}

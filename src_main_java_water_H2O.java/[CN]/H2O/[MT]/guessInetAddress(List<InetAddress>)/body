@@ -1,17 +1,19 @@
 {
-  System.out.println("Multiple local IPs detected:");
-  for (  InetAddress ip : ips)   System.out.println("  " + ip);
-  System.out.println("Attempting to determine correct address...");
+  String m="Multiple local IPs detected:\n";
+  for (  InetAddress ip : ips)   m+="  " + ip;
+  m+="Attempting to determine correct address...";
   Socket s=null;
   try {
     s=new Socket("8.8.8.8",53);
-    System.out.println("Using " + s.getLocalAddress());
+    m+="Using " + s.getLocalAddress();
     return s.getLocalAddress();
   }
  catch (  Throwable t) {
+    Log.err(t);
     return null;
   }
  finally {
+    Log.warn(m);
     Utils.close(s);
   }
 }

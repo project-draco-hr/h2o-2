@@ -1,7 +1,7 @@
 {
   int len=get4();
   if (len == -1)   return null;
-  double[] buf=new double[len];
+  double[] buf=MemoryManager.malloc8d(len);
   int sofar=0;
   while (sofar < len) {
     DoubleBuffer as=_bb.asDoubleBuffer();

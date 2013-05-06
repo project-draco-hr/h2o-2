@@ -15,7 +15,7 @@
         Closeables.closeQuietly(zis);
       }
     }
-    for (int i=0; i < keys.length; ++i)     if (keys[i] == null)     throw new Error("Cannot uncompressed ZIP-compressed dataset!");
+    for (int i=0; i < keys.length; ++i)     if (keys[i] == null)     throw new RuntimeException("Cannot uncompressed ZIP-compressed dataset!");
     parse(job,keys,setup);
   }
   finally {

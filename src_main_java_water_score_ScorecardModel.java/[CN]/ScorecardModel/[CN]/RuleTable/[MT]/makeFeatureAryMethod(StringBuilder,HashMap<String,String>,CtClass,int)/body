@@ -38,10 +38,6 @@ CtMethod happyMethod=CtMethod.make(sb.toString(),scClass);
 scClass.addMethod(happyMethod);
 }
  catch (Exception re) {
-System.err.println("=== crashing ===");
-System.err.println(sb.toString());
-throw new Error(re);
-}
- finally {
+Log.err(Sys.SCOREM,"Crashing:" + sb.toString(),new RuntimeException(re));
 }
 }

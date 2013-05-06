@@ -36,11 +36,11 @@ case GZIP:
   parseCompressed(job,keys,setup,compression);
 break;
 default :
-throw new Error("Unknown compression of dataset!");
+throw new RuntimeException("Unknown compression of dataset!");
 }
 }
- catch (java.io.EOFException eof) {
-UKV.put(job.dest(),new Fail(eof.getMessage()));
+ catch (java.io.EOFException e) {
+UKV.put(job.dest(),new Fail(e.getMessage()));
 }
 catch (Exception e) {
 UKV.put(job.dest(),new Fail(e.getMessage()));

@@ -6,8 +6,7 @@
  catch (  IllegalThreadStateException _) {
     return true;
   }
-catch (  Exception ex) {
-    Log.write(ex);
-    throw new RuntimeException(ex);
+catch (  Exception e) {
+    throw Log.errRTExcept(e);
   }
 }

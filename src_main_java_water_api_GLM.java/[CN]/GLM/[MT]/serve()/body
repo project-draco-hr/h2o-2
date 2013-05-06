@@ -26,10 +26,11 @@ r.setBuilder(Constants.DEST_KEY,new KeyElementBuilder());
 return r;
 }
  catch (GLMException e) {
+Log.err(e);
 return Response.error(e.getMessage());
 }
 catch (Throwable t) {
-t.printStackTrace();
+Log.err(t);
 return Response.error(t.getMessage());
 }
 }

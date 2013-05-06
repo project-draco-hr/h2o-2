@@ -1,0 +1,19 @@
+{
+  RandomForest.OptArgs _=new RandomForest.OptArgs();
+  _.features=numSplitFeatures;
+  _.ntrees=ntrees;
+  _.depth=depth;
+  _.classcol=cols[cols.length - 1];
+  _.seed=seed;
+  _.binLimit=binLimit;
+  _.verbose=verbose;
+  _.exclusive=exclusiveSplitLimit;
+  String w="";
+  if (classWt != null)   for (int i=0; i < classWt.length; i++)   w+=i + ":" + classWt[i]+ ",";
+  _.weights=w;
+  _.parallel=parallelTrees ? 1 : 0;
+  _.statType=stat.ordinal() == 1 ? "gini" : "entropy";
+  _.sample=(int)(sample * 100);
+  _.file="";
+  Log.info(Sys.RANDF,"Web arguments: " + _ + " key "+ ary._key);
+}

@@ -1,0 +1,9 @@
+{
+  _treeBits=model.tree(treeNum);
+  _mapping=model.columnMapping(ary.colNames());
+  _columns=model._va._cols;
+  _domain=model.response()._domain;
+  long dl=Tree.depth_leaves(new AutoBuffer(_treeBits));
+  int leaves=(int)(dl & 0xFFFFFFFFL);
+  _nodeCount=leaves * 2 - 1;
+}

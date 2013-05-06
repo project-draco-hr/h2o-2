@@ -7,7 +7,7 @@
     assertEquals(0.1,lr.get("Beta1").getAsDouble(),0.000001);
     assertEquals(1.0,lr.get("RSquared").getAsDouble(),0.000001);
     LSMSolver lsms=new ADMMSolver(0,0);
-    JsonObject glm=computeGLM(Family.gaussian,lsms,va,false,null);
+    JsonObject glm=computeGLM(Family.gaussian,lsms,va,null);
     JsonObject coefs=glm.get("coefficients").getAsJsonObject();
     assertEquals(0.0,coefs.get("Intercept").getAsDouble(),0.000001);
     assertEquals(0.1,coefs.get("0").getAsDouble(),0.000001);

@@ -1,0 +1,20 @@
+{
+  Key k1=loadAndParseKey("m.hex","smalldata/logreg/umass_statdata/cgd.dat");
+  ValueArray va=DKV.get(k1).get();
+  LSMSolver lsms=new ADMMSolver(0.0001,1);
+  GLMParams glmp=new GLMParams(Family.gaussian);
+  glmp._link=glmp._family.defaultLink;
+  glmp._betaEps=0.000001;
+  glmp._maxIter=50;
+  int[] cols=new int[va._cols.length];
+  for (int i=0; i < cols.length; i++)   cols[i]=i;
+  DataFrame df=DGLM.getData(va,cols,null,true);
+  GLMModel m=null;
+  try {
+    m=DGLM.startGLMJob(df,lsms,glmp,null,2,true).get();
+  }
+  finally {
+    if (m != null)     m.remove();
+    UKV.remove(k1);
+  }
+}

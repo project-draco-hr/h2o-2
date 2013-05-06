@@ -1,5 +1,11 @@
 {
-  ParseDataset job=new ParseDataset(dest,keys);
-  job.start();
-  parse(job,keys,null);
+  final ParseDataset job=new ParseDataset(dest,keys);
+  job.start(new H2OCountedCompleter(){
+    @Override public void compute2(){
+      parse(job,keys,null);
+      tryComplete();
+    }
+  }
+);
+  job._fjtask.compute2();
 }
