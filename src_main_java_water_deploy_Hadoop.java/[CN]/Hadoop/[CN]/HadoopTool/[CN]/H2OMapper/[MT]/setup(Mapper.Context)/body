@@ -5,12 +5,28 @@
     for (    String host : context.getConfiguration().get(HOSTS_KEY).split(","))     hosts+=host + ":" + port+ '\n';
     File flat=Utils.tempFile(hosts);
     Boot.main(new String[]{"-name","hadoop","-port",port,"-flatfile",flat.getAbsolutePath()});
+    Class script=Boot._init.loadClass(Script.class.getName());
     for (; ; ) {
+      Field field=script.getField("_done");
+      boolean done=(Boolean)field.get(null);
       context.progress();
-      Thread.sleep(10000);
+      Thread.sleep(1000);
+      if (done)       break;
     }
   }
  catch (  Exception ex) {
     throw Log.errRTExcept(ex);
   }
+  Thread t=new Thread(){
+    public void run(){
+      try {
+        Thread.sleep(1000);
+      }
+ catch (      Exception e) {
+      }
+      System.exit(0);
+    }
+  }
+;
+  t.start();
 }
