@@ -4,10 +4,10 @@
     try {
       ab=new AutoBuffer(_client).putTask(UDP.udp.ack,_tsknum).put1(SERVER_UDP_SEND);
       _dt.write(ab);
-      boolean t=ab.hasTCP();
       _computed=true;
-      ab.close(t,false);
+      boolean t=ab.hasTCP();
       _dt._repliedTcp=t;
+      ab.close(t,false);
       break;
     }
  catch (    AutoBuffer.TCPIsUnreliableException e) {
