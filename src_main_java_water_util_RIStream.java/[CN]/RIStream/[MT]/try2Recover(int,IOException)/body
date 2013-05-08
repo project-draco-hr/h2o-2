@@ -1,7 +1,6 @@
 {
-  System.out.println("[H2OS3InputStream] Attempt(" + attempt + ") to recover from "+ e.getMessage()+ "), off = "+ _off);
-  e.printStackTrace();
   if (attempt == _retries)   Throwables.propagate(e);
+  Log.warn("[H2OS3InputStream] Attempt(" + attempt + ") to recover from "+ e.getMessage()+ "), off = "+ _off);
   try {
     _is.close();
   }
@@ -13,6 +12,6 @@
   }
  catch (  InterruptedException ex) {
   }
-  open(_off);
+  open();
   return;
 }
