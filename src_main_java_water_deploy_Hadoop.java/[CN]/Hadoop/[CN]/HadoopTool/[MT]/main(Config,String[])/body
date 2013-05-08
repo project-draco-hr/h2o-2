@@ -3,7 +3,7 @@
   System.setProperty("HADOOP_USER_NAME",config.user);
   Configuration conf=new Configuration();
   conf.set("fs.default.name",config.name_server);
-  conf.set("mapred.job.tracker",config.tracker);
+  conf.set("mapred.job.tracker",config.job_tracker);
   conf.set("mapreduce.framework.name","classic");
   conf.set("hadoop.job.ugi",config.user + "," + config.password);
   conf.set("mapred.tasktracker.map.tasks.maximum","1");
@@ -15,7 +15,7 @@
   conf.set("mapred.job.map.memory.mb","" + config.memory);
   conf.set("mapred.job.reduce.memory.mb","" + config.memory);
   String hosts="";
-  URI tracker=new URI(config.tracker);
+  URI tracker=new URI(config.job_tracker);
   JobClient client=new JobClient(new InetSocketAddress(tracker.getHost(),tracker.getPort()),conf);
   Collection<String> names=client.getClusterStatus(true).getActiveTrackerNames();
   for (  String name : names)   hosts+=name.substring("tracker_".length(),name.indexOf(':')) + ',';
