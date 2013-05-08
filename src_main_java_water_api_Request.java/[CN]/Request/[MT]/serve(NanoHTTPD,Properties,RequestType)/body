@@ -1,4 +1,5 @@
 {
+  String query=checkArguments(args,type);
 switch (type) {
 case help:
     return wrap(server,build(Response.done(serveHelp())));
@@ -12,7 +13,6 @@ case www:
     }
     Log.debug(Sys.HTTPD,log);
   }
-String query=checkArguments(args,type);
 if (query != null) return wrap(server,query,type);
 long time=System.currentTimeMillis();
 Response response=serve();
@@ -23,7 +23,6 @@ case debug:
 response=serve_debug();
 return wrap(server,build(response));
 case query:
-query=checkArguments(args,type);
 return wrap(server,query);
 default :
 throw new RuntimeException("Invalid request type " + type.toString());

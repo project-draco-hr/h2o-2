@@ -1,0 +1,36 @@
+{
+  String desc="KMeans apply model: " + model._selfKey + " to "+ ary._key;
+  final ChunkProgressJob job=new ChunkProgressJob(desc,dest,ary.chunks());
+  final H2OCountedCompleter fjtask=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      KMeansApply kms=new KMeansApply();
+      kms._job=job;
+      kms._arykey=ary._key;
+      kms._cols=model.columnMapping(ary.colNames());
+      kms._clusters=model._clusters;
+      kms.invoke(ary._key);
+      Column c=new Column();
+      c._name=Constants.RESPONSE;
+      c._size=ROW_SIZE;
+      c._scale=1;
+      c._min=Double.NaN;
+      c._max=Double.NaN;
+      c._mean=Double.NaN;
+      c._sigma=Double.NaN;
+      c._domain=null;
+      c._n=ary.numRows();
+      ValueArray res=new ValueArray(dest,ary.numRows(),c._size,new Column[]{c});
+      DKV.put(dest,res);
+      DKV.write_barrier();
+      job.remove();
+      tryComplete();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      job.onException(ex);
+      return super.onExceptionalCompletion(ex,caller);
+    }
+  }
+;
+  H2O.submitTask(job.start(fjtask));
+  return job;
+}

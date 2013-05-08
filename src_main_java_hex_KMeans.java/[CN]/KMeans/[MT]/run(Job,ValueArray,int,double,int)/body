@@ -42,7 +42,9 @@
     for (int cluster=0; cluster < clusters.length; cluster++) {
       for (int column=0; column < cols.length - 1; column++) {
         double value=task._sums[cluster][column] / task._counts[cluster];
-        if (Math.abs(value - clusters[cluster][column]) > epsilon)         moved=true;
+        if (Math.abs(value - clusters[cluster][column]) > epsilon) {
+          moved=true;
+        }
         clusters[cluster][column]=value;
       }
     }
