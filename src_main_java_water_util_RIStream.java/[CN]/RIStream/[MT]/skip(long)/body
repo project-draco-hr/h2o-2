@@ -4,7 +4,7 @@
     try {
       long res=_is.skip(n);
       if (res > 0) {
-        _off+=res;
+        updateOffset((int)res);
         if (_pmon != null)         _pmon.update(res);
       }
       return res;
