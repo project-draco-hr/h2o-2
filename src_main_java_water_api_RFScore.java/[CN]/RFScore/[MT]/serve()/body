@@ -9,7 +9,7 @@
   response.addProperty(OOBEE,0);
   if (_weights.specified())   response.addProperty(WEIGHTS,_weights.originalValue());
   if (_clearCM.value())   clearCachedCM(false);
-  Confusion confusion=Confusion.make(model,_dataKey.value()._key,_classCol.value(),weights,false);
+  ConfusionTask confusion=ConfusionTask.make(model,_dataKey.value()._key,_classCol.value(),weights,false);
   Job job=new Job("Random forest scoring",confusion.keyFor());
   job.start(null);
   return RFView.redirect(response,job.self(),_modelKey.value()._selfKey);

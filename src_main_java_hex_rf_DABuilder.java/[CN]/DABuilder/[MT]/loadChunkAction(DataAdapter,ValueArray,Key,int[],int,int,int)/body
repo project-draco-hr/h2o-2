@@ -1,0 +1,27 @@
+{
+  return new RecursiveAction(){
+    @Override protected void compute(){
+      AutoBuffer bits=ary.getChunk(k);
+      for (int j=0; j < rows; ++j) {
+        int rowNum=S + j;
+        boolean rowIsValid=false;
+        for (int c=0; c < ncolumns; ++c) {
+          final int col=modelDataMap[c];
+          if (ary.isNA(bits,j,col)) {
+            dapt.addBad(rowNum,c);
+            continue;
+          }
+          float f=(float)ary.datad(bits,j,col);
+          if (!dapt.isValid(c,f)) {
+            dapt.addBad(rowNum,c);
+            continue;
+          }
+          dapt.add(f,rowNum,c);
+          if (c != ncolumns - 1)           rowIsValid|=true;
+        }
+        if (!rowIsValid)         dapt.markIgnoredRow(j);
+      }
+    }
+  }
+;
+}
