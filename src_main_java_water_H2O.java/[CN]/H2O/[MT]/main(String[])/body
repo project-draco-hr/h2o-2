@@ -5,10 +5,11 @@
   arguments.extract(OPT_ARGS);
   ARGS=arguments.toStringArray();
   ParseDataset.PLIMIT=OPT_ARGS.pparse_limit;
-  if (OPT_ARGS.nolog == null)   Log.initHeaders();
+  if (OPT_ARGS.rshell.equals("false"))   Log.wrap();
   startLocalNode();
   initializePersistence();
   startNetworkServices();
   initializeExpressionEvaluation();
   startupFinalize();
+  if (OPT_ARGS.rshell.equals("true"))   Shell.go();
 }
