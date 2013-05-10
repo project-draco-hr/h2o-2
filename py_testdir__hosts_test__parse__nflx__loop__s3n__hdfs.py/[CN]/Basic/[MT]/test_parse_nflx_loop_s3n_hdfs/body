@@ -1,7 +1,7 @@
 def test_parse_nflx_loop_s3n_hdfs(self):
     avgMichalSize = 116561140
     avgSynSize = 4020000
-    csvFilenameList = [('[A-D]-800-manyfiles-nflx-gz/file_[0-9]*.dat.gz', 'file_A_800_x55.dat.gz', (800 * (avgMichalSize / 2)), 7200), ('[A-D]-800-manyfiles-nflx-gz/file_[0-9]*.dat.gz', 'file_B_800_x55.dat.gz', (800 * (avgMichalSize / 2)), 7200), ('[A-D]-800-manyfiles-nflx-gz/file_[0-9]*.dat.gz', 'file_C_800_x55.dat.gz', (800 * (avgMichalSize / 2)), 7200), ('[A-D]-800-manyfiles-nflx-gz/file_[0-9]*.dat.gz', 'file_D_800_x55.dat.gz', (800 * (avgMichalSize / 2)), 7200), ('[A-D]-800-manyfiles-nflx-gz/file_[0-9]*.dat.gz', 'file_E_800_x55.dat.gz', (800 * (avgMichalSize / 2)), 7200), ('[A-D]-800-manyfiles-nflx-gz/file_[0-9]*.dat.gz', 'file_F_800_x55.dat.gz', (800 * (avgMichalSize / 2)), 7200), ('manyfiles-nflx-gz/file_[123][0-9][0-9].dat.gz', 'file_300_A.dat.gz', (300 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_[123][0-9][0-9].dat.gz', 'file_300_B.dat.gz', (300 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_[123][0-9][0-9].dat.gz', 'file_300_C.dat.gz', (300 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 300), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize), 900), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50_A.dat.gz', (50 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_1[0-4][0-9].dat.gz', 'file_50_B.dat.gz', (50 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_1[0-9][0-9].dat.gz', 'file_100_A.dat.gz', (100 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_2[0-9][0-9].dat.gz', 'file_100_B.dat.gz', (100 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_[12][0-9][0-9].dat.gz', 'file_200_A.dat.gz', (200 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_[12][0-9][0-9].dat.gz', 'file_200_B.dat.gz', (200 * avgMichalSize), 3600)]
+    csvFilenameList = [('manyfiles-nflx-gz/file_1.dat.gz', 'file_1.dat.gz', (1 * avgMichalSize), 300), ('manyfiles-nflx-gz/file_[2][0-9].dat.gz', 'file_10.dat.gz', (10 * avgMichalSize), 700), ('manyfiles-nflx-gz/file_[34][0-9].dat.gz', 'file_20.dat.gz', (20 * avgMichalSize), 900), ('manyfiles-nflx-gz/file_[5-9][0-9].dat.gz', 'file_50_A.dat.gz', (50 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_1[0-4][0-9].dat.gz', 'file_50_B.dat.gz', (50 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_1[0-9][0-9].dat.gz', 'file_100_A.dat.gz', (100 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_2[0-9][0-9].dat.gz', 'file_100_B.dat.gz', (100 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_[12][0-9][0-9].dat.gz', 'file_200_A.dat.gz', (200 * avgMichalSize), 3600), ('manyfiles-nflx-gz/file_[12][0-9][0-9].dat.gz', 'file_200_B.dat.gz', (200 * avgMichalSize), 3600)]
     print 'Using the -.gz files from s3'
     DO_GLM = False
     USE_S3 = False
@@ -19,10 +19,10 @@ def test_parse_nflx_loop_s3n_hdfs(self):
     pollTimeoutSecs = 180
     retryDelaySecs = 10
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
-        for tryHeap in [24]:
+        for tryHeap in [28]:
             print '\n', tryHeap, 'GB heap, 1 jvm per host, import', protocol, 'then parse'
             jea = '-Dh2o.find-ByteBuffer-leaks=true'
-            h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, java_extra_args=jea, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
+            h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
             h2o.nodes[0].sandbox_ignore_errors = True
             for trial in range(trialMax):
                 if USE_S3:

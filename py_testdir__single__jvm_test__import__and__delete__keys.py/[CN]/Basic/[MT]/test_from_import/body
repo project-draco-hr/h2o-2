@@ -15,7 +15,4 @@ def test_from_import(self):
             print "Parse result['destination_key']:", parseKey['destination_key']
             print ('\n' + csvFilename)
             storeView = h2o.nodes[0].store_view()
-            print 'Removing', parseKey['source_key'], 'so we can re-import it'
-            removeKeyResult = h2o.nodes[0].remove_key(key=parseKey['source_key'])
-            print 'removeKeyResult:', h2o.dump_json(removeKeyResult)
         print '\nTrial', trial, 'completed\n'

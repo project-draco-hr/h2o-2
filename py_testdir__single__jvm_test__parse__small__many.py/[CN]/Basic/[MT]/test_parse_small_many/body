@@ -1,4 +1,4 @@
-def test_A_parse_small_many(self):
+def test_parse_small_many(self):
     SEED = 6204672511291494176
     random.seed(SEED)
     print '\nUsing random seed:', SEED
@@ -7,16 +7,16 @@ def test_A_parse_small_many(self):
     row = 'a,b,c,d,e,f,g'
     timeoutSecs = 10
     node = h2o.nodes[0]
-    for sizeTrial in range(7):
+    for sizeTrial in range(10):
         size = random.randint(2, 129)
         print '\nparsing with rows:', size
         csvFilename = (('p' + '_') + str(size))
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         writeRows(csvPathname, row, eol, size)
         key = csvFilename
-        pkey = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
-        print h2o.dump_json(pkey)
+        print h2o.dump_json(key)
         for trial in range(5):
+            pkey = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
             key2 = (((csvFilename + '_') + str(trial)) + '.hex')
             node.parse(pkey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=0.0)
             sys.stdout.write('.')
