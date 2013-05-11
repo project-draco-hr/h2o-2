@@ -3,7 +3,7 @@
   while (true) {
     try {
       int res=_is.read(b);
-      if (res == 0)       checkEof();
+      if (res == -1)       checkEof();
       if (res > 0) {
         updateOffset(res);
         if (_pmon != null)         _pmon.update(res);
