@@ -1,0 +1,36 @@
+{
+  for (  final Request request : RequestServer._requests.values()) {
+    Interop.register(new Load());
+    Interop.register(new Invokable(){
+      @Override public String name(){
+        return request.getClass().getSimpleName().toLowerCase();
+      }
+      @Override public String[] parameters(){
+        ArrayList<String> res=new ArrayList<String>();
+        for (        Argument a : request._arguments)         res.add(a._name);
+        return res.toArray(new String[0]);
+      }
+      @Override public String[] requiredParameters(){
+        ArrayList<String> res=new ArrayList<String>();
+        for (        Argument a : request._arguments)         if (a._required)         res.add(a._name);
+        return res.toArray(new String[0]);
+      }
+      @Override public RAny invoke(      ArgumentInfo ai,      RAny[] args){
+        for (        Argument a : request._arguments)         a.reset();
+        for (        Argument a : request._arguments) {
+          int pos=ai.position(a._name);
+          if (pos >= 0 && !a.disabled()) {
+            try {
+              a.check(Interop.asString(args[pos].asString()));
+            }
+ catch (            IllegalArgumentException e) {
+              throw Log.errRTExcept(e);
+            }
+          }
+        }
+        return exec(request);
+      }
+    }
+);
+  }
+}

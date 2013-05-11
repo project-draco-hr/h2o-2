@@ -1,0 +1,25 @@
+{
+  for (; ; ) {
+    Response r=request.serve();
+switch (r._status) {
+case error:
+      throw new RuntimeException(r.error());
+case redirect:
+    request=RequestServer._requests.get(r._redirectName);
+  Properties args=new Properties();
+for (Entry<String,JsonElement> entry : r._redirectArgs.entrySet()) args.put(entry.getKey(),entry.getValue().getAsString());
+request.checkArguments(args,RequestType.json);
+break;
+case poll:
+try {
+Thread.sleep(100);
+}
+ catch (InterruptedException e) {
+throw new RuntimeException(e);
+}
+break;
+case done:
+return toR(r._response);
+}
+}
+}

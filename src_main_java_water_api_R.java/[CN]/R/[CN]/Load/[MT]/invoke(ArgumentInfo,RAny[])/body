@@ -1,0 +1,16 @@
+{
+  URI uri;
+  try {
+    uri=new URI(Interop.asString(args[0]));
+  }
+ catch (  URISyntaxException e) {
+    throw Log.errRTExcept(e);
+  }
+  if (uri.getScheme() == null || uri.getScheme().equals("file")) {
+    File f=new File(uri.getPath());
+    return Interop.asRString(TestUtil.load_test_file(f,f.getName()).toString());
+  }
+  if (uri.getScheme().equals("hdfs")) {
+  }
+  return RNull.getNull();
+}

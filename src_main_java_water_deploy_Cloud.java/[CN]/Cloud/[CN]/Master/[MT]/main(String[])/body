@@ -10,11 +10,11 @@
   for (int i=1; i < flatfile.size(); i++) {
     Host host=new Host(flatfile.get(i).inet.getHostAddress());
     hosts.put(host.address(),host);
-    workers.add(new NodeHost(host,null,workerArgs));
+    workers.add(new NodeHost(host,workerArgs));
   }
   String[] includes=(String[])ArrayUtils.add(Host.defaultIncludes(),h2oArgs.flatfile);
   String[] excludes=Host.defaultExcludes();
-  Cloud.rsync(hosts.values().toArray(new Host[0]),includes,excludes);
+  Host.rsync(hosts.values().toArray(new Host[0]),includes,excludes);
   for (  Node w : workers) {
     w.inheritIO();
     w.start();
