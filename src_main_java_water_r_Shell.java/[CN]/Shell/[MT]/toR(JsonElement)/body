@@ -1,0 +1,19 @@
+{
+  if (e instanceof JsonObject) {
+    Set<Entry<String,JsonElement>> set=((JsonObject)e).entrySet();
+    RAny[] a=new RAny[set.size()];
+    RSymbol[] names=new RSymbol[set.size()];
+    int count=0;
+    for (    Entry<String,JsonElement> entry : set) {
+      a[count]=toR(entry.getValue());
+      names[count++]=RSymbol.getSymbol(entry.getKey());
+    }
+    return RListFactory.getFor(a,new int[]{1},Names.create(names));
+  }
+  if (e instanceof JsonArray) {
+    RAny[] a=new RAny[((JsonArray)e).size()];
+    for (int i=0; i < a.length; i++)     a[i]=toR(((JsonArray)e).get(i));
+    return RListFactory.getFor(a);
+  }
+  return Interop.asRString(e.getAsString());
+}

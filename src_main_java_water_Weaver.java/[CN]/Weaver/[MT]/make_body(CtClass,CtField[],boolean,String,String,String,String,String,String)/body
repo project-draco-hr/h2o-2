@@ -31,15 +31,12 @@
   sb.append(trailer);
   String body=sb.toString();
   if (debug_print) {
-    System.out.println(cc.getName() + " " + body);
+    Log.debug(cc.getName() + " " + body);
   }
   try {
     cc.addMethod(CtNewMethod.make(body,cc));
   }
  catch (  CannotCompileException e) {
-    System.out.println("--- Compilation failure while compiler serializers for " + cc.getName());
-    System.out.println(body);
-    System.out.println("------");
-    throw Log.err(e);
+    throw Log.err("--- Compilation failure while compiler serializers for " + cc.getName() + "\n"+ body+ "\n-----",e);
   }
 }
