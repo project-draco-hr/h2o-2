@@ -1,4 +1,14 @@
 {
+  try {
+    H2O.getAWSCredentials();
+  }
+ catch (  Exception ex) {
+    System.out.println("Please add AWS credentials to './AwsCredentials.properties'");
+    System.out.println("File format is:");
+    System.out.println("accessKey=XXXXXXXXXXXXXXXXXXXX");
+    System.out.println("secretKey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    return;
+  }
   Config config;
   int count;
   String[] remaining;
@@ -18,11 +28,10 @@
     System.out.println("  -region=" + defaults.region);
     System.out.println("  -type=" + defaults.type);
     System.out.println("  -secg=" + defaults.secg + " (Security Group, must allow ssh (TCP 22))");
-    System.out.println("  -conf=" + defaults.conf + " (Confirm before starting new instances)");
+    System.out.println("  -confirm=" + defaults.confirm + " (Confirm before starting new instances)");
     System.out.println("  -incl='' (additional rsync includes, e.g. py:smalldata)");
     System.out.println("  -excl='' (additional rsync excludes, e.g. sandbox:*.pyc)");
-    System.out.println();
-    System.out.println("AWS credentials are looked for at './AwsCredentials.properties'");
+    System.out.println("  -java_args='' (java args for cluster JVMs)");
     return;
   }
   run(config,count,remaining);
