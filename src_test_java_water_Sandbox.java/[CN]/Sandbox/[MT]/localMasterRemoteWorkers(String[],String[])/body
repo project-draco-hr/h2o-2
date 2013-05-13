@@ -3,7 +3,7 @@
   int port=54321;
   String flat=local + ":" + port+ '\n';
   for (int i=0; i < workers.length; i++)   flat+=workers[i] + ":" + port+ '\n';
-  String flatfile=Utils.tempFile(flat).getAbsolutePath();
+  String flatfile=Utils.writeFile(flat).getAbsolutePath();
   for (int i=0; i < 0; i++) {
     Host host=new Host("192.168.1.15" + (i + 1));
     Node worker=new NodeHost(host,args(args,host.address(),port,flatfile));

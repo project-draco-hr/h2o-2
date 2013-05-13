@@ -1,5 +1,5 @@
 {
-  Random rand=KMeans.RAND_SEED == 0 ? new Random() : new Random(KMeans.RAND_SEED);
+  Random rand=new Random(SEED);
   for (int goal=0; goal < goals.length; goal++)   for (int c=0; c < columns; c++)   goals[goal][c]=rand.nextDouble() * 100;
   double[][] array=new double[columns][rows];
   gauss(goals,array);

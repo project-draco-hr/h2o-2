@@ -8,7 +8,7 @@
   s+=" " + host.address() + " '"+ NodeHost.command(p._java,p._node)+ "'\"";
   s=s.replace("\\","\\\\").replace("$","\\$");
   ArrayList<String> list=new ArrayList<String>();
-  File sh=Utils.tempFile(s);
+  File sh=Utils.writeFile(s);
   File onWindows=new File("C:/cygwin/bin/bash.exe");
   if (onWindows.exists()) {
     list.add(onWindows.getPath());
