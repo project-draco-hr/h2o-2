@@ -6,9 +6,9 @@ def write_syn_dataset(csvPathname, rowCount, colCount=1, SEED='12345678', colSep
 
         def doRandomOrFixed():
             if RANDOM_LENGTH:
-                return random_enum(random.randint(2, MAX_ENUM_SIZE), quoteChars=quoteChars)
+                return random_enum(random.randint(2, ENUM_SIZE), quoteChars=quoteChars)
             else:
-                return random_enum(MAX_ENUM_SIZE, quoteChars=quoteChars)
+                return random_enum(ENUM_SIZE, quoteChars=quoteChars)
         for col in range(colCount):
             ri = doRandomOrFixed()
             if (row < 2):
