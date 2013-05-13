@@ -12,11 +12,9 @@
       includes[i]=path.replace('\\','/').replace("C:/","/cygdrive/c/");
     }
     args.addAll(Arrays.asList(includes));
-    if (excludes != null) {
-      File file=Utils.tempFile(Utils.join('\n',excludes));
-      args.add("--exclude-from");
-      args.add(file.getAbsolutePath());
-    }
+    File file=Utils.tempFile(Utils.join('\n',excludes));
+    args.add("--exclude-from");
+    args.add(file.getAbsolutePath());
     args.add(_address + ":" + "/home/"+ _user+ "/"+ FOLDER);
     ProcessBuilder builder=new ProcessBuilder(args);
     builder.environment().put("CYGWIN","nodosfilewarning");

@@ -21,7 +21,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
         for tryHeap in [28]:
             print '\n', tryHeap, 'GB heap, 1 jvm per host, import', protocol, 'then parse'
-            jea = '-XX:+UseParNewGC -XX:+UseConcMarkSweepGC'
+            jea = '-Dh2o.find-ByteBuffer-leaks=true'
             h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
             h2o.nodes[0].sandbox_ignore_errors = True
             for trial in range(trialMax):

@@ -1,0 +1,6 @@
+{
+  RuntimeMXBean r=ManagementFactory.getRuntimeMXBean();
+  ArrayList<String> list=new ArrayList<String>();
+  for (  String s : r.getInputArguments())   if (!s.startsWith("-agentlib"))   list.add(s);
+  return list.toArray(new String[list.size()]);
+}

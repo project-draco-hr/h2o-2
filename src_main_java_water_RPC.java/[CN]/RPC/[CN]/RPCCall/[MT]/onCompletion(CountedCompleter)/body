@@ -11,7 +11,7 @@
       break;
     }
  catch (    AutoBuffer.TCPIsUnreliableException e) {
-      Log.info("Network congestion: TCP " + e._ioe.getMessage() + ",  AB="+ ab+ ", waiting and retrying...");
+      Log.info("Network congestion: TCPACK " + e._ioe.getMessage() + ", t#"+ _tsknum+ " AB="+ ab+ ", waiting and retrying...");
       if (ab != null)       ab.close(true,true);
       try {
         Thread.sleep(500);
