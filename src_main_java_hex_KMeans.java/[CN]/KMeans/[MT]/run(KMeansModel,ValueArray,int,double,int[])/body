@@ -1,0 +1,58 @@
+{
+  Random rand=Utils.getRNG(res._randSeed - 1);
+  double[][] clusters=new double[1][];
+  clusters[0]=new double[cols.length - 1];
+  long row=Math.max(0,(long)(rand.nextDouble() * va._numrows) - 1);
+  AutoBuffer bits=va.getChunk(va.chknum(row));
+  datad(va,bits,va.rowInChunk(va.chknum(row),row),cols,res._normalized,clusters[0]);
+  while (res._iteration < 5) {
+    Sqr sqr=new Sqr();
+    sqr._arykey=va._key;
+    sqr._cols=cols;
+    sqr._clusters=clusters;
+    sqr._normalize=res._normalized;
+    sqr.invoke(va._key);
+    Sampler sampler=new Sampler();
+    sampler._arykey=va._key;
+    sampler._cols=cols;
+    sampler._clusters=clusters;
+    sampler._normalize=res._normalized;
+    sampler._sqr=sqr._sqr;
+    sampler._probability=k * 3;
+    sampler._seed=res._randSeed;
+    sampler.invoke(va._key);
+    clusters=DRemoteTask.merge(clusters,sampler._clust2);
+    if (cancelled()) {
+      remove();
+      return;
+    }
+    res._iteration++;
+    res._clusters=clusters;
+    UKV.put(dest(),res);
+  }
+  clusters=recluster(clusters,k,rand);
+  res._clusters=clusters;
+  boolean moved=true;
+  while (moved) {
+    moved=false;
+    Lloyds task=new Lloyds();
+    task._arykey=va._key;
+    task._cols=cols;
+    task._clusters=clusters;
+    task._normalize=res._normalized;
+    task.invoke(va._key);
+    for (int cluster=0; cluster < clusters.length; cluster++) {
+      for (int column=0; column < cols.length - 1; column++) {
+        double value=task._sums[cluster][column] / task._counts[cluster];
+        if (Math.abs(value - clusters[cluster][column]) > epsilon) {
+          moved=true;
+        }
+        clusters[cluster][column]=value;
+      }
+    }
+    res._iteration++;
+    UKV.put(dest(),res);
+    if (cancelled())     break;
+  }
+  remove();
+}

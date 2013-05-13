@@ -1,9 +1,11 @@
 {
-  final ValueArray va=_source.value();
-  final Key source=va._key;
-  final int k=_k.value();
-  final double epsilon=_epsilon.value();
-  final int[] cols=_columns.value();
+  ValueArray va=_source.value();
+  Key source=va._key;
+  int k=_k.value();
+  double epsilon=_epsilon.value();
+  long seed=_seed.record()._valid ? _seed.value() : _seed._defaultValue;
+  boolean normalize=_normalize.record()._valid ? _normalize.value() : _normalize._defaultValue;
+  int[] cols=_columns.value();
   Key dest=_dest.value();
   if (dest == null) {
     String n=source.toString();
@@ -11,15 +13,8 @@
     if (dot > 0)     n=n.substring(0,dot);
     dest=Key.make(n + Extensions.KMEANS);
   }
-  final Job job=hex.KMeans.startJob(dest,va,k,epsilon,cols);
   try {
-    H2O.submitTask(new H2OCountedCompleter(){
-      @Override public void compute2(){
-        hex.KMeans.run(job,va,k,epsilon,cols);
-        tryComplete();
-      }
-    }
-);
+    hex.KMeans job=hex.KMeans.start(dest,va,k,epsilon,seed,normalize,cols);
     JsonObject response=new JsonObject();
     response.addProperty(JOB,job.self().toString());
     response.addProperty(DEST_KEY,dest.toString());

@@ -2,7 +2,7 @@
   Host master=new Host(_publicIPs[0]);
   includes=(String[])ArrayUtils.addAll(Host.defaultIncludes(),includes);
   excludes=(String[])ArrayUtils.addAll(Host.defaultExcludes(),excludes);
-  File flatfile=Utils.tempFile(Utils.join('\n',_privateIPs));
+  File flatfile=Utils.writeFile(Utils.join('\n',_privateIPs));
   includes=(String[])ArrayUtils.add(includes,flatfile.getAbsolutePath());
   master.rsync(includes,excludes);
   ArrayList<String> list=new ArrayList<String>();
