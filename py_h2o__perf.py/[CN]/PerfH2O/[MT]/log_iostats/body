@@ -8,7 +8,7 @@ def log_iostats(self, initOnly=False):
     stats = node.iostatus()
     histogram = stats['histogram']
 
-    def log_window(w):
+    def log_window(k, w):
         if (k['window'] == w):
             i_o = k['i_o']
             node = k['cloud_node_idx']
@@ -31,10 +31,9 @@ def log_iostats(self, initOnly=False):
         print '\nlog_iotstats probing node:', ((str(node.addr) + ':') + str(node.port))
         found = False
         for k in histogram:
-            found |= log_window(60)
+            found |= log_window(k, 60)
         if (not found):
             print 'iostats: desired window not found in histogram'
-            log_window(60)
     if DO_IOP:
         iopList = []
         raw_iops = stats['raw_iops']
