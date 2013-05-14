@@ -23,7 +23,7 @@ def test_GLM_100Mx70_hosts(self):
         num_cols = inspect['num_cols']
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
         y = (num_cols - 1)
-        kwargs = {'family': 'binomial', 'link': 'logit', 'y': y, 'max_iter': 8, 'n_folds': 0, 'beta_epsilon': 0.0001, 'alpha': 0, 'lambda': 0, }
+        kwargs = {'family': 'binomial', 'link': 'logit', 'y': y, 'max_iter': 8, 'n_folds': 0, 'beta_eps': 0.0001, 'alpha': 0, 'lambda': 0, }
         for trial in range(3):
             start = time.time()
             glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)

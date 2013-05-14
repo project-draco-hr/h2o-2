@@ -12,7 +12,7 @@ def test_GLM_twovalues(self):
         write_syn_dataset(csvPathname, 20, rowDataTrue, rowDataFalse, str(outputTrue), str(outputFalse))
         start = time.time()
         key = ((csvFilename + '_') + str(trial))
-        kwargs = {'case': case, 'y': 10, 'family': 'binomial', 'alpha': 0, 'beta_epsilon': 0.0002, }
+        kwargs = {'case': case, 'y': 10, 'family': 'binomial', 'alpha': 0, 'beta_eps': 0.0002, }
         glm = h2o_cmd.runGLM(csvPathname=csvPathname, key=key)
         h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
         coeffNum = len(glm['GLMModel']['coefficients'])
