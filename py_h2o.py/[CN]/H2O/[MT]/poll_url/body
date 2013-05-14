@@ -7,7 +7,10 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         print noise
         (noise_json, noiseParams) = noise
         noiseUrl = self.__url((noise_json + '.json'))
-        noiseParamsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in noiseParams.items()])
+        if (noiseParams is None):
+            noiseParamsStr = ''
+        else:
+            noiseParamsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in noiseParams.items()])
     status = 'poll'
     r = {}
     start = time.time()
