@@ -1,0 +1,9 @@
+{
+  String p="http://" + path;
+  URL url=new URL(p);
+  Key k=Key.make(p);
+  InputStream s=url.openStream();
+  if (s == null)   throw new FormatError("argh");
+  ValueArray.readPut(k,s);
+  return parse(k);
+}

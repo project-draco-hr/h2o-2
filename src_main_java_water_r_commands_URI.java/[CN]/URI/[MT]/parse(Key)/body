@@ -1,0 +1,17 @@
+{
+  Value v=DKV.get(hKey);
+  byte separator=CsvParser.NO_SEPARATOR;
+  CsvParser.Setup setup=Inspect.csvGuessValue(v,separator);
+  if (setup._data == null || setup._data[0].length == 0)   throw new IllegalArgumentException("I cannot figure out this file; I only handle common CSV formats: " + hKey);
+  Key dest=Key.make(hKey + ".hex");
+  try {
+    Job job=ParseDataset.forkParseDataset(dest,new Key[]{hKey},setup);
+    return job.get();
+  }
+ catch (  IllegalArgumentException e) {
+    throw Log.errRTExcept(e);
+  }
+catch (  Error e) {
+    throw Log.errRTExcept(e);
+  }
+}
