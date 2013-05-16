@@ -8,7 +8,7 @@ def kmeans_apply(self, data_key, model_key, destination_key, timeoutSecs=300, re
         print dump_json(a)
         raise Exception('H2O kmeans redirect is not Progress. KMeansApply json response precedes.')
     a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
-    verboseprint('\nKMeans result:', dump_json(a))
+    verboseprint('\nKMeansApply result:', dump_json(a))
     if (browseAlso | browse_json):
         print 'Redoing the KMeansApply through the browser, no results saved though'
         h2b.browseJsonHistoryAsUrlLastMatch('KMeansApply')
