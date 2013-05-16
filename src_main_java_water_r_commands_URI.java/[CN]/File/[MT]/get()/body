@@ -3,8 +3,5 @@
   Futures fs=new Futures();
   Key k=c.importFile(0,fs);
   fs.blockForPending();
-  Key okey=Key.make(path + ".hex");
-  ParseDataset.forkParseDataset(okey,new Key[]{k},null).get();
-  UKV.remove(k);
-  return DKV.get(okey).<ValueArray>get();
+  return DKV.get(k).<ValueArray>get();
 }
