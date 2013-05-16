@@ -1,0 +1,10 @@
+{
+  JsonObject res=new JsonObject();
+  JsonArray sums=new JsonArray();
+  for (int i=0; i < _sums.length; ++i) {
+    _sums[i]._summary=this;
+    sums.add(_sums[i].toJson());
+  }
+  res.add("columns",sums);
+  return res;
+}

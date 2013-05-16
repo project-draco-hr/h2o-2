@@ -1,0 +1,15 @@
+{
+  String ip="127.0.0.1";
+  int port=54321;
+  String flat="";
+  for (int i=0; i < nodes; i++)   flat+=ip + ":" + (port + i * 2)+ '\n';
+  String flatfile=Utils.writeFile(flat).getAbsolutePath();
+  for (int i=1; i < nodes; i++) {
+    String[] a=args(args,ip,(port + i * 2),flatfile);
+    Node worker=inProcess ? new NodeCL(a) : new NodeVM(a);
+    worker.inheritIO();
+    worker.start();
+  }
+  H2O.main(args(args,ip,port,flatfile));
+  TestUtil.stall_till_cloudsize(nodes);
+}

@@ -1,9 +1,0 @@
-{
-  exitWithParent();
-  Host host=getHost(args);
-  ArrayList<String> list=new ArrayList<String>();
-  list.addAll(Arrays.asList(host.sshWithArgs().split(" ")));
-  list.add(host.address());
-  list.addAll(Arrays.asList(getArgs(args)));
-  exec(list);
-}

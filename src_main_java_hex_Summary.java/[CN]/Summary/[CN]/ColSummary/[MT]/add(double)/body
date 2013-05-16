@@ -1,0 +1,23 @@
+{
+  if (!_enum) {
+    if (val < _min[_min.length - 1]) {
+      int j=_min.length - 1;
+      while (j > 0 && _min[j - 1] > val)       --j;
+      if (j == 0 || _min[j - 1] < val) {
+        for (int k=_min.length - 1; k > j; --k)         _min[k]=_min[k - 1];
+        _min[j]=val;
+      }
+    }
+    if (val > _max[_min.length - 1]) {
+      int j=_max.length - 1;
+      while (j > 0 && _max[j - 1] < val)       --j;
+      if (j == 0 || _max[j - 1] > val) {
+        for (int k=_max.length - 1; k > j; --k)         _max[k]=_max[k - 1];
+        _max[j]=val;
+      }
+    }
+  }
+  int binIdx=(_binsz == 1) ? Math.min((int)(val - _start),_bins.length - 1) : Math.min(_bins.length - 1,(int)((val - _start) * _binszInv));
+  ++_bins[binIdx];
+  ++_n;
+}

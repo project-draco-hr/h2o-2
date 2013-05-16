@@ -1,0 +1,10 @@
+{
+  new TAtomic<Progress>(){
+    @Override public Progress atomic(    Progress old){
+      if (old == null)       return null;
+      old._total+=len;
+      return old;
+    }
+  }
+.fork(job._progress);
+}

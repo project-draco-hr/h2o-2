@@ -5,7 +5,7 @@
   int ctrl=ab.getCtrl();
   ab.getPort();
   if (ctrl == UDP.udp.timeline.ordinal()) {
-    UDP.udp.timeline._udp.call(ab).close();
+    UDP.udp.timeline._udp.call(ab);
     return;
   }
   if (ctrl == UDP.udp.rebooted.ordinal())   UDPRebooted.checkForSuicide(ctrl,ab);
@@ -23,5 +23,5 @@
     _unknown_packets_per_sec=0;
     _unknown_packet_time=ab._h2o._last_heard_from;
   }
-  ab.close(false);
+  ab.close(false,false);
 }

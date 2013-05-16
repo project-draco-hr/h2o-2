@@ -11,9 +11,7 @@
     cc.addMethod(CtNewMethod.make(body,cc));
   }
  catch (  CannotCompileException ce) {
-    System.out.println("--- Compilation failure while compiler raw_enum for " + cc.getName());
-    System.out.println(body);
-    System.out.println("------");
+    Log.warn(Sys.WATER,"--- Compilation failure while compiler raw_enum for " + cc.getName() + "\n"+ body+ "\n------",ce);
     throw ce;
   }
 }

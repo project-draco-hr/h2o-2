@@ -1,0 +1,39 @@
+{
+  Process process=null;
+  try {
+    ArrayList<String> args=new ArrayList<String>();
+    File onWindows=new File("C:/cygwin/bin/rsync.exe");
+    args.add(onWindows.exists() ? onWindows.getAbsolutePath() : "rsync");
+    args.add("-" + (LOG_RSYNC ? "" : "q") + "vrzute");
+    args.add(sshWithArgs());
+    args.add("--chmod=u=rwx");
+    for (int i=0; i < includes.length; i++) {
+      String path=new File(includes[i]).getAbsolutePath();
+      includes[i]=path.replace('\\','/').replace("C:/","/cygdrive/c/");
+    }
+    args.addAll(Arrays.asList(includes));
+    File file=Utils.writeFile(Utils.join('\n',excludes));
+    args.add("--exclude-from");
+    args.add(file.getAbsolutePath());
+    args.add(_address + ":" + "/home/"+ _user+ "/"+ FOLDER);
+    ProcessBuilder builder=new ProcessBuilder(args);
+    builder.environment().put("CYGWIN","nodosfilewarning");
+    process=builder.start();
+    String log="rsync " + VM.localIP() + " -> "+ _address;
+    if (!LOG_RSYNC)     Log.debug(log);
+    NodeVM.inheritIO(process,Log.padRight(log + ": ",24));
+    process.waitFor();
+  }
+ catch (  Exception ex) {
+    throw new RuntimeException(ex);
+  }
+ finally {
+    if (process != null) {
+      try {
+        process.destroy();
+      }
+ catch (      Exception _) {
+      }
+    }
+  }
+}

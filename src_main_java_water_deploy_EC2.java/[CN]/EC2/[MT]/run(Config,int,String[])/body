@@ -1,0 +1,7 @@
+{
+  Cloud c=resize(config.region,config.type,config.secg,config.confirm,count);
+  String[] includes=config.incl != null ? config.incl.split(File.pathSeparator) : null;
+  String[] excludes=config.excl != null ? config.excl.split(File.pathSeparator) : null;
+  String[] java=config.java_args != null ? config.java_args.split(" ") : null;
+  c.start(includes,excludes,java,args);
+}

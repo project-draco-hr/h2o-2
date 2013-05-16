@@ -1,0 +1,33 @@
+{
+  checkArguments(args,type);
+  int count=_count.value();
+switch (type) {
+case txt:
+{
+      LogStr logstr=UKV.get(Log.LOG_KEY);
+      String script="";
+      String nl=System.getProperty("line.separator");
+      if (logstr != null) {
+        for (int i=0; i < LogStr.MAX; i++) {
+          int x=(i + logstr._idx + 1) & (LogStr.MAX - 1);
+          if (logstr._dates[x] == null)           continue;
+          if (Log.SYSS[logstr._syss[x]] == Sys.HTTPD) {
+            script+=logstr._msgs[x];
+            script+=nl + nl;
+          }
+          if (--count == 0)           break;
+        }
+      }
+      InputStream in;
+      try {
+        in=new StringInputStream(script);
+      }
+ catch (      UnsupportedEncodingException e) {
+        throw Log.errRTExcept(e);
+      }
+      return server.new Response(NanoHTTPD.HTTP_OK,"application/x-unknown",in);
+    }
+default :
+  throw new RuntimeException();
+}
+}

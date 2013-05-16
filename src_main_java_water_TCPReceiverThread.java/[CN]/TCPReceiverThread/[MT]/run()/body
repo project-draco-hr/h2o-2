@@ -1,8 +1,7 @@
 {
-  Thread.currentThread().setPriority(Thread.MAX_PRIORITY - 1);
+  Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
   ServerSocketChannel errsock=null;
   boolean saw_error=false;
-  _timeRun=System.currentTimeMillis();
   while (true) {
     try {
       if (errsock != null) {
@@ -17,41 +16,17 @@
         SOCK.socket().setReceiveBufferSize(AutoBuffer.BBSIZE);
         SOCK.socket().bind(H2O.SELF._key);
       }
-      _timeBlock=System.currentTimeMillis();
-      int runMS=(int)Math.min(_timeBlock - _timeRun,Integer.MAX_VALUE);
-      _dms[_idx]=runMS;
-      _idx=(_idx + 1) & (_dms.length - 1);
       SocketChannel sock=SOCK.accept();
-      _timeRun=System.currentTimeMillis();
-      int blockMS=(int)Math.min(_timeRun - _timeBlock,Integer.MAX_VALUE);
-      _dms[_idx]=blockMS;
-      _idx=(_idx + 1) & (_dms.length - 1);
-      AutoBuffer ab=new AutoBuffer(sock);
-      int ctrl=ab.getCtrl();
-      ab._h2o._last_heard_from=_timeRun;
-      TimeLine.record_recv(ab,true,0);
-switch (UDP.udp.UDPS[ctrl]) {
-case exec:
-        RPC.remote_exec(ab).close();
+      new TCPReaderThread(sock,new AutoBuffer(sock)).start();
+    }
+ catch (    java.nio.channels.AsynchronousCloseException ex) {
       break;
-case ack:
-    RPC.tcp_ack(ab);
-  break;
-case timeline:
-TimeLine.tcp_call(ab);
-break;
-default :
-throw new RuntimeException("Unknown TCP Type: " + ab.getCtrl());
-}
-}
- catch (java.nio.channels.AsynchronousCloseException ex) {
-break;
-}
-catch (Exception e) {
-Log.err("IO error on TCP port " + H2O.UDP_PORT + ": ",e);
-saw_error=true;
-errsock=SOCK;
-SOCK=null;
-}
-}
+    }
+catch (    Exception e) {
+      Log.err("IO error on TCP port " + H2O.UDP_PORT + ": ",e);
+      saw_error=true;
+      errsock=SOCK;
+      SOCK=null;
+    }
+  }
 }

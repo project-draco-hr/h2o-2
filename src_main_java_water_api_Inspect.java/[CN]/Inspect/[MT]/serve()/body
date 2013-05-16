@@ -1,5 +1,8 @@
 {
   Value val=_key.value();
+  if (val == null) {
+    return RequestServer._http404.serve();
+  }
   if (val.type() == TypeMap.PRIM_B)   return serveUnparsedValue(val);
   Freezable f=val.getFreezable();
   if (f instanceof ValueArray) {

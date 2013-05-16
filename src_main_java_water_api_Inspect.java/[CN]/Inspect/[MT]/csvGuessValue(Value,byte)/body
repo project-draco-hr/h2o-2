@@ -11,7 +11,8 @@ case ZIP:
 {
     ZipInputStream zis=new ZipInputStream(v.openStream());
     ZipEntry ze=zis.getNextEntry();
-    if (ze != null || !ze.isDirectory())     is=zis;
+    if (ze != null && !ze.isDirectory())     is=zis;
+ else     zis.close();
     break;
   }
 case GZIP:

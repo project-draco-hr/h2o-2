@@ -1,0 +1,14 @@
+{
+  try {
+    KMeansModel model=_modelKey.value();
+    ValueArray data=_dataKey.value();
+    Key dest=_dest.value();
+    Job job=KMeansModel.KMeansApply.run(dest,model,data);
+    JsonObject response=new JsonObject();
+    response.addProperty(RequestStatics.DEST_KEY,_dest.value().toString());
+    return Progress.redirect(response,job._self,_dest.value());
+  }
+ catch (  Error e) {
+    return Response.error(e.getMessage());
+  }
+}

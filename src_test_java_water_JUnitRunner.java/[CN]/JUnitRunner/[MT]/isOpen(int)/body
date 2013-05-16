@@ -1,0 +1,13 @@
+{
+  ServerSocket s=null;
+  try {
+    s=new ServerSocket(port);
+    return true;
+  }
+ catch (  IOException ex) {
+    return false;
+  }
+ finally {
+    if (s != null)     s.close();
+  }
+}

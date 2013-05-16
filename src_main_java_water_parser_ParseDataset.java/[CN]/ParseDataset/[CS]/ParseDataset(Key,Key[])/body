@@ -6,7 +6,6 @@
     dataset=DKV.get(keys[i]);
     total+=dataset.length() * Pass.values().length;
   }
-  _total=total;
   _progress=Key.make(UUID.randomUUID().toString(),(byte)0,Key.JOB);
-  UKV.put(_progress,new Progress());
+  UKV.put(_progress,new Progress(0,total));
 }

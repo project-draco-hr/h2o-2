@@ -1,0 +1,5 @@
+{
+  ArrayList<InputSplit> list=new ArrayList<InputSplit>();
+  for (  String host : context.getConfiguration().get(HOSTS_KEY).split(","))   list.add(new NopInputSplit(host));
+  return list;
+}
