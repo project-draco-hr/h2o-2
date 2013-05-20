@@ -1,3 +1,9 @@
 {
-  throw new RuntimeException("TODO Auto-generated method stub");
+  String[] files=Interop.asStringArray(ai.getAny(args,"files"));
+  Arg arg=defaultArg();
+  URI[] uris=new URI[files.length];
+  for (int i=0; i < files.length; i++)   uris[i]=URI.make(files[i]);
+  arg.files=uris;
+  Res res=execute(arg);
+  return Interop.asRString((res.error == null) ? res.result._key.toString() : res.error.toString());
 }
