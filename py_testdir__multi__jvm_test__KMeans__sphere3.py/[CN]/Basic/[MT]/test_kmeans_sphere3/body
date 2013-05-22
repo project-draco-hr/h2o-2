@@ -11,10 +11,7 @@ def test_kmeans_sphere3(self):
     kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
     elapsed = (time.time() - start)
     print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-    h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-    model_key = kmeans['destination_key']
-    kmeansResult = h2o_cmd.runInspect(key=model_key)
-    centers = kmeansResult['KMeansModel']['clusters']
+    centers = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
     centersSorted = sorted(centers, key=itemgetter(0))
     self.assertAlmostEqual(centersSorted[0][0], 100, delta=0.2)
     self.assertAlmostEqual(centersSorted[1][0], 200, delta=0.2)
