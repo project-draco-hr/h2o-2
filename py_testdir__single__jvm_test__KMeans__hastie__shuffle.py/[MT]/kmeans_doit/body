@@ -7,7 +7,7 @@ def kmeans_doit(self, csvFilename, csvPathname, timeoutSecs=30):
     kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
     elapsed = (time.time() - start)
     print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-    h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
+    h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
     inspect = h2o_cmd.runInspect(None, key=kmeans['destination_key'])
     KMeansModel = inspect['KMeansModel']
     clusters = KMeansModel['clusters'][0]

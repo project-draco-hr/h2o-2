@@ -1,6 +1,10 @@
-def show_results(csvPathname, parseKey, model_key, centers, destination_key):
-    kmeansApplyResult = h2o.nodes[0].kmeans_apply(data_key=parseKey['destination_key'], model_key=model_key, destination_key=destination_key)
-    inspect = h2o_cmd.runInspect(None, destination_key)
+def bigCheckResults(self, kmeans, csvPathname, parseKey, applyDestinationKey, **kwargs):
+    simpleCheckKMeans(self, kmeans, **kwargs)
+    model_key = kmeans['destination_key']
+    kmeansResult = h2o_cmd.runInspect(key=model_key)
+    centers = kmeansResult['KMeansModel']['clusters']
+    kmeansApplyResult = h2o.nodes[0].kmeans_apply(data_key=parseKey['destination_key'], model_key=model_key, destination_key=applyDestinationKey)
+    inspect = h2o_cmd.runInspect(None, applyDestinationKey)
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     kmeansScoreResult = h2o.nodes[0].kmeans_score(key=parseKey['destination_key'], model_key=model_key)
     score = kmeansScoreResult['score']
