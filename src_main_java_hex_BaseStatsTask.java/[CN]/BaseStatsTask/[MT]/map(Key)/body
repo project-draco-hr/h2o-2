@@ -1,0 +1,24 @@
+{
+  AutoBuffer bits=new AutoBuffer(DKV.get(key).memOrLoad());
+  final int nrows=bits.remaining() / _ary.rowSize();
+  final int ncols=_ary._cols.length;
+  _min=new double[ncols];
+  Arrays.fill(_min,Double.POSITIVE_INFINITY);
+  _max=new double[ncols];
+  Arrays.fill(_max,Double.NEGATIVE_INFINITY);
+  _sum=new double[ncols];
+  _sumsq=new double[ncols];
+  _n=new long[ncols];
+  for (int r=0; r < nrows; ++r) {
+    for (int c=0; c < ncols; ++c) {
+      if (!_ary.isNA(bits,r,c)) {
+        double d=_ary.datad(bits,r,c);
+        if (_min[c] > d)         _min[c]=d;
+        if (_max[c] < d)         _max[c]=d;
+        _sum[c]+=d;
+        _sumsq[c]+=d * d;
+        _n[c]++;
+      }
+    }
+  }
+}

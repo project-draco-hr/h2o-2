@@ -8,8 +8,9 @@
     filter._rpc[i]=numrows;
     numrows+=tmp;
   }
-  ValueArray va=DKV.get(args[0]._key).get();
-  va=VABuilder.updateRows(va,r._key,numrows);
+  ValueArray va=VABuilder.updateRows(DKV.get(args[0]._key).get(ValueArray.class),r._key,numrows);
+  DKV.put(va._key,va);
+  va=VABuilder.getUpdatedVA(va,r._key,numrows);
   va._rpc=filter._rpc;
   DKV.put(va._key,va);
   DKV.write_barrier();
