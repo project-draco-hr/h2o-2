@@ -4,7 +4,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     params = response['redirect_request_args']
     paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])
     if (noise is not None):
-        print noise
+        print 'Using noise during poll_url:', noise
         (noise_json, noiseParams) = noise
         noiseUrl = self.__url((noise_json + '.json'))
         if (noiseParams is None):
