@@ -1,4 +1,4 @@
 def Store2HDFS(self, key):
-    a = self.__check_request(requests.get(self.__url('Store2HDFS.json'), params={'key': key, }))
+    a = self.__do_json_request(self.__url('Store2HDFS.json'), params={'key': key, })
     verboseprint('\ninspect result:', dump_json(a))
     return a

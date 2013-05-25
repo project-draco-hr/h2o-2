@@ -1,6 +1,6 @@
 def shutdown_all(self):
     try:
-        self.__check_request(requests.get(self.__url('Shutdown.json')))
+        self.__do_json_request(self.__url('Shutdown.json'))
     except:
         pass
     return True

@@ -3,7 +3,7 @@ def kmeans_score(self, key, model_key, timeoutSecs=300, retryDelaySecs=0.2, init
     browseAlso = kwargs.get('browseAlso', False)
     params_dict.update(kwargs)
     print '\nKMeansScore params list', params_dict
-    a = self.__check_request(requests.get(url=self.__url('KMeansScore.json'), timeout=timeoutSecs, params=params_dict))
+    a = self.__do_json_request(url=self.__url('KMeansScore.json'), timeout=timeoutSecs, params=params_dict)
     if (1 == 0):
         verboseprint('\nKMeansScore first result:', dump_json(a))
         if (a['response']['redirect_request'] != 'Progress'):

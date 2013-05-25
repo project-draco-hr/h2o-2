@@ -1,5 +1,5 @@
 def get_cloud(self):
-    a = self.__check_request(requests.get(self.__url('Cloud.json')))
+    a = self.__do_json_request(self.__url('Cloud.json'))
     consensus = a['consensus']
     locked = a['locked']
     cloud_size = a['cloud_size']
