@@ -18,12 +18,12 @@
       ++end;
     }
  else {
-      end=input.indexOf('=',start);
+      end=input.indexOf(JS_SEP,start);
       className=input.substring(start,end);
     }
     start=end;
     while (start < bsource.length && bsource[start] == ' ')     ++start;
-    if (bsource[start] != '=')     throw new IllegalArgumentException("Expected = after the class name.");
+    if (bsource[start] != JS_SEP)     throw new IllegalArgumentException("Expected = after the class name.");
     ++start;
     end=input.indexOf(',',start);
     try {

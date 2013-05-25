@@ -18,7 +18,7 @@
   byte separator=CsvParser.NO_SEPARATOR;
   CsvParser.Setup setup=Inspect.csvGuessValue(v,separator);
   if (setup._data == null || setup._data[0].length == 0)   res.error=new IllegalArgumentException("I cannot figure out this file; I only handle common CSV formats: " + arg.files[0]);
-  Key dest=Key.make(ks[0] + ".hex");
+  Key dest=Key.make(ks[0] + Extensions.HEX);
   try {
     Job job=ParseDataset.forkParseDataset(dest,ks,setup);
     res.result=job.get();

@@ -2,7 +2,7 @@
   Key k=encodeKey(obj.getBucketName(),obj.getKey());
   long size=obj.getSize();
   Value val=null;
-  if (obj.getKey().endsWith(".hex")) {
+  if (obj.getKey().endsWith(Extensions.HEX)) {
     int sz=(int)Math.min(ValueArray.CHUNK_SZ,size);
     byte[] mem=MemoryManager.malloc1(sz);
     S3ObjectInputStream is=getObjectForKey(k,0,ValueArray.CHUNK_SZ).getObjectContent();

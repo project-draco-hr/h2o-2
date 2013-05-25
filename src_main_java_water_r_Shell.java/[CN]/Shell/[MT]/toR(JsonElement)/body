@@ -8,7 +8,7 @@
       a[count]=toR(entry.getValue());
       names[count++]=RSymbol.getSymbol(entry.getKey());
     }
-    return RListFactory.getFor(a,new int[]{1},Names.create(names));
+    return RListFactory.getFor(a,new int[]{a.length},Names.create(names));
   }
   if (e instanceof JsonArray) {
     RAny[] a=new RAny[((JsonArray)e).size()];

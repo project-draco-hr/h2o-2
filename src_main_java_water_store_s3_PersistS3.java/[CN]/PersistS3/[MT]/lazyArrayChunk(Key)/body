@@ -3,7 +3,7 @@
   long off=ValueArray.getChunkOffset(key);
   long size=getObjectMetadataForKey(arykey).getContentLength();
   long rem=size - off;
-  if (arykey.toString().endsWith(".hex")) {
+  if (arykey.toString().endsWith(Extensions.HEX)) {
     int value_len=DKV.get(arykey).memOrLoad().length;
     rem-=value_len;
   }

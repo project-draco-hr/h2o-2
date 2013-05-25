@@ -1,0 +1,15 @@
+{
+  Value value=_source.value();
+  String path=_path.value();
+  try {
+    if (value == null)     throw new IllegalArgumentException("Unknown key: " + _source.record()._originalValue);
+    PersistHdfs.store(path,value);
+  }
+ catch (  Exception e) {
+    Log.err(e);
+    return Response.error(e.getMessage());
+  }
+  JsonObject json=new JsonObject();
+  Response r=Response.done(json);
+  return r;
+}

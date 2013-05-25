@@ -10,7 +10,18 @@
         Key k=getKeyForPathString(pfs.toString());
         long size=file.getLen();
         Value val=null;
-        if (pfs.getName().endsWith(".hex")) {
+        if (pfs.getName().endsWith(Extensions.JSON)) {
+          JsonParser parser=new JsonParser();
+          JsonObject json=parser.parse(new InputStreamReader(fs.open(pfs))).getAsJsonObject();
+          JsonElement v=json.get(Constants.VERSION);
+          if (v == null)           throw new InvalidDataException("Missing version");
+          JsonElement type=json.get(Constants.TYPE);
+          if (type == null)           throw new InvalidDataException("Missing type");
+          Class c=Class.forName(type.getAsString());
+          Model model=(Model)c.newInstance();
+          model.fromJson(json);
+        }
+ else         if (pfs.getName().endsWith(Extensions.HEX)) {
           FSDataInputStream s=fs.open(pfs);
           int sz=(int)Math.min(1L << 20,size);
           byte[] mem=MemoryManager.malloc1(sz);
@@ -34,7 +45,7 @@
       }
     }
   }
- catch (  IOException e) {
+ catch (  Exception e) {
     Log.err(e);
     JsonObject o=new JsonObject();
     o.addProperty(Constants.FILE,p.toString());

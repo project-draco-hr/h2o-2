@@ -1,0 +1,10 @@
+{
+  byte[] data;
+  Model model=getAsModel(v);
+  if (model != null) {
+    if (!path.endsWith(Extensions.JSON))     path+=Extensions.JSON;
+    data=model.toJson().toString().getBytes(Charsets.UTF_8);
+  }
+ else   data=v.memOrLoad();
+  store(new Path(path),data);
+}
