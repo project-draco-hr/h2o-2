@@ -23,6 +23,7 @@
   System.out.println("Deploying to " + hosts);
   conf.set(HOSTS_KEY,hosts);
   conf.set(PORT_KEY,"" + config.port);
+  conf.set(ICE_KEY,"" + config.ice_root);
   HadoopTool tool=new HadoopTool();
   ToolRunner.run(conf,tool,args);
   String url="http://" + hosts.substring(0,hosts.indexOf(',')) + ":"+ config.port+ "/";

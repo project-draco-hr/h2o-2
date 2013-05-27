@@ -1,4 +1,7 @@
 {
-  File f=new File(PersistIce.ROOT);
+  if (Schemes.HDFS.equals(PersistIce.ROOT.getScheme())) {
+    return false;
+  }
+  File f=new File(PersistIce.ROOT.getPath());
   return f.getUsableSpace() < (5 << 10);
 }

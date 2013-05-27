@@ -44,12 +44,12 @@
     hb._fjthrds_lo=(char)H2O.loQPoolSize();
     hb._fjqueue_lo=(char)H2O.getLoQueue();
     hb._tcps_active=(char)H2ONode.TCPS.get();
-    if (PersistIce.ROOT == null) {
+    if (PersistIce.ROOT == null || Schemes.HDFS.equals(PersistIce.ROOT.getScheme())) {
       hb.set_free_disk(0);
       hb.set_max_disk(0);
     }
  else {
-      File f=new File(PersistIce.ROOT);
+      File f=new File(PersistIce.ROOT.getPath());
       hb.set_free_disk(f.getUsableSpace());
       hb.set_max_disk(f.getTotalSpace());
     }
