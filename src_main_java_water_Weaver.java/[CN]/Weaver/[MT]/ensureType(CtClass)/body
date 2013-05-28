@@ -1,6 +1,6 @@
 {
   CtMethod ccms[]=cc.getDeclaredMethods();
   if (!javassist.Modifier.isAbstract(cc.getModifiers()) && !hasExisting("frozenType","()I",ccms)) {
-    cc.addMethod(CtNewMethod.make("public int frozenType() {" + "  return " + TypeMap.onLoad(cc.getName()) + ";"+ "}",cc));
+    cc.addMethod(CtNewMethod.make("public short frozenType() {" + "  return " + TypeMap.onLoad(cc.getName()) + ";"+ "}",cc));
   }
 }

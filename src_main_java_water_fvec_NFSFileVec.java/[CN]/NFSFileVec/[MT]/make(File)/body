@@ -1,0 +1,12 @@
+{
+  long size=f.length();
+  Key k1=PersistNFS.decodeFile(f);
+  byte[] bits=new byte[1 + 1 + 4+ k1._kb.length];
+  bits[0]=Key.VEC;
+  bits[1]=0;
+  UDP.set4(bits,2,-1);
+  System.arraycopy(k1._kb,0,bits,1 + 1 + 4,k1._kb.length);
+  Key k=Key.make(bits);
+  DKV.put(k,new NFSFileVec(k,size));
+  return k;
+}
