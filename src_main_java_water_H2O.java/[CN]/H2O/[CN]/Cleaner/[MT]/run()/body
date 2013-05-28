@@ -32,7 +32,13 @@
       byte[] m=val.rawMem();
       Object p=val.rawPOJO();
       if (m == null && p == null)       continue;
-      if (key._kb[0] == Key.DVEC)       throw H2O.unimpl();
+      if (key._kb[0] == Key.DVEC) {
+        if (!junk) {
+          Log.unwrap(System.err,"still not cleaning DVecs");
+          junk=true;
+        }
+        continue;
+      }
       if (val.isArray() && (val._persist & Value.BACKEND_MASK) != Value.ICE) {
         if (m != null && p != null) {
           val.freeMem();
