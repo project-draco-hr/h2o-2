@@ -5,5 +5,11 @@
   for (int i=0; i < files.length; i++)   uris[i]=URI.make(files[i]);
   arg.files=uris;
   Res res=execute(arg);
-  return Interop.asRString((res.error == null) ? res.result._key.toString() : res.error.toString());
+  if (res.error == null) {
+    String name=res.result._key.toString();
+    RAny rname=Interop.asRString(name);
+    rname=Interop.setAttribute(rname,"h2okind","parsed-file-key");
+    return rname;
+  }
+ else   return Interop.asRString(res.error.toString());
 }

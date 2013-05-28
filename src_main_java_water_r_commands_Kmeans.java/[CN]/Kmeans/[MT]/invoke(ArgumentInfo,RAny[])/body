@@ -1,0 +1,24 @@
+{
+  String data=Interop.asString(ai.getAny(args,"data"));
+  Arg arg=defaultArg();
+  int k=(int)ai.get(args,"k",-1);
+  double epsilon=ai.get(args,"epsilon",0);
+  int maxIteration=(int)ai.get(args,"max.iteration",1);
+  int[] cols=null;
+  Key dest=Key.make(data.toString() + ".mod");
+  ValueArray va=DKV.get(Key.make(data)).get();
+  long seed=ai.get(args,"seed",1234567890);
+  boolean normalize=ai.get(args,"normalize",true);
+  try {
+    hex.KMeans job=hex.KMeans.start(dest,va,k,epsilon,seed,normalize,cols);
+    job.get();
+    String ds=dest.toString();
+    RAny rds=Interop.asRString(ds);
+    rds=Interop.setAttribute(rds,"h2okind","kmeans-model");
+  }
+ catch (  IllegalArgumentException e) {
+  }
+catch (  Error e) {
+  }
+  return null;
+}
