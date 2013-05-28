@@ -5,6 +5,7 @@
   arguments.extract(OPT_ARGS);
   ARGS=arguments.toStringArray();
   ParseDataset.PLIMIT=OPT_ARGS.pparse_limit;
+  SELF_ADDRESS=findInetAddressForSelf();
   Log.wrap();
   startLocalNode();
   initializePersistence();
