@@ -1,28 +1,15 @@
 {
   Res res=defaultRes();
-  if (arg.files.length == 0) {
-    res.error=new URI.FormatError("no files");
-    return res;
+  ValueArray va=DKV.get(Key.make(arg.data)).get();
+  if (arg.cols == null) {
+    arg.cols=new int[va._cols.length];
+    for (int i=0; i < arg.cols.length; i++)     arg.cols[i]=i;
   }
-  Key[] ks=new Key[arg.files.length];
-  for (int i=0; i < ks.length; i++) {
-    try {
-      ks[i]=arg.files[i].get();
-    }
- catch (    IOException e) {
-      res.error=e;
-      return res;
-    }
-  }
-  Value v=DKV.get(ks[0]);
-  byte separator=CsvParser.NO_SEPARATOR;
-  CsvParser.Setup setup=Inspect.csvGuessValue(v,separator);
-  if (setup._data == null || setup._data[0].length == 0)   res.error=new IllegalArgumentException("H2O cannot only handles common CSV formats: " + arg.files[0]);
-  Key dest=Key.make(ks[0] + Extensions.HEX);
   try {
-    Job job=ParseDataset.forkParseDataset(dest,ks,setup);
-    res.result=job.get();
-    for (    Key k : ks)     UKV.remove(k);
+    Key dest=Key.make(arg.data + ".mod");
+    hex.KMeans job=hex.KMeans.start(dest,va,arg.k,arg.epsilon,arg.seed,arg.normalize,arg.cols);
+    job.get();
+    res.result=DKV.get(dest).get();
   }
  catch (  Error e) {
     res.error=e;

@@ -1,24 +1,19 @@
 {
-  String data=Interop.asString(ai.getAny(args,"data"));
   Arg arg=defaultArg();
-  int k=(int)ai.get(args,"k",-1);
-  double epsilon=ai.get(args,"epsilon",0);
-  int maxIteration=(int)ai.get(args,"max.iteration",1);
-  int[] cols=null;
-  Key dest=Key.make(data.toString() + ".mod");
-  ValueArray va=DKV.get(Key.make(data)).get();
-  long seed=ai.get(args,"seed",1234567890);
-  boolean normalize=ai.get(args,"normalize",true);
-  try {
-    hex.KMeans job=hex.KMeans.start(dest,va,k,epsilon,seed,normalize,cols);
-    job.get();
-    String ds=dest.toString();
+  if (Interop.getAttributeAsString(ai.getAny(args,"data"),"h2okind") != "HEX")   return Interop.asRString("Error wrong data argument");
+  arg.data=ai.get(args,"data",arg.data);
+  arg.k=(int)ai.get(args,"k",arg.k);
+  arg.epsilon=ai.get(args,"epsilon",(long)arg.epsilon);
+  arg.maxIterations=(int)ai.get(args,"max.iterations",arg.maxIterations);
+  arg.cols=Interop.asIntArray(ai.getAny(args,"cols"));
+  arg.seed=ai.get(args,"seed",arg.seed);
+  arg.normalize=ai.get(args,"normalize",arg.normalize);
+  Res res=execute(arg);
+  if (res.error == null) {
+    String ds=res.result._selfKey.toString();
     RAny rds=Interop.asRString(ds);
-    rds=Interop.setAttribute(rds,"h2okind","kmeans-model");
+    rds=Interop.setAttribute(rds,"h2okind","KMEANS.MODEL");
+    return rds;
   }
- catch (  IllegalArgumentException e) {
-  }
-catch (  Error e) {
-  }
-  return null;
+ else   return Interop.asRString(res.error.toString());
 }
