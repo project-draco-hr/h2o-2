@@ -5,16 +5,6 @@
   Value v1=DKV.get(arykey,Integer.MAX_VALUE,H2O.ARY_KEY_PRIORITY);
   if (v1 == null)   return null;
   if (!v1.isArray())   return null;
-switch (v1._persist & BACKEND_MASK) {
-case ICE:
-    return PersistIce.lazyArrayChunk(key);
-case HDFS:
-  return PersistHdfs.lazyArrayChunk(key);
-case NFS:
-return PersistNFS.lazyArrayChunk(key);
-case S3:
-return PersistS3.lazyArrayChunk(key);
-default :
-throw H2O.unimpl();
-}
+  int i=v1._persist & BACKEND_MASK;
+  return Persist.I[i].lazyArrayChunk(key);
 }

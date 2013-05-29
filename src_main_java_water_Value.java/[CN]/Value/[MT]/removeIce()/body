@@ -1,5 +1,6 @@
 {
   if (!isPersisted() || !onICE())   return;
   clrdsk();
-  PersistIce.fileDelete(this);
+  int i=_persist & BACKEND_MASK;
+  Persist.I[i].delete(this);
 }

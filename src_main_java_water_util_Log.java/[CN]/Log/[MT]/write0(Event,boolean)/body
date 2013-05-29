@@ -1,11 +1,21 @@
 {
   String s=e.toString();
-  if (H2O.SELF != null && LOG_FILE == null)   LOG_FILE=new BufferedWriter(PersistIce.logFile());
-  if (LOG_FILE != null) {
+  if (H2O.SELF != null && FILE_WRITER == null) {
+    File dir;
+    if (H2O.ICE_ROOT.getScheme() == null || Schemes.FILE.equals(H2O.ICE_ROOT.getScheme()))     dir=new File(H2O.ICE_ROOT.getPath());
+ else     dir=new File(H2O.DEFAULT_ICE_ROOT);
     try {
-      LOG_FILE.write(s,0,s.length());
-      LOG_FILE.write(NL,0,NL.length());
-      LOG_FILE.flush();
+      FILE=new File(dir,FILE_NAME);
+      FILE_WRITER=new BufferedWriter(new FileWriter(FILE));
+    }
+ catch (    IOException _) {
+    }
+  }
+  if (FILE_WRITER != null) {
+    try {
+      FILE_WRITER.write(s,0,s.length());
+      FILE_WRITER.write(NL,0,NL.length());
+      FILE_WRITER.flush();
     }
  catch (    IOException ioe) {
     }
