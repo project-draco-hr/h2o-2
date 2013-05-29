@@ -1,0 +1,19 @@
+{
+  Res res=defaultRes();
+  ValueArray va=DKV.get(Key.make(arg.data)).get();
+  if (arg.X == null) {
+    arg.X=new int[va._cols.length - 1];
+    int j=0;
+    for (int i=0; i < va._cols.length; i++)     if (i != arg.Y)     arg.X[j++]=i;
+  }
+  try {
+    Key dest=Key.make(arg.data + ".mod");
+    Job job=hex.DGLM.startGLMJob(dest,DGLM.getData(va,arg.X,arg.Y,null,arg.normalize),new ADMMSolver(arg.lambda,arg.alpha),new GLMParams(DGLM.Family.valueOf(arg.family)),arg.betaStart,arg.xval,true);
+    job.get();
+    res.result=DKV.get(dest).get();
+  }
+ catch (  Error e) {
+    res.error=e;
+  }
+  return res;
+}

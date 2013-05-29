@@ -5,12 +5,11 @@
   Key key=Key.make("irisModel");
   RReader.run(key,new FileInputStream(file));
   RFModel model=UKV.get(key);
-  int[] map=model.columnMapping(iris.colNames());
-  Assert.assertTrue(Model.isCompatible(map));
-  double[] row=new double[map.length];
+  Model m=model.adapt(iris.colNames());
+  double[] row=new double[iris._cols.length];
   for (int i=0; i < iris._numrows; i++) {
-    for (int j=0; j < map.length - 1; j++)     row[j]=iris.datad(i,j);
-    assertEquals(iris.datad(i,map.length - 1),model.score(row,map),0.0001);
+    for (int j=0; j < iris._cols.length - 1; j++)     row[j]=iris.datad(i,j);
+    assertEquals(iris.datad(i,iris._cols.length - 1),m.score(row),0.0001);
   }
   model.deleteKeys();
   UKV.remove(key);
