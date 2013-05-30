@@ -1,0 +1,14 @@
+{
+  if (DEBUG)   Log.debug("reduce: " + this);
+  PersistS3Task task=(PersistS3Task)rt;
+  if (task._parts != null) {
+    if (_parts == null) {
+      _parts=task._parts;
+      _etags=task._etags;
+    }
+ else {
+      _parts=merge(_parts,task._parts);
+      _etags=merge(_etags,task._etags);
+    }
+  }
+}

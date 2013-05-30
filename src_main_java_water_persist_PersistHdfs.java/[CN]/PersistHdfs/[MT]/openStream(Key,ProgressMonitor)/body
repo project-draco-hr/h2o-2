@@ -1,0 +1,17 @@
+{
+  H2OHdfsInputStream res=null;
+  Path p=new Path(k.toString());
+  try {
+    res=new H2OHdfsInputStream(p,0,pmon);
+  }
+ catch (  IOException e) {
+    try {
+      Thread.sleep(1000);
+    }
+ catch (    Exception ex) {
+    }
+    Log.warn("Error while opening HDFS key " + k.toString() + ", will wait and retry.");
+    res=new H2OHdfsInputStream(p,0,pmon);
+  }
+  return res;
+}

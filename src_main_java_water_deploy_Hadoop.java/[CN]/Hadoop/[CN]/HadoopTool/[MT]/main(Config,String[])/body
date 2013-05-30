@@ -39,7 +39,7 @@
     JSONObject resp=json.getJSONObject(Constants.RESPONSE);
     String status=resp.getString(Constants.STATUS);
     System.out.println("Status: " + status);
-    if (status == Status.error.name()) {
+    if (Status.error.name().equals(status)) {
       System.out.println("Response: " + res);
     }
   }

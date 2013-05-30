@@ -12,7 +12,10 @@
       boolean done=(Boolean)field.get(null);
       context.progress();
       Thread.sleep(1000);
-      if (done)       break;
+      if (done) {
+        Persist.getIce().clear();
+        break;
+      }
     }
   }
  catch (  Exception ex) {
