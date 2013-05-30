@@ -1,4 +1,12 @@
 {
-  if (_len == _mem.length)   _mem=Arrays.copyOf(_mem,_len << 1);
-  _mem[_len++]=(byte)c;
+  int waste=0;
+  if (_off + _len == _cs.length) {
+    waste=_len;
+    byte[] cs=new byte[(_cs.length << 1) < 1024 ? (_cs.length << 1) : 1024];
+    System.arraycopy(_cs,_off,cs,0,_len);
+    _off=0;
+    _cs=cs;
+  }
+  _cs[_off + _len++]=(byte)c;
+  return waste;
 }

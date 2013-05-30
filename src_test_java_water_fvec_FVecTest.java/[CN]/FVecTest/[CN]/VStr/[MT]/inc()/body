@@ -1,3 +1,4 @@
 {
-  _cnt.addAndGet(1);
+  int r=_cnt;
+  while (!_cntUpdater.compareAndSet(this,r,r + 1))   r=_cnt;
 }

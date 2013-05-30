@@ -3,6 +3,8 @@
   Key key=NFSFileVec.make(file);
   NFSFileVec nfs=DKV.get(key).get();
   NonBlockingHashMap<VStr,VStr> words=new WordCount().invoke(nfs)._words;
-  Log.unwrap(System.err,words.toString());
+  VStr[] vss=words.keySet().toArray(new VStr[words.size()]);
+  Arrays.sort(vss);
+  Log.unwrap(System.err,Arrays.toString(vss));
   UKV.remove(key);
 }
