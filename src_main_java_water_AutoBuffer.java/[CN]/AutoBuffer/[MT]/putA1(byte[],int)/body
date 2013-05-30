@@ -1,10 +1,3 @@
 {
-  int sofar=0;
-  while (sofar < length) {
-    int len=Math.min(length - sofar,_bb.remaining());
-    _bb.put(ary,sofar,len);
-    sofar+=len;
-    if (sofar < length)     sendPartial();
-  }
-  return this;
+  return putA1(ary,0,length);
 }

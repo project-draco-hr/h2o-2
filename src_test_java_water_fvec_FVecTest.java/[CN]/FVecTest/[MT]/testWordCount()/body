@@ -1,10 +1,11 @@
 {
-  File file=TestUtil.find_test_file("../wiki/enwiki-latest-pages-articles.xml");
+  File file=TestUtil.find_test_file("../Dropbox/Sris and Cliff/H20_Rush_New_Dataset_100k.csv");
   Key key=NFSFileVec.make(file);
   NFSFileVec nfs=DKV.get(key).get();
   NonBlockingHashMap<VStr,VStr> words=new WordCount().invoke(nfs)._words;
   VStr[] vss=words.keySet().toArray(new VStr[words.size()]);
   Arrays.sort(vss);
-  Log.unwrap(System.err,Arrays.toString(vss));
+  System.out.println("Found " + vss.length + " unique words.");
+  System.out.println(Arrays.toString(vss));
   UKV.remove(key);
 }
