@@ -1,0 +1,25 @@
+{
+  _words=WORDS;
+  long i=start;
+  if (start > 0)   while (Character.isLetter((char)bv.at(i)))   i++;
+  VStr vs=new VStr();
+  while (i < start + len) {
+    int c=(int)bv.at(i);
+    if (Character.isLetter(c)) {
+      vs.append(c);
+    }
+ else {
+      if (vs._len > 0) {
+        VStr vs2=WORDS.putIfAbsent(vs,vs);
+        if (vs2 == null) {
+          vs=new VStr();
+        }
+ else {
+          vs2.inc();
+          vs._len=0;
+        }
+      }
+    }
+    i++;
+  }
+}

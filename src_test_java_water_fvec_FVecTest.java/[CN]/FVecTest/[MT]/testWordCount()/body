@@ -1,0 +1,8 @@
+{
+  File file=TestUtil.find_test_file("../wiki/enwiki-latest-pages-articles.xml");
+  Key key=NFSFileVec.make(file);
+  NFSFileVec nfs=DKV.get(key).get();
+  NonBlockingHashMap<VStr,VStr> words=new WordCount().invoke(nfs)._words;
+  Log.unwrap(System.err,words.toString());
+  UKV.remove(key);
+}
