@@ -1,5 +1,5 @@
 {
-  File file=TestUtil.find_test_file("../Dropbox/Sris and Cliff/H20_Rush_New_Dataset_100k.csv");
+  File file=TestUtil.find_test_file("/home/0xdiag/datasets/wiki.xml");
   Key key=NFSFileVec.make(file);
   NFSFileVec nfs=DKV.get(key).get();
   NonBlockingHashMap<VStr,VStr> words=new WordCount().invoke(nfs)._words;
