@@ -1,7 +1,7 @@
-def setupImportHdfs(node=None, path=None):
+def setupImportHdfs(node=None, path=None, schema='hdfs'):
     if (not node):
         node = h2o.nodes[0]
-    hdfsPrefix = ('hdfs://' + node.hdfs_name_node)
+    hdfsPrefix = ((schema + '://') + node.hdfs_name_node)
     if (path is None):
         URI = (hdfsPrefix + '/datasets')
     else:
