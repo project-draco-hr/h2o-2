@@ -10,12 +10,18 @@
   if (buf[i] != '-')   dd=digit(dd,buf[i++]);
   if (dd < 1 || dd > 31)   return Long.MIN_VALUE;
   if (buf[i++] != '-')   return Long.MIN_VALUE;
+  byte[] mm=null;
   OUTER:   for (; MM < MMS.length; MM++) {
-    for (int j=0; j < MMS[MM].length; j++)     if (MMS[MM][j] != buf[i + j])     continue OUTER;
-    break;
+    byte[][] mms=MMS[MM];
+    INNER:     for (int k=0; k < mms.length; k++) {
+      mm=mms[k];
+      if (mm == null)       continue;
+      for (int j=0; j < mm.length; j++)       if (mm[j] != Character.toLowerCase(buf[i + j]))       continue INNER;
+      break OUTER;
+    }
   }
   if (MM == MMS.length)   return Long.MIN_VALUE;
-  i+=MMS[MM].length;
+  i+=mm.length;
   MM++;
   if (buf[i++] != '-')   return Long.MIN_VALUE;
   yy=digit(yy,buf[i++]);
