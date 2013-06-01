@@ -1,5 +1,7 @@
 {
   super.read(ab);
+  final long start=System.currentTimeMillis();
+  int cnt=0;
   _words=WORDS;
   int len=0;
   while ((len=ab.get2()) != 65535) {
@@ -8,6 +10,9 @@
     vs._cnt=ab.get4();
     VStr vs2=WORDS.putIfAbsent(vs,vs);
     if (vs2 != null)     vs2.inc(vs._cnt);
+    cnt++;
   }
+  final long t=System.currentTimeMillis() - start;
+  System.out.println("WC Read takes " + t + "msec for "+ cnt+ " words");
   return this;
 }
