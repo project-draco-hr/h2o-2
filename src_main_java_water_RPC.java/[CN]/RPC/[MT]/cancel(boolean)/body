@@ -3,9 +3,9 @@
 synchronized (this) {
     if (!isCancelled()) {
       did=true;
+      _target.taskRemove(_tasknum);
       _target=null;
       UDPTimeOutThread.PENDING.remove(this);
-      _target.taskRemove(_tasknum);
     }
     notifyAll();
   }
