@@ -1,0 +1,27 @@
+{
+synchronized (this) {
+    if (procManagerThread != null) {
+      updateResult("Error: procManagerThread already exists");
+      return;
+    }
+  }
+  try {
+    ProcessBuilder pb=new ProcessBuilder("/Users/tomk/0xdata/H2OLauncher/Contents/Resources/jre1.7.0_21-osx/java-osx/bin/java","-Xmx" + xmxField.getText().trim(),"-jar","/Users/tomk/0xdata/H2OLauncher/Contents/Resources/h2o.jar","-name",cloudField.getText().trim(),"-port",portField.getText().trim());
+    pb.redirectErrorStream(true);
+    Process p=pb.start();
+synchronized (this) {
+      proc=p;
+      ProcManagerThread t;
+      t=new ProcManagerThread(this,proc);
+      t.start();
+      procManagerThread=t;
+      status=H2oStatus.RUNNING;
+    }
+    updateResult("H2O started");
+  }
+ catch (  Exception e) {
+    updateResult("Failed to start H2O (process start failed)");
+    String s=e.getMessage() + "\n" + e.getStackTrace();
+    textArea.setText(s);
+  }
+}
