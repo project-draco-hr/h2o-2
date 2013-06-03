@@ -1,2 +1,18 @@
 {
+  final Key arykey=ValueArray.getArrayKey(key);
+  final long off=(_iceRoot != null) ? 0 : ValueArray.getChunkOffset(key);
+  final Path p=(_iceRoot != null) ? new Path(_iceRoot,getIceName(key,(byte)'V')) : new Path(arykey.toString());
+  final Size sz=new Size();
+  run(new Callable(){
+    @Override public Object call() throws Exception {
+      FileSystem fs=FileSystem.get(p.toUri(),CONF);
+      long rem=fs.getFileStatus(p).getLen() - off;
+      sz._value=(rem > ValueArray.CHUNK_SZ * 2) ? (int)ValueArray.CHUNK_SZ : (int)rem;
+      return null;
+    }
+  }
+,true,0);
+  Value val=new Value(key,sz._value,Value.HDFS);
+  val.setdsk();
+  return val;
 }
