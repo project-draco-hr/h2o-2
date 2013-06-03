@@ -4,9 +4,9 @@
   Color colorNotEditable=new Color(230,230,230);
   addPadding();
   JLabel cloudLabel;
-  cloudLabel=new JLabel("Cloud name");
+  cloudLabel=new JLabel("H2O cluster name");
   cloudField=new JTextField(20);
-  cloudField.setToolTipText("H2O nodes must have the same cloud name in order to form a cloud.  By default, a random name is chosen to prevent you from accidentally joining an existing cloud.");
+  cloudField.setToolTipText("H2O nodes must have the same cluster name in order to form a cluster.  By default, a random name is chosen to prevent you from accidentally joining an existing cluster.");
   cloudField.addActionListener(this);
   cloudField.setActionCommand(CLOUD_COMMAND);
 {
@@ -15,7 +15,7 @@
     if (randValue < 0) {
       randValue=-randValue;
     }
-    String s="cloud_" + (randValue.toString());
+    String s="h2o_cluster_" + (randValue.toString());
     cloudField.setText(s);
     myAdd(cloudLabel,makeLabelConstraints());
     myAdd(cloudField,makeFieldConstraints());
