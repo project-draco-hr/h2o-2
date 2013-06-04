@@ -1,8 +1,0 @@
-{
-  int nchunks=vecs[0].nChunks();
-  for (  Vec vec : vecs)   if (vec.nChunks() != nchunks)   throw new IllegalArgumentException("Vectors different numbers of chunks, " + nchunks + " and "+ vec.nChunks());
-  for (int i=0; i < nchunks; i++) {
-    long es=vecs[0].chunk2StartElem(i);
-    for (    Vec vec : vecs)     if (vec.chunk2StartElem(i) != es)     throw new IllegalArgumentException("Vector chunks different numbers of rows, " + es + " and "+ vec.chunk2StartElem(i));
-  }
-}

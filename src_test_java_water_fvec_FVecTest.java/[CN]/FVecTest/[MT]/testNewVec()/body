@@ -1,0 +1,13 @@
+{
+  File file=TestUtil.find_test_file("./smalldata/cars.csv");
+  Key key=NFSFileVec.make(file);
+  NFSFileVec nfs=DKV.get(key).get();
+  Key key2=Key.make("newKey",(byte)0,Key.VEC);
+  NewVec nv=new NewVec(key2);
+  Vec res=new TestNewVec().invoke(nv,nfs).vecs(0).close();
+  int cidx=res.elem2ChunkIdx(0);
+  Value dvec=res.chunkIdx(cidx);
+  System.err.println(new String(dvec.memOrLoad()));
+  UKV.remove(key);
+  UKV.remove(key2);
+}
