@@ -1,0 +1,22 @@
+{
+  if (_ds != null)   throw H2O.unimpl();
+  if (_ls != null) {
+    long min=Long.MAX_VALUE, max=Long.MIN_VALUE;
+    for (    long l : _ls) {
+      if (l < min)       min=l;
+      if (l > max)       max=l;
+    }
+    if (max - min < 255) {
+      if (max < 255) {
+        byte[] bs=new byte[_len];
+        for (int i=0; i < _len; i++)         bs[i]=(byte)_ls[i];
+        C0Vector c0=new C0Vector();
+        c0._mem=bs;
+        c0._start=-1;
+        c0._len=_len;
+        return c0;
+      }
+    }
+  }
+  throw H2O.unimpl();
+}
