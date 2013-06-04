@@ -1,6 +1,9 @@
 {
   if (repl >= size())   return -1;
   byte[] kb=key._kb;
+  if (kb[0] == Key.DVEC && kb[1] != -1) {
+    throw H2O.unimpl();
+  }
   if (!key.user_allowed() && repl < kb[1]) {
     H2ONode h2o=null, h2otmp=new H2ONode();
     AutoBuffer ab=new AutoBuffer(kb,2);
