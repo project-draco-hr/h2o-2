@@ -1,0 +1,116 @@
+{
+  super(new GridBagLayout());
+  status=H2oStatus.NOT_RUNNING;
+  Color colorNotEditable=new Color(230,230,230);
+  addPadding();
+  JLabel cloudLabel;
+  cloudLabel=new JLabel("H2O cluster name");
+  cloudField=new JTextField(20);
+  cloudField.setToolTipText("H2O nodes must have the same cluster name in order to form a cluster.  By default, a random name is chosen to prevent you from accidentally joining an existing cluster.");
+  cloudField.addActionListener(this);
+  cloudField.setActionCommand(CLOUD_COMMAND);
+{
+    Random r=new Random();
+    Integer randValue=new Integer(r.nextInt());
+    if (randValue < 0) {
+      randValue=-randValue;
+    }
+    String s="h2o_cluster_" + (randValue.toString());
+    cloudField.setText(s);
+    myAdd(cloudLabel,makeLabelConstraints());
+    myAdd(cloudField,makeFieldConstraints());
+  }
+  JLabel portLabel;
+  portLabel=new JLabel("Browser port");
+  portField=new JTextField(6);
+  portField.setToolTipText("The embedded web server inside the H2O node will listen on this port.");
+  portField.setText("54321");
+  portField.addActionListener(this);
+  portField.setActionCommand(PORT_COMMAND);
+{
+    myAdd(portLabel,makeLabelConstraints());
+    myAdd(portField,makeFieldConstraints());
+  }
+  JLabel xmxLabel=new JLabel("H2O Java heap size (Xmx)");
+  xmxField=new JTextField(6);
+  xmxField.setToolTipText("For best performance, this value should be at least roughly four times the size of your data set.");
+  xmxField.setText("2g");
+  xmxField.addActionListener(this);
+  xmxField.setActionCommand(XMX_COMMAND);
+{
+    myAdd(xmxLabel,makeLabelConstraints());
+    myAdd(xmxField,makeFieldConstraints());
+  }
+{
+    startButton=new JButton("Start H2O");
+    startButton.setToolTipText("Start a new Java process running H2O.");
+    startButton.addActionListener(this);
+    startButton.setActionCommand(START_COMMAND);
+    int y=1;
+{
+      GridBagConstraints c=makeButtonConstraints();
+      c.gridy=y++;
+      myAdd(startButton,c);
+    }
+    stopButton=new JButton("Stop H2O");
+    stopButton.setToolTipText("Stop the currently running H2O Java process.");
+    stopButton.addActionListener(this);
+    stopButton.setActionCommand(STOP_COMMAND);
+{
+      GridBagConstraints c=makeButtonConstraints();
+      c.gridy=y++;
+      myAdd(stopButton,c);
+    }
+    h2oStatusLabel=new JLabel("Blah blah");
+{
+      GridBagConstraints c=makeButtonConstraints();
+      c.gridy=y++;
+      myAdd(h2oStatusLabel,c);
+    }
+  }
+  addPadding();
+  final int textAreaHeightInLines=12;
+  final int textAreaWidthInCharacters=60;
+  final int wideFieldDiffInCharacters=0;
+  JLabel browserLabel=new JLabel("H2O browser URL");
+  browserField=new JTextField(textAreaWidthInCharacters - wideFieldDiffInCharacters);
+  browserField.setToolTipText("After starting H2O, point your browser to this URL to interact with it.");
+  browserField.setEditable(false);
+  browserField.setBackground(colorNotEditable);
+{
+    myAdd(browserLabel,makeLabelConstraints());
+    GridBagConstraints c=makeFieldConstraints();
+    c.gridwidth=GridBagConstraints.REMAINDER;
+    c.fill=GridBagConstraints.BOTH;
+    myAdd(browserField,c);
+  }
+  JLabel resultLabel=new JLabel("Last operation result");
+  resultField=new JTextField(textAreaWidthInCharacters - wideFieldDiffInCharacters);
+  resultField.setToolTipText("Information about whether the last thing you did succeeded or not");
+  resultField.setEditable(false);
+  resultField.setBackground(colorNotEditable);
+{
+    myAdd(resultLabel,makeLabelConstraints());
+    GridBagConstraints c=makeFieldConstraints();
+    c.gridwidth=GridBagConstraints.REMAINDER;
+    c.fill=GridBagConstraints.BOTH;
+    myAdd(resultField,c);
+  }
+  addPadding();
+{
+    JLabel outputLabel=new JLabel("(H2O stdout and stderr output)");
+    myAdd(outputLabel,makeLabelConstraints());
+  }
+  textArea=new JTextArea(textAreaHeightInLines,textAreaWidthInCharacters);
+  textArea.setEditable(false);
+  JScrollPane scrollPane=new JScrollPane(textArea);
+  scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+{
+    GridBagConstraints c=makeLabelConstraints();
+    c.gridwidth=GridBagConstraints.REMAINDER;
+    c.fill=GridBagConstraints.BOTH;
+    myAdd(scrollPane,c);
+  }
+  validatePort();
+  recalcInBackground();
+}
