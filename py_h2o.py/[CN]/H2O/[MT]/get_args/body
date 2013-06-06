@@ -34,7 +34,7 @@ def get_args(self):
     if self.use_hdfs:
         args += [('-hdfs hdfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
     if self.use_maprfs:
-        args += [('-hdfs maprfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
+        args += [('-hdfs maprfs:///' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
     if self.hdfs_config:
         args += [('-hdfs_config ' + self.hdfs_config)]
     if (not self.sigar):
