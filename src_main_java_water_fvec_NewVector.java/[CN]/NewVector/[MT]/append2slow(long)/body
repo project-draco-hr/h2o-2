@@ -2,7 +2,7 @@
   if (_ds != null)   throw H2O.unimpl();
   if (_ls == null)   _ls=new long[1024];
   if (_len >= _ls.length) {
-    if (_len >= ValueArray.CHUNK_SZ)     throw new ArrayIndexOutOfBoundsException(_len);
+    if (_len > ValueArray.CHUNK_SZ)     throw new ArrayIndexOutOfBoundsException(_len);
     _ls=Arrays.copyOf(_ls,_len << 1);
   }
   _ls[_len++]=l;

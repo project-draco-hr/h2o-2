@@ -1,0 +1,14 @@
+{
+  int nchunk=_espc.length;
+  while (_espc[nchunk - 1] == 0)   nchunk--;
+  long espc[]=new long[nchunk + 1];
+  long x=0;
+  for (int i=0; i < nchunk; i++) {
+    espc[i]=x;
+    x+=_espc[i];
+  }
+  espc[nchunk]=x;
+  Vec vec=new Vec(_key,espc);
+  DKV.put(_key,vec);
+  return vec;
+}
