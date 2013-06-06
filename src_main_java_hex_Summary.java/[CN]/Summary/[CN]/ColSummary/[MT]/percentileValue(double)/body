@@ -1,0 +1,7 @@
+{
+  if (_percentiles == null)   throw new Error("Percentiles not available for enums!");
+  int idx=Arrays.binarySearch(_percentiles,threshold);
+  if (idx < 0)   throw new Error("don't have requested percentile");
+  if (_percentileValues == null)   computePercentiles();
+  return _percentileValues[idx];
+}

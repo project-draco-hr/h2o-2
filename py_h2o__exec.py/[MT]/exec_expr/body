@@ -1,6 +1,6 @@
 def exec_expr(node, execExpr, resultKey='Result.hex', timeoutSecs=10):
     start = time.time()
-    resultExec = h2o_cmd.runExecOnly(node, expression=execExpr, timeoutSecs=timeoutSecs, escape_nan=0)
+    resultExec = h2o_cmd.runExecOnly(node, expression=execExpr, timeoutSecs=timeoutSecs)
     h2o.verboseprint(resultExec)
     h2o.verboseprint('exec took', (time.time() - start), 'seconds')
     h2o.verboseprint('\nfirst look at the default Result key')

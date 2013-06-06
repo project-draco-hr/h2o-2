@@ -3,10 +3,10 @@
   final String bucket=_bucket.value();
   final String object=_object.value();
   try {
-    final Key dest=MultipartUpload.init(value);
+    final Key dest=PersistS3Task.init(value);
     H2O.submitTask(new H2OCountedCompleter(){
       @Override public void compute2(){
-        MultipartUpload.run(dest,value,bucket,object);
+        PersistS3Task.run(dest,value,bucket,object);
       }
     }
 );

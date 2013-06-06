@@ -2,7 +2,7 @@ def random_forest_treeview(self, tree_number, data_key, model_key, timeoutSecs=1
     params_dict = {'tree_number': tree_number, 'data_key': data_key, 'model_key': model_key, }
     browseAlso = kwargs.pop('browseAlso', False)
     params_dict.update(kwargs)
-    a = self.__check_request(requests.get(self.__url('RFTreeView.json'), timeout=timeoutSecs, params=params_dict), ignoreH2oError=ignoreH2oError)
+    a = self.__do_json_request(self.__url('RFTreeView.json'), timeout=timeoutSecs, params=params_dict, ignoreH2oError=ignoreH2oError)
     verboseprint('\nrandom_forest_treeview result:', dump_json(a))
     if ((browseAlso | browse_json) | True):
         h2b.browseJsonHistoryAsUrlLastMatch('RFTreeView')

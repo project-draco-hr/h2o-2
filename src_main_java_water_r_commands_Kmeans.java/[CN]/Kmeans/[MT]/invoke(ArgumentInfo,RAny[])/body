@@ -1,0 +1,19 @@
+{
+  Arg arg=defaultArg();
+  if (Interop.getAttributeAsString(ai.getAny(args,"data"),"h2okind") != "HEX")   return Interop.asRString("Error wrong data argument");
+  arg.data=ai.get(args,"data",arg.data);
+  arg.k=(int)ai.get(args,"k",arg.k);
+  arg.epsilon=ai.get(args,"epsilon",(long)arg.epsilon);
+  arg.maxIterations=(int)ai.get(args,"max.iterations",arg.maxIterations);
+  arg.cols=Interop.asIntArray(ai.getAny(args,"cols"));
+  arg.seed=ai.get(args,"seed",arg.seed);
+  arg.normalize=ai.get(args,"normalize",arg.normalize);
+  Res res=execute(arg);
+  if (res.error == null) {
+    String ds=res.result._selfKey.toString();
+    RAny rds=Interop.asRString(ds);
+    rds=Interop.setAttribute(rds,"h2okind","KMEANS.MODEL");
+    return rds;
+  }
+ else   return Interop.asRString(res.error.toString());
+}

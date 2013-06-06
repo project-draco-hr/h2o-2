@@ -1,0 +1,14 @@
+{
+  FileWriter w=null;
+  try {
+    w=new FileWriter(file);
+    w.write(content);
+  }
+ catch (  IOException e) {
+    Log.errRTExcept(e);
+  }
+ finally {
+    close(w);
+  }
+  return file;
+}

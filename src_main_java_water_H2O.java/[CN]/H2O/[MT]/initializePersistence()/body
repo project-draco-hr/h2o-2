@@ -1,7 +1,5 @@
 {
-  PersistIce.initialize();
-  PersistNFS.initialize();
-  HdfsLoader.initialize();
+  HdfsLoader.loadJars();
   if (OPT_ARGS.aws_credentials != null) {
     try {
       PersistS3.getClient();
@@ -10,4 +8,5 @@
       Log.err(e);
     }
   }
+  Persist.initialize();
 }

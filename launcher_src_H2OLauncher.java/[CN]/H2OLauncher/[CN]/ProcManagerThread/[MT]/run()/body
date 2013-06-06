@@ -1,0 +1,23 @@
+{
+  BufferedReader r=new BufferedReader(new InputStreamReader(_p.getInputStream()));
+  while (true) {
+    try {
+      String s=r.readLine();
+      if (s == null) {
+        _p.waitFor();
+        _launcher.notifyProcessExit();
+        break;
+      }
+      notifyProcessOutput(s + "\n");
+      if (s.contains("Listening for HTTP and REST traffic")) {
+        String s2=s.replaceFirst("^.*http","http");
+        _launcher.notifyHttp(s2);
+      }
+    }
+ catch (    Exception e) {
+      _p.destroy();
+      _launcher.notifyProcessExit();
+      break;
+    }
+  }
+}

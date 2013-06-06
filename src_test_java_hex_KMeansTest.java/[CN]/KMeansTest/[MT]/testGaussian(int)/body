@@ -2,7 +2,6 @@
   Key source=Key.make("datakey");
   Key target=Key.make("datakey.kmeans");
   try {
-    KMeans.RAND_SEED=8683452581122892188L;
     final int columns=100;
     double[][] goals=new double[8][columns];
     double[][] array=gauss(columns,rows,goals);
@@ -10,9 +9,9 @@
     for (int i=0; i < cols.length; i++)     cols[i]=i;
     ValueArray va=va_maker(source,(Object[])array);
     Timer t=new Timer();
-    KMeans.run(target,va,goals.length,1e-6,cols);
+    KMeans.start(target,va,goals.length,1e-6,SEED,false,cols).get();
     Log.debug(Sys.KMEAN," testGaussian rows:" + rows + ", ms:"+ t);
-    KMeans.KMeansModel res=UKV.get(target);
+    KMeansModel res=UKV.get(target);
     double[][] clusters=res.clusters();
     for (    double[] goal : goals) {
       boolean found=false;
@@ -26,7 +25,6 @@
     }
   }
   finally {
-    KMeans.RAND_SEED=0;
     UKV.remove(source);
     UKV.remove(target);
   }

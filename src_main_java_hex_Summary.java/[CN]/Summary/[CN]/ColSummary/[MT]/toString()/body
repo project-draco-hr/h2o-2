@@ -1,0 +1,7 @@
+{
+  StringBuilder res=new StringBuilder("ColumnSummary[" + _start + ":"+ _end+ ", binsz="+ _binsz+ "]");
+  if (_percentiles != null) {
+    for (    double d : _percentiles)     res.append(", p(" + (int)(100 * d) + "%)="+ percentileValue(d));
+  }
+  return res.toString();
+}

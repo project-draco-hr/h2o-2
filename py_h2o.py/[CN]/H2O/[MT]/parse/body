@@ -5,7 +5,7 @@ def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDela
     params_dict.update(kwargs)
     if benchmarkLogging:
         cloudPerfH2O.get_log_save(initOnly=True)
-    a = self.__check_request(requests.get(url=self.__url('Parse.json'), timeout=timeoutSecs, params=params_dict))
+    a = self.__do_json_request(url=self.__url('Parse.json'), timeout=timeoutSecs, params=params_dict)
     if (a['response']['redirect_request'] != 'Progress'):
         print dump_json(a)
         raise Exception('H2O parse redirect is not Progress. Parse json response precedes.')

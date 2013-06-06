@@ -6,7 +6,7 @@ def test_KMeans_params_rand2(self):
         csvFilenameList = [('covtype20x.data', 400)]
     else:
         csvFilenameList = [('covtype20x.data', 400), ('covtype200x.data', 2000)]
-    importFolderPath = '/home/0xdiag/datasets'
+    importFolderPath = '/home/0xdiag/datasets/standard'
     h2i.setupImportFolder(None, importFolderPath)
     for (csvFilename, timeoutSecs) in csvFilenameList:
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, pollTimeoutSecs=60)

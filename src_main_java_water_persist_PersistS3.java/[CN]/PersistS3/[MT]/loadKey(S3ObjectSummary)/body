@@ -1,0 +1,23 @@
+{
+  Key k=encodeKey(obj.getBucketName(),obj.getKey());
+  long size=obj.getSize();
+  Value val=null;
+  if (obj.getKey().endsWith(Extensions.HEX)) {
+    int sz=(int)Math.min(ValueArray.CHUNK_SZ,size);
+    byte[] mem=MemoryManager.malloc1(sz);
+    S3ObjectInputStream is=getObjectForKey(k,0,ValueArray.CHUNK_SZ).getObjectContent();
+    int off=0;
+    while (off < sz)     off+=is.read(mem,off,sz - off);
+    ValueArray ary=new ValueArray(k,sz).read(new AutoBuffer(mem));
+    val=new Value(k,ary,Value.S3);
+  }
+ else   if (size >= 2 * ValueArray.CHUNK_SZ) {
+    val=new Value(k,new ValueArray(k,size),Value.S3);
+  }
+ else {
+    val=new Value(k,(int)size,Value.S3);
+  }
+  val.setdsk();
+  DKV.put(k,val);
+  return k;
+}

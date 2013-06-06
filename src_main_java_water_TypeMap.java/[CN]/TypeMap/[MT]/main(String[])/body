@@ -2,15 +2,14 @@
   Log._dontDie=true;
   ArrayList<String> list=new ArrayList<String>();
   for (  String name : Boot.getClasses()) {
-    try {
+    if (!name.equals("water.api.RequestServer") && !name.equals("water.External") && !name.startsWith("water.r.")) {
       Class c=Class.forName(name);
       if (Freezable.class.isAssignableFrom(c))       list.add(c.getName());
     }
- catch (    Throwable _) {
-      System.out.println("Skipped: " + name);
-    }
   }
   Collections.sort(list);
-  Log.unwrap(System.out,"");
-  for (  String s : list)   Log.unwrap(System.out,"    \"" + s + "\",");
+  String s="" + " BAD\n" + "[B\n";
+  for (  String c : list)   s+=c + "\n";
+  Utils.writeFile(new File("src/main/resources/typemap"),s);
+  Log.info("Generated TypeMap");
 }

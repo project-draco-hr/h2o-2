@@ -1,5 +1,5 @@
 def test_B_importFolder_files(self):
-    importFolderPath = '/home/0xdiag/datasets'
+    importFolderPath = '/home/0xdiag/datasets/standard'
     h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 900
     csvFilenameAll = ['covtype.data', 'billion_rows.csv.gz']
@@ -14,7 +14,6 @@ def test_B_importFolder_files(self):
         print csvFilename, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
         print ('\n' + csvFilename)
-        start = time.time()
         kwargs = {'x': 0, 'y': 1, 'n_folds': 0, 'case_mode': '=', 'case': 1, }
         colX = 0
         kwargs.update({'alpha': 0, 'lambda': 0, })

@@ -1,0 +1,35 @@
+{
+  if (object == null || object.length() == 0)   object=value._key.toString();
+  String uploadId=null;
+  AmazonS3 s3=PersistS3.getClient();
+  try {
+    InitiateMultipartUploadRequest initRequest=new InitiateMultipartUploadRequest(bucket,object);
+    InitiateMultipartUploadResult initResponse=s3.initiateMultipartUpload(initRequest);
+    uploadId=initResponse.getUploadId();
+    PersistS3Task task=new PersistS3Task();
+    task._dest=dest;
+    task._key=value._key;
+    task._bucket=bucket;
+    task._object=object;
+    task._uploadId=uploadId;
+    task.invoke(value._key);
+    List<PartETag> partETags=new ArrayList<PartETag>();
+    for (int i=0; i < task._parts.length; i++)     partETags.add(new PartETag(task._parts[i],task._etags[i]));
+    CompleteMultipartUploadRequest compRequest=new CompleteMultipartUploadRequest(bucket,object,uploadId,partETags);
+    s3.completeMultipartUpload(compRequest);
+    Progress progress=new Progress();
+    progress._confirmed=true;
+    UKV.put(dest,progress);
+  }
+ catch (  Exception e) {
+    try {
+      s3.abortMultipartUpload(new AbortMultipartUploadRequest(bucket,object,uploadId));
+    }
+ catch (    Exception _) {
+    }
+    Log.err(e);
+    Progress progress=new Progress();
+    progress._error=e.toString();
+    UKV.put(dest,progress);
+  }
+}

@@ -1,0 +1,7 @@
+{
+  FileIntegrityChecker c=FileIntegrityChecker.check(new java.io.File(path));
+  Futures fs=new Futures();
+  Key k=c.importFile(0,fs);
+  fs.blockForPending();
+  return k;
+}

@@ -1,0 +1,24 @@
+{
+  JsonObject res=new JsonObject();
+  res.addProperty(Constants.VERSION,H2O.VERSION);
+  res.addProperty(Constants.TYPE,RFModel.class.getName());
+  res.addProperty("features",_features);
+  res.addProperty("sampling_strategy",_samplingStrategy.name());
+  res.addProperty("sample",_sample);
+  JsonArray vals=new JsonArray();
+  for (  float f : _strataSamples)   vals.add(new JsonPrimitive(f));
+  res.add("strataSamples",vals);
+  res.addProperty("split_features",_splitFeatures);
+  vals=new JsonArray();
+  for (  int i : _nodesSplitFeatures)   vals.add(new JsonPrimitive(i));
+  res.add("nodesSplitFeatures",vals);
+  res.addProperty("totalTrees",_totalTrees);
+  res.addProperty("time",_time);
+  vals=new JsonArray();
+  for (  Key tkey : _tkeys) {
+    byte[] b=Base64.encodeBase64(DKV.get(tkey).memOrLoad(),false);
+    vals.add(new JsonPrimitive(StringUtils.newStringUtf8(b)));
+  }
+  res.add("trees",vals);
+  return res;
+}

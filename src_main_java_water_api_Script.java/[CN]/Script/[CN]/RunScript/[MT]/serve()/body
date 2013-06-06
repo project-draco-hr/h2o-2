@@ -1,2 +1,12 @@
 {
+  ValueArray va=_key.value().get();
+  ByteBuffer bb=va.getChunk(0)._bb;
+  String script;
+  try {
+    script=new String(bb.array(),0,bb.remaining(),"UTF-8");
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException(e);
+  }
+  return run(script);
 }

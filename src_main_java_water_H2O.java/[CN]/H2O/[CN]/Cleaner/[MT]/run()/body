@@ -55,7 +55,7 @@
           if (m != null)           cleaned+=m.length;
         }
  catch (        IOException e) {
-          if (isDiskFull())           Log.warn(Sys.CLEAN,"Disk full! Disabling swapping to disk." + ((force) ? " Memory low! Please free some space in " + PersistIce.ROOT + "!" : ""));
+          if (isDiskFull())           Log.warn(Sys.CLEAN,"Disk full! Disabling swapping to disk." + (force ? " Memory low! Please free some space in " + Persist.getIce().getPath() + "!" : ""));
  else           Log.warn(Sys.CLEAN,"Disk swapping failed! " + e.getMessage());
           diskFull=true;
         }

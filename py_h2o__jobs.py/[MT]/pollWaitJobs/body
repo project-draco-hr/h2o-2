@@ -12,7 +12,6 @@ def pollWaitJobs(pattern=None, timeoutSecs=30, pollTimeoutSecs=30, retryDelaySec
             if (j['end_time'] == ''):
                 anyBusy = True
                 h2o.verboseprint('waiting', waitTime, 'secs, still not done - ', 'destination_key:', j['destination_key'], 'progress:', j['progress'], 'cancelled:', j['cancelled'], 'end_time:', j['end_time'])
-        h2b.browseJsonHistoryAsUrlLastMatch('Jobs')
         if (anyBusy and (waitTime > timeoutSecs)):
             print h2o.dump_json(jobs)
             raise Exception("Some queued jobs haven't completed after", timeoutSecs, 'seconds')

@@ -1,5 +1,5 @@
 def test_B_randomdata2_1_lineend(self):
-    print 'Using smalldata/datagen1.csv to create', SYNDATASETS_DIR, '/datagen1.csv with \r instead'
+    print 'Using smalldata/datagen1.csv to create', SYNDATASETS_DIR, '/datagen1.csv with different line ending'
     csvPathname1 = h2o.find_file('smalldata/datagen1.csv')
     csvPathname2 = (SYNDATASETS_DIR + '/datagen1_crlf.csv')
     infile = open(csvPathname1, 'r')
@@ -8,4 +8,5 @@ def test_B_randomdata2_1_lineend(self):
         outfile.write((line.strip('\n') + '\r'))
     infile.close()
     outfile.close()
-    h2o_cmd.runRF(trees=1, response_variable=2, timeoutSecs=10, csvPathname=csvPathname2)
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname2, timeoutSecs=10, header=1, separator=44)
+    h2o_cmd.runRFOnly(parseKey=parseKey, trees=1, response_variable=2, timeoutSecs=10, csvPathname=csvPathname2)

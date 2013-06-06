@@ -1,6 +1,5 @@
 def test_exec_import_hosts(self):
-    importFolderPath = '/home/0xdiag/datasets'
-    h2i.setupImportFolder(None, importFolderPath)
+    importFolderPath = '/home/0xdiag/datasets/standard'
     if localhost:
         maxTrials = 200
         csvFilenameAll = [('covtype.data', 'cA', 15), ('covtype.data', 'cB', 15)]
@@ -11,6 +10,7 @@ def test_exec_import_hosts(self):
     h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
     for (csvFilename, key2, timeoutSecs) in csvFilenameList:
+        h2i.setupImportFolder(None, importFolderPath)
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['Key']:", parseKey['destination_key']

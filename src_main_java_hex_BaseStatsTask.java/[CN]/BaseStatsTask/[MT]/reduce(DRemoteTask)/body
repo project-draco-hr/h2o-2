@@ -1,0 +1,19 @@
+{
+  BaseStatsTask t=(BaseStatsTask)drt;
+  if (_min == null) {
+    _min=t._min;
+    _max=t._max;
+    _sum=t._sum;
+    _sumsq=t._sumsq;
+    _n=t._n;
+  }
+ else {
+    for (int c=0; c < _min.length; ++c) {
+      if (_min[c] > t._min[c])       _min[c]=t._min[c];
+      if (_max[c] < t._max[c])       _max[c]=t._max[c];
+      _sum[c]+=t._sum[c];
+      _sumsq[c]+=t._sumsq[c];
+      _n[c]+=t._n[c];
+    }
+  }
+}

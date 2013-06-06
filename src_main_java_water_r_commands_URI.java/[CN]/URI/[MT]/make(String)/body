@@ -1,0 +1,28 @@
+{
+  URI res=null;
+  if (s.startsWith("file://")) {
+    String p=s.replaceFirst("file://","");
+    res=new File(p);
+  }
+ else   if (s.startsWith("hdfs://")) {
+    String p=s.replaceFirst("hdfs://","");
+    res=new S3(p);
+  }
+ else   if (s.startsWith("s3://")) {
+    String p=s.replaceFirst("s3://","");
+    res=new S3(p);
+  }
+ else   if (s.startsWith("s3n://")) {
+    String p=s.replaceFirst("s3n://","");
+    res=new S3n(p);
+  }
+ else   if (s.startsWith("http://")) {
+    String p=s.replaceFirst("http://","");
+    res=new Http(p);
+  }
+ else   if (!s.contains("://")) {
+    res=new File(s);
+  }
+  if (res == null)   throw new FormatError("Not a valid URI:" + s);
+ else   return res;
+}

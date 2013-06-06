@@ -11,10 +11,11 @@
   System.out.println("min=" + pro._cols[classCol]._min);
   long start=System.currentTimeMillis();
   double[] row=new double[map.length];
+  Model M=model.adapt(pro);
   int errs=0;
   for (int i=0; i < pro._numrows; i++) {
     for (int j=0; j < map.length; j++)     row[j]=pro.datad(i,j);
-    double score=model.score(row,map);
+    double score=M.score(row);
     System.out.println(" " + i + " "+ score+ " "+ (pro.datad(i,classCol)));
     if (Math.abs(pro.datad(i,classCol) - score) > 0.0001)     errs++;
   }
