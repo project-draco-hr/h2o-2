@@ -1,0 +1,13 @@
+{
+  UKV.remove(job.dest());
+  if (fkeys.length == 0) {
+    job.cancel();
+    return;
+  }
+  ByteVec vec=UKV.get(fkeys[0]);
+  Compression compression=guessCompressionMethod(vec);
+  if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,(setup != null) ? setup._separator : CsvParser.NO_SEPARATOR,compression);
+  final int ncolumns=setup._data[0].length;
+  System.out.println("Setup=" + setup);
+  throw H2O.unimpl();
+}
