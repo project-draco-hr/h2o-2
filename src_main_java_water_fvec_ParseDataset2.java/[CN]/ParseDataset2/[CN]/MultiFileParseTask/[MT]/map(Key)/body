@@ -1,0 +1,12 @@
+{
+  ByteVec vec=UKV.get(key);
+  Compression cpr=guessCompressionMethod(vec);
+  CsvParser.Setup setup=csvGuessValue(vec,_setup._separator,cpr);
+  final int ncol1=_setup._data[0].length;
+  final int ncol2=setup._data[0].length;
+  if (ncol1 != ncol2) {
+    _parserr="Found conflicting number of columns (using separator '" + _setup._separator + "' when parsing multiple files.  Found "+ ncol2+ " columns  in "+ key+ " , but expected "+ ncol1;
+    return;
+  }
+  throw H2O.unimpl();
+}

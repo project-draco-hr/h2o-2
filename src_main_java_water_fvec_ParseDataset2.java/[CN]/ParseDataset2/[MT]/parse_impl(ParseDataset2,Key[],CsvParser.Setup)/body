@@ -9,14 +9,7 @@
   byte sep=setup == null ? CsvParser.NO_SEPARATOR : setup._separator;
   if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,sep,compression);
   System.out.println("Setup=" + setup);
-  final int ncols=setup._data[0].length;
-  int parallel=Math.min(fkeys.length,Math.max(8,H2O.CLOUD.size() << 1));
-  if (parallel > 1)   throw H2O.unimpl();
-  UnzipAndParseTask[] parses=new UnzipAndParseTask[fkeys.length];
-  for (int i=0; i < fkeys.length; i++) {
-    parses[i]=new UnzipAndParseTask().dfork((ByteVec)UKV.get(fkeys[i]));
-    if (i >= parallel)     parses[i - parallel].get();
-  }
-  for (int i=fkeys.length - parallel; i < fkeys.length; i++)   parses[i].get();
+  MultiFileParseTask uzpt=new MultiFileParseTask(setup).invoke(fkeys);
+  if (uzpt._parserr != null)   throw new ParseException(uzpt._parserr);
   throw H2O.unimpl();
 }
