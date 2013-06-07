@@ -1,7 +1,5 @@
 {
   ParseDataset2 job=new ParseDataset2(dest,keys);
-  H2OCountedCompleter fjt=new ParserFJTask(job,keys,setup);
-  job.start(fjt);
-  H2O.submitTask(fjt);
+  H2O.submitTask(job.start(new ParserFJTask(job,keys,setup)));
   return job;
 }

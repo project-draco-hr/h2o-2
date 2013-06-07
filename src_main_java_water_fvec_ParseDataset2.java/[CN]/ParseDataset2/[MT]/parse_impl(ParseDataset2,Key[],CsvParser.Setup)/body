@@ -1,0 +1,22 @@
+{
+  UKV.remove(job.dest());
+  if (fkeys.length == 0) {
+    job.cancel();
+    return;
+  }
+  ByteVec vec=UKV.get(fkeys[0]);
+  Compression compression=guessCompressionMethod(vec);
+  byte sep=setup == null ? CsvParser.NO_SEPARATOR : setup._separator;
+  if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,sep,compression);
+  System.out.println("Setup=" + setup);
+  final int ncols=setup._data[0].length;
+  int parallel=Math.min(fkeys.length,Math.max(8,H2O.CLOUD.size() << 1));
+  if (parallel > 1)   throw H2O.unimpl();
+  UnzipAndParseTask[] parses=new UnzipAndParseTask[fkeys.length];
+  for (int i=0; i < fkeys.length; i++) {
+    parses[i]=new UnzipAndParseTask().dfork((ByteVec)UKV.get(fkeys[i]));
+    if (i >= parallel)     parses[i - parallel].get();
+  }
+  for (int i=fkeys.length - parallel; i < fkeys.length; i++)   parses[i].get();
+  throw H2O.unimpl();
+}
