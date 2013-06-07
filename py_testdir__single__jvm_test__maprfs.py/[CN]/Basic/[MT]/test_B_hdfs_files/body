@@ -8,7 +8,7 @@ def test_B_hdfs_files(self):
         csvFilenameList = csvFilenameAll
     timeoutSecs = 200
     firstglm = {}
-    h2i.setupImportHdfs(path='/', schema='maprfs:///')
+    h2i.setupImportHdfs(path='/datasets', schema='maprfs:///')
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
         parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', schema='maprfs:///', timeoutSecs=1000)
