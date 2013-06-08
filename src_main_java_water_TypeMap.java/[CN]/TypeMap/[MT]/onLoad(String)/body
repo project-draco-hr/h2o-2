@@ -1,5 +1,7 @@
 {
   Integer I=MAP.get(className);
-  if (I == null)   throw Log.err(new RuntimeException("TypeMap missing " + className));
-  return I;
+  if (I != null)   return I;
+  int id=-1;
+  if (H2O.CLOUD.leader() != H2O.SELF)   id=FetchId.fetchId(className);
+  return install(className,id);
 }

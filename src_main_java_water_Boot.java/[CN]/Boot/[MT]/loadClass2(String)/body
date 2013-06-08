@@ -1,7 +1,7 @@
 {
   Class z=findLoadedClass(name);
   if (z != null)   return z;
-  if (_weaver == null)   _weaver=new Weaver();
+  if (_weaver == null)   (_weaver=new Weaver()).initTypeMap(this);
   z=_weaver.weaveAndLoad(name,this);
   if (z != null)   return z;
   z=getParent().loadClass(name);
