@@ -1,0 +1,10 @@
+{
+  _typeMap=weaveAndLoad("water.TypeMap",boot);
+  try {
+    _onLoad=_typeMap.getMethod("onLoad",String.class);
+  }
+ catch (  NoSuchMethodException nsme) {
+    throw new RuntimeException(nsme);
+  }
+  return this;
+}
