@@ -12,4 +12,6 @@ def parseS3File(node=None, bucket=None, filename=None, keyForParseResult=None, t
         myKeyForParseResult = (s3_key + '.hex')
     else:
         myKeyForParseResult = keyForParseResult
-    return node.parse(s3_key, myKeyForParseResult, timeoutSecs, retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, noPoll=noPoll, **kwargs)
+    p = node.parse(s3_key, myKeyForParseResult, timeoutSecs, retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, noPoll=noPoll, **kwargs)
+    node.summary_page(myKeyForParseResult)
+    return p
