@@ -6,7 +6,8 @@
     cols[i]=new AppendableVec(Key.make(fkey.toString() + "C" + i));
     nvs[i]=new NewVector(cols[i],0);
   }
-  CsvParser parser=new CsvParser(_setup){
+  CsvParser parser=new CsvParser(_setup,null){
+    private byte[] _bits=new byte[32 * 1024];
     @Override public byte[] getChunkData(    int cidx){
       throw H2O.unimpl();
     }
@@ -30,6 +31,5 @@
     }
   }
 ;
-  while (true) {
-  }
+  parser.parse(0);
 }
