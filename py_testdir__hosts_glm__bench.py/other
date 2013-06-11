@@ -1,0 +1,14 @@
+import unittest
+import time, sys
+sys.path.extend(['.', '..', 'py'])
+import h2o_cmd, h2o, h2o_hosts
+import h2o_browse as h2b
+import os
+import csv
+import time
+import socket
+csv_header = ('time', 'nodes#', 'dataset', 'y', 'x', 'family', 'alpha', 'lambda', 'n_folds', 'nLines', 'nCols', 'dof', 'nullDev', 'resDev', 'aic', 'auc', 'iterations', 'model_time', 'model_iterations', 'val_time', 'val_iterations', 'lsm_time')
+ec2_files = {'allstate': 's3n://h2o-datasets/allstate/train_set.zip', 'airlines': 's3n://h2o-airlines-unpacked/allyears.csv', }
+local_files = {'allstate': 'hdfs://192.168.1.176/datasets/allstate.csv', 'airlines': 'hdfs://192.168.1.176/datasets/airlines_all.csv', }
+if (__name__ == '__main__'):
+    h2o.unit_main()
