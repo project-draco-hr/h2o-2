@@ -1,11 +1,13 @@
 def test_C_prostate(self):
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()
     print '\nStarting prostate.csv'
     y = '1'
     x = ''
     csvFilename = 'prostate.csv'
     csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
-    for maxx in range(2, 9):
+    for maxx in range(2, 6):
         x = range(maxx)
         x.remove(0)
         x.remove(1)
@@ -17,3 +19,5 @@ def test_C_prostate(self):
         h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
         sys.stdout.write('.')
         sys.stdout.flush()
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()
