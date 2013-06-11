@@ -7,6 +7,9 @@
     nvs[i]=new NewVector(cols[i],0);
   }
   CsvParser parser=new CsvParser(_setup){
+    @Override public byte[] getChunkData(    int cidx){
+      throw H2O.unimpl();
+    }
     void newLine(){
       throw H2O.unimpl();
     }

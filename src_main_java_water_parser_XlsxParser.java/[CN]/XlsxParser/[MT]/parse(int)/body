@@ -1,6 +1,6 @@
 {
   _firstRow=true;
-  InputStream is=DKV.get(key).openStream();
+  InputStream is=DKV.get(_key).openStream();
   try {
     XSSFReader reader=new XSSFReader(OPCPackage.open(is));
     _sst=reader.getSharedStringsTable();

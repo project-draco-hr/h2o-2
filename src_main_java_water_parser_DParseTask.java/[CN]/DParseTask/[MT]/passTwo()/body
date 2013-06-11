@@ -11,8 +11,9 @@ _outputStreams2=createRecords(0,(int)_numRows);
 assert(_outputStreams2.length > 0);
 _ab=_outputStreams2[0].initialize();
 try {
-CustomParser p=(_parserType == CustomParser.Type.XLS) ? new XlsParser(this) : new XlsxParser(this);
-p.parse(_sourceDataset._key);
+Key key=_sourceDataset._key;
+CustomParser p=(_parserType == CustomParser.Type.XLS) ? new XlsParser(this,key) : new XlsxParser(this,key);
+p.parse(0);
 }
  catch (Exception e) {
 throw new RuntimeException(e);

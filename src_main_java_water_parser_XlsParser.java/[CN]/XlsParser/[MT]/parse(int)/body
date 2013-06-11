@@ -1,6 +1,6 @@
 {
   _firstRow=true;
-  InputStream is=DKV.get(key).openStream();
+  InputStream is=DKV.get(_key).openStream();
   try {
     _fs=new POIFSFileSystem(is);
     MissingRecordAwareHSSFListener listener=new MissingRecordAwareHSSFListener(this);

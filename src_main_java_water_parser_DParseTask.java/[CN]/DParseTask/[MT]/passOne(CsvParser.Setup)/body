@@ -22,9 +22,9 @@ dfork(_sourceDataset._key);
 break;
 case XLS:
 try {
-XlsParser p=new XlsParser(this);
+XlsParser p=new XlsParser(this,_sourceDataset._key);
 Log.info("parsing ",_sourceDataset._key);
-p.parse(_sourceDataset._key);
+p.parse(0);
 --_myrows;
 _numRows=_myrows;
 }
