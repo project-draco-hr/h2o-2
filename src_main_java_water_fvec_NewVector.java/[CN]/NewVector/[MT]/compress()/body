@@ -1,22 +1,29 @@
 {
-  if (_ds != null)   throw H2O.unimpl();
-  if (_ls != null) {
-    long min=Long.MAX_VALUE, max=Long.MIN_VALUE;
-    for (    long l : _ls) {
-      if (l < min)       min=l;
-      if (l > max)       max=l;
+  int xmin=Integer.MAX_VALUE, xmax=Integer.MIN_VALUE;
+  long lmin=Long.MAX_VALUE, lmax=Long.MIN_VALUE;
+  for (int i=0; i < _len; i++) {
+    if (_xs[i] < xmin)     xmin=_xs[i];
+    if (_xs[i] > xmax)     xmax=_xs[i];
+    if (_ls[i] < lmin)     lmin=_ls[i];
+    if (_ls[i] > lmax)     lmax=_ls[i];
+  }
+  water.util.Log.unwrap(System.err,"COMPRESS: " + lmin + "e"+ xmin+ " - "+ lmax+ "e"+ xmax);
+  if (xmin != 0 || xmax != 0)   throw H2O.unimpl();
+  if (lmax - lmin < 255) {
+    if (lmax < 127) {
+      byte[] bs=new byte[_len];
+      for (int i=0; i < _len; i++)       bs[i]=(byte)_ls[i];
+      return new C0Vector(bs);
     }
-    if (max - min < 255) {
-      if (max < 255) {
-        byte[] bs=new byte[_len];
-        for (int i=0; i < _len; i++)         bs[i]=(byte)_ls[i];
-        C0Vector c0=new C0Vector();
-        c0._mem=bs;
-        c0._start=-1;
-        c0._len=_len;
-        return c0;
-      }
+    throw H2O.unimpl();
+  }
+  if (lmax - lmin < 65535) {
+    if (lmax < 32767) {
+      byte[] bs=new byte[_len << 1];
+      for (int i=0; i < _len; i++)       UDP.set2(bs,i << 1,(short)_ls[i]);
+      return new C2Vector(bs);
     }
+    throw H2O.unimpl();
   }
   throw H2O.unimpl();
 }
