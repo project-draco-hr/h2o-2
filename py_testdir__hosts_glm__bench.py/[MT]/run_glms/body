@@ -1,4 +1,4 @@
-def run_glms(self, file, configs):
+def run_glms(file, configs):
     output = None
     if (not os.path.exists('glmbench.csv')):
         output = open('glmbench.csv', 'w')
@@ -7,7 +7,7 @@ def run_glms(self, file, configs):
         output = open('glmbench.csv', 'a')
     csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
     try:
-        k = self.parse_file(file)
+        k = parse_file(file)
         try:
             for kwargs in configs:
                 res = h2o.nodes[0].GLM(k, timeoutSecs=6000000, **kwargs)
