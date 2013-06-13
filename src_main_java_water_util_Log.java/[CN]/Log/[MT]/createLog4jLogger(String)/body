@@ -1,0 +1,24 @@
+{
+synchronized (water.util.Log.class) {
+    if (_logger != null) {
+      return _logger;
+    }
+    String log4jProperties=System.getProperty("log4j.properties");
+    if (log4jProperties != null) {
+      PropertyConfigurator.configure(log4jProperties);
+    }
+ else {
+      java.util.Properties p=new java.util.Properties();
+      p.setProperty("log4j.rootLogger","debug, R");
+      p.setProperty("log4j.appender.R","org.apache.log4j.RollingFileAppender");
+      p.setProperty("log4j.appender.R.File",logDir + File.separator + "h2ologs"+ File.separator+ "h2o.log");
+      p.setProperty("log4j.appender.R.MaxFileSize","1MB");
+      p.setProperty("log4j.appender.R.MaxBackupIndex","5");
+      p.setProperty("log4j.appender.R.layout","org.apache.log4j.PatternLayout");
+      p.setProperty("log4j.appender.R.layout.ConversionPattern","%m%n");
+      PropertyConfigurator.configure(p);
+    }
+    _logger=LogManager.getLogger(Log.class.getName());
+  }
+  return _logger;
+}
