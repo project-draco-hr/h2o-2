@@ -1,0 +1,14 @@
+def test_log_download_terminate2(self):
+    for h in h2o.nodes:
+        h.log_view()
+        h.log_download(timeoutSecs=3)
+    h2o.nodes[1].terminate_self_only()
+    time.sleep(5)
+    h2o.nodes[0].log_download(timeoutSecs=3)
+    logNames = []
+    for (i, node) in enumerate(h2o.nodes):
+        lineCount = h2o_util.file_line_count(('sandbox/' + logName))
+        logName = (((('node' + str(i)) + node.addr) + '_') + node.port)
+        logNames.append(logName)
+        print logName, 'lineCount:', lineCount
+    print logNames

@@ -1,6 +1,7 @@
 def shutdown_all(self):
     try:
-        self.__do_json_request(self.__url('Shutdown.json'))
+        self.__do_json_request('Shutdown.json')
     except:
         pass
+    time.sleep(1)
     return True

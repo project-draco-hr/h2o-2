@@ -1,4 +1,4 @@
-def setupImportHdfs(node=None, path=None, schema='hdfs'):
+def setupImportHdfs(node=None, path=None, schema='hdfs', timeoutSecs=30):
     if (not node):
         node = h2o.nodes[0]
     print 'setupImportHdfs schema:', schema
@@ -11,6 +11,6 @@ def setupImportHdfs(node=None, path=None, schema='hdfs'):
     else:
         URI = (hdfsPrefix + path)
     print 'URI:', URI
-    importHdfsResult = node.import_hdfs(URI)
+    importHdfsResult = node.import_hdfs(URI, timeoutSecs=timeoutSecs)
     h2o.verboseprint(h2o.dump_json(importHdfsResult))
     return importHdfsResult
