@@ -1,29 +1,48 @@
 {
-  int xmin=Integer.MAX_VALUE, xmax=Integer.MIN_VALUE;
-  long lmin=Long.MAX_VALUE, lmax=Long.MIN_VALUE;
+  int xmin=Integer.MAX_VALUE;
+  long lemin=0, lemax=lemin;
+  boolean overflow=false;
+  boolean first=true;
   for (int i=0; i < _len; i++) {
-    if (_xs[i] < xmin)     xmin=_xs[i];
-    if (_xs[i] > xmax)     xmax=_xs[i];
-    if (_ls[i] < lmin)     lmin=_ls[i];
-    if (_ls[i] > lmax)     lmax=_ls[i];
-  }
-  water.util.Log.unwrap(System.err,"COMPRESS: " + lmin + "e"+ xmin+ " - "+ lmax+ "e"+ xmax);
-  if (xmin != 0 || xmax != 0)   throw H2O.unimpl();
-  if (lmax - lmin < 255) {
-    if (lmax < 127) {
-      byte[] bs=new byte[_len];
-      for (int i=0; i < _len; i++)       bs[i]=(byte)_ls[i];
-      return new C0Vector(bs);
+    long l=_ls[i];
+    int x=_xs[i];
+    if (l == 0)     x=0;
+    long t;
+    while (l != 0 && (t=l / 10) * 10 == l) {
+      l=t;
+      x++;
     }
-    throw H2O.unimpl();
-  }
-  if (lmax - lmin < 65535) {
-    if (lmax < 32767) {
-      byte[] bs=new byte[_len << 1];
-      for (int i=0; i < _len; i++)       UDP.set2(bs,i << 1,(short)_ls[i]);
-      return new C2Vector(bs);
+    if (x < xmin) {
+      if (!first) {
+        overflow|=(lemin < Integer.MIN_VALUE) | (lemax > Integer.MAX_VALUE);
+        if (xmin - x >= 10)         overflow=true;
+ else {
+          lemin*=DParseTask.pow10i(xmin - x);
+          lemax*=DParseTask.pow10i(xmin - x);
+        }
+      }
+      xmin=x;
     }
-    throw H2O.unimpl();
+    long le=l * DParseTask.pow10i(x - xmin);
+    if (first || le < lemin)     lemin=le;
+    if (first || le > lemax)     lemax=le;
+    first=false;
   }
-  throw H2O.unimpl();
+  water.util.Log.unwrap(System.err,"COMPRESS: " + lemin + "e"+ xmin+ " - "+ lemax+ "e"+ xmin);
+  if (xmin != 0) {
+    if (!overflow && lemax - lemin < 255)     return new C1SVector(bufX(lemin,xmin,C1SVector.OFF,0),(int)lemin,DParseTask.pow10(xmin));
+    if (!overflow && lemax - lemin < 65535)     return new C2SVector(bufX(lemin,xmin,C2SVector.OFF,1),(int)lemin,DParseTask.pow10(xmin));
+    if (Math.abs(lemax - lemin) <= MAX_FLOAT_MANTISSA && -35 <= xmin && xmin <= 35)     return new C4FVector(bufF(2));
+    return new C8DVector(bufF(3));
+  }
+  if (lemax - lemin < 255) {
+    if (0 <= lemin && lemax < 255)     return new C1Vector(bufX(0,0,C1Vector.OFF,0));
+    return new C1SVector(bufX(lemin,0,C1SVector.OFF,0),(int)lemin,1);
+  }
+  if (lemax - lemin < 65535) {
+    if (-32767 <= lemin && lemax <= 32767)     return new C2Vector(bufX(0,0,C2Vector.OFF,1));
+    return new C2SVector(bufX(lemin,0,C2SVector.OFF,1),(int)lemin,1);
+  }
+  if (Integer.MIN_VALUE < lemin && lemax <= Integer.MAX_VALUE)   return new C4Vector(bufX(0,0,0,2));
+  return new C8Vector(bufX(0,0,0,3));
 }

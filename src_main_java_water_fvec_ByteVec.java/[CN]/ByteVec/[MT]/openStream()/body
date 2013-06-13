@@ -1,7 +1,7 @@
 {
   return new InputStream(){
     private int _cidx, _sz;
-    private C0Vector _c0;
+    private C1Vector _c0;
     @Override public int available() throws IOException {
       if (_c0 == null || _sz >= _c0._mem.length) {
         if (_cidx >= nChunks())         return 0;
