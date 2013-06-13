@@ -5,6 +5,7 @@ def setUpClass(cls):
     random.seed(SEED)
     print '\nUsing random seed:', SEED
     localhost = h2o.decide_if_localhost()
+    print "WARNING: won't work for remote h2o, because syn_datasets is created locally only, for import"
     if localhost:
         h2o.build_cloud(1, java_heap_GB=14)
     else:
