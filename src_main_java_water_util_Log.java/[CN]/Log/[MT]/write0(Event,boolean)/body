@@ -1,23 +1,26 @@
 {
-  String s=e.toString();
-  if (H2O.SELF != null && FILE_WRITER == null) {
-    File dir;
-    if (H2O.ICE_ROOT.getScheme() == null || Schemes.FILE.equals(H2O.ICE_ROOT.getScheme()))     dir=new File(H2O.ICE_ROOT.getPath());
- else     dir=new File(H2O.DEFAULT_ICE_ROOT);
-    try {
-      FILE=new File(dir,FILE_NAME);
-      FILE_WRITER=new BufferedWriter(new FileWriter(FILE));
-    }
- catch (    IOException _) {
+  org.apache.log4j.Logger l4j=getLog4jLogger();
+  if (l4j == null) {
+    if (H2O.SELF != null) {
+      File dir;
+      if (H2O.ICE_ROOT.getScheme() == null || Schemes.FILE.equals(H2O.ICE_ROOT.getScheme()))       dir=new File(H2O.ICE_ROOT.getPath());
+ else       dir=new File(H2O.DEFAULT_ICE_ROOT);
+      l4j=createLog4jLogger(dir.toString());
     }
   }
-  if (FILE_WRITER != null) {
-    try {
-      FILE_WRITER.write(s,0,s.length());
-      FILE_WRITER.write(NL,0,NL.length());
-      FILE_WRITER.flush();
+  String s=e.toString();
+  if (l4j != null) {
+    if (e.kind == Kind.ERRR) {
+      l4j.error(s);
     }
- catch (    IOException ioe) {
+ else     if (e.kind == Kind.WARN) {
+      l4j.warn(s);
+    }
+ else     if (e.kind == Kind.INFO) {
+      l4j.info(s);
+    }
+ else {
+      l4j.error(s);
     }
   }
   if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.kind,e.sys,e.body(0));
