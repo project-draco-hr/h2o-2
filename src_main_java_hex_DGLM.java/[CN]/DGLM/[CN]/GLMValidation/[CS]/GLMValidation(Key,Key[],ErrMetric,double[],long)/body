@@ -2,19 +2,19 @@
   _time=time;
   _errMetric=m;
   _modelKey=modelKey;
+  _modelKeys=modelKeys;
   GLMModel[] models=new GLMModel[modelKeys.length];
   for (int i=0; i < models.length; ++i)   models[i]=DKV.get(modelKeys[i]).get();
   _dataKey=models[0]._dataKey;
-  _modelKeys=new Key[models.length];
   int i=0;
   boolean solved=true;
+  _xvalIterations=0;
   for (  GLMModel xm : models) {
-    _modelKeys[i++]=xm._selfKey;
     if (!xm.isSolved())     solved=false;
+    _xvalIterations+=xm._iterations;
   }
   if (!solved) {
     _aic=Double.NaN;
-    _dof=-1;
     _auc=Double.NaN;
     _deviance=Double.NaN;
     _nullDeviance=Double.NaN;
@@ -27,7 +27,8 @@
   double dev=0;
   double aic=0;
   double err=0;
-  int rank=-1;
+  GLMModel mainModel=DKV.get(modelKey).get();
+  int rank=mainModel.rank();
   if (models[0]._vals[0]._cm != null) {
     int nthresholds=models[0]._vals[0]._cm.length;
     _cm=new ConfusionMatrix[nthresholds];
@@ -35,15 +36,13 @@
     n+=models[0]._vals[0]._n;
     dev=models[0]._vals[0]._deviance;
     rank=models[0].rank();
-    aic=models[0]._vals[0]._aic - 2 * rank;
+    aic=models[0]._vals[0]._aic - 2 * models[0].rank();
     _auc=models[0]._vals[0]._auc;
     nDev=models[0]._vals[0]._nullDeviance;
     for (i=1; i < models.length; ++i) {
-      int xm_rank=models[i].rank();
-      rank=Math.max(xm_rank,rank);
       n+=models[i]._vals[0]._n;
       dev+=models[i]._vals[0]._deviance;
-      aic+=models[i]._vals[0]._aic - 2 * xm_rank;
+      aic+=models[i]._vals[0]._aic - 2 * models[i].rank();
       nDev+=models[i]._vals[0]._nullDeviance;
       _auc+=models[i]._vals[0]._auc;
       for (int t=0; t < nthresholds; ++t)       _cm[t].add(models[i]._vals[0]._cm[t]);
@@ -54,19 +53,17 @@
   }
  else {
     for (    GLMModel xm : models) {
-      int xm_rank=xm.rank();
-      rank=Math.max(xm_rank,rank);
       n+=xm._vals[0]._n;
       dev+=xm._vals[0]._deviance;
       nDev+=xm._vals[0]._nullDeviance;
       err+=xm._vals[0]._err;
-      aic+=(xm._vals[0]._aic - 2 * xm_rank);
+      aic+=(xm._vals[0]._aic - 2 * xm.rank());
     }
   }
   _err=err / models.length;
   _deviance=dev;
   _nullDeviance=nDev;
   _n=n;
+  System.out.println("N = " + _n + ", rank = "+ rank);
   _aic=aic + 2 * rank;
-  _dof=_n - models[0]._beta.length - 1;
 }

@@ -6,7 +6,7 @@
     GLMValidation v=_thresholds.disabled() ? m.validateOn(null,ary,null,null) : m.validateOn(null,ary,null,_thresholds.value()._arr);
     res.add("validation",v.toJson());
     Response r=Response.done(res);
-    r.setBuilder("",new GLMValidationBuilder(v));
+    r.setBuilder("",new GLMValidationBuilder(m,v));
     return r;
   }
  catch (  GLMException e) {
