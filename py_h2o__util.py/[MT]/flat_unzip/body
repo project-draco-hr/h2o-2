@@ -1,4 +1,5 @@
 def flat_unzip(my_zip, my_dir):
+    resultList = []
     with zipfile.ZipFile(my_zip) as zip_file:
         for member in zip_file.namelist():
             filename = os.path.basename(member)
@@ -9,3 +10,4 @@ def flat_unzip(my_zip, my_dir):
             with source:
                 with target:
                     shutil.copyfileobj(source, target)
+                    resultList.append(target)
