@@ -1,4 +1,4 @@
-def import_hdfs(self, path):
-    a = self.__do_json_request('ImportHdfs.json', params={'path': path, })
+def import_hdfs(self, path, timeoutSecs=30):
+    a = self.__do_json_request('ImportHdfs.json', timeout=timeoutSecs, params={'path': path, })
     verboseprint('\nimport_hdfs result:', dump_json(a))
     return a
