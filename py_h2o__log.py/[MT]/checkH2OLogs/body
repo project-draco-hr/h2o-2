@@ -9,9 +9,11 @@ def checkH2OLogs(timeoutSecs=3):
     lineCountList = []
     for (i, nodeName) in enumerate(nodeNameList):
         print 'nodeName:', nodeName
+        p = re.search(':([0-9][0-9]*)', nodeName)
+        nodePort = p.group(1)
         nodeName = nodeName.replace(':', '_')
         nodeName = nodeName.replace('/', '_')
-        logName = ((('node' + str(i)) + nodeName) + '.log')
+        logName = (('h2oNode' + nodePort) + '.log')
         lineCount = h2o_util.file_line_count(('sandbox/' + logName))
         print logName, 'lineCount:', lineCount
         logNameList.append(logName)
