@@ -1,16 +1,16 @@
 {
   LogCollectorTask collector=new LogCollectorTask();
   collector.invokeOnAllNodes();
-  String outputFile=getOutputLogName();
+  String outputFileStem=getOutputLogStem();
   byte[] result=null;
   try {
-    result=zipLogs(collector._result);
+    result=zipLogs(collector._result,outputFileStem);
   }
  catch (  IOException e) {
     result=e.toString().getBytes();
   }
   NanoHTTPD.Response res=server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_DEFAULT_BINARY,new ByteArrayInputStream(result));
   res.addHeader("Content-Length",Long.toString(result.length));
-  res.addHeader("Content-Disposition","attachment; filename=" + outputFile);
+  res.addHeader("Content-Disposition","attachment; filename=" + outputFileStem + ".zip");
   return res;
 }
