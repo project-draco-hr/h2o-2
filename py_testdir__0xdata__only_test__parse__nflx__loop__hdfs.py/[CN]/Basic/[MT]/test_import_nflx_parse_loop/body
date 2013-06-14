@@ -5,7 +5,11 @@ def test_import_nflx_parse_loop(self):
     trialMax = 2
     for tryHeap in [24]:
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import 192.168.1.176 hdfs, then parse'
-        h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, use_hdfs=True, hdfs_name_node='192.168.1.176', hdfs_version='cdh3')
+        localhost = h2o.decide_if_localhost()
+        if localhost:
+            h2o_hosts.build_cloud(node_count=1, java_heap_GB=tryHeap, use_hdfs=True, hdfs_version='cdh3', hdfs_name_node='192.168.1.176')
+        else:
+            h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, use_hdfs=True, hdfs_name_node='192.168.1.176', hdfs_version='cdh3')
         h2o.nodes[0].sandbox_ignore_errors = True
         URI = (('hdfs://' + h2o.nodes[0].hdfs_name_node) + '/datasets/manyfiles-nflx-gz')
         hdfsKey = ((URI + '/') + csvFilepattern)

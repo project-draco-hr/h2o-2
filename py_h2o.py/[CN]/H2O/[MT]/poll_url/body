@@ -21,7 +21,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         time.sleep(retryDelaySecs)
         create_noise = ((noise is not None) and ((count % 2) == 0))
         if create_noise:
-            urlUsed = self.__url(noiseUrl)
+            urlUsed = noiseUrl
             paramsUsed = noiseParams
             paramsUsedStr = noiseParamsStr
             msgUsed = '\nNoise during polling with'
