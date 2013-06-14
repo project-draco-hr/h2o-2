@@ -10,9 +10,10 @@ def log_download(self, logDir=None, timeoutSecs=5, **kwargs):
     z = zipfile.ZipFile(StringIO.StringIO(r.content))
     print 'z.namelist:', z.namelist()
     print 'z.printdir:', z.printdir()
+    nameList = z.namelist()
+    h2oLogDir = ((logDir + '/') + nameList.pop(0))
     z = zipfile.ZipFile(StringIO.StringIO(r.content))
     z.extractall(logDir)
-    for zname in z.namelist():
-        z2 = zipfile.ZipFile(((logDir + '/') + zname))
+    for zname in nameList:
         resultList = h2o_util.flat_unzip(((logDir + '/') + zname), logDir)
     return resultList
