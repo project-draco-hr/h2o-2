@@ -2,7 +2,7 @@
   UKV.remove(job.dest());
   if (fkeys.length == 0) {
     job.cancel();
-    return;
+    return null;
   }
   ByteVec vec=UKV.get(fkeys[0]);
   Compression compression=guessCompressionMethod(vec);
@@ -11,5 +11,8 @@
   System.out.println("Setup=" + setup);
   MultiFileParseTask uzpt=new MultiFileParseTask(setup).invoke(fkeys);
   if (uzpt._parserr != null)   throw new ParseException(uzpt._parserr);
-  throw H2O.unimpl();
+  Vec vecs[]=new Vec[uzpt._cols.length];
+  for (int i=0; i < vecs.length; i++)   vecs[i]=uzpt._cols[i].close();
+  for (int i=0; i < vecs.length; i++)   Log.unwrap(System.err,vecs[i].toString() + (setup._header ? setup._data[0][i] : "") + " bytes/row="+ (vecs[i].elem2BV(0)._mem.length / vecs[i].length()));
+  return vecs;
 }

@@ -11,6 +11,9 @@
     for (int i=0; i < setup._data[0].length; ++i)     has_hdr&=setup._data[0][i].equalsIgnoreCase(_setup._data[0][i]);
     if (!has_hdr)     setup=new CsvParser.Setup(setup,false);
   }
+  final int ncols=_setup._data[0].length;
+  _cols=new AppendableVec[ncols];
+  for (int i=0; i < ncols; i++)   _cols[i]=new AppendableVec(Key.make(key.toString() + "C" + i));
   try {
 switch (cpr) {
 case NONE:
@@ -19,12 +22,12 @@ case ZIP:
 {
       ZipInputStream zis=new ZipInputStream(vec.openStream());
       ZipEntry ze=zis.getNextEntry();
-      if (ze != null && !ze.isDirectory())       streamParse(key,zis);
+      if (ze != null && !ze.isDirectory())       streamParse(key,zis,setup);
  else       zis.close();
       break;
     }
 case GZIP:
-  streamParse(key,new GZIPInputStream(vec.openStream()));
+  streamParse(key,new GZIPInputStream(vec.openStream()),setup);
 break;
 }
 }
@@ -32,5 +35,4 @@ break;
 _parserr=ioe.toString();
 return;
 }
-throw H2O.unimpl();
 }

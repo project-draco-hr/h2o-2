@@ -1,4 +1,9 @@
 {
   if (_parserr == null)   _parserr=uzpt._parserr;
  else   if (uzpt._parserr != null)   _parserr+=uzpt._parserr;
+  if (_cols == null) {
+    _cols=uzpt._cols;
+    return;
+  }
+  throw H2O.unimpl();
 }

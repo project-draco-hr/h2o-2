@@ -6,6 +6,10 @@
   for (int i=0; i < _len; i++) {
     long l=_ls[i];
     int x=_xs[i];
+    double d=l * DParseTask.pow10(x);
+    if (d < _min)     _min=d;
+    if (d > _max)     _max=d;
+    _sum+=d;
     if (l == 0)     x=0;
     long t;
     while (l != 0 && (t=l / 10) * 10 == l) {
@@ -28,7 +32,6 @@
     if (first || le > lemax)     lemax=le;
     first=false;
   }
-  water.util.Log.unwrap(System.err,"COMPRESS: " + lemin + "e"+ xmin+ " - "+ lemax+ "e"+ xmin);
   if (xmin != 0) {
     if (!overflow && lemax - lemin < 255)     return new C1SVector(bufX(lemin,xmin,C1SVector.OFF,0),(int)lemin,DParseTask.pow10(xmin));
     if (!overflow && lemax - lemin < 65535)     return new C2SVector(bufX(lemin,xmin,C2SVector.OFF,1),(int)lemin,DParseTask.pow10(xmin));
