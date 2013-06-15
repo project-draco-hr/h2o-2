@@ -1,0 +1,16 @@
+{
+  try {
+    JsonObject res=new JsonObject();
+    ValueArray ary=_dataKey.value();
+    Model m=(Model)_modelKey.value();
+    return Inspect.redirect(res,ScoreTask.score(m,ary,Key.make("prediction.hex")));
+  }
+ catch (  GLMException e) {
+    Log.err(e);
+    return Response.error(e.getMessage());
+  }
+catch (  Throwable t) {
+    Log.err(t);
+    return Response.error(t.getMessage());
+  }
+}
