@@ -3,15 +3,17 @@
   int finished=0;
   RFModel model=_modelKey.value();
   double[] weights=_weights.value();
+  boolean done=false;
   tasks=model._totalTrees;
   finished=model.size();
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value() && (finished == tasks || _iterativeCM.value()) && finished > 0) {
     int modelSize=tasks * _refreshTresholdCM.value() / 100;
     modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
-    ConfusionTask confusion=ConfusionTask.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
-    response.addProperty(JSON_CONFUSION_KEY,confusion.keyFor().toString());
-    if (confusion.isValid() && modelSize > 0) {
+    CMJob cmJob=ConfusionTask.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
+    response.addProperty(JSON_CONFUSION_KEY,cmJob.dest().toString());
+    CMFinal confusion=UKV.get(cmJob.dest());
+    if (confusion != null && modelSize > 0) {
       JsonObject cm=new JsonObject();
       JsonArray cmHeader=new JsonArray();
       JsonArray matrix=new JsonArray();
@@ -27,16 +29,17 @@
         JsonArray row=new JsonArray();
         int classHitScore=0;
         for (int ccol=0; ccol < nclasses; ++ccol) {
-          row.add(new JsonPrimitive(confusion._matrix[crow][ccol]));
-          if (crow != ccol)           classHitScore+=confusion._matrix[crow][ccol];
+          row.add(new JsonPrimitive(confusion.matrix(crow,ccol)));
+          if (crow != ccol)           classHitScore+=confusion.matrix(crow,ccol);
         }
-        classErrors.add(new JsonPrimitive((float)classHitScore / (classHitScore + confusion._matrix[crow][crow])));
+        classErrors.add(new JsonPrimitive((float)classHitScore / (classHitScore + confusion.matrix(crow,crow))));
         matrix.add(row);
       }
       cm.add(JSON_CM_CLASSES_ERRORS,classErrors);
       cm.add(JSON_CM_MATRIX,matrix);
-      cm.addProperty(JSON_CM_TREES,confusion._treesUsed);
+      cm.addProperty(JSON_CM_TREES,modelSize);
       response.add(JSON_CM,cm);
+      done=finished == tasks;
     }
   }
   JsonObject trees=new JsonObject();
@@ -47,7 +50,7 @@
   }
   response.add(Constants.TREES,trees);
   Response r;
-  if (finished == tasks) {
+  if (done) {
     r=jobDone(response);
     r.addHeader("<div class='alert'>" + RFScore.link(MODEL_KEY,model._selfKey,"Use this model for scoring.") + " </div>");
   }
