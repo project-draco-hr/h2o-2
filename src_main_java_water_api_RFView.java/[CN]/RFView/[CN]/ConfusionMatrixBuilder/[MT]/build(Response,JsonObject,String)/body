@@ -7,6 +7,7 @@
     long rows=cm.get(JSON_CM_ROWS).getAsLong();
     long skippedRows=cm.get(JSON_CM_ROWS_SKIPPED).getAsLong();
     sb.append("<dt>used / skipped rows </dt><dd>").append(String.format("%d / %d (%3.1f %%)",rows,skippedRows,(double)skippedRows * 100 / (skippedRows + rows))).append("</dd>");
+    sb.append("<dt>trees used</dt><dd>" + cm.get(JSON_CM_TREES).getAsInt()).append("</dd>");
     sb.append("</dl>");
     sb.append("<table class='table table-striped table-bordered table-condensed'>");
     sb.append("<tr><th>Actual \\ Predicted</th>");
@@ -49,7 +50,6 @@
     sb.append(String.format("%5.3f = %d / %d",(double)sumError / sumTotal,sumError,sumTotal));
     sb.append("</b></td></tr>");
     sb.append("</table>");
-    sb.append("Trees used: " + cm.get(JSON_CM_TREES).getAsInt());
   }
  else {
     sb.append("<div class='alert alert-info'>");
