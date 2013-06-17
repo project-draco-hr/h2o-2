@@ -1,9 +1,12 @@
-def setupImportFolder(node=None, path='/home/0xdiag/datasets'):
+def setupImportFolder(node=None, path='/home/0xdiag/datasets', timeoutSecs=30):
     if (not node):
         node = h2o.nodes[0]
     if node.redirect_import_folder_to_s3_path:
         bucket = 'home-0xdiag-datasets'
-        importFolderResult = setupImportS3(node=node, bucket=bucket)
+        importFolderResult = setupImportS3(node=node, bucket=bucket, timeoutSecs=timeoutSecs)
     else:
-        importFolderResult = node.import_files(path)
+        if (getpass.getuser() == 'jenkins'):
+            print 'michal: Temp hack of /home/0xdiag/datasets/standard to /home/0xdiag/datasets till EC2 image is fixed'
+            path = re.sub('/home/0xdiag/datasets/standard', '/home/0xdiag/datasets', path)
+        importFolderResult = node.import_files(path, timeoutSecs=timeoutSecs)
     return importFolderResult

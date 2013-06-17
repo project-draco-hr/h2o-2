@@ -1,0 +1,14 @@
+{
+  if (status == H2oStatus.RUNNING) {
+    h2oStatusLabel.setText(H2O_STATUS_RUNNING);
+    startButton.setEnabled(false);
+    stopButton.setEnabled(true);
+    stopButton.requestFocusInWindow();
+  }
+ else   if (status == H2oStatus.NOT_RUNNING) {
+    h2oStatusLabel.setText(H2O_STATUS_NOT_RUNNING);
+    startButton.setEnabled(true);
+    stopButton.setEnabled(false);
+    startButton.requestFocusInWindow();
+  }
+}

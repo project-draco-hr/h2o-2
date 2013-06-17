@@ -2,7 +2,7 @@
   int[] modelDataMap=ary.getColumnIds(_va.colNames());
   if (!isCompatible(modelDataMap))   throw new GLMException("incompatible dataset");
   DataFrame data=new DataFrame(ary,modelDataMap,s,false,true);
-  GLMValidationFunc f=new GLMValidationFunc(_glmParams,_beta,thresholds,ary._cols[modelDataMap[modelDataMap.length - 1]]._mean);
+  GLMValidationFunc f=new GLMValidationFunc(this,_glmParams,_beta,thresholds,ary._cols[modelDataMap[modelDataMap.length - 1]]._mean);
   GLMValidation val=f.apply(job,data);
   val._modelKey=_selfKey;
   if (_vals == null)   _vals=new GLMValidation[]{val};

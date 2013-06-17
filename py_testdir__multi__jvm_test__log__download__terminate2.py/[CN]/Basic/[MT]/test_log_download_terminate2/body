@@ -1,0 +1,12 @@
+def test_log_download_terminate2(self):
+    for h in h2o.nodes:
+        h.log_view()
+        h.log_download(timeoutSecs=3)
+    h2o.nodes[1].terminate_self_only()
+    time.sleep(5)
+    (logNameList, lineCountList) = h2o_log.checkH2OLogs()
+    nodesNum = len(h2o.nodes)
+    self.assertEqual(len(logNameList), nodesNum, (('Should be ' + nodesNum) + ' logs'))
+    self.assertEqual(len(lineCountList), nodesNum, (('Should be ' + nodesNum) + ' logs'))
+    for i in range(nodesNum):
+        self.assertGreater(lineCountList[i], 12, (('node ' + str(i)) + ' log is too small'))

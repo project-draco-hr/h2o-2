@@ -44,15 +44,8 @@
     hb._fjthrds_lo=(char)H2O.loQPoolSize();
     hb._fjqueue_lo=(char)H2O.getLoQueue();
     hb._tcps_active=(char)H2ONode.TCPS.get();
-    if (PersistIce.ROOT == null) {
-      hb.set_free_disk(0);
-      hb.set_max_disk(0);
-    }
- else {
-      File f=new File(PersistIce.ROOT);
-      hb.set_free_disk(f.getUsableSpace());
-      hb.set_max_disk(f.getTotalSpace());
-    }
+    hb.set_free_disk(Persist.getIce().getUsableSpace());
+    hb.set_max_disk(Persist.getIce().getTotalSpace());
     UDPHeartbeat.build_and_multicast(cloud,hb);
     long now=System.currentTimeMillis();
     H2O.SELF._last_heard_from=now;

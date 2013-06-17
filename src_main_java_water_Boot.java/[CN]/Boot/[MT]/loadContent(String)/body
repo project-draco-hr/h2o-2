@@ -1,0 +1,16 @@
+{
+  BufferedReader reader=null;
+  StringBuilder sb=new StringBuilder();
+  try {
+    InputStream is=getResource2(fromFile);
+    reader=new BufferedReader(new InputStreamReader(is));
+    CharStreams.copy(reader,sb);
+  }
+ catch (  IOException e) {
+    Log.err(e);
+  }
+ finally {
+    Closeables.closeQuietly(reader);
+  }
+  return sb.toString();
+}

@@ -1,29 +1,23 @@
 {
   _result=new byte[H2O.CLOUD._memary.length][];
   int idx=H2O.SELF.index();
-  File logFile=PersistIce.logFile;
-  InputStream is=null;
-  int length=(int)Math.min(MAX_SIZE,logFile.length());
+  baos=new ByteArrayOutputStream();
+  ZipOutputStream zos=new ZipOutputStream(baos);
   try {
-    _result[idx]=new byte[length];
-    is=new FileInputStream(logFile);
-    is.skip(logFile.length() - length);
-    int off=0;
-    while (length > 0) {
-      int l=is.read(_result[idx],off,length);
-      off+=l;
-      length-=l;
-    }
+    zipDir(Log.LOG_DIR,zos);
   }
  catch (  IOException e) {
     H2O.ignore(e);
   }
  finally {
     try {
-      is.close();
+      zos.close();
+      baos.close();
     }
  catch (    Exception _) {
     }
+    byte[] arr=baos.toByteArray();
+    _result[idx]=arr;
     tryComplete();
   }
 }

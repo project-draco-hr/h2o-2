@@ -1,4 +1,4 @@
-def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar=False, use_debugger=None, classpath=None, use_hdfs=False, hdfs_version='cdh3', hdfs_name_node='192.168.1.176', hdfs_config=None, aws_credentials=None, use_flatfile=False, java_heap_GB=None, java_heap_MB=None, java_extra_args=None, use_home_for_ice=False, node_id=None, username=None, random_udp_drop=False, redirect_import_folder_to_s3_path=None, disable_h2o_log=False, enable_benchmark_log=False):
+def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar=False, use_debugger=None, classpath=None, use_hdfs=False, use_maprfs=False, hdfs_version='cdh3', hdfs_name_node='192.168.1.176', hdfs_config=None, aws_credentials=None, use_flatfile=False, java_heap_GB=None, java_heap_MB=None, java_extra_args=None, use_home_for_ice=False, node_id=None, username=None, random_udp_drop=False, redirect_import_folder_to_s3_path=None, disable_h2o_log=False, enable_benchmark_log=False):
     self.redirect_import_folder_to_s3_path = redirect_import_folder_to_s3_path
     if (use_debugger is None):
         use_debugger = debugger
@@ -8,8 +8,8 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar
         self.addr = ipaddr
     else:
         self.addr = use_this_ip_addr
-    if (use_this_ip_addr is not None):
-        self.http_addr = use_this_ip_addr
+    if (self.addr is not None):
+        self.http_addr = self.addr
     else:
         self.http_addr = get_ip_address()
     self.sigar = sigar
@@ -17,6 +17,7 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar
     self.classpath = classpath
     self.capture_output = capture_output
     self.use_hdfs = use_hdfs
+    self.use_maprfs = use_maprfs
     self.hdfs_name_node = hdfs_name_node
     self.hdfs_version = hdfs_version
     self.hdfs_config = hdfs_config

@@ -1,0 +1,22 @@
+{
+  String res=null;
+  FSDataOutputStream s=null;
+  try {
+    Path p=new Path(path);
+    FileSystem fs=FileSystem.get(p.toUri(),PersistHdfs.CONF);
+    s=fs.append(p);
+    Log.debug(Sys.HDFS_,"append=" + data.length);
+    s.write(data);
+  }
+ catch (  IOException e) {
+    res=e.getMessage();
+  }
+ finally {
+    try {
+      if (s != null)       s.close();
+    }
+ catch (    IOException e) {
+    }
+  }
+  return res;
+}

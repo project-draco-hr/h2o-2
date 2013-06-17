@@ -15,6 +15,8 @@ def get_args(self):
     if self.use_debugger:
         args += ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']
     args += ['-ea']
+    if self.use_maprfs:
+        args += ['-Djava.library.path=/opt/mapr/lib']
     if self.classpath:
         entries = [find_file('build/classes'), find_file('lib/javassist.jar')]
         entries += glob.glob((find_file('lib') + '/*/*.jar'))
@@ -31,6 +33,8 @@ def get_args(self):
     args += [('--ice_root=%s' % self.get_ice_dir()), ('--name=' + cloud_name())]
     if self.use_hdfs:
         args += [('-hdfs hdfs://' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
+    if self.use_maprfs:
+        args += [('-hdfs maprfs:///' + self.hdfs_name_node), ('-hdfs_version=' + self.hdfs_version)]
     if self.hdfs_config:
         args += [('-hdfs_config ' + self.hdfs_config)]
     if (not self.sigar):

@@ -1,0 +1,13 @@
+def checkH2OLogs(timeoutSecs=3):
+    for h in h2o.nodes:
+        h.log_view()
+        h.log_download(timeoutSecs=timeoutSecs)
+    h2o.nodes[0].log_download(timeoutSecs=timeoutSecs)
+    logNameList = [(((('h2o_' + str(n.http_addr)) + '_') + str(n.port)) + '.log') for n in h2o.nodes]
+    lineCountList = []
+    for logName in logNameList:
+        lineCount = h2o_util.file_line_count(('sandbox/' + logName))
+        print logName, 'lineCount:', lineCount
+        lineCountList.append(lineCount)
+    print logNameList
+    return (logNameList, lineCountList)

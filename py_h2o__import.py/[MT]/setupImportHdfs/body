@@ -1,11 +1,16 @@
-def setupImportHdfs(node=None, path=None):
+def setupImportHdfs(node=None, path=None, schema='hdfs', timeoutSecs=30):
     if (not node):
         node = h2o.nodes[0]
-    hdfsPrefix = ('hdfs://' + node.hdfs_name_node)
+    print 'setupImportHdfs schema:', schema
+    if (schema == 'maprfs'):
+        hdfsPrefix = (schema + '://')
+    else:
+        hdfsPrefix = ((schema + '://') + node.hdfs_name_node)
     if (path is None):
         URI = (hdfsPrefix + '/datasets')
     else:
         URI = (hdfsPrefix + path)
-    importHdfsResult = node.import_hdfs(URI)
+    print 'URI:', URI
+    importHdfsResult = node.import_hdfs(URI, timeoutSecs=timeoutSecs)
     h2o.verboseprint(h2o.dump_json(importHdfsResult))
     return importHdfsResult

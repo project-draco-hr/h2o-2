@@ -30,7 +30,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             paramsUsed = params
             paramsUsedStr = paramsStr
             msgUsed = '\nPolling with'
-        r = self.__do_json_request(url=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
+        r = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
         if ((count % 5) == 0):
             verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r['response']))
         if ((count % 6) == 0):

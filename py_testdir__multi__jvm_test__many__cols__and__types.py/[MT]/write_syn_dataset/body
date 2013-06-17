@@ -1,4 +1,4 @@
-def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel):
+def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE):
     letters = 'abcdefghijklmnopqrstuvwxyz'
 
     def case0(r):
@@ -12,10 +12,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel):
 
     def case3(r):
         d = r.randint(0, 2)
-        if (d == 2):
-            return ''
-        else:
-            return str(d)
+        return str(d)
 
     def case4(r):
         return 'a'
@@ -57,14 +54,15 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel):
     def case11(r):
         return str(r.uniform((-1e+30), 1e+30))
     caseList = [case0, case1, case2, case3, case4, case5, case6, case7, case8, case9, case10, case11]
-    if ((sel < 0) or (sel >= len(caseList))):
-        raise Exception('sel out of range in write_syn_dataset:', sel)
-    f = caseList[sel]
     r = random.Random(SEEDPERFILE)
+    colCase = range(COLCASES)
+    random.shuffle(colCase)
     dsf = open(csvPathname, 'w+')
     for i in range(rowCount):
         rowData = []
         for j in range(colCount):
+            colCaseToUse = (j % COLCASES)
+            f = caseList[colCase[colCaseToUse]]
             rowData.append(f(r))
         rowDataCsv = ','.join(rowData)
         dsf.write((rowDataCsv + '\n'))

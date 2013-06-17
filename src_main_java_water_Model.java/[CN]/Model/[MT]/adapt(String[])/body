@@ -1,0 +1,6 @@
+{
+  final int[] colMap=columnMapping(colNames);
+  if (!isCompatible(colMap))   throw new IllegalArgumentException("This model uses different columns than those provided");
+  if (identityMap(colMap))   return this;
+  return new ModelDataAdaptor(this,colMap[colMap.length - 1],Arrays.copyOf(colMap,colMap.length - 1),null);
+}

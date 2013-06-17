@@ -3,7 +3,14 @@
   String path=_path.value();
   try {
     if (value == null)     throw new IllegalArgumentException("Unknown key: " + _source.record()._originalValue);
-    PersistHdfs.store(path,value);
+    byte[] data=null;
+    Model model=getAsModel(value);
+    if (model != null) {
+      if (!path.endsWith(Extensions.JSON))       path+=Extensions.JSON;
+      data=model.toJson().toString().getBytes(Charsets.UTF_8);
+    }
+    if (data != null)     PersistHdfs.store(new Path(path),data);
+ else     throw new UnsupportedOperationException("Only models can be exported");
   }
  catch (  Exception e) {
     Log.err(e);

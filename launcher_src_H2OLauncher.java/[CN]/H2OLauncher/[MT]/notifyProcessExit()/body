@@ -1,0 +1,10 @@
+{
+synchronized (this) {
+    procManagerThread=null;
+    proc=null;
+    status=H2oStatus.NOT_RUNNING;
+  }
+  notifyProcessOutput("\nH2O PROCESS EXITED\n\n");
+  notifyHttp("");
+  recalcInBackground();
+}

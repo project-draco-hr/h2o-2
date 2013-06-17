@@ -4,6 +4,6 @@ def random_forest(self, data_key, trees, timeoutSecs=300, print_params=True, **k
     params_dict.update(kwargs)
     if print_params:
         print '\nrandom_forest parameters:', params_dict
-    a = self.__do_json_request(url=self.__url('RF.json'), timeout=timeoutSecs, params=params_dict)
+    a = self.__do_json_request('RF.json', timeout=timeoutSecs, params=params_dict)
     verboseprint('\nrandom_forest result:', dump_json(a))
     return a
