@@ -1,13 +1,5 @@
 def terminate(self):
     self.shutdown_all()
-    time.sleep(1)
     if self.is_alive():
         print ("\nShutdown didn't work for local node? : %s. Will kill though" % self)
-    try:
-        if self.is_alive():
-            self.ps.kill()
-        if self.is_alive():
-            self.ps.terminate()
-        return self.wait(0.5)
-    except psutil.NoSuchProcess:
-        return (-1)
+    self.terminate_self_only()

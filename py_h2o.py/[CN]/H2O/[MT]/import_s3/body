@@ -1,4 +1,4 @@
-def import_s3(self, bucket):
-    a = self.__do_json_request(self.__url('ImportS3.json'), params={'bucket': bucket, })
+def import_s3(self, bucket, timeoutSecs=30):
+    a = self.__do_json_request('ImportS3.json', timeout=timeoutSecs, params={'bucket': bucket, })
     verboseprint('\nimport_s3 result:', dump_json(a))
     return a

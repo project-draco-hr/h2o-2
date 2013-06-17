@@ -1,0 +1,8 @@
+def notest_C_putfile_and_getfile(self):
+    cvsfile = h2o.find_file(file_to_put())
+    node = h2o.nodes[0]
+    key = node.put_file(cvsfile)
+    r = node.get_key(key)
+    f = open(cvsfile)
+    self.diff(r, f)
+    f.close()

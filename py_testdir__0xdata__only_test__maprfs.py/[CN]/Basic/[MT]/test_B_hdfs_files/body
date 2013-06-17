@@ -1,0 +1,23 @@
+def test_B_hdfs_files(self):
+    print '\nLoad a list of files from HDFS, parse and do 1 RF tree'
+    print '\nYou can try running as hduser/hduser if fail'
+    csvFilenameAll = ['TEST-poker1000.csv']
+    if (1 == 0):
+        csvFilenameList = random.sample(csvFilenameAll, 8)
+    else:
+        csvFilenameList = csvFilenameAll
+    timeoutSecs = 200
+    firstglm = {}
+    h2i.setupImportHdfs(path='/datasets', schema='maprfs')
+    for csvFilename in csvFilenameList:
+        print 'Loading', csvFilename, 'from HDFS'
+        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', schema='maprfs', timeoutSecs=1000)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print 'parse result:', parseKey['destination_key']
+        print ('\n' + csvFilename)
+        start = time.time()
+        RFview = h2o_cmd.runRFOnly(trees=1, parseKey=parseKey, timeoutSecs=2000)
+        h2b.browseJsonHistoryAsUrlLastMatch('RFView')
+        time.sleep(10)
+        sys.stdout.write('.')
+        sys.stdout.flush()

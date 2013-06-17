@@ -1,0 +1,10 @@
+{
+  ScoreTask t=(ScoreTask)drt;
+  _min=Math.min(_min,t._min);
+  _max=Math.max(_max,t._max);
+  _sum+=t._sum;
+  _sumsq+=t._sumsq;
+  _n+=t._n;
+  if (_rpc == null)   _rpc=t._rpc;
+ else   if (_rpc != t._rpc)   for (int i=0; i < _rpc.length; ++i)   _rpc[i]+=t._rpc[i];
+}

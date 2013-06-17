@@ -2,7 +2,12 @@
   JsonObject res=new JsonObject();
   res.addProperty(Constants.VERSION,H2O.VERSION);
   res.addProperty(Constants.TYPE,GLMModel.class.getName());
-  res.addProperty("time",_time);
+  res.addProperty("model_time",_time);
+  res.addProperty("model_iterations",_iterations);
+  res.addProperty("lsm_time",_lsmSolveTime);
+  res.addProperty("dof",_dof);
+  res.addProperty("nLines",_nLines);
+  res.addProperty("nCols",_nCols);
   res.addProperty(Constants.MODEL_KEY,_selfKey.toString());
   if (_warnings != null) {
     JsonArray warnings=new JsonArray();

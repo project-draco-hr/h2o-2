@@ -1,0 +1,21 @@
+{
+  ValueArray output=new ValueArray(outputKey,data.length());
+  ScoreTask t=new ScoreTask(M.adapt(data),output,(int)data.chunks());
+  t.invoke(data._key);
+  Column c=new Column();
+  c._max=t._max;
+  c._min=t._min;
+  c._mean=t._sum / t._n;
+  double norm=1.0 / t._n;
+  double s=t._sum * norm;
+  c._sigma=Math.sqrt(t._sumsq * norm - s * s);
+  c._name=M.responseName();
+  c._size=-8;
+  c._scale=1;
+  c._base=0;
+  c._off=0;
+  c._domain=null;
+  ValueArray res=new ValueArray(outputKey,t._rpc,8,new Column[]{c});
+  DKV.put(outputKey,res);
+  return res._key;
+}

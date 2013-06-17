@@ -3,7 +3,11 @@ def parseImportHdfsFile(node=None, csvFilename=None, path=None, schema='hdfs', t
         raise Exception('No csvFilename parameter in parseImportHdfsFile')
     if (not node):
         node = h2o.nodes[0]
-    hdfsPrefix = ((schema + '://') + node.hdfs_name_node)
+    print 'parseImportHdfsFiles schema:', schema
+    if (schema == 'maprfs'):
+        hdfsPrefix = (schema + ':')
+    else:
+        hdfsPrefix = ((schema + '://') + node.hdfs_name_node)
     if (path is None):
         URI = (hdfsPrefix + '/datasets')
     else:
@@ -11,7 +15,7 @@ def parseImportHdfsFile(node=None, csvFilename=None, path=None, schema='hdfs', t
     hdfsKey = ((URI + '/') + csvFilename)
     print 'parseHdfsFile hdfsKey:', hdfsKey
     inspect = h2o_cmd.runInspect(key=hdfsKey)
-    print 'parseHdfsFile:', inspect
+    print 'parseHdfsFile inspect of source:', inspect
     parseKey = node.parse(hdfsKey, (csvFilename + '.hex'), timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
     parseKey['source_key'] = hdfsKey
     print 'parseHdfsFile:', parseKey
