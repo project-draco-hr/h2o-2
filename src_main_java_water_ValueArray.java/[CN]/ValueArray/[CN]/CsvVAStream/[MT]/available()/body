@@ -1,0 +1,26 @@
+{
+  if (_i == _currentLine.length) {
+    if (++_rid == _numrows) {
+      _ab=null;
+      int abytes=super.available();
+      if (abytes <= 0)       return abytes;
+      _numrows=_ary.rpc(_chkidx - 1);
+      _rid=0;
+    }
+    StringBuilder sb=new StringBuilder();
+    boolean f=true;
+    for (    Column c : _ary._cols) {
+      if (f)       f=false;
+ else       sb.append(',');
+      if (!_ary.isNA(_ab,_rid,c)) {
+        if (c.isEnum())         sb.append('"' + c._domain[(int)_ary.data(_ab,_rid,c)] + '"');
+ else         if (!c.isFloat())         sb.append(_ary.data(_ab,_rid,c));
+ else         sb.append(_ary.datad(_ab,_rid,c));
+      }
+    }
+    sb.append('\n');
+    _currentLine=sb.toString().getBytes();
+  }
+  _i=0;
+  return _currentLine.length - _i;
+}
