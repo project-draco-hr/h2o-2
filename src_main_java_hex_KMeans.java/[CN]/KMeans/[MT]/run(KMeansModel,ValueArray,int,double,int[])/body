@@ -32,9 +32,8 @@
   }
   clusters=recluster(clusters,k,rand);
   res._clusters=clusters;
-  boolean moved=true;
-  while (moved) {
-    moved=false;
+  for (; ; ) {
+    boolean moved=false;
     Lloyds task=new Lloyds();
     task._arykey=va._key;
     task._cols=cols;
@@ -42,16 +41,21 @@
     task._normalize=res._normalized;
     task.invoke(va._key);
     for (int cluster=0; cluster < clusters.length; cluster++) {
-      for (int column=0; column < cols.length - 1; column++) {
-        double value=task._sums[cluster][column] / task._counts[cluster];
-        if (Math.abs(value - clusters[cluster][column]) > epsilon) {
-          moved=true;
+      if (task._counts[cluster] > 0) {
+        for (int column=0; column < cols.length - 1; column++) {
+          double value=task._sums[cluster][column] / task._counts[cluster];
+          if (Math.abs(value - clusters[cluster][column]) > epsilon) {
+            moved=true;
+          }
+          clusters[cluster][column]=value;
         }
-        clusters[cluster][column]=value;
       }
     }
+    res._error=task._error;
     res._iteration++;
     UKV.put(dest(),res);
+    if (!moved)     break;
+    if (res._maxIter != 0 && res._iteration >= res._maxIter)     break;
     if (cancelled())     break;
   }
   remove();
