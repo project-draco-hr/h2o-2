@@ -1,6 +1,6 @@
 {
   for (int c=0; c < cols.length - 1; c++) {
-    ValueArray.Column C=va._cols[c];
+    ValueArray.Column C=va._cols[cols[c]];
     double d=(va.isNA(bits,row,C) ? C._mean : va.datad(bits,row,C));
     if (normalize) {
       d-=C._mean;

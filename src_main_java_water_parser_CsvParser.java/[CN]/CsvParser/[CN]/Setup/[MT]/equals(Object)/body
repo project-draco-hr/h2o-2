@@ -1,5 +1,6 @@
 {
   if (o == null || !(o instanceof Setup))   return false;
+  if (o == this)   return true;
   Setup s=(Setup)o;
-  return _separator == s._separator && _data[0].length == s._data[0].length;
+  return _separator == s._separator && ((_data == null && s._data == null) || (_data[0].length == s._data[0].length));
 }

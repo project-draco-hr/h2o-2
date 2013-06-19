@@ -1,0 +1,17 @@
+{
+  byte[] bs=new byte[_len << log];
+  for (int i=0; i < _len; i++) {
+    double le=_ls[i] * DParseTask.pow10(_xs[i]);
+switch (log) {
+case 2:
+      UDP.set4f(bs,(i << 2),(float)le);
+    break;
+case 3:
+  UDP.set8d(bs,(i << 3),le);
+break;
+default :
+H2O.fail();
+}
+}
+return bs;
+}

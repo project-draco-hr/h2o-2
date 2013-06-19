@@ -31,7 +31,7 @@
   sb.append(trailer);
   String body=sb.toString();
   if (debug_print) {
-    Log.debug(cc.getName() + " " + body);
+    System.err.println(cc.getName() + " " + body);
   }
   try {
     cc.addMethod(CtNewMethod.make(body,cc));

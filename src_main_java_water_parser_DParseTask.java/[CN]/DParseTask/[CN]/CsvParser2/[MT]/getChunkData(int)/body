@@ -1,0 +1,14 @@
+{
+  Key key=_key;
+  if (key._kb[0] == Key.ARRAYLET_CHUNK) {
+    Key aryKey=ValueArray.getArrayKey(key);
+    ValueArray ary=DKV.get(aryKey).get();
+    if (cidx >= ary.chunks())     return null;
+    key=ary.getChunkKey(cidx);
+  }
+ else {
+    if (cidx > 0)     return null;
+  }
+  Value v=DKV.get(key);
+  return v == null ? null : v.memOrLoad();
+}

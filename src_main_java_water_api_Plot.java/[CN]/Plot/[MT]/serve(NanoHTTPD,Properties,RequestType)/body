@@ -1,6 +1,8 @@
 {
   checkArguments(args,type);
   ValueArray va=_source.value();
+  double[][] clusters=null;
+  if (_clusters.value() != null)   clusters=((KMeansModel)_clusters.value().get())._clusters;
   Key source=va._key;
   int width=_width.value();
   int height=_height.value();
@@ -26,6 +28,17 @@ case png:
         pixel[1]=255 - v;
         pixel[2]=255 - v;
         raster.setPixel(x,y,pixel);
+      }
+    }
+    if (clusters != null) {
+      for (int i=0; i < clusters.length; i++) {
+        int x0=hex.Plot.scale(clusters[i][0],va._cols[0],width);
+        int y0=hex.Plot.scale(clusters[i][1],va._cols[1],height);
+        pixel[0]=255;
+        pixel[1]=0;
+        pixel[2]=0;
+        int r=2;
+        for (int y=Math.max(0,y0 - r); y < Math.min(height,y0 + r); y++)         for (int x=Math.max(0,x0 - r); x < Math.min(width,x0 + r); x++)         raster.setPixel(x,y,pixel);
       }
     }
     ByteArrayOutputStream buffer=new ByteArrayOutputStream();

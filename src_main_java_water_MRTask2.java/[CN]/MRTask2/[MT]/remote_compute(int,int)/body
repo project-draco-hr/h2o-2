@@ -1,0 +1,8 @@
+{
+  int mid=(hi + lo) >>> 1;
+  T rpc=clone();
+  rpc._nlo=lo;
+  rpc._nhi=hi;
+  addToPendingCount(1);
+  return new RPC(H2O.CLOUD._memary[mid],rpc).addCompleter(this).call();
+}

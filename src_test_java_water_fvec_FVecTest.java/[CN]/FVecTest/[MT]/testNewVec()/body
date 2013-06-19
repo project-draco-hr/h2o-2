@@ -1,0 +1,13 @@
+{
+  File file=TestUtil.find_test_file("./smalldata/cars.csv");
+  Key key=NFSFileVec.make(file);
+  NFSFileVec nfs=DKV.get(key).get();
+  Key key2=Key.make("newKey",(byte)0,Key.VEC);
+  AppendableVec nv=new AppendableVec(key2);
+  Vec res=new TestNewVec().invoke(nv,nfs).vecs(0);
+  assertEquals(nfs.at(0) + 1,res.at(0));
+  assertEquals(nfs.at(1) + 1,res.at(1));
+  assertEquals(nfs.at(2) + 1,res.at(2));
+  UKV.remove(key);
+  UKV.remove(key2);
+}

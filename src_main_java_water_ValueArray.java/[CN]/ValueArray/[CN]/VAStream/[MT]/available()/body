@@ -1,0 +1,9 @@
+{
+  if (_ab == null || _ab.remaining() == 0) {
+    if (_chkidx >= _ary.chunks())     return 0;
+    _ab=_ary.getChunk(_chkidx++);
+    if (_pm != null)     _pm.update(_currentChunkSz);
+    _currentChunkSz=_ab.remaining();
+  }
+  return _ab.remaining();
+}

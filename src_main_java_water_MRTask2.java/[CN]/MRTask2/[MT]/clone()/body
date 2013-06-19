@@ -1,0 +1,15 @@
+{
+  try {
+    T x=(T)super.clone();
+    x.setCompleter(this);
+    x._topLocal=false;
+    x._nleft=x._nrite=null;
+    x._left=x._rite=null;
+    x._fs=null;
+    x.setPendingCount(0);
+    return x;
+  }
+ catch (  CloneNotSupportedException e) {
+    throw Log.errRTExcept(e);
+  }
+}
