@@ -4,7 +4,8 @@
   }
  else {
     try {
-      return new FileInputStream(new File("lib/resources" + uri));
+      String classes=getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+      return new FileInputStream(new File(classes + "/../../lib/resources" + uri));
     }
  catch (    FileNotFoundException e) {
       Log.err(e);

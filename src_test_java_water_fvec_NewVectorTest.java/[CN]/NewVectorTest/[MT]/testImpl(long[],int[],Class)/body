@@ -1,9 +1,9 @@
 {
-  NewVector nv=new NewVector(null,0);
+  NewChunk nv=new NewChunk(null,0);
   nv._ls=ls;
   nv._xs=xs;
   nv._len=ls.length;
-  BigVector bv=nv.compress();
+  Chunk bv=nv.compress();
   assertTrue(C.isInstance(bv));
-  for (int i=0; i < ls.length; i++)   assertEquals(ls[i] * DParseTask.pow10(xs[i]),bv.atd_impl(i),bv.atd_impl(i) * EPSILON);
+  for (int i=0; i < ls.length; i++)   assertEquals(ls[i] * DParseTask.pow10(xs[i]),bv.getd(i),bv.getd(i) * EPSILON);
 }

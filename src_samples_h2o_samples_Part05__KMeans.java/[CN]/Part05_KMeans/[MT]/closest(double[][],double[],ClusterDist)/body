@@ -1,0 +1,17 @@
+{
+  int min=-1;
+  double minSqr=Double.MAX_VALUE;
+  for (int cluster=0; cluster < clusters.length; cluster++) {
+    double sqr=0;
+    for (int column=0; column < point.length; column++) {
+      double delta=point[column] - clusters[cluster][column];
+      sqr+=delta * delta;
+    }
+    if (sqr < minSqr) {
+      min=cluster;
+      minSqr=sqr;
+    }
+  }
+  cd._cluster=min;
+  cd._dist=minSqr;
+}
