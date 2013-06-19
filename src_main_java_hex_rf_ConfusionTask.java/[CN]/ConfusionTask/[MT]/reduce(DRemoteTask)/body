@@ -1,0 +1,16 @@
+{
+  ConfusionTask C=(ConfusionTask)drt;
+  if (_matrix == null) {
+    _matrix=C._matrix;
+  }
+ else {
+    _matrix=_matrix.add(C._matrix);
+  }
+  long[] ept1=_errorsPerTree;
+  long[] ept2=C._errorsPerTree;
+  if (ept1 == null)   _errorsPerTree=ept2;
+ else   if (ept2 != null) {
+    if (ept1.length < ept2.length)     ept1=Arrays.copyOf(ept1,ept2.length);
+    for (int i=0; i < ept2.length; i++)     ept1[i]+=ept2[i];
+  }
+}

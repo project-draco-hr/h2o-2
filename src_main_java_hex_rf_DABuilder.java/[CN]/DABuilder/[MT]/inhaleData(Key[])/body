@@ -9,37 +9,38 @@
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   int start_row=0;
   for (  final Key k : keys) {
+    System.err.println("loading: " + k);
     final int S=start_row;
     if (!k.home())     continue;
     final int rows=ary.rpc(ValueArray.getChunkIndex(k));
-    dataInhaleJobs.add(new RecursiveAction(){
-      @Override protected void compute(){
-        AutoBuffer bits=ary.getChunk(k);
-        for (int j=0; j < rows; ++j) {
-          int rowNum=S + j;
-          boolean rowIsValid=false;
-          for (int c=0; c < ncolumns; ++c) {
-            final int col=modelDataMap[c];
-            if (ary.isNA(bits,j,col)) {
-              dapt.addBad(rowNum,c);
-              continue;
-            }
-            float f=(float)ary.datad(bits,j,col);
-            if (!dapt.isValid(c,f)) {
-              dapt.addBad(rowNum,c);
-              continue;
-            }
-            dapt.add(f,rowNum,c);
-            if (c != ncolumns - 1)             rowIsValid|=true;
-          }
-          if (!rowIsValid)           dapt.markIgnoredRow(j);
-        }
-      }
-    }
-);
+    dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S));
     start_row+=rows;
   }
   ForkJoinTask.invokeAll(dataInhaleJobs);
+  if (_drf._params._useNonLocalData) {
+    final float OVERHEAD_MAGIC=3 / 8.f;
+    long totalmem=Runtime.getRuntime().totalMemory();
+    long localChunks=keys.length * ValueArray.CHUNK_SZ;
+    long availMem=(long)(OVERHEAD_MAGIC * totalmem) - localChunks;
+    if (availMem > 0) {
+      int numkeys=(int)(availMem / ValueArray.CHUNK_SZ);
+      System.err.println("TAvailM: MB " + availMem / 1024 / 1024);
+      System.err.println("Can load keys: " + numkeys);
+      ArrayList<Key> allkeys=new ArrayList<Key>(numkeys);
+      for (int i=0; i < ary.chunks(); i++) {
+        Key k=ary.getChunkKey(i);
+        if (!k.home())         allkeys.add(k);
+        if (allkeys.size() == numkeys)         break;
+      }
+      for (      final Key k : allkeys) {
+        System.err.println("-> reloading more keys: " + k + " from "+ k.home_node());
+        final int S=start_row;
+        final int rows=ary.rpc(ValueArray.getChunkIndex(k));
+        dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S));
+        start_row+=rows;
+      }
+    }
+  }
   dapt.shrink();
   Log.debug(Sys.RANDF,"Inhale done in " + t_inhale);
   return dapt;
