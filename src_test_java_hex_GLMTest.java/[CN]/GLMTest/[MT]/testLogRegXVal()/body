@@ -1,5 +1,5 @@
 {
-  Key k1=loadAndParseKey("m.hex","smalldata/logreg/umass_statdata/cgd.dat");
+  Key k1=loadAndParseFile("m.hex","smalldata/logreg/umass_statdata/cgd.dat");
   ValueArray va=DKV.get(k1).get();
   LSMSolver lsms=new ADMMSolver(0.0001,1);
   GLMParams glmp=new GLMParams(Family.gaussian);

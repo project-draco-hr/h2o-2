@@ -1,7 +1,7 @@
 {
   Key k1=null, k2=null;
   try {
-    k1=loadAndParseKey("h.hex","smalldata/cars.csv");
+    k1=loadAndParseFile("h.hex","smalldata/cars.csv");
     k2=Exec.exec("colSwap(h.hex,2,h.hex$cylinders==3?1:0)","h2.hex");
     int[] cols=new int[]{3,4,5,6,7,2};
     ValueArray va=DKV.get(k2).get();

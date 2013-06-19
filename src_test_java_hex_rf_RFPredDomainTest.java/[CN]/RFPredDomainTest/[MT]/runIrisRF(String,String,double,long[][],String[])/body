@@ -1,6 +1,6 @@
 {
   String trainKeyName="iris_train.hex";
-  Key trainKey=loadAndParseKey(trainKeyName,trainDS);
+  Key trainKey=loadAndParseFile(trainKeyName,trainDS);
   ValueArray trainData=DKV.get(trainKey).get();
   int trees=10;
   int depth=50;
@@ -12,7 +12,7 @@
   DRFJob drf=hex.rf.DRF.execute(modelKey,cols,trainData,trees,depth,1024,statType,seed,false,null,-1,Sampling.Strategy.RANDOM,1.0f,null,0,0);
   RFModel model=drf.get();
   String testKeyName="iris_test.hex";
-  Key testKey=loadAndParseKey(testKeyName,testDS);
+  Key testKey=loadAndParseFile(testKeyName,testDS);
   ValueArray testData=DKV.get(testKey).get();
   Confusion confusion=Confusion.make(model,testData._key,model._features - 1,null,false);
   confusion.report();
