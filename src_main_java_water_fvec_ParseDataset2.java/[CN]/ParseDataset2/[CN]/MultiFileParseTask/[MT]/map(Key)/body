@@ -17,17 +17,18 @@
   try {
 switch (cpr) {
 case NONE:
-      throw H2O.unimpl();
+      distroParse(vec,setup);
+    break;
 case ZIP:
 {
-      ZipInputStream zis=new ZipInputStream(vec.openStream());
-      ZipEntry ze=zis.getNextEntry();
-      if (ze != null && !ze.isDirectory())       streamParse(key,zis,setup);
- else       zis.close();
-      break;
-    }
+    ZipInputStream zis=new ZipInputStream(vec.openStream());
+    ZipEntry ze=zis.getNextEntry();
+    if (ze != null && !ze.isDirectory())     streamParse(zis,setup);
+ else     zis.close();
+    break;
+  }
 case GZIP:
-  streamParse(key,new GZIPInputStream(vec.openStream()),setup);
+streamParse(new GZIPInputStream(vec.openStream()),setup);
 break;
 }
 }
