@@ -86,6 +86,5 @@ def simpleCheckRFView(node, rfv, noPrint=False, **kwargs):
     if ((number_built <= 0) or (number_built > 20000)):
         raise Exception('number_built in RFView seems wrong. number_built:', number_built)
     h2o.verboseprint('RFView response: number_built:', number_built, 'leaves:', leaves, 'depth:', depth)
-    confusion_key = rfv['confusion_key']
     dataInspect = node.inspect(data_key)
     return (classification_error, classErrorPctList, totalScores)

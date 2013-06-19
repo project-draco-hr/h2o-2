@@ -1,4 +1,4 @@
-def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=30, parentName=None, **kwargs):
+def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, parentName=None, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
     params_dict = {'parallel': 1, 'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', }
     params_dict.update(kwargs)
