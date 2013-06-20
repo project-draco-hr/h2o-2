@@ -1,0 +1,11 @@
+{
+  for (int i=0; i < xs._len; i++) {
+    if (!xs.isNA(i) && !ys.isNA(i)) {
+      double fit=_beta1 * xs.at(i) + _beta0;
+      double rs=fit - ys.at(i);
+      _rss+=rs * rs;
+      double sr=fit - _meanY;
+      _ssr+=sr * sr;
+    }
+  }
+}

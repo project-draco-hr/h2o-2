@@ -2,8 +2,9 @@
   int xmin=Integer.MAX_VALUE;
   long lemin=0, lemax=lemin;
   boolean overflow=false;
-  boolean first=true;
+  boolean floatOverflow=false;
   for (int i=0; i < _len; i++) {
+    if (isNA(i))     continue;
     long l=_ls[i];
     int x=_xs[i];
     double d=l * DParseTask.pow10(x);
@@ -16,27 +17,27 @@
       l=t;
       x++;
     }
+    floatOverflow=Math.abs(l) > MAX_FLOAT_MANTISSA;
+    if (i == 0) {
+      xmin=x;
+      lemin=lemax=l;
+      continue;
+    }
+    if (overflow || (overflow=(Math.abs(xmin - x)) >= 10))     continue;
     if (x < xmin) {
-      if (!first) {
-        overflow|=(lemin < Integer.MIN_VALUE) | (lemax > Integer.MAX_VALUE);
-        if (xmin - x >= 10)         overflow=true;
- else {
-          lemin*=DParseTask.pow10i(xmin - x);
-          lemax*=DParseTask.pow10i(xmin - x);
-        }
-      }
+      lemin*=DParseTask.pow10i(xmin - x);
+      lemax*=DParseTask.pow10i(xmin - x);
       xmin=x;
     }
     long le=l * DParseTask.pow10i(x - xmin);
-    if (first || le < lemin)     lemin=le;
-    if (first || le > lemax)     lemax=le;
-    first=false;
+    if (le < lemin)     lemin=le;
+    if (le > lemax)     lemax=le;
   }
+  if (overflow || ((xmin != 0) && floatOverflow || -35 > xmin || xmin > 35))   return new C8DChunk(bufF(3));
   if (xmin != 0) {
-    if (!overflow && lemax - lemin < 255)     return new C1SChunk(bufX(lemin,xmin,C1SChunk.OFF,0),(int)lemin,DParseTask.pow10(xmin));
-    if (!overflow && lemax - lemin < 65535)     return new C2SChunk(bufX(lemin,xmin,C2SChunk.OFF,1),(int)lemin,DParseTask.pow10(xmin));
-    if (Math.abs(lemax - lemin) <= MAX_FLOAT_MANTISSA && -35 <= xmin && xmin <= 35)     return new C4FChunk(bufF(2));
-    return new C8DChunk(bufF(3));
+    if (lemax - lemin < 255)     return new C1SChunk(bufX(lemin,xmin,C1SChunk.OFF,0),(int)lemin,DParseTask.pow10(xmin));
+    if (lemax - lemin < 65535)     return new C2SChunk(bufX(lemin,xmin,C2SChunk.OFF,1),(int)lemin,DParseTask.pow10(xmin));
+    return new C4FChunk(bufF(2));
   }
   if (lemax - lemin < 255) {
     if (0 <= lemin && lemax < 255)     return new C1Chunk(bufX(0,0,C1Chunk.OFF,0));
