@@ -1,15 +1,34 @@
 {
   byte[] bs=new byte[(_len << log) + off];
   for (int i=0; i < _len; i++) {
-    int x=_xs[i] - scale;
-    long le=x >= 0 ? _ls[i] * DParseTask.pow10i(x) : _ls[i] / DParseTask.pow10i(-x);
-    le-=bias;
+    if (isNA(i)) {
 switch (log) {
 case 0:
-      bs[i + off]=(byte)le;
-    break;
+        bs[i + off]=(byte)0xFF;
+      break;
 case 1:
-  UDP.set2(bs,(i << 1) + off,(short)le);
+    UDP.set2(bs,(i << 1) + off,Short.MIN_VALUE);
+  break;
+case 2:
+UDP.set4(bs,(i << 2) + off,Integer.MIN_VALUE);
+break;
+case 3:
+UDP.set8(bs,(i << 3) + off,Long.MIN_VALUE);
+break;
+default :
+H2O.fail();
+}
+}
+ else {
+int x=_xs[i] - scale;
+long le=x >= 0 ? _ls[i] * DParseTask.pow10i(x) : _ls[i] / DParseTask.pow10i(-x);
+le-=bias;
+switch (log) {
+case 0:
+bs[i + off]=(byte)le;
+break;
+case 1:
+UDP.set2(bs,(i << 1) + off,(short)le);
 break;
 case 2:
 UDP.set4(bs,(i << 2) + off,(int)le);
@@ -19,6 +38,7 @@ UDP.set8(bs,(i << 3) + off,le);
 break;
 default :
 H2O.fail();
+}
 }
 }
 return bs;

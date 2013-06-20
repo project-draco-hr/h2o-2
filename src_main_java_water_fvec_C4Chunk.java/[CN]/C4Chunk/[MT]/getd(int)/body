@@ -1,3 +1,4 @@
 {
-  return UDP.get4(_mem,i << 2);
+  int res=UDP.get4(_mem,i << 2);
+  return (res == NA()) ? Double.NaN : res;
 }
