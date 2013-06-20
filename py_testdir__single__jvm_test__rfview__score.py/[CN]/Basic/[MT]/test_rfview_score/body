@@ -23,20 +23,15 @@ def test_rfview_score(self):
         ntree = rfv['ntree']
         kwargs.pop('ntree', None)
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        kwargs['no_confusion_matrix'] = 0
-        kwargs['clear_confusion_matrix'] = 0
+        h2o.nodes[0].random_forest_predict(model_key=model_key, key=dataKeyTest)
+        kwargs['iterative_cm'] = 0
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        kwargs['no_confusion_matrix'] = 0
-        kwargs['clear_confusion_matrix'] = 1
+        h2o.nodes[0].random_forest_predict(model_key=model_key, key=dataKeyTest)
+        kwargs['iterative_cm'] = 1
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        kwargs['no_confusion_matrix'] = 1
-        kwargs['clear_confusion_matrix'] = 0
-        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        kwargs['no_confusion_matrix'] = 1
-        kwargs['clear_confusion_matrix'] = 1
-        h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        kwargs['no_confusion_matrix'] = 0
-        kwargs['clear_confusion_matrix'] = 0
+        h2o.nodes[0].random_forest_predict(model_key=model_key, key=dataKeyTest)
+        kwargs['iterative_cm'] = 1
         kwargs['class_weights'] = '1=1,2=2,3=3,4=4,5=5,6=6,7=7'
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
+        h2o.nodes[0].random_forest_predict(model_key=model_key, key=dataKeyTest)
         print 'Trial #', trial, 'completed'
