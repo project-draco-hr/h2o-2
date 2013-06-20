@@ -1,17 +1,19 @@
 {
   Thread thread=new Thread(){
     @Override public void run(){
-      for (; ; ) {
-        int b;
-        try {
-          b=System.in.read();
-        }
- catch (        Exception e) {
-          b=-1;
-        }
-        if (b < 0) {
-          Log.debug("Assuming parent done, exit(0)");
-          System.exit(0);
+      if (!System.getProperty("os.name").toLowerCase().contains("win")) {
+        for (; ; ) {
+          int b;
+          try {
+            b=System.in.read();
+          }
+ catch (          Exception e) {
+            b=-1;
+          }
+          if (b < 0) {
+            Log.info("Assuming parent done, exit(0)");
+            System.exit(0);
+          }
         }
       }
     }
