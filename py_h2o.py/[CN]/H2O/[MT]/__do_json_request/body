@@ -1,8 +1,12 @@
-def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=None, cmd='get', extraComment=None, ignoreH2oError=False, **kwargs):
+def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params={}, cmd='get', extraComment=None, ignoreH2oError=False, **kwargs):
     if fullUrl:
         url = fullUrl
     else:
         url = self.__url(jsonRequest)
+    params2 = params.copy()
+    for k in params2:
+        if (params2[k] is None):
+            del params[k]
     if (params is not None):
         paramsStr = ('?' + '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()]))
     else:

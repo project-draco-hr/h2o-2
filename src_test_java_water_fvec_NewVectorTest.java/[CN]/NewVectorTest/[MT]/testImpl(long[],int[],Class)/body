@@ -1,9 +1,12 @@
 {
-  NewChunk nv=new NewChunk(null,0);
+  AppendableVec av=new AppendableVec(Vec.newKey());
+  NewChunk nv=new NewChunk(av,0);
   nv._ls=ls;
   nv._xs=xs;
   nv._len=ls.length;
   Chunk bv=nv.compress();
+  bv._vec=av.close();
   assertTrue(C.isInstance(bv));
   for (int i=0; i < ls.length; i++)   assertEquals(ls[i] * DParseTask.pow10(xs[i]),bv.at0(i),bv.at0(i) * EPSILON);
+  UKV.remove(av._key);
 }

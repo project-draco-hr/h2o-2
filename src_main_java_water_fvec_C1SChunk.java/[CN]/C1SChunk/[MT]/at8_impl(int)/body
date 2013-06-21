@@ -1,3 +1,4 @@
 {
-  return (long)(((0xFF & _mem[i + OFF]) + _bias) * _scale);
+  long res=0xFF & _mem[i + OFF];
+  return res == _NA ? _vec._iNA : (long)((res + _bias) * _scale);
 }
