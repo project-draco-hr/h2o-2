@@ -4,6 +4,10 @@
   Key okey=Key.make("na_test.hex");
   Frame fr=ParseDataset2.parse(okey,new Key[]{key});
   int nlines=(int)fr._vecs[0].length();
+  assertTrue(fr._vecs.length == expectedTypes.length);
+  for (int i=0; i < expectedTypes.length; ++i) {
+    assertTrue(expectedTypes[i].isInstance(fr._vecs[i].elem2BV(0)));
+  }
   for (int i=0; i < nlines - 1; ++i)   for (  Vec v : fr._vecs)   assertTrue(!v.isNA(v.getd(i)) && !v.isNA(v.get(i)));
   for (  Vec v : fr._vecs) {
     assertTrue(v.isNA(v.getd(nlines - 1)) && v.isNA(v.get(nlines - 1)));
