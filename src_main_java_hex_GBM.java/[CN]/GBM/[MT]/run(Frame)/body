@@ -7,9 +7,12 @@
     maxs[i]=fr._vecs[i].max();
   }
   Histogram hist=new Histogram(fr._names,fr._vecs[0].length(),mins,maxs);
-  Log.unwrap(System.out,hist.toString() + "\n\n");
+  Log.unwrap(System.out,hist.toString() + "\n");
   double[] ds=new double[ncols + 1];
-  for (int i=0; i < ncols; i++)   ds[i]=fr._vecs[i].at(0);
-  hist.incr(ds);
-  Log.unwrap(System.out,hist.toString() + "\n\n");
+  for (int j=0; j < fr._vecs[0].length(); j++) {
+    for (int i=0; i < ncols; i++)     ds[i]=fr._vecs[i].at(j);
+    Log.unwrap(System.out,Arrays.toString(ds));
+    hist.incr(ds);
+    Log.unwrap(System.out,hist.toString() + "\n");
+  }
 }

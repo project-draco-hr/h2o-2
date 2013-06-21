@@ -1,5 +1,7 @@
 {
   String s=Double.isNaN(d) ? "NaN" : ((d == Double.MAX_VALUE || d == Double.MIN_VALUE) ? " -" : Double.toString(d));
-  if (s.length() > w)   return sb.append(String.format("%4.0f",d));
-  return p(sb,s,w);
+  if (s.length() <= w)   return p(sb,s,w);
+  s=String.format("%4.1f",d);
+  if (s.length() > w)   s=String.format("%4.0f",d);
+  return sb.append(s);
 }
