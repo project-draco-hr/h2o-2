@@ -1,0 +1,33 @@
+{
+  H2O.main(args);
+  Key file=NFSFileVec.make(new File("lib/resources/datasets/gaussian.csv"));
+  Frame frame=ParseDataset2.parse(Key.make("test"),new Key[]{file});
+  frame=new Frame(null,Utils.remove(frame._names,0),Utils.remove(frame._vecs,0));
+  int k=7;
+  double[][] clusters=new double[k][frame.vecs().length];
+  Random rand=new Random();
+  for (int cluster=0; cluster < clusters.length; cluster++) {
+    long row=Math.max(0,(long)(rand.nextDouble() * frame.vecs().length) - 1);
+    for (int i=0; i < frame.vecs().length; i++)     clusters[cluster][i]=frame.vecs()[i].getd(row);
+  }
+  for (int i=0; i < 10; i++) {
+    KMeans task=new KMeans();
+    task._clusters=clusters;
+    task.invoke(frame);
+    for (int c=0; c < clusters.length; c++) {
+      if (task._counts[c] > 0) {
+        for (int v=0; v < frame.vecs().length; v++) {
+          double value=task._sums[c][v] / task._counts[c];
+          clusters[c][v]=value;
+        }
+      }
+    }
+    System.out.println("Error is " + task._error);
+  }
+  System.out.println("Clusters:");
+  DecimalFormat df=new DecimalFormat("#.00");
+  for (int c=0; c < clusters.length; c++) {
+    for (int v=0; v < frame.vecs().length; v++)     System.out.print(df.format(clusters[c][v]) + ", ");
+    System.out.println("");
+  }
+}
