@@ -1,8 +1,10 @@
 {
   for (int i=0; i < xs._len; i++) {
-    if (!xs.isNA(i) && !ys.isNA(i)) {
-      double Xa=(xs.at0(i) - _meanX);
-      double Ya=(ys.at0(i) - _meanY);
+    double Xa=xs.getd(i);
+    double Ya=ys.getd(i);
+    if (!Double.isNaN(Xa) && !Double.isNaN(Ya)) {
+      Xa-=_meanX;
+      Ya-=_meanY;
       _XXbar+=Xa * Xa;
       _YYbar+=Ya * Ya;
       _XYbar+=Xa * Ya;

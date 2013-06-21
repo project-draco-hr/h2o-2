@@ -1,3 +1,4 @@
 {
-  return UDP.get4f(_mem,i << 2);
+  float res=UDP.get4f(_mem,i << 2);
+  return Float.isNaN(res) ? _vec._fNA : res;
 }
