@@ -8,7 +8,10 @@
   Random rand=new Random();
   for (int cluster=0; cluster < clusters.length; cluster++) {
     long row=Math.max(0,(long)(rand.nextDouble() * frame.vecs().length) - 1);
-    for (int i=0; i < frame.vecs().length; i++)     clusters[cluster][i]=frame.vecs()[i].getd(row);
+    for (int i=0; i < frame.vecs().length; i++) {
+      Vec v=frame.vecs()[i];
+      clusters[cluster][i]=v.at(row);
+    }
   }
   for (int i=0; i < 10; i++) {
     KMeans task=new KMeans();
