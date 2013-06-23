@@ -1,0 +1,10 @@
+{
+  double sum=0;
+  int ncols=_bins[0].length;
+  for (int i=0; i < ncols; i++) {
+    double m=mean(col,i);
+    double x=m == 0.0 ? 0 : var(col,i) / m;
+    sum+=x;
+  }
+  return sum;
+}
