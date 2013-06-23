@@ -8,7 +8,10 @@
     m+="Using " + s.getLocalAddress() + "\n";
     return s.getLocalAddress();
   }
- catch (  Throwable t) {
+ catch (  java.net.SocketException se) {
+    return null;
+  }
+catch (  Throwable t) {
     Log.err(t);
     return null;
   }
