@@ -1,15 +1,23 @@
 {
   _numSplits=1;
-  final int ncols=fr._vecs.length - 1;
+  final int ncols=fr._vecs.length;
   double mins[]=new double[ncols], maxs[]=new double[ncols];
+  boolean isInts[]=new boolean[ncols];
   for (int i=0; i < ncols; i++) {
     mins[i]=fr._vecs[i].min();
     maxs[i]=fr._vecs[i].max();
+    isInts[i]=fr._vecs[i]._isInt;
   }
-  Histogram hist=new Histogram(fr._names,fr._vecs[0].length(),mins,maxs);
-  Log.unwrap(System.out,hist.toString() + "\n\n");
-  double[] ds=new double[ncols + 1];
-  for (int i=0; i < ncols; i++)   ds[i]=fr._vecs[i].at(0);
-  hist.incr(ds);
-  Log.unwrap(System.out,hist.toString() + "\n\n");
+  Histogram hist=new Histogram(fr._names,fr._vecs[0].length(),mins,maxs,isInts);
+  Log.unwrap(System.out,hist.toString() + "\n");
+  double[] ds=new double[ncols];
+  for (int j=0; j < fr._vecs[0].length(); j++) {
+    for (int i=0; i < ncols; i++)     ds[i]=fr._vecs[i].at(j);
+    hist.incr(ds);
+  }
+  Log.unwrap(System.out,hist.toString() + "\n");
+  StringBuilder sb=new StringBuilder();
+  for (int i=0; i < ncols - 1; i++)   sb.append(i).append("=").append(hist.score(i)).append("  ");
+  Log.unwrap(System.out,sb.toString());
+  Log.unwrap(System.out,"Best split is column " + hist.bestSplit());
 }
