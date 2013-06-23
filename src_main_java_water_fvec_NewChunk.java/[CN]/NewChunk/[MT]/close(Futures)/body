@@ -1,4 +1,5 @@
 {
-  DKV.put(_vec.chunkKey(_cidx),compress(),fs);
-  ((AppendableVec)_vec).closeChunk(_cidx,_len,_min,_max,_sum);
+  Chunk chunk=compress();
+  DKV.put(_vec.chunkKey(_cidx),chunk,fs);
+  ((AppendableVec)_vec).closeChunk(_cidx,_len,chunk.hasFloat(),_min,_max);
 }
