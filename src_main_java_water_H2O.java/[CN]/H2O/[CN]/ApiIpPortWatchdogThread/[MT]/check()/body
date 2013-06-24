@@ -1,0 +1,41 @@
+{
+  final Socket s=new Socket();
+  final InetSocketAddress apiIpPort=new InetSocketAddress(H2O.SELF_ADDRESS,H2O.API_PORT);
+  try {
+    s.connect(apiIpPort,timeoutMillis);
+    reset();
+  }
+ catch (  SocketTimeoutException e) {
+    if (gracefulShutdownInitiated) {
+      return;
+    }
+    Log.err(threadName + ": Timed out trying to connect to REST API IP and Port (" + H2O.SELF_ADDRESS+ ":"+ H2O.API_PORT+ ", "+ timeoutMillis+ " ms)");
+    failed();
+  }
+catch (  IOException e) {
+    if (gracefulShutdownInitiated) {
+      return;
+    }
+    Log.err(threadName + ": Failed to connect to REST API IP and Port (" + H2O.SELF_ADDRESS+ ":"+ H2O.API_PORT+ ")");
+    Log.err(threadName + ": " + e.getMessage());
+    failed();
+  }
+catch (  Exception e) {
+    if (gracefulShutdownInitiated) {
+      return;
+    }
+    Log.err(threadName + ": Failed unexpectedly trying to connect to REST API IP and Port (" + H2O.SELF_ADDRESS+ ":"+ H2O.API_PORT+ ")",e);
+    failed();
+  }
+ finally {
+    if (gracefulShutdownInitiated) {
+      return;
+    }
+    testForFailureShutdown();
+    try {
+      s.close();
+    }
+ catch (    Exception _) {
+    }
+  }
+}
