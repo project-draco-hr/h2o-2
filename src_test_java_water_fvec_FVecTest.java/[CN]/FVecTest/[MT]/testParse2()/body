@@ -1,11 +1,12 @@
 {
-  File file=TestUtil.find_test_file("../smalldata/logreg/umass_chdage.csv");
+  File file=TestUtil.find_test_file("../smalldata/logreg/syn_2659x1049.csv");
   Key fkey=NFSFileVec.make(file);
-  Key okey=Key.make("prostate_long.hex");
+  Key okey=Key.make("syn.hex");
   Frame fr=ParseDataset2.parse(okey,new Key[]{fkey});
   UKV.remove(fkey);
-  System.out.println("Frame=" + fr);
   double[] sums=new Sum().invoke(fr)._sums;
-  System.out.println(Arrays.toString(sums));
   UKV.remove(okey);
+  assertEquals(3949,sums[0],EPSILON);
+  assertEquals(3986,sums[1],EPSILON);
+  assertEquals(3993,sums[2],EPSILON);
 }

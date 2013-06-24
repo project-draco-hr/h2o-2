@@ -26,7 +26,7 @@ int len=is.read(bs,off,bs.length - off);
 if (len < 0) break;
 off+=len;
 if (off == bs.length) {
-if (bs.length >= ValueArray.CHUNK_SZ) break;
+if (bs.length >= Vec.CHUNK_SZ) break;
 bs=Arrays.copyOf(bs,bs.length * 2);
 }
 }
