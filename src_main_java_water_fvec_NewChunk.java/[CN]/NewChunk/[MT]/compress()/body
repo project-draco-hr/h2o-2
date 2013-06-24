@@ -10,7 +10,6 @@
     double d=l * DParseTask.pow10(x);
     if (d < _min)     _min=d;
     if (d > _max)     _max=d;
-    _sum+=d;
     if (l == 0)     x=0;
     long t;
     while (l != 0 && (t=l / 10) * 10 == l) {
@@ -32,6 +31,10 @@
     long le=l * DParseTask.pow10i(x - xmin);
     if (le < lemin)     lemin=le;
     if (le > lemax)     lemax=le;
+  }
+  if (_min == _max) {
+    if (xmin < 0)     throw H2O.unimpl();
+    return new C0LChunk((long)_min,_len);
   }
   if (overflow || ((xmin != 0) && floatOverflow || -35 > xmin || xmin > 35))   return new C8DChunk(bufF(3));
   if (xmin != 0) {

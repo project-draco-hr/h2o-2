@@ -1,0 +1,15 @@
+{
+  Futures fs=new Futures();
+  if (v._espc == null)   throw H2O.unimpl();
+  int nchunks=v.nChunks();
+  Vec v0=new Vec(newKey(),v._espc,true,0,0);
+  long row=0;
+  for (int i=0; i < nchunks; i++) {
+    long nrow=v.chunk2StartElem(i + 1);
+    DKV.put(v0.chunkKey(i),new C0LChunk(0L,(int)(nrow - row)),fs);
+    row=nrow;
+  }
+  DKV.put(v0._key,v0,fs);
+  fs.blockForPending();
+  return v0;
+}
