@@ -4,6 +4,8 @@
   Key okey=Key.make("syn.hex");
   Frame fr=ParseDataset2.parse(okey,new Key[]{fkey});
   UKV.remove(fkey);
+  assertEquals(fr.length(),1049);
+  assertEquals(fr._vecs[0].length(),2659);
   double[] sums=new Sum().invoke(fr)._sums;
   UKV.remove(okey);
   assertEquals(3949,sums[0],EPSILON);
