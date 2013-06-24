@@ -1,0 +1,11 @@
+{
+  if (_activeWrites)   return;
+  setActiveWrites();
+  new TAtomic<Vec>(){
+    @Override public Vec atomic(    Vec v){
+      v.setActiveWrites();
+      return v;
+    }
+  }
+.fork(_key);
+}
