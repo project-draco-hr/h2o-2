@@ -1,0 +1,20 @@
+def test_B_hdfs_files(self):
+    print '\nLoad a list of files from HDFS, parse and do 1 RF tree'
+    print '\nYou can try running as hduser/hduser if fail'
+    csvFilenameList = ['airlines_88_08_100lines.csv']
+    h2b.browseTheCloud()
+    timeoutSecs = 200
+    firstglm = {}
+    h2i.setupImportHdfs()
+    for csvFilename in csvFilenameList:
+        print 'Loading', csvFilename, 'from HDFS'
+        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=1000)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print 'parse result:', parseKey['destination_key']
+        print ('\n' + csvFilename)
+        start = time.time()
+        RFview = h2o_cmd.runRFOnly(trees=1, parseKey=parseKey, timeoutSecs=2000)
+        h2b.browseJsonHistoryAsUrlLastMatch('RFView')
+        time.sleep(10)
+        sys.stdout.write('.')
+        sys.stdout.flush()
