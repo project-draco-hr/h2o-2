@@ -1,0 +1,5 @@
+{
+  long then=object.getAsJsonPrimitive(LAST_CONTACT).getAsLong();
+  long now=System.currentTimeMillis();
+  return ((now - then) >= HeartBeatThread.TIMEOUT) ? "\n<tr class=\"error\">" : "\n<tr>";
+}
