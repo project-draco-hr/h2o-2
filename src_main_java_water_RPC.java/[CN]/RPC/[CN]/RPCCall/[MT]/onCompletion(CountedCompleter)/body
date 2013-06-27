@@ -1,4 +1,5 @@
 {
+  DTask dt=_dt;
   while (true) {
     AutoBuffer ab=null;
     try {
@@ -20,5 +21,6 @@
       }
     }
   }
+  if (dt instanceof DRemoteTask || dt instanceof MRTask2)   Log.info("Done  remote task#" + _tsknum + " "+ dt.getClass()+ " to "+ _client);
   _client.record_task_answer(this);
 }

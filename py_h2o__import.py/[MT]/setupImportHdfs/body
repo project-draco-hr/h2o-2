@@ -4,8 +4,12 @@ def setupImportHdfs(node=None, path=None, schema='hdfs', timeoutSecs=180):
     print 'setupImportHdfs schema:', schema
     if (schema == 'maprfs'):
         hdfsPrefix = (schema + '://')
-    else:
+    elif (schema == 's3n'):
+        hdfsPrefix = (schema + ':/')
+    elif (schema == 'hdfs'):
         hdfsPrefix = ((schema + '://') + node.hdfs_name_node)
+    else:
+        raise Exception((('Uknown schema: ' + schema) + ' in setupImportHdfs'))
     if (path is None):
         URI = (hdfsPrefix + '/datasets')
     else:
