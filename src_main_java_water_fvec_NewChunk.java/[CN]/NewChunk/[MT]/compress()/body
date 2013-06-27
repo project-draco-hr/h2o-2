@@ -1,0 +1,55 @@
+{
+  int xmin=Integer.MAX_VALUE;
+  long lemin=0, lemax=lemin;
+  boolean overflow=false;
+  boolean floatOverflow=false;
+  for (int i=0; i < _len; i++) {
+    if (isNA(i))     continue;
+    long l=_ls[i];
+    int x=_xs[i];
+    double d=l * DParseTask.pow10(x);
+    if (d < _min)     _min=d;
+    if (d > _max)     _max=d;
+    if (l == 0)     x=0;
+    long t;
+    while (l != 0 && (t=l / 10) * 10 == l) {
+      l=t;
+      x++;
+    }
+    floatOverflow=Math.abs(l) > MAX_FLOAT_MANTISSA;
+    if (i == 0) {
+      xmin=x;
+      lemin=lemax=l;
+      continue;
+    }
+    if (overflow || (overflow=(Math.abs(xmin - x)) >= 10))     continue;
+    if (x < xmin) {
+      lemin*=DParseTask.pow10i(xmin - x);
+      lemax*=DParseTask.pow10i(xmin - x);
+      xmin=x;
+    }
+    long le=l * DParseTask.pow10i(x - xmin);
+    if (le < lemin)     lemin=le;
+    if (le > lemax)     lemax=le;
+  }
+  if (_min == _max) {
+    if (xmin < 0)     throw H2O.unimpl();
+    return new C0LChunk((long)_min,_len);
+  }
+  if (overflow || ((xmin != 0) && floatOverflow || -35 > xmin || xmin > 35))   return new C8DChunk(bufF(3));
+  if (xmin != 0) {
+    if (lemax - lemin < 255)     return new C1SChunk(bufX(lemin,xmin,C1SChunk.OFF,0),(int)lemin,DParseTask.pow10(xmin));
+    if (lemax - lemin < 65535)     return new C2SChunk(bufX(lemin,xmin,C2SChunk.OFF,1),(int)lemin,DParseTask.pow10(xmin));
+    return new C4FChunk(bufF(2));
+  }
+  if (lemax - lemin < 255) {
+    if (0 <= lemin && lemax < 255)     return new C1Chunk(bufX(0,0,C1Chunk.OFF,0));
+    return new C1SChunk(bufX(lemin,0,C1SChunk.OFF,0),(int)lemin,1);
+  }
+  if (lemax - lemin < 65535) {
+    if (-32767 <= lemin && lemax <= 32767)     return new C2Chunk(bufX(0,0,C2Chunk.OFF,1));
+    return new C2SChunk(bufX(lemin,0,C2SChunk.OFF,1),(int)lemin,1);
+  }
+  if (Integer.MIN_VALUE < lemin && lemax <= Integer.MAX_VALUE)   return new C4Chunk(bufX(0,0,0,2));
+  return new C8Chunk(bufX(0,0,0,3));
+}

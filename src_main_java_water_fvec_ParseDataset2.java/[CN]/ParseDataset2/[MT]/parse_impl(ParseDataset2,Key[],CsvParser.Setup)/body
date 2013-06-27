@@ -1,0 +1,16 @@
+{
+  UKV.remove(job.dest());
+  if (fkeys.length == 0) {
+    job.cancel();
+    return;
+  }
+  ByteVec vec=UKV.get(fkeys[0]);
+  Compression compression=guessCompressionMethod(vec);
+  byte sep=setup == null ? CsvParser.NO_SEPARATOR : setup._separator;
+  if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,sep,compression);
+  MultiFileParseTask uzpt=new MultiFileParseTask(setup).invoke(fkeys);
+  if (uzpt._parserr != null)   throw new ParseException(uzpt._parserr);
+  String[] names=new String[uzpt._cols.length];
+  for (int i=0; i < names.length; i++)   names[i]=setup._header ? setup._data[0][i] : ("" + i);
+  UKV.put(job.dest(),new Frame(job.dest(),names,uzpt._cols));
+}

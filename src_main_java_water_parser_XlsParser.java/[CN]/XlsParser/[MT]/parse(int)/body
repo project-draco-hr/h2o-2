@@ -1,0 +1,20 @@
+{
+  _firstRow=true;
+  InputStream is=DKV.get(_key).openStream();
+  try {
+    _fs=new POIFSFileSystem(is);
+    MissingRecordAwareHSSFListener listener=new MissingRecordAwareHSSFListener(this);
+    _formatListener=new FormatTrackingHSSFListener(listener);
+    HSSFEventFactory factory=new HSSFEventFactory();
+    HSSFRequest request=new HSSFRequest();
+    request.addListenerForAllRecords(_formatListener);
+    factory.processWorkbookEvents(request,_fs);
+  }
+  finally {
+    try {
+      is.close();
+    }
+ catch (    IOException e) {
+    }
+  }
+}

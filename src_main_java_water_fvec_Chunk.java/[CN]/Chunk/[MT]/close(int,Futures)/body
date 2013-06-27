@@ -1,0 +1,5 @@
+{
+  if (_chk instanceof NewChunk)   _chk=((NewChunk)_chk).close(fs);
+ else   if (_chk == this)   return;
+  DKV.put(_vec.chunkKey(cidx),_chk,fs);
+}

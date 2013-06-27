@@ -1,6 +1,14 @@
 {
   H2OCountedCompleter jobRemoval=new H2O.H2OCountedCompleter(){
     @Override public void compute2(){
+      new TAtomic<RFModel>(){
+        @Override public RFModel atomic(        RFModel old){
+          if (old == null)           return null;
+          old._time=DRFJob.this.executionTime();
+          return old;
+        }
+      }
+.invoke(dest());
     }
     @Override public void onCompletion(    CountedCompleter caller){
       DRFJob.this.remove();

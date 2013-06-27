@@ -1,0 +1,6 @@
+{
+  double err=classError();
+  RFModel model=DKV.get(_rfModelKey).get();
+  String s="              Type of random forest: classification\n" + "                    Number of trees: " + model.size() + "\n"+ "No of variables tried at each split: "+ model._splitFeatures+ "\n"+ "              Estimate of err. rate: "+ Math.round(err * 10000) / 100 + "%  (" + err + ")\n" + "                              OOBEE: " + (_computedOOB ? "YES (sampling rate: " + model._sample * 100 + "%)" : "NO") + "\n" + "                   Confusion matrix:\n" + toString() + "\n" + "                          CM domain: " + Arrays.toString(_domain) + "\n" + "          Avg tree depth (min, max): " + model.depth() + "\n" + "         Avg tree leaves (min, max): " + model.leaves() + "\n" + "                Validated on (rows): " + rows() + "\n" + "     Rows skipped during validation: " + skippedRows() + "\n" + "  Mispredictions per tree (in rows): " + Arrays.toString(_errorsPerTree) + "\n";
+  Log.info(Sys.RANDF,s);
+}

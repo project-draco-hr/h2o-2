@@ -1,4 +1,4 @@
-def import_files(self, path, timeoutSecs=30):
+def import_files(self, path, timeoutSecs=180):
     a = self.__do_json_request('ImportFiles.json', timeout=timeoutSecs, params={'path': path, })
     verboseprint('\nimport_files result:', dump_json(a))
     return a

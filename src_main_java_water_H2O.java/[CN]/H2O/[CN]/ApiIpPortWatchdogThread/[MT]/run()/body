@@ -1,0 +1,12 @@
+{
+  Log.debug(threadName + ": Thread run() started");
+  reset();
+  while (true) {
+    mySleep(sleepMillis);
+    check();
+    if (gracefulShutdownInitiated) {
+      break;
+    }
+  }
+  Log.debug(threadName + ": Thread run() exited");
+}

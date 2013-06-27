@@ -1,4 +1,5 @@
 {
+  _setup=setup;
 switch (_parserType) {
 case CSV:
     if (setup == null) {
@@ -11,7 +12,7 @@ case CSV:
   }
 _colNames=setup._data[0];
 setColumnNames(_colNames);
-_skipFirstLine=setup._header;
+_skip=setup._header;
 this._sep=setup._separator;
 if (_sourceDataset.isArray()) {
 ValueArray ary=_sourceDataset.get();
@@ -22,9 +23,9 @@ dfork(_sourceDataset._key);
 break;
 case XLS:
 try {
-XlsParser p=new XlsParser(this);
+XlsParser p=new XlsParser(this,_sourceDataset._key);
 Log.info("parsing ",_sourceDataset._key);
-p.parse(_sourceDataset._key);
+p.parse(0);
 --_myrows;
 _numRows=_myrows;
 }

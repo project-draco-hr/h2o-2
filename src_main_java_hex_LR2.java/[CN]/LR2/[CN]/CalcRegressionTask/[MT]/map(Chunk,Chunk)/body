@@ -1,0 +1,13 @@
+{
+  for (int i=0; i < xs._len; i++) {
+    double X=xs.at0(i);
+    double Y=ys.at0(i);
+    if (!Double.isNaN(X) && !Double.isNaN(Y)) {
+      double fit=_beta1 * X + _beta0;
+      double rs=fit - Y;
+      _rss+=rs * rs;
+      double sr=fit - _meanY;
+      _ssr+=sr * sr;
+    }
+  }
+}

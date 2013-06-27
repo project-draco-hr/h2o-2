@@ -1,12 +1,4 @@
 {
-  long start=System.currentTimeMillis();
-  while (System.currentTimeMillis() - start < ms) {
-    if (H2O.CLOUD.size() >= x)     break;
-    try {
-      Thread.sleep(100);
-    }
- catch (    InterruptedException ie) {
-    }
-  }
-  assertTrue("Cloud size of " + x,H2O.CLOUD.size() >= x);
+  H2O.waitForCloudSize(x,ms);
+  UKV.put(Job.LIST,new Job.List());
 }

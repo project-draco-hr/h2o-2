@@ -1,0 +1,25 @@
+{
+  final Key cmKey=keyForCM(model._selfKey,modelSize,datakey,classcol,computeOOB);
+  final CMJob cmJob=new CMJob("CM computation",cmKey,modelSize);
+  H2OCountedCompleter fjtask=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      CMFinal cmResult=UKV.get(cmJob.dest());
+      if (cmResult == null) {
+        ConfusionTask cmTask=new ConfusionTask(cmJob,model,modelSize,datakey,classcol,classWt,computeOOB);
+        cmTask.invoke(datakey);
+        cmResult=CMFinal.make(cmTask._matrix,model,cmTask.domain(),cmTask._errorsPerTree,computeOOB);
+        DKV.put(cmJob.dest(),cmResult);
+        DKV.write_barrier();
+      }
+      cmJob.remove();
+      tryComplete();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      cmJob.onException(ex);
+      return super.onExceptionalCompletion(ex,caller);
+    }
+  }
+;
+  H2O.submitTask(cmJob.start(fjtask));
+  return cmJob;
+}

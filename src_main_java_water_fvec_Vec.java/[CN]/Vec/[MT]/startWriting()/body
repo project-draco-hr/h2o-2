@@ -1,0 +1,6 @@
+{
+  if (_activeWrites)   return;
+  if (!writable())   throw new IllegalArgumentException("Vector not writable");
+  setActiveWrites();
+  new SetActiveWrites().invoke(_key);
+}

@@ -1,11 +1,12 @@
 def random_forest_view(self, data_key, model_key, timeoutSecs=300, print_params=False, **kwargs):
-    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'class_weights': None, 'response_variable': None, 'no_confusion_matrix': None, 'clear_confusion_matrix': None, }
+    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'class_weights': None, }
     browseAlso = kwargs.pop('browseAlso', False)
     for k in kwargs:
         if (k in params_dict):
             params_dict[k] = kwargs[k]
     if print_params:
         print '\nrandom_forest_view parameters:', params_dict
+        sys.stdout.flush()
     a = self.__do_json_request('RFView.json', timeout=timeoutSecs, params=params_dict)
     verboseprint('\nrandom_forest_view result:', dump_json(a))
     if (browseAlso | browse_json):

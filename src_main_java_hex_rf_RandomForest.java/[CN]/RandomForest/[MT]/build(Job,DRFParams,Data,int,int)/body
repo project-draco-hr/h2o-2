@@ -8,7 +8,7 @@
   Sampling sampler=createSampler(drfParams);
   for (int i=0; i < ntrees; ++i) {
     long treeSeed=rnd.nextLong() + TREE_SEED_INIT;
-    trees[i]=new Tree(job,data,drfParams._depth,drfParams._stat,numSplitFeatures,treeSeed,i,drfParams._verbose,drfParams._exclusiveSplitLimit,sampler);
+    trees[i]=new Tree(job,data,drfParams._depth,drfParams._stat,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose);
     if (!drfParams._parallel)     ForkJoinTask.invokeAll(new Tree[]{trees[i]});
   }
   if (drfParams._parallel)   DRemoteTask.invokeAll(trees);
