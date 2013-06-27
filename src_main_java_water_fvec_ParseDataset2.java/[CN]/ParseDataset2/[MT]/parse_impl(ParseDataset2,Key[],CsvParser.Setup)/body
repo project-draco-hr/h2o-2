@@ -10,13 +10,7 @@
   if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,sep,compression);
   MultiFileParseTask uzpt=new MultiFileParseTask(setup).invoke(fkeys);
   if (uzpt._parserr != null)   throw new ParseException(uzpt._parserr);
-  Futures fs=new Futures();
-  Vec[] vecs=new Vec[uzpt._cols.length];
   String[] names=new String[uzpt._cols.length];
-  for (int i=0; i < vecs.length; i++) {
-    vecs[i]=uzpt._cols[i].close(fs);
-    names[i]=setup._header ? setup._data[0][i] : ("" + i);
-  }
-  UKV.put(job.dest(),new Frame(job.dest(),names,vecs),fs);
-  fs.blockForPending();
+  for (int i=0; i < names.length; i++)   names[i]=setup._header ? setup._data[0][i] : ("" + i);
+  UKV.put(job.dest(),new Frame(job.dest(),names,uzpt._cols));
 }

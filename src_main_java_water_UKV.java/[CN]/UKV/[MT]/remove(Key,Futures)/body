@@ -8,10 +8,8 @@
   if (key._kb[0] == Key.KEY_OF_KEYS)   for (  Key k : key.flatten())   remove(k,fs);
   if (key._kb[0] == Key.VEC) {
     water.fvec.Vec vec=val.get();
-    for (int i=0; i < vec.nChunks(); i++) {
-      remove(vec.chunkKey(i),fs);
-    }
+    for (int i=0; i < vec.nChunks(); i++)     remove(vec.chunkKey(i),fs);
   }
-  if (val.isFrame())   ((Frame)val.get()).remove();
+  if (val.isFrame())   ((Frame)val.get()).remove(fs);
   DKV.remove(key,fs);
 }
