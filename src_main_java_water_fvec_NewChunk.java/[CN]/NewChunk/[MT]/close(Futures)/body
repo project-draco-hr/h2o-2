@@ -1,5 +1,5 @@
 {
   Chunk chk=compress();
   if (_vec instanceof AppendableVec)   ((AppendableVec)_vec).closeChunk(_cidx,_len,chk.hasFloat(),_min,_max);
-  DKV.put(_vec.chunkKey(_cidx),chk,fs);
+  return chk;
 }

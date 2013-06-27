@@ -5,7 +5,7 @@
   nv._xs=xs;
   nv._len=ls.length;
   Chunk bv=nv.compress();
-  bv._vec=av.close();
+  bv._vec=av.close(null);
   assertTrue("Found chunk class " + bv.getClass() + " but expected "+ C,C.isInstance(bv));
   assertEquals(hasFloat,bv.hasFloat());
   for (int i=0; i < ls.length; i++)   assertEquals(ls[i] * DParseTask.pow10(xs[i]),bv.at0(i),bv.at0(i) * EPSILON);
