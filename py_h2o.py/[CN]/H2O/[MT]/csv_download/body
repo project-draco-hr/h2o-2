@@ -1,0 +1,7 @@
+def csv_download(self, key, timeoutSecs=60, **kwargs):
+    params_dict = {'key': key, }
+    params_dict.update(kwargs)
+    print '\n', 'params list:', params_dict
+    a = self.__do_json_request('downloadCsv.json', timeout=timeoutSecs, params=params_dict)
+    verboseprint(dump_json(a))
+    return a

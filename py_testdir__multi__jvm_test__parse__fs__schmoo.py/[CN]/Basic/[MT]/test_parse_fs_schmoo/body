@@ -1,9 +1,10 @@
-def test_sort_of_prostate_with_row_schmoo(self):
+def test_parse_fs_schmoo(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilename = 'syn_prostate.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON'
     rowData = '1,0,65,1,2,1,1.4,0,6'
+    rowData = '1,0,65,1,2,1,1,0,6'
     totalRows = 99860
     write_syn_dataset(csvPathname, totalRows, headerData, rowData)
     print 'This is the same format/data file used by test_same_parse, but the non-gzed version'

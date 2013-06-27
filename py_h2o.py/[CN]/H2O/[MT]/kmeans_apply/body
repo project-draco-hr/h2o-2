@@ -2,7 +2,7 @@ def kmeans_apply(self, data_key, model_key, destination_key, timeoutSecs=300, re
     params_dict = {'destination_key': destination_key, 'model_key': model_key, 'data_key': data_key, }
     browseAlso = kwargs.get('browseAlso', False)
     params_dict.update(kwargs)
-    print '\nKMeansApply params list', params_dict
+    print '\nKMeansApply params list:', params_dict
     a = self.__do_json_request('KMeansApply.json', timeout=timeoutSecs, params=params_dict)
     if (a['response']['redirect_request'] != 'Progress'):
         print dump_json(a)
