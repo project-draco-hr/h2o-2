@@ -11,6 +11,6 @@ def simpleCheckGLMGrid(self, glmGridResult, colX=None, allowFailWarning=False, *
     model_key = model0['key']
     print 'best GLM model key:', model_key
     glm_lambda = model0['lambda']
-    inspectGLM = h2o_cmd.runInspect(None, key)
+    inspectGLM = h2o_cmd.runInspect(None, model_key)
     h2o.verboseprint('GLMGrid inspectGLM:', h2o.dump_json(inspectGLM))
     simpleCheckGLM(self, inspectGLM, colX, allowFailWarning=allowFailWarning, **kwargs)

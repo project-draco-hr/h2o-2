@@ -1,0 +1,13 @@
+{
+  JsonObject redirect=new JsonObject();
+  if (jobKey != null)   redirect.addProperty(JOB,jobKey.toString());
+  redirect.addProperty(MODEL_KEY,modelKey.toString());
+  redirect.addProperty(DEST_KEY,modelKey.toString());
+  redirect.addProperty(DATA_KEY,dataKey.toString());
+  redirect.addProperty(NUM_TREES,ntree);
+  redirect.addProperty(CLASS,classCol);
+  if (weights != null)   redirect.addProperty(WEIGHTS,weights);
+  redirect.addProperty(OOBEE,oobee);
+  redirect.addProperty(ITERATIVE_CM,oobee);
+  return Response.redirect(fromPageResponse,RFView.class,redirect);
+}
