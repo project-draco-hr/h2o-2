@@ -21,12 +21,42 @@
   for (int i=0; i < ncols - 1; i++)   sb.append(i).append("=").append(hist.score(i)).append("  ");
   Log.unwrap(System.out,sb.toString());
   int scol=hist.bestSplit();
+  int nsplits=hist._mins[scol].length;
   Log.unwrap(System.out,"Best split is column " + scol);
+  double mins2[][]=new double[nsplits][ncols];
+  double maxs2[][]=new double[nsplits][ncols];
+  for (int i=0; i < nsplits; i++) {
+    Arrays.fill(mins2[i],Double.MAX_VALUE);
+    Arrays.fill(maxs2[i],-Double.MAX_VALUE);
+  }
   for (int j=0; j < fr._vecs[0].length(); j++) {
     double d=fr._vecs[scol].at(j);
     int bin=hist.bin(scol,d);
     vsplit.set8(j,bin);
+    for (int i=0; i < ncols; i++) {
+      double d2=fr._vecs[i].at(j);
+      if (d2 < mins2[bin][i])       mins2[bin][i]=d2;
+      if (d2 > maxs2[bin][i])       maxs2[bin][i]=d2;
+    }
   }
+  for (int i=0; i < vsplit.nChunks(); i++)   vsplit.elem2BV(i).close(i,null);
   Tree t=new Tree(hist,scol);
+  Histogram hs[]=new Histogram[nsplits];
+  for (int i=0; i < nsplits; i++) {
+    hs[i]=new Histogram(fr._names,hist._bins[scol][i],mins2[i],maxs2[i],isInts);
+    Log.unwrap(System.out,hs[i].toString());
+  }
+  for (int j=0; j < fr._vecs[0].length(); j++) {
+    for (int i=0; i < ncols; i++)     ds[i]=fr._vecs[i].at(j);
+    hs[(int)vsplit.at8(j)].incr(ds);
+  }
+  for (int j=0; j < nsplits; j++) {
+    Log.unwrap(System.out,hs[j].toString());
+    sb=new StringBuilder();
+    for (int i=0; i < ncols - 1; i++)     sb.append(i).append("=").append(hs[j].score(i)).append("  ");
+    Log.unwrap(System.out,sb.toString());
+    int scol2=hs[j].bestSplit();
+    Log.unwrap(System.out,"Best split is column " + scol2);
+  }
   UKV.remove(vsplit._key);
 }
