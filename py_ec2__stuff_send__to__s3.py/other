@@ -1,7 +1,7 @@
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('local_file_path', help='path to local file to be copied to s3')
-parser.add_argument('s3_path', help="path to use inside s3 bucket 'home-0xdiag-datasets'")
+parser.add_argument('s3_path', help="path to use inside s3 bucket 'home2-0xdiag-datasets'")
 args = parser.parse_args()
 import sys
 import os
@@ -16,7 +16,7 @@ print '  Using aws_key:', aws_key
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 conn = S3Connection(aws_id, aws_key)
-bucket = 'home-0xdiag-datasets'
+bucket = 'home2-0xdiag-datasets'
 pb = conn.get_bucket(bucket)
 k = Key(pb)
 file_name_to_use_in_s3 = ('%s/%s' % (args.s3_path, os.path.basename(args.local_file_path)))

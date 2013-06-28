@@ -1,8 +1,7 @@
 def test_GLM_allstate_s3n_thru_hdfs(self):
     csvFilename = 'train_set.csv'
-    csvPathname = csvFilename
     URI = 's3n://home-0xdiag-datasets/allstate/'
-    s3nKey = (URI + csvPathname)
+    s3nKey = (URI + csvFilename)
     trialMax = 3
     for trial in range(trialMax):
         trialStart = time.time()
@@ -29,21 +28,21 @@ def test_GLM_allstate_s3n_thru_hdfs(self):
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, noise=('JStack', None), **kwargs)
         elapsed = (time.time() - start)
-        print 'glm (L2) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'glm (L2) end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
         h2o.check_sandbox_for_errors()
         kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, noise=('JStack', None), **kwargs)
         elapsed = (time.time() - start)
-        print 'glm (Elastic) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'glm (Elastic) end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
         h2o.check_sandbox_for_errors()
         kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, noise=('JStack', None), **kwargs)
         elapsed = (time.time() - start)
-        print 'glm (L1) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'glm (L1) end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
         h2o.check_sandbox_for_errors()
         print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
