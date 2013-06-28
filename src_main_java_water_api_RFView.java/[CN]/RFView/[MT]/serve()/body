@@ -44,6 +44,7 @@
       ConfusionTask.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
     }
   }
+ else   if (_noCM.value() && finished == tasks)   done=true;
   JsonObject trees=new JsonObject();
   trees.addProperty(Constants.TREE_COUNT,model.size());
   if (model.size() > 0) {
