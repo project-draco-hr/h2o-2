@@ -1,6 +1,5 @@
 {
   RFModel model=_modelKey.value();
-  double[] weights=_weights.value();
   JsonObject response=new JsonObject();
   response.addProperty(DATA_KEY,_dataKey.originalValue());
   response.addProperty(MODEL_KEY,_modelKey.originalValue());
@@ -9,6 +8,5 @@
   response.addProperty(OOBEE,0);
   if (_weights.specified())   response.addProperty(WEIGHTS,_weights.originalValue());
   if (_clearCM.value())   clearCachedCM(false);
-  CMJob cmJob=ConfusionTask.make(model,_dataKey.value()._key,_classCol.value(),weights,false);
-  return RFView.redirect(response,cmJob.self(),_modelKey.value()._selfKey);
+  return RFView.redirect(response,null,_modelKey.value()._selfKey,_dataKey.value()._key,model._totalTrees,_classCol.value(),_weights.originalValue(),false,false);
 }

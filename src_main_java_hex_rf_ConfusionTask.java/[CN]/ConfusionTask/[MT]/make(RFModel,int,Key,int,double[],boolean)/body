@@ -5,11 +5,11 @@
     @Override public void compute2(){
       CMFinal cmResult=UKV.get(cmJob.dest());
       if (cmResult == null) {
+        DKV.put(cmJob.dest(),CMFinal.make());
         ConfusionTask cmTask=new ConfusionTask(cmJob,model,modelSize,datakey,classcol,classWt,computeOOB);
         cmTask.invoke(datakey);
         cmResult=CMFinal.make(cmTask._matrix,model,cmTask.domain(),cmTask._errorsPerTree,computeOOB);
-        DKV.put(cmJob.dest(),cmResult);
-        DKV.write_barrier();
+        CMFinal.updateDKV(cmJob.dest(),cmResult);
       }
       cmJob.remove();
       tryComplete();

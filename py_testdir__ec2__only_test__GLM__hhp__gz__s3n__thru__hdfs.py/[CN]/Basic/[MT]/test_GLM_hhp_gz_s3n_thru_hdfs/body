@@ -1,10 +1,10 @@
 def test_GLM_hhp_gz_s3n_thru_hdfs(self):
     print 'Trying to load the 100 gz files in the hhp_107_01 dir'
     print 'Should look like hhp_107_01/hhp_107_01.data.gz_00030 in bucket: home-0xdiag-datasets'
-    csvFilename = '*gz'
-    csvPathname = ('hhp_107_01/' + csvFilename)
-    URI = 's3n://home-0xdiag-datasets/'
-    s3nKey = (URI + csvPathname)
+    csvFilename = '*gz*'
+    csvPathname = csvFilename
+    URI = 's3n://home-0xdiag-datasets/hhp_107_01'
+    s3nKey = ((URI + '/') + csvPathname)
     trialMax = 1
     for trial in range(trialMax):
         trialStart = time.time()
@@ -20,7 +20,7 @@ def test_GLM_hhp_gz_s3n_thru_hdfs(self):
         print 'Loading s3n key: ', s3nKey, 'thru HDFS'
         timeoutSecs = 500
         start = time.time()
-        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noise=('JStack', None))
+        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
         print s3nKey, 'h2o reported parse time:', parseKey['response']['time']
         print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
@@ -33,5 +33,11 @@ def test_GLM_hhp_gz_s3n_thru_hdfs(self):
         elapsed = (time.time() - start)
         print 'glm (L2) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
+        GLMModel = glm['GLMModel']
+        model_key = GLMModel['model_key']
+        e = h2o.nodes[0].export_s3(source_key=model_key, bucket='home-0xdiag-datasets', obj='/junk/glm_model_key_1.hex')
+        e = h2o.nodes[0].export_hdfs(source_key=model_key, path='s3n://home-0xdiag-datasets/junk/glm_model_key_2.hex')
+        h2o_cmd.runInspect(key='s3n://home-0xdiag-datasets/junk/glm_model_key_2.hex')
+        h2o.nodes[0].remove_key(key=model_key)
         h2o.check_sandbox_for_errors()
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.',

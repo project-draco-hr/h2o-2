@@ -12,7 +12,7 @@
     modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
     Key cmKey=ConfusionTask.keyForCM(model._selfKey,modelSize,_dataKey.value()._key,_classCol.value(),_oobee.value());
     CMFinal confusion=UKV.get(cmKey);
-    if (confusion != null && modelSize > 0) {
+    if (confusion != null && confusion.valid() && modelSize > 0) {
       JsonObject cm=new JsonObject();
       JsonArray cmHeader=new JsonArray();
       JsonArray matrix=new JsonArray();
@@ -40,10 +40,11 @@
       response.add(JSON_CM,cm);
       done=finished == tasks;
     }
- else {
+ else     if (confusion == null) {
       ConfusionTask.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
     }
   }
+ else   if (_noCM.value() && finished == tasks)   done=true;
   JsonObject trees=new JsonObject();
   trees.addProperty(Constants.TREE_COUNT,model.size());
   if (model.size() > 0) {

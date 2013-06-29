@@ -33,6 +33,7 @@
     node.addProperty(FJ_QUEUE_LO,(int)hb._fjqueue_lo);
     node.addProperty(RPCS,(int)hb._rpcs);
     node.addProperty(TCPS_ACTIVE,(int)hb._tcps_active);
+    node.addProperty(LAST_CONTACT,h2o._last_heard_from);
     nodes.add(node);
   }
   response.add(NODES,nodes);
@@ -41,6 +42,8 @@
   Response r=Response.done(response);
   r.setBuilder(CONSENSUS,new BooleanStringBuilder("","Voting new members"));
   r.setBuilder(LOCKED,new BooleanStringBuilder("Locked","Accepting new members"));
+  r.setBuilder(NODES,new MyAryBuilder());
   r.setBuilder(NODES + "." + NAME,new NodeCellBuilder());
+  r.setBuilder(NODES + "." + LAST_CONTACT,new LastContactBuilder());
   return r;
 }

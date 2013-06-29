@@ -6,12 +6,12 @@ def test_flashgordon(self):
     USE_S3 = False
     noPoll = True
     benchmarkLogging = ['cpu', 'disk']
-    bucket = 'home-0xdiag-datasets'
+    bucket = 'flashgordon'
     if USE_S3:
-        URI = 's3://flashgordon'
+        URI = (('s3://' + bucket) + '/')
         protocol = 's3'
     else:
-        URI = 's3n://flashgordon'
+        URI = (('s3n://' + bucket) + '/')
         protocol = 's3n/hdfs'
     trialMax = 1
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
@@ -33,7 +33,7 @@ def test_flashgordon(self):
                     else:
                         pass
                 self.assertGreater(len(s3nFullList), 8, "Didn't see more than 8 files in s3n?")
-                s3nKey = ((URI + '/') + csvFilepattern)
+                s3nKey = (URI + csvFilepattern)
                 key2 = (((csvFilename + '_') + str(trial)) + '.hex')
                 print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                 start = time.time()
@@ -42,14 +42,14 @@ def test_flashgordon(self):
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
                     (csvFilepattern, csvFilename, totalBytes2, timeoutSecs) = csvFilenameList[(i + 1)]
-                    s3nKey = ((URI + '/') + csvFilepattern)
+                    s3nKey = (URI + csvFilepattern)
                     key2 = (((csvFilename + '_') + str(trial)) + '.hex')
                     print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                     parse2Key = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
                     (csvFilepattern, csvFilename, totalBytes3, timeoutSecs) = csvFilenameList[(i + 2)]
-                    s3nKey = ((URI + '/') + csvFilepattern)
+                    s3nKey = (URI + csvFilepattern)
                     key2 = (((csvFilename + '_') + str(trial)) + '.hex')
                     print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                     parse3Key = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noPoll=noPoll, benchmarkLogging=benchmarkLogging)

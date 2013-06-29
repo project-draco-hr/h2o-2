@@ -1,9 +1,0 @@
-{
-  JsonObject destPageParams=new JsonObject();
-  destPageParams.addProperty(JOB,job.toString());
-  destPageParams.addProperty(DEST_KEY,model.toString());
-  for (  String param : PARAMS_LIST) {
-    if (fromPageResponse.has(param))     destPageParams.addProperty(param,fromPageResponse.get(param).getAsString());
-  }
-  return Response.redirect(fromPageResponse,RFView.class,destPageParams);
-}
