@@ -1,0 +1,15 @@
+{
+  final int cidx=chk._cidx;
+  while (cidx >= _espc.length) {
+    _espc=Arrays.copyOf(_espc,_espc.length << 1);
+    _homes=Arrays.copyOf(_homes,_homes.length << 1);
+  }
+  _espc[cidx]=chk._len;
+  _homes[cidx]=H2O.SELF.index();
+  _hasFloat|=chk.hasFloat();
+  if (chk._min < _min)   _min=chk._min;
+  if (chk._max > _max)   _max=chk._max;
+  _missingCnt+=chk._naCnt;
+  _strCnt+=chk._strCnt;
+  _totalCnt+=chk._len;
+}

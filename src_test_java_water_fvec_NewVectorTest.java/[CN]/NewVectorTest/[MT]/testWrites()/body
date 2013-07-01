@@ -1,14 +1,12 @@
 {
-  final Key key=Vec.newKey();
+  Key key=Vec.newKey();
   AppendableVec av=new AppendableVec(key);
   NewChunk nv=new NewChunk(av,0);
   nv._ls=new long[]{0,0,0};
   nv._xs=new int[]{0,0,0};
   nv._len=nv._ls.length;
   nv.close(0,null);
-  Futures fs=new Futures();
-  Vec vec=av.close(fs);
-  fs.blockForPending();
+  Vec vec=av.close();
   assertEquals(nv._ls.length,vec.length());
   Chunk c0=vec.elem2BV(0);
   assertTrue("Found chunk class " + c0.getClass() + " but expected C0LChunk",c0 instanceof C0LChunk);

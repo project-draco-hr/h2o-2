@@ -1,4 +1,11 @@
 {
-  new NATest().testNAs();
-  new NewVectorTest().testCompression();
+  final int nnodes=3;
+  for (int i=1; i < nnodes; i++) {
+    Node n=new NodeVM(args);
+    n.inheritIO();
+    n.start();
+  }
+  H2O.main(args);
+  H2O.waitForCloudSize(nnodes);
+  new NATest().test2();
 }

@@ -5,7 +5,7 @@
   Frame fr=ParseDataset2.parse(okey,new Key[]{fkey});
   UKV.remove(fkey);
   try {
-    assertEquals(fr.length(),1050);
+    assertEquals(fr.numCols(),1050);
     assertEquals(fr._vecs[0].length(),2659);
     double[] sums=new Sum().invoke(fr)._sums;
     assertEquals(3949,sums[0],EPSILON);
