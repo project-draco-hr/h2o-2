@@ -1,0 +1,11 @@
+{
+  int idx=bin(d);
+  _bins[idx]++;
+  if (d < _mins[idx])   _mins[idx]=d;
+  if (d > _maxs[idx])   _maxs[idx]=d;
+  long k=_bins[idx];
+  double oldM=_Ms[idx], newM=oldM + (y - oldM) / k;
+  double oldS=_Ss[idx], newS=oldS + (y - oldM) * (y - newM);
+  _Ms[idx]=newM;
+  _Ss[idx]=newS;
+}

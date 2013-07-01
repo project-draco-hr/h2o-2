@@ -1,3 +1,7 @@
 {
-  return false;
+  if ((double)((int)_scale) != _scale)   return false;
+  long res=(long)(l / _scale) - _bias;
+  if (!(0 <= l && l < 255))   return false;
+  _mem[i + OFF]=(byte)l;
+  return true;
 }
