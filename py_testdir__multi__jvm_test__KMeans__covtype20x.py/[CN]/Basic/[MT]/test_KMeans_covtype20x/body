@@ -8,7 +8,7 @@ def test_KMeans_covtype20x(self):
     for (csvFilename, timeoutSecs, key2) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         start = time.time()
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, key2=key2, noise=('JStack', None))
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, key2=key2)
         print 'parse end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
