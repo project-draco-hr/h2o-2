@@ -8,13 +8,13 @@ def test_parse_multi_header_single(self):
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON,output'
     tryList = [(57, 300, 9, 'cA', 60)]
     trial = 0
-    for (FILENUM, rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (fileNum, rowCount, colCount, key2, timeoutSecs) in tryList:
         trial += 1
-        print 'Wait while', FILENUM, 'synthetic files are created in', SYNDATASETS_DIR
+        print 'Wait while', fileNum, 'synthetic files are created in', SYNDATASETS_DIR
         rowxcol = ((str(rowCount) + 'x') + str(colCount))
         totalCols = (colCount + 1)
         totalRows = 0
-        for fileN in range(FILENUM):
+        for fileN in range(fileNum):
             csvFilename = (((((('syn_' + str(fileN)) + '_') + str(SEED)) + '_') + rowxcol) + '.csv')
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             rList = rand_rowData(colCount)
