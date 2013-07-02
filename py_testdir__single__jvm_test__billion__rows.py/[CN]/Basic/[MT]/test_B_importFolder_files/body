@@ -1,10 +1,9 @@
 def test_B_importFolder_files(self):
     importFolderPath = '/home/0xdiag/datasets/standard'
     h2i.setupImportFolder(None, importFolderPath)
-    timeoutSecs = 900
+    timeoutSecs = 1500
     csvFilenameAll = ['covtype.data', 'billion_rows.csv.gz']
     csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
     for csvFilename in csvFilenameList:
         start = time.time()
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500, pollTimeoutSecs=60)
