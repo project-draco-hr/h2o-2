@@ -1,0 +1,20 @@
+{
+  File file=find_test_file("target/h2o.jar");
+  Key h2okey=load_test_file(file);
+  ByteHistoThrow bh=new ByteHistoThrow();
+  try {
+    bh.invoke(h2okey);
+  }
+ catch (  DException.DistributedException de) {
+    assertTrue(de.getMessage().indexOf("/ by zero") != -1);
+    return;
+  }
+catch (  RuntimeException de) {
+    de.printStackTrace();
+    fail("Should have thrown a DistributedException");
+  }
+ finally {
+    UKV.remove(h2okey);
+  }
+  fail("Should have thrown from the invoke");
+}

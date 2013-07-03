@@ -1,4 +1,12 @@
 {
-  if (_is_local)   lcompute();
+  if (_is_local) {
+    try {
+      lcompute();
+    }
+ catch (    RuntimeException e) {
+      _exception=new DException(e);
+      completeExceptionally(e);
+    }
+  }
  else   dcompute();
 }
