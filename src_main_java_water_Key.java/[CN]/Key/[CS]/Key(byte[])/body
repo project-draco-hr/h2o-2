@@ -10,14 +10,6 @@
       chk=(int)(off >>> (6 + 20));
     }
   }
-  int hash=0;
-  for (; i < kb.length; i++) {
-    hash+=kb[i];
-    hash+=(hash << 10);
-    hash^=(hash >> 6);
-  }
-  hash+=(hash << 3);
-  hash^=(hash >> 11);
-  hash+=(hash << 15);
+  int hash=hash(kb,i,kb.length);
   _hash=hash + chk;
 }

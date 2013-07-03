@@ -7,5 +7,13 @@
   }
   H2O.main(args);
   H2O.waitForCloudSize(nnodes);
-  new NATest().test2();
+  new NATest().testNAs();
+  new FVecTest().testBasicCRUD();
+  new FVecTest().testNewVec();
+  new FVecTest().testParse();
+  new FVecTest().testParse2();
+  new NewVectorTest().testCompression();
+  new NewVectorTest().testWrites();
+  checkLeakedKeys();
+  System.out.println("DONE!!!");
 }

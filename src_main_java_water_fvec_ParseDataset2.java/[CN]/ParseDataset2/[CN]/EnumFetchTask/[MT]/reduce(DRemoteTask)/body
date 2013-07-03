@@ -1,0 +1,7 @@
+{
+  EnumFetchTask etk=(EnumFetchTask)drt;
+  if (_enums == null)   _enums=etk._enums;
+ else   if (etk._enums != null) {
+    for (    int i : _ecols)     _enums[i].merge(etk._enums[i]);
+  }
+}
