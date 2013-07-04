@@ -1,10 +1,9 @@
 {
-  final int N=xx.getRowDimension();
+  final int N=xx.getRows();
   double lambda=_lambda * (1 - _alpha) * 0.5 + _rho;
-  if (_lambda != 0)   for (int i=0; i < N - 1; ++i)   xx.set(i,i,xx.get(i,i) + lambda);
-  CholeskyDecomposition lu=new CholeskyDecomposition(xx);
+  if (_lambda != 0)   for (int i=0; i < N - 1; ++i)   xx.put(i,i,xx.get(i,i) + lambda);
   if (_alpha == 0 || _lambda == 0)   try {
-    double[] res=lu.solve(xy).getColumnPackedCopy();
+    double[] res=Solve.solvePositive(xx,xy).reshape(xx.getColumns() * xy.getColumns(),1).toArray();
     System.arraycopy(res,0,z,0,res.length);
     _converged=true;
     return res;
@@ -16,22 +15,22 @@
   final double ABSTOL=Math.sqrt(N) * 1e-4;
   final double RELTOL=1e-2;
   double[] u=MemoryManager.malloc8d(N - 1);
-  Matrix xm=null;
-  Matrix xyPrime=(Matrix)xy.clone();
+  DoubleMatrix xm=null;
+  DoubleMatrix xyPrime=xy.dup();
   OUTER:   for (int a=0; a < 5; ++a) {
     double kappa=_lambda * _alpha / _rho;
     for (int i=0; i < 1000; ++i) {
       for (int j=0; j < N - 1; ++j) {
-        xyPrime.set(j,0,xy.get(j,0) + _rho * (z[j] - u[j]));
+        xyPrime.put(j,0,xy.get(j,0) + _rho * (z[j] - u[j]));
       }
       try {
-        xm=lu.solve(xyPrime);
+        xm=Solve.solvePositive(xx,xyPrime);
       }
  catch (      Exception e) {
         if (!e.getMessage().equals("Matrix is not symmetric positive definite."))         throw Log.errRTExcept(e);
         _rho*=10;
         lambda=(_lambda * (1 - _alpha) + _rho) - lambda;
-        for (int j=0; j < N - 1; ++j)         xx.set(j,j,xx.get(j,j) + lambda);
+        for (int j=0; j < N - 1; ++j)         xx.put(j,j,xx.get(j,j) + lambda);
         Arrays.fill(z,0);
         Arrays.fill(u,0);
         continue OUTER;
