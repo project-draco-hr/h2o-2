@@ -13,7 +13,8 @@
   }
   final int ncols=_setup._data[0].length;
   _cols=new Vec[ncols];
-  for (int i=0; i < ncols; i++)   _cols[i]=new AppendableVec(Key.make(key.toString() + "C" + i));
+  Key[] keys=vec.group().addVecs(ncols);
+  for (int i=0; i < ncols; i++)   _cols[i]=new AppendableVec(keys[i]);
   try {
 switch (cpr) {
 case NONE:

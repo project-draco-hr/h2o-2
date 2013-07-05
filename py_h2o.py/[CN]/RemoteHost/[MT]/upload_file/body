@@ -1,6 +1,7 @@
 def upload_file(self, f, progress=None):
     f = find_file(f)
     if (f not in self.uploaded):
+        start = time.time()
         import md5
         m = md5.new()
         m.update(open(f).read())
@@ -14,6 +15,7 @@ def upload_file(self, f, progress=None):
             except IOError as e:
                 if (e.errno == errno.ENOENT):
                     sftp.put(f, dest, callback=progress)
+                    print '\n{0:.3f} seconds'.format((time.time() - start))
         finally:
             sftp.close()
         self.uploaded[f] = dest

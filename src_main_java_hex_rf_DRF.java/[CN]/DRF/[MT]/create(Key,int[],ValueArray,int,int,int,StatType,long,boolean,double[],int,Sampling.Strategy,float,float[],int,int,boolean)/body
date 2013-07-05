@@ -1,2 +1,12 @@
 {
+  DRFTask drf=new DRFTask();
+  drf._rfmodel=new RFModel(modelKey,cols,ary._key,new Key[0],ary._cols.length,samplingStrategy,sample,strataSamples,numSplitFeatures,ntrees);
+  int numrows=(int)(ValueArray.CHUNK_SZ / ary._rowsize);
+  drf._params=DRFParams.create(cols[cols.length - 1],ntrees,depth,numrows,binLimit,stat,seed,parallelTrees,classWt,numSplitFeatures,samplingStrategy,sample,strataSamples,verbose,exclusiveSplitLimit,useNonLocalData);
+  if (verbose > 0)   dumpRFParams(modelKey,cols,ary,ntrees,depth,binLimit,stat,seed,parallelTrees,classWt,numSplitFeatures,samplingStrategy,sample,strataSamples,verbose,exclusiveSplitLimit,useNonLocalData);
+  drf.validateInputData();
+  drf._t_main=new Timer();
+  UKV.put(modelKey,drf._rfmodel);
+  DKV.write_barrier();
+  return drf;
 }
