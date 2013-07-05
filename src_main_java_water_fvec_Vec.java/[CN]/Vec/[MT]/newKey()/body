@@ -1,9 +1,3 @@
 {
-  byte[] kb=Key.make()._kb;
-  byte[] bits=new byte[1 + 1 + 4+ kb.length];
-  bits[0]=Key.VEC;
-  bits[1]=0;
-  UDP.set4(bits,2,-1);
-  System.arraycopy(kb,0,bits,1 + 1 + 4,kb.length);
-  return Key.make(bits);
+  return newKey(Key.make());
 }

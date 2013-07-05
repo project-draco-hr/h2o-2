@@ -30,7 +30,7 @@ def invoke_hosts_action(action, hosts_config, args, ec2_reservation=None):
                     while True:
                         time.sleep(3600)
             except:
-                pass
+                print traceback.format_exc()
         finally:
             log('Goodbye H2O cloud...')
             h2o.tear_down_cloud()

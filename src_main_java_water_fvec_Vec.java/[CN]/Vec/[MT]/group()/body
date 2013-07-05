@@ -1,0 +1,6 @@
+{
+  Key gKey=groupKey();
+  Value v=DKV.get(gKey);
+  if (v != null)   return v.get(VectorGroup.class);
+  return new VectorGroup(gKey,1);
+}

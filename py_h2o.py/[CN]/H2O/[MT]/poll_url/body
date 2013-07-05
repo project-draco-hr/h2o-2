@@ -3,7 +3,8 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     url = self.__url(response['redirect_request'])
     params = response['redirect_request_args']
     paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])
-    if (noise is not None):
+    noise_enable = ((noise is not None) and (noise != ('JStack', None)))
+    if noise_enable:
         print 'Using noise during poll_url:', noise
         (noise_json, noiseParams) = noise
         noiseUrl = self.__url((noise_json + '.json'))
@@ -19,7 +20,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         time.sleep(initialDelaySecs)
     while (status == 'poll'):
         time.sleep(retryDelaySecs)
-        create_noise = ((noise is not None) and ((count % 2) == 0))
+        create_noise = (noise_enable and ((count % 2) == 0))
         if create_noise:
             urlUsed = noiseUrl
             paramsUsed = noiseParams
