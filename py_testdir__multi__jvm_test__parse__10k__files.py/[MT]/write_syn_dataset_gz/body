@@ -1,0 +1,5 @@
+def write_syn_dataset_gz(csvPathname, rowCount, headerData, rowData):
+    f = gzip.open(csvPathname, 'wb')
+    for i in range(rowCount):
+        f.write((rowData + '\n'))
+    f.close()
