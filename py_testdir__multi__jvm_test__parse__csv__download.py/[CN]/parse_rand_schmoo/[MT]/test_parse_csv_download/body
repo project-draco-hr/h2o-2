@@ -1,4 +1,4 @@
-def test_sort_of_prostate_with_row_schmoo(self):
+def test_parse_csv_download(self):
     SEED = random.randint(0, sys.maxint)
     random.seed(SEED)
     print '\nUsing random seed:', SEED
@@ -11,7 +11,7 @@ def test_sort_of_prostate_with_row_schmoo(self):
     write_syn_dataset(csvPathname, totalRows, headerData, rowData)
     print 'This is the same format/data file used by test_same_parse, but the non-gzed version'
     print '\nSchmoo the # of rows'
-    for trial in range(100):
+    for trial in range(40):
         rowData = rand_rowData()
         num = random.randint(4096, 10096)
         append_syn_dataset(csvPathname, rowData, num)
