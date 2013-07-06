@@ -23,7 +23,7 @@
       if (a > 20 * b / 3)       b*=10;
  else       if (a > 5 * b / 3)       b*=5;
       double start=b * Math.floor(c._min / b);
-      double binsz=Math.max(1e4,3.5 * c._sigma / Math.cbrt(c._n));
+      double binsz=Math.max(1e-4,3.5 * c._sigma / Math.cbrt(c._n));
       int nbin=Math.min(MAX_HIST_SZ,(int)((c._max - c._min) / binsz));
       _bins=new long[nbin];
       _start=start;
