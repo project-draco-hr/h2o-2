@@ -6,7 +6,7 @@ def test_B_importFolder_files(self):
     csvFilenameList = csvFilenameAll
     for csvFilename in csvFilenameList:
         start = time.time()
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500, pollTimeoutSecs=60)
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=timeoutSecs, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
