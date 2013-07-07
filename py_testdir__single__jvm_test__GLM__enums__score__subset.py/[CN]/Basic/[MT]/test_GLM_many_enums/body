@@ -7,7 +7,6 @@ def test_GLM_many_enums(self):
         colSepChar = colSepHexString.decode('hex')
         colSepInt = int(colSepHexString, base=16)
         print 'colSepChar:', colSepChar
-        print 'colSepInt', colSepInt
         rowSepHexString = '0a'
         rowSepChar = rowSepHexString.decode('hex')
         print 'rowSepChar:', rowSepChar
@@ -15,7 +14,7 @@ def test_GLM_many_enums(self):
         csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
-        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, quoteChars=quoteChars)
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
@@ -28,5 +27,17 @@ def test_GLM_many_enums(self):
         kwargs = {'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
-        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'glm end on ', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        GLMModel = glm['GLMModel']
+        modelKey = GLMModel['model_key']
+        start = time.time()
+        scoreDataKey = parseKey['destination_key']
+        glmScore = h2o_cmd.runGLMScore(key=scoreDataKey, model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)
+        print 'glmScore end on ', scoreDataKey, 'took', (time.time() - start), 'seconds'
+        classErr = glmScore['validation']['classErr']
+        auc = glmScore['validation']['auc']
+        err = glmScore['validation']['err']
+        print 'classErr:', classErr
+        print 'err:', err
+        print 'auc:', auc
