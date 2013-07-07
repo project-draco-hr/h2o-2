@@ -1,5 +1,11 @@
 {
   try {
+    DETAILMESSAGE=Throwable.class.getDeclaredField("detailMessage");
+    DETAILMESSAGE.setAccessible(true);
+  }
+ catch (  NoSuchFieldException nsfe) {
+  }
+  try {
     Thread.sleep(1000);
   }
  catch (  InterruptedException e) {
