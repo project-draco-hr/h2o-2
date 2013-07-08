@@ -11,5 +11,5 @@
       for (int j=0; j < c._domain.length; ++j)       catMap[i][j]=find(c._domain[j],_va._cols[i]._domain);
     }
   }
-  return (id && identityMap(colMap)) ? this : new ModelDataAdaptor(this,colMap[colMap.length - 1],Arrays.copyOf(colMap,colMap.length - 1),catMap);
+  return (id && identityMap(colMap)) ? this : new ModelDataAdaptor(this,Arrays.copyOf(colMap,colMap.length - 1),catMap);
 }
