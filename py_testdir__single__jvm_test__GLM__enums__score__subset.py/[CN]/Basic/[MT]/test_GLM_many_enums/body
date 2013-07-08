@@ -13,8 +13,8 @@ def test_GLM_many_enums(self):
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-        print 'Creating random', csvPathname
-        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
+        print 'Creating random', csvPathname, 'for glm model building'
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, randChars='abcd')
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
@@ -31,6 +31,8 @@ def test_GLM_many_enums(self):
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         GLMModel = glm['GLMModel']
         modelKey = GLMModel['model_key']
+        print 'Creating random', csvPathname, 'for glm scoring with prior model (using enum subset)'
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, randChars='abc')
         start = time.time()
         scoreDataKey = parseKey['destination_key']
         glmScore = h2o_cmd.runGLMScore(key=scoreDataKey, model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)

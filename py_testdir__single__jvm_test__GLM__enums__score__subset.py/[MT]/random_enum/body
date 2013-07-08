@@ -1,7 +1,4 @@
-def random_enum(maxEnumSize, randChars='abcd'):
+def random_enum(randChars, maxEnumSize):
     choiceStr = randChars
-    mightBeNumberOrWhite = True
-    while mightBeNumberOrWhite:
-        r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
-        mightBeNumberOrWhite = h2o_util.might_h2o_think_number_or_whitespace(r)
+    r = ''.join((random.choice(choiceStr) for x in range(maxEnumSize)))
     return r
