@@ -17,6 +17,7 @@ def test_GLM_many_enums(self):
         csvScorePathname = ((SYNDATASETS_DIR + '/') + csvScoreFilename)
         enumList = create_enum_list(listSize=10)
         enumListForScore = random.sample(enumList, 5)
+        enumListForScore.append('xyzzy')
         print 'Creating random', csvPathname, 'for glm model building'
         write_syn_dataset(csvPathname, enumList, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
         print 'Creating random', csvScorePathname, 'for glm scoring with prior model (using enum subset)'
