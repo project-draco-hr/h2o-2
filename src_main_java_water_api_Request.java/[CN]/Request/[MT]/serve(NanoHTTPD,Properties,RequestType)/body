@@ -18,7 +18,7 @@ if (query != null) return wrap(server,query,type);
 long time=System.currentTimeMillis();
 Response response=serve();
 response.setTimeStart(time);
-if (type == RequestType.json) return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()));
+if (type == RequestType.json) return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()),RequestType.json);
 return wrap(server,build(response));
 case debug:
 response=serve_debug();
