@@ -1,9 +1,13 @@
 {
   try {
     _pool=ClassPool.getDefault();
+    _iced=_pool.get("water.Iced");
+    _dtask=_pool.get("water.DTask");
     _enum=_pool.get("java.lang.Enum");
-    _serBases=new CtClass[]{_pool.get("water.Iced"),_pool.get("water.DTask"),_enum};
+    _api=_pool.get("water.api.Request");
+    _serBases=new CtClass[]{_iced,_dtask,_enum,_api};
     for (    CtClass c : _serBases)     c.freeze();
+    _jsondoc=_pool.get("water.api.JSONDoc");
   }
  catch (  NotFoundException e) {
     throw new RuntimeException(e);

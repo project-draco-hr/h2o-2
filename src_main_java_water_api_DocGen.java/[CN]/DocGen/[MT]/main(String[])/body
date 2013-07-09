@@ -1,15 +1,5 @@
 {
-  H2O.main(new String[0]);
-  OptArgs options=new OptArgs();
-  new Arguments(args).extract(options);
-  if (options.type.equalsIgnoreCase("wiki")) {
-    generateWiki(options);
-  }
- else   if (options.type.equalsIgnoreCase("python")) {
-    genereratePython(options);
-  }
- else {
-    System.err.println("Unknown documentation type: " + options.type);
-  }
-  System.exit(0);
+  H2O.main(args);
+  TestUtil.stall_till_cloudsize(1);
+  System.out.println(new ImportFiles().ReSTHelp());
 }

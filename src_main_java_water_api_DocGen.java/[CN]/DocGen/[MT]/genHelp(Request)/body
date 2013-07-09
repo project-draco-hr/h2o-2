@@ -1,0 +1,25 @@
+{
+  String name=R.getClass().getSimpleName();
+  StringBuilder sb=new StringBuilder();
+  bodyHead(sb);
+  title(sb,name);
+  paragraph(sb,"");
+  section(sb,"Supported HTTP methods and descriptions");
+  String gs=R.toGETDoc();
+  if (gs != null) {
+    paragraph(sb,"GET");
+    paragraph(sb,gs);
+  }
+  section(sb,"URL");
+  paragraph(sb,"http://<h2oHost>:<h2oApiPort>/" + name + ".json");
+  section(sb,"Input parameters");
+  section(sb,"Output JSON elements");
+  JSONDoc docs[]=R.toJSONDoc();
+  if (docs != null) {
+    listHead(sb);
+    for (    JSONDoc doc : docs)     listBullet(sb,doc._name + ", a " + doc._clazz.getSimpleName(),doc._help + ".  From version " + doc._min_ver+ (doc._max_ver == Integer.MAX_VALUE ? " onward" : " to version " + doc._max_ver));
+    listTail(sb);
+  }
+  bodyTail(sb);
+  return sb.toString();
+}
