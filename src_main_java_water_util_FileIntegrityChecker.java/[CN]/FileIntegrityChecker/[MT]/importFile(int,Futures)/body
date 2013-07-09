@@ -6,4 +6,5 @@
   Value val=(size < 2 * ValueArray.CHUNK_SZ) ? new Value(k,(int)size,Value.NFS) : new Value(k,new ValueArray(k,size),Value.NFS);
   val.setdsk();
   UKV.put(k,val,fs);
+  return k;
 }

@@ -1,0 +1,51 @@
+{
+  CtField ctfs[]=cc.getDeclaredFields();
+  boolean api=false;
+  for (  CtField ctf : ctfs)   if (ctf.getName().equals("API_WEAVER"))   api=true;
+  if (api == false)   return;
+  make_body(cc,ctfs,false,"public water.AutoBuffer writeJSON(water.AutoBuffer ab) {\n  ab.put1('{');\n","  super.writeJSON(ab);\n","  ab.putJSON%z(\"%s\",%s)","  ab.putEnumJSON(%s)","  ab.putJSON%z(%s)",".put1(',').put1('\\n');\n",";\n  return ab.put1('\\n').put1('}');\n}");
+  CtField jsondoc=null;
+  CtField getdoc=null;
+  StringBuilder sb=new StringBuilder();
+  sb.append("new water.api.JSONDoc[]{");
+  boolean first=true;
+  for (  CtField ctf : ctfs) {
+    int mods=ctf.getModifiers();
+    if (javassist.Modifier.isTransient(mods) || javassist.Modifier.isStatic(mods)) {
+      if (ctf.getName().equals("DOC_JSON"))       jsondoc=ctf;
+      if (ctf.getName().equals("DOC_GET"))       getdoc=ctf;
+      continue;
+    }
+    String name=ctf.getName();
+    String help=null;
+    int minver=1;
+    int maxver=Integer.MAX_VALUE;
+    for (    CtField ctf2 : ctfs) {
+      if (javassist.Modifier.isStatic(ctf2.getModifiers())) {
+        String sname=ctf2.getName();
+        if (sname.startsWith(name)) {
+          String x=sname.substring(name.length());
+          Object o=ctf2.getConstantValue();
+          if (o == null)           throw new CannotCompileException("Found JSON static field '" + sname + "' but its value is not constant");
+ else           if (x.equals("Help"))           help=(String)o;
+ else           if (x.equals("MinVer"))           minver=(Integer)o;
+ else           if (x.equals("MaxVer"))           maxver=(Integer)o;
+ else           throw new CannotCompileException("Found JSON field '" + name + "' and also static field '"+ sname+ "' which is not one of "+ name+ "Help, "+ name+ "MinVer, or "+ name+ "MaxVer.");
+        }
+      }
+    }
+    if (help == null)     throw new CannotCompileException("Found JSON field '" + name + "' but did not find static final String "+ name+ "Help = 'some helper text';");
+    if (minver < 1 || minver > 1000000)     throw new CannotCompileException("Found JSON field '" + name + "' but MinVer < 1 or MinVer > 1000000");
+    if (maxver < minver || (maxver > 1000000 && maxver != Integer.MAX_VALUE))     throw new CannotCompileException("Found JSON field '" + name + "' but MaxVer < "+ minver+ " or MaxVer > 1000000");
+    if (first)     first=false;
+ else     sb.append(",");
+    sb.append("new water.api.JSONDoc(\"" + name + "\",\""+ help+ "\","+ minver+ ","+ maxver+ ","+ ctf.getType().getName()+ ".class)");
+  }
+  sb.append("}");
+  if (jsondoc == null)   throw new CannotCompileException("Did not find static final JSONDoc[] DOC_JSON field;");
+  if (!jsondoc.getType().isArray() || jsondoc.getType().getComponentType() != _jsondoc)   throw new CannotCompileException("DOC_JSON not declared static final JSONDoc[];");
+  cc.removeField(jsondoc);
+  cc.addField(jsondoc,CtField.Initializer.byExpr(sb.toString()));
+  cc.addMethod(CtNewMethod.make("  public water.api.JSONDoc[] toJSONDoc() { return DOC_JSON; }",cc));
+  if (getdoc != null)   cc.addMethod(CtNewMethod.make("  public String toGETDoc() { return DOC_GET; }",cc));
+}
