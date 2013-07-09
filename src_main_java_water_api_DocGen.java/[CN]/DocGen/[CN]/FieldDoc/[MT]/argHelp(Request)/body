@@ -1,0 +1,12 @@
+{
+  try {
+    Object o=R.getClass().getDeclaredField(_name).get(R);
+    return ((RequestArguments.Argument)o).queryDescription();
+  }
+ catch (  IllegalAccessException ie) {
+    return "";
+  }
+catch (  NoSuchFieldException ie) {
+    return "";
+  }
+}

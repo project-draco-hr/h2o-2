@@ -12,12 +12,17 @@
   }
   section(sb,"URL");
   paragraph(sb,"http://<h2oHost>:<h2oApiPort>/" + name + ".json");
+  FieldDoc docs[]=R.toFieldDoc();
   section(sb,"Input parameters");
-  section(sb,"Output JSON elements");
-  JSONDoc docs[]=R.toJSONDoc();
   if (docs != null) {
     listHead(sb);
-    for (    JSONDoc doc : docs)     listBullet(sb,doc._name + ", a " + doc._clazz.getSimpleName(),doc._help + ".  From version " + doc._min_ver+ (doc._max_ver == Integer.MAX_VALUE ? " onward" : " to version " + doc._max_ver));
+    for (    FieldDoc doc : docs)     if (doc.isArg())     listBullet(sb,doc._name + ", " + doc.argHelp(R),doc._help + "  From version " + doc._min_ver+ (doc._max_ver == Integer.MAX_VALUE ? " onward" : " to version " + doc._max_ver));
+    listTail(sb);
+  }
+  section(sb,"Output JSON elements");
+  if (docs != null) {
+    listHead(sb);
+    for (    FieldDoc doc : docs)     if (doc.isJSON())     listBullet(sb,doc._name + ", a " + doc._clazz.getSimpleName(),doc._help + "  From version " + doc._min_ver+ (doc._max_ver == Integer.MAX_VALUE ? " onward" : " to version " + doc._max_ver));
     listTail(sb);
   }
   bodyTail(sb);

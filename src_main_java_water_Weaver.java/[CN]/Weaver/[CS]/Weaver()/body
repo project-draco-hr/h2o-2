@@ -7,7 +7,8 @@
     _api=_pool.get("water.api.Request");
     _serBases=new CtClass[]{_iced,_dtask,_enum,_api};
     for (    CtClass c : _serBases)     c.freeze();
-    _jsondoc=_pool.get("water.api.JSONDoc");
+    _fielddoc=_pool.get("water.api.DocGen$FieldDoc");
+    _arg=_pool.get("water.api.RequestArguments$Argument");
   }
  catch (  NotFoundException e) {
     throw new RuntimeException(e);
