@@ -9,7 +9,7 @@
   CtField ctfs[]=cc.getDeclaredFields();
   boolean callsuper=true;
   for (  CtClass base : _serBases)   if (cc.getSuperclass() == base)   callsuper=false;
-  make_body(cc,ctfs,callsuper,"public water.AutoBuffer write(water.AutoBuffer ab) {\n","  super.write(ab);\n","  ab.put%z(%s);\n","  ab.putEnum(%s);\n","  ab.put%z(%s);\n","","  return ab;\n" + "}");
-  make_body(cc,ctfs,callsuper,"public water.Freezable read(water.AutoBuffer s) {\n","  super.read(s);\n","  %s = s.get%z();\n","  %s = %c.raw_enum(s.get1());\n","  %s = (%C)s.get%z(%c.class);\n","","  return this;\n" + "}");
-  if (d)   make_body(cc,ctfs,callsuper,"public void copyOver(water.DTask i) {\n" + "  " + cc.getName() + " s = ("+ cc.getName()+ ")i;\n","  super.copyOver(s);\n","  %s = s.%s;\n","  %s = s.%s;\n","  %s = s.%s;\n","","}");
+  make_body(cc,ctfs,callsuper,"public water.AutoBuffer write(water.AutoBuffer ab) {\n","  super.write(ab);\n","  ab.put%z(%s);\n","  ab.putEnum(%s);\n","  ab.put%z(%s);\n","","  return ab;\n" + "}",null);
+  make_body(cc,ctfs,callsuper,"public water.Freezable read(water.AutoBuffer s) {\n","  super.read(s);\n","  %s = s.get%z();\n","  %s = %c.raw_enum(s.get1());\n","  %s = (%C)s.get%z(%c.class);\n","","  return this;\n" + "}",null);
+  if (d)   make_body(cc,ctfs,callsuper,"public void copyOver(water.DTask i) {\n" + "  " + cc.getName() + " s = ("+ cc.getName()+ ")i;\n","  super.copyOver(s);\n","  %s = s.%s;\n","  %s = s.%s;\n","  %s = s.%s;\n","","}",null);
 }

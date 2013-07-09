@@ -1,6 +1,7 @@
 {
-  String name=R.getClass().getSimpleName();
-  StringBuilder sb=new StringBuilder();
+  final String name=R.getClass().getSimpleName();
+  final FieldDoc docs[]=R.toFieldDoc();
+  final StringBuilder sb=new StringBuilder();
   bodyHead(sb);
   title(sb,name);
   paragraph(sb,"");
@@ -11,15 +12,32 @@
     paragraph(sb,gs);
   }
   section(sb,"URL");
-  paragraph(sb,"http://<h2oHost>:<h2oApiPort>/" + name + ".json");
+  paraTail(escape(paraHead(sb),"http://<h2oHost>:<h2oApiPort>/" + name + ".json"));
+  if (docs == null)   return bodyTail(sb).toString();
   section(sb,"Input parameters");
-  section(sb,"Output JSON elements");
-  JSONDoc docs[]=R.toJSONDoc();
-  if (docs != null) {
-    listHead(sb);
-    for (    JSONDoc doc : docs)     listBullet(sb,doc._name + ", a " + doc._clazz.getSimpleName(),doc._help + ".  From version " + doc._min_ver+ (doc._max_ver == Integer.MAX_VALUE ? " onward" : " to version " + doc._max_ver));
-    listTail(sb);
+  listHead(sb);
+  for (  FieldDoc doc : docs)   if (doc.isArg()) {
+    listBullet(sb,bold(doc._name) + ", " + doc.argHelp(R),doc._help + doc.version(),0);
+    String[] errors=doc.errors(R);
+    if (errors != null || doc.required(R)) {
+      paragraph(sb,"");
+      paragraph(sb,bold("Possible JSON error field returns:"));
+      listHead(sb);
+      if (errors != null)       for (      String err : errors)       listBullet(sb,doc.argErr() + err,"",1);
+      if (doc.required(R))       listBullet(sb,doc.argErr() + "Argument '" + doc._name+ "' is required, but not specified","",1);
+      listTail(sb);
+    }
   }
+  listTail(sb);
+  section(sb,"Output JSON elements");
+  listHead(sb);
+  for (  FieldDoc doc : docs)   if (doc.isJSON())   listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),doc._help + doc.version(),0);
+  listTail(sb);
+  section(sb,"HTTP response codes");
+  paragraph(sb,"200 OK");
+  paragraph(sb,"Success and error responses are identical.");
+  section(sb,"Success Example");
+  section(sb,"Error Example");
   bodyTail(sb);
   return sb.toString();
 }
