@@ -1,0 +1,8 @@
+def write_syn_dataset(csvPathname, rowCount, headerData=None, rowData=None):
+    dsf = open(csvPathname, 'w+')
+    if (headerData is not None):
+        dsf.write((headerData + '\n'))
+    if (rowData is not None):
+        for i in range(rowCount):
+            dsf.write((rowData + '\n'))
+    dsf.close()

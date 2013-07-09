@@ -1,6 +1,6 @@
 {
   org.apache.log4j.Logger l4j=getLog4jLogger();
-  if (l4j == null) {
+  if (l4j == null && !H2O.DEBUG) {
     if (H2O.SELF != null) {
       File dir;
       if (H2O.ICE_ROOT.getScheme() == null || Schemes.FILE.equals(H2O.ICE_ROOT.getScheme()))       dir=new File(H2O.ICE_ROOT.getPath());
@@ -24,6 +24,6 @@
     }
   }
   if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.kind,e.sys,e.body(0));
-  if (printOnOut || printAll)   unwrap(System.out,(LONG_HEADERS ? e.toString() : e.toShortString()));
+  if (printOnOut || printAll)   unwrap(System.out,(H2O.DEBUG ? e.toString() : e.toShortString()));
   e.printMe=false;
 }

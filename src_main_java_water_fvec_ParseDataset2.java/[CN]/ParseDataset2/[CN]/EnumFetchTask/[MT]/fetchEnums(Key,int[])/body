@@ -1,0 +1,7 @@
+{
+  EnumFetchTask tsk=new EnumFetchTask(H2O.SELF.index(),k,ecols);
+  Key[] keys=new Key[H2O.CLOUD.size()];
+  for (int i=0; i < keys.length; ++i)   keys[i]=Key.make("aaa",(byte)1,Key.DFJ_INTERNAL_USER,H2O.CLOUD._memary[i]);
+  tsk.invoke(keys);
+  return tsk._enums;
+}

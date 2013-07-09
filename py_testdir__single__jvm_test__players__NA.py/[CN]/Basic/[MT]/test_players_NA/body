@@ -5,4 +5,4 @@ def test_players_NA(self):
     inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
     missingValuesList = h2o_cmd.infoFromInspect(inspect, csvPathname)
     print missingValuesList
-    self.assertEqual(missingValuesList, [501286], 'Players.csv should have NAs due to col 0 only')
+    self.assertEqual(missingValuesList, [], 'Players.csv should have no NAs')

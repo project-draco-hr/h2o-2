@@ -1,5 +1,15 @@
 {
-  dfork(keys).quietlyJoin();
+  try {
+    dfork(keys).get();
+  }
+ catch (  ExecutionException eex) {
+  }
+catch (  InterruptedException iex) {
+    Log.errRTExcept(iex);
+  }
+catch (  CancellationException cex) {
+    Log.errRTExcept(cex);
+  }
   if (_exception != null)   throw _exception.toEx();
   return self();
 }

@@ -1,0 +1,17 @@
+def getRandomDate():
+    day = str(random.randint(1, 31)).zfill(2)
+    if (random.randint(0, 1) == 1):
+        day = day.zfill(2)
+    year = str(random.randint(0, 99)).zfill(2)
+    if (random.randint(0, 1) == 1):
+        year = year.zfill(2)
+    if (1 == 1):
+        month = random.randint(1, 12)
+        monthTranslateChoices = months[(month - 1)]
+        month = random.choice(monthTranslateChoices)
+    else:
+        month = str(random.randint(1, 12)).zfill(2)
+        if (random.randint(0, 1) == 1):
+            month = month.zfill(2)
+    a = ('%s-%s-%s' % (day, month, year))
+    return a

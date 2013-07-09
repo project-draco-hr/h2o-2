@@ -11,4 +11,5 @@ def test_exec_import_hosts(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         h2e.exec_zero_list(zeroList)
-        h2e.exec_expr_list_rand(lenNodes, exprList, key2, maxCol=53, maxRow=400000, maxTrials=200, timeoutSecs=timeoutSecs)
+        h2e.exec_expr_list_rand(lenNodes, exprErrorCaseList, key2, maxCol=53, maxRow=400000, maxTrials=5, timeoutSecs=timeoutSecs, ignoreH2oError=True)
+        h2e.exec_expr_list_rand(lenNodes, exprList, key2, maxCol=53, maxRow=400000, maxTrials=100, timeoutSecs=timeoutSecs)
