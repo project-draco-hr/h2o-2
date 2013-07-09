@@ -3,12 +3,12 @@
   final CMJob cmJob=new CMJob("CM computation",cmKey,modelSize);
   H2OCountedCompleter fjtask=new H2OCountedCompleter(){
     @Override public void compute2(){
-      Key key=cmJob.dest();
-      Value val=H2O.putIfMatch(key,new Value(key,CMFinal.make()),null);
-      if (val == null) {
+      CMFinal cmResult=UKV.get(cmJob.dest());
+      if (cmResult == null) {
+        DKV.put(cmJob.dest(),CMFinal.make());
         ConfusionTask cmTask=new ConfusionTask(cmJob,model,modelSize,datakey,classcol,classWt,computeOOB);
         cmTask.invoke(datakey);
-        CMFinal cmResult=CMFinal.make(cmTask._matrix,model,cmTask.domain(),cmTask._errorsPerTree,computeOOB);
+        cmResult=CMFinal.make(cmTask._matrix,model,cmTask.domain(),cmTask._errorsPerTree,computeOOB);
         CMFinal.updateDKV(cmJob.dest(),cmResult);
       }
       cmJob.remove();
