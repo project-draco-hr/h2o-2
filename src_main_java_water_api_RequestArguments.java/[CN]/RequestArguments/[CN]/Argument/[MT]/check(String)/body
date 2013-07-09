@@ -14,7 +14,7 @@
     }
   }
   if (input == null) {
-    if (_required)     throw new IllegalArgumentException("Argument " + _name + " is required, but not specified");
+    if (_required)     throw new IllegalArgumentException("Argument '" + _name + "' is required, but not specified");
     record._value=defaultValue();
     record._valid=true;
   }
@@ -25,7 +25,7 @@
     }
  catch (    IllegalArgumentException e) {
       record._value=defaultValue();
-      Throwables.propagate(e);
+      throw e;
     }
   }
 }
