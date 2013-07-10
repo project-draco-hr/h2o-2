@@ -1,25 +1,2 @@
 {
-  final Key cmKey=keyForCM(model._selfKey,modelSize,datakey,classcol,computeOOB);
-  final CMJob cmJob=new CMJob("CM computation",cmKey,modelSize);
-  H2OCountedCompleter fjtask=new H2OCountedCompleter(){
-    @Override public void compute2(){
-      Key key=cmJob.dest();
-      Value val=DKV.DputIfMatch(key,new Value(key,CMFinal.make()),null,null);
-      if (val == null) {
-        ConfusionTask cmTask=new ConfusionTask(cmJob,model,modelSize,datakey,classcol,classWt,computeOOB);
-        cmTask.invoke(datakey);
-        CMFinal cmResult=CMFinal.make(cmTask._matrix,model,cmTask.domain(),cmTask._errorsPerTree,computeOOB);
-        CMFinal.updateDKV(cmJob.dest(),cmResult);
-      }
-      cmJob.remove();
-      tryComplete();
-    }
-    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
-      cmJob.onException(ex);
-      return super.onExceptionalCompletion(ex,caller);
-    }
-  }
-;
-  H2O.submitTask(cmJob.start(fjtask));
-  return cmJob;
 }
