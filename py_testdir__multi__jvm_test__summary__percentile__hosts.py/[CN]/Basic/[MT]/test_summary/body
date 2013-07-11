@@ -66,9 +66,9 @@ def test_summary(self):
                 self.assertEqual(smin[0], expectedMin)
                 print 'len(thresholds):', len(thresholds), thresholds
                 print 'len(values):', len(values), values
-                if (1 == 0):
-                    for v in values:
-                        self.assertIn(v, legalValues, "Value in percentile 'values' is not present in the dataset")
+                for v in values:
+                    self.assertTrue((v >= expectedMin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
+                    self.assertTrue((v <= expectedMax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
                 print 'mean:', mean
                 self.assertAlmostEqual(mean, expectedMean, delta=0.01)
                 print 'sigma:', sigma
