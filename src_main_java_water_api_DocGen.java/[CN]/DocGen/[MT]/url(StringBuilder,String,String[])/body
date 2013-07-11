@@ -1,0 +1,15 @@
+{
+  sb.append("curl -s ").append(name).append(".json");
+  boolean first=true;
+  for (int i=0; i < parms.length; i+=2) {
+    if (first) {
+      first=false;
+      sb.append("?");
+    }
+ else {
+      sb.append("&");
+    }
+    sb.append(parms[i]).append('=').append(parms[i + 1]);
+  }
+  return sb.append('\n');
+}

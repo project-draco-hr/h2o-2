@@ -1,8 +1,10 @@
 {
   localCloud(1,true,args);
-  double[][] array=new double[][]{new double[]{0,0,0,0},new double[]{1.63475416828,1.63337340671,-7.01908639681,2.72330313693},new double[]{-7.01908639681,2.72330313693,-3.47665202262,4.71153347407}};
-  Key key=Key.make("test.hex");
-  ValueArray va=TestUtil.va_maker(key,(Object[])array);
+  File f=new File("syn_5853362476331324036_100x11.csv");
+  Key key=TestUtil.load_test_file(f,"test");
+  Key dest=Key.make("test.hex");
+  ParseDataset.parse(dest,new Key[]{key});
+  ValueArray va=(ValueArray)UKV.get(dest);
   Key km=Key.make("test.kmeans");
   int[] cols=new int[va._cols.length];
   for (int i=0; i < cols.length; i++)   cols[i]=i;

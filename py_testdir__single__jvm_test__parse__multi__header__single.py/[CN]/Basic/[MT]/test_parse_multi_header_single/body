@@ -36,7 +36,7 @@ def test_parse_multi_header_single(self):
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         self.assertEqual(inspect['num_cols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], totalCols)))
-        self.assertEqual(inspect['num_rows'], totalRows, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], totalCols)))
+        self.assertEqual(inspect['num_rows'], totalRows, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], totalRows)))
         if HEADER:
             kwargs = {'sample': 75, 'depth': 25, 'ntree': 1, 'ignore': 'ID,CAPSULE', }
         else:

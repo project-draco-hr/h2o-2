@@ -13,7 +13,7 @@ def test_KMeans_covtype20x(self):
         h2o.check_sandbox_for_errors()
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-        kwargs = {'cols': None, 'epsilon': 0.0001, 'k': 7, }
+        kwargs = {'cols': None, 'epsilon': 0.0001, 'k': 2, }
         start = time.time()
         kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
         elapsed = (time.time() - start)

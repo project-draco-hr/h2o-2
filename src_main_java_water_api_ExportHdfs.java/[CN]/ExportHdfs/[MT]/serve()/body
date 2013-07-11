@@ -7,7 +7,7 @@
     Model model=getAsModel(value);
     if (model != null) {
       if (!path.endsWith(Extensions.JSON))       path+=Extensions.JSON;
-      data=model.toJson().toString().getBytes(Charsets.UTF_8);
+      data=model.toJson().toString().getBytes("UTF-8");
     }
     if (data != null)     PersistHdfs.store(new Path(path),data);
  else     throw new UnsupportedOperationException("Only models can be exported");
