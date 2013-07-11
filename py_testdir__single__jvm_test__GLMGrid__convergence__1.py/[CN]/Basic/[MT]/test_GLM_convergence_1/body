@@ -24,9 +24,9 @@ def test_GLM_convergence_1(self):
         else:
             kwargs['y'] = y
         emsg = None
-        for i in range(25):
+        for i in range(2):
             start = time.time()
-            glm = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, noise=('Jstack', None), **kwargs)
+            glm = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
             print 'glm #', i, 'end on', csvPathname, 'took', (time.time() - start), 'seconds'
             warnings = h2o_glm.simpleCheckGLMGrid(self, glm, None, allowFailWarning=True, **kwargs)
             x = re.compile('[Ff]ailed')
