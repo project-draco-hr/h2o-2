@@ -1,4 +1,4 @@
-def parseFile(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=30, retryDelaySecs=0.5, pollTimeoutSecs=30, noise=None, noPoll=None, **kwargs):
+def parseFile(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=30, retryDelaySecs=0.5, pollTimeoutSecs=30, noise=None, noPoll=None, doSummary=True, **kwargs):
     if (not csvPathname):
         raise Exception('No file name specified')
     if (not node):
@@ -9,5 +9,6 @@ def parseFile(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=30, 
     else:
         myKey2 = key2
     p = node.parse(key, myKey2, timeoutSecs, retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, noPoll=noPoll, **kwargs)
-    node.summary_page(myKey2)
+    if doSummary:
+        node.summary_page(myKey2)
     return p
