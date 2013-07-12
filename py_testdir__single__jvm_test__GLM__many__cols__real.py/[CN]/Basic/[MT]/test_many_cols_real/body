@@ -1,6 +1,6 @@
 def test_many_cols_real(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(1000, 100, 'cA', 300), (1000, 200, 'cB', 300), (1000, 300, 'cC', 300), (1000, 400, 'cD', 300), (1000, 500, 'cE', 300), (1000, 1000, 'cJ', 300)]
+    tryList = [(100, 1000, 'cA', 300), (100, 3000, 'cB', 300), (100, 5000, 'cC', 300), (100, 7000, 'cD', 300), (100, 9000, 'cE', 300), (100, 10000, 'cF', 300)]
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -13,7 +13,7 @@ def test_many_cols_real(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'y': y, 'max_iter': 50, 'case': '1', 'case_mode': '=', 'lambda': 0.0001, 'alpha': 0.6, }
+        kwargs = {'y': y, 'max_iter': 9, 'case': '1', 'case_mode': '=', 'lambda': 0.0001, 'alpha': 0.6, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
