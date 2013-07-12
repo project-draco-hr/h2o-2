@@ -12,7 +12,7 @@ def test_parse_1m_cols(self):
         print 'Summary should work with 65k'
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=timeoutSecs, doSummary=True)
         print csvFilename, 'parse time:', parseKey['response']['time']
-        print 'Parse:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        print 'Parse and summary:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
         start = time.time()
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=timeoutSecs)
         print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
