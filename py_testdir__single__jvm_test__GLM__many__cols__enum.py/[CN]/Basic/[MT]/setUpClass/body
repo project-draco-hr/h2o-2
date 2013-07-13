@@ -5,7 +5,9 @@ def setUpClass(cls):
     random.seed(SEED)
     print '\nUsing random seed:', SEED
     localhost = h2o.decide_if_localhost()
+    global tryHeap
+    tryHeap = 14
     if localhost:
-        h2o.build_cloud(3, java_heap_GB=3, use_flatfile=True)
+        h2o.build_cloud(1, enable_benchmark_log=True, java_heap_GB=tryHeap)
     else:
-        h2o_hosts.build_cloud_with_hosts()
+        h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True)
