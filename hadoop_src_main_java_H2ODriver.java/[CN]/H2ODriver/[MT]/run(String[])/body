@@ -1,0 +1,24 @@
+{
+  parseArgs(args);
+  Configuration conf=getConf();
+  conf.set("mapred.child.java.opts","-Xms" + mapperXmx + " -Xmx"+ mapperXmx);
+  conf.set("mapred.used.genericoptionsparser","true");
+  conf.set("mapreduce.map.speculative","false");
+  conf.set("mapred.map.tasks.speculative.execution","false");
+  Job job=new Job(conf,jobtrackerName);
+  job.setJarByClass(getClass());
+  job.setInputFormatClass(H2OInputFormat.class);
+  job.setMapperClass(H2OMapper.class);
+  job.setNumReduceTasks(0);
+  job.setOutputKeyClass(Text.class);
+  job.setOutputValueClass(Text.class);
+  FileInputFormat.addInputPath(job,new Path("ignored"));
+  if (outputPath != null) {
+    FileOutputFormat.setOutputPath(job,new Path(outputPath));
+  }
+  boolean success=job.waitForCompletion(true);
+  if (!success) {
+    return 1;
+  }
+  return 0;
+}

@@ -1,0 +1,8 @@
+{
+  emitLogHeader(context);
+  Counter counter=context.getCounter(H2O_MAPPER_COUNTER.HADOOP_COUNTER_HEARTBEAT);
+  Thread counterThread=new CounterThread(counter);
+  counterThread.start();
+  int millis=20 * 1000;
+  Thread.sleep(millis);
+}
