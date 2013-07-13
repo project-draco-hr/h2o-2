@@ -1,0 +1,10 @@
+{
+  int len=_names.length;
+  if (idx < 0 || idx >= len)   return null;
+  Vec v=_vecs[idx];
+  System.arraycopy(_names,idx + 1,_names,idx,len - idx - 1);
+  System.arraycopy(_vecs,idx + 1,_vecs,idx,len - idx - 1);
+  _names=Arrays.copyOf(_names,len - 1);
+  _vecs=Arrays.copyOf(_vecs,len - 1);
+  return v;
+}

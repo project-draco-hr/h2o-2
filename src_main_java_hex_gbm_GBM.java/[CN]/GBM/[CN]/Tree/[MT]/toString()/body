@@ -14,7 +14,7 @@
     p(sb,"min",mmmW).append('/');
     p(sb,"max",mmmW).append('/');
     p(sb,"mean",mmmW).append('/');
-    p(sb,"var",varW).append(colPad);
+    p(sb,"mse",varW).append(colPad);
   }
   sb.append('\n');
   for (int i=0; i < Histogram.BINS; i++) {
@@ -25,7 +25,7 @@
         p(sb,_hs[j]._mins[i],mmmW).append('/');
         p(sb,_hs[j]._maxs[i],mmmW).append('/');
         p(sb,_hs[j].mean(i),mmmW).append('/');
-        p(sb,_hs[j].var(i),varW).append(colPad);
+        p(sb,_hs[j].mse(i),varW).append(colPad);
       }
  else {
         p(sb,"",colW).append(colPad);

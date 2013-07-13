@@ -2,11 +2,7 @@ def spawn_cmd(name, args, capture_output=True):
     if capture_output:
         (outfd, outpath) = tmp_file((name + '.stdout.'), '.log')
         (errfd, errpath) = tmp_file((name + '.stderr.'), '.log')
-        if (1 == 0):
-            argsStr = ('ulimit -u 1024;' + ' '.join(args))
-            ps = psutil.Popen(argsStr, stdin=None, stdout=outfd, stderr=errfd, shell=True)
-        else:
-            ps = psutil.Popen(args, stdin=None, stdout=outfd, stderr=errfd)
+        ps = psutil.Popen(args, stdin=None, stdout=outfd, stderr=errfd)
     else:
         outpath = '<stdout>'
         errpath = '<stderr>'

@@ -12,7 +12,7 @@ case 3:
 }
 }
  else {
-double le=_ls[i] * DParseTask.pow10(_xs[i]);
+double le=_ds == null ? _ls[i] * DParseTask.pow10(_xs[i]) : _ds[i];
 switch (log) {
 case 2:
 UDP.set4f(bs,(i << 2),(float)le);
