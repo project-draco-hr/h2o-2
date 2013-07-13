@@ -6,13 +6,10 @@
   try {
     assertEquals(380,fr._vecs[0].length());
     int ncols=fr._names.length;
-    String s=fr._names[1];
-    Vec v=fr._vecs[1];
-    System.arraycopy(fr._names,2,fr._names,1,ncols - 2);
-    System.arraycopy(fr._vecs,2,fr._vecs,1,ncols - 2);
-    fr._names[ncols - 1]=s;
-    fr._vecs[ncols - 1]=v;
-    GBM gbm=GBM.start(GBM.makeKey(),fr,11);
+    UKV.remove(fr.remove("ID")._key);
+    Vec capsule=fr.remove("CAPSULE");
+    fr.add("CAPSULE",capsule);
+    GBM gbm=GBM.start(GBM.makeKey(),fr,7);
     gbm.get();
     UKV.remove(gbm._dest);
   }
