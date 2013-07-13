@@ -1,7 +1,7 @@
-def test_exec_rotating_inc(self):
+def test_exec_rotate_inc(self):
     lenNodes = len(h2o.nodes)
     for exprTemplate in initList:
-        execExpr = h2e.fill_in_expr_template(exprTemplate, '0', '0')
+        execExpr = h2e.fill_in_expr_template(exprTemplate, n=0, m=0)
         print execExpr
         execResult = h2e.exec_expr(h2o.nodes[0], execExpr)
     period = 10
@@ -13,8 +13,8 @@ def test_exec_rotating_inc(self):
             else:
                 nodeX = random.randint(0, (lenNodes - 1))
             number = (trial + 10)
-            execExpr = h2e.fill_in_expr_template(exprTemplate, str((number % period)), str(((number - goback) % period)))
             resultKey = ('Result' + str((number % period)))
+            execExpr = h2e.fill_in_expr_template(exprTemplate, n=(number % period), m=((number - goback) % period))
             (execResultInspect, min_value) = h2e.exec_expr(h2o.nodes[nodeX], execExpr, resultKey=resultKey, timeoutSecs=4)
             print 'min_value:', min_value, 'execExpr:', execExpr, 'number:', number
             h2o.verboseprint('min: ', min_value, 'trial:', trial)
