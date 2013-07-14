@@ -1,8 +1,43 @@
 {
-  emitLogHeader(context);
+  _context=context;
+  Configuration conf=context.getConfiguration();
+  _mapredTaskId=conf.get("mapred.task.id");
+  Text textId=new Text(_mapredTaskId);
+  emitLogHeader();
   Counter counter=context.getCounter(H2O_MAPPER_COUNTER.HADOOP_COUNTER_HEARTBEAT);
   Thread counterThread=new CounterThread(counter);
   counterThread.start();
-  int millis=20 * 1000;
-  Thread.sleep(millis);
+  String ice_root=conf.get("mapred.local.dir");
+  _context.write(textId,new Text("mapred.local.dir is " + ice_root));
+  String[] args={"-flatfile","flatfile.txt","-port","54321"};
+  _context.write(textId,new Text("before water.Boot.main()"));
+  try {
+    water.Boot.main(UserMain.class,args);
+  }
+ catch (  Exception e) {
+    _context.write(textId,new Text("exception in water.Boot.main()"));
+    String s=e.getMessage();
+    if (s == null) {
+      s="(null exception message)";
+    }
+    _context.write(textId,new Text(s));
+    s=e.toString();
+    if (s == null) {
+      s="(null exception toString)";
+    }
+    _context.write(textId,new Text(s));
+    StackTraceElement[] els=e.getStackTrace();
+    for (int i=0; i < els.length; i++) {
+      StackTraceElement el=els[i];
+      s=el.toString();
+      _context.write(textId,new Text("    " + s));
+    }
+  }
+ finally {
+    _context.write(textId,new Text("after water.Boot.main()"));
+    while (true) {
+      int FIVE_SECONDS_MILLIS=5 * 1000;
+      Thread.sleep(FIVE_SECONDS_MILLIS);
+    }
+  }
 }
