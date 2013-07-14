@@ -1,8 +1,7 @@
 {
   Enum[] enums=enums();
   final Chunk in=bvs[bvs.length - 1];
-  final NewChunk[] nvs=new NewChunk[bvs.length - 1];
-  for (int i=0; i < nvs.length; i++)   nvs[i]=(NewChunk)bvs[i];
+  final NewChunk[] nvs=Arrays.copyOf(bvs,bvs.length - 1,NewChunk[].class);
   ChunkParser parser=new ChunkParser(in,nvs,_setup,enums);
   parser.parse(0);
 }

@@ -5,11 +5,10 @@
   UKV.remove(fkey);
   try {
     assertEquals(380,fr._vecs[0].length());
-    int ncols=fr._names.length;
     UKV.remove(fr.remove("ID")._key);
     Vec capsule=fr.remove("CAPSULE");
     fr.add("CAPSULE",capsule);
-    GBM gbm=GBM.start(GBM.makeKey(),fr,7);
+    GBM gbm=GBM.start(GBM.makeKey(),fr,11);
     gbm.get();
     UKV.remove(gbm._dest);
   }

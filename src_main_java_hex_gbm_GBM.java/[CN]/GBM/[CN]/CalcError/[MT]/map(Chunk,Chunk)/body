@@ -1,0 +1,8 @@
+{
+  for (int i=0; i < ys._len; i++) {
+    if (ys.isNA0(i))     System.out.println("Row " + (i + ys._start) + " = "+ _fr.toString(i + ys._start));
+    double y=ys.at0(i);
+    double pred=preds.at0(i);
+    _sum+=(y - pred) * (y - pred);
+  }
+}
