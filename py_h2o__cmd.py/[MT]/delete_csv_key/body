@@ -1,6 +1,5 @@
 def delete_csv_key(csvFilename, importFullList):
-    for k in importFullList:
-        deleteKey = k['key']
-        if ((csvFilename in deleteKey) and (not ('.hex' in deleteKey))):
-            print '\nRemoving', deleteKey
-            removeKeyResult = h2o.nodes[0].remove_key(key=deleteKey)
+    for k in importFullList['keys']:
+        if (csvFilename in k):
+            print '\nRemoving', k
+            removeKeyResult = h2o.nodes[0].remove_key(key=k)

@@ -1,6 +1,6 @@
 def test_from_import(self):
     importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath)
+    importFullList = h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 500
     csvFilenameAll = ['covtype.data', 'covtype20x.data']
     csvFilenameList = csvFilenameAll
@@ -15,5 +15,6 @@ def test_from_import(self):
         RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
         h2b.browseJsonHistoryAsUrlLastMatch('RFView')
         time.sleep(10)
+        h2o_cmd.delete_csv_key(csvFilename, importFullList)
         sys.stdout.write('.')
         sys.stdout.flush()
