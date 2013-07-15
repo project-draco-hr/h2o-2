@@ -58,6 +58,11 @@
     if (xmin < 0)     throw H2O.unimpl();
     return new C0LChunk((long)_min,_len);
   }
+  if (lemax - lemin == 1 && lemin == 0) {
+    int bpv=_naCnt > 0 ? 2 : 1;
+    byte[] cbuf=bufB(CBSChunk.OFF,bpv);
+    return new CBSChunk(cbuf,cbuf[0],cbuf[1]);
+  }
   if (overflow || ((xmin != 0) && floatOverflow || -35 > xmin || xmin > 35))   return new C8DChunk(bufF(3));
   if (xmin != 0) {
     if (lemax - lemin < 255)     return new C1SChunk(bufX(lemin,xmin,C1SChunk.OFF,0),(int)lemin,DParseTask.pow10(xmin));

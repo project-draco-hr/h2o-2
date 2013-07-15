@@ -2,8 +2,8 @@
   Key key=Vec.newKey();
   AppendableVec av=new AppendableVec(key);
   NewChunk nv=new NewChunk(av,0);
-  nv._ls=new long[]{0,0,0};
-  nv._xs=new int[]{0,0,0};
+  nv._ls=new long[]{0,0,0,0};
+  nv._xs=new int[]{0,0,0,0};
   nv._len=nv._ls.length;
   nv.close(0,null);
   Vec vec=av.close(new Futures());
@@ -20,11 +20,16 @@
   assertEquals(1,vec.at8(1));
   c1.close(0,null);
   Chunk c2=vec.elem2BV(0);
-  assertTrue("Found chunk class " + c2.getClass() + " but expected C1Chunk",c2 instanceof C1Chunk);
+  assertTrue("Found chunk class " + c2.getClass() + " but expected CBSChunk",c2 instanceof CBSChunk);
   c2.set8(2,2);
   assertEquals(2,vec.at8(2));
   c2.close(0,null);
   Chunk c3=vec.elem2BV(0);
   assertTrue("Found chunk class " + c3.getClass() + " but expected C1Chunk",c3 instanceof C1Chunk);
+  c3.set8(3,3);
+  assertEquals(3,vec.at8(3));
+  c3.close(0,null);
+  Chunk c4=vec.elem2BV(0);
+  assertTrue("Found chunk class " + c4.getClass() + " but expected C1Chunk",c4 instanceof C1Chunk);
   UKV.remove(av._key);
 }

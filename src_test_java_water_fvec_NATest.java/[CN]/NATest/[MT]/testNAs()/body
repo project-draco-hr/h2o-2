@@ -7,6 +7,7 @@
   Class[] expectedTypes=new Class[]{C1Chunk.class,C1SChunk.class,C2Chunk.class,C2SChunk.class,C4Chunk.class,C4FChunk.class,C8Chunk.class,C8DChunk.class};
   assertTrue(fr._vecs.length == expectedTypes.length);
   for (int i=0; i < expectedTypes.length; ++i)   assertTrue(expectedTypes[i].isInstance(fr._vecs[i].elem2BV(0)));
+  assertEquals(8,nlines);
   for (int i=0; i < nlines - 1; ++i) {
     for (    Vec v : fr._vecs) {
       assertTrue("error at line " + i + ", vec "+ v.elem2BV(0).getClass().getSimpleName(),!v.isNA(v.at(i)) && !v.isNA(v.at8(i)));
