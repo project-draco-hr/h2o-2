@@ -56,8 +56,8 @@ def test_benchmark_import(self):
             h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=(tryHeap / 2), base_port=base_port, enable_benchmark_log=True)
         for trial in range(trialMax):
             importFolderResult = h2i.setupImportFolder(None, importFolderPath)
-            importFullList = importFolderResult['succeeded']
-            importFailList = importFolderResult['failed']
+            importFullList = importFolderResult['files']
+            importFailList = importFolderResult['fails']
             print '\n Problem if this is not empty: importFailList:', h2o.dump_json(importFailList)
             h2o.cloudPerfH2O.change_logfile(csvFilename)
             h2o.cloudPerfH2O.message('')
