@@ -84,7 +84,7 @@ def test_benchmark_import(self):
                 print l
                 h2o.cloudPerfH2O.message(l)
             h2o_cmd.check_key_distribution()
-            h2o_cmd.delete_csv_key(csvFilename, importFullList)
+            h2o_cmd.delete_csv_key(csvFilename, importFolderResult)
             h2o.tear_down_cloud()
             if (not localhost):
                 print 'Waiting 30 secs before building cloud again (sticky ports?)'
