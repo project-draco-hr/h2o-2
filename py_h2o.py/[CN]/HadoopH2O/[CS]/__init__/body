@@ -1,0 +1,15 @@
+def __init__(self, host, *args, **kwargs):
+    super(RemoteH2O, self).__init__(*args, **kwargs)
+    if self.use_home_for_ice:
+        self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
+    else:
+        self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
+    self.channel = host.open_channel()
+    cmd = ' '.join(self.get_args())
+    shCmdString = 'hadoop jar H2ODriver.jar water.hadoop.H2ODriver -jt akira:8021 -files flatfile.txt -libjars h2o.jar -mapperXmx 1g -nodes 4 -output output77'
+    print 'Starting h2o on hadoop', base_port
+    p1 = Popen(shCmdString.split(), stdout=PIPE)
+    output = p1.communicate()[0]
+    print output
+    comment = ('hadoop on %s' % self.addr)
+    log(cmd, comment=comment)
