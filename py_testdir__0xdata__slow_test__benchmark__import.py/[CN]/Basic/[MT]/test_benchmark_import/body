@@ -53,7 +53,7 @@ def test_benchmark_import(self):
         if localhost:
             h2o.build_cloud(2, java_heap_GB=tryHeap, base_port=base_port, enable_benchmark_log=True)
         else:
-            h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=(tryHeap / 2), base_port=base_port, enable_benchmark_log=True)
+            h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=tryHeap, base_port=base_port, enable_benchmark_log=True)
         for trial in range(trialMax):
             importFolderResult = h2i.setupImportFolder(None, importFolderPath)
             importFullList = importFolderResult['files']
