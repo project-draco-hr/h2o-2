@@ -1,4 +1,10 @@
 {
+  for (  String arg : args) {
+    if (arg.equals("-inherit_log4j")) {
+      Log.POST(110,"Saw inherit_log4j");
+      H2O.INHERIT_LOG4J=true;
+    }
+  }
   if (fromJar()) {
     _systemLoader=(URLClassLoader)getSystemClassLoader();
     _addUrl=URLClassLoader.class.getDeclaredMethod("addURL",URL.class);

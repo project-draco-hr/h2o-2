@@ -8,12 +8,16 @@
     }
   }
   Class mainClazz=_init.loadClass(mainClass,true);
+  Log.POST(20,"before (in run) mainClass invoke " + mainClazz.getName());
   mainClazz.getMethod("main",String[].class).invoke(null,(Object)args);
+  Log.POST(20,"after (in run) mainClass invoke " + mainClazz.getName());
   int index=Arrays.asList(args).indexOf("-runClass");
   if (index >= 0 && args.length > index + 1) {
     String className=args[index + 1];
     args=Arrays.copyOfRange(args,index + 2,args.length);
     Class clazz=_init.loadClass(className,true);
+    Log.POST(21,"before (in run) runClass invoke " + clazz.getName() + " main");
     clazz.getMethod("main",String[].class).invoke(null,(Object)args);
+    Log.POST(21,"after (in run) runClass invoke " + clazz.getName() + " main");
   }
 }
