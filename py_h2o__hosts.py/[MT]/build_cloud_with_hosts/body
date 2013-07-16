@@ -34,7 +34,7 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     paramsToUse.pop('password')
     paramsToUse.pop('key_filename')
     h2o.write_flatfile(node_count=paramsToUse['h2o_per_host'], base_port=paramsToUse['base_port'], hosts=hosts, rand_shuffle=paramsToUse['rand_shuffle'])
-    if (hosts is not None):
+    if ((not paramsToUse['hadoop']) and (hosts is not None)):
         h2o.upload_jar_to_remote_hosts(hosts, slow_connection=paramsToUse['slow_connection'])
         timeoutSecs = max(60, (8 * (len(hosts) * paramsToUse['h2o_per_host'])))
     else:
