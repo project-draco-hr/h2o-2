@@ -4,6 +4,7 @@
   StreamParser parser=new StreamParser(is,nvs,localSetup,enums());
   int cidx=0;
   while (is.available() > 0)   parser.parse(cidx++);
+  parser.parse(cidx++);
   for (int i=0; i < _cols.length; i++) {
     nvs[i].close(0,_fs);
     _cols[i]=((AppendableVec)_cols[i]).close(_fs);

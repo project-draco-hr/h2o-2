@@ -1,0 +1,11 @@
+def is_alive(self):
+    verboseprint('Doing is_alive check for HadoopH2O')
+    shCmdString = 'hadoop dfsadmin -report'
+    p1 = Popen(shCmdString.split(), stdout=PIPE)
+    output = p1.communicate()[0]
+    print output
+    try:
+        self.get_cloud()
+        return True
+    except:
+        return False
