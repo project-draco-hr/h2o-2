@@ -1,32 +1,3 @@
 {
-synchronized (postLock) {
-    File f=new File("/tmp/h2o.POST");
-    if (!f.exists()) {
-      boolean success=f.mkdirs();
-      if (!success) {
-        try {
-          System.err.print("Exiting from POST now!");
-        }
- catch (        Exception _) {
-        }
-        System.exit(0);
-      }
-    }
-    f=new File("/tmp/h2o.POST/" + n);
-    try {
-      f.createNewFile();
-      FileWriter fstream=new FileWriter(f.getAbsolutePath(),true);
-      BufferedWriter out=new BufferedWriter(fstream);
-      out.write(s + "\n");
-      out.close();
-    }
- catch (    Exception e) {
-      try {
-        System.err.print("Exiting from POST now!");
-      }
- catch (      Exception _) {
-      }
-      System.exit(0);
-    }
-  }
+  return;
 }
