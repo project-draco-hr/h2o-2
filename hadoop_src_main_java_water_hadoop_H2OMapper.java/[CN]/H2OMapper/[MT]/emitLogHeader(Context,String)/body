@@ -1,35 +1,35 @@
 {
-  Configuration conf=_context.getConfiguration();
-  Text textId=new Text(_mapredTaskId);
+  Configuration conf=context.getConfiguration();
+  Text textId=new Text(mapredTaskId);
   for (  Map.Entry<String,String> entry : conf) {
     StringBuilder sb=new StringBuilder();
     sb.append(entry.getKey());
     sb.append("=");
     sb.append(entry.getValue());
-    _context.write(textId,new Text(sb.toString()));
+    context.write(textId,new Text(sb.toString()));
   }
-  _context.write(textId,new Text("----- Properties -----"));
+  context.write(textId,new Text("----- Properties -----"));
   String[] plist={"mapred.local.dir","mapred.child.java.opts"};
   for (  String k : plist) {
     String v=conf.get(k);
     if (v == null) {
       v="(null)";
     }
-    _context.write(textId,new Text(k + " " + v));
+    context.write(textId,new Text(k + " " + v));
   }
   String userDir=System.getProperty("user.dir");
-  _context.write(textId,new Text("user.dir " + userDir));
+  context.write(textId,new Text("user.dir " + userDir));
   try {
     java.net.InetAddress localMachine=java.net.InetAddress.getLocalHost();
-    _context.write(textId,new Text("hostname " + localMachine.getHostName()));
+    context.write(textId,new Text("hostname " + localMachine.getHostName()));
   }
  catch (  java.net.UnknownHostException uhe) {
   }
-  _context.write(textId,new Text("----- Flat File -----"));
+  context.write(textId,new Text("----- Flat File -----"));
   BufferedReader reader=new BufferedReader(new FileReader("flatfile.txt"));
   String line;
   while ((line=reader.readLine()) != null) {
-    _context.write(textId,new Text(line));
+    context.write(textId,new Text(line));
   }
-  _context.write(textId,new Text("---------------------"));
+  context.write(textId,new Text("---------------------"));
 }

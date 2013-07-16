@@ -53,4 +53,9 @@
   if (!mapperXmx.matches("[1-9][0-9]*[mgMG]")) {
     error("-mapperXmx invalid (try something like -mapperXmx 4g)");
   }
+  if (jobtrackerName == null) {
+    Random rng=new Random();
+    int num=rng.nextInt(99999);
+    jobtrackerName="H2O_" + num;
+  }
 }

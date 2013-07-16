@@ -1,16 +1,13 @@
 {
   Log.POST(30,"Entered UserMain");
-  Log.POST(30,_mapredTaskId == null ? "_mapredTaskId is null" : _mapredTaskId);
-  Log.POST(30,_context == null ? "_context is null" : "_context ok");
   Log.POST(31,"built textId");
   try {
     Log.POST(32,"top of try");
-    Log.POST(33,"after _context.write");
     H2O.main(args);
-    Log.POST(34,"after H2O.main");
+    Log.POST(33,"after H2O.main");
   }
  catch (  Exception e) {
-    Log.POST(38,"exception occurred");
+    Log.POST(37,"exception occurred");
     try {
       e.printStackTrace();
     }
@@ -20,14 +17,8 @@
     }
   }
  finally {
-    Log.POST(39,"top of finally");
-    try {
-    }
- catch (    Exception _) {
-      System.err.println("_context.write excepted in UserMain");
-      _.printStackTrace();
-    }
-    Log.POST(39,"bottom of finally");
+    Log.POST(38,"top of finally");
+    Log.POST(38,"bottom of finally");
   }
   Log.POST(39,"leaving UserMain");
 }
