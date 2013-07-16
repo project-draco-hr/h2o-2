@@ -1,0 +1,24 @@
+{
+  Log.POST(30,"Entered UserMain");
+  Log.POST(31,"built textId");
+  try {
+    Log.POST(32,"top of try");
+    H2O.main(args);
+    Log.POST(33,"after H2O.main");
+  }
+ catch (  Exception e) {
+    Log.POST(37,"exception occurred");
+    try {
+      e.printStackTrace();
+    }
+ catch (    Exception _) {
+      System.err.println("_context.write excepted in UserMain");
+      _.printStackTrace();
+    }
+  }
+ finally {
+    Log.POST(38,"top of finally");
+    Log.POST(38,"bottom of finally");
+  }
+  Log.POST(39,"leaving UserMain");
+}
