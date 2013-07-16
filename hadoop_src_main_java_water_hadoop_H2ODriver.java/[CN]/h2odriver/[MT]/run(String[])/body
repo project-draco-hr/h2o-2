@@ -11,7 +11,7 @@
   Job job=new Job(conf,jobtrackerName);
   job.setJarByClass(getClass());
   job.setInputFormatClass(H2OInputFormat.class);
-  job.setMapperClass(H2OMapper.class);
+  job.setMapperClass(h2omapper.class);
   job.setNumReduceTasks(0);
   job.setOutputKeyClass(Text.class);
   job.setOutputValueClass(Text.class);
@@ -19,6 +19,7 @@
   if (outputPath != null) {
     FileOutputFormat.setOutputPath(job,new Path(outputPath));
   }
+  System.out.println("Job running (this command blocks until the H2O cluster shuts down)...");
   boolean success=job.waitForCompletion(true);
   if (!success) {
     return 1;
