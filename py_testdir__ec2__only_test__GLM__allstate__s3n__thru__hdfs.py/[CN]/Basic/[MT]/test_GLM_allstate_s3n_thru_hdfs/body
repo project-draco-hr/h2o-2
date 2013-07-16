@@ -6,7 +6,7 @@ def test_GLM_allstate_s3n_thru_hdfs(self):
     for trial in range(trialMax):
         trialStart = time.time()
         importHDFSResult = h2o.nodes[0].import_hdfs(URI)
-        s3nFullList = importHDFSResult['succeeded']
+        s3nFullList = importHDFSResult['files']
         self.assertGreater(len(s3nFullList), 8, "Didn't see more than 8 files in s3n?")
         storeView = h2o.nodes[0].store_view()
         for s in storeView['keys']:
