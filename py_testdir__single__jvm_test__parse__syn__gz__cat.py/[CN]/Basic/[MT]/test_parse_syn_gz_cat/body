@@ -1,0 +1,42 @@
+def test_parse_syn_gz_cat(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(10, 4000, 'cD', 600), (10, 5000, 'cE', 600), (10, 10000, 'cF', 600)]
+    FILEREPL = 200
+    DOSUMMARY = True
+    h2b.browseTheCloud()
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+        csvFilenamegz = (csvFilename + '.gz')
+        csvPathnamegz = ((SYNDATASETS_DIR + '/') + csvFilenamegz)
+        h2o_util.file_gzip(csvPathname, csvPathnamegz)
+        csvFilenameReplgz = (((csvFilename + '_') + str(FILEREPL)) + 'x.gz')
+        csvPathnameReplgz = ((SYNDATASETS_DIR + '/') + csvFilenameReplgz)
+        start = time.time()
+        print 'Replicating', csvFilenamegz, 'into', csvFilenameReplgz
+        h2o_util.file_cat(csvPathnamegz, csvPathnamegz, csvPathnameReplgz)
+        totalRows = (2 * rowCount)
+        for i in range((FILEREPL - 2)):
+            h2o_util.file_append(csvPathnamegz, csvPathnameReplgz)
+            totalRows += rowCount
+        print 'Replication took:', (time.time() - start), 'seconds'
+        start = time.time()
+        print 'Parse start:', csvPathnameReplgz
+        parseKey = h2o_cmd.parseFile(None, csvPathnameReplgz, key2=key2, timeoutSecs=timeoutSecs, doSummary=DOSUMMARY)
+        print csvFilenameReplgz, 'parse time:', parseKey['response']['time']
+        if DOSUMMARY:
+            algo = 'Parse and Summary:'
+        else:
+            algo = 'Parse:'
+        print algo, parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        print 'Inspecting..'
+        start = time.time()
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=timeoutSecs)
+        print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        h2o_cmd.infoFromInspect(inspect, csvPathname)
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        self.assertEqual(inspect['num_cols'], colCount, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], colCount)))
+        self.assertEqual(inspect['num_rows'], totalRows, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], rowCount)))
