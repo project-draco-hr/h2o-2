@@ -10,4 +10,5 @@ def test_Cloud(self):
         h2o_hosts.build_cloud_with_hosts(tryNodes, base_port=base_port, retryDelaySecs=2, timeoutSecs=max(30, (10 * tryNodes)), java_heap_GB=1)
         print ('trial #%d: Build cloud of %d in %d secs' % (trial, tryNodes, (time.time() - start)))
         h2o.verify_cloud_size()
+        time.sleep(5)
         h2o.tear_down_cloud()
