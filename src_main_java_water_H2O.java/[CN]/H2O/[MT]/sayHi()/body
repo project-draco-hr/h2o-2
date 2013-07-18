@@ -1,0 +1,22 @@
+{
+  String build_branch="(unknown)";
+  String build_hash="(unknown)";
+  String build_by="(unknown)";
+  String build_on="(unknown)";
+  try {
+    Class klass=Class.forName("water.BuildVersion");
+    java.lang.reflect.Constructor constructor=klass.getConstructor();
+    AbstractBuildVersion abv=(AbstractBuildVersion)constructor.newInstance();
+    build_branch=abv.branchName();
+    build_hash=abv.lastCommitHash();
+    build_by=abv.compiledBy();
+    build_on=abv.compiledOn();
+  }
+ catch (  Exception e) {
+  }
+  Log.info("----- H2O started -----");
+  Log.info("Build git branch: " + build_branch);
+  Log.info("Build git hash:   " + build_hash);
+  Log.info("Built by: '" + build_by + "'");
+  Log.info("Built on: '" + build_on + "'");
+}
