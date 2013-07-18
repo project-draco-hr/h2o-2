@@ -3,12 +3,7 @@
   for (  int f : _features)   if (f != -1) {
     if (row.isValid() && row.hasValidValue(f)) {
       short val=row.getEncodedColumnValue(f);
-      try {
-        _columnDists[f][val][cls]++;
-      }
- catch (      ArrayIndexOutOfBoundsException ab) {
-        throw Log.err(Sys.RANDF,ab);
-      }
+      _columnDists[f][val][cls]++;
     }
   }
 }
