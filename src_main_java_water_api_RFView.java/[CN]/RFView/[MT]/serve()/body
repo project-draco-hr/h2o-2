@@ -8,7 +8,7 @@
   finished=model.size();
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value() && (finished == tasks || _iterativeCM.value()) && finished > 0) {
-    int modelSize=tasks * _refreshTresholdCM.value() / 100;
+    int modelSize=tasks * _refreshThresholdCM.value() / 100;
     modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
     CMJob cmJob=ConfusionTask.make(model,modelSize,_dataKey.value()._key,_classCol.value(),weights,_oobee.value());
     CMFinal confusion=UKV.get(cmJob.dest());
