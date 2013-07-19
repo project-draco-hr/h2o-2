@@ -9,14 +9,15 @@
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   int start_row=0;
   for (  final Key k : keys) {
-    System.err.println("loading: " + k);
     final int S=start_row;
     if (!k.home())     continue;
     final int rows=ary.rpc(ValueArray.getChunkIndex(k));
     dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S));
     start_row+=rows;
   }
+  System.out.println("before invokeAll, jobs=" + dataInhaleJobs.size());
   ForkJoinTask.invokeAll(dataInhaleJobs);
+  System.out.println("after invokeAll");
   if (_drf._params._useNonLocalData) {
     final float OVERHEAD_MAGIC=3 / 8.f;
     long totalmem=Runtime.getRuntime().totalMemory();
