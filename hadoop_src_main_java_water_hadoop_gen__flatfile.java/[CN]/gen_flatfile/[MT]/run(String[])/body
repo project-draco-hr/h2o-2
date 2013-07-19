@@ -1,0 +1,16 @@
+{
+  Configuration conf=getConf();
+  String trackerIpPort=conf.get("mapred.job.tracker");
+  String[] arr=trackerIpPort.split(":");
+  String host=arr[0];
+  int port=Integer.parseInt(arr[1]);
+  InetSocketAddress addr=new InetSocketAddress(host,port);
+  JobClient client=new JobClient(addr,conf);
+  Collection<String> names=client.getClusterStatus(true).getActiveTrackerNames();
+  for (  String name : names) {
+    String n=name.substring("tracker_".length(),name.indexOf(':'));
+    String s=InetAddress.getByName(n).getHostAddress();
+    System.out.println(s);
+  }
+  return 0;
+}
