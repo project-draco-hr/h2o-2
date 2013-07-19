@@ -1,5 +1,4 @@
 {
-  _cholesky=true;
   final int sparseN=_diag.length;
   final int denseN=_xy.length - sparseN;
   if (_diag != null)   for (int i=0; i < sparseN; ++i) {
@@ -15,5 +14,6 @@
   if (!chol.isSPD())   return false;
   arr=chol.getL().getArray();
   for (int i=0; i < arr.length; ++i)   System.arraycopy(arr[i],0,_xx[i],sparseN,i + 1);
+  _cholesky=true;
   return true;
 }
