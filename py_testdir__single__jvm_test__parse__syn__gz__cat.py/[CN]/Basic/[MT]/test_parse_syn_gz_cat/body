@@ -2,8 +2,7 @@ def test_parse_syn_gz_cat(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(10, 4000, 'cD', 600), (10, 5000, 'cE', 600), (10, 10000, 'cF', 600)]
     FILEREPL = 200
-    DOSUMMARY = True
-    h2b.browseTheCloud()
+    DOSUMMARY = False
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
