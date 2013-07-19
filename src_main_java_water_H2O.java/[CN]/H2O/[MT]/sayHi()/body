@@ -1,0 +1,30 @@
+{
+  String build_branch="(unknown)";
+  String build_hash="(unknown)";
+  String build_describe="(unknown)";
+  String build_by="(unknown)";
+  String build_on="(unknown)";
+  try {
+    Class klass=Class.forName("water.BuildVersion");
+    java.lang.reflect.Constructor constructor=klass.getConstructor();
+    AbstractBuildVersion abv=(AbstractBuildVersion)constructor.newInstance();
+    build_branch=abv.branchName();
+    build_hash=abv.lastCommitHash();
+    build_describe=abv.describe();
+    build_by=abv.compiledBy();
+    build_on=abv.compiledOn();
+  }
+ catch (  Exception e) {
+  }
+  Log.info("----- H2O started -----");
+  Log.info("Build git branch: " + build_branch);
+  Log.info("Build git hash: " + build_hash);
+  Log.info("Build git describe: " + build_describe);
+  Log.info("Built by: '" + build_by + "'");
+  Log.info("Built on: '" + build_on + "'");
+  Runtime runtime=Runtime.getRuntime();
+  double ONE_GB=1024 * 1024 * 1024;
+  Log.info("Java availableProcessors: " + runtime.availableProcessors());
+  Log.info("Java heap totalMemory: " + String.format("%.2f gb",(double)runtime.totalMemory() / ONE_GB));
+  Log.info("Java heap maxMemory: " + String.format("%.2f gb",(double)runtime.maxMemory() / ONE_GB));
+}

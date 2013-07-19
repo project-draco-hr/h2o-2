@@ -9,6 +9,7 @@
     printHelp();
     System.exit(0);
   }
+  sayHi();
   ParseDataset.PLIMIT=OPT_ARGS.pparse_limit;
   Log.POST(310,"");
   String ice=DEFAULT_ICE_ROOT;
@@ -25,6 +26,8 @@
   Log.wrap();
   startLocalNode();
   Log.POST(330,"");
+  String logDir=(Log.getLogDir() != null) ? Log.getLogDir() : "(unknown)";
+  Log.info("Log dir: '" + logDir + "'");
   initializePersistence();
   Log.POST(340,"");
   startNetworkServices();
