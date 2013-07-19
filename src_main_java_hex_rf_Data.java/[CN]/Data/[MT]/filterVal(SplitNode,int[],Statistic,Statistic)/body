@@ -1,0 +1,23 @@
+{
+  int cidx=node._column;
+  DataAdapter.Col cs[]=_dapt._c;
+  short binned[]=cs[cidx].binned;
+  short classes[]=cs[cs.length - 1].binned;
+  int split=node._split;
+  int l=start(), r=end() - 1;
+  while (l <= r) {
+    int permIdx=permutation[l];
+    int cls=classes[permIdx];
+    int val=binned[permIdx];
+    if (val <= split) {
+      ls.addQValid(cls,permIdx,cs);
+      ++l;
+    }
+ else {
+      rs.addQValid(cls,permIdx,cs);
+      permutation[l]=permutation[r];
+      permutation[r--]=permIdx;
+    }
+  }
+  return l;
+}
