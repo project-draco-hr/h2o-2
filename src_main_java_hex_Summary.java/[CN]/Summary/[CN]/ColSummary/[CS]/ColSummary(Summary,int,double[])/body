@@ -5,7 +5,8 @@
   _enum=c.isEnum();
   final long n=Math.max(c._n,1);
   if (_enum) {
-    _percentiles=null;
+    _percentiles=Objects.firstNonNull(percentiles,DEFAULT_PERCENTILES);
+    ;
     _binsz=_binszInv=1;
     _bins=new long[(int)n];
     _start=0;
