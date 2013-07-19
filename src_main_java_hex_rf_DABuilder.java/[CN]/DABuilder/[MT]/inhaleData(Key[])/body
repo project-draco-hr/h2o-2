@@ -15,7 +15,9 @@
     dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S));
     start_row+=rows;
   }
+  System.out.println("before invokeAll, jobs=" + dataInhaleJobs.size());
   ForkJoinTask.invokeAll(dataInhaleJobs);
+  System.out.println("after invokeAll");
   if (_drf._params._useNonLocalData) {
     final float OVERHEAD_MAGIC=3 / 8.f;
     long totalmem=Runtime.getRuntime().totalMemory();
