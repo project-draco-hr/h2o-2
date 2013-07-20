@@ -1,3 +1,14 @@
 {
-  throw H2O.unimpl();
+  double dx=Math.log10(_scale);
+  int x=(int)dx;
+  if (DParseTask.pow10i(x) != _scale)   throw H2O.unimpl();
+  for (int i=0; i < _mem.length - OFF; i++) {
+    long res=0xFF & _mem[i + OFF];
+    if (res == _NA)     nc.setInvalid(i);
+ else {
+      nc._ls[i]=res + _bias;
+      nc._xs[i]=x;
+    }
+  }
+  return nc;
 }
