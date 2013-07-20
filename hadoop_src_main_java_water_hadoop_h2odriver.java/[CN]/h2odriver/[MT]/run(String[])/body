@@ -1,7 +1,9 @@
 {
   parseArgs(args);
   Configuration conf=getConf();
-  conf.set("mapred.child.java.opts","-Xms" + mapperXmx + " -Xmx"+ mapperXmx);
+  String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx;
+  conf.set("mapred.child.java.opts",mapChildJavaOpts);
+  conf.set("mapred.map.child.java.opts",mapChildJavaOpts);
   conf.set("mapred.used.genericoptionsparser","true");
   conf.set("mapreduce.map.speculative","false");
   conf.set("mapred.map.tasks.speculative.execution","false");
