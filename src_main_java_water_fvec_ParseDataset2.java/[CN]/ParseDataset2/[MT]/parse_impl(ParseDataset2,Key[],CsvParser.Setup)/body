@@ -21,7 +21,7 @@
     Vec[] evecs=new Vec[ecols.length];
     for (int i=0; i < evecs.length; ++i)     evecs[i]=uzpt._cols[ecols[i]];
     EnumUpdateTask t=new EnumUpdateTask(ds,uzpt._eKey,ecols);
-    t.invoke(evecs);
+    t.doAll(evecs);
   }
   UKV.put(job.dest(),new Frame(job.dest(),names,uzpt._cols));
 }
