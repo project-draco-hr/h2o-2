@@ -2,7 +2,7 @@
   double dx=Math.log10(_scale);
   int x=(int)dx;
   if (DParseTask.pow10i(x) != _scale)   throw H2O.unimpl();
-  for (int i=0; i < _mem.length - OFF; i++) {
+  for (int i=0; i < _len; i++) {
     long res=0xFF & _mem[i + OFF];
     if (res == _NA)     nc.setInvalid(i);
  else {

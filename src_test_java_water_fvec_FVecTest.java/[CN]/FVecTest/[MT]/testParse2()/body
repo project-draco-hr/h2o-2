@@ -7,17 +7,17 @@
   try {
     assertEquals(fr.numCols(),1050);
     assertEquals(fr._vecs[0].length(),2659);
-    double[] sums=new Sum().invoke(fr)._sums;
+    double[] sums=new Sum().doAll(fr)._sums;
     assertEquals(3949,sums[0],EPSILON);
     assertEquals(3986,sums[1],EPSILON);
     assertEquals(3993,sums[2],EPSILON);
     Vec v0=fr._vecs[0];
     Vec v1=fr._vecs[1];
     Vec vz=Vec.makeZero(v0);
-    new PairSum().invoke(vz,v0,v1);
+    new PairSum().doAll(vz,v0,v1);
     fr.remove();
     fr.add("tmp",vz);
-    sums=new Sum().invoke(fr)._sums;
+    sums=new Sum().doAll(fr)._sums;
     assertEquals(3949 + 3986,sums[0],EPSILON);
   }
   finally {

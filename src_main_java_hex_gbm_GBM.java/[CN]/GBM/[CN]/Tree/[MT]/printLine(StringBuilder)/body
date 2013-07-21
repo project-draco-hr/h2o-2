@@ -1,7 +1,0 @@
-{
-  if (_parent == null)   return sb.append("root");
-  Tree ts[]=_parent._ts;
-  Histogram h=_parent._hs[_parent._col];
-  for (int i=0; i < ts.length; i++)   if (ts[i] == this)   return _parent.printLine(sb.append("[").append(h._mins[i]).append(" <= ").append(h._name).append(" <= ").append(h._maxs[i]).append("] from "));
-  throw H2O.fail();
-}
