@@ -1,10 +1,7 @@
 @classmethod
 def setUpClass(cls):
-    global SEED
-    SEED = random.randint(0, sys.maxint)
+    global SEED, localhost
     SEED = 6019110937119320453
-    random.seed(SEED)
-    print '\nUsing random seed:', SEED
     localhost = h2o.decide_if_localhost()
     if localhost:
         h2o.build_cloud(1, java_heap_GB=4)

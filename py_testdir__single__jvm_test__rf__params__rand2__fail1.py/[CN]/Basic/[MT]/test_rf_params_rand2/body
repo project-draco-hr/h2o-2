@@ -1,7 +1,4 @@
 def test_rf_params_rand2(self):
-    SEED = random.randint(0, sys.maxint)
-    random.seed(SEED)
-    print '\nUsing random seed:', SEED
     csvPathname = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
     kwargs = {'response_variable': 54, 'features': 7, 'sampling_strategy': 'STRATIFIED_LOCAL', 'out_of_bag_error_estimate': 1, 'strata_samples': '1=10,2=99,3=99,4=99,5=99,6=99,7=99', 'bin_limit': None, 'seed': '11111', 'model_key': '012345', 'ntree': 13, 'parallel': 1, }
     for trial in range(2):
