@@ -1,0 +1,30 @@
+{
+  DataAdapter.Col cs[]=_dapt._c;
+  short classs[]=cs[_dapt.classColIdx()]._binned;
+  int cds[][][]=s._columnDists;
+  int fs[]=s._features;
+  for (int j=0; j < fs.length; j++) {
+    int f=fs[j];
+    if (f == -1)     break;
+    int cdsf[][]=cds[f];
+    short[] bins=cs[f]._binned;
+    if (bins != null) {
+      for (int i=lo; i < hi; i++) {
+        int permIdx=permutation[i];
+        int val=bins[permIdx];
+        if (val == DataAdapter.BAD)         continue;
+        int cls=classs[permIdx];
+        cdsf[val][cls]++;
+      }
+    }
+ else {
+      byte[] raw=cs[f]._rawB;
+      for (int i=lo; i < hi; i++) {
+        int permIdx=permutation[i];
+        int val=(0xFF & raw[permIdx]);
+        int cls=classs[permIdx];
+        cdsf[val][cls]++;
+      }
+    }
+  }
+}
