@@ -11,8 +11,8 @@
   CallbackManager cm=new CallbackManager();
   cm.setServerSocket(driverCallbackSocket);
   cm.start();
-  System.out.println("    [Using mapper->driver callback IP address and port: " + driverCallbackIp + ":"+ actualDriverCallbackPort+ "]");
-  System.out.println("    [You can override these with -driverif and -driverport.]");
+  System.out.println("Using mapper->driver callback IP address and port: " + driverCallbackIp + ":"+ actualDriverCallbackPort);
+  System.out.println("(You can override these with -driverif and -driverport.)");
   Configuration conf=getConf();
   String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx;
   conf.set("mapred.child.java.opts",mapChildJavaOpts);
@@ -44,7 +44,7 @@
   System.out.printf("Waiting for H2O cluster to come up...\n",numNodes);
   waitForClusterToComeUp();
   if (job.isComplete()) {
-    System.out.println("H2O cluster failed to come up.");
+    System.out.println("ERROR: H2O cluster failed to come up.");
     ctrlc.setComplete();
     return 2;
   }
