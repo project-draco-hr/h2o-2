@@ -32,6 +32,7 @@
     converged=(betaDiff < params._betaEps);
     float progress=Math.max((float)iter / params._maxIter,Math.min((float)(params._betaEps / betaDiff),1.0f));
     currentModel=new GLMModel(Status.ComputingModel,progress,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,warnings);
+    currentModel._lsmSolveTime=lsmSolveTime;
     currentModel.store();
   }
  while (++iter < params._maxIter && !converged);

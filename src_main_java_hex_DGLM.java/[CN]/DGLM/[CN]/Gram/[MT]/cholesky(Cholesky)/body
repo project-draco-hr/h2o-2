@@ -9,7 +9,7 @@
   final int denseN=_xy.length - sparseN;
   if (_diag != null)   for (int i=0; i < sparseN; ++i) {
     double d=1.0 / (chol._diag[i]=Math.sqrt(_diag[i]));
-    for (int j=0; j < denseN; ++j)     chol._xx[j][i]*=d;
+    for (int j=0; j < denseN; ++j)     chol._xx[j][i]=d * _xx[j][i];
   }
   Futures fs=new Futures();
   for (int i=0; i < denseN; ++i) {
@@ -19,7 +19,7 @@
         for (int j=0; j <= fi; ++j) {
           double s=0;
           for (int k=0; k < sparseN; ++k)           s+=fchol._xx[fi][k] * fchol._xx[j][k];
-          fchol._xx[fi][j + sparseN]=fchol._xx[fi][j + sparseN] - s;
+          fchol._xx[fi][j + sparseN]=_xx[fi][j + sparseN] - s;
         }
       }
     }
