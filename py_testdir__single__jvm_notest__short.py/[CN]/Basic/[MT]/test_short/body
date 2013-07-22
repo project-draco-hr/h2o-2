@@ -1,12 +1,21 @@
 def test_short(self):
     csvFilename = 'short'
-    key2 = (csvFilename + '.hex')
-    csvPathname = ('/home/kevin/' + csvFilename)
-    parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30)
+    importFolderPath = '/home/hduser/data'
+    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    start = time.time()
+    parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
+    print 'Parse of', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
     print csvFilename, 'parse time:', parseKey['response']['time']
     print "Parse result['destination_key']:", parseKey['destination_key']
+    start = time.time()
+    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=500)
+    print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+    h2o_cmd.infoFromInspect(inspect, csvPathname)
+    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
     print ('\n' + csvFilename)
     missingValuesDict = h2o_cmd.check_enums_from_inspect(parseKey)
     if missingValuesDict:
+        print len(missingValuesDict), 'missing values'
         m = [((str(k) + ':') + str(v)) for (k, v) in missingValuesDict.iteritems()]
         raise Exception(('Looks like columns got flipped to NAs: ' + ', '.join(m)))
