@@ -75,8 +75,9 @@
     return new C1SChunk(bufX(lemin,0,C1SChunk.OFF,0),(int)lemin,1);
   }
   if (lemax - lemin < 65535) {
-    if (-32767 <= lemin && lemax <= 32767)     return new C2Chunk(bufX(0,0,C2Chunk.OFF,1));
-    return new C2SChunk(bufX(lemin,0,C2SChunk.OFF,1),(int)lemin,1);
+    if (Short.MIN_VALUE < lemin && lemax <= Short.MAX_VALUE)     return new C2Chunk(bufX(0,0,C2Chunk.OFF,1));
+    int bias=(int)(lemin - (Short.MIN_VALUE + 1));
+    return new C2SChunk(bufX(bias,0,C2SChunk.OFF,1),bias,1);
   }
   if (Integer.MIN_VALUE < lemin && lemax <= Integer.MAX_VALUE)   return new C4Chunk(bufX(0,0,0,2));
   return new C8Chunk(bufX(0,0,0,3));
