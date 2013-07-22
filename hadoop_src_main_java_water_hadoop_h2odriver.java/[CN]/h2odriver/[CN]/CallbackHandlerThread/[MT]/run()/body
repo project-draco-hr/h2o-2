@@ -7,10 +7,20 @@
       return;
     }
     if (type == MapperToDriverMessage.TYPE_EMBEDDED_WEB_SERVER_IP_PORT) {
-      System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " started");
     }
  else     if (type == MapperToDriverMessage.TYPE_CLOUD_SIZE) {
-      System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " reports cloud size "+ msg.getCloudSize());
+      System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " reports H2O cluster size "+ msg.getCloudSize());
+      if (msg.getCloudSize() == numNodes) {
+synchronized (h2odriver.class) {
+          if (!clusterIsUp) {
+            if (clusterReadyFileName != null) {
+              createClusterReadyFile(msg.getEmbeddedWebServerIp(),msg.getEmbeddedWebServerPort());
+              System.out.println("Cluster notification file (" + clusterReadyFileName + ") created.");
+            }
+            clusterIsUp=true;
+          }
+        }
+      }
     }
  else     if (type == MapperToDriverMessage.TYPE_EXIT) {
       System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " exited with status "+ msg.getExitStatus());

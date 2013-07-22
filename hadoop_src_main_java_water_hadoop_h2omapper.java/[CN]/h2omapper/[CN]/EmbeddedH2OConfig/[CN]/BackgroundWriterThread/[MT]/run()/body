@@ -3,6 +3,12 @@
     Socket s=new Socket(_m.getDriverCallbackIp(),_m.getDriverCallbackPort());
     _m.write(s);
   }
- catch (  Exception e) {
+ catch (  java.net.ConnectException e) {
+    System.out.println("EmbeddedH2OConfig: BackgroundWriterThread could not connect to driver");
+    System.out.println("(This is normal when the driver disowns the hadoop job and exits.)");
+  }
+catch (  Exception e) {
+    System.out.println("EmbeddedH2OConfig: BackgroundWriterThread caught an Exception");
+    e.printStackTrace();
   }
 }

@@ -1,6 +1,5 @@
 {
   try {
-    Socket s=new Socket(_driverCallbackIp,_driverCallbackPort);
     MapperToDriverMessage msg=new MapperToDriverMessage();
     msg.setDriverCallbackIpPort(_driverCallbackIp,_driverCallbackPort);
     msg.setMessageExit(_embeddedWebServerIp,_embeddedWebServerPort,status);
@@ -12,8 +11,6 @@
   }
  catch (  Exception e) {
     System.out.println("EmbeddedH2OConfig: exit caught an exception");
-    System.out.println(e.toString());
-    System.out.println((e.getStackTrace() != null) ? e.getStackTrace() : "(null)");
     e.printStackTrace();
   }
   System.exit(status);

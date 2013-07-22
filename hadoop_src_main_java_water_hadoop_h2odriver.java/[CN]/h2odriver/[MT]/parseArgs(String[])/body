@@ -50,6 +50,16 @@
       }
       driverCallbackPort=Integer.parseInt(args[i]);
     }
+ else     if (s.equals("-disown")) {
+      disown=true;
+    }
+ else     if (s.equals("-notify")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      clusterReadyFileName=args[i];
+    }
  else {
       error("Unrecognized option " + s);
     }

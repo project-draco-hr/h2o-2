@@ -2,7 +2,6 @@
   _embeddedWebServerIp=ip.getHostAddress();
   _embeddedWebServerPort=port;
   try {
-    Socket s=new Socket(_driverCallbackIp,_driverCallbackPort);
     MapperToDriverMessage msg=new MapperToDriverMessage();
     msg.setDriverCallbackIpPort(_driverCallbackIp,_driverCallbackPort);
     msg.setMessageCloudSize(ip.getHostAddress(),port,size);
@@ -13,8 +12,6 @@
   }
  catch (  Exception e) {
     System.out.println("EmbeddedH2OConfig: notifyAboutCloudSize caught an Exception");
-    System.out.println(e.toString());
-    System.out.println((e.getStackTrace() != null) ? e.getStackTrace() : "(null)");
     e.printStackTrace();
   }
 }
