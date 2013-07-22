@@ -1,0 +1,18 @@
+{
+  String ip=null;
+  int port=-1;
+  for (int i=0; i < args.length; i++) {
+    if (args[i].equals("-driverip")) {
+      i++;
+      ip=args[i];
+    }
+ else     if (args[i].equals("-driverport")) {
+      i++;
+      port=Integer.parseInt(args[i]);
+    }
+  }
+  _embeddedH2OConfig=new EmbeddedH2OConfig();
+  _embeddedH2OConfig.setDriverCallbackIp(ip);
+  _embeddedH2OConfig.setDriverCallbackPort(port);
+  H2O.setEmbeddedH2OConfig(_embeddedH2OConfig);
+}

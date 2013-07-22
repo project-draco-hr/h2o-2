@@ -25,6 +25,7 @@
   }
   SELF=H2ONode.self(SELF_ADDRESS);
   Log.info("Internal communication uses port: ",UDP_PORT,"\nListening for HTTP and REST traffic on  http:/",SELF_ADDRESS,":" + _apiSocket.getLocalPort() + "/");
+  notifyAboutEmbeddedWebServerIpPort(SELF_ADDRESS,API_PORT);
   NAME=OPT_ARGS.name == null ? System.getProperty("user.name") : OPT_ARGS.name;
   STATIC_H2OS=parseFlatFile(OPT_ARGS.flatfile);
   int hash=NAME.hashCode() & 0x7fffffff;

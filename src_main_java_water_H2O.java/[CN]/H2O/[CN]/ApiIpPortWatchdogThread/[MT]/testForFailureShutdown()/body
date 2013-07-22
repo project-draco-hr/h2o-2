@@ -1,7 +1,7 @@
 {
   if (consecutiveFailures >= maxConsecutiveFailures) {
     Log.err(threadName + ": Too many failures (>= " + maxConsecutiveFailures+ "), H2O node shutting down");
-    System.exit(1);
+    H2O.exit(1);
   }
   if (consecutiveFailures > 0) {
     final long now=System.currentTimeMillis();
@@ -9,7 +9,7 @@
     final long thresholdMillis=(maxFailureSeconds * millisPerSecond);
     if (deltaMillis > thresholdMillis) {
       Log.err(threadName + ": Failure time threshold exceeded (>= " + thresholdMillis+ " ms), H2O node shutting down");
-      System.exit(1);
+      H2O.exit(1);
     }
   }
 }

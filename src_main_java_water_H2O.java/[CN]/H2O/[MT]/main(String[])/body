@@ -7,7 +7,11 @@
   ARGS=arguments.toStringArray();
   if ((OPT_ARGS.h != null) || (OPT_ARGS.help != null)) {
     printHelp();
-    System.exit(0);
+    H2O.exit(0);
+  }
+  if (OPT_ARGS.version != null) {
+    sayHi();
+    H2O.exit(0);
   }
   sayHi();
   ParseDataset.PLIMIT=OPT_ARGS.pparse_limit;
