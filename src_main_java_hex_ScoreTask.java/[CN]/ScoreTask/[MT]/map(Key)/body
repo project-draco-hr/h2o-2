@@ -15,7 +15,7 @@
     res.put8d(p);
   }
   int idx=(int)ValueArray.getChunkIndex(key);
-  Key outputKey=_outputAry.getChunkKey(idx);
+  Key outputKey=ValueArray.getChunkKey(idx,_outKey);
   _rpc[idx]+=nrows;
   DKV.put(outputKey,new Value(outputKey,res.buf()));
 }

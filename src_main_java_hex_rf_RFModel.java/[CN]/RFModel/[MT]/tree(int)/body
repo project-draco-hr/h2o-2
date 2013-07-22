@@ -1,3 +1,7 @@
 {
-  return DKV.get(_tkeys[tree_id]).memOrLoad();
+  byte[][] ts=_trees;
+  if (ts == null)   _trees=ts=new byte[tree_id + 1][];
+  if (tree_id >= ts.length)   _trees=ts=Arrays.copyOf(ts,tree_id + 1);
+  if (ts[tree_id] == null)   ts[tree_id]=DKV.get(_tkeys[tree_id]).memOrLoad();
+  return ts[tree_id];
 }

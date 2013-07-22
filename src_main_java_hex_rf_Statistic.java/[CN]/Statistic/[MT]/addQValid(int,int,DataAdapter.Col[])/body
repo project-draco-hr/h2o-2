@@ -1,0 +1,16 @@
+{
+  for (int i=0; i < _features.length; i++) {
+    int f=_features[i];
+    if (f == -1)     break;
+    short[] bins=cs[f]._binned;
+    int val;
+    if (bins != null) {
+      val=bins[ridx];
+      if (val == DataAdapter.BAD)       continue;
+    }
+ else {
+      val=(0xFF & cs[f]._rawB[ridx]);
+    }
+    _columnDists[f][val][cls]++;
+  }
+}

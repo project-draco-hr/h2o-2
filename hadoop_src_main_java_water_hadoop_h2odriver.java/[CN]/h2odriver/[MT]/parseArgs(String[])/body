@@ -36,6 +36,30 @@
       }
       mapperXmx=args[i];
     }
+ else     if (s.equals("-driverif")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      driverCallbackIp=args[i];
+    }
+ else     if (s.equals("-driverport")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      driverCallbackPort=Integer.parseInt(args[i]);
+    }
+ else     if (s.equals("-disown")) {
+      disown=true;
+    }
+ else     if (s.equals("-notify")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      clusterReadyFileName=args[i];
+    }
  else {
       error("Unrecognized option " + s);
     }

@@ -1,0 +1,17 @@
+{
+  try {
+    MapperToDriverMessage msg=new MapperToDriverMessage();
+    msg.setDriverCallbackIpPort(_driverCallbackIp,_driverCallbackPort);
+    msg.setMessageExit(_embeddedWebServerIp,_embeddedWebServerPort,status);
+    System.out.printf("EmbeddedH2OConfig: exit called (%d)\n",status);
+    BackgroundWriterThread bwt=new BackgroundWriterThread();
+    bwt.setMessage(msg);
+    bwt.start();
+    Thread.sleep(1000);
+  }
+ catch (  Exception e) {
+    System.out.println("EmbeddedH2OConfig: exit caught an exception");
+    e.printStackTrace();
+  }
+  System.exit(status);
+}

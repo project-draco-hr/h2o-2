@@ -1,0 +1,8 @@
+def setup_random_seed():
+    if (random_seed is not None):
+        SEED = random_seed
+    else:
+        SEED = random.randint(0, sys.maxint)
+    random.seed(SEED)
+    print '\nUsing random seed:', SEED
+    return SEED

@@ -2,7 +2,7 @@
   File file=TestUtil.find_test_file("./smalldata/cars.csv");
   Key key=NFSFileVec.make(file);
   NFSFileVec nfs=DKV.get(key).get();
-  int[] x=new ByteHisto().invoke(nfs)._x;
+  int[] x=new ByteHisto().doAll(nfs)._x;
   int sum=0;
   for (  int i : x)   sum+=i;
   assertEquals(file.length(),sum);

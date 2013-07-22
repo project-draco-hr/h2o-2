@@ -21,15 +21,15 @@
     }
  catch (    UnknownHostException e) {
       Log.err(e);
-      System.exit(-1);
+      H2O.exit(-1);
     }
     if (!(arg instanceof Inet4Address)) {
       Log.warn("Only IP4 addresses allowed.");
-      System.exit(-1);
+      H2O.exit(-1);
     }
     if (!ips.contains(arg)) {
       Log.warn("IP address not found on this machine");
-      System.exit(-1);
+      H2O.exit(-1);
     }
     local=arg;
   }

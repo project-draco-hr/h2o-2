@@ -1,0 +1,15 @@
+{
+  Chunk preds=chks[chks.length - 1];
+  Chunk nids=chks[chks.length - 2];
+  for (int i=0; i < nids._len; i++) {
+    int oldNid=(int)nids.at80(i);
+    if (oldNid == -1)     continue;
+    Tree.Node t=_tree.n(oldNid);
+    double d=chks[t._col].at0(i);
+    int bin=t._hs[t._col].bin(d);
+    double pred=t._hs[t._col].mean(bin);
+    int newNid=t._ns[bin];
+    nids.set80(i,newNid);
+    preds.set80(i,pred);
+  }
+}
