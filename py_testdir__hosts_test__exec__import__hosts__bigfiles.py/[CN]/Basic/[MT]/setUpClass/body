@@ -1,6 +1,5 @@
 @classmethod
 def setUpClass(cls):
-    SEED = random.randint(0, sys.maxint)
-    random.seed(SEED)
-    print '\nUsing random seed:', SEED
+    global SEED
+    SEED = h2o.setup_random_seed()
     h2o_hosts.build_cloud_with_hosts()

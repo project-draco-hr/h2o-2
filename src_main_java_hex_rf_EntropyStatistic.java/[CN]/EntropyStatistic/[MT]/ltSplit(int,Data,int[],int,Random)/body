@@ -3,23 +3,31 @@
   final double upperBoundReduction=upperBoundReduction(d.classes());
   double maxReduction=-1;
   int bestSplit=-1;
+  int totL=0, totR=0;
+  int classL=0, classR=0;
+  for (  int e : distR) {
+    totR+=e;
+    if (e != 0)     classR++;
+  }
   for (int i=0; i < _columnDists[col].length - 1; ++i) {
+    int[] cdis=_columnDists[col][i];
     for (int j=0; j < distL.length; ++j) {
-      double v=_columnDists[col][i][j];
+      int v=cdis[j];
+      if (v == 0)       continue;
+      totL+=v;
+      totR-=v;
+      if (distL[j] == 0)       classL++;
       distL[j]+=v;
       distR[j]-=v;
+      if (distR[j] == 0)       classR--;
     }
-    int totL=0, totR=0;
-    for (    int e : distL)     totL+=e;
     if (totL == 0)     continue;
-    for (    int e : distR)     totR+=e;
     if (totR == 0)     continue;
     double eL=0, eR=0;
-    for (    int e : distL)     eL+=gain(e,totL);
-    for (    int e : distR)     eR+=gain(e,totR);
+    if (classL > 1)     for (    int e : distL)     eL+=gain(e,totL);
+    if (classR > 1)     for (    int e : distR)     eR+=gain(e,totR);
     double eReduction=upperBoundReduction - ((eL * totL + eR * totR) / (totL + totR));
     if (eReduction == maxReduction) {
-      if (rand.nextInt(10) < 2)       bestSplit=i;
     }
  else     if (eReduction > maxReduction) {
       bestSplit=i;

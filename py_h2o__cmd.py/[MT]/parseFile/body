@@ -10,6 +10,5 @@ def parseFile(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=30, 
         myKey2 = key2
     p = node.parse(key, myKey2, timeoutSecs, retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, noPoll=noPoll, **kwargs)
     if doSummary:
-        print 'hello'
         node.summary_page(myKey2)
     return p

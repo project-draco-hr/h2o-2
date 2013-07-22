@@ -1,0 +1,21 @@
+{
+  Chunk nids=chks[chks.length - 2];
+  _hcs=new Histogram[_tree._len - _leaf][];
+  for (int i=0; i < nids._len; i++) {
+    int nid=(int)nids.at80(i);
+    if (nid == -1)     continue;
+    if (_hcs[nid - _leaf] == null) {
+      _hcs[nid - _leaf]=new Histogram[_ncols];
+      Histogram hs[]=_tree.n(nid)._hs;
+      for (int j=0; j < _ncols; j++)       if (hs[j] != null)       _hcs[nid - _leaf][j]=hs[j].copy();
+    }
+  }
+  Chunk ys=chks[chks.length - 3];
+  for (int i=0; i < nids._len; i++) {
+    int nid=(int)nids.at80(i);
+    if (nid == -1)     continue;
+    Histogram hs[]=_hcs[nid - _leaf];
+    double y=ys.at0(i);
+    for (int j=0; j < _ncols; j++)     if (hs[j] != null)     hs[j].incr(chks[j].at0(i),y);
+  }
+}

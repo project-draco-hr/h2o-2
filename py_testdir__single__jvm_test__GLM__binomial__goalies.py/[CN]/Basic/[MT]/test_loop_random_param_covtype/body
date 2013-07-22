@@ -4,10 +4,7 @@ def test_loop_random_param_covtype(self):
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname)
     inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
     h2o_cmd.infoFromInspect(inspect, csvPathname)
-    SEED = random.randint(0, sys.maxint)
-    random.seed(SEED)
     paramDict = define_params()
-    print '\nUsing random seed:', SEED
     for trial in range(20):
         params = {'y': 6, 'n_folds': 2, 'family': 'binomial', 'case_mode': '>', 'case': '20', 'alpha': 0, 'lambda': 0.0001, 'beta_eps': 0.001, 'max_iter': 8, }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)

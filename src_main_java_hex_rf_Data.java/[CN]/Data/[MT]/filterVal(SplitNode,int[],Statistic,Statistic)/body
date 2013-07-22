@@ -1,24 +1,6 @@
 {
-  int cidx=node._column;
-  DataAdapter.Col cs[]=_dapt._c;
-  short bins[]=cs[cidx]._binned;
-  byte binb[]=cs[cidx]._rawB;
-  byte classes[]=cs[_dapt.classColIdx()]._rawB;
-  int split=node._split;
-  int l=start(), r=end() - 1;
-  while (l <= r) {
-    int permIdx=permutation[l];
-    int cls=classes[permIdx];
-    int val=bins == null ? (0xFF & binb[permIdx]) : bins[permIdx];
-    if (val <= split) {
-      ls.addQValid(cls,permIdx,cs);
-      ++l;
-    }
- else {
-      rs.addQValid(cls,permIdx,cs);
-      permutation[l]=permutation[r];
-      permutation[r--]=permIdx;
-    }
-  }
+  final int l=filterVal1(node,permutation,ls,rs);
+  filterVal3(permutation,ls,start(),l);
+  filterVal3(permutation,rs,l,end());
   return l;
 }

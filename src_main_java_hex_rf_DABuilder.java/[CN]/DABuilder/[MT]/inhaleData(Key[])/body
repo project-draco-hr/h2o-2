@@ -3,7 +3,8 @@
   RFModel rfmodel=_drf._rfmodel;
   final ValueArray ary=DKV.get(rfmodel._dataKey).get();
   final int[] modelDataMap=rfmodel.columnMapping(ary.colNames());
-  final DataAdapter dapt=new DataAdapter(ary,rfmodel,modelDataMap,getRowCount(keys),getChunkId(keys),_drf._params._seed,_drf._params._binLimit,_drf._params._classWt);
+  final int totalRows=getRowCount(keys);
+  final DataAdapter dapt=new DataAdapter(ary,rfmodel,modelDataMap,totalRows,getChunkId(keys),_drf._params._seed,_drf._params._binLimit,_drf._params._classWt);
   checkAndLimitFeatureUsedPerSplit(dapt);
   final int ncolumns=rfmodel._va._cols.length;
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
@@ -12,12 +13,10 @@
     final int S=start_row;
     if (!k.home())     continue;
     final int rows=ary.rpc(ValueArray.getChunkIndex(k));
-    dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S));
+    dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S,totalRows));
     start_row+=rows;
   }
-  System.out.println("before invokeAll, jobs=" + dataInhaleJobs.size());
   ForkJoinTask.invokeAll(dataInhaleJobs);
-  System.out.println("after invokeAll");
   if (_drf._params._useNonLocalData) {
     final float OVERHEAD_MAGIC=3 / 8.f;
     long totalmem=Runtime.getRuntime().totalMemory();
@@ -37,7 +36,7 @@
         System.err.println("-> reloading more keys: " + k + " from "+ k.home_node());
         final int S=start_row;
         final int rows=ary.rpc(ValueArray.getChunkIndex(k));
-        dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S));
+        dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S,totalRows));
         start_row+=rows;
       }
     }
