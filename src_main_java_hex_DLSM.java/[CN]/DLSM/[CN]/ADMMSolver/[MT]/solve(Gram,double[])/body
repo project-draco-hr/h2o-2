@@ -3,12 +3,18 @@
   Arrays.fill(z,0);
   if (_lambda > 0)   gram.addDiag(_lambda * (1 - _alpha) * 0.5 + _rho);
   int attempts=0;
-  boolean isspd=false;
-  while (!(isspd=gram.cholesky()) && attempts < 10)   gram.addDiag(_rho * (1 << ++attempts));
-  if (!isspd)   throw new NonSPDMatrixException();
+  Cholesky chol=gram.cholesky(null);
+  double rhoAdd=0;
+  while (!chol._isSPD && attempts < 10) {
+    double rhoIncrement=_rho * (1 << ++attempts);
+    gram.addDiag(rhoIncrement);
+    rhoAdd+=rhoIncrement;
+  }
+  if (!chol._isSPD)   throw new NonSPDMatrixException();
+  _rho+=rhoAdd;
   if (_alpha == 0 || _lambda == 0) {
     System.arraycopy(gram._xy,0,z,0,gram._xy.length);
-    gram.solve(z);
+    chol.solve(z);
     return _converged=true;
   }
   final double ABSTOL=Math.sqrt(N) * 1e-4;
@@ -19,7 +25,7 @@
   for (int i=0; i < 1000; ++i) {
     for (int j=0; j < N - 1; ++j)     xyPrime[j]=gram._xy[j] + _rho * (z[j] - u[j]);
     xyPrime[N - 1]=gram._xy[N - 1];
-    gram.solve(xyPrime);
+    chol.solve(xyPrime);
     double x_norm=0;
     double z_norm=0;
     double u_norm=0;
