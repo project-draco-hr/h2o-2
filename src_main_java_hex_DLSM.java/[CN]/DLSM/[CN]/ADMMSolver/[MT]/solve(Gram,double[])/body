@@ -9,6 +9,7 @@
     double rhoIncrement=_rho * (1 << ++attempts);
     gram.addDiag(rhoIncrement);
     rhoAdd+=rhoIncrement;
+    gram.cholesky(chol);
   }
   if (!chol._isSPD)   throw new NonSPDMatrixException();
   _rho+=rhoAdd;
