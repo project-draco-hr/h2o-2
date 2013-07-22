@@ -1,0 +1,58 @@
+{
+  parseArgs(args);
+  if (driverCallbackIp == null) {
+    driverCallbackIp=calcMyIp();
+  }
+  driverCallbackSocket=new ServerSocket();
+  driverCallbackSocket.setReuseAddress(true);
+  InetSocketAddress sa=new InetSocketAddress(driverCallbackIp,driverCallbackPort);
+  driverCallbackSocket.bind(sa,driverCallbackPort);
+  int actualDriverCallbackPort=driverCallbackSocket.getLocalPort();
+  CallbackManager cm=new CallbackManager();
+  cm.setServerSocket(driverCallbackSocket);
+  cm.start();
+  System.out.println("    [Using mapper->driver callback IP address and port: " + driverCallbackIp + ":"+ actualDriverCallbackPort+ "]");
+  System.out.println("    [You can override these with -driverif and -driverport.]");
+  Configuration conf=getConf();
+  String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx;
+  conf.set("mapred.child.java.opts",mapChildJavaOpts);
+  conf.set("mapred.map.child.java.opts",mapChildJavaOpts);
+  conf.set("mapred.used.genericoptionsparser","true");
+  conf.set("mapreduce.map.speculative","false");
+  conf.set("mapred.map.tasks.speculative.execution","false");
+  conf.set("mapred.map.max.attempts","1");
+  conf.set("mapred.job.reuse.jvm.num.tasks","1");
+  conf.set(h2omapper.H2O_JOBTRACKERNAME_KEY,jobtrackerName);
+  conf.set(h2omapper.H2O_DRIVER_IP_KEY,driverCallbackIp);
+  conf.set(h2omapper.H2O_DRIVER_PORT_KEY,Integer.toString(actualDriverCallbackPort));
+  job=new Job(conf,jobtrackerName);
+  job.setJarByClass(getClass());
+  job.setInputFormatClass(H2OInputFormat.class);
+  job.setMapperClass(h2omapper.class);
+  job.setNumReduceTasks(0);
+  job.setOutputKeyClass(Text.class);
+  job.setOutputValueClass(Text.class);
+  FileInputFormat.addInputPath(job,new Path("ignored"));
+  if (outputPath != null) {
+    FileOutputFormat.setOutputPath(job,new Path(outputPath));
+  }
+  System.out.printf("Job name '%s' submitted.\n",jobtrackerName);
+  ctrlc=new CtrlCHandler();
+  Runtime.getRuntime().addShutdownHook(ctrlc);
+  job.submit();
+  System.out.println("JobTracker job ID is: " + job.getJobID());
+  System.out.println("This command blocks until the H2O cluster shuts down...");
+  while (true) {
+    if (job.isComplete()) {
+      break;
+    }
+    final int ONE_SECOND_MILLIS=1000;
+    Thread.sleep(ONE_SECOND_MILLIS);
+  }
+  ctrlc.setComplete();
+  boolean success=job.isSuccessful();
+  if (!success) {
+    return 1;
+  }
+  return 0;
+}

@@ -9,9 +9,11 @@
   Thread counterThread=new CounterThread(context,counter);
   counterThread.start();
   String ice_root=conf.get("mapred.local.dir");
-  String jobtrackerName=conf.get("hexdata.jobtrackername");
+  String jobtrackerName=conf.get(H2O_JOBTRACKERNAME_KEY);
   context.write(textId,new Text("mapred.local.dir is " + ice_root));
-  String[] args={"-ice_root",ice_root,"-flatfile","flatfile.txt","-port","54321","-inherit_log4j","-name",jobtrackerName};
+  String driverIp=conf.get(H2O_DRIVER_IP_KEY);
+  String driverPortString=conf.get(H2O_DRIVER_PORT_KEY);
+  String[] args={"-ice_root",ice_root,"-flatfile","flatfile.txt","-port","54321","-name",jobtrackerName,"-driverip",driverIp,"-driverport",driverPortString,"-inherit_log4j"};
   context.write(textId,new Text("before water.Boot.main()"));
   try {
     Log.POST(11,"Before boot");

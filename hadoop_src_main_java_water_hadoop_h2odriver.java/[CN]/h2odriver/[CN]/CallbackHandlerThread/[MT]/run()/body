@@ -1,0 +1,31 @@
+{
+  MapperToDriverMessage msg=new MapperToDriverMessage();
+  try {
+    msg.readMessage(_s);
+    char type=msg.getType();
+    if (type == MapperToDriverMessage.TYPE_EOF_NO_MESSAGE) {
+      return;
+    }
+    if (type == MapperToDriverMessage.TYPE_EMBEDDED_WEB_SERVER_IP_PORT) {
+      System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " started");
+    }
+ else     if (type == MapperToDriverMessage.TYPE_CLOUD_SIZE) {
+      System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " reports cloud size "+ msg.getCloudSize());
+    }
+ else     if (type == MapperToDriverMessage.TYPE_EXIT) {
+      System.out.println("H2O node " + msg.getEmbeddedWebServerIp() + ":"+ msg.getEmbeddedWebServerPort()+ " exited with status "+ msg.getExitStatus());
+    }
+ else {
+      System.err.println("MapperToDriverMessage: Read invalid type (" + type + ") from socket, ignoring...");
+    }
+    _s.close();
+  }
+ catch (  Exception e) {
+    System.out.println("Exception occurred in CallbackHandlerThread");
+    System.out.println(e.toString());
+    if (e.getMessage() != null) {
+      System.out.println(e.getMessage());
+    }
+    e.printStackTrace();
+  }
+}
