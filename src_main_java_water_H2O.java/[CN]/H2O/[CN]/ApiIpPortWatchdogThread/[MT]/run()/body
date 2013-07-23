@@ -3,10 +3,12 @@
   reset();
   while (true) {
     mySleep(sleepMillis);
+    if (gracefulShutdownInitiated) {
+      break;
+    }
     check();
     if (gracefulShutdownInitiated) {
       break;
     }
   }
-  Log.debug(threadName + ": Thread run() exited");
 }
