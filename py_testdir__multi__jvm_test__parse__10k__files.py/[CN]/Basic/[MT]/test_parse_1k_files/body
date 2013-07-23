@@ -12,7 +12,7 @@ def test_parse_1k_files(self):
     avgFileSize = os.path.getsize(csvPathname)
     importFolderPath = os.path.abspath(SYNDATASETS_DIR)
     print '\nimportFolderPath:', importFolderPath
-    csvFilenameList = [('*_syn.csv.gz', 'syn_all.csv', (maxFilenum * avgFileSize), 1200)]
+    csvFilenameList = [('*[1][0-9][0-9][0-9]_syn.csv.gz', 'syn_all.1000.csv', (maxFilenum * avgFileSize), 1200), ('*[1-2][0-9][0-9][0-9]_syn.csv.gz', 'syn_all.2000.csv', (maxFilenum * avgFileSize), 1200)]
     trialMax = 1
     base_port = 54321
     tryHeap = 4
