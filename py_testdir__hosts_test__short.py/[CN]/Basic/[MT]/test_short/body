@@ -19,7 +19,7 @@ def test_short(self):
     if missingValuesDict:
         print len(missingValuesDict), 'columns with missing values'
     print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
-    for maxx in [400]:
+    for maxx in [num_cols]:
         y = 'is_purchase'
         x = range(maxx)
         if (1 == 1):
@@ -48,6 +48,6 @@ def test_short(self):
         x = ','.join(map(str, x))
         print '\nx:', x
         print 'y:', y
-        kwargs = {'x': x, 'y': y, 'family': ['gaussian'], 'lambda': [1e-05], 'alpha': [0.5], 'max_iter': [10], 'thresholds': [0.5], 'n_folds': [1], 'beta_eps': [0.0001], }
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=15, **kwargs)
+        kwargs = {'x': x, 'y': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 10, 'thresholds': 0.5, 'n_folds': 1, 'beta_eps': 0.0001, }
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=3600, pollTimeoutsecs=60, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
