@@ -8,10 +8,18 @@
     bwt.setMessage(msg);
     bwt.start();
     Thread.sleep(1000);
+    Socket s=new Socket("127.0.0.1",_mapperCallbackPort);
+    byte[] b=new byte[1];
+    b[0]=(byte)status;
+    OutputStream os=s.getOutputStream();
+    os.write(b);
+    os.flush();
+    s.close();
+    Thread.sleep(10 * 000);
   }
  catch (  Exception e) {
     System.out.println("EmbeddedH2OConfig: exit caught an exception");
     e.printStackTrace();
   }
-  System.exit(status);
+  System.exit(111);
 }

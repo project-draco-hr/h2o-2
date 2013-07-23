@@ -13,7 +13,11 @@
   context.write(textId,new Text("mapred.local.dir is " + ice_root));
   String driverIp=conf.get(H2O_DRIVER_IP_KEY);
   String driverPortString=conf.get(H2O_DRIVER_PORT_KEY);
-  String[] args={"-ice_root",ice_root,"-flatfile","flatfile.txt","-port","54321","-name",jobtrackerName,"-driverip",driverIp,"-driverport",driverPortString,"-inherit_log4j"};
+  ServerSocket ss=new ServerSocket();
+  InetSocketAddress sa=new InetSocketAddress("127.0.0.1",0);
+  ss.bind(sa);
+  String localPortString=Integer.toString(ss.getLocalPort());
+  String[] args={"-ice_root",ice_root,"-flatfile","flatfile.txt","-port","54321","-name",jobtrackerName,"-driverip",driverIp,"-driverport",driverPortString,"-mapperport",localPortString,"-inherit_log4j"};
   context.write(textId,new Text("before water.Boot.main()"));
   try {
     Log.POST(11,"Before boot");
@@ -45,8 +49,18 @@
     context.write(textId,new Text("after water.Boot.main()"));
   }
   Log.POST(15,"Entering wait loop");
-  while (true) {
-    int ONE_MINUTE_MILLIS=60 * 1000;
-    Thread.sleep(ONE_MINUTE_MILLIS);
+  Socket sock=ss.accept();
+  byte[] b=new byte[1];
+  InputStream is=sock.getInputStream();
+  int expectedBytes=1;
+  int receivedBytes=0;
+  while (receivedBytes < expectedBytes) {
+    int n=is.read(b,0,0);
+    if (n < 0) {
+      System.exit(112);
+    }
+    receivedBytes+=n;
   }
+  int exitStatus=(int)b[0];
+  System.exit(exitStatus);
 }
