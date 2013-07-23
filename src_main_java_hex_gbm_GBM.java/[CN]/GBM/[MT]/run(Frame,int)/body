@@ -3,23 +3,21 @@
   final int ncols=fr._vecs.length - 1;
   Vec vs[]=fr._vecs;
   Vec vresponse=vs[ncols];
+  final long nrows=vresponse.length();
   Vec vnids=Vec.makeZero(vs[0]);
   fr.add("NIDs",vnids);
-  Vec vpred=Vec.makeZero(vs[0]);
-  fr.add("Predictions",vpred);
   Tree tree=new Tree();
   tree.newNode(null,Histogram.initialHist(fr,ncols));
   int leaf=0;
   for (int depth=0; depth < maxDepth; depth++) {
     ScoreBuildHistogram sbh=new ScoreBuildHistogram(tree,leaf,ncols).doAll(fr);
-    CalcError.report(sbh._sum,sbh._err,vpred.length(),tree._len,depth);
     final int tmax=tree._len;
     for (int i=leaf; i < tmax; i++)     tree.n(i)._hs=sbh._hcs[i - leaf];
     for (; leaf < tmax; leaf++)     pickSplits(tree,tree.n(leaf),fr,ncols);
   }
-  CalcError ce=new CalcError().doAll(vresponse,vpred);
-  CalcError.report(ce._sum,ce._err,vpred.length(),tree._len,maxDepth);
   Log.info(Sys.GBM__,"GBM done in " + t_gbm);
+  Timer t_score=new Timer();
+  new BulkScore(tree).doAll(fr).report(nrows,maxDepth);
+  Log.info(Sys.GBM__,"GBM score done in " + t_score);
   UKV.remove(fr.remove("NIDs")._key);
-  UKV.remove(fr.remove("Predictions")._key);
 }
