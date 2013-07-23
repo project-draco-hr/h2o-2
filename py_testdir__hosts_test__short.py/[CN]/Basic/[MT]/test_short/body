@@ -1,0 +1,53 @@
+def test_short(self):
+    csvFilename = 'part-00000b'
+    importFolderPath = '/home/hduser/data'
+    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    start = time.time()
+    parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500, separator=9)
+    print 'Parse of', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+    print csvFilename, 'parse time:', parseKey['response']['time']
+    print "Parse result['destination_key']:", parseKey['destination_key']
+    start = time.time()
+    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=500)
+    print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+    h2o_cmd.infoFromInspect(inspect, csvPathname)
+    num_rows = inspect['num_rows']
+    num_cols = inspect['num_cols']
+    print ('\n' + csvFilename)
+    (missingValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.get_column_info_from_inspect(parseKey, timeoutSecs=300)
+    if missingValuesDict:
+        print len(missingValuesDict), 'columns with missing values'
+    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
+    for maxx in [400]:
+        y = 'is_purchase'
+        x = range(maxx)
+        if (1 == 1):
+            for m in missingValuesDict:
+                if (int(m) < maxx):
+                    name = colNameDict[m]
+                    print ('Removing %s %s because it has missing values' % (m, name))
+                    x.remove(int(m))
+            for e in enumSizeDict:
+                if (e not in missingValuesDict):
+                    if (int(e) < maxx):
+                        name = colNameDict[e]
+                        print ('Removing %s %s because it has enums' % (e, name))
+                        x.remove(int(e))
+        pattern = 'oly_|mt_|b_'
+        keepX = re.compile(pattern)
+        for i in x:
+            name = colNameDict[str(i)]
+            if (name == y):
+                print ('Removing %s because name: %s matches output %s' % (i, name, y))
+                x.remove(i)
+            elif (not keepX.match(name)):
+                print ("Removing %s because name: %s doesn't match desired pattern %s" % (i, name, pattern))
+                x.remove(i)
+        print 'The pruned x has length', len(x)
+        x = ','.join(map(str, x))
+        print '\nx:', x
+        print 'y:', y
+        kwargs = {'x': x, 'y': y, 'family': ['gaussian'], 'lambda': [1e-05], 'alpha': [0.5], 'max_iter': [10], 'thresholds': [0.5], 'n_folds': [1], 'beta_eps': [0.0001], }
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=15, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
