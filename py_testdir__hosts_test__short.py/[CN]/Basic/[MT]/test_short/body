@@ -54,7 +54,7 @@ def test_short(self):
         x = ','.join(map(str, x))
         print '\nx:', x
         print 'y:', y
-        kwargs = {'x': x, 'y': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 2, 'thresholds': 0.5, 'n_folds': 1, 'weight': 100, 'beta_eps': 0.0001, }
+        kwargs = {'x': x, 'y': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 2, 'thresholds': 0.5, 'n_folds': 1, 'weight': 100, 'beta_epsilon': 0.0001, }
         timeoutSecs = 1800
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, **kwargs)

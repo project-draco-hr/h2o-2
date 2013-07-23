@@ -5,7 +5,7 @@ def test_loop_random_param_covtype(self):
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     paramDict = define_params()
     for trial in range(5):
-        params = {'y': 5, 'n_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 0, 'beta_eps': 0.001, 'max_iter': 3, 'standardize': 1, 'expert': 1, 'lsm_solver': 'GenGradient', }
+        params = {'y': 5, 'n_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 0, 'beta_epsilon': 0.001, 'max_iter': 3, 'standardize': 1, 'expert': 1, 'lsm_solver': 'GenGradient', }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (180 + (kwargs['n_folds'] * 30))
