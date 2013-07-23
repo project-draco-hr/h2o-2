@@ -35,7 +35,7 @@ def test_GLM_many_enums(self):
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         print ('\n' + csvFilename)
-        missingValuesDict = h2o_cmd.check_enums_from_inspect(parseKey)
+        (missingValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.get_column_info_from_inspect(parseKey)
         if missingValuesDict:
             pass
         y = colCount
