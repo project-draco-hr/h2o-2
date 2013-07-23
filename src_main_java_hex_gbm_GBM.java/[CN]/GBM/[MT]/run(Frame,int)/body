@@ -1,4 +1,5 @@
 {
+  Timer t_gbm=new Timer();
   final int ncols=fr._vecs.length - 1;
   Vec vs[]=fr._vecs;
   Vec vresponse=vs[ncols];
@@ -7,29 +8,18 @@
   Vec vpred=Vec.makeZero(vs[0]);
   fr.add("Predictions",vpred);
   Tree tree=new Tree();
-  Histogram hists[]=new Histogram[ncols];
-  for (int j=0; j < ncols; j++)   hists[j]=new Histogram(fr._names[j],vs[j].length(),vs[j].min(),vs[j].max(),vs[j]._isInt);
-  Tree.Node root=tree.newNode(null,hists);
+  tree.newNode(null,Histogram.initialHist(fr,ncols));
   int leaf=0;
   for (int depth=0; depth < maxDepth; depth++) {
-    CalcError ce=new CalcError().doAll(vresponse,vpred);
-    double errAvg=ce._sum / fr._vecs[0].length();
-    Log.unwrap(System.out,"============================================================== ");
-    Log.unwrap(System.out,"Average squared prediction error for tree of depth " + depth + " is "+ errAvg);
-    Log.unwrap(System.out,"Total of " + ce._err + " errors on "+ vpred.length()+ " rows, with "+ tree._len+ " nodes");
-    Histogram hs[][]=new BuildHistogram(tree,leaf,ncols).doAll(fr)._hcs;
+    ScoreBuildHistogram sbh=new ScoreBuildHistogram(tree,leaf,ncols).doAll(fr);
+    CalcError.report(sbh._sum,sbh._err,vpred.length(),tree._len,depth);
     final int tmax=tree._len;
-    for (int i=leaf; i < tmax; i++)     tree.n(i)._hs=hs[i - leaf];
+    for (int i=leaf; i < tmax; i++)     tree.n(i)._hs=sbh._hcs[i - leaf];
     for (; leaf < tmax; leaf++)     pickSplits(tree,tree.n(leaf),fr,ncols);
-    new ScoreAndAssign(tree).doAll(fr);
   }
   CalcError ce=new CalcError().doAll(vresponse,vpred);
-  double errAvg=ce._sum / fr._vecs[0].length();
-  Log.unwrap(System.out,"============================================================== ");
-  Log.unwrap(System.out,"Average squared prediction error for tree of depth " + maxDepth + " is "+ errAvg);
-  Log.unwrap(System.out,"Total of " + ce._err + " errors on "+ vpred.length()+ " rows, with "+ tree._len+ " nodes");
-  fr.remove("Predictions");
-  fr.remove("NIDs");
-  UKV.remove(vnids._key);
-  UKV.remove(vpred._key);
+  CalcError.report(ce._sum,ce._err,vpred.length(),tree._len,maxDepth);
+  Log.info(Sys.GBM__,"GBM done in " + t_gbm);
+  UKV.remove(fr.remove("NIDs")._key);
+  UKV.remove(fr.remove("Predictions")._key);
 }
