@@ -5,10 +5,10 @@ def test_GLM_from_import_hosts(self):
         csvFilenameList = ['covtype200x.data', 'covtype200x.data', 'covtype.data', 'covtype.data', 'covtype20x.data', 'covtype20x.data']
     h2b.browseTheCloud()
     importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath, timeoutSecs=60)
     validations1 = {}
     coefficients1 = {}
     for csvFilename in csvFilenameList:
+        h2i.setupImportFolder(None, importFolderPath, timeoutSecs=60)
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']

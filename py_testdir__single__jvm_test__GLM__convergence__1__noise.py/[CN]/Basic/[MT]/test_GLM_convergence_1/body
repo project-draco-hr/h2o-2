@@ -18,7 +18,7 @@ def test_GLM_convergence_1(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'max_iter': 40, 'lambda': 0.0001, 'alpha': 0.5, 'weight': 1.0, 'link': 'familyDefault', 'n_folds': 2, 'beta_eps': 0.0001, 'thresholds': '0.5', }
+        kwargs = {'max_iter': 40, 'lambda': 0.0001, 'alpha': 0.5, 'weight': 1.0, 'link': 'familyDefault', 'n_folds': 2, 'beta_epsilon': 0.0001, 'thresholds': '0.5', }
         if USEKNOWNFAILURE:
             kwargs['y'] = 50
         else:

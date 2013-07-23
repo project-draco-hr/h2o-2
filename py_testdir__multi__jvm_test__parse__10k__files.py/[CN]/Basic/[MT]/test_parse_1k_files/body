@@ -12,7 +12,7 @@ def test_parse_1k_files(self):
     avgFileSize = os.path.getsize(csvPathname)
     importFolderPath = os.path.abspath(SYNDATASETS_DIR)
     print '\nimportFolderPath:', importFolderPath
-    csvFilenameList = [('*_syn.csv.gz', 'syn_all.csv', (maxFilenum * avgFileSize), 1200)]
+    csvFilenameList = [('*[1][0-9][0-9][0-9]_syn.csv.gz', 'syn_all.1000.csv', (maxFilenum * avgFileSize), 1200), ('*[1-2][0-9][0-9][0-9]_syn.csv.gz', 'syn_all.2000.csv', (maxFilenum * avgFileSize), 1200)]
     trialMax = 1
     base_port = 54321
     tryHeap = 4
@@ -59,7 +59,7 @@ def test_parse_1k_files(self):
             print csvFilepattern, 'parse time:', parseKey['response']['time']
             print "Parse result['destination_key']:", parseKey['destination_key']
             if (not noPoll):
-                h2o_cmd.check_enums_from_inspect(parseKey)
+                h2o_cmd.get_column_info_from_inspect(parseKey)
             print ('\n' + csvFilepattern)
             if DO_GLM:
                 GLMkwargs = {'y': 0, 'case': 1, 'case_mode': '>', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
