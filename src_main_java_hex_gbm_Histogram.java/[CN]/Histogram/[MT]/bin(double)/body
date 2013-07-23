@@ -1,6 +1,5 @@
 {
-  int nbins=_bins.length;
-  int idx1=_step <= 0.0 ? 0 : (int)((d - _mins[0]) / _step);
-  int idx2=Math.max(Math.min(idx1,nbins - 1),0);
+  int idx1=_step <= 0.0 ? 0 : (int)((d - _min) / _step);
+  int idx2=Math.max(Math.min(idx1,_nbins - 1),0);
   return idx2;
 }

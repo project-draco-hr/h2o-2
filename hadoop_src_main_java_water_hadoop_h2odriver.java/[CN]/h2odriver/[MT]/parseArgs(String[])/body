@@ -1,0 +1,85 @@
+{
+  int i=0;
+  while (true) {
+    if (i >= args.length) {
+      break;
+    }
+    String s=args[i];
+    if (s.equals("-h") || s.equals("help") || s.equals("-help")|| s.equals("--help")) {
+      usage();
+    }
+ else     if (s.equals("-n") || s.equals("-nodes")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      numNodes=Integer.parseInt(args[i]);
+    }
+ else     if (s.equals("-o") || s.equals("-output")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      outputPath=args[i];
+    }
+ else     if (s.equals("-jobname")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      jobtrackerName=args[i];
+    }
+ else     if (s.equals("-mapperXmx")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      mapperXmx=args[i];
+    }
+ else     if (s.equals("-driverif")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      driverCallbackIp=args[i];
+    }
+ else     if (s.equals("-driverport")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      driverCallbackPort=Integer.parseInt(args[i]);
+    }
+ else     if (s.equals("-disown")) {
+      disown=true;
+    }
+ else     if (s.equals("-notify")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      clusterReadyFileName=args[i];
+    }
+ else {
+      error("Unrecognized option " + s);
+    }
+    i++;
+  }
+  if (numNodes < 1) {
+    error("Number of H2O nodes must be greater than 0 (must specify -n)");
+  }
+  if (outputPath == null) {
+    error("Missing required option -output");
+  }
+  if (mapperXmx == null) {
+    error("Missing required option -mapperXmx");
+  }
+  if (!mapperXmx.matches("[1-9][0-9]*[mgMG]")) {
+    error("-mapperXmx invalid (try something like -mapperXmx 4g)");
+  }
+  if (jobtrackerName == null) {
+    Random rng=new Random();
+    int num=rng.nextInt(99999);
+    jobtrackerName="H2O_" + num;
+  }
+}

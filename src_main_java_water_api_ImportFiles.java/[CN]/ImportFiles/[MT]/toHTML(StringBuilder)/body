@@ -1,0 +1,9 @@
+{
+  if (files.length > 1)   sb.append("<div class='alert'>").append(Parse.link("*" + path.value() + "*","Parse all into hex format")).append(" </div>");
+  DocGen.HTML.title(sb,"files");
+  DocGen.HTML.arrayHead(sb);
+  for (int i=0; i < files.length; i++)   sb.append("<tr><td><a href='Parse.html?source_key=").append(keys[i]).append("'>").append(files[i]).append("</a></td></tr>");
+  DocGen.HTML.arrayTail(sb);
+  if (fails.length > 0)   DocGen.HTML.array(DocGen.HTML.title(sb,"fails"),fails);
+  return sb;
+}

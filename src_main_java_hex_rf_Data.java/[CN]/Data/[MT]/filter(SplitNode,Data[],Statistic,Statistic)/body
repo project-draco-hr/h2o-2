@@ -1,2 +1,15 @@
 {
+  int[] permutation=getPermutationArray();
+  int cidx=node._column;
+  int l=_dapt.hasAnyInvalid(cidx) || _dapt.hasAnyInvalid(_dapt.columns() - 1) ? filterInv(node,permutation,ls,rs) : filterVal(node,permutation,ls,rs);
+  ls.applyClassWeights();
+  rs.applyClassWeights();
+  ColumnInfo[] linfo=_columnInfo.clone();
+  ColumnInfo[] rinfo=_columnInfo.clone();
+  linfo[node._column]=linfo[node._column].left(node._split);
+  rinfo[node._column]=rinfo[node._column].right(node._split);
+  result[0]=new Subset(this,permutation,start(),l);
+  result[1]=new Subset(this,permutation,l,end());
+  result[0]._columnInfo=linfo;
+  result[1]._columnInfo=rinfo;
 }

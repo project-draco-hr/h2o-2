@@ -1,0 +1,25 @@
+def get_column_info_from_inspect(parseKey, **kwargs):
+    inspect = runInspect(key=parseKey['destination_key'], **kwargs)
+    print 'num_rows:', inspect['num_rows']
+    print 'num_cols:', inspect['num_cols']
+    cols = inspect['cols']
+    missingValuesDict = {}
+    constantValuesDict = {}
+    enumSizeDict = {}
+    colNameDict = {}
+    colTypeDict = {}
+    for (i, c) in enumerate(cols):
+        colNameDict[str(i)] = c['name']
+        colTypeDict[str(i)] = c['type']
+        msg = ('column %s %d' % (c['name'], i))
+        msg += (' type: %s' % c['type'])
+        if (c['type'] == 'enum'):
+            msg += (' enum_domain_size: %d' % c['enum_domain_size'])
+            enumSizeDict[str(i)] = c['enum_domain_size']
+        if (c['num_missing_values'] != 0):
+            msg += (' num_missing_values: %s' % c['num_missing_values'])
+            missingValuesDict[str(i)] = c['num_missing_values']
+        print msg
+        if (c['min'] == c['max']):
+            constantValuesDict[str(i)] = c['min']
+    return (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict)

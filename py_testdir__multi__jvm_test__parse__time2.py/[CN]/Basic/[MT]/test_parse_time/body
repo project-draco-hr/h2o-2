@@ -1,0 +1,41 @@
+def test_parse_time(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_time.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    headerData = None
+    colCount = 12
+    rowData = rand_rowData(colCount)
+    rowCount = 3
+    write_syn_dataset(csvPathname, rowCount, headerData, rowData)
+    for trial in range(20):
+        if (trial == 0):
+            rowData = min_rowData()
+        elif (trial == 1):
+            rowData = max_rowData()
+        else:
+            rowData = rand_rowData()
+        key = ((csvFilename + '_') + str(trial))
+        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        start = time.time()
+        parseKeyA = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2)
+        print '\nA trial #', trial, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        inspect = h2o_cmd.runInspect(key=key2)
+        missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
+        print 'missingValuesListA', missingValuesListA
+        num_colsA = inspect['num_cols']
+        num_rowsA = inspect['num_rows']
+        row_sizeA = inspect['row_size']
+        value_size_bytesA = inspect['value_size_bytes']
+        self.assertEqual(missingValuesListA, [], 'missingValuesList should be empty')
+        self.assertEqual(num_colsA, colCount)
+        self.assertEqual(num_rowsA, rowCount)
+        rows = inspect['rows']
+        for r in rows:
+            for c in r:
+                k = r[c]
+                if (c != 'row'):
+                    if (k < 959238000000):
+                        raise Exception(('row: %s col: %s value: %s is too small for date' % (r, c, k)))
+                    if (k > 4089855600000):
+                        raise Exception(('row: %s col: %s value: %s is too big for date' % (r, c, k)))
+        h2o.check_sandbox_for_errors()

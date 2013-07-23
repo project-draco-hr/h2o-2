@@ -1,0 +1,13 @@
+{
+  if (_arg != null)   return _arg;
+  try {
+    Object o=R.getClass().getDeclaredField(_name).get(R);
+    return _arg=((RequestArguments.Argument)o);
+  }
+ catch (  IllegalAccessException ie) {
+    return null;
+  }
+catch (  NoSuchFieldException ie) {
+    return null;
+  }
+}

@@ -1,0 +1,68 @@
+{
+  Configuration conf=context.getConfiguration();
+  String mapredTaskId=conf.get("mapred.task.id");
+  Text textId=new Text(mapredTaskId);
+  emitLogHeader(context,mapredTaskId);
+  Log.POST(10,"After emitLogHeader");
+  Counter counter=context.getCounter(H2O_MAPPER_COUNTER.HADOOP_COUNTER_HEARTBEAT);
+  Thread counterThread=new CounterThread(context,counter);
+  counterThread.start();
+  String ice_root=conf.get("mapred.local.dir");
+  String jobtrackerName=conf.get(H2O_JOBTRACKERNAME_KEY);
+  context.write(textId,new Text("mapred.local.dir is " + ice_root));
+  String driverIp=conf.get(H2O_DRIVER_IP_KEY);
+  String driverPortString=conf.get(H2O_DRIVER_PORT_KEY);
+  ServerSocket ss=new ServerSocket();
+  InetSocketAddress sa=new InetSocketAddress("127.0.0.1",0);
+  ss.bind(sa);
+  String localPortString=Integer.toString(ss.getLocalPort());
+  String[] args={"-ice_root",ice_root,"-flatfile","flatfile.txt","-port","54321","-name",jobtrackerName,"-driverip",driverIp,"-driverport",driverPortString,"-mapperport",localPortString,"-inherit_log4j"};
+  context.write(textId,new Text("before water.Boot.main()"));
+  try {
+    Log.POST(11,"Before boot");
+    water.Boot.main(UserMain.class,args);
+    Log.POST(12,"After boot");
+  }
+ catch (  Exception e) {
+    Log.POST(13,"Exception in boot");
+    context.write(textId,new Text("exception in water.Boot.main()"));
+    String s=e.getMessage();
+    if (s == null) {
+      s="(null exception message)";
+    }
+    context.write(textId,new Text(s));
+    s=e.toString();
+    if (s == null) {
+      s="(null exception toString)";
+    }
+    context.write(textId,new Text(s));
+    StackTraceElement[] els=e.getStackTrace();
+    for (int i=0; i < els.length; i++) {
+      StackTraceElement el=els[i];
+      s=el.toString();
+      context.write(textId,new Text("    " + s));
+    }
+  }
+ finally {
+    Log.POST(14,"Top of finally");
+    context.write(textId,new Text("after water.Boot.main()"));
+  }
+  Log.POST(15,"Waiting for exit");
+  Socket sock=ss.accept();
+  System.out.println("Wait for exit woke up from accept");
+  byte[] b=new byte[1];
+  InputStream is=sock.getInputStream();
+  int expectedBytes=1;
+  int receivedBytes=0;
+  while (receivedBytes < expectedBytes) {
+    int n=is.read(b,receivedBytes,expectedBytes - receivedBytes);
+    System.out.println("is.read returned " + n);
+    if (n < 0) {
+      System.exit(112);
+    }
+    receivedBytes+=n;
+  }
+  int exitStatus=(int)b[0];
+  System.out.println("Received exitStatus " + exitStatus);
+  return exitStatus;
+}

@@ -1,6 +1,5 @@
 def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
     r1 = random.Random(SEED)
-    r2 = random.Random(SEED)
     dsf = open(csvPathname, 'w+')
     for i in range(rowCount):
         rowData = []
@@ -9,7 +8,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
             ri1 = int(r1.gauss(1, 0.1))
             rowTotal += ri1
             rowData.append((ri1 + 0.1))
-        if (rowTotal > (0.52 * colCount)):
+        if (rowTotal > (0.5 * colCount)):
             result = 1
         else:
             result = 0

@@ -1,6 +1,5 @@
 {
-  ValueArray output=new ValueArray(outputKey,data.length());
-  ScoreTask t=new ScoreTask(M.adapt(data),output,(int)data.chunks());
+  ScoreTask t=new ScoreTask(M.adapt(data),outputKey,(int)data.chunks());
   t.invoke(data._key);
   Column c=new Column();
   c._max=t._max;

@@ -1,17 +1,17 @@
 def test_B_hdfs_files(self):
     print '\nLoad a list of files from HDFS, parse and do 1 RF tree'
     print '\nYou can try running as hduser/hduser if fail'
-    csvFilenameAll = ['TEST-poker1000.csv']
+    csvFilenameAll = ['allyears2k.csv', 'billion_rows.csv.gz', 'covtype.data', 'covtype.shuffled.data', 'covtype10x.data', 'covtype200x.data', 'covtype20x.data', 'kddcup_1999.data.gz', 'rand_logreg_100000000x70.csv.gz']
     if (1 == 0):
         csvFilenameList = random.sample(csvFilenameAll, 8)
     else:
         csvFilenameList = csvFilenameAll
     timeoutSecs = 200
     firstglm = {}
-    h2i.setupImportHdfs(path='/datasets', schema='maprfs')
+    h2i.setupImportHdfs(path='/datasets/standard', schema='maprfs')
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
-        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', schema='maprfs', timeoutSecs=1000)
+        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets/standard', schema='maprfs', timeoutSecs=1000)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print 'parse result:', parseKey['destination_key']
         print ('\n' + csvFilename)

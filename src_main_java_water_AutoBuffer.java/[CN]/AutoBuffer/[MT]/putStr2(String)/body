@@ -1,0 +1,12 @@
+{
+  byte[] b=s.getBytes();
+  int off=0;
+  for (int i=0; i < b.length; i++) {
+    if (b[i] == '\\') {
+      putA1(b,off,i);
+      put1('\\');
+      off=i;
+    }
+  }
+  return putA1(b,off,b.length);
+}

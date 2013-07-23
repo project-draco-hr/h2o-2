@@ -1,0 +1,49 @@
+def test_GLM_enums_score_subset(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    n = 200
+    tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300)]
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        colSepHexString = '2c'
+        colSepChar = colSepHexString.decode('hex')
+        colSepInt = int(colSepHexString, base=16)
+        print 'colSepChar:', colSepChar
+        rowSepHexString = '0a'
+        rowSepChar = rowSepHexString.decode('hex')
+        print 'rowSepChar:', rowSepChar
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        csvScoreFilename = (((('syn_enums_score_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvScorePathname = ((SYNDATASETS_DIR + '/') + csvScoreFilename)
+        enumList = create_enum_list(listSize=10)
+        enumListForScore = random.sample(enumList, 5)
+        print 'Creating random', csvPathname, 'for glm model building'
+        write_syn_dataset(csvPathname, enumList, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
+        print 'Creating random', csvScorePathname, 'for glm scoring with prior model (using enum subset)'
+        write_syn_dataset(csvScorePathname, enumListForScore, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        print ('\n' + csvFilename)
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.get_column_info_from_inspect(parseKey)
+        if missingValuesDict:
+            m = [((str(k) + ':') + str(v)) for (k, v) in missingValuesDict.iteritems()]
+            raise Exception(('Looks like columns got flipped to NAs: ' + ', '.join(m)))
+        y = colCount
+        kwargs = {'y': y, 'max_iter': 1, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, 'case_mode': '=', 'case': 0, }
+        start = time.time()
+        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+        print 'glm end on ', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        GLMModel = glm['GLMModel']
+        modelKey = GLMModel['model_key']
+        parseKey = h2o_cmd.parseFile(None, csvScorePathname, key2=('score_' + key2), timeoutSecs=30, separator=colSepInt)
+        start = time.time()
+        glmScore = h2o_cmd.runGLMScore(key=parseKey['destination_key'], model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)
+        print 'glm end on ', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        classErr = glmScore['validation']['classErr']
+        auc = glmScore['validation']['auc']
+        err = glmScore['validation']['err']
+        print 'classErr:', classErr
+        print 'err:', err
+        print 'auc:', auc

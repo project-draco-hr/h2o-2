@@ -12,6 +12,7 @@ def test_rf_covtype_train_oobe2(self):
     num_rows = inspect['num_rows']
     pct10 = int((num_rows * 0.1))
     rowsForPct = [(i * pct10) for i in range(0, 11)]
+    last10 = (num_rows - rowsForPct[9])
     rowsForPct[10] = num_rows
     rowsForPct[0] = rowsForPct[10]
     expectTrainPctRightList = [0, 85.16, 88.45, 90.24, 91.27, 92.03, 92.64, 93.11, 93.48, 93.79]
@@ -52,20 +53,19 @@ def test_rf_covtype_train_oobe2(self):
         kwargs['iterative_cm'] = 1
         kwargs['out_of_bag_error_estimate'] = 0
         rfv = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        h2o.nodes[0].random_forest_predict(model_key=model_key, key=dataKeyTest)
+        h2o.nodes[0].generate_predictions(model_key=model_key, key=dataKeyTest)
         fullScorePctRight = (100 * (1.0 - rfv['confusion_matrix']['classification_error']))
         self.assertAlmostEqual(fullScorePctRight, expectScorePctRightList[trial], msg=('Full: pct. right for scoring after %s pct. training not close enough %6.2f %6.2f' % ((trial * 10), fullScorePctRight, expectScorePctRightList[trial])), delta=0.2)
         actualScorePctRightList.append(fullScorePctRight)
         print 'Trial #', trial, 'completed', ('using %6.2f' % ((rowsToUse * 100.0) / num_rows)), 'pct. of all rows'
     actualDelta = [abs((a - b)) for (a, b) in zip(expectTrainPctRightList, actualTrainPctRightList)]
     niceFp = ['{0:0.2f}'.format(i) for i in actualTrainPctRightList]
-    print 'maybe should update with actual. Remove single quotes'
-    print 'expectTrainPctRightList =', niceFp
+    print 'actualTrainPctRightList =', niceFp
     niceFp = ['{0:0.2f}'.format(i) for i in actualDelta]
     print 'actualDelta =', niceFp
     actualDelta = [abs((a - b)) for (a, b) in zip(expectScorePctRightList, actualScorePctRightList)]
     niceFp = ['{0:0.2f}'.format(i) for i in actualScorePctRightList]
     print 'maybe should update with actual. Remove single quotes'
-    print 'expectScorePctRightList =', niceFp
+    print 'actualScorePctRightList =', niceFp
     niceFp = ['{0:0.2f}'.format(i) for i in actualDelta]
     print 'actualDelta =', niceFp

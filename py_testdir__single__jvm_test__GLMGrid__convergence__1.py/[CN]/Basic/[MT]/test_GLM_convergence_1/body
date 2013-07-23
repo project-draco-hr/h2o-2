@@ -18,15 +18,15 @@ def test_GLM_convergence_1(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'max_iter': 10, 'weight': 1.0, 'link': 'familyDefault', 'n_folds': 2, 'beta_eps': 0.0001, 'lambda': '1e-8:1e-3:1e2', 'alpha': '0,0.5,.75', 'thresholds': '0,1,0.2', }
+        kwargs = {'max_iter': 10, 'weight': 1.0, 'link': 'familyDefault', 'n_folds': 2, 'beta_epsilon': 0.0001, 'lambda': '1e-8:1e-3:1e2', 'alpha': '0,0.5,.75', 'thresholds': '0,1,0.2', }
         if USEKNOWNFAILURE:
             kwargs['y'] = 50
         else:
             kwargs['y'] = y
         emsg = None
-        for i in range(25):
+        for i in range(2):
             start = time.time()
-            glm = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, noise=('Jstack', None), **kwargs)
+            glm = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
             print 'glm #', i, 'end on', csvPathname, 'took', (time.time() - start), 'seconds'
             warnings = h2o_glm.simpleCheckGLMGrid(self, glm, None, allowFailWarning=True, **kwargs)
             x = re.compile('[Ff]ailed')

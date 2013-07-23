@@ -18,21 +18,24 @@ def test_GLM_umass(self):
         x = None
         col_names = ''
         for c in range(0, num_cols):
-            if (x is None):
-                col_names += ('V' + str((c + 1)))
+            if ((csvFilename == 'clslowbwt.dat') and (c == 6)):
+                print 'Not including col 6 for this dataset from x'
             else:
-                col_names += (',V' + str((c + 1)))
-            if (c != y):
                 if (x is None):
-                    x = str(c)
-                    formula += ('V' + str((c + 1)))
+                    col_names += ('V' + str((c + 1)))
                 else:
-                    x += (',' + str(c))
-                    formula += ('+V' + str((c + 1)))
+                    col_names += (',V' + str((c + 1)))
+                if (c != y):
+                    if (x is None):
+                        x = str(c)
+                        formula += ('V' + str((c + 1)))
+                    else:
+                        x += (',' + str(c))
+                        formula += ('+V' + str((c + 1)))
         print 'formula:', formula
         print 'col_names:', col_names
         print 'x:', x
-        kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_eps': 0.0001, 'max_iter': 50, }
+        kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_epsilon': 0.0001, 'max_iter': 50, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end (w/check) on ', csvPathname2, 'took', (time.time() - start), 'seconds'

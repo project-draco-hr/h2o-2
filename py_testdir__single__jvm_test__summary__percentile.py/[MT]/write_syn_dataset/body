@@ -1,0 +1,8 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, low, high, mode, SEED):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    for i in range(rowCount):
+        rowData = [randint_triangular(low, high, mode) for j in range(colCount)]
+        rowDataCsv = ','.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()

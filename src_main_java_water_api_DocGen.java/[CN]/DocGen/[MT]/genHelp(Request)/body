@@ -1,0 +1,53 @@
+{
+  final String name=R.getClass().getSimpleName();
+  final FieldDoc docs[]=R.toDocField();
+  final StringBuilder sb=new StringBuilder();
+  bodyHead(sb);
+  title(sb,name);
+  paragraph(sb,"");
+  section(sb,"Supported HTTP methods and descriptions");
+  String gs=R.toDocGET();
+  if (gs != null) {
+    paragraph(sb,"GET");
+    paragraph(sb,gs);
+  }
+  section(sb,"URL");
+  paraTail(escape(paraHead(sb),"http://<h2oHost>:<h2oApiPort>/" + name + ".json"));
+  if (docs == null)   return bodyTail(sb).toString();
+  section(sb,"Input parameters");
+  listHead(sb);
+  for (  FieldDoc doc : docs)   if (doc.isArg()) {
+    listBullet(sb,bold(doc._name) + ", " + doc.argHelp(R),doc._help + doc.version(),0);
+    String[] errors=doc.errors(R);
+    if (errors != null || doc.required(R)) {
+      paragraph(sb,"");
+      paragraph(sb,bold("Possible JSON error field returns:"));
+      listHead(sb);
+      if (errors != null)       for (      String err : errors)       listBullet(sb,doc.argErr() + err,"",1);
+      if (doc.required(R))       listBullet(sb,doc.argErr() + "Argument '" + doc._name+ "' is required, but not specified","",1);
+      listTail(sb);
+    }
+  }
+  listTail(sb);
+  section(sb,"Output JSON elements");
+  listHead(sb);
+  for (  FieldDoc doc : docs)   if (doc.isJSON())   listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),doc._help + doc.version(),0);
+  listTail(sb);
+  section(sb,"HTTP response codes");
+  paragraph(sb,"200 OK");
+  paragraph(sb,"Success and error responses are identical.");
+  section(sb,"Success Example");
+  String s[]=R.DocExampleSucc();
+  paraHead(sb);
+  url(sb,name,s);
+  paraTail(sb);
+  paragraph(sb,serve(name,s));
+  section(sb,"Error Example");
+  String f[]=R.DocExampleFail();
+  paraHead(sb);
+  url(sb,name,f);
+  paraTail(sb);
+  paragraph(sb,serve(name,f));
+  bodyTail(sb);
+  return sb.toString();
+}

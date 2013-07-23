@@ -24,9 +24,8 @@ def test_flashgordon(self):
                     importResult = h2o.nodes[0].import_s3(bucket)
                 else:
                     importResult = h2o.nodes[0].import_hdfs(URI)
-                s3nFullList = importResult['succeeded']
-                for k in s3nFullList:
-                    key = k['key']
+                s3nFullList = importResult['files']
+                for key in importResult:
                     if (csvFilepattern in key):
                         print "example file we'll use:", key
                         break

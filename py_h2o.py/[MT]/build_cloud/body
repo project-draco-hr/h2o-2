@@ -1,4 +1,4 @@
-def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, **kwargs):
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, hadoop=False, **kwargs):
     clean_sandbox()
     if kwargs.setdefault('enable_benchmark_log', False):
         global cloudPerfH2O
@@ -27,15 +27,18 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
             if rand_shuffle:
                 random.shuffle(hostPortList)
             for (h, p) in hostPortList:
-                verboseprint('ssh starting node', totalNodes, 'via', h)
-                newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)
+                if hadoop:
+                    newNode = h.hadoop_h2o(port=p, node_id=totalNodes, **kwargs)
+                else:
+                    verboseprint('ssh starting node', totalNodes, 'via', h)
+                    newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)
                 node_list.append(newNode)
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
         stabilize_cloud(node_list[(-1)], len(node_list), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
         verboseprint(len(node_list), 'Last added node stabilized in ', (time.time() - start), ' secs')
-        verboseprint(('Built cloud: %d node_list, %d hosts, in %d s' % (len(node_list), hostCount, (time.time() - start))))
+        verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(node_list), hostCount, (time.time() - start))))
         for n in node_list:
             stabilize_cloud(n, len(node_list), timeoutSecs=timeoutSecs)
         check_sandbox_for_errors()

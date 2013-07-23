@@ -1,10 +1,10 @@
 {
-  String res="Column(" + name + "){";
-  if (ignored)   res+="IGNORED";
+  String res="Column(" + _name + "){";
+  if (_ignored)   res+="IGNORED";
  else {
-    res+=" [" + df.format(min) + ","+ df.format(max)+ "]";
-    res+=",bad values=" + invalidValues + "/"+ rows();
-    if (isClass)     res+=" CLASS ";
+    res+=" [" + df.format(_min) + ","+ df.format(_max)+ "]";
+    res+=",bad values=" + _invalidValues + "/"+ rows();
+    if (_isClass)     res+=" CLASS ";
   }
   res+="}";
   return res;

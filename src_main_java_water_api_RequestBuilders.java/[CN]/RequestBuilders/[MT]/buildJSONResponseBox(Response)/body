@@ -2,7 +2,7 @@
 switch (response._status) {
 case done:
     RString result=new RString(_jsonResponseBox);
-  result.replace("JSON_RESPONSE_BOX",GSON_BUILDER.toJson(response.toJson()));
+  result.replace("JSON_RESPONSE_BOX",response._response == null ? new String(response._req.writeJSON(new AutoBuffer()).buf()) : GSON_BUILDER.toJson(response.toJson()));
 return result.toString();
 case error:
 case redirect:

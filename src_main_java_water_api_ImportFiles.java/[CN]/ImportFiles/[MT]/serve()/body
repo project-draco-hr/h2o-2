@@ -1,39 +1,22 @@
 {
-  FileIntegrityChecker c=FileIntegrityChecker.check(_path.value());
-  JsonObject json=new JsonObject();
-  JsonArray succ=new JsonArray();
-  JsonArray fail=new JsonArray();
+  FileIntegrityChecker c=FileIntegrityChecker.check(path.value());
+  ArrayList<String> afails=new ArrayList();
+  ArrayList<String> afiles=new ArrayList();
+  ArrayList<String> akeys=new ArrayList();
   Futures fs=new Futures();
   for (int i=0; i < c.size(); ++i) {
     Key k=c.importFile(i,fs);
     if (k == null) {
-      fail.add(new JsonPrimitive(c.getFileName(i)));
+      afails.add(c.getFileName(i));
     }
  else {
-      JsonObject o=new JsonObject();
-      o.addProperty(KEY,k.toString());
-      o.addProperty(FILE,c.getFileName(i));
-      succ.add(o);
+      afiles.add(c.getFileName(i));
+      akeys.add(k.toString());
     }
   }
   fs.blockForPending();
-  json.add(SUCCEEDED,succ);
-  json.add(FAILED,fail);
-  Response r=Response.done(json);
-  r.setBuilder(SUCCEEDED,new ArrayBuilder(){
-    @Override public String header(    JsonArray array){
-      return "<table class='table table-striped table-bordered'>" + "<tr><th>File</th></tr>";
-    }
-    @Override public Builder defaultBuilder(    JsonElement element){
-      return new ObjectBuilder(){
-        @Override public String build(        Response response,        JsonObject object,        String contextName){
-          return "<tr><td>" + "<a href='Parse.html?source_key=" + object.get(KEY).getAsString() + "'>"+ object.get(FILE).getAsString()+ "</a></td></tr>";
-        }
-      }
-;
-    }
-  }
-);
-  if (succ.size() > 1)   r.addHeader("<div class='alert'>" + Parse.link("*" + _path.value() + "*","Parse all into hex format") + " </div>");
-  return r;
+  fails=afails.toArray(new String[0]);
+  files=afiles.toArray(new String[0]);
+  keys=akeys.toArray(new String[0]);
+  return new Response(Response.Status.done,this);
 }
