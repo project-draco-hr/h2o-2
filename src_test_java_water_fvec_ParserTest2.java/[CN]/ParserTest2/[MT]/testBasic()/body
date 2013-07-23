@@ -1,0 +1,19 @@
+{
+  String[] data=new String[]{"1|2|3\n1|2|3\n","4|5|6\n","4|5.2|\n","asdf|qwer|1\n","1.3\n","1.1|2.7|3.4"};
+  double[][] exp=new double[][]{d(1.0,2.0,3.0),d(1.0,2.0,3.0),d(4.0,5.0,6.0),d(4.0,5.2,NaN),d(NaN,NaN,1.0),d(1.3,NaN,NaN),d(1.1,2.7,3.4)};
+  for (  char separator : SEPARATORS) {
+    String[] dataset=getDataForSeparator(separator,data);
+    StringBuilder sb=new StringBuilder();
+    for (int i=0; i < dataset.length; ++i)     sb.append(dataset[i]).append("\n");
+    Key k=k(Key.make().toString(),sb.toString());
+    Key r1=Key.make("r1");
+    ParseDataset2.parse(r1,new Key[]{k});
+    testParsed(r1,exp,k);
+    sb=new StringBuilder();
+    for (int i=0; i < dataset.length; ++i)     sb.append(dataset[i]).append("\r\n");
+    k=k(k.toString(),sb.toString());
+    Key r2=Key.make("r2");
+    ParseDataset2.parse(r2,new Key[]{k});
+    testParsed(r2,exp,k);
+  }
+}

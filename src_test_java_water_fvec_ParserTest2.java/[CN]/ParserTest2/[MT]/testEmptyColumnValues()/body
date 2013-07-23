@@ -1,0 +1,14 @@
+{
+  String data[]={"1,2,3,foo\n" + "4,5,6,bar\n" + "7,,8,\n"+ ",9,10\n"+ "11,,,\n"+ "0,0,0,z\n"+ "0,0,0,z\n"+ "0,0,0,z\n"+ "0,0,0,z\n"+ "0,0,0,z\n"};
+  double[][] expDouble=new double[][]{d(1,2,3,1),d(4,5,6,0),d(7,NaN,8,NaN),d(NaN,9,10,NaN),d(11,NaN,NaN,NaN),d(0,0,0,2),d(0,0,0,2),d(0,0,0,2),d(0,0,0,2),d(0,0,0,2)};
+  final char separator=',';
+  String[] dataset=getDataForSeparator(separator,data);
+  Key key=k("EmptyColumnValues",dataset);
+  Key r=Key.make();
+  ParseDataset2.parse(r,new Key[]{key});
+  Frame fr=DKV.get(r).get();
+  String[] cd=fr._vecs[3]._domain;
+  Assert.assertEquals("bar",cd[0]);
+  Assert.assertEquals("foo",cd[1]);
+  testParsed(r,expDouble,key);
+}
