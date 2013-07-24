@@ -1,4 +1,4 @@
-def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, **kwargs):
+def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, **kwargs):
     GLMModel = glm['GLMModel']
     warnings = None
     if ('warnings' in GLMModel):
@@ -16,6 +16,8 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     family = GLMParams['family']
     iterations = GLMModel['iterations']
     print 'GLMModel/iterations:', iterations
+    if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
+        raise Exception(('GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
     validationsList = GLMModel['validations']
     validations = validationsList[0]
     n_folds = kwargs.setdefault('n_folds', None)
