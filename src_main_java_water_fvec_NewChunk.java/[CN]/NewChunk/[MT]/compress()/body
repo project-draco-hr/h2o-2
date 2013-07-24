@@ -3,7 +3,8 @@
   long lemin=0, lemax=lemin;
   boolean overflow=false;
   boolean floatOverflow=false;
-  if (0 < _strCnt && (_strCnt + _naCnt) == _len) {
+  if (_naCnt == _len)   return new C0DChunk(Double.NaN,_len);
+  if (type() == AppendableVec.ENUM) {
     int sz=Integer.MIN_VALUE;
     for (    int x : _xs)     if (x > sz)     sz=x;
     if (sz < Enum.MAX_ENUM_SIZE) {

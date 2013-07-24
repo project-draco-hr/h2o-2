@@ -3,7 +3,7 @@
   double[][] expDouble=new double[][]{d(+.6e102,.7e102,.8e102),d(+.6e102,+.7e102,+.8e102)};
   for (  char separator : SEPARATORS) {
     String[] dataset=getDataForSeparator(separator,data);
-    Key key=k("NumberFormats",dataset);
+    Key key=FVecTest.makeByteVec("NumberFormats",dataset);
     Key r=Key.make();
     ParseDataset2.parse(r,new Key[]{key});
     testParsed(r,expDouble,key);

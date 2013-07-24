@@ -1,0 +1,23 @@
+{
+  int nid=0, bin=0;
+  Histogram h=null;
+  while (true) {
+    Tree.Node node=_tree.n(nid);
+    Histogram h2=node._hs[node._col];
+    if (h2 == null)     break;
+    h=h2;
+    double d=chks[node._col].at0(i);
+    bin=h2.bin(d);
+    if (node._ns == null)     break;
+    nid=node._ns[bin];
+    if (nid == -1)     break;
+  }
+  if (_numClasses == 0)   return h.mean(bin) - y;
+  int ycls=(int)y - _ymin;
+  long num=h._bins[bin];
+  long clss[]=h._clss[bin];
+  int best=0;
+  for (int k=1; k < _numClasses; k++)   if (clss[best] < clss[k])   best=k;
+  if (best != ycls)   _err++;
+  return (double)(num - clss[ycls]) / num;
+}
