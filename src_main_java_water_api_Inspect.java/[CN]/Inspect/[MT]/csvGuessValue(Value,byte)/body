@@ -1,4 +1,8 @@
 {
+  Object o=v.type() != TypeMap.PRIM_B ? v.get() : null;
+  if (o instanceof ByteVec) {
+    v=((ByteVec)o).chunkIdx(0);
+  }
   byte[] bs=v.getFirstBytes();
   int off=0;
   InputStream is=null;

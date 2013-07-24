@@ -1,14 +1,18 @@
 {
+  Key key=Key.make(_key.record()._originalValue);
   Value val=_key.value();
   if (val == null) {
     return RequestServer._http404.serve();
   }
-  if (val.type() == TypeMap.PRIM_B)   return serveUnparsedValue(val);
+  if (val.type() == TypeMap.PRIM_B)   return serveUnparsedValue(key,val);
   Freezable f=val.getFreezable();
   if (f instanceof ValueArray) {
     ValueArray ary=(ValueArray)f;
-    if (ary._cols.length == 1 && ary._cols[0]._name == null)     return serveUnparsedValue(val);
+    if (ary._cols.length == 1 && ary._cols[0]._name == null)     return serveUnparsedValue(key,val);
     return serveValueArray(ary);
+  }
+  if (f instanceof Vec) {
+    return serveUnparsedValue(key,((Vec)f).chunkIdx(0));
   }
   if (f instanceof GLMModel) {
     GLMModel m=(GLMModel)f;

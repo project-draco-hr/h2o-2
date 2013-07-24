@@ -1,0 +1,18 @@
+{
+  PSetup p=_source.value();
+  CsvParser.Setup q=p._setup;
+  Key dest=Key.make(_dest.value());
+  try {
+    CsvParser.Setup new_setup=_header.originalValue() == null ? q : new CsvParser.Setup(q._separator,_header.value(),q._data,q._numlines,q._bits);
+    Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
+    job=ParseDataset2.forkParseDataset(dest,keys,new_setup)._self.toString();
+    destination_key=dest.toString();
+    return new Response(Response.Status.done,this);
+  }
+ catch (  IllegalArgumentException e) {
+    return Response.error(e.getMessage());
+  }
+catch (  Error e) {
+    return Response.error(e.getMessage());
+  }
+}
