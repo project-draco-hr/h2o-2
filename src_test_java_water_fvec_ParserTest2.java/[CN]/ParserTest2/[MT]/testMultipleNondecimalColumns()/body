@@ -3,7 +3,7 @@
   double[][] expDouble=new double[][]{d(1,2,0),d(0,4,2),d(1,6,1),d(0,8,0),d(0,NaN,2),d(0,12,1),d(2,14,0)};
   for (  char separator : SEPARATORS) {
     String[] dataset=getDataForSeparator(separator,data);
-    Key key=k("MultipleNondecimalColumns",dataset);
+    Key key=FVecTest.makeByteVec("MultipleNondecimalColumns",dataset);
     Key r=Key.make();
     ParseDataset2.parse(r,new Key[]{key});
     Frame fr=DKV.get(r).get();

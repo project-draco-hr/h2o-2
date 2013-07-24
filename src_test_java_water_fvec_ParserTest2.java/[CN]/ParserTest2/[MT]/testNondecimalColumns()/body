@@ -4,7 +4,7 @@
   String[][] expString=new String[][]{s(null,null,"one"),s(null,null,"two"),s(null,null,"three"),s(null,null,"one"),s(null,null,"two"),s(null,null,"three"),s(null,null,"one"),s(null,null,"two"),s(null,null," four"),s(null,null,"three")};
   for (  char separator : SEPARATORS) {
     String[] dataset=getDataForSeparator(separator,data);
-    Key key=k("NondecimalColumns",dataset);
+    Key key=FVecTest.makeByteVec("NondecimalColumns",dataset);
     Key r=Key.make();
     ParseDataset2.parse(r,new Key[]{key});
     Frame fr=DKV.get(r).get();
