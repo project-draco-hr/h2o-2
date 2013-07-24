@@ -2,7 +2,8 @@
   GLMModel currentModel=null;
   ArrayList<String> warns=new ArrayList<String>();
   long t1=System.currentTimeMillis();
-  Column ycol=data._ary._cols[data._modelDataMap[data._modelDataMap.length - 1]];
+  int ycolId=data._modelDataMap[data._response];
+  Column ycol=data._ary._cols[ycolId];
   params.checkResponseCol(ycol,warns);
   GramMatrixFunc gramF=new GramMatrixFunc(data,params,oldBeta);
   double[] newBeta=MemoryManager.malloc8d(data.expandedSz());
@@ -10,24 +11,11 @@
   Gram gram=gramF.apply(job,data);
   int iter=1;
   long lsmSolveTime=0;
-  try {
-    long t=System.currentTimeMillis();
-    lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
-    lsmSolveTime+=System.currentTimeMillis() - t;
-  }
- catch (  NonSPDMatrixException e) {
-    if (!(lsm instanceof GeneralizedGradientSolver)) {
-      lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
-      warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
-      long t=System.currentTimeMillis();
-      lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
-      lsmSolveTime+=System.currentTimeMillis() - t;
-    }
-  }
-  if (params._family == Family.gaussian) {
-    currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,null);
-  }
- else   do {
+  long t=System.currentTimeMillis();
+  lsm.solve(gram,newBeta);
+  lsmSolveTime+=System.currentTimeMillis() - t;
+  currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,null);
+  if (params._family != Family.gaussian)   do {
     if (oldBeta == null)     oldBeta=MemoryManager.malloc8d(data.expandedSz());
     if (job.cancelled())     throw new JobCancelledException();
     double[] b=oldBeta;
@@ -35,26 +23,16 @@
     newBeta=b;
     gram=gramF.apply(job,data);
     if (gram.hasNaNsOrInfs())     break;
-    try {
-      long t=System.currentTimeMillis();
-      lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
-      lsmSolveTime+=System.currentTimeMillis() - t;
-    }
- catch (    NonSPDMatrixException e) {
-      if (!(lsm instanceof GeneralizedGradientSolver)) {
-        lsm=new GeneralizedGradientSolver(lsm._lambda,lsm._alpha);
-        warns.add("Switched to generalized gradient solver due to Non SPD matrix.");
-        long t=System.currentTimeMillis();
-        lsm.solve(gram.getXX(),gram.getXY(),gram.getYY(),newBeta);
-        lsmSolveTime+=System.currentTimeMillis() - t;
-      }
-    }
+    t=System.currentTimeMillis();
+    lsm.solve(gram,newBeta);
+    lsmSolveTime+=System.currentTimeMillis() - t;
     String[] warnings=new String[warns.size()];
     warns.toArray(warnings);
     double betaDiff=betaDiff(oldBeta,newBeta);
     converged=(betaDiff < params._betaEps);
     float progress=Math.max((float)iter / params._maxIter,Math.min((float)(params._betaEps / betaDiff),1.0f));
     currentModel=new GLMModel(Status.ComputingModel,progress,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,warnings);
+    currentModel._lsmSolveTime=lsmSolveTime;
     currentModel.store();
   }
  while (++iter < params._maxIter && !converged);
