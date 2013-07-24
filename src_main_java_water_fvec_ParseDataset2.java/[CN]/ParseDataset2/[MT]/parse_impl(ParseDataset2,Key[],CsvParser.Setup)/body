@@ -11,17 +11,17 @@
   MultiFileParseTask uzpt=new MultiFileParseTask(setup).invoke(fkeys);
   if (uzpt._parserr != null)   throw new ParseException(uzpt._parserr);
   int[] ecols=uzpt.enumCols();
-  String[] names=new String[uzpt._cols.length];
+  String[] names=new String[uzpt._vecs.length];
   for (int i=0; i < names.length; i++)   names[i]=setup._header ? setup._data[0][i] : ("" + i);
   if (ecols != null && ecols.length > 0) {
     Enum[] enums=EnumFetchTask.fetchEnums(uzpt._eKey,ecols);
-    for (    int i : ecols)     uzpt._cols[i]._domain=enums[i].computeColumnDomain();
+    for (    int i : ecols)     uzpt._vecs[i]._domain=enums[i].computeColumnDomain();
     String[][] ds=new String[ecols.length][];
-    for (int i=0; i < ecols.length; ++i)     ds[i]=uzpt._cols[ecols[i]]._domain;
+    for (int i=0; i < ecols.length; ++i)     ds[i]=uzpt._vecs[ecols[i]]._domain;
     Vec[] evecs=new Vec[ecols.length];
-    for (int i=0; i < evecs.length; ++i)     evecs[i]=uzpt._cols[ecols[i]];
+    for (int i=0; i < evecs.length; ++i)     evecs[i]=uzpt._vecs[ecols[i]];
     EnumUpdateTask t=new EnumUpdateTask(ds,uzpt._eKey,ecols);
     t.doAll(evecs);
   }
-  UKV.put(job.dest(),new Frame(job.dest(),names,uzpt._cols));
+  UKV.put(job.dest(),new Frame(job.dest(),names,uzpt._vecs));
 }

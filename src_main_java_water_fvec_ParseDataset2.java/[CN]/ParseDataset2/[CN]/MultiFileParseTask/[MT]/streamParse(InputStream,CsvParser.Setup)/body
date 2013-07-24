@@ -1,12 +1,12 @@
 {
-  final NewChunk nvs[]=new NewChunk[_cols.length];
-  for (int i=0; i < nvs.length; i++)   nvs[i]=new NewChunk(_cols[i],0);
+  final NewChunk nvs[]=new NewChunk[_vecs.length];
+  for (int i=0; i < nvs.length; i++)   nvs[i]=new NewChunk(_vecs[i],0);
   StreamParser parser=new StreamParser(is,nvs,localSetup,enums());
   int cidx=0;
   while (is.available() > 0)   parser.parse(cidx++);
   parser.parse(cidx++);
-  for (int i=0; i < _cols.length; i++) {
+  for (int i=0; i < _vecs.length; i++) {
     nvs[i].close(0,_fs);
-    _cols[i]=((AppendableVec)_cols[i]).close(_fs);
+    _vecs[i]=((AppendableVec)_vecs[i]).close(_fs);
   }
 }

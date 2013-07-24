@@ -1,0 +1,6 @@
+{
+  int[] res=_modelDataMap.clone();
+  System.arraycopy(_modelDataMap,0,res,_modelDataMap.length - _dense,_dense);
+  System.arraycopy(_modelDataMap,_dense,res,0,_modelDataMap.length - _dense);
+  return res;
+}

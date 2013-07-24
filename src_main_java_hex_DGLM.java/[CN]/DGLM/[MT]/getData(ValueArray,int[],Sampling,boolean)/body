@@ -1,15 +1,3 @@
 {
-  ArrayList<Integer> numeric=new ArrayList<Integer>();
-  ArrayList<Integer> categorical=new ArrayList<Integer>();
-  for (int i=0; i < colIds.length - 1; ++i) {
-    int c=colIds[i];
-    if (ary._cols[c]._domain != null)     categorical.add(c);
- else     numeric.add(c);
-  }
-  if (!categorical.isEmpty() && !numeric.isEmpty()) {
-    int idx=0;
-    for (    int i : numeric)     colIds[idx++]=i;
-    for (    int i : categorical)     colIds[idx++]=i;
-  }
   return new DataFrame(ary,colIds,s,standardize,true);
 }

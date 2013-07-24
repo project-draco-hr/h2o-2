@@ -1,0 +1,12 @@
+{
+  String[] data=new String[]{"1|2|3\n4|5|6\n7|8|9","\r\n10|11|12\n13|14|15","\n16|17|18\r","\n19|20|21\n","22|23|24\n25|26|27\r\n","28|29|30"};
+  double[][] exp=new double[][]{d(1,2,3),d(4,5,6),d(7,8,9),d(10,11,12),d(13,14,15),d(16,17,18),d(19,20,21),d(22,23,24),d(25,26,27),d(28,29,30)};
+  for (  char separator : SEPARATORS) {
+    String[] dataset=getDataForSeparator(separator,data);
+    Key k=FVecTest.makeByteVec("ChunkBoundariesMixedLineEndings",dataset);
+    Key r4=Key.make();
+    ParseDataset2.parse(r4,new Key[]{k});
+    testParsed(r4,exp,k);
+    checkLeakedKeys();
+  }
+}

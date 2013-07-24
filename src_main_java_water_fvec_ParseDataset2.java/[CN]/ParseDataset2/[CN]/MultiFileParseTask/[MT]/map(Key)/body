@@ -12,9 +12,9 @@
     if (!has_hdr)     setup=new CsvParser.Setup(setup,false);
   }
   final int ncols=_setup._data[0].length;
-  _cols=new Vec[ncols];
+  _vecs=new Vec[ncols];
   Key[] keys=vec.group().addVecs(ncols);
-  for (int i=0; i < ncols; i++)   _cols[i]=new AppendableVec(keys[i]);
+  for (int i=0; i < ncols; i++)   _vecs[i]=new AppendableVec(keys[i]);
   try {
 switch (cpr) {
 case NONE:
