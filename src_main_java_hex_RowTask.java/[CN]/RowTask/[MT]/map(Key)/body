@@ -1,10 +1,7 @@
 {
   _bits=new AutoBuffer(DKV.get(key).memOrLoad());
-  final int nrows=_bits.remaining() / _ary.rowSize();
+  final int nrows=_ary.rpc(ValueArray.getChunkIndex(key));
   final Row r=new Row(this);
   _res=newRes();
-  for (_rid=0; _rid < nrows; ++_rid) {
-    if (_filters != null)     for (    RowFilter f : _filters)     if (!f.useRow(r))     continue;
-    map(r,_res);
-  }
+  for (_rid=0; _rid < nrows; ++_rid)   map(r,_res);
 }
