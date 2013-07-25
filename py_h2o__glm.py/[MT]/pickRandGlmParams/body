@@ -9,8 +9,8 @@ def pickRandGlmParams(paramDict, params):
         if (randomKey == 'x'):
             colX = randomValue
         if (('family' in params) and ('link' in params)):
-            if (params['family'] == 'poisson'):
-                if (params['link'] in 'logit'):
+            if ((params['family'] is not None) and (params['family'] == 'poisson')):
+                if ((params['link'] is not None) and (params['link'] in 'logit')):
                     params['link'] = None
         if (('family' not in params) or (params['family'] == 'binomial')):
             maxCase = max(paramDict['case'])

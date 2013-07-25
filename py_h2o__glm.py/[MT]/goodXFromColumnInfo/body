@@ -1,6 +1,6 @@
-def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, parseKey=None, timeoutSecs=120):
-    if (parseKey is not None):
-        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseKey, exceptionOnMissingValues=False, timeoutSecs=timeoutSecs)
+def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120):
+    if (key is not None):
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(key, exceptionOnMissingValues=False, timeoutSecs=timeoutSecs)
         num_cols = len(colNameDict)
     if (keepPattern is not None):
         keepX = re.compile(keepPattern)
@@ -9,8 +9,6 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
     x = range(num_cols)
     xOrig = x[:]
     for k in xOrig:
-        if (k == 5):
-            print 'hello', colNameDict[k], k
         name = colNameDict[k]
         if (name == y):
             print ('Removing %d because name: %s matches output %s' % (k, name, y))
@@ -32,4 +30,5 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
             x.remove(k)
     print 'The pruned x has length', len(x)
     x = ','.join(map(str, x))
+    print '\nx:', x
     return x

@@ -17,7 +17,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     iterations = GLMModel['iterations']
     print 'GLMModel/iterations:', iterations
     if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
-        raise Exception(('GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
+        raise Exception(('Convergence issue? GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
     validationsList = GLMModel['validations']
     validations = validationsList[0]
     n_folds = kwargs.setdefault('n_folds', None)

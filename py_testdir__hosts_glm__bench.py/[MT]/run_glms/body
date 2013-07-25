@@ -6,17 +6,21 @@ def run_glms(file, configs):
     else:
         output = open('glmbench.csv', 'a')
     csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
-    csvWrt.writerow(dict(((fn, fn) for fn in csv_header)))
+    csvWrt.writeheader()
     try:
+        java_heap_GB = h2o.nodes[0].java_heap_GB
         k = parse_file(file)
-        goodX = h2o_glm.goodXFromColumnInfo(y=kwargs['y'], parseKey=parseKey, timeoutSecs=300)
+        goodX = h2o_glm.goodXFromColumnInfo(y=configs[0]['y'], key=k, timeoutSecs=300)
         for kwargs in configs:
             start = time.time()
             res = h2o.nodes[0].GLM(k, timeoutSecs=6000000, pollTimeoutSecs=180, **kwargs)
             wall_clock_secs = (time.time() - start)
             glm = res['GLMModel']
+            print 'glm model time (milliseconds):', glm['model_time']
+            print 'glm validations[0] time (milliseconds):', glm['validations'][0]['val_time']
+            print 'glm lsm time (milliseconds):', glm['lsm_time']
+            print 'glm computation time', res['computation_time']
             coefs = glm['coefficients']
-            print 'model computed in', res['computation_time']
             print 'wall clock in', wall_clock_secs, 'secs'
             max_len = 0
             val = glm['validations'][0]
@@ -25,6 +29,7 @@ def run_glms(file, configs):
             row.update(glm)
             row.update(val)
             row.update({'wall_clock_secs': wall_clock_secs, })
+            row.update({'java_heap_GB': java_heap_GB, })
             csvWrt.writerow(row)
         h2o.nodes[0].remove_key(k)
     finally:

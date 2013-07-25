@@ -15,7 +15,7 @@ def test_short(self):
     keepPattern = 'oly_|mt_|b_'
     y = 'is_purchase'
     print 'y:', y
-    x = h2o_glm.goodXFromColumnInfo(y, keepPattern=pattern, parseKey=parseKey, timeoutSecs=300)
+    x = h2o_glm.goodXFromColumnInfo(y, keepPattern=keepPattern, key=parseKey['destination_key'], timeoutSecs=300)
     print 'x:', x
     kwargs = {'x': x, 'y': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 5, 'thresholds': 0.5, 'n_folds': 1, 'weight': 100, 'beta_epsilon': 0.0001, }
     timeoutSecs = 1800
