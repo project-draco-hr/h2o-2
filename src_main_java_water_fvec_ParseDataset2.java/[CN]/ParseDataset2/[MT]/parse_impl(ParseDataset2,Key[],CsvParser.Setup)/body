@@ -4,8 +4,7 @@
     job.cancel();
     return;
   }
-  Frame f=UKV.get(fkeys[0]);
-  ByteVec vec=(ByteVec)f._vecs[0];
+  ByteVec vec=(ByteVec)getVec(fkeys[0]);
   Compression compression=guessCompressionMethod(vec);
   byte sep=setup == null ? CsvParser.NO_SEPARATOR : setup._separator;
   if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,sep,compression);

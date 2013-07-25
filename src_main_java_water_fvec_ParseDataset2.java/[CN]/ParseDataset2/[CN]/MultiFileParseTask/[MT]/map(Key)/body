@@ -1,6 +1,5 @@
 {
-  Frame f=UKV.get(key);
-  ByteVec vec=(ByteVec)f._vecs[0];
+  ByteVec vec=(ByteVec)getVec(key);
   Compression cpr=guessCompressionMethod(vec);
   CsvParser.Setup setup=csvGuessValue(vec,_setup._separator,cpr);
   if (!_setup.equals(setup)) {
