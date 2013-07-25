@@ -1,5 +1,5 @@
 {
   long total=0;
-  for (  Key fkey : fkeys)   total+=((ByteVec)UKV.get(fkey)).length();
+  for (  Key fkey : fkeys)   total+=((Frame)UKV.get(fkey))._vecs[0].byteSize();
   return new ParseProgress(0,total);
 }

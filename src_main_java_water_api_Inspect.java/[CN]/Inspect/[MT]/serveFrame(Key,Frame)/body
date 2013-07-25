@@ -1,0 +1,49 @@
+{
+  if (_offset.value() > f._vecs[0].length())   return Response.error("Value only has " + f._vecs[0].length() + " rows");
+  JsonObject result=new JsonObject();
+  result.addProperty(VALUE_TYPE,"parsed");
+  result.addProperty(KEY,key.toString());
+  result.addProperty(NUM_ROWS,f._vecs[0].length());
+  result.addProperty(NUM_COLS,f._vecs.length);
+  JsonArray cols=new JsonArray();
+  JsonArray rows=new JsonArray();
+  for (int i=0; i < f._vecs.length; i++) {
+    Vec v=f._vecs[i];
+    JsonObject json=new JsonObject();
+    json.addProperty(NAME,f._names[i]);
+    json.addProperty(MIN,v.min());
+    json.addProperty(MAX,v.max());
+    cols.add(json);
+  }
+  if (_offset.value() != INFO_PAGE) {
+    long endRow=Math.min(_offset.value() + _view.value(),f._vecs[0].length());
+    long startRow=Math.min(_offset.value(),f._vecs[0].length() - _view.value());
+    for (long row=Math.max(0,startRow); row < endRow; ++row) {
+      JsonObject obj=new JsonObject();
+      obj.addProperty(ROW,row);
+      for (int i=0; i < f._vecs.length; ++i)       format(obj,f,row,i);
+      rows.add(obj);
+    }
+  }
+  result.add(COLS,cols);
+  result.add(ROWS,rows);
+  Response r=Response.done(result);
+  r.setBuilder(ROOT_OBJECT,new ObjectBuilder(){
+    @Override public String build(    Response response,    JsonObject object,    String contextName){
+      String s=html(key,f._vecs[0].length(),f._vecs.length,0,0);
+      Table2 t=new Table2(argumentsToJson(),_offset.value(),_view.value(),f);
+      s+=t.build(response,object.get(ROWS),ROWS);
+      return s;
+    }
+  }
+);
+  r.setBuilder(ROWS + "." + ROW,new ArrayRowElementBuilder(){
+    @Override public String elementToString(    JsonElement elm,    String contextName){
+      String json=elm.getAsString();
+      String html=_displayNames.get(json);
+      return html != null ? html : RequestStatics.JSON2HTML(json);
+    }
+  }
+);
+  return r;
+}

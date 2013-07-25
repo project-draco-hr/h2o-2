@@ -3,7 +3,9 @@
   File f=new File(_files[i]);
   Key k;
   if (_newApi) {
-    k=NFSFileVec.make(f,fs);
+    k=PersistNFS.decodeFile(f);
+    NFSFileVec nfs=DKV.get(NFSFileVec.make(f,fs)).get();
+    UKV.put(k,new Frame(new String[]{"0"},new Vec[]{nfs}),fs);
   }
  else {
     k=PersistNFS.decodeFile(f);

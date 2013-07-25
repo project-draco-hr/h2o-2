@@ -41,7 +41,7 @@
   Response r=Response.done(result);
   r.setBuilder(ROOT_OBJECT,new ObjectBuilder(){
     @Override public String build(    Response response,    JsonObject object,    String contextName){
-      String s=html(va);
+      String s=html(va._key,va._numrows,va._cols.length,va._rowsize,va.length());
       Table t=new Table(argumentsToJson(),_offset.value(),_view.value(),va);
       s+=t.build(response,object.get(ROWS),ROWS);
       return s;

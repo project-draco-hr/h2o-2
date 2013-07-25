@@ -4,7 +4,8 @@
     job.cancel();
     return;
   }
-  ByteVec vec=UKV.get(fkeys[0]);
+  Frame f=UKV.get(fkeys[0]);
+  ByteVec vec=(ByteVec)f._vecs[0];
   Compression compression=guessCompressionMethod(vec);
   byte sep=setup == null ? CsvParser.NO_SEPARATOR : setup._separator;
   if (setup == null || setup._data == null || setup._data[0] == null)   setup=csvGuessValue(vec,sep,compression);
@@ -23,5 +24,5 @@
     EnumUpdateTask t=new EnumUpdateTask(ds,uzpt._eKey,ecols);
     t.doAll(evecs);
   }
-  UKV.put(job.dest(),new Frame(job.dest(),names,uzpt._vecs));
+  UKV.put(job.dest(),new Frame(names,uzpt._vecs));
 }

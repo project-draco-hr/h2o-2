@@ -1,7 +1,8 @@
 {
   File file=TestUtil.find_test_file("./smalldata/logreg/prostate.csv");
   Key fkey=NFSFileVec.make(file);
-  Frame fr=ParseDataset2.parse(Key.make("prostate.hex"),new Key[]{fkey});
+  Key dest=Key.make("prostate.hex");
+  Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
   UKV.remove(fkey);
   try {
     assertEquals(380,fr._vecs[0].length());
@@ -13,6 +14,6 @@
     UKV.remove(gbm._dest);
   }
   finally {
-    UKV.remove(fr._key);
+    UKV.remove(dest);
   }
 }
