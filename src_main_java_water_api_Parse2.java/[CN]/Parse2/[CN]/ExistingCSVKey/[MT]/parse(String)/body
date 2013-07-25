@@ -1,0 +1,29 @@
+{
+  Key k1=Key.make(input);
+  Value v1=DKV.get(k1);
+  if (v1 != null && (input.endsWith(".xlsx") || input.endsWith(".xls")))   return new PSetup(k1,new Setup((byte)0,false,null,0,null));
+  Pattern incl=makePattern(input);
+  Pattern excl=null;
+  if (exclude.specified())   excl=makePattern(exclude.value());
+  ArrayList<Key> keys=new ArrayList();
+  for (  Key key : H2O.keySet()) {
+    if (!key.user_allowed())     continue;
+    String ks=key.toString();
+    if (!incl.matcher(ks).matches())     continue;
+    if (excl != null && excl.matcher(ks).matches())     continue;
+    Value v2=DKV.get(key);
+    if (v2 == null || input.endsWith(".xlsx") || input.endsWith(".xls") || v2.length() == 0)     continue;
+    if (v2.isHex())     continue;
+    Object o=v2.type() != TypeMap.PRIM_B ? v2.get() : null;
+    if (o instanceof Frame && ((Frame)o)._vecs[0] instanceof ByteVec)     keys.add(key);
+  }
+  if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
+  Collections.sort(keys);
+  Key hKey=keys.get(0);
+  Value v=DKV.get(hKey);
+  v=((Frame)v.get())._vecs[0].chunkIdx(0);
+  byte sep=separator.specified() ? separator.value() : CsvParser.NO_SEPARATOR;
+  CsvParser.Setup setup=Inspect.csvGuessValue(v,sep);
+  if (setup._data == null || setup._data[0].length == 0)   throw new IllegalArgumentException("I cannot figure out this file; I only handle common CSV formats: " + hKey);
+  return new PSetup(keys,setup);
+}
