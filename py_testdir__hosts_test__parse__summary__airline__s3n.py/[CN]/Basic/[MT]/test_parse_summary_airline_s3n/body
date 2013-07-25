@@ -2,13 +2,14 @@ def test_parse_summary_airline_s3n(self):
     URI = 's3n://h2o-airlines-unpacked/'
     csvFilelist = [('allyears2k.csv', 300), ('allyears.csv', 900), ('allyears_10.csv', 1800)]
     importHDFSResult = h2o.nodes[0].import_hdfs(URI)
-    s3nFullList = importHDFSResult['files']
+    s3nFullList = importHDFSResult['succeeded']
     self.assertGreater(len(s3nFullList), 8, 'Should see more than 8 files in s3n?')
-    storeView = h2o.nodes[0].store_view()
-    for s in storeView['keys']:
-        print '\nkey:', s['key']
-        if ('rows' in s):
-            print 'rows:', s['rows'], 'value_size_bytes:', s['value_size_bytes']
+    if (1 == 0):
+        storeView = h2o.nodes[0].store_view(timeoutSecs=60)
+        for s in storeView['keys']:
+            print '\nkey:', s['key']
+            if ('rows' in s):
+                print 'rows:', s['rows'], 'value_size_bytes:', s['value_size_bytes']
     trial = 0
     for (csvFilename, timeoutSecs) in csvFilelist:
         trialStart = time.time()
@@ -16,9 +17,8 @@ def test_parse_summary_airline_s3n(self):
         s3nKey = (URI + csvPathname)
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         print 'Loading s3n key: ', s3nKey, 'thru HDFS'
-        timeoutSecs = 500
         start = time.time()
-        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noise=('JStack', none))
+        parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120)
         elapsed = (time.time() - start)
         print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseKey['destination_key']
@@ -35,10 +35,12 @@ def test_parse_summary_airline_s3n(self):
             print ('Maybe columns got flipped to NAs: ' + ', '.join(m))
         if constantValuesDict:
             print len(constantValuesDict), 'columns with constant values'
+            m = [((str(k) + ':') + str(v)) for (k, v) in constantValuesDict.iteritems()]
+            print ('constant columns: ' + ', '.join(m))
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
         summaryResult = h2o.nodes[0].summary_page(key2)
         summary = summaryResult['summary']
-        infoFromSummary(summary)
+        infoFromSummary(self, summary)
         storeView = h2o.nodes[0].store_view()
         for s in storeView['keys']:
             print '\nStoreView: key:', s['key']

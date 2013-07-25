@@ -1,4 +1,4 @@
-def infoFromSummary(summary):
+def infoFromSummary(self, summary):
     columnsList = summary['columns']
     for columns in columnsList:
         N = columns['N']
@@ -22,17 +22,20 @@ def infoFromSummary(summary):
         if (stype != 'enum'):
             smax = columns['max']
             smin = columns['min']
-            percentiles = columns['percentiles']
-            thresholds = percentiles['thresholds']
-            values = percentiles['values']
             mean = columns['mean']
             sigma = columns['sigma']
-            print 'len(max):', len(smax), smax
-            print 'len(min):', len(smin), smin
-            print 'len(thresholds):', len(thresholds), thresholds
-            print 'len(values):', len(values), values
+            print 'smax:', smax
+            print 'smin:', smin
             print 'mean:', mean
             print 'sigma:', sigma
-            for v in values:
-                self.assertTrue((v >= smin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
-                self.assertTrue((v <= smax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
+            if (len(bins) != 0):
+                percentiles = columns['percentiles']
+                thresholds = percentiles['thresholds']
+                values = percentiles['values']
+                print 'len(max):', len(smax), smax
+                print 'len(min):', len(smin), smin
+                print 'len(thresholds):', len(thresholds), thresholds
+                print 'len(values):', len(values), values
+                for v in values:
+                    self.assertTrue((v >= smin[0]), ('Percentile value %s should all be >= the min dataset value %s' % (v, smin[0])))
+                    self.assertTrue((v <= smax[0]), ('Percentile value %s should all be <= the max dataset value %s' % (v, smax[0])))
