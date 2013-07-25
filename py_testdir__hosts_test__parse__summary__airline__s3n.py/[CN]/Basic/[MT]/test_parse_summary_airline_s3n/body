@@ -1,6 +1,6 @@
 def test_parse_summary_airline_s3n(self):
     URI = 's3n://h2o-airlines-unpacked/'
-    csvFilelist = [('allyears2k.csv', 300), ('allyears.csv', 900), ('allyears_10.csv', 1800)]
+    csvFilelist = [('allyears2k.csv', 300), ('year1987.csv', 600), ('allyears.csv', 900), ('allyears_10.csv', 1800)]
     importHDFSResult = h2o.nodes[0].import_hdfs(URI)
     s3nFullList = importHDFSResult['succeeded']
     self.assertGreater(len(s3nFullList), 8, 'Should see more than 8 files in s3n?')
@@ -41,10 +41,11 @@ def test_parse_summary_airline_s3n(self):
         summaryResult = h2o.nodes[0].summary_page(key2, timeoutSecs=360)
         summary = summaryResult['summary']
         infoFromSummary(self, summary)
-        storeView = h2o.nodes[0].store_view()
-        for s in storeView['keys']:
-            print '\nStoreView: key:', s['key']
-            if ('rows' in s):
-                print 'StoreView: rows:', s['rows'], 'value_size_bytes:', s['value_size_bytes']
+        if (1 == 0):
+            storeView = h2o.nodes[0].store_view()
+            for s in storeView['keys']:
+                print '\nStoreView: key:', s['key']
+                if ('rows' in s):
+                    print 'StoreView: rows:', s['rows'], 'value_size_bytes:', s['value_size_bytes']
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
         trial += 0
