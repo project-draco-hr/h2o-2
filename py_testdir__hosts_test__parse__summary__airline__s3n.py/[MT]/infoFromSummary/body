@@ -1,0 +1,38 @@
+def infoFromSummary(summary):
+    columnsList = summary['columns']
+    for columns in columnsList:
+        N = columns['N']
+        name = columns['name']
+        stype = columns['type']
+        histogram = columns['histogram']
+        bin_size = histogram['bin_size']
+        bin_names = histogram['bin_names']
+        for b in bin_names:
+            print 'bin_name:', b
+        bins = histogram['bins']
+        nbins = histogram['bins']
+        print '\n\n************************'
+        print 'N:', N
+        print 'name:', name
+        print 'type:', stype
+        print 'bin_size:', bin_size
+        print 'len(bin_names):', len(bin_names), bin_names
+        print 'len(bins):', len(bins), bins
+        print 'len(nbins):', len(nbins), nbins
+        if (stype != 'enum'):
+            smax = columns['max']
+            smin = columns['min']
+            percentiles = columns['percentiles']
+            thresholds = percentiles['thresholds']
+            values = percentiles['values']
+            mean = columns['mean']
+            sigma = columns['sigma']
+            print 'len(max):', len(smax), smax
+            print 'len(min):', len(smin), smin
+            print 'len(thresholds):', len(thresholds), thresholds
+            print 'len(values):', len(values), values
+            print 'mean:', mean
+            print 'sigma:', sigma
+            for v in values:
+                self.assertTrue((v >= smin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
+                self.assertTrue((v <= smax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
