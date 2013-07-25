@@ -11,6 +11,10 @@ catch (    AssertionError e) {
       _exception=new DException(e);
       completeExceptionally(e);
     }
+catch (    OutOfMemoryError e) {
+      _exception=new DException(e);
+      completeExceptionally(e);
+    }
   }
  else   dcompute();
 }

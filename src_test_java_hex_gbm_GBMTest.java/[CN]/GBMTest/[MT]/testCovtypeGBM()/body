@@ -1,5 +1,6 @@
 {
   File file=TestUtil.find_test_file("../datasets/UCI/UCI-large/covtype/covtype.data");
+  if (file == null)   return;
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make("cov1.hex");
   Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});

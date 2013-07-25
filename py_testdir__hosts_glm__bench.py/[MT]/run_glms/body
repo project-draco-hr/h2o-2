@@ -6,20 +6,25 @@ def run_glms(file, configs):
     else:
         output = open('glmbench.csv', 'a')
     csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
+    csvWrt.writerow(dict(((fn, fn) for fn in csv_header)))
     try:
         k = parse_file(file)
+        goodX = h2o_glm.goodXFromColumnInfo(y=kwargs['y'], parseKey=parseKey, timeoutSecs=300)
         for kwargs in configs:
+            start = time.time()
             res = h2o.nodes[0].GLM(k, timeoutSecs=6000000, pollTimeoutSecs=180, **kwargs)
+            wall_clock_secs = (time.time() - start)
             glm = res['GLMModel']
             coefs = glm['coefficients']
-            coefs = glm['coefficients']
             print 'model computed in', res['computation_time']
+            print 'wall clock in', wall_clock_secs, 'secs'
             max_len = 0
             val = glm['validations'][0]
             row = {'time': time.asctime(), 'nodes#': len(h2o.nodes), }
             row.update(kwargs)
             row.update(glm)
             row.update(val)
+            row.update({'wall_clock_secs': wall_clock_secs, })
             csvWrt.writerow(row)
         h2o.nodes[0].remove_key(k)
     finally:
