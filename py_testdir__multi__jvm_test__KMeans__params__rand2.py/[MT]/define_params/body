@@ -1,4 +1,4 @@
-def define_params():
+def define_params(SEED):
     print 'Restricting epsilon to 1e-6 and up. Too slow otherwise and no stopping condition?'
-    paramDict = {'k': [2, 5], 'epsilon': [1e-06, 0.01, 1, 10], 'cols': [None, '0', '3', '0,1,2,3,4,5,6'], }
+    paramDict = {'k': [2, 5], 'epsilon': [1e-06, 0.01, 1, 10], 'cols': [None, '0', '3', '0,1,2,3,4,5,6'], 'max_iter': [None, 0, 1, 5, 10], 'seed': [None, 12345678, SEED], 'normalize': [None, 0, 1], }
     return paramDict

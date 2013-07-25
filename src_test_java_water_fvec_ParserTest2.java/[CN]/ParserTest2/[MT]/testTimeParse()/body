@@ -1,0 +1,7 @@
+{
+  Key fkey=NFSFileVec.make(find_test_file("smalldata/kaggle/bestbuy_train_10k.csv.gz"));
+  Key okey=Key.make("bestbuy.hex");
+  ParseDataset2.parse(okey,new Key[]{fkey});
+  UKV.remove(fkey);
+  UKV.remove(okey);
+}

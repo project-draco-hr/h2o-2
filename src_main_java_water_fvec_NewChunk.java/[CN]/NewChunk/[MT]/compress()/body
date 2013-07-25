@@ -3,7 +3,8 @@
   long lemin=0, lemax=lemin;
   boolean overflow=false;
   boolean floatOverflow=false;
-  if (0 < _strCnt && (_strCnt + _naCnt) == _len) {
+  if (_naCnt == _len)   return new C0DChunk(Double.NaN,_len);
+  if (type() == AppendableVec.ENUM) {
     int sz=Integer.MIN_VALUE;
     for (    int x : _xs)     if (x > sz)     sz=x;
     if (sz < Enum.MAX_ENUM_SIZE) {
@@ -55,8 +56,7 @@
     if (le > lemax)     lemax=le;
   }
   if (_min == _max) {
-    if (xmin < 0)     throw H2O.unimpl();
-    return new C0LChunk((long)_min,_len);
+    return ((long)_min == _min) ? new C0LChunk((long)_min,_len) : new C0DChunk(_min,_len);
   }
   if (lemax - lemin == 1 && lemin == 0) {
     int bpv=_naCnt > 0 ? 2 : 1;
@@ -69,7 +69,7 @@
     if (lemax - lemin < 65535)     return new C2SChunk(bufX(lemin,xmin,C2SChunk.OFF,1),(int)lemin,DParseTask.pow10(xmin));
     return new C4FChunk(bufF(2));
   }
-  if (0 <= lemin && lemax <= 255 && _naCnt == 0)   return new C1NChunk(bufX(0,0,C1NChunk.OFF,0));
+  if (0 <= lemin && lemax <= 255 && ((_naCnt + _strCnt) == 0))   return new C1NChunk(bufX(0,0,C1NChunk.OFF,0));
   if (lemax - lemin < 255) {
     if (0 <= lemin && lemax < 255)     return new C1Chunk(bufX(0,0,C1Chunk.OFF,0));
     return new C1SChunk(bufX(lemin,0,C1SChunk.OFF,0),(int)lemin,1);

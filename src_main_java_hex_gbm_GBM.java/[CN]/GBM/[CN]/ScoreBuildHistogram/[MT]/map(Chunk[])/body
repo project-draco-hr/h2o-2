@@ -17,9 +17,15 @@
     if (nhs == null) {
       nhs=_hcs[nid - _leaf]=new Histogram[_ncols];
       Histogram ohs[]=_tree.n(nid)._hs;
-      for (int j=0; j < _ncols; j++)       if (ohs[j] != null)       nhs[j]=ohs[j].copy();
+      for (int j=0; j < _ncols; j++)       if (ohs[j] != null)       nhs[j]=ohs[j].copy(_numClasses);
     }
-    double y=ys.at0(i);
-    for (int j=0; j < _ncols; j++)     if (nhs[j] != null)     nhs[j].incr(chks[j].at0(i),y);
+    if (_numClasses == 0) {
+      double y=ys.at0(i);
+      for (int j=0; j < _ncols; j++)       if (nhs[j] != null)       nhs[j].incr(chks[j].at0(i),y);
+    }
+ else {
+      int y=(int)ys.at80(i) - _ymin;
+      for (int j=0; j < _ncols; j++)       if (nhs[j] != null)       nhs[j].incr(chks[j].at0(i),y);
+    }
   }
 }

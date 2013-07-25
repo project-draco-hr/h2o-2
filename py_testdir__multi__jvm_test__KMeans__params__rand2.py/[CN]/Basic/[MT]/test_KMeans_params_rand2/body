@@ -10,15 +10,11 @@ def test_KMeans_params_rand2(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         csvPathname = ((importFolderPath + '/') + csvFilename)
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-        paramDict = define_params()
+        paramDict = define_params(SEED)
         for trial in range(3):
-            randomV = paramDict['k']
-            k = random.choice(randomV)
-            randomV = paramDict['epsilon']
-            epsilon = random.choice(randomV)
-            randomV = paramDict['cols']
-            cols = random.choice(randomV)
-            kwargs = {'k': k, 'epsilon': epsilon, 'cols': cols, 'destination_key': (((csvFilename + '_') + str(trial)) + '.hex'), }
+            params = {'k': 1, 'destination_key': (((csvFilename + '_') + str(trial)) + '.hex'), }
+            h2o_kmeans.pickRandKMeansParams(paramDict, params)
+            kwargs = params.copy()
             start = time.time()
             kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
             elapsed = (time.time() - start)
