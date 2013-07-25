@@ -23,7 +23,7 @@ def test_parse_summary_airline_s3n(self):
         print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseKey['destination_key']
         start = time.time()
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=500)
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=360)
         print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         num_rows = inspect['num_rows']
@@ -38,7 +38,7 @@ def test_parse_summary_airline_s3n(self):
             m = [((str(k) + ':') + str(v)) for (k, v) in constantValuesDict.iteritems()]
             print ('constant columns: ' + ', '.join(m))
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
-        summaryResult = h2o.nodes[0].summary_page(key2)
+        summaryResult = h2o.nodes[0].summary_page(key2, timeoutSecs=360)
         summary = summaryResult['summary']
         infoFromSummary(self, summary)
         storeView = h2o.nodes[0].store_view()
