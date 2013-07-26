@@ -8,27 +8,34 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
         keepX = None
     x = range(num_cols)
     xOrig = x[:]
+    ignore_x = []
     for k in xOrig:
         name = colNameDict[k]
         if (name == y):
             print ('Removing %d because name: %s matches output %s' % (k, name, y))
             x.remove(k)
+            ignore_x.append(k)
         elif ((keepX is not None) and (not keepX.match(name))):
             print ("Removing %d because name: %s doesn't match desired keepPattern %s" % (k, name, keepPattern))
             x.remove(k)
+            ignore_x.append(k)
         elif (k in constantValuesDict):
             value = constantValuesDict[k]
             print ('Removing %d with name: %s because it has constant value: %s ' % (k, name, str(value)))
             x.remove(k)
+            ignore_x.append(k)
         elif (k in missingValuesDict):
             value = missingValuesDict[k]
             print ('Removing %d with name: %s because it has %d missing values' % (k, name, value))
             x.remove(k)
+            ignore_x.append(k)
         elif (k in enumSizeDict):
             value = enumSizeDict[k]
             print ('Removing %d %s because it has enums of size: %d' % (k, name, value))
             x.remove(k)
+            ignore_x.append(k)
     print 'The pruned x has length', len(x)
     x = ','.join(map(str, x))
     print '\nx:', x
+    print '\nignore_x:', ignore_x
     return x

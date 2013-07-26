@@ -1,5 +1,5 @@
-def test_parse_1k_files(self):
-    SYNDATASETS_DIR = h2o.make_syn_dir()
+def test_parse_10k_files(self):
+    SYNDATASETS_DIR = os.path.abspath(h2o.make_syn_dir())
     csvFilename = 'syn.csv.gz'
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON'
     totalRows = 10
@@ -10,7 +10,7 @@ def test_parse_1k_files(self):
         csvPathname = ((((SYNDATASETS_DIR + '/') + filePrefix) + '_') + csvFilename)
         write_syn_dataset_gz(csvPathname, totalRows, headerData, rowData)
     avgFileSize = os.path.getsize(csvPathname)
-    importFolderPath = os.path.abspath(SYNDATASETS_DIR)
+    importFolderPath = SYNDATASETS_DIR
     print '\nimportFolderPath:', importFolderPath
     csvFilenameList = [('*[1][0-9][0-9][0-9]_syn.csv.gz', 'syn_all.1000.csv', (maxFilenum * avgFileSize), 1200), ('*[1-2][0-9][0-9][0-9]_syn.csv.gz', 'syn_all.2000.csv', (maxFilenum * avgFileSize), 1200)]
     trialMax = 1
