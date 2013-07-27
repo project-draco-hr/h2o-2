@@ -1,0 +1,9 @@
+def runStoreView(node=None, timeoutSecs=30):
+    if (not node):
+        node = h2o.nodes[0]
+    storeView = node.store_view(timeoutSecs)
+    for s in storeView['keys']:
+        print '\nStoreView: key:', s['key']
+        if ('rows' in s):
+            print 'StoreView: rows:', s['rows'], 'value_size_bytes:', s['value_size_bytes']
+    return storeView

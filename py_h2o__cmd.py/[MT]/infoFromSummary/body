@@ -1,4 +1,4 @@
-def infoFromSummary(self, summary):
+def infoFromSummary(summary):
     columnsList = summary['columns']
     for columns in columnsList:
         N = columns['N']
@@ -37,5 +37,9 @@ def infoFromSummary(self, summary):
                 print 'len(thresholds):', len(thresholds), thresholds
                 print 'len(values):', len(values), values
                 for v in values:
-                    self.assertTrue((v >= smin[0]), ('Percentile value %s should all be >= the min dataset value %s' % (v, smin[0])))
-                    self.assertTrue((v <= smax[0]), ('Percentile value %s should all be <= the max dataset value %s' % (v, smax[0])))
+                    if (not (v >= smin[0])):
+                        m = ('Percentile value %s should all be >= the min dataset value %s' % (v, smin[0]))
+                        raise Exception(m)
+                    if (not (v <= smax[0])):
+                        m = ('Percentile value %s should all be <= the max dataset value %s' % (v, smax[0]))
+                        raise Exception(m)
