@@ -1,0 +1,16 @@
+def test_rf_model_key_unique(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    modelKeyDict = {}
+    for trial in xrange(1, 5, 1):
+        csvPathname = h2o.find_file('smalldata/iris/iris2.csv')
+        h2o.verboseprint('Trial', trial)
+        start = time.time()
+        rfResult = h2o_cmd.runRF(trees=6, timeoutSecs=10, rfview=False, csvPathname=csvPathname)
+        print ('RF #%d' % trial), 'started on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        model_key = rfResult['model_key']
+        print 'model_key:', model_key
+        if (model_key in modelKeyDict):
+            raise Exception(('same model_key used in RF #%d that matches prior RF #%d' % (trial, modelKeyDict[model_key])))
+        modelKeyDict[model_key] = trial
+    a = h2o.nodes[0].jobs_admin()
+    print 'jobs_admin():', h2o.dump_json(a)
