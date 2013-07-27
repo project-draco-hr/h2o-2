@@ -16,7 +16,7 @@ def test_import_nflx_parse_loop(self):
         timeoutSecs = 500
         for trial in range(trialMax):
             importHdfsResult = h2o.nodes[0].import_hdfs(URI)
-            hdfsFullList = importHdfsResult['files']
+            hdfsFullList = importHdfsResult['succeeded']
             for k in hdfsFullList:
                 key = k['key']
                 if (('nflx' in key) and ('file_1.dat.gz' in key)):

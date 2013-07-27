@@ -44,9 +44,9 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                     else:
                         importResult = h2o.nodes[0].import_hdfs(URI)
                     foundKeys = 0
-                    for key in importResult['keys']:
-                        if (csvFilepattern in key):
-                            print "example file we'll use:", key
+                    for s in importResult['succeeded']:
+                        if (csvFilepattern in s['key']):
+                            print "example file we'll use:", s['key']
                             break
                         else:
                             pass
@@ -89,23 +89,24 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                     l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} MB/sec for {:6.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed)
                     print l
                     h2o.cloudPerfH2O.message(l)
+                y = 378
                 if (not noPoll):
-                    h2o_cmd.check_enums_from_inspect(parseKey)
+                    x = h2o_glm.goodXFromColumnInfo(y, key=parseKey['destination_key'], timeoutSecs=300)
                 if (DO_GLM or DO_GLMGRID):
                     x = range(542)
-                    for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, 378]:
+                    for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, y]:
                         x.remove(i)
                     x = ','.join(map(str, x))
                     if DO_GLM:
                         algo = 'GLM'
-                        GLMkwargs = {'x': x, 'y': 378, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
+                        GLMkwargs = {'x': x, 'y': y, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
                         start = time.time()
                         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
                         elapsed = (time.time() - start)
                         h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
                     else:
                         algo = 'GLMGrid'
-                        GLMkwargs = {'x': x, 'y': 378, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, 'lambda': '1e-4', 'alpha': '0,0.5', 'thresholds': '0.5', }
+                        GLMkwargs = {'x': x, 'y': y, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, 'lambda': '1e-4', 'alpha': '0,0.5', 'thresholds': '0.5', }
                         start = time.time()
                         glm = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
                         elapsed = (time.time() - start)
