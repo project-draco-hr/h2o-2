@@ -4,7 +4,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
         global cloudPerfH2O
         cloudPerfH2O = h2o_perf.PerfH2O(python_test_name)
     ports_per_node = 2
-    node_list = []
+    nodeList = []
     try:
         totalNodes = 0
         portList = [(base_port + (ports_per_node * i)) for i in range(node_count)]
@@ -16,7 +16,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
             for p in portList:
                 verboseprint('psutil starting node', i)
                 newNode = LocalH2O(port=p, node_id=totalNodes, **kwargs)
-                node_list.append(newNode)
+                nodeList.append(newNode)
                 totalNodes += 1
         else:
             hostCount = len(hosts)
@@ -32,24 +32,27 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
                 else:
                     verboseprint('ssh starting node', totalNodes, 'via', h)
                     newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)
-                node_list.append(newNode)
+                nodeList.append(newNode)
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
-        stabilize_cloud(node_list[(-1)], len(node_list), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
-        verboseprint(len(node_list), 'Last added node stabilized in ', (time.time() - start), ' secs')
-        verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(node_list), hostCount, (time.time() - start))))
-        for n in node_list:
-            stabilize_cloud(n, len(node_list), timeoutSecs=timeoutSecs)
+        stabilize_cloud(nodeList[(-1)], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+        verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
+        verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
+        if (1 == 0):
+            for n in nodeList:
+                stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs)
+        else:
+            verify_cloud_size(nodeList)
         check_sandbox_for_errors()
     except:
         if cleanup:
-            for n in node_list:
+            for n in nodeList:
                 n.terminate()
         else:
-            nodes[:] = node_list
+            nodes[:] = nodeList
         check_sandbox_for_errors()
         raise
-    nodes[:] = node_list
-    print len(node_list), 'total jvms in H2O cloud'
-    return node_list
+    nodes[:] = nodeList
+    print len(nodeList), 'total jvms in H2O cloud'
+    return nodeList

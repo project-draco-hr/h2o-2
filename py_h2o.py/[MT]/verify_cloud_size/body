@@ -1,10 +1,17 @@
-def verify_cloud_size():
-    expectedSize = len(nodes)
-    cloudSizes = [n.get_cloud()['cloud_size'] for n in nodes]
-    cloudConsensus = [n.get_cloud()['consensus'] for n in nodes]
+def verify_cloud_size(nodeList=None):
+    if (not nodeList):
+        nodeList = nodes
+    expectedSize = len(nodeList)
+    cloudSizes = [n.get_cloud()['cloud_size'] for n in nodeList]
+    cloudConsensus = [n.get_cloud()['consensus'] for n in nodeList]
+    if ((expectedSize == 0) or (len(cloudSizes) == 0) or (len(cloudConsensus) == 0)):
+        print '\nexpectedSize:', expectedSize
+        print 'cloudSizes:', cloudSizes
+        print 'cloudConsensus:', cloudConsensus
+        raise Exception("Nothing in cloud. Can't verify size")
     for s in cloudSizes:
         consensusStr = ','.join(map(str, cloudConsensus))
         sizeStr = ','.join(map(str, cloudSizes))
         if (s != expectedSize):
-            raise Exception(('Inconsistent cloud size.' + ('nodes report size: %s consensus: %s instead of %d.' % (sizeStr, consensusStr, expectedSize))))
+            raise Exception(('Inconsistent cloud size.' + ('nodeList report size: %s consensus: %s instead of %d.' % (sizeStr, consensusStr, expectedSize))))
     return (sizeStr, consensusStr, expectedSize)
