@@ -1,6 +1,6 @@
 def test_rf_model_key_unique(self):
     modelKeyDict = {}
-    for trial in xrange(1, 5, 1):
+    for trial in range(1, 5):
         csvPathname = h2o.find_file('smalldata/iris/iris2.csv')
         start = time.time()
         rfResult = h2o_cmd.runRF(trees=6, timeoutSecs=10, rfview=False, csvPathname=csvPathname)
