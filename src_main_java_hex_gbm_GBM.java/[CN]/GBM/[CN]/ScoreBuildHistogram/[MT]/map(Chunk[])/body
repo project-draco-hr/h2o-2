@@ -5,18 +5,12 @@
   for (int i=0; i < nids._len; i++) {
     int nid=(int)nids.at80(i);
     if (nid == -1)     continue;
-    if (_leaf > 0) {
-      Tree.Node node=_tree.n(nid);
-      double d=chks[node._col].at0(i);
-      int bin=node._hs[node._col].bin(d);
-      nid=node._ns[bin];
-      nids.set80(i,nid);
-    }
+    if (_leaf > 0)     nids.set80(i,nid=_tree.decided(nid).ns(chks,i));
     if (nid == -1)     continue;
     Histogram nhs[]=_hcs[nid - _leaf];
     if (nhs == null) {
       nhs=_hcs[nid - _leaf]=new Histogram[_ncols];
-      Histogram ohs[]=_tree.n(nid)._hs;
+      Histogram ohs[]=_tree.undecided(nid)._hs;
       for (int j=0; j < _ncols; j++)       if (ohs[j] != null)       nhs[j]=ohs[j].copy(_numClasses);
     }
     if (_numClasses == 0) {
@@ -24,8 +18,8 @@
       for (int j=0; j < _ncols; j++)       if (nhs[j] != null)       nhs[j].incr(chks[j].at0(i),y);
     }
  else {
-      int y=(int)ys.at80(i) - _ymin;
-      for (int j=0; j < _ncols; j++)       if (nhs[j] != null)       nhs[j].incr(chks[j].at0(i),y);
+      int ycls=(int)ys.at80(i) - _ymin;
+      for (int j=0; j < _ncols; j++)       if (nhs[j] != null)       nhs[j].incr(chks[j].at0(i),ycls);
     }
   }
 }

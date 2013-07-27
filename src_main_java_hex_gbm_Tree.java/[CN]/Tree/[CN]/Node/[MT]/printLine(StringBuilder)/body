@@ -1,7 +1,6 @@
 {
-  if (_pid == -1)   return sb.append("root");
-  Node parent=_tree.n(_pid);
-  Histogram h=parent._hs[parent._col];
-  for (int i=0; i < parent._ns.length; i++)   if (parent._ns[i] == _nid)   return parent.printLine(sb.append("[").append(h._mins[i]).append(" <= ").append(h._name).append(" <= ").append(h._maxs[i]).append("] from "));
-  throw H2O.fail();
+  if (_pid == -1)   return sb.append("[root]");
+  DecidedNode parent=_tree.decided(_pid);
+  parent.printLine(sb).append(" to ");
+  return parent.printChild(sb,_nid);
 }
