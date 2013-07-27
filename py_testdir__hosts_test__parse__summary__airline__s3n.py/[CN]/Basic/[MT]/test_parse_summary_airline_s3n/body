@@ -6,7 +6,7 @@ def test_parse_summary_airline_s3n(self):
     self.assertGreater(len(s3nFullList), 8, 'Should see more than 8 files in s3n?')
     if (1 == 0):
         print '\nTrying StoreView after the import hdfs'
-        h2o_cmd.runStoreView(timeoutSecs=30)
+        h2o_cmd.runStoreView(timeoutSecs=120)
     trial = 0
     for (csvFilename, timeoutSecs) in csvFilelist:
         trialStart = time.time()
@@ -29,6 +29,6 @@ def test_parse_summary_airline_s3n(self):
         h2o_cmd.infoFromSummary(summary)
         if (1 == 0):
             print '\nTrying StoreView after the parse'
-            h2o_cmd.runStoreView(timeoutSecs=30)
+            h2o_cmd.runStoreView(timeoutSecs=120)
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
         trial += 1
