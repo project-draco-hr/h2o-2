@@ -2,8 +2,8 @@ def test_parse_storeview_import(self):
     importFolderPath = '/home/0xdiag/datasets/standard'
     csvFilelist = [('covtype.data', 300)]
     importFolderResult = h2i.setupImportFolder(None, importFolderPath)
-    succeededList = importFolderResult['succeeded']
-    self.assertGreater(len(suceededList), 3, 'Should see more than 3 files in the import?')
+    succeededList = importFolderResult['files']
+    self.assertGreater(len(succeededList), 3, 'Should see more than 3 files in the import?')
     print '\nTrying StoreView after the import folder'
     h2o_cmd.runStoreView(timeoutSecs=30)
     trial = 0
