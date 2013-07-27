@@ -39,7 +39,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
         stabilize_cloud(nodeList[(-1)], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
         verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
-        if (1 == 0):
+        if (1 == 1):
             for n in nodeList:
                 stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs)
         else:
