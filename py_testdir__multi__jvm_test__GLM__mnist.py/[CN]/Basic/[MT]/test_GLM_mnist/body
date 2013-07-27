@@ -38,4 +38,4 @@ def test_GLM_mnist(self):
         start = time.time()
         glmScore = h2o_cmd.runGLMScore(key=testKey2, model_key=modelKey, thresholds='0.5', timeoutSecs=60)
         print 'GLMScore in', (time.time() - start), 'secs', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
-        h2o.verboseprint(h2o.dump_json(glmScore))
+        h2o_glm.simpleCheckGLMScore(self, glmScore, 'gaussian', **kwargs)
