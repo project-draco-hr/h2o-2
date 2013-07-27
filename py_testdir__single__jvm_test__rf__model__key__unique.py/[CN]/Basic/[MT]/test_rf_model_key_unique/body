@@ -1,9 +1,7 @@
 def test_rf_model_key_unique(self):
-    SYNDATASETS_DIR = h2o.make_syn_dir()
     modelKeyDict = {}
     for trial in xrange(1, 5, 1):
         csvPathname = h2o.find_file('smalldata/iris/iris2.csv')
-        h2o.verboseprint('Trial', trial)
         start = time.time()
         rfResult = h2o_cmd.runRF(trees=6, timeoutSecs=10, rfview=False, csvPathname=csvPathname)
         print ('RF #%d' % trial), 'started on ', csvPathname, 'took', (time.time() - start), 'seconds'
