@@ -12,6 +12,14 @@ def simpleCheckGLMScore(self, glmScore, family='gaussian', allowFailWarning=Fals
                 else:
                     raise Exception(w)
     validation = glmScore['validation']
+    print ('%15s %s' % ('err:\t', validation['err']))
+    print ('%15s %s' % ('nullDev:\t', validation['nullDev']))
+    print ('%15s %s' % ('resDev:\t', validation['resDev']))
+    if (family == 'binomial'):
+        print ('%15s %s' % ('auc:\t', validation['auc']))
+        print ('%15s %s' % ('threshold:\t', validation['threshold']))
+    if ((family == 'poisson') or (family == 'gaussian')):
+        print ('%15s %s' % ('aic:\t', validation['aic']))
     if math.isnan(validation['err']):
         emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validation['err']))
         raise Exception(emsg)
@@ -21,11 +29,3 @@ def simpleCheckGLMScore(self, glmScore, family='gaussian', allowFailWarning=Fals
     if math.isnan(validation['nullDev']):
         emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validation['nullDev']))
         raise Exception(emsg)
-    print ('%15s %s' % ('err:\t', validation['err']))
-    print ('%15s %s' % ('nullDev:\t', validation['nullDev']))
-    print ('%15s %s' % ('resDev:\t', validation['resDev']))
-    if (family == 'binomial'):
-        print ('%15s %s' % ('auc:\t', validation['auc']))
-        print ('%15s %s' % ('threshold:\t', validation['threshold']))
-    if ((family == 'poisson') or (family == 'gaussian')):
-        print ('%15s %s' % ('aic:\t', validation['aic']))
