@@ -1,0 +1,15 @@
+{
+  Tree.DecidedNode prev=null;
+  Tree.Node node=_tree.root();
+  while (node instanceof Tree.DecidedNode) {
+    prev=(Tree.DecidedNode)node;
+    int nid=prev.ns(chks,i);
+    if (nid == -1)     break;
+    node=_tree.node(nid);
+  }
+  int bin=prev.bin(chks,i);
+  if (_numClasses == 0)   return prev._pred[bin] - y;
+  int ycls=(int)y - _ymin;
+  if (prev._ycls[bin] != ycls)   _err++;
+  return prev._pred[bin];
+}

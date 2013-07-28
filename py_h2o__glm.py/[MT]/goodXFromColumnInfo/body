@@ -1,4 +1,5 @@
 def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120):
+    y = str(y)
     if (key is not None):
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(key, exceptionOnMissingValues=False, timeoutSecs=timeoutSecs)
         num_cols = len(colNameDict)
@@ -11,7 +12,11 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
     ignore_x = []
     for k in xOrig:
         name = colNameDict[k]
-        if (name == y):
+        if (str(k) == y):
+            print ('Removing %d because name: %s matches output %s' % (k, str(k), y))
+            x.remove(k)
+            ignore_x.append(k)
+        elif (name == y):
             print ('Removing %d because name: %s matches output %s' % (k, name, y))
             x.remove(k)
             ignore_x.append(k)

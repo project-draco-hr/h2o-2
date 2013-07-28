@@ -1,0 +1,31 @@
+def simpleCheckGLMScore(self, glmScore, family='gaussian', allowFailWarning=False, **kwargs):
+    warnings = None
+    if ('warnings' in glmScore):
+        warnings = glmScore['warnings']
+        x = re.compile('failed', re.IGNORECASE)
+        c = re.compile('converge', re.IGNORECASE)
+        for w in warnings:
+            print '\nwarning:', w
+            if (re.search(x, w) and (not allowFailWarning)):
+                if re.search(c, w):
+                    pass
+                else:
+                    raise Exception(w)
+    validation = glmScore['validation']
+    if math.isnan(validation['err']):
+        emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validation['err']))
+        raise Exception(emsg)
+    if math.isnan(validation['resDev']):
+        emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validation['resDev']))
+        raise Exception(emsg)
+    if math.isnan(validation['nullDev']):
+        emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validation['nullDev']))
+        raise Exception(emsg)
+    print ('%15s %s' % ('err:\t', validation['err']))
+    print ('%15s %s' % ('nullDev:\t', validation['nullDev']))
+    print ('%15s %s' % ('resDev:\t', validation['resDev']))
+    if (family == 'binomial'):
+        print ('%15s %s' % ('auc:\t', validation['auc']))
+        print ('%15s %s' % ('threshold:\t', validation['threshold']))
+    if ((family == 'poisson') or (family == 'gaussian')):
+        print ('%15s %s' % ('aic:\t', validation['aic']))

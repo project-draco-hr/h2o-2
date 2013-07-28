@@ -1,0 +1,57 @@
+{
+  final String colPad="  ";
+  final int cntW=4, mmmW=4, varW=4;
+  final int colW=cntW + 1 + mmmW+ 1+ mmmW+ 1+ mmmW+ 1+ varW;
+  StringBuilder sb=new StringBuilder();
+  sb.append("Nid# ").append(_nid).append(", ");
+  printLine(sb).append("\n");
+  int numClasses=0;
+  final int ncols=_hs.length;
+  for (int j=0; j < ncols; j++)   if (_hs[j] != null) {
+    p(sb,_hs[j]._name + String.format(", err=%5.2f",_hs[j].score()),colW).append(colPad);
+    if (_hs[j]._clss != null)     numClasses=_hs[j]._clss[0].length;
+  }
+  sb.append('\n');
+  for (int j=0; j < ncols; j++) {
+    if (_hs[j] == null)     continue;
+    p(sb,"cnt",cntW).append('/');
+    p(sb,"min",mmmW).append('/');
+    p(sb,"max",mmmW).append('/');
+    if (numClasses == 0) {
+      p(sb,"mean",mmmW).append('/');
+      p(sb,"var",varW).append(colPad);
+    }
+ else {
+      p(sb,"C0",mmmW).append('-');
+      p(sb,"C" + (numClasses - 1),varW).append(colPad);
+    }
+  }
+  sb.append('\n');
+  for (int i=0; i < Histogram.BINS; i++) {
+    for (int j=0; j < ncols; j++) {
+      if (_hs[j] == null)       continue;
+      if (i < _hs[j]._bins.length) {
+        p(sb,Long.toString(_hs[j]._bins[i]),cntW).append('/');
+        p(sb,_hs[j]._mins[i],mmmW).append('/');
+        p(sb,_hs[j]._maxs[i],mmmW).append('/');
+        if (numClasses == 0) {
+          p(sb,_hs[j].mean(i),mmmW).append('/');
+          p(sb,_hs[j].var(i),varW).append(colPad);
+        }
+ else {
+          StringBuilder sb2=new StringBuilder();
+          long N=_hs[j]._bins[i];
+          long cls[]=_hs[j]._clss[i];
+          for (int k=0; k < cls.length; k++)           sb2.append(cls[k]).append(',');
+          p(sb,sb2.toString(),mmmW + 1 + varW).append(colPad);
+        }
+      }
+ else {
+        p(sb,"",colW).append(colPad);
+      }
+    }
+    sb.append('\n');
+  }
+  sb.append("Nid# ").append(_nid);
+  return sb.toString();
+}

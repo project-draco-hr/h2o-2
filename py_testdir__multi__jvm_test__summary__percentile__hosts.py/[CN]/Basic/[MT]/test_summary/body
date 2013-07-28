@@ -39,10 +39,10 @@ def test_summary(self):
                 self.assertIn(int(b), legalValues)
             bins = histogram['bins']
             self.assertEqual(len(bins), len(legalValues))
-            self.assertAlmostEqual(bins[0], (0.042 * rowCount), delta=(0.01 * rowCount))
-            self.assertAlmostEqual(bins[1], (0.333 * rowCount), delta=(0.01 * rowCount))
-            self.assertAlmostEqual(bins[2], (0.541 * rowCount), delta=(0.01 * rowCount))
-            self.assertAlmostEqual(bins[3], (0.083 * rowCount), delta=(0.01 * rowCount))
+            self.assertAlmostEqual(bins[0], (0.042 * rowCount), delta=(0.01 * rowCount), msg='histogram bins 0')
+            self.assertAlmostEqual(bins[1], (0.333 * rowCount), delta=(0.01 * rowCount), msg='histogram bins 1')
+            self.assertAlmostEqual(bins[2], (0.541 * rowCount), delta=(0.01 * rowCount), msg='histogram bins 2')
+            self.assertAlmostEqual(bins[3], (0.083 * rowCount), delta=(0.01 * rowCount), msg='histogram bins 3')
             nbins = histogram['bins']
             print '\n\n************************'
             print 'name:', name
@@ -70,9 +70,9 @@ def test_summary(self):
                     self.assertTrue((v >= expectedMin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
                     self.assertTrue((v <= expectedMax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
                 print 'mean:', mean
-                self.assertAlmostEqual(mean, expectedMean, delta=0.01)
+                self.assertAlmostEqual(mean, expectedMean, delta=0.02, msg='mean')
                 print 'sigma:', sigma
-                self.assertAlmostEqual(sigma, expectedSigma, delta=0.01)
+                self.assertAlmostEqual(sigma, expectedSigma, delta=0.02, msg='sigma')
         sys.stdout.write('.')
         sys.stdout.flush()
         trial += 1

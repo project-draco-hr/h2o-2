@@ -1,0 +1,32 @@
+def test_parse_storeview_import(self):
+    importFolderPath = '/home/0xdiag/datasets/standard'
+    csvFilelist = [('covtype.data', 300)]
+    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+    succeededList = importFolderResult['files']
+    self.assertGreater(len(succeededList), 3, 'Should see more than 3 files in the import?')
+    print '\nTrying StoreView after the import folder'
+    h2o_cmd.runStoreView(timeoutSecs=30)
+    trial = 0
+    for (csvFilename, timeoutSecs) in csvFilelist:
+        trialStart = time.time()
+        csvPathname = csvFilename
+        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        print 'parse start on:', csvFilename
+        start = time.time()
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseKey['destination_key']
+        start = time.time()
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=360)
+        print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        h2o_cmd.infoFromInspect(inspect, csvPathname)
+        if (1 == 0):
+            goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseKey['destination_key'], timeoutSecs=300)
+            summaryResult = h2o.nodes[0].summary_page(key2, timeoutSecs=360)
+            summary = summaryResult['summary']
+            infoFromSummary(self, summary)
+        print 'Trying StoreView after the parse'
+        h2o_cmd.runStoreView(timeoutSecs=30)
+        print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
+        trial += 1
