@@ -1,6 +1,6 @@
-def runKMeans(node=None, csvPathname=None, key=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
+def runKMeans(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
     pto = max((timeoutSecs / 5), 10)
     noise = kwargs.pop('noise', None)
-    parseKey = parseFile(node, csvPathname, key, timeoutSecs=pto, noise=noise)
+    parseKey = parseFile(node, csvPathname, key, key2=key2, timeoutSecs=pto, noise=noise)
     kmeans = runKMeansOnly(node, parseKey, timeoutSecs, retryDelaySecs, **kwargs)
     return kmeans
