@@ -31,15 +31,6 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
                 raise Exception(((len(xval_models) + ' cross validation models returned. Asked for ') + n_folds))
         elif (len(xval_models) != 10):
             raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
-    if math.isnan(validations['err']):
-        emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validations['err']))
-        raise Exception(emsg)
-    if math.isnan(validations['resDev']):
-        emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validations['resDev']))
-        raise Exception(emsg)
-    if math.isnan(validations['nullDev']):
-        emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validations['nullDev']))
-        raise Exception(emsg)
     print 'GLMModel/validations'
     print ('%15s %s' % ('err:\t', validations['err']))
     print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
@@ -49,6 +40,15 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print ('%15s %s' % ('threshold:\t', validations['threshold']))
     if ((family == 'poisson') or (family == 'gaussian')):
         print ('%15s %s' % ('aic:\t', validations['aic']))
+    if math.isnan(validations['err']):
+        emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validations['err']))
+        raise Exception(emsg)
+    if math.isnan(validations['resDev']):
+        emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validations['resDev']))
+        raise Exception(emsg)
+    if math.isnan(validations['nullDev']):
+        emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validations['nullDev']))
+        raise Exception(emsg)
     coefficients = GLMModel['coefficients'].copy()
     column_names = GLMModel['column_names']
     intercept = coefficients.pop('Intercept', None)

@@ -1,5 +1,5 @@
-def runGLM(node=None, csvPathname=None, key=None, timeoutSecs=20, retryDelaySecs=2, noise=None, **kwargs):
+def runGLM(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=20, retryDelaySecs=2, noise=None, **kwargs):
     pto = max((timeoutSecs / 5), 10)
     noise = kwargs.pop('noise', None)
-    parseKey = parseFile(node, csvPathname, key, timeoutSecs=pto, noise=noise)
+    parseKey = parseFile(node, csvPathname, key, key2=key2, timeoutSecs=pto, noise=noise)
     return runGLMOnly(node, parseKey, timeoutSecs, retryDelaySecs, noise=noise, **kwargs)
