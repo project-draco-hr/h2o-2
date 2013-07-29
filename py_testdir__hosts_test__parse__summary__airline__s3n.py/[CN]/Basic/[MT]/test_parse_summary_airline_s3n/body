@@ -24,9 +24,8 @@ def test_parse_summary_airline_s3n(self):
         print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         goodX = h2o_glm.goodXFromColumnInfo(y='IsArrDelayed', key=parseKey['destination_key'], timeoutSecs=300)
-        summaryResult = h2o.nodes[0].summary_page(key2, timeoutSecs=360)
-        summary = summaryResult['summary']
-        h2o_cmd.infoFromSummary(summary)
+        summaryResult = h2o_cmd.runSummary(key=key2, timeoutSecs=360)
+        h2o_cmd.infoFromSummary(summaryResult)
         if (1 == 0):
             print '\nTrying StoreView after the parse'
             h2o_cmd.runStoreView(timeoutSecs=120)

@@ -11,10 +11,8 @@ def test_parse_small_many(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         writeRows(csvPathname, row, eol, size)
         key = csvFilename
-        print h2o.dump_json(key)
         for trial in range(5):
-            pkey = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
             key2 = (((csvFilename + '_') + str(trial)) + '.hex')
-            node.parse(pkey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=0.0)
+            parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2)
             sys.stdout.write('.')
             sys.stdout.flush()

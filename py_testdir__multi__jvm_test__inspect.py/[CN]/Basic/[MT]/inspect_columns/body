@@ -1,7 +1,7 @@
 def inspect_columns(self, filename, rows=1, cols=26, columnNames=crange('A', 'Z'), columnTypes=None):
     cvsfile = h2o.find_file(filename)
     node = h2o.nodes[0]
-    res = self.putfile_and_parse(node, cvsfile)
+    res = h2o_cmd.parseFile(node=node, csvPathname=cvsfile)
     ary = node.inspect(res['destination_key'])
     self.assertEqual(rows, ary['num_rows'])
     self.assertEqual(cols, ary['num_cols'])
