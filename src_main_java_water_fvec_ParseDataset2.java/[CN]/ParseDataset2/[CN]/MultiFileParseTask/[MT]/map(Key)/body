@@ -22,14 +22,14 @@ case NONE:
     break;
 case ZIP:
 {
-    ZipInputStream zis=new ZipInputStream(vec.openStream());
+    ZipInputStream zis=new ZipInputStream(vec.openStream(_progress));
     ZipEntry ze=zis.getNextEntry();
     if (ze != null && !ze.isDirectory())     streamParse(zis,setup);
  else     zis.close();
     break;
   }
 case GZIP:
-streamParse(new GZIPInputStream(vec.openStream()),setup);
+streamParse(new GZIPInputStream(vec.openStream(_progress)),setup);
 break;
 }
 }
