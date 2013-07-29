@@ -1,0 +1,8 @@
+{
+  Histogram hs[]=_hcs[tid][nid - _leafs[tid]];
+  for (int j=0; j < hs.length; j++) {
+    Histogram h=hs[j];
+    if (h != null)     h.tightenMinMax();
+  }
+  return hs;
+}

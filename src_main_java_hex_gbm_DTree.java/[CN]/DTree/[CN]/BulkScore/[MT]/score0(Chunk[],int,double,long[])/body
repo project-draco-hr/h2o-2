@@ -1,0 +1,41 @@
+{
+  double sum=0;
+  long rows=0;
+  if (_numClasses > 0)   Arrays.fill(clss,0);
+  for (int t=0; t < _trees.length; t++) {
+    final DTree tree=_trees[t];
+    DecidedNode prev=null;
+    Node node=tree.root();
+    while (node instanceof DecidedNode) {
+      prev=(DecidedNode)node;
+      int nid=prev.ns(chks,i);
+      if (nid == -1)       break;
+      node=tree.node(nid);
+    }
+    int bin=prev.bin(chks,i);
+    long[] ycls=prev._ycls[bin];
+    if (_numClasses == 0) {
+      long num=ycls[0];
+      rows+=num;
+      sum+=prev._pred[bin] * num;
+    }
+ else {
+      for (int c=0; c < _numClasses; c++)       clss[c]+=ycls[c];
+    }
+  }
+  if (_numClasses == 0) {
+    double prediction=sum / rows;
+    return prediction - y;
+  }
+ else {
+    rows+=clss[0];
+    int best=0;
+    for (int c=1; c < _numClasses; c++) {
+      rows+=clss[c];
+      if (clss[c] > clss[best])       best=c;
+    }
+    int ycls=(int)y - _ymin;
+    if (best != ycls)     _err++;
+    return (double)(rows - clss[best]) / rows;
+  }
+}

@@ -9,14 +9,14 @@
   int numClasses=vresponse._isInt ? ((int)vresponse.max() - ymin + 1) : 0;
   Vec vnids=Vec.makeZero(vs[0]);
   fr.add("NIDs",vnids);
-  Tree tree=new Tree(names);
-  new Tree.UndecidedNode(tree,-1,Histogram.initialHist(fr,ncols));
+  DTree tree=new DTree(names);
+  new UndecidedNode(tree,-1,Histogram.initialHist(fr,ncols));
   int leaf=0;
   int depth=0;
   for (; depth < maxDepth; depth++) {
-    Tree.ScoreBuildHistogram sbh=new Tree.ScoreBuildHistogram(tree,leaf,ncols,numClasses,ymin).doAll(fr);
+    ScoreBuildHistogram sbh=new ScoreBuildHistogram(new DTree[]{tree},new int[]{leaf},ncols,numClasses,ymin).doAll(fr);
     final int tmax=tree._len;
-    for (int i=leaf; i < tmax; i++)     tree.undecided(i)._hs=sbh.getFinalHisto(i);
+    for (int i=leaf; i < tmax; i++)     tree.undecided(i)._hs=sbh.getFinalHisto(0,i);
     for (; leaf < tmax; leaf++) {
       new GBMDecidedNode(tree.undecided(leaf));
     }
@@ -24,7 +24,7 @@
   }
   Log.info(Sys.GBM__,"GBM done in " + t_gbm);
   Timer t_score=new Timer();
-  new Tree.BulkScore(tree,numClasses,ymin).doAll(fr).report(Sys.GBM__,nrows,depth);
+  new BulkScore(new DTree[]{tree},ncols,numClasses,ymin).doAll(fr).report(Sys.GBM__,nrows,depth);
   Log.info(Sys.GBM__,"GBM score done in " + t_score);
   UKV.remove(fr.remove("NIDs")._key);
 }

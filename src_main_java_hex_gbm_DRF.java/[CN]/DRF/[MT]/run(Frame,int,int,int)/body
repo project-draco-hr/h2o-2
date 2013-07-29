@@ -7,25 +7,40 @@
   final long nrows=vresponse.length();
   int ymin=(int)vresponse.min();
   int numClasses=vresponse._isInt ? ((int)vresponse.max() - ymin + 1) : 0;
-  Vec vnids=Vec.makeZero(vs[0]);
-  fr.add("NIDs",vnids);
   Random rand=new MersenneTwisterRNG(new int[]{1,2});
-  DRFTree tree=new DRFTree(names,mtrys,rand);
-  new Tree.UndecidedNode(tree,-1,Histogram.initialHist(fr,ncols));
-  int leaf=0;
+  Histogram hs[]=Histogram.initialHist(fr,ncols);
+  DRFTree trees[]=new DRFTree[ntrees];
+  for (int t=0; t < ntrees; t++) {
+    trees[t]=new DRFTree(names,mtrys,rand);
+    new UndecidedNode(trees[t],-1,hs);
+    fr.add("NIDs" + t,Vec.makeZero(vs[0]));
+  }
+  int leafs[]=new int[ntrees];
   int depth=0;
   for (; depth < maxDepth; depth++) {
-    Tree.ScoreBuildHistogram sbh=new Tree.ScoreBuildHistogram(tree,leaf,ncols,numClasses,ymin).doAll(fr);
-    final int tmax=tree._len;
-    for (int i=leaf; i < tmax; i++)     tree.undecided(i)._hs=sbh.getFinalHisto(i);
-    for (; leaf < tmax; leaf++) {
-      new DRFDecidedNode(tree.undecided(leaf));
+    ScoreBuildHistogram sbh=new ScoreBuildHistogram(trees,leafs,ncols,numClasses,ymin).doAll(fr);
+    for (int t=0; t < ntrees; t++) {
+      final int tmax=trees[t]._len;
+      final DTree tree=trees[t];
+      for (int i=leafs[t]; i < tmax; i++)       tree.undecided(i)._hs=sbh.getFinalHisto(t,i);
     }
-    if (tmax == tree._len)     break;
+    boolean still_splitting=false;
+    for (int t=0; t < ntrees; t++) {
+      final DTree tree=trees[t];
+      final int tmax=tree._len;
+      int leaf=leafs[t];
+      for (; leaf < tmax; leaf++) {
+        new DRFDecidedNode(tree.undecided(leaf));
+      }
+      leafs[t]=leaf;
+      if (tmax < tree._len)       still_splitting=true;
+    }
+    if (!still_splitting)     break;
+    new BulkScore(trees,ncols,numClasses,ymin).doAll(fr).report(Sys.DRF__,nrows,depth);
   }
   Log.info(Sys.DRF__,"DRF done in " + t_drf);
   Timer t_score=new Timer();
-  new Tree.BulkScore(tree,numClasses,ymin).doAll(fr).report(Sys.DRF__,nrows,depth);
+  new BulkScore(trees,ncols,numClasses,ymin).doAll(fr).report(Sys.DRF__,nrows,depth);
   Log.info(Sys.DRF__,"DRF score done in " + t_score);
-  UKV.remove(fr.remove("NIDs")._key);
+  while (fr.numCols() > ncols + 1)   UKV.remove(fr.remove(fr.numCols() - 1)._key);
 }
