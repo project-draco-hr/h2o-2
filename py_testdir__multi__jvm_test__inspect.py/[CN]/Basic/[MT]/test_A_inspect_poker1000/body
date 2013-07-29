@@ -1,7 +1,7 @@
 def test_A_inspect_poker1000(self):
     cvsfile = h2o.find_file('smalldata/poker/poker1000')
     node = h2o.nodes[0]
-    res = self.putfile_and_parse(node, cvsfile)
+    res = h2o_cmd.parseFile(node=node, csvPathname=cvsfile)
     ary = node.inspect(res['destination_key'])
     rows = wcl(cvsfile)
     self.assertEqual(rows, ary['num_rows'])
