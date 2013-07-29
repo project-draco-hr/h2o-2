@@ -16,13 +16,13 @@ case redirect:
 result.replace("BUTTON","<button class='btn btn-primary' onclick='redirect()'>" + response._status.toString() + "</button>");
 result.replace("TEXT","Request was successful and the process was started. You will be redirected to the new page in 1 seconds, or when you click on the redirect" + " button on the left. If you want to keep this page for longer you can <a href='#' onclick='countdown_stop()'>stop the countdown</a>.");
 RString redirect=new RString(_redirectJs);
-redirect.replace("REDIRECT_URL",response._redirectName + ".html" + encodeRedirectArgs(response._redirectArgs));
+redirect.replace("REDIRECT_URL",response._redirectName + ".html" + encodeRedirectArgs(response._redirectArgs,response._redirArgs));
 result.replace("JSSTUFF",redirect.toString());
 break;
 case poll:
 if (response._redirectArgs != null) {
 RString poll=new RString(_redirectJs);
-poll.replace("REDIRECT_URL",getClass().getSimpleName() + ".html" + encodeRedirectArgs(response._redirectArgs));
+poll.replace("REDIRECT_URL",getClass().getSimpleName() + ".html" + encodeRedirectArgs(response._redirectArgs,response._redirArgs));
 result.replace("JSSTUFF",poll.toString());
 }
  else {
