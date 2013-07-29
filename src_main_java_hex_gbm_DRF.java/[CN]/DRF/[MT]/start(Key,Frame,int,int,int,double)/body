@@ -2,7 +2,7 @@
   final DRF job=new DRF(dest,fr);
   H2O.submitTask(job.start(new H2OCountedCompleter(){
     @Override public void compute2(){
-      job.run(fr,maxDepth,ntrees,mtrys);
+      job.run(fr,maxDepth,ntrees,mtrys,sampleRate);
       tryComplete();
     }
   }

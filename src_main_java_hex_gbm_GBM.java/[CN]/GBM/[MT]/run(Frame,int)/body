@@ -9,7 +9,7 @@
   int numClasses=vresponse._isInt ? ((int)vresponse.max() - ymin + 1) : 0;
   Vec vnids=Vec.makeZero(vs[0]);
   fr.add("NIDs",vnids);
-  DTree tree=new DTree(names);
+  DTree tree=new DTree(names,ncols);
   new UndecidedNode(tree,-1,Histogram.initialHist(fr,ncols));
   int leaf=0;
   int depth=0;
@@ -24,7 +24,7 @@
   }
   Log.info(Sys.GBM__,"GBM done in " + t_gbm);
   Timer t_score=new Timer();
-  new BulkScore(new DTree[]{tree},ncols,numClasses,ymin).doAll(fr).report(Sys.GBM__,nrows,depth);
+  new BulkScore(new DTree[]{tree},ncols,numClasses,ymin,1.0).doAll(fr).report(Sys.GBM__,nrows,depth);
   Log.info(Sys.GBM__,"GBM score done in " + t_score);
   UKV.remove(fr.remove("NIDs")._key);
 }

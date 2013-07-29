@@ -10,7 +10,7 @@
   try {
     assertEquals(581012,fr._vecs[0].length());
     int mtrys=Math.max((int)Math.sqrt(fr.numCols()),1);
-    DRF drf=DRF.start(DRF.makeKey(),fr,40,10,mtrys);
+    DRF drf=DRF.start(DRF.makeKey(),fr,40,10,mtrys,0.67);
     drf.get();
     UKV.remove(drf._dest);
   }

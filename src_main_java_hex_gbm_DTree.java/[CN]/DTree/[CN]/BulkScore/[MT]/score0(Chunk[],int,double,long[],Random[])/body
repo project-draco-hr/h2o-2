@@ -3,6 +3,7 @@
   long rows=0;
   if (_numClasses > 0)   Arrays.fill(clss,0);
   for (int t=0; t < _trees.length; t++) {
+    if (rands != null && !(rands[t].nextFloat() >= _rate))     continue;
     final DTree tree=_trees[t];
     DecidedNode prev=null;
     Node node=tree.root();
@@ -24,6 +25,7 @@
     }
   }
   if (_numClasses == 0) {
+    if (rows == 0)     return 0;
     double prediction=sum / rows;
     return prediction - y;
   }
@@ -34,8 +36,9 @@
       rows+=clss[c];
       if (clss[c] > clss[best])       best=c;
     }
+    if (rows == 0)     return 0;
     int ycls=(int)y - _ymin;
     if (best != ycls)     _err++;
-    return (double)(rows - clss[best]) / rows;
+    return (double)(rows - clss[ycls]) / rows;
   }
 }
