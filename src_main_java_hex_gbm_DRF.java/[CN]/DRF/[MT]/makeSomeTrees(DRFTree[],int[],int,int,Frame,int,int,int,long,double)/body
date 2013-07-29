@@ -1,0 +1,23 @@
+{
+  for (int depth=0; depth < maxDepth; depth++) {
+    ScoreBuildHistogram sbh=new ScoreBuildHistogram(trees,leafs,ncols,numClasses,ymin).doAll(fr);
+    for (int t=0; t < ntrees; t++) {
+      final int tmax=trees[t]._len;
+      final DTree tree=trees[t];
+      for (int i=leafs[t]; i < tmax; i++)       tree.undecided(i)._hs=sbh.getFinalHisto(t,i);
+    }
+    boolean still_splitting=false;
+    for (int t=0; t < ntrees; t++) {
+      final DTree tree=trees[t];
+      final int tmax=tree._len;
+      int leaf=leafs[t];
+      for (; leaf < tmax; leaf++) {
+        new DRFDecidedNode(tree.undecided(leaf));
+      }
+      leafs[t]=leaf;
+      if (tmax < tree._len)       still_splitting=true;
+    }
+    if (!still_splitting)     return depth;
+  }
+  return maxDepth;
+}

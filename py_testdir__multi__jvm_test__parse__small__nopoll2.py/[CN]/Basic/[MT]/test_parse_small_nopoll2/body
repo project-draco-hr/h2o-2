@@ -13,10 +13,9 @@ def test_parse_small_nopoll2(self):
         trialMax = 100
         for trial in range(trialMax):
             key = ((csvFilename + '_') + str(trial))
-            pkey = node.put_file(csvPathname, key=key, timeoutSecs=timeoutSecs)
             key2 = (((csvFilename + '_') + str(trial)) + '.hex')
             noPoll = (trial != (trialMax - 1))
-            node.parse(pkey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=0.5, noPoll=noPoll)
+            parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=30)
             if (not (trial % 10)):
                 sys.stdout.write('.')
                 sys.stdout.flush()

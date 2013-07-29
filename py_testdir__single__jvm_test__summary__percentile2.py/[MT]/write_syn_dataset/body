@@ -1,10 +1,11 @@
-def write_syn_dataset(csvPathname, rowCount, colCount, maxIntegerValue, SEED):
+def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEED):
     r1 = random.Random(SEED)
     dsf = open(csvPathname, 'w+')
+    expectedRange = ((expectedMax - expectedMin) + 1)
     for i in range(rowCount):
         rowData = []
+        ri = (expectedMin + (i % expectedRange))
         for j in range(colCount):
-            ri = r1.randint(0, maxIntegerValue)
             rowData.append(ri)
         rowDataCsv = ','.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
