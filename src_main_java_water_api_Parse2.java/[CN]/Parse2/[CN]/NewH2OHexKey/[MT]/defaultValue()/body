@@ -3,9 +3,9 @@
   if (setup == null)   return null;
   String n=setup._keys.get(0).toString();
   int dot=n.lastIndexOf('.');
-  if (dot > 0)   n=n.substring(0,dot);
+  if (dot > 0 && n.lastIndexOf(File.separator) < dot)   n=n.substring(0,dot);
   dot=n.lastIndexOf('.');
-  if (dot > 0)   n=n.substring(0,dot);
+  if (dot > 0 && n.lastIndexOf(File.separator) < dot)   n=n.substring(0,dot);
   int i=0;
   String res=n + Extensions.HEX;
   Key k=Key.make(res);
