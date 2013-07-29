@@ -1,0 +1,12 @@
+{
+  String build_project_version="(unknown)";
+  try {
+    Class klass=Class.forName("water.BuildVersion");
+    java.lang.reflect.Constructor constructor=klass.getConstructor();
+    AbstractBuildVersion abv=(AbstractBuildVersion)constructor.newInstance();
+    build_project_version=abv.projectVersion();
+  }
+ catch (  Exception e) {
+  }
+  return build_project_version;
+}
