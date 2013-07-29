@@ -17,13 +17,13 @@
     Object o=v2.type() != TypeMap.PRIM_B ? v2.get() : null;
     if (o instanceof Frame && ((Frame)o)._vecs[0] instanceof ByteVec)     keys.add(key);
   }
-  if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
+  if (keys.size() == 0)   throw new IllegalArgumentException(errors()[0]);
   Collections.sort(keys);
   Key hKey=keys.get(0);
   Value v=DKV.get(hKey);
   v=((Frame)v.get())._vecs[0].chunkIdx(0);
   byte sep=separator.specified() ? separator.value() : CsvParser.NO_SEPARATOR;
   CsvParser.Setup setup=Inspect.csvGuessValue(v,sep);
-  if (setup._data == null || setup._data[0].length == 0)   throw new IllegalArgumentException("I cannot figure out this file; I only handle common CSV formats: " + hKey);
+  if (setup._data == null || setup._data[0].length == 0)   throw new IllegalArgumentException(errors()[1] + hKey);
   return new PSetup(keys,setup);
 }

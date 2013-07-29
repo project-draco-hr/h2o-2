@@ -1,7 +1,7 @@
 {
   PSetup p=source_key.value();
   CsvParser.Setup q=p._setup;
-  Key d=Key.make(dest.value());
+  Key d=Key.make(dst_key.value());
   try {
     CsvParser.Setup new_setup=header.originalValue() == null ? q : new CsvParser.Setup(q._separator,header.value(),q._data,q._numlines,q._bits);
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
