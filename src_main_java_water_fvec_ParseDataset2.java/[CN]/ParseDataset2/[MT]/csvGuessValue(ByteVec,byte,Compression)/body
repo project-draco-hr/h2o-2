@@ -1,5 +1,5 @@
 {
-  C1Chunk bv=vec.elem2BV(0);
+  C1NChunk bv=vec.elem2BV(0);
   byte[] bs=bv._mem;
   int off=0;
   InputStream is=null;
@@ -9,11 +9,11 @@ case NONE:
       off=bs.length;
     break;
 case GZIP:
-  is=new GZIPInputStream(vec.openStream());
+  is=new GZIPInputStream(vec.openStream(null));
 break;
 case ZIP:
 {
-ZipInputStream zis=new ZipInputStream(vec.openStream());
+ZipInputStream zis=new ZipInputStream(vec.openStream(null));
 ZipEntry ze=zis.getNextEntry();
 if (ze != null && !ze.isDirectory()) is=zis;
  else zis.close();
