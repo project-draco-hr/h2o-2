@@ -1,5 +1,5 @@
 def random_forest_view(self, data_key, model_key, timeoutSecs=300, print_params=False, **kwargs):
-    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'class_weights': None, }
+    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'class_weights': None, 'response_variable': (-3), }
     browseAlso = kwargs.pop('browseAlso', False)
     for k in kwargs:
         if (k in params_dict):
