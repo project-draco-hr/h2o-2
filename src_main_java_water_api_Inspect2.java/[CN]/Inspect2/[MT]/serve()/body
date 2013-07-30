@@ -1,5 +1,5 @@
 {
-  Frame fr=src_key.value();
+  Frame fr=DKV.get(src_key.value()).get();
   if (fr == null)   return RequestServer._http404.serve();
   return new Response(Response.Status.done,this,-1,-1,null);
 }
