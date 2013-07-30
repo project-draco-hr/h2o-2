@@ -6,5 +6,5 @@ def test_GLM_gamma_fail1(self):
         start = time.time()
         glm = h2o_cmd.runGLMOnly(timeoutSecs=120, parseKey=parseKey, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
-        h2o_glm.simpleCheckGLM(self, glm, None, maxExpectedIterations=(kwargs['max_iter'] - 2), **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, None, **kwargs)
         print 'Trial #', trial, 'completed\n'
