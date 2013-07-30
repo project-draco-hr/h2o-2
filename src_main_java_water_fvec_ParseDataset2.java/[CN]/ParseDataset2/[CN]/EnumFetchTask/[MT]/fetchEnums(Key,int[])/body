@@ -1,5 +1,3 @@
 {
-  EnumFetchTask tsk=new EnumFetchTask(H2O.SELF.index(),k,ecols);
-  tsk.invokeOnAllNodes();
-  return tsk._enums;
+  return new EnumFetchTask(H2O.SELF.index(),k,ecols).invokeOnAllNodes()._enums;
 }

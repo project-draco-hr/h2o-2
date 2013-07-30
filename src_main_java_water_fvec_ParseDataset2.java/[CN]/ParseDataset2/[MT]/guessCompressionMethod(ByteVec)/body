@@ -1,5 +1,5 @@
 {
-  C1Chunk bv=vec.elem2BV(0);
+  C1NChunk bv=vec.elem2BV(0);
   if (vec.length() > ZipFile.LOCHDR && bv.get4(0) == ZipFile.LOCSIG)   return Compression.ZIP;
   if (vec.length() > 2 && (0xFFFF & bv.get2(0)) == GZIPInputStream.GZIP_MAGIC)   return Compression.GZIP;
   return Compression.NONE;

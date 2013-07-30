@@ -1,0 +1,10 @@
+{
+  new TAtomic<ParseProgress>(){
+    @Override public ParseProgress atomic(    ParseProgress old){
+      if (old == null)       return null;
+      old._value+=len;
+      return old;
+    }
+  }
+.fork(progress);
+}
