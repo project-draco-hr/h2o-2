@@ -1,0 +1,15 @@
+def test_dead_node_status(self):
+    h2b.browseTheCloud()
+    for h in h2o.nodes:
+        h.log_view()
+    h2o.nodes[1].terminate_self_only()
+    nodeList = h2o.nodes[:]
+    del nodeList[1]
+    print 'We probably need some status to interrogate to understand a node is in red state?'
+    print 'And I probably need to wait 60 secs to get to red state'
+    time.sleep(5)
+    h2o.verify_cloud_size(nodeList, verbose=True)
+    time.sleep(5)
+    h2o.verify_cloud_size(nodeList, verbose=True)
+    time.sleep(5)
+    h2o.verify_cloud_size(nodeList, verbose=True)

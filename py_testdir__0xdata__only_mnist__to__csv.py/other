@@ -1,0 +1,33 @@
+import os, struct
+from array import array as pyarray
+import numpy
+from numpy import append, array, int8, uint8, zeros
+if (__name__ == '__main__'):
+    from pylab import *
+
+    def doit(f):
+        print 'we want all the images'
+        (images, labels) = read(range(10), f)
+        print 'labels.shape', labels.shape
+        print 'images.shape', images.shape
+        print 'images[0].shape', images[0].shape
+        (a, b, c) = images.shape
+        imagesF = images.reshape(a, (b * c))
+        labelsF = labels
+        bothF = numpy.concatenate((labelsF, imagesF), 1)
+        print 'labelsF.shape', labelsF.shape
+        print 'imagesF.shape', imagesF.shape
+        print 'both.shape', bothF.shape
+        headerList = ['label']
+        headerList += [('p' + str(i)) for i in range(784)]
+        header = ','.join(map(str, headerList))
+        print header
+        numpy.savetxt((('mnist_' + f) + '.csv'), bothF, header=header, delimiter=',', fmt='%d')
+    doit('training')
+    doit('testing')
+    file_gzip('mnist_training.csv', 'mnist_training.csv.gz')
+    file_gzip('mnist_testing.csv', 'mnist_testing.csv.gz')
+    if (1 == 0):
+        (images, labels) = read([7, 8, 9], 'training')
+        imshow(images.mean(axis=0), cmap=cm.gray)
+        show()
