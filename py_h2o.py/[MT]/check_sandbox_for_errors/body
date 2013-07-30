@@ -41,7 +41,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
         for e in errLines:
             justInfo &= (re.match('INFO:', e) or ('apache' in e))
         if (not justInfo):
-            emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr.\n' + 'Could have occurred at any prior time\n\n')
+            emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr (including R stdout/stderr).\n' + 'Could have occurred at any prior time\n\n')
             emsg2 = ''.join(errLines)
             if nodes:
                 nodes[0].sandbox_error_report(True)
