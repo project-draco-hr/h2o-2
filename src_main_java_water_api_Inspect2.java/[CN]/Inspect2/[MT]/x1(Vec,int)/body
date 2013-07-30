@@ -1,0 +1,25 @@
+{
+switch (v.dtype()) {
+case I:
+    return Long.toString(v.at8(row));
+case F:
+{
+    Chunk c=v.elem2BV(0);
+    Class Cc=c.getClass();
+    if (Cc == null) {
+    }
+ else     if (Cc == C1SChunk.class) {
+      return x2(v,row,((C1SChunk)c)._scale);
+    }
+ else     if (Cc == C2SChunk.class) {
+      return x2(v,row,((C2SChunk)c)._scale);
+    }
+ else {
+      return Double.toString(v.at(row));
+    }
+    return Double.toString(v.at(row));
+  }
+default :
+throw H2O.unimpl();
+}
+}

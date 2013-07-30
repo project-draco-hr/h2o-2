@@ -1,4 +1,17 @@
 {
-  Frame fr=src_key.value();
-  throw H2O.unimpl();
+  Key skey=src_key.value();
+  Frame fr=DKV.get(skey).get();
+  DocGen.HTML.title(sb,skey.toString());
+  DocGen.HTML.arrayHead(sb);
+  sb.append("<tr>");
+  for (int i=0; i < fr.numCols(); i++)   sb.append("<td>").append(fr._names[i]).append("</td>");
+  sb.append("</tr>");
+  int N=(int)Math.min(100,fr.numRows());
+  for (int j=0; j < N; j++) {
+    sb.append("<tr>");
+    for (int i=0; i < fr.numCols(); i++)     sb.append("<td>").append(x1(fr._vecs[i],j)).append("</td>");
+    sb.append("</tr>");
+  }
+  DocGen.HTML.arrayTail(sb);
+  return true;
 }
