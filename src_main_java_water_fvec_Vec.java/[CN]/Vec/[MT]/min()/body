@@ -1,4 +1,9 @@
 {
-  if (_min == Double.NaN)   throw H2O.unimpl();
+  if (Double.isNaN(_min)) {
+    RollupStats rs=new RollupStats().doAll(this);
+    _min=rs._min;
+    _max=rs._max;
+    _nas=rs._nas;
+  }
   return _min;
 }
