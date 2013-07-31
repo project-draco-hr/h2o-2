@@ -3,6 +3,12 @@ def test_parse_storeview_import(self):
     csvFilelist = [('covtype.data', 300)]
     importFolderResult = h2i.setupImportFolder(None, importFolderPath)
     succeededList = importFolderResult['files']
+    if ('succeeded' in importFolderResult):
+        succeededList = importFolderResult['succeeded']
+    elif ('files' in importFolderResult):
+        succeededList = importFolderResult['files']
+    else:
+        raise Exception("Can't find 'files' or 'succeeded' in import list")
     self.assertGreater(len(succeededList), 3, 'Should see more than 3 files in the import?')
     print '\nTrying StoreView after the import folder'
     h2o_cmd.runStoreView(timeoutSecs=30)
