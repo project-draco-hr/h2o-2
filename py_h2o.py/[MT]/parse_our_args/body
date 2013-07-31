@@ -8,10 +8,10 @@ def parse_our_args():
     parser.add_argument('-dbg', '--debugger', help='Launch java processes with java debug attach mechanisms', action='store_true')
     parser.add_argument('-rud', '--random_udp_drop', help='Drop 20 pct. of the UDP packets at the receive side', action='store_true')
     parser.add_argument('-s', '--random_seed', type=int, help='initialize SEED (64-bit integer) for random generators')
-    parser.add_argument('unittest_args', nargs='*')
+    parser.add_argument('-bf', '--beta_features', help='enable or switch to beta features (import2/parse2)', action='store_true')
     parser.add_argument('unittest_args', nargs='*')
     args = parser.parse_args()
-    global browse_disable, browse_json, verbose, ipaddr, config_json, debugger, random_udp_drop, random_seed
+    global browse_disable, browse_json, verbose, ipaddr, config_json, debugger, random_udp_drop, random_seed, beta_features
     browse_disable = (args.browse_disable or (getpass.getuser() == 'jenkins'))
     browse_json = args.browse_json
     verbose = args.verbose
@@ -20,4 +20,5 @@ def parse_our_args():
     debugger = args.debugger
     random_udp_drop = args.random_udp_drop
     random_seed = args.random_seed
+    beta_features = args.beta_features
     sys.argv[1:] = (['-v', '--failfast'] + args.unittest_args)
