@@ -12,7 +12,7 @@
     int mtrys=Math.max((int)Math.sqrt(fr.numCols()),1);
     DRF drf=DRF.start(DRF.makeKey(),fr,50,5,mtrys,0.67);
     drf.get();
-    UKV.remove(drf._dest);
+    UKV.remove(drf.destination_key);
   }
   finally {
     UKV.remove(dest);

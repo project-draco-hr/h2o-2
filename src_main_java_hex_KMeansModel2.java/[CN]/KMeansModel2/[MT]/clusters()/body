@@ -1,0 +1,16 @@
+{
+  double dd[][]=new double[_clusters.length][_clusters[0].length];
+  for (int j=0; j < dd.length; j++) {
+    double ds[]=_clusters[j];
+    for (int i=0; i < ds.length; i++) {
+      ValueArray.Column C=_va._cols[i];
+      double d=ds[i];
+      if (_job.normalize) {
+        if (C._sigma != 0.0 && !Double.isNaN(C._sigma))         d*=C._sigma;
+        d+=C._mean;
+      }
+      dd[j][i]=d;
+    }
+  }
+  return dd;
+}

@@ -5,7 +5,7 @@
   try {
     CsvParser.Setup new_setup=header.originalValue() == null ? q : new CsvParser.Setup(q._separator,header.value(),q._data,q._numlines,q._bits);
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
-    job=ParseDataset2.forkParseDataset(d,keys,new_setup)._self.toString();
+    job=ParseDataset2.forkParseDataset(d,keys,new_setup).job_key.toString();
     destination_key=d.toString();
     return new Response(Status.done,this);
   }
