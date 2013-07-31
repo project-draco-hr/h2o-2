@@ -56,7 +56,7 @@ def test_benchmark_import(self):
                 l = '{:d} jvms, {:d}GB heap, {:s} {:s} GLM: {:6.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, elapsed)
                 print l
                 h2o.cloudPerfH2O.message(l)
-            h2o_cmd.check_key_distribution()
+            h2o_cmd.checkKeyDistribution()
             h2o.tear_down_cloud()
             sys.stdout.write('.')
             sys.stdout.flush()
