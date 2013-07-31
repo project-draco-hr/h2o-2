@@ -91,7 +91,7 @@ def test_benchmark_import(self):
             print csvFilepattern, 'parse time:', parseKey['response']['time']
             print "Parse result['destination_key']:", parseKey['destination_key']
             if (not noPoll):
-                h2o_cmd.check_enums_from_inspect(parseKey)
+                h2o_cmd.columnInfoFromInspect(parseKey['destination_key'], exceptionOnMissingValues=False)
             origKey = parseKey['destination_key']
             execExpr = (('a = slice(' + origKey) + ',1,200)')
             h2e.exec_expr(h2o.nodes[0], execExpr, 'a', timeoutSecs=30)
