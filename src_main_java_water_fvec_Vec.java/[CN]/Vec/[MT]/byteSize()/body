@@ -1,6 +1,4 @@
 {
-  long s=0;
-  int nc=nChunks();
-  for (int i=0; i < nc; i++)   s+=((Chunk)(DKV.get(chunkKey(i)).get())).byteSize();
-  return s;
+  if (Double.isNaN(_min))   min();
+  return _byteSize;
 }
