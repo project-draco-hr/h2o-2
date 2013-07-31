@@ -1,0 +1,21 @@
+{
+  listHead(sb);
+  for (  FieldDoc doc : docs)   if (doc.isJSON()) {
+    listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),doc._help + doc.version(),0);
+    Class c=doc._clazz.getComponentType();
+    if (c == null)     c=doc._clazz;
+    if (Iced.class.isAssignableFrom(c)) {
+      try {
+        FieldDoc[] nested=((Iced)c.newInstance()).toDocField();
+        listJSONFields(sb,nested);
+      }
+ catch (      InstantiationException ie) {
+        water.util.Log.errRTExcept(ie);
+      }
+catch (      IllegalAccessException ie) {
+        water.util.Log.errRTExcept(ie);
+      }
+    }
+  }
+  listTail(sb);
+}

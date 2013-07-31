@@ -1,0 +1,13 @@
+{
+  for (int i=0; i < c._len; i++) {
+    if (c.isNA0(i))     _nas++;
+ else {
+      double d=c.at0(i);
+      if (d < _min)       _min=d;
+      if (d > _max)       _max=d;
+      _mean+=d;
+      _rows++;
+    }
+  }
+  _mean=_mean / _rows;
+}
