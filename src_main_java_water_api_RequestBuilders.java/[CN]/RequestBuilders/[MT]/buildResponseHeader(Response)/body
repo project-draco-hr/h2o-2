@@ -26,7 +26,9 @@ poll.replace("REDIRECT_URL",getClass().getSimpleName() + ".html" + encodeRedirec
 result.replace("JSSTUFF",poll.toString());
 }
  else {
-result.replace("JSSTUFF",_pollJs);
+RString poll=new RString(_pollJs);
+poll.replace("TIMEOUT",response._pollProgress == 0 ? 500 : 2000);
+result.replace("JSSTUFF",poll.toString());
 }
 int pct=(int)((double)response._pollProgress / response._pollProgressElements * 100);
 result.replace("BUTTON","<button class='btn btn-primary' onclick='redirect()'>" + response._status.toString() + "</button>");

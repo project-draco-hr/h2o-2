@@ -1,0 +1,19 @@
+{
+  if ((row >= 0 && v.isNA(row)) || Double.isNaN(d))   return "-";
+switch (v.dtype()) {
+case I:
+    return Long.toString(row >= 0 ? v.at8(row) : (long)d);
+case F:
+{
+    Chunk c=v.elem2BV(0);
+    Class Cc=c.getClass();
+    if (Cc == C1SChunk.class)     return x2(d,((C1SChunk)c)._scale);
+    if (Cc == C2SChunk.class)     return x2(d,((C2SChunk)c)._scale);
+    return Double.toString(d);
+  }
+case S:
+return row >= 0 ? v.domain(v.at8(row)) : Long.toString((long)d);
+default :
+throw H2O.unimpl();
+}
+}
