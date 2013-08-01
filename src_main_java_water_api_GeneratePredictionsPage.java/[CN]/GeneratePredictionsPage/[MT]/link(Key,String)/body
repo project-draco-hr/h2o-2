@@ -1,5 +1,6 @@
 {
-  RString rs=new RString("<a href='GeneratePredictionsPage.query?model_key=%key'>%content</a>");
+  RString rs=new RString("<a href='GeneratePredictionsPage.query?%key_param=%$key'>%content</a>");
+  rs.replace("key_param",MODEL_KEY);
   rs.replace("key",k.toString());
   rs.replace("content",content);
   return rs.toString();
