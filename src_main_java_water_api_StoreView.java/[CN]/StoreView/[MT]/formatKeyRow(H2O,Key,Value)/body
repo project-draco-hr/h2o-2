@@ -38,10 +38,10 @@
     }
   }
   if (rows == -1) {
-    CsvParser.Setup setup=Inspect.csvGuessValue(val);
+    CustomParser.ParserSetup setup=ParseDataset.guessSetup(val);
     if (setup._data != null && setup._data[1].length > 0) {
       int zipped_len=val.getFirstBytes().length;
-      double bytes_per_row=(double)zipped_len / setup._numlines;
+      double bytes_per_row=(double)zipped_len / setup._data.length;
       rows=(long)(val.length() / bytes_per_row);
       cols=setup._data[1].length;
       result.addProperty(ROWS,"~" + rows);

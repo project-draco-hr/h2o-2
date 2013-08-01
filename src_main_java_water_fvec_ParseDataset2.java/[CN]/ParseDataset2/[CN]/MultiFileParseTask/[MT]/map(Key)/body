@@ -1,35 +1,46 @@
 {
   ByteVec vec=(ByteVec)getVec(key);
   Compression cpr=guessCompressionMethod(vec);
-  CsvParser.Setup setup=csvGuessValue(vec,_setup._separator,cpr);
-  if (!_setup.equals(setup)) {
-    _parserr="Conflicting file layouts, expecting: " + _setup + " but found "+ setup;
-    return;
-  }
-  boolean has_hdr=_setup._header && setup._header;
-  if (has_hdr) {
-    for (int i=0; i < setup._data[0].length; ++i)     has_hdr&=setup._data[0][i].equalsIgnoreCase(_setup._data[0][i]);
-    if (!has_hdr)     setup=new CsvParser.Setup(setup,false);
-  }
-  final int ncols=_setup._data[0].length;
-  _vecs=new Vec[ncols];
-  Key[] keys=vec.group().addVecs(ncols);
-  for (int i=0; i < ncols; i++)   _vecs[i]=new AppendableVec(keys[i]);
-  try {
+  CustomParser.ParserSetup localSetup;
+  byte[] bits=Inspect.getFirstBytes(DKV.get(key));
+switch (_setup._pType) {
+case SVMLight:
+    localSetup=SVMLightParser.guessSetup(bits);
+  break;
+case CSV:
+localSetup=CsvParser.guessSetup(bits,_setup._separator);
+break;
+default :
+throw H2O.unimpl();
+}
+if (!_setup.isCompatible(localSetup)) {
+_parserr="Conflicting file layouts, expecting: " + _setup + " but found "+ localSetup;
+return;
+}
+boolean has_hdr=_setup._header && localSetup._header;
+if (has_hdr) {
+for (int i=0; i < localSetup._columnNames.length; ++i) has_hdr=localSetup._columnNames[i].equalsIgnoreCase(_setup._columnNames[i]);
+if (!has_hdr) localSetup=CustomParser.ParserSetup.makeCSVSetup(localSetup._separator,false,localSetup._data,localSetup._bits,localSetup._ncols);
+}
+final int ncols=_setup._ncols;
+_vecs=new Vec[ncols];
+Key[] keys=vec.group().addVecs(ncols);
+for (int i=0; i < ncols; i++) _vecs[i]=new AppendableVec(keys[i]);
+try {
 switch (cpr) {
 case NONE:
-      distroParse(vec,setup);
-    break;
+distroParse(vec,localSetup);
+break;
 case ZIP:
 {
-    ZipInputStream zis=new ZipInputStream(vec.openStream(_progress));
-    ZipEntry ze=zis.getNextEntry();
-    if (ze != null && !ze.isDirectory())     streamParse(zis,setup);
- else     zis.close();
-    break;
-  }
+ZipInputStream zis=new ZipInputStream(vec.openStream(_progress));
+ZipEntry ze=zis.getNextEntry();
+if (ze != null && !ze.isDirectory()) streamParse(zis,localSetup);
+ else zis.close();
+break;
+}
 case GZIP:
-streamParse(new GZIPInputStream(vec.openStream(_progress)),setup);
+streamParse(new GZIPInputStream(vec.openStream(_progress)),localSetup);
 break;
 }
 }

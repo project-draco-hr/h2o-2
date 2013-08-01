@@ -1,0 +1,71 @@
+{
+  int j=0;
+  UKV.remove(job.dest());
+  Key[] nonEmptyKeys=new Key[keys.length];
+  for (int i=0; i < keys.length; ++i) {
+    Value v=DKV.get(keys[i]);
+    if (v == null || v.length() > 0)     nonEmptyKeys[j++]=keys[i];
+  }
+  if (j < nonEmptyKeys.length)   keys=Arrays.copyOf(nonEmptyKeys,j);
+  if (keys.length == 0) {
+    job.cancel();
+    return;
+  }
+  Value v=DKV.get(keys[0]);
+  DParseTask p1=tryParseXls(v,job);
+  if (p1 != null) {
+    if (keys.length == 1) {
+      DParseTask p2=p1.createPassTwo();
+      p2.passTwo();
+      p2.createValueArrayHeader();
+      job.remove();
+      return;
+    }
+ else     throw H2O.unimpl();
+  }
+  if (setup == null || setup._pType == CustomParser.ParserType.AUTO)   setup=ParseDataset.guessSetup(v);
+  Compression compression=guessCompressionMethod(v);
+  try {
+    UnzipAndParseTask tsk=new UnzipAndParseTask(job,compression,setup);
+    tsk.invoke(keys);
+    DParseTask[] p2s=new DParseTask[keys.length];
+    DParseTask phaseTwo=tsk._tsk.createPassTwo();
+    HashMap<Key,FileInfo> fileInfo=new HashMap<Key,FileInfo>();
+    long rowCount=0;
+    for (int i=0; i < tsk._fileInfo.length; ++i)     fileInfo.put(tsk._fileInfo[i]._ikey,tsk._fileInfo[i]);
+    for (int i=0; i < keys.length; ++i) {
+      FileInfo finfo=fileInfo.get(keys[i]);
+      Key k=finfo._okey;
+      long nrows=finfo._nrows[finfo._nrows.length - 1];
+      for (j=0; j < finfo._nrows.length; ++j)       finfo._nrows[j]+=rowCount;
+      rowCount+=nrows;
+      p2s[i]=phaseTwo.makePhase2Clone(finfo).dfork(k);
+    }
+    phaseTwo._sigma=new double[phaseTwo._ncolumns];
+    phaseTwo._invalidValues=new long[phaseTwo._ncolumns];
+    for (int i=0; i < p2s.length; ++i) {
+      DParseTask t=p2s[i];
+      p2s[i].get();
+      for (j=0; j < phaseTwo._ncolumns; ++j) {
+        phaseTwo._sigma[j]+=t._sigma[j];
+        phaseTwo._invalidValues[j]+=t._invalidValues[j];
+      }
+      if ((t._error != null) && !t._error.isEmpty()) {
+        System.err.println(phaseTwo._error);
+        throw new Exception("The dataset format is not recognized/supported");
+      }
+      FileInfo finfo=fileInfo.get(keys[i]);
+      UKV.remove(finfo._okey);
+    }
+    phaseTwo.normalizeSigma();
+    phaseTwo._colNames=setup._data[0];
+    phaseTwo.createValueArrayHeader();
+  }
+ catch (  Throwable e) {
+    UKV.put(job.dest(),new Fail(e.getMessage()));
+    throw Throwables.propagate(e);
+  }
+ finally {
+    job.remove();
+  }
+}
