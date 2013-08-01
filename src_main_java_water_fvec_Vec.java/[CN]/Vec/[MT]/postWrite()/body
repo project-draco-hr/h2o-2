@@ -1,0 +1,12 @@
+{
+  if (_activeWrites) {
+    _activeWrites=false;
+    new TAtomic<Vec>(){
+      @Override public Vec atomic(      Vec v){
+        v._activeWrites=false;
+        return v;
+      }
+    }
+.invoke(_key);
+  }
+}

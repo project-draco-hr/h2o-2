@@ -21,7 +21,7 @@ def test_summary(self):
         print "Parse result['destination_key']:", parseKey['destination_key']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
-        summaryResult = runSummary(key=key2)
+        summaryResult = h2o_cmd.runSummary(key=key2)
         summary = summaryResult['summary']
         columnsList = summary['columns']
         for columns in columnsList:

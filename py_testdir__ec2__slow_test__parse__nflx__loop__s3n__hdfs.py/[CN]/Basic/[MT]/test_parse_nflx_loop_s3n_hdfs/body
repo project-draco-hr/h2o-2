@@ -116,8 +116,8 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                     print l
                     h2o.cloudPerfH2O.message(l)
                 print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
-                h2o_cmd.check_key_distribution()
-                h2o_cmd.delete_csv_key(csvFilename, importResult)
+                h2o_cmd.checkKeyDistribution()
+                h2o_cmd.deleteCsvKey(csvFilename, importResult)
             h2o.tear_down_cloud()
             print 'Waiting 30 secs before building cloud again (sticky ports?)'
             time.sleep(30)
