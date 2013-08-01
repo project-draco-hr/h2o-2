@@ -1,0 +1,16 @@
+{
+  final NewChunk nvs[]=new NewChunk[_vecs.length];
+  for (int i=0; i < nvs.length; i++)   nvs[i]=new NewChunk(_vecs[i],0);
+  FVecDataOut dout=new FVecDataOut(nvs,enums());
+  CsvParser p=new CsvParser(localSetup,false);
+  try {
+    p.streamParse(is,dout);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  for (int i=0; i < _vecs.length; i++) {
+    nvs[i].close(0,_fs);
+    _vecs[i]=((AppendableVec)_vecs[i]).close(_fs);
+  }
+}

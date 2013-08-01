@@ -1,14 +1,19 @@
 {
-  UnzipAndParseTask tsk=(UnzipAndParseTask)drt;
-  if (_tsk == null && _fileInfo == null) {
-    _fileInfo=tsk._fileInfo;
-    _tsk=tsk._tsk;
-  }
+  try {
+    UnzipAndParseTask tsk=(UnzipAndParseTask)drt;
+    if (_tsk == null && _fileInfo == null) {
+      _fileInfo=tsk._fileInfo;
+      _tsk=tsk._tsk;
+    }
  else {
-    final int n=_fileInfo.length;
-    _fileInfo=Arrays.copyOf(_fileInfo,n + tsk._fileInfo.length);
-    System.arraycopy(tsk._fileInfo,0,_fileInfo,n,tsk._fileInfo.length);
-    tsk._tsk._nrows=_tsk._nrows;
-    _tsk.reduce(tsk._tsk);
+      final int n=_fileInfo.length;
+      _fileInfo=Arrays.copyOf(_fileInfo,n + tsk._fileInfo.length);
+      System.arraycopy(tsk._fileInfo,0,_fileInfo,n,tsk._fileInfo.length);
+      tsk._tsk._nrows=_tsk._nrows;
+      _tsk.reduce(tsk._tsk);
+    }
+  }
+ catch (  Throwable t) {
+    t.printStackTrace();
   }
 }

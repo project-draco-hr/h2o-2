@@ -1,5 +1,9 @@
 {
   Value v=this;
   if (isArray())   v=DKV.get(ValueArray.getChunkKey(0,_key));
+ else   if (isByteVec()) {
+    ByteVec vec=get();
+    return vec.elem2BV(0).getBytes();
+  }
   return v != null ? v.memOrLoad() : new byte[0];
 }
