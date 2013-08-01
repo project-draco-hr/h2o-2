@@ -15,6 +15,6 @@ def test_from_import(self):
         RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
         h2b.browseJsonHistoryAsUrlLastMatch('RFView')
         time.sleep(10)
-        h2o_cmd.delete_csv_key(csvFilename, importFolderResult)
+        h2o_cmd.deleteCsvKey(csvFilename, importFolderResult)
         sys.stdout.write('.')
         sys.stdout.flush()

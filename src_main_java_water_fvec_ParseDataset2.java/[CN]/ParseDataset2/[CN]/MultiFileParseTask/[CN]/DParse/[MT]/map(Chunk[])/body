@@ -4,4 +4,5 @@
   final NewChunk[] nvs=Arrays.copyOf(bvs,bvs.length - 1,NewChunk[].class);
   ChunkParser parser=new ChunkParser(in,nvs,_setup,enums);
   parser.parse(0);
+  onProgress(in._len,_progress);
 }

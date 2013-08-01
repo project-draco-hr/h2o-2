@@ -1,0 +1,48 @@
+import os, struct
+from array import array as pyarray
+import numpy
+from numpy import append, array, int8, uint8, zeros
+DO_REALS = False
+DO_IMAGES = False
+if (__name__ == '__main__'):
+    from pylab import *
+
+    def doit(prefix, f):
+        print 'we want all the images'
+        (images, labels) = read(range(10), f)
+        if DO_REALS:
+            images /= 255.0
+        print images[0]
+        print 'labels.shape', labels.shape
+        print 'images.shape', images.shape
+        print 'images[0].shape', images[0].shape
+        (a, b, c) = images.shape
+        if DO_REALS:
+            images /= 255.0
+        imagesF = images.reshape(a, (b * c))
+        labelsF = labels
+        bothF = numpy.concatenate((labelsF, imagesF), 1)
+        print 'labelsF.shape', labelsF.shape
+        print 'imagesF.shape', imagesF.shape
+        print 'bothF.shape', bothF.shape
+        headerList = ['label']
+        headerList += [('p' + str(i)) for i in range(784)]
+        header = ','.join(map(str, headerList))
+        print header
+        if DO_REALS:
+            fmt = ','.join((['%i'] + (['%f'] * imagesF.shape[1])))
+        else:
+            fmt = '%d'
+        numpy.savetxt(((prefix + f) + '.csv'), bothF, header=header, delimiter=',', fmt=fmt)
+    if DO_REALS:
+        prefix = 'mnist_reals_'
+    else:
+        prefix = 'mnist_'
+    doit(prefix, 'training')
+    doit(prefix, 'testing')
+    file_gzip((prefix + 'training.csv'), (prefix + 'training.csv.gz'))
+    file_gzip((prefix + 'testing.csv'), (prefix + 'testing.csv.gz'))
+    if DO_IMAGES:
+        (images, labels) = read(range(0, 10), 'training')
+        imshow(images.mean(axis=0), cmap=cm.gray)
+        show()

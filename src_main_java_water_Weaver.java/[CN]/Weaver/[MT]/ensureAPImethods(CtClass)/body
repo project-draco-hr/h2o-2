@@ -5,7 +5,7 @@
   if (api == false)   return;
   CtField fielddoc=null;
   CtField getdoc=null;
-  make_body(cc,ctfs,false,"public water.AutoBuffer writeJSON(water.AutoBuffer ab) {\n  ab.put1('{');\n","  super.writeJSON(ab);\n","  ab.putJSON%z(\"%s\",%s)","  ab.putEnumJSON(%s)","  ab.putJSON%z(%s)",".put1(',');\n",";\n  return ab.put1('}');\n}",new FieldFilter(){
+  make_body(cc,ctfs,false,"public water.AutoBuffer writeJSONFields(water.AutoBuffer ab) {\n","  super.writeJSONFields(ab);\n","  ab.putJSON%z(\"%s\",%s)","  ab.putEnumJSON(\"%s\",%s)","  ab.putJSON%z(\"%s\",%s)",".put1(',');\n",";\n  return ab;\n}",new FieldFilter(){
     boolean filter(    CtField ctf) throws NotFoundException {
       return !ctf.getType().subclassOf(_arg);
     }
