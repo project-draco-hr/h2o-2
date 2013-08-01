@@ -22,6 +22,7 @@ def test_summary(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         summaryResult = h2o_cmd.runSummary(key=key2)
+        h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
         summary = summaryResult['summary']
         columnsList = summary['columns']
         for columns in columnsList:
@@ -36,15 +37,6 @@ def test_summary(self):
             bin_names = histogram['bin_names']
             bins = histogram['bins']
             nbins = histogram['bins']
-            print 'bins:', bins
-            print '\n\n************************'
-            print 'name:', name
-            print 'type:', stype
-            print 'N:', N
-            print 'bin_size:', bin_size
-            print 'len(bin_names):', len(bin_names), bin_names
-            print 'len(bins):', len(bins), bins
-            print 'len(nbins):', len(nbins), nbins
             for b in bins:
                 e = (0.1 * rowCount)
                 self.assertAlmostEqual(b, (0.1 * rowCount), delta=(0.01 * rowCount), msg=('Bins not right. b: %s e: %s' % (b, e)))
@@ -56,13 +48,11 @@ def test_summary(self):
                 values = percentiles['values']
                 mean = columns['mean']
                 sigma = columns['sigma']
-                print 'len(max):', len(smax), smax
                 self.assertEqual(smax[0], expectedMax)
                 self.assertEqual(smax[1], (expectedMax - 1))
                 self.assertEqual(smax[2], (expectedMax - 2))
                 self.assertEqual(smax[3], (expectedMax - 3))
                 self.assertEqual(smax[4], (expectedMax - 4))
-                print 'len(min):', len(smin), smin
                 self.assertEqual(smin[0], expectedMin)
                 self.assertEqual(smin[1], (expectedMin + 1))
                 self.assertEqual(smin[2], (expectedMin + 2))
@@ -71,12 +61,8 @@ def test_summary(self):
                 for v in values:
                     self.assertTrue((v >= expectedMin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
                     self.assertTrue((v <= expectedMax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
-                print 'mean:', mean
                 self.assertAlmostEqual(mean, ((expectedMax + expectedMin) / 2.0), delta=0.1)
-                print 'sigma:', sigma
                 self.assertAlmostEqual(sigma, 2.9, delta=0.1)
-                print 'len(thresholds):', len(thresholds), thresholds
-                print 'len(values):', len(values), values
                 eV1 = [1.0, 1.0, 1.0, 3.0, 4.0, 5.0, 7.0, 8.0, 9.0, 10.0, 10.0]
                 if (expectedMin == 1):
                     eV = eV1
@@ -89,8 +75,6 @@ def test_summary(self):
                 for (t, v, e) in zip(thresholds, values, eV):
                     m = ('Percentile threshold: %s with value %s should ~= %s' % (t, v, e))
                     self.assertAlmostEqual(v, e, delta=0.5, msg=m)
-        sys.stdout.write('.')
-        sys.stdout.flush()
         trial += 1
         if (1 == 0):
             generate_scipy_comparison(csvPathname)
