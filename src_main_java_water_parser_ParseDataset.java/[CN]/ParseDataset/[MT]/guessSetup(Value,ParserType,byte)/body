@@ -1,14 +1,3 @@
 {
-  byte[] bits=Inspect.getFirstBytes(v);
-  ParserSetup res=null;
-switch (pType) {
-case CSV:
-    return CsvParser.guessSetup(bits,sep);
-case SVMLight:
-  return SVMLightParser.guessSetup(bits);
-case AUTO:
-return (res=SVMLightParser.guessSetup(bits)) != null ? res : CsvParser.guessSetup(bits,sep);
-default :
-throw H2O.unimpl();
-}
+  return guessSetup(Inspect.getFirstBytes(v),pType,sep);
 }

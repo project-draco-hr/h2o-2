@@ -15,7 +15,7 @@
       if (lines.size() < 5)       lines.add(new String(bits,lineStart,lineEnd - lineStart));
     }
   }
-  if (lines.size() < 2)   return CustomParser.ParserSetup.makeCSVSetup(separator == NO_SEPARATOR ? (byte)' ' : separator,false,null,null,0);
+  if (lines.size() < 2)   return CustomParser.ParserSetup.makeCSVSetup(separator == NO_SEPARATOR ? (byte)' ' : separator,false,null,0);
   if (separator != NO_SEPARATOR) {
     try {
       String[] t1=determineTokens(lines.get(0),separator);
@@ -39,5 +39,5 @@
       }
     }
   }
-  return CustomParser.ParserSetup.makeCSVSetup((byte)' ',false,null,null,0);
+  return CustomParser.ParserSetup.makeCSVSetup((byte)' ',false,null,0);
 }
