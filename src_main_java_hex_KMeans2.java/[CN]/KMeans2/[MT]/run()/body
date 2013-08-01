@@ -1,8 +1,16 @@
 {
+  if (destination_key == null) {
+    String n=source_key.toString();
+    int dot=n.lastIndexOf('.');
+    if (dot > 0)     n=n.substring(0,dot);
+    String res=n + Extensions.KMEANS_GRID;
+    destination_key=Key.make(res);
+  }
+  _frame=DKV.get(source_key).get();
   Random rand=Utils.getRNG(seed - 1);
   double[][] clusters=new double[1][];
   clusters[0]=new double[cols.length - 1];
-  long row=Math.max(0,(long)(rand.nextDouble() * va._numrows) - 1);
+  long row=Math.max(0,(long)(rand.nextDouble() * frame._vecs[0].length()) - 1);
   AutoBuffer bits=va.getChunk(va.chknum(row));
   datad(va,bits,va.rowInChunk(va.chknum(row),row),cols,normalize,clusters[0]);
   while (iterations < 5) {

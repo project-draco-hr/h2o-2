@@ -1,0 +1,12 @@
+{
+  for (int i=0; i < _frame._vecs.length; i++) {
+    Vec v=_frame._vecs[i];
+    double d=(v.isNA(row) ? v._mean : va.datad(bits,row,C));
+    if (normalize) {
+      d-=C._mean;
+      d=(C._sigma == 0.0 || Double.isNaN(C._sigma)) ? d : d / C._sigma;
+    }
+    res[i]=d;
+  }
+  return res;
+}
