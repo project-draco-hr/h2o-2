@@ -1,5 +1,4 @@
 {
-  if (cidx == 0)   return _chk._mem;
-  Chunk nextChk=_chk._vec.nextBV(_chk);
-  return (nextChk == null) ? null : nextChk._mem;
+  if (cidx != _idx)   _chk=cidx < _vec.nChunks() ? _vec.elem2BV(_idx=cidx) : null;
+  return (_chk == null) ? null : _chk._mem;
 }
