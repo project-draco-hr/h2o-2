@@ -7,7 +7,7 @@ def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDela
         cloudPerfH2O.get_log_save(initOnly=True)
     a = self.__do_json_request(('Parse2.json' if beta_features else 'Parse.json'), timeout=timeoutSecs, params=params_dict)
     verboseprint(('Parse2' if beta_features else ('Parse' + ' result:')), dump_json(a))
-    if (a['response']['redirect_request'] != 'Progress'):
+    if ((not beta_features) and (a['response']['redirect_request'] != 'Progress')):
         raise Exception('H2O parse redirect is not Progress. Parse json response precedes.')
     if noPoll:
         return a

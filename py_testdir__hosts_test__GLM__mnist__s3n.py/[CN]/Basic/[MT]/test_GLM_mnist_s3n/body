@@ -1,6 +1,6 @@
 def test_GLM_mnist_s3n(self):
     URI = 's3n://home-0xdiag-datasets/mnist/'
-    csvFilelist = [('mnist_train.csv.gz', 'mnist_test.csv.gz', 600), ('mnist_test.csv.gz', 'mnist_train.csv.gz', 600), ('mnist_train.csv.gz', 'mnist_train.csv.gz', 600)]
+    csvFilelist = [('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600), ('mnist_testing.csv.gz', 'mnist_training.csv.gz', 600), ('mnist_training.csv.gz', 'mnist_training.csv.gz', 600)]
     importHDFSResult = h2o.nodes[0].import_hdfs(URI)
     s3nFullList = importHDFSResult['succeeded']
     self.assertGreater(len(s3nFullList), 1, 'Should see more than 1 files in s3n?')

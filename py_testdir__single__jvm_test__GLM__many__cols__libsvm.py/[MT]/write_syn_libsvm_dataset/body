@@ -1,0 +1,15 @@
+def write_syn_libsvm_dataset(csvPathname, rowCount, colCount, SEED):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    for i in range(rowCount):
+        rowData = []
+        for j in range(colCount):
+            ri = r1.randint(0, 1)
+            if (ri != 0):
+                colNumber = (j + 1)
+                rowData.append(((str(colNumber) + ':') + str(ri)))
+        ri = r1.randint(0, 1)
+        rowData.insert(0, str(ri))
+        rowDataCsv = ' '.join(rowData)
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()

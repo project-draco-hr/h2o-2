@@ -19,7 +19,17 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
             print 'michal: Temp hack of /home/0xdiag/datasets/standard to /home/0xdiag/datasets till EC2 image is fixed'
             path = re.sub('/home/0xdiag/datasets/standard', '/home/0xdiag/datasets', path)
         importKey = ((('nfs:/' + path) + '/') + csvFilename)
-        parseKey = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
-        parseKey['source_key'] = importKey
+        if h2o.beta_features:
+            print 'Temp hack to look at the jobs list for parse completion. No multiple outstanding parses'
+            print 'The parse result will be just from the first noPoll response. Parse is done as noPoll'
+        parseKey = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll=(noPoll or h2o.beta_features), **kwargs)
+        if h2o.beta_features:
+            print 'Temp hack to look at the jobs list for parse completion. No multiple outstanding parses'
+            print 'The parse result will be just from the first noPoll response.'
+            print '\nWaiting on Parse job for ', importKey
+            start = time.time()
+            h2o_jobs.pollWaitJobs(pattern='arse', timeoutSecs=timeoutSecs, pollTimeoutSecs=120, retryDelaySecs=5)
+            print 'Parse job end for ', importKey, 'took', (time.time() - start), 'seconds'
+        parseKey['python_source_key'] = importKey
         print '\nParse result:', parseKey
     return parseKey

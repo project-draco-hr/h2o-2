@@ -149,12 +149,16 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distrib
         raise Exception('sel out of range in write_syn_dataset:', sel)
     f = caseList[sel]
 
-    def makeVal(valMin, valMax):
+    def addRandValToRowStuff(colNumber, valMin, valMax, rowData, synColSumDict):
         val = r.triangular(valMin, valMax, 0)
         if ((val > (valMin / 2)) and (val < (valMax / 2))):
-            return None
+            return
         else:
-            return val
+            rowData.append(((str(colNumber) + ':') + f(val)))
+            if (val in synColSumDict):
+                synColSumDict[colNumber] += val
+            else:
+                synColSumDict[colNumber] = val
     valMin = (-100.0)
     valMax = 100.0
     classMin = (-36)
@@ -162,20 +166,17 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distrib
     dsf = open(csvPathname, 'w+')
     for i in range(rowCount):
         rowData = []
+        synColSumDict = {}
         d = random.randint(0, 2)
         if (d == 0):
             if (distribution == 'sparse'):
-                j = random.randint(0, colCount)
-                val = makeVal(valMin, valMax)
-                if val:
-                    rowData.append(((str((j + 1)) + ':') + f(val)))
+                colNumber = random.randint(0, (colCount - 1))
+                addRandValToRowStuff(colNumber, valMin, valMax, rowData, synColSumDict)
             else:
-                for j in range(colCount):
-                    val = makeVal(valMin, valMax)
-                    if val:
-                        rowData.append(((str((j + 1)) + ':') + f(val)))
-            if (len(rowData) != 0):
-                rowData.insert(0, random.randint(classMin, classMax))
+                for colNumber in range(colCount):
+                    addRandValToRowStuff(colNumber, valMin, valMax, rowData, synColSumDict)
+        rowData.insert(0, random.randint(classMin, classMax))
         rowDataCsv = ' '.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
     dsf.close()
+    return synColSumDict
