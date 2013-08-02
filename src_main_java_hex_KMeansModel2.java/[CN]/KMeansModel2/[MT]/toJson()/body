@@ -1,0 +1,13 @@
+{
+  JsonObject res=new JsonObject();
+  res.addProperty(Constants.VERSION,H2O.VERSION);
+  res.addProperty(Constants.TYPE,KMeansModel2.class.getName());
+  JsonArray ary=new JsonArray();
+  for (  double[] dd : clusters()) {
+    JsonArray ary2=new JsonArray();
+    for (    double d : dd)     ary2.add(new JsonPrimitive(d));
+    ary.add(ary2);
+  }
+  res.add(Constants.CLUSTERS,ary);
+  return res;
+}

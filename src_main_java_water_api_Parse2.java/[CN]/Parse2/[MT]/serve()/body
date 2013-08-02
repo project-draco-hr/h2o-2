@@ -5,7 +5,7 @@
   try {
     if (header.originalValue() != null)     setup._header=header.value();
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
-    Key jobkey=ParseDataset2.forkParseDataset(d,keys,setup)._self;
+    Key jobkey=ParseDataset2.forkParseDataset(d,keys,setup).job_key;
     job=jobkey.toString();
     destination_key=d.toString();
     return Progress2.redirect(this,jobkey,d);

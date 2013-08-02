@@ -1,6 +1,6 @@
 {
   if (cc.subclassOf(_enum))   exposeRawEnumArray(cc);
-  if (cc.subclassOf(_iced) || cc.subclassOf(_api))   ensureAPImethods(cc);
+  if (cc.subclassOf(_iced))   ensureAPImethods(cc);
   if (cc.subclassOf(_iced) || cc.subclassOf(_dtask)) {
     cc.setModifiers(javassist.Modifier.setPublic(cc.getModifiers()));
     ensureSerMethods(cc);

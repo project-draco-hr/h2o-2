@@ -1,10 +1,9 @@
 {
   localCloud(1,true,args);
-  Utils.readConsole();
   File f=new File("lib/resources/datasets/gaussian.csv");
-  Key fkey=NFSFileVec.make(f);
-  Key key=Key.make("test");
-  UKV.put(key,UKV.get(fkey));
-  Utils.readConsole();
+  Key key=TestUtil.load_test_file(f,"test");
+  Key dest=Key.make("test.hex");
+  ParseDataset.parse(dest,new Key[]{key});
+  ValueArray va=(ValueArray)UKV.get(dest);
   System.out.println("Done!");
 }

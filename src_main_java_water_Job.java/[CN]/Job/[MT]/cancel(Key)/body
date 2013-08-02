@@ -6,7 +6,7 @@
       if (old == null)       old=new List();
       Job[] jobs=old._jobs;
       for (int i=0; i < jobs.length; i++) {
-        if (jobs[i]._self.equals(self)) {
+        if (jobs[i].job_key.equals(self)) {
           jobs[i]._endTime=CANCELLED_END_TIME;
           break;
         }

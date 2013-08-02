@@ -1,0 +1,13 @@
+{
+  for (int i=0; i < data.length - 1; i++) {
+    ValueArray.Column C=_va._cols[i];
+    double d=data[i];
+    if (_job.normalize) {
+      d-=C._mean;
+      if (C._sigma != 0.0 && !Double.isNaN(C._sigma))       d/=C._sigma;
+    }
+    data[i]=d;
+  }
+  data[data.length - 1]=Double.NaN;
+  return KMeans.closest(_clusters,data,new ClusterDist())._cluster;
+}
