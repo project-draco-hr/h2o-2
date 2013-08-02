@@ -1,6 +1,18 @@
 {
-  Vec bvs[]=Arrays.copyOf(_vecs,_vecs.length + 1,Vec[].class);
+switch (localSetup._pType) {
+case CSV:
+    Vec bvs[]=Arrays.copyOf(_vecs,_vecs.length + 1,Vec[].class);
   bvs[bvs.length - 1]=vec;
-  DParse dp=new DParse(localSetup).doAll(bvs);
-  for (int i=0; i < _vecs.length; i++)   _vecs[i]=dp.vecs(i);
+DParse dp=new DParse(localSetup).doAll(bvs);
+for (int i=0; i < _vecs.length; i++) _vecs[i]=dp.vecs(i);
+break;
+case SVMLight:
+SVMLightDParse sdp=new SVMLightDParse().doAll(vec);
+Vec[] newVecs=sdp._dout.closeVecs(_fs);
+SVFTask t=new SVFTask();
+t._f=new Frame(null,newVecs);
+t.invokeOnAllNodes();
+_vecs=newVecs;
+break;
+}
 }

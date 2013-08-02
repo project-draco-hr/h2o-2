@@ -14,7 +14,8 @@ case CSV:
       setup=CsvParser.guessSetup(DKV.get(fkeys[0]).getFirstBytes(),sep);
     break;
 case SVMLight:
-  throw H2O.unimpl();
+  setup=SVMLightParser.guessSetup(DKV.get(fkeys[0]).getFirstBytes());
+break;
 default :
 throw H2O.unimpl();
 }

@@ -5,7 +5,7 @@
   byte[] bits=Inspect.getFirstBytes(DKV.get(key));
 switch (_setup._pType) {
 case SVMLight:
-    localSetup=SVMLightParser.guessSetup(bits);
+    localSetup=CustomParser.ParserSetup.makeSVMLightSetup(0,null);
   break;
 case CSV:
 localSetup=CsvParser.guessSetup(bits,_setup._separator);
