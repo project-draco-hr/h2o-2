@@ -77,7 +77,10 @@ String[] arr=new String[_columnNames.size()];
 arr=_columnNames.toArray(arr);
 _dout.setColumnNames(arr);
 }
- else _dout.newLine();
+ else {
+_dout.newLine();
+curCol=-1;
+}
 }
 if (curCol == -1) return;
 if (_firstRow) {
