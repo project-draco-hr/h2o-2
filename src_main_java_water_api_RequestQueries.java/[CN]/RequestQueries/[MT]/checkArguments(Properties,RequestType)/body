@@ -4,7 +4,7 @@
   for (  Argument arg : _arguments) {
     if (!arg.disabled()) {
       try {
-        arg.check(args.getProperty(arg._name,""));
+        arg.check(RequestQueries.this,args.getProperty(arg._name,""));
         queryArgumentValueSet(arg,args);
       }
  catch (      IllegalArgumentException e) {

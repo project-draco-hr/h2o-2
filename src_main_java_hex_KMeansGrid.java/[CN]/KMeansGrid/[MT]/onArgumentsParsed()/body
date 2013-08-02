@@ -1,0 +1,9 @@
+{
+  if (source_key != null && destination_key == null) {
+    String n=source_key.toString();
+    int dot=n.lastIndexOf('.');
+    if (dot > 0)     n=n.substring(0,dot);
+    String res=n + Extensions.KMEANS_GRID;
+    destination_key=Key.make(res);
+  }
+}

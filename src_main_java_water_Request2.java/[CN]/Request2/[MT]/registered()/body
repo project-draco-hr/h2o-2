@@ -1,0 +1,65 @@
+{
+  ArrayList<Class> classes=new ArrayList<Class>();
+{
+    Class c=getClass();
+    while (c != null) {
+      classes.add(c);
+      c=c.getSuperclass();
+    }
+  }
+  Collections.reverse(classes);
+  ArrayList<Field> fields=new ArrayList<Field>();
+  for (  Class c : classes)   for (  Field field : c.getDeclaredFields())   if (!Modifier.isStatic(field.getModifiers()))   fields.add(field);
+  for (  Field f : fields) {
+    Annotation[] as=f.getAnnotations();
+    Input input=find(as,Input.class);
+    if (input != null) {
+      f.setAccessible(true);
+      Object defaultValue;
+      try {
+        defaultValue=f.get(this);
+      }
+ catch (      Exception e) {
+        throw new RuntimeException(e);
+      }
+      API api=find(as,API.class);
+      ExistingHexKey hexKey=find(as,ExistingHexKey.class);
+      Bounds bounds=find(as,Bounds.class);
+      ColumnSelect cols=find(as,ColumnSelect.class);
+      Sequence seq=find(as,Sequence.class);
+      Argument arg=null;
+      if (f.getType() == Key.class) {
+        if (hexKey != null)         arg=new H2OHexKey(f.getName());
+ else         arg=new H2OKey(f.getName(),input.required());
+      }
+ else       if (f.getType() == float.class || f.getType() == double.class) {
+        double val=((Number)defaultValue).doubleValue();
+        Double min=bounds != null ? bounds.min() : null;
+        Double max=bounds != null ? bounds.max() : null;
+        arg=new Real(f.getName(),input.required(),val,min,max,api.help());
+      }
+ else       if (f.getType() == int.class || f.getType() == long.class) {
+        long val=((Number)defaultValue).longValue();
+        Long min=bounds != null ? (long)bounds.min() : null;
+        Long max=bounds != null ? (long)bounds.max() : null;
+        arg=new LongInt(f.getName(),input.required(),val,min,max,api.help());
+      }
+ else       if (f.getType() == boolean.class) {
+        boolean val=(Boolean)defaultValue;
+        arg=new Bool(f.getName(),val,api.help());
+      }
+ else       if (f.getType() == int[].class) {
+        if (seq != null) {
+          NumberSequence val=new NumberSequence(seq.pattern(),seq.mult(),0);
+          arg=new RSeq(f.getName(),input.required(),val,seq.mult());
+        }
+ else         if (cols != null) {
+          H2OHexKey key=null;
+          for (          Argument t : _arguments)           if (t instanceof H2OHexKey && cols.key().equals(((H2OHexKey)t)._name))           key=(H2OHexKey)t;
+          arg=new HexAllColumnSelect(f.getName(),key);
+        }
+      }
+      arg._field=f;
+    }
+  }
+}

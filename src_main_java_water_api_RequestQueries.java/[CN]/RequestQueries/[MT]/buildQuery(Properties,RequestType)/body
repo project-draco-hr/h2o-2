@@ -8,7 +8,7 @@
   script.replace("REQUEST_NAME",getClass().getSimpleName());
   for (  Argument arg : _arguments) {
     try {
-      arg.check(args.getProperty(arg._name,""));
+      arg.check(RequestQueries.this,args.getProperty(arg._name,""));
       queryArgumentValueSet(arg,args);
     }
  catch (    IllegalArgumentException e) {
