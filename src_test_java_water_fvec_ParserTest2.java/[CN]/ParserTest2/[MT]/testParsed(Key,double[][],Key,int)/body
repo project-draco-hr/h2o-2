@@ -5,7 +5,7 @@
   for (int i=0; i < expected.length; ++i)   for (int j=0; j < fr.numCols(); ++j) {
     double parsedVal=fr._vecs[j].at(i);
     Assert.assertTrue((Double.isNaN(parsedVal) == Double.isNaN(expected[i][j])));
-    Assert.assertTrue(Double.isNaN(expected[i][j]) || compareDoubles(expected[i][j],parsedVal,1e-8));
+    Assert.assertTrue(Double.isNaN(expected[i][j]) || compareDoubles(expected[i][j],parsedVal,1e-5));
   }
   UKV.remove(k);
   UKV.remove(inputkey);

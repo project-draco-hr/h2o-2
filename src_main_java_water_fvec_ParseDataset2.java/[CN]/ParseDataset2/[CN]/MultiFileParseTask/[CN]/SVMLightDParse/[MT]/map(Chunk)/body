@@ -1,0 +1,9 @@
+{
+  Enum[] enums=enums();
+  FVecDataIn din=new FVecDataIn(in);
+  SVMLightFVecDataOut dout=new SVMLightFVecDataOut(in,enums);
+  SVMLightParser p=new SVMLightParser();
+  p.parallelParse(in.cidx(),din,dout);
+  dout.close(_fs);
+  _dout=dout;
+}

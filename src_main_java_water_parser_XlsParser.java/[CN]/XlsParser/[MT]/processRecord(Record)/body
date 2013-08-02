@@ -75,17 +75,17 @@ if (_firstRow) {
 _firstRow=false;
 String[] arr=new String[_columnNames.size()];
 arr=_columnNames.toArray(arr);
-_callback.setColumnNames(arr);
+_dout.setColumnNames(arr);
 }
-_callback.newLine();
+ else _dout.newLine();
 }
 if (curCol == -1) return;
 if (_firstRow) {
 _columnNames.add(curStr == null ? "" : curStr.toString());
 }
  else {
-if (curStr == null) if (Double.isNaN(curNum)) _callback.addInvalidCol(curCol);
- else _callback.addCol(curCol,curNum);
- else _callback.addStrCol(curCol,curStr);
+if (curStr == null) if (Double.isNaN(curNum)) _dout.addInvalidCol(curCol);
+ else _dout.addNumCol(curCol,curNum);
+ else _dout.addStrCol(curCol,curStr);
 }
 }
