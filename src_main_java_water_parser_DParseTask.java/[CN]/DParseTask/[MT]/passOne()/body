@@ -1,0 +1,25 @@
+{
+  boolean arraylet;
+  if ((arraylet=_sourceDataset.isArray())) {
+    ValueArray ary=_sourceDataset.get();
+    _nrows=new long[(int)ary.chunks() + 1];
+  }
+ else   _nrows=new long[2];
+  if (_parser.parallelParseSupported()) {
+    dfork(_sourceDataset._key);
+  }
+ else {
+    createEnums();
+    phaseOneInitialize();
+    try {
+      _streamMode=true;
+      _parser.streamParse(DKV.get(_sourceDataset._key).openStream(),this);
+      _numRows=_myrows;
+      _map=true;
+      tryComplete();
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+}

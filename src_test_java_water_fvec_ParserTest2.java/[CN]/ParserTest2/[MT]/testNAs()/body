@@ -8,7 +8,6 @@
   assertTrue(fr._vecs.length == expectedTypes.length);
   assertEquals(9,nlines);
   for (int i=0; i < nlines - 2; ++i)   for (  Vec v : fr._vecs)   assertTrue("error at line " + i + ", vec "+ v.elem2BV(0).getClass().getSimpleName(),!v.isNA(v.at(i)) && !v.isNA(v.at8(i)));
-  System.out.println("nlines = " + nlines);
   int j=0;
   for (  Vec v : fr._vecs) {
     for (int i=nlines - 2; i < nlines; ++i) {

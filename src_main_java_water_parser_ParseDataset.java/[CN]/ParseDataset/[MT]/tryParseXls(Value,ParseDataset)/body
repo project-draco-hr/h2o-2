@@ -1,7 +1,7 @@
 {
-  DParseTask t=DParseTask.createPassOne(v,job,CustomParser.Type.XLS);
+  DParseTask t=new DParseTask().createPassOne(v,job,new XlsParser(null));
   try {
-    t.passOne(null);
+    t.passOne();
   }
  catch (  Exception e) {
     return null;

@@ -1,11 +1,11 @@
 {
   PSetup p=source_key.value();
-  CsvParser.Setup q=p._setup;
+  CustomParser.ParserSetup setup=p._setup;
   Key d=Key.make(dst_key.value());
   try {
-    CsvParser.Setup new_setup=header.originalValue() == null ? q : new CsvParser.Setup(q._separator,header.value(),q._data,q._numlines,q._bits);
+    if (header.originalValue() != null)     setup._header=header.value();
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
-    Key jobkey=ParseDataset2.forkParseDataset(d,keys,new_setup)._self;
+    Key jobkey=ParseDataset2.forkParseDataset(d,keys,setup)._self;
     job=jobkey.toString();
     destination_key=d.toString();
     return Progress2.redirect(this,jobkey,d);

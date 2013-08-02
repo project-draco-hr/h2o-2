@@ -12,12 +12,12 @@
       try {
         try {
           Double d=Double.parseDouble(_lastContents);
-          if (Double.isNaN(d))           _callback.addInvalidCol(_curCol);
- else           _callback.addCol(_curCol,d);
+          if (Double.isNaN(d))           _dout.addInvalidCol(_curCol);
+ else           _dout.addNumCol(_curCol,d);
         }
  catch (        NumberFormatException e) {
-          if (_lastContents.isEmpty())           _callback.addInvalidCol(_curCol);
- else           _callback.addStrCol(_curCol,_str.setTo(_lastContents));
+          if (_lastContents.isEmpty())           _dout.addInvalidCol(_curCol);
+ else           _dout.addStrCol(_curCol,_str.setTo(_lastContents));
         }
       }
  catch (      Exception e) {
@@ -27,11 +27,11 @@
   }
  else   if (name.equals("row")) {
     if (_firstRow == true) {
-      _callback.setColumnNames(_colNames.toArray(new String[_colNames.size()]));
+      _dout.setColumnNames(_colNames.toArray(new String[_colNames.size()]));
       _firstRow=false;
     }
  else {
-      _callback.newLine();
+      _dout.newLine();
     }
   }
 }

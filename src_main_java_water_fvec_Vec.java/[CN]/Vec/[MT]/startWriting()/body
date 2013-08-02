@@ -2,5 +2,11 @@
   if (_activeWrites)   return;
   if (!writable())   throw new IllegalArgumentException("Vector not writable");
   setActiveWrites();
-  new SetActiveWrites().invoke(_key);
+  new TAtomic<Vec>(){
+    @Override public Vec atomic(    Vec v){
+      v.setActiveWrites();
+      return v;
+    }
+  }
+.invoke(_key);
 }
