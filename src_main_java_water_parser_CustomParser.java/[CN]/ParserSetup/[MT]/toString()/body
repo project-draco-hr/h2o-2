@@ -1,0 +1,17 @@
+{
+  StringBuilder sb=new StringBuilder(_pType.name());
+switch (_pType) {
+case SVMLight:
+    sb.append(" data with (estimated) " + _ncols + " columns.");
+  break;
+case CSV:
+sb.append(" data with " + _ncols + " columns using '"+ (char)_separator+ "' (\\"+ _separator+ "04d) as separator.");
+break;
+case XLS:
+sb.append(" data with " + _ncols + " columns.");
+break;
+default :
+throw H2O.unimpl();
+}
+return sb.toString();
+}
