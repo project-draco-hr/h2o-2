@@ -1,13 +1,17 @@
 {
   if (_arg != null)   return _arg;
-  try {
-    Object o=R.getClass().getDeclaredField(_name).get(R);
-    return _arg=((RequestArguments.Argument)o);
-  }
- catch (  IllegalAccessException ie) {
-    return null;
-  }
-catch (  NoSuchFieldException ie) {
-    return null;
+  Class clzz=R.getClass();
+  while (true) {
+    try {
+      Object o=clzz.getDeclaredField(_name).get(R);
+      return _arg=((RequestArguments.Argument)o);
+    }
+ catch (    NoSuchFieldException ie) {
+      clzz=clzz.getSuperclass();
+    }
+catch (    IllegalAccessException ie) {
+      ie.printStackTrace();
+      return null;
+    }
   }
 }
