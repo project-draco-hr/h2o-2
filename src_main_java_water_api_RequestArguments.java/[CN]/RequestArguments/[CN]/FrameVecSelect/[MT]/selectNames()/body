@@ -1,0 +1,12 @@
+{
+  Frame fr=fr();
+  int is[]=allCols();
+  String[] res=new String[len(is)];
+  for (int i=0; i < len(is); i++) {
+    Vec vec=fr.vecs()[is[i]];
+    String name=fr._names[is[i]];
+    double ratio=(double)vec.NAcnt() / vec.length();
+    res[i]=name + (ratio > 0.01 ? (" (" + Math.round(ratio * 100) + "% NAs)") : "");
+  }
+  return res;
+}

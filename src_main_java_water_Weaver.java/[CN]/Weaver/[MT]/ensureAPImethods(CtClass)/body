@@ -14,34 +14,24 @@
   StringBuilder sb=new StringBuilder();
   sb.append("new water.api.DocGen$FieldDoc[] {");
   boolean first=true;
-  for (  CtField ctf : ctfs) {
-    int mods=ctf.getModifiers();
-    if (javassist.Modifier.isTransient(mods) || javassist.Modifier.isStatic(mods)) {
-      if (ctf.getName().equals("DOC_FIELDS"))       fielddoc=ctf;
-      if (ctf.getName().equals("DOC_GET"))       getdoc=ctf;
-      continue;
+  CtClass cc2=cc;
+  while (true) {
+    for (    CtField ctf : ctfs) {
+      int mods=ctf.getModifiers();
+      if (javassist.Modifier.isTransient(mods) || javassist.Modifier.isStatic(mods)) {
+        if (cc2 == cc) {
+          if (ctf.getName().equals("DOC_FIELDS"))           fielddoc=ctf;
+          if (ctf.getName().equals("DOC_GET"))           getdoc=ctf;
+        }
+        continue;
+      }
+      first=addFieldWeave(sb,ctf,cc,first);
     }
-    String name=ctf.getName();
-    Object[] as;
-    try {
-      as=ctf.getAnnotations();
-    }
- catch (    ClassNotFoundException ex) {
-      throw new RuntimeException(ex);
-    }
-    API a=null;
-    for (    Object attribute : as) {
-      if (attribute instanceof API)       a=(API)attribute;
-    }
-    if (a == null)     throw new CannotCompileException("Class " + cc.getName() + " has non-transient field '"+ name+ "' without a Weave annotation");
-    String help=a.help();
-    int min=a.minVersion();
-    int max=a.maxVersion();
-    if (min < 1 || min > 1000000)     throw new CannotCompileException("Found field '" + name + "' but MinVer < 1 or MinVer > 1000000");
-    if (max < min || (max > 1000000 && max != Integer.MAX_VALUE))     throw new CannotCompileException("Found field '" + name + "' but MaxVer < "+ min+ " or MaxVer > 1000000");
-    if (first)     first=false;
- else     sb.append(",");
-    sb.append("new water.api.DocGen$FieldDoc(\"" + name + "\",\""+ help+ "\","+ min+ ","+ max+ ","+ ctf.getType().getName()+ ".class)");
+    cc2=cc2.getSuperclass();
+    ctfs=cc2.getDeclaredFields();
+    api=false;
+    for (    CtField ctf : ctfs)     if (ctf.getName().equals("API_WEAVER"))     api=true;
+    if (api == false)     break;
   }
   sb.append("}");
   if (fielddoc == null)   throw new CannotCompileException("Did not find static final DocGen.FieldDoc[] DOC_FIELDS field;");

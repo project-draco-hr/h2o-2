@@ -21,26 +21,26 @@ def test_rfview_score(self):
         kwargs.pop('ntree', None)
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, key=dataKeyTest)
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
         print 'predict end on ', dataKeyTest, 'took', elapsed, 'seconds.'
         kwargs['iterative_cm'] = 0
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, key=dataKeyTest)
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
         print 'predict end on ', dataKeyTest, 'took', elapsed, 'seconds.'
         kwargs['iterative_cm'] = 1
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, key=dataKeyTest)
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
         print 'predict end on ', dataKeyTest, 'took', elapsed, 'seconds.'
         kwargs['iterative_cm'] = 1
         kwargs['class_weights'] = '1=1,2=2,3=3,4=4,5=5,6=6,7=7'
         h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, key=dataKeyTest)
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
         print 'predict end on ', dataKeyTest, 'took', elapsed, 'seconds.'
         print 'Trial #', trial, 'completed'

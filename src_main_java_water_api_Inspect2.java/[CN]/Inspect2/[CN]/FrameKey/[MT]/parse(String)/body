@@ -1,8 +1,0 @@
-{
-  Key k=Key.make(input);
-  Value v=DKV.get(k);
-  if (v == null)   throw new IllegalArgumentException("Key " + input + " not found!");
-  Iced ice=v.get();
-  if (!(ice instanceof Frame))   throw new IllegalArgumentException("Key " + input + " is not a valid Frame key");
-  return k;
-}

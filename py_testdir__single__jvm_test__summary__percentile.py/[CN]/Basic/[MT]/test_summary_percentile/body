@@ -1,0 +1,61 @@
+def test_summary_percentile(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(100000, 1, 'cD', 300), (100000, 2, 'cE', 300)]
+    timeoutSecs = 10
+    trial = 1
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        print 'Trial:', trial
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        legalValues = {0, 1}
+        expectedMin = min(legalValues)
+        expectedMax = max(legalValues)
+        expectedUnique = ((expectedMax - expectedMin) + 1)
+        mode = 0.5
+        expectedMean = 0.5
+        expectedSigma = 0.5
+        write_syn_dataset(csvPathname, rowCount, colCount, low=expectedMin, high=expectedMax, mode=mode, SEED=SEEDPERFILE)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10, doSummary=False)
+        print csvFilename, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        print ('\n' + csvFilename)
+        summaryResult = h2o_cmd.runSummary(key=key2)
+        h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
+        summary = summaryResult['summary']
+        columnsList = summary['columns']
+        for columns in columnsList:
+            N = columns['N']
+            self.assertEqual(N, rowCount)
+            name = columns['name']
+            stype = columns['type']
+            self.assertEqual(stype, 'number')
+            histogram = columns['histogram']
+            bin_size = histogram['bin_size']
+            self.assertEqual(bin_size, 1)
+            bin_names = histogram['bin_names']
+            for b in bin_names:
+                self.assertIn(int(b), legalValues)
+            bins = histogram['bins']
+            nbins = histogram['bins']
+            self.assertEqual(len(bins), len(legalValues))
+            self.assertAlmostEqual(bins[0], (0.5 * rowCount), delta=(0.01 * rowCount))
+            self.assertAlmostEqual(bins[1], (0.5 * rowCount), delta=(0.01 * rowCount))
+            if (stype != 'enum'):
+                smax = columns['max']
+                smin = columns['min']
+                percentiles = columns['percentiles']
+                thresholds = percentiles['thresholds']
+                values = percentiles['values']
+                mean = columns['mean']
+                sigma = columns['sigma']
+                self.assertEqual(smax[0], expectedMax)
+                self.assertEqual(smin[0], expectedMin)
+                for v in values:
+                    self.assertTrue((v >= expectedMin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
+                    self.assertTrue((v <= expectedMax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
+                self.assertAlmostEqual(mean, expectedMean, delta=0.01)
+                self.assertAlmostEqual(sigma, expectedSigma, delta=0.01)
+        trial += 1

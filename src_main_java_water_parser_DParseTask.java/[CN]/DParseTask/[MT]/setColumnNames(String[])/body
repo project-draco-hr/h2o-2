@@ -1,11 +1,7 @@
 {
   if (_phase == Pass.ONE) {
     assert(colNames != null);
-    _colNames=colNames;
-    _ncolumns=colNames.length;
-    if ((_parserType == CustomParser.Type.XLS) || (_parserType == CustomParser.Type.XLSX)) {
-      createEnums();
-      phaseOneInitialize();
-    }
+    addColumns(colNames.length);
   }
+  _colNames=colNames;
 }

@@ -1,0 +1,9 @@
+{
+  DParseTask t=clone2();
+  t._sourceDataset=dataset;
+  t._job=job;
+  t._phase=Pass.ONE;
+  t._parser=parser;
+  if (t._parser._setup != null)   t._ncolumns=parser._setup._ncols;
+  return t;
+}

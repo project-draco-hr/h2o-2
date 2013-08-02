@@ -1,10 +1,10 @@
 {
   JsonObject result=new JsonObject();
   result.addProperty(VALUE_TYPE,"unparsed");
-  CsvParser.Setup setup=csvGuessValue(v);
+  CustomParser.ParserSetup setup=ParseDataset.guessSetup(v);
   if (setup._data != null && setup._data[1].length > 0) {
     int zipped_len=v.getFirstBytes().length;
-    double bytes_per_row=(double)zipped_len / setup._numlines;
+    double bytes_per_row=(double)zipped_len / setup._data.length;
     long rows=(long)(v.length() / bytes_per_row);
     result.addProperty(NUM_ROWS,"~" + rows);
     result.addProperty(NUM_COLS,setup._data[1].length);

@@ -1,0 +1,8 @@
+{
+  if (dout._vecs.length > _vecs.length) {
+    AppendableVec[] v=_vecs;
+    _vecs=dout._vecs;
+    dout._vecs=v;
+  }
+  for (int i=0; i < dout._vecs.length; ++i)   _vecs[i].reduce(dout._vecs[i]);
+}
