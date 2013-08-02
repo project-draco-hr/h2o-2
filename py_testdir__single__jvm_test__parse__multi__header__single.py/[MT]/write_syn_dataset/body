@@ -6,4 +6,7 @@ def write_syn_dataset(csvPathname, rowCount, headerData, rList):
         for i in range(rowCount):
             r = ((rList[random.randint(0, 1)] + ',') + str(random.randint(0, 7)))
             dsf.write((r + '\n'))
-    dsf.close()
+        dsf.close()
+        return rowCount
+    else:
+        return 0
