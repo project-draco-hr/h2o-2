@@ -23,7 +23,7 @@
   Value v=DKV.get(hKey);
   v=((Frame)v.get())._vecs[0].chunkIdx(0);
   byte sep=separator.specified() ? separator.value() : CsvParser.NO_SEPARATOR;
-  CustomParser.ParserSetup setup=ParseDataset.guessSetup(v,CustomParser.ParserType.CSV,sep);
+  CustomParser.ParserSetup setup=ParseDataset.guessSetup(v,CustomParser.ParserType.AUTO,sep);
   if (setup._data == null || setup._data[0].length == 0)   throw new IllegalArgumentException(errors()[1] + hKey);
   return new PSetup(keys,setup);
 }
