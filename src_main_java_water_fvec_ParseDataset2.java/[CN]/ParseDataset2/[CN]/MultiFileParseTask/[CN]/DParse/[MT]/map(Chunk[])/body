@@ -5,5 +5,5 @@
   FVecDataIn din=new FVecDataIn(in);
   FVecDataOut dout=new FVecDataOut(nvs,enums);
   CsvParser p=new CsvParser(_setup,in._start > 0);
-  p.parallelParse(0,din,dout);
+  p.parallelParse(in.cidx(),din,dout);
 }
