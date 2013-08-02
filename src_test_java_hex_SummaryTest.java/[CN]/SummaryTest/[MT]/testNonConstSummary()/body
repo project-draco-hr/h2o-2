@@ -1,0 +1,33 @@
+{
+  Key vkey=loadAndParseFile("enum_test.hex","./smalldata/test/test_percentiles_distns.csv.gz");
+  try {
+    ValueArray array=UKV.get(vkey);
+    int[] cols=new int[2];
+    String[] colnames=array.colNames();
+    for (int i=0; i < cols.length; i++) {
+      if (colnames[i].equals("zeroone"))       cols[0]=i;
+ else       if (colnames[i].equals("zerotwo"))       cols[1]=i;
+    }
+    Summary sum=new ColSummaryTask(array,cols).invoke(vkey).result();
+    for (int i=0; i < cols.length; i++) {
+      sum._sums[i]._summary=sum;
+      sum._sums[i].toJson();
+    }
+    Summary.ColSummary csum=sum._sums[0];
+    assertEquals(2,csum._bins.length);
+    assertEquals(0,csum._n_na);
+    assertEquals(520,csum._nzero);
+    assertEquals(520,csum._bins[0]);
+    assertEquals(480,csum._bins[1]);
+    csum=sum._sums[1];
+    assertEquals(3,csum._bins.length);
+    assertEquals(0,csum._n_na);
+    assertEquals(334,csum._nzero);
+    assertEquals(334,csum._bins[0]);
+    assertEquals(329,csum._bins[1]);
+    assertEquals(337,csum._bins[1]);
+  }
+  finally {
+    if (vkey != null)     UKV.remove(vkey);
+  }
+}
