@@ -16,7 +16,7 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
         parseKey = parseImportHdfsFile(node, csvFilename, path, myKey2, 's3n', timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll)
     else:
         if (getpass.getuser() == 'jenkins'):
-            print 'michal: Temp hack of /home/0xdiag/datasets/standard to /home/0xdiag/datasets till EC2 image is fixed'
+            print 'Temp hack of /home/0xdiag/datasets/standard to /home/0xdiag/datasets'
             path = re.sub('/home/0xdiag/datasets/standard', '/home/0xdiag/datasets', path)
         importKey = ((('nfs:/' + path) + '/') + csvFilename)
         if h2o.beta_features:
