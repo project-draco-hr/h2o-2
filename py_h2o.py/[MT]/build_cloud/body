@@ -1,4 +1,4 @@
-def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, hadoop=False, conservative=True, **kwargs):
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, hadoop=False, conservative=False, **kwargs):
     clean_sandbox()
     if kwargs.setdefault('enable_benchmark_log', False):
         global cloudPerfH2O
@@ -36,14 +36,14 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
-        stabilize_cloud(nodeList[(-1)], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+        stabilize_cloud(nodeList[0], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
         verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
         if conservative:
             for n in nodeList:
                 stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs)
         else:
-            verify_cloud_size(nodeList)
+            pass
         check_sandbox_for_errors()
     except:
         if cleanup:
