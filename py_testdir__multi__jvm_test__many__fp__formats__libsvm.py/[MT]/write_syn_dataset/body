@@ -164,9 +164,9 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distrib
     classMin = (-36)
     classMax = 36
     dsf = open(csvPathname, 'w+')
+    synColSumDict = {}
     for i in range(rowCount):
         rowData = []
-        synColSumDict = {}
         d = random.randint(0, 2)
         if (d == 0):
             if (distribution == 'sparse'):

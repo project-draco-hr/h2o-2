@@ -1,4 +1,4 @@
-def test_many_cols_and_values_with_syn(self):
+def test_many_fp_formats_libsvm(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(1000, 10, 'cA', 30, 'sparse'), (100000, 100, 'cB', 30, 'sparse'), (1000, 10, 'cC', 30, 'sparse50'), (100, 100, 'cD', 30, 'sparse'), (100, 100, 'cE', 30, 'sparse50')]
     for (rowCount, colCount, key2, timeoutSecs, distribution) in tryList:
@@ -17,6 +17,9 @@ def test_many_cols_and_values_with_syn(self):
             num_rows = inspect['num_rows']
             print ('\n' + csvFilename)
             goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseKey['destination_key'], timeoutSecs=300)
+            if DO_SUMMARY:
+                summaryResult = h2o_cmd.runSummary(key=selKey2, timeoutSecs=360)
+                h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
             h2e.exec_zero_list(zeroList)
             self.assertEqual(colCount, num_cols, msg=('generated %s cols, parsed to %s cols' % (colCount, num_cols)))
             colResultList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=num_cols, timeoutSecs=timeoutSecs)
@@ -26,8 +29,8 @@ def test_many_cols_and_values_with_syn(self):
             self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
             print '\ncolResultList:', colResultList
             print '\nsynColSumDict:', synColSumDict
-            for (k, v) in synColSumDict:
+            for (k, v) in synColSumDict.iteritems():
                 self.assertTrue(((k >= 0) and (k < len(colResultList))))
                 compare = float(colResultList[k])
-                print '\n', good, '\n', compare
+                print '\nComparing:', v, compare
                 self.assertEqual(good, compare, 'compare is not equal to good')
