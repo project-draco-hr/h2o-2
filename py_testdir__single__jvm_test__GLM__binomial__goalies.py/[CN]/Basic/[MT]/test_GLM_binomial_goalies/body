@@ -1,11 +1,12 @@
-def test_loop_random_param_covtype(self):
+def test_GLM_binomial_goalies(self):
     csvPathname = h2o.find_file('smalldata/poisson/Goalies.csv')
+    print '\nParsing', csvPathname
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname)
     inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     paramDict = define_params()
-    for trial in range(5):
-        params = {'y': 5, 'n_folds': 1, 'family': 'poisson', 'alpha': 0.0, 'lambda': 0, 'beta_epsilon': 0.001, 'max_iter': 3, 'standardize': 1, 'expert': 1, 'lsm_solver': 'ADMM', }
+    for trial in range(20):
+        params = {'y': 6, 'n_folds': 2, 'family': 'binomial', 'case_mode': '>', 'case': '20', 'alpha': 0, 'lambda': 0.0001, 'beta_epsilon': 0.001, 'max_iter': 8, }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (180 + (kwargs['n_folds'] * 30))
