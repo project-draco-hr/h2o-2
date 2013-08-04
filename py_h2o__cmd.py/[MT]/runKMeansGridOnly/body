@@ -1,0 +1,6 @@
+def runKMeansGridOnly(node=None, parseKey=None, timeoutSecs=60, retryDelaySecs=2, noise=None, **kwargs):
+    if (not parseKey):
+        raise Exception('No parsed key for KMeansGrid specified')
+    if (not node):
+        node = h2o.nodes[0]
+    return node.kmeans_grid(parseKey['destination_key'], timeoutSecs, **kwargs)
