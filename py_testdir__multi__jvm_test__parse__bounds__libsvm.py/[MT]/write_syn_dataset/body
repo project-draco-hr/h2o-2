@@ -16,7 +16,14 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE):
             val = 1
             colNumber = colCount
             colNumberMax = colNumber
-            addValToRowStuff(colNumber, val, rowData, synColSumDict)
+        else:
+            d = random.randint(0, 1)
+            if (d == 1):
+                val = 1
+            else:
+                val = 0
+            colNumber = 1
+        addValToRowStuff(colNumber, val, rowData, synColSumDict)
         val = 0
         rowData.insert(0, val)
         synColSumDict[0] += val
