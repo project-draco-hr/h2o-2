@@ -1,5 +1,5 @@
 def test_parse_bounds_libsvm(self):
-    print 'Empty rows except for the last, with all zeros for class. Single col at max'
+    print 'Random 0/1 for col1. Last has max col = 1, All have zeros for class.'
     h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 100000, 'cC', 300)]
@@ -38,17 +38,20 @@ def test_parse_bounds_libsvm(self):
             sigma = columns['sigma']
             if (name == ('V' + str(colNumberMax))):
                 synZeros = (num_rows - 1)
+                synSigma = None
                 synMean = (1.0 / num_rows)
                 synMin = [0.0, 1.0]
                 synMax = [1.0, 0.0]
             elif (name == 'V1'):
                 synSum = synColSumDict[1]
                 synZeros = (num_rows - synSum)
+                synSigma = 0.5
                 synMean = ((synSum + 0.0) / num_rows)
                 synMin = [0.0, 1.0]
                 synMax = [1.0, 0.0]
             else:
                 synZeros = num_rows
+                synSigma = 0.0
                 synMean = 0.0
                 synMin = [0.0]
                 synMax = [0.0]
@@ -57,6 +60,8 @@ def test_parse_bounds_libsvm(self):
             if ((name == 'V65536') or (name == 'V65537')):
                 print 'columns around possible zeros mismatch:', h2o.dump_json(columns)
             self.assertEqual(zeros, synZeros, msg=('col %s zeros %s is not equal to generated zeros count %s' % (name, zeros, synZeros)))
+            if synSigma:
+                self.assertAlmostEqual(float(sigma), synSigma, places=2, msg=('col %s sigma %s is not equal to generated sigma %s' % (name, sigma, synSigma)))
             if CHECK_MAX:
                 self.assertEqual(smax, synMax, msg=('col %s max %s is not equal to generated max %s' % (name, smax, synMax)))
             self.assertEqual(0, na, msg=('col %s num_missing_values %d should be 0' % (name, na)))
