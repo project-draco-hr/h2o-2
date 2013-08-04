@@ -1,0 +1,8 @@
+def test_script_download(self):
+    print 'Assuming all json requests are logged in the script? maybe not'
+    h2o.verify_cloud_size()
+    (logNameList, lineCountList) = h2o_log.getH2OScripts()
+    self.assertEqual(len(logNameList), len(h2o.nodes), ('Should be %d scripts' % len(h2o.nodes)))
+    self.assertEqual(len(lineCountList), len(h2o.nodes), ('Should be %d scripts' % len(h2o.nodes)))
+    for (i, l) in enumerate(lineCountList):
+        self.assertGreater(l, 12, ('node %d script is too small' % i))
