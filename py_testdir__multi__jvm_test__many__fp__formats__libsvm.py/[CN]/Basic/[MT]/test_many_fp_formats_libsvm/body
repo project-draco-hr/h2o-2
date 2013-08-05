@@ -36,7 +36,7 @@ def test_many_fp_formats_libsvm(self):
             for (k, v) in synColSumDict.iteritems():
                 self.assertTrue(((k >= 0) and (k < len(colResultList))))
                 compare = colResultList[k]
-                print '\nComparing col sums:', v, compare
+                print '\nComparing col', k, 'sums:', v, compare
                 self.assertAlmostEqual(v, compare, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, compare)))
                 synMean = ((v + 0.0) / rowCount)
                 mean = inspect['cols'][k]['mean']
