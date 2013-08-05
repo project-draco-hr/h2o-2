@@ -1,0 +1,38 @@
+{
+  DocGen.HTML.title(sb,"Confusion Matrix");
+  DocGen.HTML.arrayHead(sb);
+  sb.append("<tr>");
+  sb.append("<th>Actual \\ Predicted</th>");
+  for (int i=0; i < domain.length; i++)   sb.append("<th>").append(domain[i]).append("</th>");
+  sb.append("<th>Error</th>");
+  sb.append("</tr>\n");
+  long tots[]=new long[cm.length];
+  long errs=0, nrows=0;
+  for (int i=0; i < domain.length; i++) {
+    sb.append("<tr>");
+    sb.append("<th>").append(domain[i]).append("</th>");
+    long sum=0;
+    for (int j=0; j < domain.length; j++) {
+      sum+=cm[i][j];
+      tots[j]+=cm[i][j];
+      sb.append(i == j ? "<td style='background-color:LightGreen'>" : "<td>").append(cm[i][j]).append("</td>");
+    }
+    long err=sum - cm[i][i];
+    errs+=err;
+    nrows+=sum;
+    sb.append(String.format("<td>%5.3f = %d / %d</td>",(double)err / sum,err,sum));
+    sb.append("</tr>\n");
+  }
+  sb.append("<tr>");
+  sb.append("<th>Totals</th>");
+  for (int i=0; i < domain.length; i++)   sb.append("<td>").append(tots[i]).append("</td>");
+  sb.append(String.format("<th>%5.3f = %d / %d</th>",(double)errs / nrows,errs,nrows));
+  sb.append("</tr>\n");
+  DocGen.HTML.arrayTail(sb);
+  DocGen.HTML.section(sb,"Summary");
+  DocGen.HTML.listHead(sb);
+  DocGen.HTML.listBullet(sb,"ntrees",ntrees.toString(),0);
+  DocGen.HTML.listBullet(sb,"mtrys",Integer.toString(mtrys),0);
+  DocGen.HTML.listTail(sb);
+  return true;
+}
