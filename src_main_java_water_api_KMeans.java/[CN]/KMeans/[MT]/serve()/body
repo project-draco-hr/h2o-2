@@ -1,25 +1,10 @@
 {
-  ValueArray va=_source.value();
-  Key source=va._key;
-  int k=_k.value();
-  double epsilon=_epsilon.value();
-  int maxIter=_maxIter.value();
-  long seed=_seed.record()._valid ? _seed.value() : _seed._defaultValue;
-  boolean normalize=_normalize.record()._valid ? _normalize.value() : _normalize._defaultValue;
-  int[] cols=_columns.value();
-  Key dest=_dest.value();
-  if (dest == null) {
-    String n=source.toString();
-    int dot=n.lastIndexOf('.');
-    if (dot > 0)     n=n.substring(0,dot);
-    dest=Key.make(n + Extensions.KMEANS);
-  }
   try {
-    hex.KMeans job=hex.KMeans.start(dest,va,k,epsilon,maxIter,seed,normalize,cols);
+    hex.KMeans job=start(destination_key.value(),k.value(),max_iter.value());
     JsonObject response=new JsonObject();
     response.addProperty(JOB,job.self().toString());
-    response.addProperty(DEST_KEY,dest.toString());
-    Response r=Progress.redirect(response,job.self(),dest);
+    response.addProperty(DEST_KEY,job.dest().toString());
+    Response r=Progress.redirect(response,job.self(),job.dest());
     r.setBuilder(DEST_KEY,new KeyElementBuilder());
     return r;
   }

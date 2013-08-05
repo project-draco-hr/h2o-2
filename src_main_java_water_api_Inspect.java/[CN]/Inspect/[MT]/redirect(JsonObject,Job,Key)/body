@@ -1,6 +1,6 @@
 {
   JsonObject redir=new JsonObject();
-  if (keyProducer != null)   redir.addProperty(JOB,keyProducer._self.toString());
+  if (keyProducer != null)   redir.addProperty(JOB,keyProducer.job_key.toString());
   redir.addProperty(KEY,dest.toString());
   return Response.redirect(resp,Inspect.class,redir);
 }

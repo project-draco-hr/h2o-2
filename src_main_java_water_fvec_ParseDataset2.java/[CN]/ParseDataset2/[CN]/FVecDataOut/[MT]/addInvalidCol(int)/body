@@ -1,3 +1,4 @@
 {
-  _nvs[_col=colIdx].addNA();
+  if (colIdx >= _nCols)   System.err.println("Additional column (" + _nvs.length + " < "+ colIdx+ " NA) on line "+ linenum());
+ else   _nvs[_col=colIdx].addNA();
 }

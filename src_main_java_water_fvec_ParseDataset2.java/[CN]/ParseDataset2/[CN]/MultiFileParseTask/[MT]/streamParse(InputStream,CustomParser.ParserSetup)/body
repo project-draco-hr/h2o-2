@@ -2,7 +2,7 @@
   final NewChunk nvs[]=new NewChunk[_vecs.length];
   for (int i=0; i < nvs.length; i++)   nvs[i]=new NewChunk(_vecs[i],0);
   FVecDataOut dout=new FVecDataOut(nvs,enums());
-  CsvParser p=new CsvParser(localSetup,false);
+  CustomParser p=localSetup.parser();
   try {
     p.streamParse(is,dout);
   }

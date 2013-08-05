@@ -1,0 +1,12 @@
+{
+switch (this._pType) {
+case CSV:
+    return new CsvParser(this,false);
+case SVMLight:
+  return new SVMLightParser(this);
+case XLS:
+return new XlsParser(this);
+default :
+throw H2O.unimpl();
+}
+}

@@ -1,0 +1,53 @@
+{
+  try {
+    ArrayList<Class> classes=new ArrayList<Class>();
+{
+      Class c=getClass();
+      while (c != null) {
+        classes.add(c);
+        c=c.getSuperclass();
+      }
+    }
+    Collections.reverse(classes);
+    ArrayList<Field> fields=new ArrayList<Field>();
+    for (    Class c : classes)     for (    Field field : c.getDeclaredFields())     if (!Modifier.isStatic(field.getModifiers()))     fields.add(field);
+    for (    Field f : fields) {
+      Annotation[] as=f.getAnnotations();
+      API api=find(as,API.class);
+      if (api != null) {
+        f.setAccessible(true);
+        Object defaultValue=f.get(this);
+        Argument arg=null;
+        if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)getInnerClassConstructor(api.filter()).newInstance(this);
+ else {
+          if (f.getType() == float.class || f.getType() == double.class) {
+            double val=((Number)defaultValue).doubleValue();
+            arg=new Real(f.getName(),api.required(),val,null,null,api.help());
+          }
+ else           if (f.getType() == int.class || f.getType() == long.class) {
+            long val=((Number)defaultValue).longValue();
+            arg=new LongInt(f.getName(),api.required(),val,null,null,api.help());
+          }
+ else           if (f.getType() == boolean.class) {
+            boolean val=(Boolean)defaultValue;
+            arg=new Bool(f.getName(),val,api.help());
+          }
+        }
+        if (ColumnSelect.class.isAssignableFrom(api.filter())) {
+          ColumnSelect name=(ColumnSelect)api.filter().newInstance();
+          H2OHexKey key=null;
+          for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._key.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
+          arg=new HexAllColumnSelect(f.getName(),key);
+        }
+        if (arg != null) {
+          arg._name=f.getName();
+          arg._required=api.required();
+          arg._field=f;
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}

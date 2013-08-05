@@ -1,0 +1,45 @@
+def test_many_fp_formats_libsvm(self):
+    h2b.browseTheCloud()
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(10, 10, 'cA', 30, 'sparse50'), (100, 10, 'cB', 30, 'sparse'), (100000, 100, 'cC', 30, 'sparse'), (1000, 10, 'cD', 30, 'sparse50'), (100, 100, 'cE', 30, 'sparse'), (100, 100, 'cF', 30, 'sparse50')]
+    for (rowCount, colCount, key2, timeoutSecs, distribution) in tryList:
+        for sel in [random.randint(0, 47)]:
+            SEEDPERFILE = random.randint(0, sys.maxint)
+            csvFilename = ('syn_%s_%s_%s_%s.csv' % (SEEDPERFILE, sel, rowCount, colCount))
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            print 'Creating random', csvPathname
+            (colNumberMax, synColSumDict) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distribution)
+            selKey2 = ((key2 + '_') + str(sel))
+            parseKey = h2o_cmd.parseFile(None, csvPathname, key2=selKey2, timeoutSecs=timeoutSecs)
+            print csvFilename, 'parse time:', parseKey['response']['time']
+            print "Parse result['destination_key']:", parseKey['destination_key']
+            inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+            num_cols = inspect['num_cols']
+            num_rows = inspect['num_rows']
+            print ('\n' + csvFilename)
+            goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseKey['destination_key'], timeoutSecs=300)
+            if DO_SUMMARY:
+                summaryResult = h2o_cmd.runSummary(key=selKey2, timeoutSecs=360)
+                h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
+            self.assertEqual((colNumberMax + 1), num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), num_cols)))
+            h2e.exec_zero_list(zeroList)
+            colResultList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
+            print '\n*************'
+            print 'colResultList', colResultList
+            print '*************'
+            self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
+            print '\ncolResultList:', colResultList
+            print '\nsynColSumDict:', synColSumDict
+
+            def almost_equal(value_1, value_2, accuracy=(10 ** (-8))):
+                return (abs((value_1 - value_2)) < accuracy)
+            for (k, v) in synColSumDict.iteritems():
+                self.assertTrue(((k >= 0) and (k < len(colResultList))))
+                compare = colResultList[k]
+                print '\nComparing col', k, 'sums:', v, compare
+                self.assertAlmostEqual(v, compare, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, compare)))
+                synMean = ((v + 0.0) / rowCount)
+                mean = inspect['cols'][k]['mean']
+                self.assertAlmostEqual(mean, synMean, places=0, msg=('col %s mean %0.6f is not equal to generated mean %0.6f' % (k, mean, synMean)))
+                num_missing_values = inspect['cols'][k]['num_missing_values']
+                self.assertEqual(0, num_missing_values, msg=('col %s num_missing_values %d should be 0' % (k, num_missing_values)))
