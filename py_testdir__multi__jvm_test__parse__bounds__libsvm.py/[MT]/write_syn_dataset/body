@@ -1,0 +1,33 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE):
+    r = random.Random(SEEDPERFILE)
+
+    def addValToRowStuff(colNumber, val, rowData, synColSumDict):
+        if (val != 0):
+            rowData.append(((str(colNumber) + ':') + str(val)))
+            if (colNumber in synColSumDict):
+                synColSumDict[colNumber] += val
+            else:
+                synColSumDict[colNumber] = val
+    dsf = open(csvPathname, 'w+')
+    synColSumDict = {0: 0, }
+    for i in range(rowCount):
+        rowData = []
+        if (i == (rowCount - 1)):
+            val = 1
+            colNumber = colCount
+            colNumberMax = colNumber
+        else:
+            d = random.randint(0, 1)
+            if (d == 1):
+                val = 1
+            else:
+                val = 0
+            colNumber = 1
+        addValToRowStuff(colNumber, val, rowData, synColSumDict)
+        val = 0
+        rowData.insert(0, val)
+        synColSumDict[0] += val
+        rowDataCsv = ' '.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
+    return (colNumberMax, synColSumDict)

@@ -2,6 +2,7 @@
   JsonObject res=new JsonObject();
   res.addProperty("type",_enum ? "enum" : "number");
   res.addProperty("name",_summary._ary._cols[_colId]._name);
+  if (_enum)   res.addProperty("enumCardinality",getEnumCardinality());
   if (!_enum) {
     JsonArray min=new JsonArray();
     for (    double d : _min) {
@@ -17,8 +18,10 @@
     res.add("max",max);
     res.addProperty("mean",_summary._ary._cols[_colId]._mean);
     res.addProperty("sigma",_summary._ary._cols[_colId]._sigma);
+    res.addProperty("zeros",_nzero);
   }
   res.addProperty("N",_n);
+  res.addProperty("na",_n_na);
   JsonObject histo=new JsonObject();
   histo.addProperty("bin_size",_binsz);
   histo.addProperty("nbins",_bins.length);

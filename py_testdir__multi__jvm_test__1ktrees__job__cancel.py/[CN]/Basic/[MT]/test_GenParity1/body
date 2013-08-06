@@ -13,7 +13,7 @@ def test_GenParity1(self):
         parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=30)
         h2o.verboseprint('Trial', trial)
         start = time.time()
-        rfResult = h2o_cmd.runRFOnly(parseKey=parseKey, trees=1000, depth=2, rfview=False, timeoutSecs=600, retryDelaySecs=3)
+        rfResult = h2o_cmd.runRFOnly(parseKey=parseKey, trees=1000, depth=2, rfView=False, timeoutSecs=600, retryDelaySecs=3)
         print 'RF #', trial, 'started on ', csvFilename, 'took', (time.time() - start), 'seconds'
         model_key = rfResult['model_key']
         print 'model_key:', model_key

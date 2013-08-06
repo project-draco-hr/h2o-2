@@ -8,6 +8,9 @@
     Key jobkey=ParseDataset2.forkParseDataset(d,keys,setup).job_key;
     job=jobkey.toString();
     destination_key=d.toString();
+    if (blocking.value()) {
+      Job.waitUntilJobEnded(jobkey);
+    }
     return Progress2.redirect(this,jobkey,d);
   }
  catch (  IllegalArgumentException e) {

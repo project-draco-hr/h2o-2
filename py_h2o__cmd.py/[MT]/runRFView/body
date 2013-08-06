@@ -8,7 +8,7 @@ def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=
         numberBuilt = rfView['trees']['number_built']
         if (status == 'done'):
             if (numberBuilt != ntree):
-                raise Exception('RFview done but number_built!=ntree: %s %s', numberBuilt, ntree)
+                raise Exception(('RFview done but number_built!=ntree: %s %s' % (numberBuilt, ntree)))
             return True
         if (status != 'poll'):
             raise Exception(('Unexpected status: ' + status))

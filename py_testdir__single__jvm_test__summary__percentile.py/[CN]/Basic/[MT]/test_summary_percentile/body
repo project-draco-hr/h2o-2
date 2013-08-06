@@ -44,6 +44,8 @@ def test_summary_percentile(self):
             self.assertAlmostEqual(bins[0], (0.5 * rowCount), delta=(0.01 * rowCount))
             self.assertAlmostEqual(bins[1], (0.5 * rowCount), delta=(0.01 * rowCount))
             if (stype != 'enum'):
+                zeros = columns['zeros']
+                na = columns['na']
                 smax = columns['max']
                 smin = columns['min']
                 percentiles = columns['percentiles']

@@ -1,5 +1,6 @@
 {
   if (!_enum) {
+    if (val == 0.)     _nzero++;
     if (val < _min[_min.length - 1]) {
       int j=_min.length - 1;
       while (j > 0 && _min[j - 1] > val)       --j;
@@ -8,7 +9,7 @@
         _min[j]=val;
       }
     }
-    if (val > _max[_min.length - 1]) {
+    if (val > _max[_max.length - 1]) {
       int j=_max.length - 1;
       while (j > 0 && _max[j - 1] < val)       --j;
       if (j == 0 || _max[j - 1] > val) {

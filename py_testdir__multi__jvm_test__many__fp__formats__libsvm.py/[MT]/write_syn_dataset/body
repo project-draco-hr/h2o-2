@@ -149,42 +149,46 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distrib
         raise Exception('sel out of range in write_syn_dataset:', sel)
     f = caseList[sel]
 
-    def addRandValToRowStuff(colNumber, valMin, valMax, rowData, synColSumDict):
+    def addRandValToRowStuff(colNumber, rowData, synColSumDict):
         val = r.triangular(valMin, valMax, 0)
-        if ((val > (valMin / 2)) and (val < (valMax / 2))):
+        if ((colNumber == 1) or ((val > (valMin / 2)) and (val < (valMax / 2)))):
+            val = 0
+        a = addValToRowStuff(colNumber, val, rowData, synColSumDict)
+        return a
+
+    def addValToRowStuff(colNumber, val, rowData, synColSumDict):
+        if (colNumber in synColSumDict):
+            synColSumDict[colNumber] += val
+        else:
+            synColSumDict[colNumber] = val
+        if (val == 0):
             return None
         else:
             rowData.append(((str(colNumber) + ':') + f(val)))
-            if (colNumber in synColSumDict):
-                synColSumDict[colNumber] += val
-            else:
-                synColSumDict[colNumber] = val
             return val
-    valMin = (-100.0)
-    valMax = 100.0
-    classMin = (-36)
-    classMax = 36
     dsf = open(csvPathname, 'w+')
     synColSumDict = {0: 0, }
     colNumberMax = 0
     for i in range(rowCount):
         rowData = []
         d = random.randint(0, 2)
-        if (d == 0):
+        if (d != 0):
             if (distribution == 'sparse'):
                 colNumber = random.randint(1, colCount)
-                val = addRandValToRowStuff(colNumber, valMin, valMax, rowData, synColSumDict)
-                if (val and (colNumber > colNumberMax)):
-                    colNumberMax = colNumber
-            else:
+                val = addRandValToRowStuff(colNumber, rowData, synColSumDict)
+                if val:
+                    colNumberMax = max(colNumberMax, colNumber)
+            elif (distribution == 'sparse50'):
                 for colNumber in range(1, (colCount + 1)):
-                    val = addRandValToRowStuff(colNumber, valMin, valMax, rowData, synColSumDict)
-                    if (val and (colNumber > colNumberMax)):
-                        colNumberMax = colNumber
+                    val = addRandValToRowStuff(colNumber, rowData, synColSumDict)
+                    if val:
+                        colNumberMax = max(colNumberMax, colNumber)
+            else:
+                raise (Exception, ("Don't understand what you want here %s" % distribution))
         val = random.randint(classMin, classMax)
         rowData.insert(0, val)
         synColSumDict[0] += val
         rowDataCsv = ' '.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
     dsf.close()
-    return (colNumberMax, synColSumDict)
+    return (synColSumDict, colNumberMax)

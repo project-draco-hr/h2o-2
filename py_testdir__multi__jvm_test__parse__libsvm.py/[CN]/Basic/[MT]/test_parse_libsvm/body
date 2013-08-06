@@ -1,23 +1,54 @@
 def test_parse_libsvm(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
     importFolderPath = '/home/0xdiag/datasets/libsvm'
-    csvFilenameList = [('tmc2007_train.svm', 'cJ', 30, 1), ('syn_6_1000_10.svm', 'cK', 30, 1), ('syn_0_100_1000.svm', 'cL', 30, 1), ('mnist_training.svm', 'cM', 30, 1), ('colon-cancer.svm', 'cA', 30, 1), ('connect4.svm', 'cB', 30, 1), ('covtype.binary.svm', 'cC', 30, 1), ('duke.svm', 'cD', 30, 1), ('gisette_scale.svm', 'cF', 30, 1), ('mushrooms.svm', 'cG', 30, 1), ('news20.svm', 'cH', 30, 1)]
+    csvFilenameList = [('syn_6_1000_10.svm', 'cK', 30, (-36), 36, True, False), ('syn_0_100_1000.svm', 'cL', 30, (-36), 36, True, False), ('covtype.binary.svm', 'cC', 30, 1, 2, True, True), ('duke.svm', 'cD', 30, (-1.0), 1.0, False, False), ('colon-cancer.svm', 'cA', 30, (-1.0), 1.0, False, False), ('news20.svm', 'cH', 30, 1, 20, False, False), ('connect4.svm', 'cB', 30, (-1), 1, False, False), ('mnist_training.svm', 'cM', 30, 0, 9, False, False), ('gisette_scale.svm', 'cF', 30, (-1), 1, False, False), ('mushrooms.svm', 'cG', 30, 1, 2, False, False)]
+    h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
     firstDone = False
-    for (csvFilename, key2, timeoutSecs, resultMult) in csvFilenameList:
+    for (csvFilename, key2, timeoutSecs, expectedCol0Min, expectedCol0Max, enableDownloadReparse, enableSizeChecks) in csvFilenameList:
         h2i.setupImportFolder(None, importFolderPath)
+        csvPathname = ((importFolderPath + '/') + csvFilename)
         parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
-        print csvFilename, 'parse time:', parseKey['response']['time']
+        print csvPathname, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         start = time.time()
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=360)
         print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_cmd.infoFromInspect(inspect, csvFilename)
+        imin = inspect['cols'][0]['min']
+        imax = inspect['cols'][0]['max']
+        if expectedCol0Min:
+            self.assertEqual(imin, expectedCol0Min, msg=('col %s min %s is not equal to expected min %s' % (0, imin, expectedCol0Min)))
+        if expectedCol0Max:
+            self.assertEqual(imax, expectedCol0Max, msg=('col %s max %s is not equal to expected max %s' % (0, imax, expectedCol0Max)))
+        print '\nmin/max for col0:', imin, imax
         if DO_SUMMARY:
             goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseKey['destination_key'], timeoutSecs=300, noPrint=True)
             summaryResult = h2o_cmd.runSummary(key=key2, timeoutSecs=360)
             h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
-        h2e.exec_zero_list(zeroList)
-        colResultList = h2e.exec_expr_list_across_cols(lenNodes, exprList, key2, maxCol=54, timeoutSecs=timeoutSecs)
-        print '\n*************'
-        print 'colResultList', colResultList
-        print '*************'
+        if (DO_DOWNLOAD_REPARSE and enableDownloadReparse):
+            missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
+            num_colsA = inspect['num_cols']
+            num_rowsA = inspect['num_rows']
+            row_sizeA = inspect['row_size']
+            value_size_bytesA = inspect['value_size_bytes']
+            csvDownloadPathname = (((SYNDATASETS_DIR + '/') + csvFilename) + '_csvDownload.csv')
+            print 'Trying csvDownload of', csvDownloadPathname
+            h2o.nodes[0].csv_download(key=key2, csvPathname=csvDownloadPathname)
+            start = time.time()
+            key2B = (key2 + '_B')
+            parseKeyB = h2o_cmd.parseFile(csvPathname=csvDownloadPathname, key2=key2B)
+            print csvFilename, 'download/reparse (B) parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+            inspect = h2o_cmd.runInspect(key=key2B)
+            missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
+            num_colsB = inspect['num_cols']
+            num_rowsB = inspect['num_rows']
+            row_sizeB = inspect['row_size']
+            value_size_bytesB = inspect['value_size_bytes']
+            self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
+            self.assertEqual(num_colsA, num_colsB, ('num_cols mismatches after re-parse of downloadCsv result %d %d' % (num_colsA, num_colsB)))
+            self.assertEqual(num_rowsA, num_rowsB, ('num_rows mismatches after re-parse of downloadCsv result %d %d' % (num_rowsA, num_rowsB)))
+            if (DO_SIZE_CHECKS and enableSizeChecks):
+                self.assertEqual(row_sizeA, row_sizeB, ('row_size mismatches after re-parse of downloadCsv result %d %d' % (row_sizeA, row_sizeB)))
+                self.assertEqual(value_size_bytesA, value_size_bytesB, ('value_size_bytes mismatches after re-parse of downloadCsv result %d %d' % (value_size_bytesA, value_size_bytesB)))
+        h2o.check_sandbox_for_errors()

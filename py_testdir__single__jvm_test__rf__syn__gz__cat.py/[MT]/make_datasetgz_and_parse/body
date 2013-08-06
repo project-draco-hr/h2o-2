@@ -18,7 +18,7 @@ def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, key2, rowCount, colCo
     start = time.time()
     print 'Parse start:', csvPathnameReplgz
     doSummary = False
-    parseKey = h2o_cmd.parseFile(None, csvPathnameReplgz, key2=key2, timeoutSecs=timeoutSecs, doSummary=doSummary)
+    parseKey = h2o_cmd.parseFile(None, csvPathnameReplgz, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, doSummary=doSummary)
     print csvFilenameReplgz, 'parse time:', parseKey['response']['time']
     if doSummary:
         algo = 'Parse and Summary:'
