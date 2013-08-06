@@ -1,6 +1,9 @@
 {
   String s="[" + length() + (Double.isNaN(_min) ? "" : "," + _min + "/"+ _mean+ "/"+ _max+ ", "+ PrettyPrint.bytes(byteSize())+ ", {");
   int nc=nChunks();
-  for (int i=0; i < nc; i++)   s+=(DKV.get(chunkKey(i)).get()) + ",";
+  for (int i=0; i < nc; i++) {
+    s+=chunkKey(i).home_node() + ":" + chunk2StartElem(i)+ ":";
+    s+=elem2BV(i).getClass().getSimpleName().replaceAll("Chunk","") + ", ";
+  }
   return s + "}]";
 }

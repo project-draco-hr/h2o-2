@@ -8,7 +8,7 @@ def test_many_fp_formats_libsvm(self):
             csvFilename = ('syn_%s_%s_%s_%s.csv' % (SEEDPERFILE, sel, rowCount, colCount))
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             print 'Creating random', csvPathname
-            (colNumberMax, synColSumDict) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distribution)
+            (synColSumDict, colNumberMax) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distribution)
             selKey2 = ((key2 + '_') + str(sel))
             parseKey = h2o_cmd.parseFile(None, csvPathname, key2=selKey2, timeoutSecs=timeoutSecs)
             print csvFilename, 'parse time:', parseKey['response']['time']
@@ -21,25 +21,56 @@ def test_many_fp_formats_libsvm(self):
             if DO_SUMMARY:
                 summaryResult = h2o_cmd.runSummary(key=selKey2, timeoutSecs=360)
                 h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
+            print synColSumDict.keys(), colNumberMax
             self.assertEqual((colNumberMax + 1), num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), num_cols)))
             h2e.exec_zero_list(zeroList)
-            colResultList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
-            print '\n*************'
-            print 'colResultList', colResultList
-            print '*************'
+            colSumList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
             self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
-            print '\ncolResultList:', colResultList
+            print '\ncolSumList:', colSumList
             print '\nsynColSumDict:', synColSumDict
-
-            def almost_equal(value_1, value_2, accuracy=(10 ** (-8))):
-                return (abs((value_1 - value_2)) < accuracy)
             for (k, v) in synColSumDict.iteritems():
-                self.assertTrue(((k >= 0) and (k < len(colResultList))))
-                compare = colResultList[k]
-                print '\nComparing col', k, 'sums:', v, compare
-                self.assertAlmostEqual(v, compare, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, compare)))
-                synMean = ((v + 0.0) / rowCount)
-                mean = inspect['cols'][k]['mean']
-                self.assertAlmostEqual(mean, synMean, places=0, msg=('col %s mean %0.6f is not equal to generated mean %0.6f' % (k, mean, synMean)))
-                num_missing_values = inspect['cols'][k]['num_missing_values']
-                self.assertEqual(0, num_missing_values, msg=('col %s num_missing_values %d should be 0' % (k, num_missing_values)))
+                if (k > colNumberMax):
+                    continue
+                self.assertTrue(((k >= 0) and (k < len(colSumList))), msg=('k: %s len(colSumList): %s num_cols: %s' % (k, len(colSumList), num_cols)))
+                syn = {}
+                if (k == 0):
+                    syn['name'] = 'Target'
+                    syn['size'] = {1, 2}
+                    syn['type'] = {'int'}
+                    syn['min'] = classMin
+                    syn['max'] = classMax
+                    syn['scale'] = {1}
+                elif (k == 1):
+                    syn['name'] = ('V' + str(k))
+                    syn['size'] = {1}
+                    syn['type'] = {'int'}
+                    syn['min'] = 0
+                    syn['max'] = 0
+                    syn['scale'] = {1}
+                    syn['base'] = 0
+                    syn['variance'] = 0
+                else:
+                    syn['name'] = ('V' + str(k))
+                    syn['size'] = {1, 2, 4, 8}
+                    syn['type'] = {'int', 'float'}
+                    syn['min'] = valMin
+                    syn['max'] = valMax
+                    syn['scale'] = {1, 10, 100, 1000}
+                syn['num_missing_values'] = 0
+                syn['enum_domain_size'] = 0
+                cols = inspect['cols'][k]
+                for synKey in syn:
+                    if (synKey == 'min'):
+                        self.assertTrue((syn[synKey] <= cols[synKey]), msg=('col %s %s %s should be <= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    elif (synKey == 'max'):
+                        self.assertTrue((syn[synKey] >= cols[synKey]), msg=('col %s %s %s should be >= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    elif ((synKey == 'size') or (synKey == 'scale') or (synKey == 'type')):
+                        if (cols[synKey] not in syn[synKey]):
+                            print 'cols size/min/max:', cols['size'], cols['min'], cols['max']
+                            print 'syn size/min/max:', syn['size'], syn['min'], syn['max']
+                            raise Exception(('col %s %s %s should be in this allowed %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    else:
+                        self.assertEqual(syn[synKey], cols[synKey], msg=('col %s %s %s should be %s' % (k, synKey, cols[synKey], syn[synKey])))
+                colSum = colSumList[k]
+                print '\nComparing col', k, 'sums:', v, colSum
+                self.assertAlmostEqual(float(v), colSum, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, colSum)))
