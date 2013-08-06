@@ -29,8 +29,7 @@ def check(self, first, second, path='', with_values=False):
                 except (IndexError, KeyError):
                     self.save_diff(('%s - %s, %s' % (new_path, type(first), type(second))), TYPE)
             self.check(first[index], sec, path=new_path, with_values=with_values)
-    else:
-        if (with_values and (second != None)):
-            if (first != second):
-                self.save_diff(('%s - %s | %s' % (path, first, second)), 'diff')
-        return
+    elif (with_values and (second != None)):
+        if (first != second):
+            self.save_diff(('%s - %s | %s' % (path, first, second)), 'diff')
+    return

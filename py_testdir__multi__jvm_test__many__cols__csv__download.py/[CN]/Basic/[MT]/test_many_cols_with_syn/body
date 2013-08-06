@@ -1,0 +1,41 @@
+def test_many_cols_with_syn(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(5000, 10000, 'cK', 60), (10000, 10000, 'cL', 60), (100, 8500, 'cF', 15), (100, 9000, 'cG', 15), (100, 10000, 'cI', 15), (100, 11000, 'cH', 15), (1000, 10000, 'cI', 15), (3000, 10000, 'cJ', 15)]
+    lenNodes = len(h2o.nodes)
+    trial = 0
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        trial += 1
+        csvFilename = (((((('syn_' + str(SEED)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, SEED)
+        start = time.time()
+        parseKeyA = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=timeoutSecs)
+        print '\nA Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        inspect = h2o_cmd.runInspect(key=key2)
+        missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
+        num_colsA = inspect['num_cols']
+        num_rowsA = inspect['num_rows']
+        row_sizeA = inspect['row_size']
+        value_size_bytesA = inspect['value_size_bytes']
+        csvDownloadPathname = (SYNDATASETS_DIR + '/csvDownload.csv')
+        print '\nStarting csv download to', csvDownloadPathname, 'rowCount:', rowCount, 'colCount:', colCount
+        start = time.time()
+        h2o.nodes[0].csv_download(key=key2, csvPathname=csvDownloadPathname)
+        print 'csv_download end.', 'took', (time.time() - start), 'seconds. Originally from:', csvFilename
+        h2o.nodes[0].remove_key(key2)
+        start = time.time()
+        parseKeyB = h2o_cmd.parseFile(csvPathname=csvDownloadPathname, key2=key2, timeoutSecs=timeoutSecs)
+        print '\nB Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        inspect = h2o_cmd.runInspect(key=key2)
+        missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
+        num_colsB = inspect['num_cols']
+        num_rowsB = inspect['num_rows']
+        row_sizeB = inspect['row_size']
+        value_size_bytesB = inspect['value_size_bytes']
+        self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
+        self.assertEqual(num_colsA, num_colsB, ('num_cols mismatches after re-parse of downloadCsv result %d %d' % (num_colsA, num_colsB)))
+        self.assertEqual(num_rowsA, num_rowsB, ('num_rows mismatches after re-parse of downloadCsv result %d %d' % (num_rowsA, num_rowsB)))
+        self.assertEqual(row_sizeA, row_sizeB, ('row_size mismatches after re-parse of downloadCsv result %d %d' % (row_sizeA, row_sizeB)))
+        self.assertEqual(value_size_bytesA, value_size_bytesB, ('value_size_bytes mismatches after re-parse of downloadCsv result %d %d' % (value_size_bytesA, value_size_bytesB)))
+        h2o.check_sandbox_for_errors()
