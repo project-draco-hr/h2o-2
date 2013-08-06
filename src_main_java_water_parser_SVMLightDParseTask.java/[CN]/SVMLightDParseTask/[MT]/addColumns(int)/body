@@ -2,6 +2,10 @@
   _colTypes=Arrays.copyOf(_colTypes,ncols);
   _min=Arrays.copyOf(_min,ncols);
   _max=Arrays.copyOf(_max,ncols);
+  if (_myrows == 0) {
+    _min[ncols - 1]=Double.POSITIVE_INFINITY;
+    _max[ncols - 1]=Double.NEGATIVE_INFINITY;
+  }
   _scale=Arrays.copyOf(_scale,ncols);
   _mean=Arrays.copyOf(_mean,ncols);
   _invalidValues=Arrays.copyOf(_invalidValues,ncols);
