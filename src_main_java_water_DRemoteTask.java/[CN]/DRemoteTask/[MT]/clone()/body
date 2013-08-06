@@ -1,12 +1,7 @@
 {
-  try {
-    T dt=(T)super.clone();
-    dt.setCompleter(this);
-    dt._fs=null;
-    dt.setPendingCount(0);
-    return dt;
-  }
- catch (  CloneNotSupportedException e) {
-    throw Log.errRTExcept(e);
-  }
+  T dt=(T)super.clone();
+  dt.setCompleter(this);
+  dt._fs=null;
+  dt.setPendingCount(0);
+  return dt;
 }

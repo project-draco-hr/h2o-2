@@ -6,4 +6,5 @@
   FVecDataOut dout=new FVecDataOut(nvs,enums);
   CsvParser p=new CsvParser(_setup,in._start > 0);
   p.parallelParse(in.cidx(),din,dout);
+  onProgress(in._len,_progress);
 }
