@@ -1,0 +1,3 @@
+def notest_B_RF_iris2(self):
+    csvPathname = h2o.find_file('smalldata/iris/iris2.csv')
+    h2o_cmd.runRF(trees=6, model_key='iris2', timeoutSecs=10, retryDelaySecs=1, csvPathname=csvPathname)
