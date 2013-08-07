@@ -1,0 +1,18 @@
+{
+  int sum=14 * 8;
+  sum+=byteSize(_bins);
+  sum+=byteSize(_mins);
+  sum+=byteSize(_maxs);
+  sum+=byteSize(_Ms);
+  sum+=byteSize(_Ss);
+  sum+=byteSize(_MSEs);
+  if (_clss != null) {
+    sum+=(_clss.length + 3) * 8;
+    for (    short[] ss : _clss)     sum+=byteSize(ss);
+  }
+  if (_clss2 != null) {
+    sum+=(_clss2.length + 3) * 8;
+    for (    long[] ss : _clss2)     sum+=byteSize(ss);
+  }
+  return sum;
+}
