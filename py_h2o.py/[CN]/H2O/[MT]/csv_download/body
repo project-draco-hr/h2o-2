@@ -9,3 +9,4 @@ def csv_download(self, key, csvPathname, timeoutSecs=60, **kwargs):
         f = open(csvPathname, 'wb')
         for chunk in r.iter_content(1024):
             f.write(chunk)
+    print csvPathname, 'size:', h2o_util.file_size_formatted(csvPathname)

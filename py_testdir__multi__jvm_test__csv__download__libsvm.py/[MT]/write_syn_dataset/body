@@ -1,0 +1,27 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE):
+    start = time.time()
+    r = random.Random(SEEDPERFILE)
+    dsf = open(csvPathname, 'w+')
+    colNumberMax = 0
+    for i in range(rowCount):
+        rowData = []
+        if (i == (rowCount - 1)):
+            val = 1.0
+            colNumber = colCount
+        else:
+            d = random.randint(0, 1)
+            if (d == 1):
+                val = 1.0
+            else:
+                val = 0
+            colNumber = 1
+        if (val != 0):
+            rowData.append(((str(colNumber) + ':') + str(val)))
+            colNumberMax = max(colNumber, colNumberMax)
+        val = 0
+        rowData.insert(0, val)
+        rowDataCsv = ' '.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
+    print '\n', csvPathname, 'creation took', (time.time() - start), 'seconds'
+    return colNumberMax

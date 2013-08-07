@@ -1,0 +1,14 @@
+@classmethod
+def create_random(cls, level):
+    symbol = None
+    r = random.random()
+    cumulative = 0.0
+    for (k, v) in operators.items():
+        cumulative += v['prob']
+        if (r <= cumulative):
+            symbol = k
+            break
+    assert (symbol != None)
+    left = expression.create_random((level + 1))
+    right = expression.create_random((level + 1))
+    return binary_expression(symbol, left, right)

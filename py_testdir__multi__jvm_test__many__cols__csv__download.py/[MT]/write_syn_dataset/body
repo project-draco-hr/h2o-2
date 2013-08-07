@@ -1,0 +1,13 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
+    r1 = random.Random(SEED)
+    start = time.time()
+    dsf = open(csvPathname, 'w+')
+    rowData = [('c' + str(j)) for j in range(colCount)]
+    rowDataCsv = ','.join(rowData)
+    dsf.write((rowDataCsv + '\n'))
+    for i in range(rowCount):
+        rowData = range(colCount)
+        rowDataCsv = ','.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
+    print '\n', csvPathname, 'creation took', (time.time() - start), 'seconds'

@@ -1,0 +1,5 @@
+def test_A_Basic(self):
+    for n in h2o.nodes:
+        h2o.verboseprint('cloud check for:', n)
+        c = n.get_cloud()
+        self.assertEqual(c['cloud_size'], len(h2o.nodes), 'inconsistent cloud size')

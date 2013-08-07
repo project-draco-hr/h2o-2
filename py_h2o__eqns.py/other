@@ -1,0 +1,14 @@
+import sys
+import random
+operators = {'^': {'prec': 10, 'prob': 0.1, 'eval': (lambda a, b: pow(a, b)), }, '*': {'prec': 20, 'prob': 0.2, 'eval': (lambda a, b: (a * b)), }, '/': {'prec': 20, 'prob': 0.2, 'eval': (lambda a, b: (a / b)), }, '+': {'prec': 30, 'prob': 0.25, 'eval': (lambda a, b: (a + b)), }, '-': {'prec': 30, 'prob': 0.25, 'eval': (lambda a, b: (a - b)), }, }
+max_levels = 3
+integer_range = ((-100), 100)
+random.seed()
+max_result = pow(10, 10)
+for i in range(10):
+    expr = expression.create_random(0)
+    try:
+        value = float(expr.eval())
+    except:
+        value = 'indeterminate'
+    print expr, '=', value
