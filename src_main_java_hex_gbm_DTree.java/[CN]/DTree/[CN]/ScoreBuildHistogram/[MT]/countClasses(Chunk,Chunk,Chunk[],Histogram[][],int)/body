@@ -1,0 +1,9 @@
+{
+  for (int i=0; i < nids._len; i++) {
+    int nid=(int)nids.at80(i);
+    if (nid < 0)     continue;
+    Histogram nhs[]=hcs[nid - leaf];
+    int ycls=(int)ys.at80(i) - _ymin;
+    for (int j=0; j < _ncols; j++)     if (nhs[j] != null)     nhs[j].incr(chks[j].at0(i),ycls);
+  }
+}
