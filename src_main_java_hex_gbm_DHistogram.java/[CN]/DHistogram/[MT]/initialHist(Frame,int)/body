@@ -1,0 +1,9 @@
+{
+  DHistogram hists[]=new DHistogram[ncols];
+  Vec[] vs=fr._vecs;
+  for (int j=0; j < ncols; j++) {
+    Vec v=vs[j];
+    hists[j]=v.min() == v.max() ? null : new DHistogram(fr._names[j],v.length(),v.min(),v.max(),v._isInt);
+  }
+  return hists;
+}
