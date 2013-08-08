@@ -4,7 +4,9 @@
     for (int t=0; t < ntrees; t++) {
       final int tmax=trees[t]._len;
       final DTree tree=trees[t];
-      for (int i=leafs[t]; i < tmax; i++)       tree.undecided(i)._hs=sbh.getFinalHisto(t,i);
+      for (int i=leafs[t]; i < tmax; i++) {
+        tree.undecided(i)._hs=sbh.getFinalHisto(t,i);
+      }
     }
     boolean still_splitting=false;
     for (int t=0; t < ntrees; t++) {
