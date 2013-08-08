@@ -1,14 +1,14 @@
 {
   Chunk ys=chks[_ncols];
-  _cm=new long[_numClasses][_numClasses];
+  _cm=new long[_nclass][_nclass];
   Random rands[]=null;
   if (_rate < 1.0f) {
     rands=new Random[_trees.length];
     for (int t=0; t < _trees.length; t++)     rands[t]=_trees[t].rngForChunk(ys.cidx());
   }
-  long clss[]=new long[_numClasses];
+  long clss[]=new long[_nclass];
   for (int i=0; i < ys._len; i++) {
-    double err=score0(chks,i,ys.at0(i),clss,rands);
+    float err=score0(chks,i,(float)ys.at0(i),clss,rands);
     _sum+=err * err;
   }
 }

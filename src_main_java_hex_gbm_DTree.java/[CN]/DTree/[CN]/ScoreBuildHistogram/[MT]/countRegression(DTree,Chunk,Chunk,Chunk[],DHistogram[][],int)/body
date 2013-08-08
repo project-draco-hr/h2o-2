@@ -1,0 +1,16 @@
+{
+  for (int i=0; i < nids._len; i++) {
+    int nid=(int)nids.at80(i);
+    if (nid < 0)     continue;
+    DHistogram nhs[]=hcs[nid - leaf];
+    float y=(float)ys.at0(i);
+    for (int j=0; j < _ncols; j++) {
+      DHistogram nh=nhs[j];
+      if (nh != null) {
+        float f=(float)chks[j].at0(i);
+        nh.incr(f);
+        if (nh instanceof DBinHistogram)         ((DBinHistogram)nh).incr(f,y);
+      }
+    }
+  }
+}

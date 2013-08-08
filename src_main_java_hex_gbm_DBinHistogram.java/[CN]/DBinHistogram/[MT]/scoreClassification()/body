@@ -1,0 +1,10 @@
+{
+  float sum=0;
+  for (int i=0; i < _bins.length; i++) {
+    if (_bins[i] <= 1)     continue;
+    int err=0;
+    for (int j=0; j < _nclass; j++)     err+=_clss[i][j] * _clss[i][j];
+    sum+=(float)_bins[i] - ((float)err / _bins[i]);
+  }
+  return sum;
+}

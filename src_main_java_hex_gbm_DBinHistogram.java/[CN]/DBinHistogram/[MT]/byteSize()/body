@@ -1,0 +1,14 @@
+{
+  long sum=super.byteSize();
+  sum+=byteSize(_bins);
+  sum+=byteSize(_mins);
+  sum+=byteSize(_maxs);
+  sum+=byteSize(_Ms);
+  sum+=byteSize(_Ss);
+  sum+=byteSize(_MSEs);
+  if (_nclass > 0) {
+    sum+=(_clss.length + 3) * 8;
+    for (    long[] ls : _clss)     sum+=byteSize(ls);
+  }
+  return sum;
+}
