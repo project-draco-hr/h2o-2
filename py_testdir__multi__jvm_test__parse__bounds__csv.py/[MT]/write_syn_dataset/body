@@ -2,12 +2,17 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE):
     r = random.Random(SEEDPERFILE)
 
     def addValToRowStuff(colNumber, val, rowData, synColSumDict):
-        if (val != 0):
-            rowData.append(((str(colNumber) + ':') + str(val)))
-            if (colNumber in synColSumDict):
-                synColSumDict[colNumber] += val
-            else:
-                synColSumDict[colNumber] = val
+        if DO_LIBSVM:
+            if (val != 0):
+                rowData.append(((str(colNumber) + ':') + str(val)))
+        else:
+            for j in range(colNumber):
+                rowData.append('0')
+            rowData.append(str(val))
+        if (colNumber in synColSumDict):
+            synColSumDict[colNumber] += val
+        else:
+            synColSumDict[colNumber] = val
     dsf = open(csvPathname, 'w+')
     synColSumDict = {0: 0, }
     colNumberMax = 0
