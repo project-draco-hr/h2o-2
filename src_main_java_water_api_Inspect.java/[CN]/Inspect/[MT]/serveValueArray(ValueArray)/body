@@ -9,11 +9,11 @@
   result.addProperty(VALUE_SIZE,va.length());
   JsonArray cols=new JsonArray();
   JsonArray rows=new JsonArray();
-  for (int i=0; i < va._cols.length; i++) {
+  for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,va._cols.length); i++) {
     Column c=va._cols[i];
     JsonObject json=new JsonObject();
     json.addProperty(NAME,c._name);
-    json.addProperty(OFFSET,(int)c._off);
+    json.addProperty(OFFSET,c._off);
     json.addProperty(SIZE,Math.abs(c._size));
     json.addProperty(BASE,c._base);
     json.addProperty(SCALE,(int)c._scale);
@@ -32,7 +32,7 @@
     for (long row=Math.max(0,startRow); row < endRow; ++row) {
       JsonObject obj=new JsonObject();
       obj.addProperty(ROW,row);
-      for (int i=0; i < va._cols.length; ++i)       format(obj,va,row,i);
+      for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,va._cols.length); ++i)       format(obj,va,row,i);
       rows.add(obj);
     }
   }
