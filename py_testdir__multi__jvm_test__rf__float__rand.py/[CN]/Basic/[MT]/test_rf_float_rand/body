@@ -10,10 +10,19 @@ def test_rf_float_rand(self):
         num = random.randint(4096, 10096)
         append_syn_dataset(csvPathname, num)
         totalRows += num
-        start = time.time()
         key = ((csvFilename + '_') + str(trial))
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         kwargs = {'ntree': 5, 'depth': 5, }
+        start = time.time()
         key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=15, pollTimeoutSecs=5, **kwargs)
         print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        inspect = h2o_cmd.runInspect(key=key2)
+        cols = inspect['cols']
+        num_cols = inspect['num_cols']
+        for (i, c) in enumerate(cols):
+            if (i < (num_cols - 1)):
+                colType = c['type']
+                colSize = c['size']
+                self.assertEqual(colType, 'float', msg=('col %d should be type float: %s' % (i, colType)))
+                self.assertEqual(colSize, 8, msg=('col %d should be size 8: %d' % (i, colSize)))
         h2o.check_sandbox_for_errors()
