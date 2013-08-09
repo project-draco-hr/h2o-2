@@ -7,7 +7,7 @@
  else {
     for (int i=0; i < nbins(); i++) {
       sb.append(String.format("cnt=%d, min=%f, max=%f, ",_bins[i],_mins[i],_maxs[i]));
-      for (int c=0; c < _nclass; c++)       sb.append("c").append(c).append("=").append(_clss[i][c]).append(",");
+      for (int c=0; c < _nclass; c++)       sb.append("c").append(c).append("=").append(clss(i,c)).append(",");
       sb.append("\n");
     }
   }

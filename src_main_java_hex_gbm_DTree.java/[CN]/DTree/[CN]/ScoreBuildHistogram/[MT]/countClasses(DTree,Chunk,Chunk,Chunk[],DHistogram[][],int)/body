@@ -4,13 +4,13 @@
     if (nid < 0)     continue;
     DHistogram nhs[]=hcs[nid - leaf];
     int ycls=(int)ys.at80(i) - _ymin;
-    int sCols[]=tree.undecided(nid)._scoreCols;
-    for (int idx=0; idx < sCols.length; idx++) {
-      int j=sCols[idx];
+    for (int j=0; j < _ncols; j++) {
       DHistogram nh=nhs[j];
-      float f=(float)chks[j].at0(i);
-      nh.incr(f);
-      ((DBinHistogram)nh).incr(f,ycls);
+      if (nh != null) {
+        float f=(float)chks[j].at0(i);
+        nh.incr(f);
+        if (nh instanceof DBinHistogram)         ((DBinHistogram)nh).incr(f,ycls);
+      }
     }
   }
 }
