@@ -11,15 +11,15 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
         for j in range(colCount):
             if (j == 1):
                 ri = random.randint(0, 1)
-            elif (j == 2):
-                ri = None
-            else:
-                ri = 0
-            if (ri is None):
-                ri = ''
-            else:
                 synSumList[j] += ri
                 ri = str(ri)
+            elif (j == 2):
+                ri = ('' if DO_NAN else '0')
+            elif ((j == (colCount - 1)) and (i == (rowCount - 1))):
+                synSumList[j] += 1
+                ri = '1'
+            else:
+                ri = '0'
             rowData.append(ri)
         rowDataCsv = ','.join(rowData)
         dsf.write((rowDataCsv + '\n'))
