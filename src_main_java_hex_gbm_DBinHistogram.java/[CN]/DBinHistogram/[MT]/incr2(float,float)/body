@@ -1,0 +1,8 @@
+{
+  if (_MSEs == null)   _MSEs=new float[_bins.length];
+  int idx=bin(d);
+  float z=y - mean(idx);
+  float e=z * z;
+  float oldMSE=_MSEs[idx];
+  _MSEs[idx]=oldMSE + (e - oldMSE) / _bins[idx];
+}
