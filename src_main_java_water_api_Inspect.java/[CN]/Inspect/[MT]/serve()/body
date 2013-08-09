@@ -9,7 +9,9 @@
   if (f instanceof ValueArray) {
     ValueArray ary=(ValueArray)f;
     if (ary._cols.length == 1 && ary._cols[0]._name == null)     return serveUnparsedValue(key,val);
-    return serveValueArray(ary);
+    int columns_to_display=0;
+    if (_max_column.value() > 0)     columns_to_display=_max_column.value();
+    return serveValueArray(ary,columns_to_display);
   }
   if (f instanceof Vec) {
     return serveUnparsedValue(key,((Vec)f).chunkIdx(0));
