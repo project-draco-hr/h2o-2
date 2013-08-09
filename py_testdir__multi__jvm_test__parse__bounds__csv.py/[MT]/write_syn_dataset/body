@@ -1,39 +1,27 @@
-def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE):
-    r = random.Random(SEEDPERFILE)
-
-    def addValToRowStuff(colNumber, val, rowData, synColSumDict):
-        if DO_LIBSVM:
-            if (val != 0):
-                rowData.append(((str(colNumber) + ':') + str(val)))
-        else:
-            for j in range(colNumber):
-                rowData.append('0')
-            rowData.append(str(val))
-        if (colNumber in synColSumDict):
-            synColSumDict[colNumber] += val
-        else:
-            synColSumDict[colNumber] = val
+def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
+    r1 = random.Random(SEED)
     dsf = open(csvPathname, 'w+')
-    synColSumDict = {0: 0, }
-    colNumberMax = 0
+    rowData = ['Target']
+    rowData.extend([('V' + str(i)) for i in range(1, colCount)])
+    rowDataCsv = ','.join(rowData)
+    dsf.write((rowDataCsv + '\n'))
+    synSumList = [0 for i in range(colCount)]
     for i in range(rowCount):
         rowData = []
-        if (i == (rowCount - 1)):
-            val = 1
-            colNumber = colCount
-        else:
-            d = random.randint(0, 1)
-            if (d == 1):
-                val = 1
+        for j in range(colCount):
+            if (j == 1):
+                ri = random.randint(0, 1)
+            elif (j == 2):
+                ri = None
             else:
-                val = 0
-            colNumber = 1
-        addValToRowStuff(colNumber, val, rowData, synColSumDict)
-        colNumberMax = max(colNumber, colNumberMax)
-        val = 0
-        rowData.insert(0, val)
-        synColSumDict[0] += val
-        rowDataCsv = ' '.join(map(str, rowData))
+                ri = 0
+            if (ri is None):
+                ri = ''
+            else:
+                synSumList[j] += ri
+                ri = str(ri)
+            rowData.append(ri)
+        rowDataCsv = ','.join(rowData)
         dsf.write((rowDataCsv + '\n'))
     dsf.close()
-    return (colNumberMax, synColSumDict)
+    return synSumList
