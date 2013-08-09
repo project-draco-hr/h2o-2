@@ -1,0 +1,11 @@
+def test_exec_arith_precedence(self):
+    h2b.browseTheCloud()
+    lenNodes = len(h2o.nodes)
+    trial = 0
+    for (execExpr, expectedResult) in zip(exprList, resultList):
+        resultKey = ('R' + str(trial))
+        (execResultInspect, min_value) = h2e.exec_expr(None, ((resultKey + '=') + execExpr), resultKey=resultKey, timeoutSecs=4)
+        print ('trial: #' + str(trial)), min_value, execExpr
+        print ('min_value: %s  expectedResult: %s' % (min_value, expectedResult))
+        self.assertAlmostEqual(float(min_value), float(expectedResult), places=6, msg=('exec wrong answer %s %s' % (min_value, expectedResult)))
+        trial += 1

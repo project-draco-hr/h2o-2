@@ -1,7 +1,7 @@
 def test_parse_bounds_libsvm(self):
     print 'Random 0/1 for col1. Last has max col = 1, All have zeros for class.'
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 100000, 'cC', 300)]
+    tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 999, 'cC', 300)]
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = ('syn_%s_%s_%s.csv' % (SEEDPERFILE, rowCount, colCount))
