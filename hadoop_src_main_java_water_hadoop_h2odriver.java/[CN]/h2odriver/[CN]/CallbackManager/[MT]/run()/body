@@ -1,9 +1,13 @@
 {
+  _dupChecker=new HashSet<String>();
+  _nodes=new ArrayList<String>();
+  _socks=new ArrayList<Socket>();
   while (true) {
     try {
       Socket s=_ss.accept();
       CallbackHandlerThread t=new CallbackHandlerThread();
       t.setSocket(s);
+      t.setCallbackManager(this);
       t.start();
     }
  catch (    Exception e) {

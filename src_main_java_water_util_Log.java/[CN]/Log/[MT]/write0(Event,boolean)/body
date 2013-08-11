@@ -1,10 +1,11 @@
 {
   org.apache.log4j.Logger l4j=getLog4jLogger();
-  if (l4j == null && !H2O.DEBUG) {
+  if ((l4j == null) && !loggerCreateWasCalled && !H2O.DEBUG) {
     if (H2O.SELF != null) {
       File dir;
       if (H2O.ICE_ROOT.getScheme() == null || Schemes.FILE.equals(H2O.ICE_ROOT.getScheme()))       dir=new File(H2O.ICE_ROOT.getPath());
  else       dir=new File(H2O.DEFAULT_ICE_ROOT);
+      loggerCreateWasCalled=true;
       l4j=createLog4jLogger(dir.toString());
     }
   }

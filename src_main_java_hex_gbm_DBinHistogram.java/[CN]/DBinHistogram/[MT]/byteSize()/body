@@ -1,0 +1,18 @@
+{
+  long sum=super.byteSize();
+  sum+=8 + byteSize(_bins);
+  sum+=8 + byteSize(_mins);
+  sum+=8 + byteSize(_maxs);
+  sum+=8 + byteSize(_Ms);
+  sum+=8 + byteSize(_Ss);
+  sum+=8 + byteSize(_MSEs);
+  sum+=8 + byteSize(_clss1);
+  if (_clss1 != null)   for (int i=0; i < _clss1.length; i++)   sum+=byteSize(_clss1[i]);
+  sum+=8 + byteSize(_clss2);
+  if (_clss2 != null)   for (int i=0; i < _clss2.length; i++)   sum+=byteSize(_clss2[i]);
+  sum+=8 + byteSize(_clss4);
+  if (_clss4 != null)   for (int i=0; i < _clss4.length; i++)   sum+=byteSize(_clss4[i]);
+  sum+=8 + byteSize(_clss8);
+  if (_clss8 != null)   for (int i=0; i < _clss8.length; i++)   sum+=byteSize(_clss8[i]);
+  return sum;
+}
