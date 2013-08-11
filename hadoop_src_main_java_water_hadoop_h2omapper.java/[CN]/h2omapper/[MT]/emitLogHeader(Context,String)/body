@@ -25,11 +25,4 @@
   }
  catch (  java.net.UnknownHostException uhe) {
   }
-  context.write(textId,new Text("----- Flat File -----"));
-  BufferedReader reader=new BufferedReader(new FileReader("flatfile.txt"));
-  String line;
-  while ((line=reader.readLine()) != null) {
-    context.write(textId,new Text(line));
-  }
-  context.write(textId,new Text("---------------------"));
 }
