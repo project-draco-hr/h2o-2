@@ -14,11 +14,11 @@
     for (    Field f : fields) {
       Annotation[] as=f.getAnnotations();
       API api=find(as,API.class);
-      if (api != null) {
+      if (api != null && Helper.isInput(api)) {
         f.setAccessible(true);
         Object defaultValue=f.get(this);
         Argument arg=null;
-        if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)getInnerClassConstructor(api.filter()).newInstance(this);
+        if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
  else {
           if (f.getType() == float.class || f.getType() == double.class) {
             double val=((Number)defaultValue).doubleValue();
@@ -32,12 +32,19 @@
             boolean val=(Boolean)defaultValue;
             arg=new Bool(f.getName(),val,api.help());
           }
+ else           if (f.getType() == Key.class)           arg=new H2OKey(f.getName(),api.required());
         }
         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
-          ColumnSelect name=(ColumnSelect)api.filter().newInstance();
+          ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
           for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._key.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
           arg=new HexAllColumnSelect(f.getName(),key);
+        }
+        if (VecSelect.class.isAssignableFrom(api.filter())) {
+          VecSelect name=(VecSelect)newInstance(api);
+          FrameKey key=null;
+          for (          Argument a : _arguments)           if (a instanceof FrameKey && name._key.equals(((FrameKey)a)._name))           key=(FrameKey)a;
+          arg=new FrameKeyVec(f.getName(),key);
         }
         if (arg != null) {
           arg._name=f.getName();
