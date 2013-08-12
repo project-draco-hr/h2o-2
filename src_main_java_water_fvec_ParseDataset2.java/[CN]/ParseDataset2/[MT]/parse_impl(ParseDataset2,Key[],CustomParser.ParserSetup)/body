@@ -4,9 +4,6 @@
     job.cancel();
     return;
   }
-  ByteVec vec=(ByteVec)getVec(fkeys[0]);
-  Compression compression=guessCompressionMethod(vec);
-  if (setup == null)   setup=ParseDataset.guessSetup(DKV.get(fkeys[0]));
   MultiFileParseTask uzpt=new MultiFileParseTask(setup,job._progress).invoke(fkeys);
   if (uzpt._parserr != null)   throw new ParseException(uzpt._parserr);
   int[] ecols=uzpt.enumCols();

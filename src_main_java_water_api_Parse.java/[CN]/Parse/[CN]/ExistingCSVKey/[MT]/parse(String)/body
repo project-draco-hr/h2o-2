@@ -1,7 +1,6 @@
 {
   Key k1=Key.make(input);
   Value v1=DKV.get(k1);
-  if (v1 != null && (input.endsWith(".xlsx") || input.endsWith(".xls")))   return new PSetup(k1,null);
   Pattern p=makePattern(input);
   Pattern exclude=null;
   if (_excludeExpression.specified())   exclude=makePattern(_excludeExpression.value());
@@ -12,7 +11,6 @@
     if (!p.matcher(ks).matches())     continue;
     if (exclude != null && exclude.matcher(ks).matches())     continue;
     Value v2=DKV.get(key);
-    if (v2 == null || input.endsWith(".xlsx") || input.endsWith(".xls") || v2.length() == 0)     continue;
     if (v2.isHex())     continue;
     keys.add(key);
   }
@@ -21,20 +19,14 @@
   Key hKey=keys.get(0);
   Value v=DKV.get(hKey);
   byte[] bits=Inspect.getFirstBytes(v);
-  CustomParser.ParserType pType=_parserType.value();
-  CustomParser.ParserSetup setup;
-  if (pType == CustomParser.ParserType.CSV) {
-    byte separator=_separator.specified() ? _separator.value() : CsvParser.NO_SEPARATOR;
-    setup=CsvParser.guessSetup(bits,separator);
-    if (setup == null || setup._data == null || setup._data[0].length == 0)     throw new IllegalArgumentException("I cannot figure out this file; I only handle common CSV formats: " + hKey);
-  }
- else   if (pType == CustomParser.ParserType.SVMLight) {
-    setup=SVMLightParser.guessSetup(bits);
-    if (setup == null)     throw new IllegalArgumentException("The file " + hKey + " does not appear to be valid SVMLight parse.");
-  }
- else {
-    setup=ParseDataset.guessSetup(v);
-    if (setup == null)     throw new IllegalArgumentException("I cannot figure out this file; It does not match any of the supported formats. " + hKey);
-  }
-  return new PSetup(keys,setup);
+  System.out.println("header value = " + _header.value());
+  CustomParser.ParserSetup setup=ParseDataset.guessSetup(bits,new CustomParser.ParserSetup(_parserType.value(),_separator.value(),_header.specified() ? _header.value() : false),_header.specified());
+  if (setup == null)   throw new IllegalArgumentException("I cannot figure out this file; Please select the parse setup manually.");
+  PSetup res=new PSetup(keys,setup);
+  _parserType.setValue(res._setup._pType);
+  _separator.setValue(res._setup._separator);
+  _header.setValue(res._setup._header);
+  System.out.println("header value(2) = " + _header.value());
+  _header._hideInQuery=_separator._hideInQuery=res._setup._pType != CustomParser.ParserType.CSV;
+  return res;
 }

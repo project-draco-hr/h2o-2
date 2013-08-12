@@ -1,0 +1,6 @@
+{
+  ByteVec vec=(ByteVec)getVec(key);
+  byte[] bits=vec.elem2BV(0)._mem;
+  Compression cpr=guessCompressionMethod(vec);
+  return ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),setup,true);
+}

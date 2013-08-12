@@ -1,9 +1,9 @@
 {
   PSetup p=_source.value();
+  System.out.println("setup = " + p._setup.toString());
   CustomParser.ParserSetup setup=p._setup;
   Key dest=Key.make(_dest.value());
   try {
-    if (p._setup != null && _header.specified())     setup.setHeader(_header.value());
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
     Job job=ParseDataset.forkParseDataset(dest,keys,setup);
     JsonObject response=new JsonObject();

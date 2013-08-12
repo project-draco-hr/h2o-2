@@ -23,8 +23,8 @@
     }
  else     throw H2O.unimpl();
   }
-  if (setup == null || setup._pType == CustomParser.ParserType.AUTO)   setup=ParseDataset.guessSetup(v);
   Compression compression=guessCompressionMethod(v);
+  if (setup == null || setup._pType == CustomParser.ParserType.AUTO)   setup=ParseDataset.guessSetup(Inspect.getFirstBytes(v));
   try {
     UnzipAndParseTask tsk=new UnzipAndParseTask(job,compression,setup);
     tsk.invoke(keys);
@@ -58,7 +58,7 @@
       UKV.remove(finfo._okey);
     }
     phaseTwo.normalizeSigma();
-    phaseTwo._colNames=setup._data[0];
+    phaseTwo._colNames=setup._columnNames;
     phaseTwo.createValueArrayHeader();
   }
  catch (  Throwable e) {
