@@ -1,14 +1,11 @@
 {
-  PSetup p=source_key.value();
+  PSetup p=_source.value();
   CustomParser.ParserSetup setup=p._setup;
-  Key d=Key.make(dst_key.value());
+  Key d=Key.make(_dest.value());
   try {
-    if (header.originalValue() != null)     setup._header=header.value();
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
     Key jobkey=ParseDataset2.forkParseDataset(d,keys,setup).job_key;
-    job=jobkey.toString();
-    destination_key=d.toString();
-    if (blocking.value()) {
+    if (_blocking.value()) {
       Job.waitUntilJobEnded(jobkey);
     }
     return Progress2.redirect(this,jobkey,d);

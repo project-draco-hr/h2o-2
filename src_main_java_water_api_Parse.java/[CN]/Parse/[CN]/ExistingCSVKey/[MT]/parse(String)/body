@@ -14,11 +14,7 @@
   }
   if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
   Collections.sort(keys);
-  Key hKey=keys.get(0);
-  Value v=DKV.get(hKey);
-  byte[] bits=Inspect.getFirstBytes(v);
-  System.out.println("header value = " + _header.value());
-  CustomParser.ParserSetup setup=ParseDataset.guessSetup(bits,new CustomParser.ParserSetup(_parserType.value(),_separator.value(),_header.specified() ? _header.value() : false),_header.specified());
+  CustomParser.ParserSetup setup=guessSetup(keys.get(0),new CustomParser.ParserSetup(_parserType.value(),_separator.value(),_header.specified() ? _header.value() : false),_header.specified());
   if (setup == null)   throw new IllegalArgumentException("I cannot figure out this file; Please select the parse setup manually.");
   PSetup res=new PSetup(keys,setup);
   _parserType.setValue(res._setup._pType);
