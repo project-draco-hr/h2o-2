@@ -7,19 +7,40 @@
   CtField getdoc=null;
   make_body(cc,ctfs,false,"public water.AutoBuffer writeJSONFields(water.AutoBuffer ab) {\n","  super.writeJSONFields(ab);\n","  ab.putJSON%z(\"%s\",%s)","  ab.putEnumJSON(\"%s\",%s)","  ab.putJSON%z(\"%s\",%s)",".put1(',');\n",";\n  return ab;\n}",new FieldFilter(){
     boolean filter(    CtField ctf) throws NotFoundException {
-      return !ctf.getType().subclassOf(_arg);
+      Object[] as;
+      try {
+        as=ctf.getAnnotations();
+      }
+ catch (      ClassNotFoundException ex) {
+        throw new NotFoundException("getAnnotations throws ",ex);
+      }
+      API api=null;
+      for (      Object o : as)       if (o instanceof API) {
+        api=(API)o;
+        break;
+      }
+      return api != null && !isInput(ctf.getType(),api);
     }
   }
 );
   StringBuilder sb=new StringBuilder();
   sb.append("new water.api.DocGen$FieldDoc[] {");
-  boolean first=true;
-  CtClass cc2=cc;
+  ArrayList<CtClass> classes=new ArrayList<CtClass>();
+  CtClass current=cc;
   while (true) {
-    for (    CtField ctf : ctfs) {
+    classes.add(current);
+    current=current.getSuperclass();
+    api=false;
+    for (    CtField ctf : current.getDeclaredFields())     if (ctf.getName().equals("API_WEAVER"))     api=true;
+    if (api == false)     break;
+  }
+  Collections.reverse(classes);
+  boolean first=true;
+  for (  CtClass c : classes) {
+    for (    CtField ctf : c.getDeclaredFields()) {
       int mods=ctf.getModifiers();
       if (javassist.Modifier.isTransient(mods) || javassist.Modifier.isStatic(mods)) {
-        if (cc2 == cc) {
+        if (c == cc) {
           if (ctf.getName().equals("DOC_FIELDS"))           fielddoc=ctf;
           if (ctf.getName().equals("DOC_GET"))           getdoc=ctf;
         }
@@ -27,11 +48,6 @@
       }
       first=addFieldWeave(sb,ctf,cc,first);
     }
-    cc2=cc2.getSuperclass();
-    ctfs=cc2.getDeclaredFields();
-    api=false;
-    for (    CtField ctf : ctfs)     if (ctf.getName().equals("API_WEAVER"))     api=true;
-    if (api == false)     break;
   }
   sb.append("}");
   if (fielddoc == null)   throw new CannotCompileException("Did not find static final DocGen.FieldDoc[] DOC_FIELDS field;");

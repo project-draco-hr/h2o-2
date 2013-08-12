@@ -7,16 +7,17 @@
  catch (  ClassNotFoundException ex) {
     throw new NotFoundException("getAnnotations throws ",ex);
   }
-  API a=null;
-  for (  Object o : as)   if (o instanceof API)   a=(API)o;
-  if (a == null)   throw new CannotCompileException("Class " + cc.getName() + " has non-transient field '"+ name+ "' without a Weave annotation");
-  String help=a.help();
-  int min=a.since();
-  int max=a.until();
-  if (min < 1 || min > 1000000)   throw new CannotCompileException("Found field '" + name + "' but MinVer < 1 or MinVer > 1000000");
-  if (max < min || (max > 1000000 && max != Integer.MAX_VALUE))   throw new CannotCompileException("Found field '" + name + "' but MaxVer < "+ min+ " or MaxVer > 1000000");
+  API api=null;
+  for (  Object o : as)   if (o instanceof API)   api=(API)o;
+  if (api == null)   throw new CannotCompileException("Class " + cc.getName() + " has non-transient field '"+ name+ "' without an API annotation");
+  String help=api.help();
+  int min=api.since();
+  int max=api.until();
+  if (min < 1 || min > 1000000)   throw new CannotCompileException("Found field '" + name + "' but 'since' < 1 or 'since' > 1000000");
+  if (max < min || (max > 1000000 && max != Integer.MAX_VALUE))   throw new CannotCompileException("Found field '" + name + "' but 'until' < "+ min+ " or 'until' > 1000000");
   if (first)   first=false;
  else   sb.append(",");
-  sb.append("new water.api.DocGen$FieldDoc(\"" + name + "\",\""+ help+ "\","+ min+ ","+ max+ ","+ ctf.getType().getName()+ ".class)");
+  boolean input=isInput(ctf.getType(),api);
+  sb.append("new water.api.DocGen$FieldDoc(\"" + name + "\",\""+ help+ "\","+ min+ ","+ max+ ","+ ctf.getType().getName()+ ".class,"+ input+ ","+ api.required()+ ")");
   return first;
 }

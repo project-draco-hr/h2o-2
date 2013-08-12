@@ -1,4 +1,4 @@
 {
   Job jjob=Job.findJob(Key.make(job.value()));
-  return (jjob == null || jjob._endTime != 0) ? jobDone(jjob,dst_key.value()) : jobInProgress(jjob,dst_key.value());
+  return (jjob == null || jjob.end_time != 0) ? jobDone(jjob,dst_key.value()) : jobInProgress(jjob,dst_key.value());
 }

@@ -1,20 +1,18 @@
 {
-  Vec X=vec_x.value();
-  Vec Y=vec_y.value();
   long start=System.currentTimeMillis();
-  CalcSumsTask lr1=new CalcSumsTask().doAll(X,Y);
+  CalcSumsTask lr1=new CalcSumsTask().doAll(vec_x,vec_y);
   long pass1=System.currentTimeMillis();
   pass1time=pass1 - start;
   nrows=lr1._n;
   final double meanX=lr1._sumX / nrows;
   final double meanY=lr1._sumY / nrows;
-  CalcSquareErrorsTasks lr2=new CalcSquareErrorsTasks(meanX,meanY).doAll(X,Y);
+  CalcSquareErrorsTasks lr2=new CalcSquareErrorsTasks(meanX,meanY).doAll(vec_x,vec_y);
   long pass2=System.currentTimeMillis();
   pass2time=pass2 - pass1;
   ssto=lr2._YYbar;
   beta1=lr2._XYbar / lr2._XXbar;
   beta0=meanY - beta1 * meanX;
-  CalcRegressionTask lr3=new CalcRegressionTask(beta0,beta1,meanY).doAll(X,Y);
+  CalcRegressionTask lr3=new CalcRegressionTask(beta0,beta1,meanY).doAll(vec_x,vec_y);
   long pass3=System.currentTimeMillis();
   pass3time=pass3 - pass2;
   long df=nrows - 2;

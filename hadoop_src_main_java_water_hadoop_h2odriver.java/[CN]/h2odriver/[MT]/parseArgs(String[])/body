@@ -50,6 +50,13 @@
       }
       driverCallbackPort=Integer.parseInt(args[i]);
     }
+ else     if (s.equals("-timeout")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      cloudFormationTimeoutSeconds=Integer.parseInt(args[i]);
+    }
  else     if (s.equals("-disown")) {
       disown=true;
     }
