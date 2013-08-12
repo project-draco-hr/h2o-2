@@ -20,3 +20,9 @@ def test_parse_1m_cols(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         self.assertEqual(inspect['num_cols'], colCount, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], colCount)))
         self.assertEqual(inspect['num_rows'], rowCount, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], rowCount)))
+        column_limits = [25, 25000, 50000]
+        for column_limit in column_limits:
+            inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], max_column_display=column_limit, timeoutSecs=timeoutSecs)
+            self.assertEqual(len(inspect['cols']), column_limit, ('inspect obeys max_column_display = ' + str(column_limit)))
+            for r in range(0, len(inspect['rows'])):
+                self.assertEqual(len(inspect['rows'][r]), (column_limit + 1), ('inspect data rows obeys max_column_display = ' + str(column_limit)))

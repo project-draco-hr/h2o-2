@@ -1,0 +1,9 @@
+def file_gzip(infile, gzfile):
+    import gzip
+    print '\nGzip-ing', infile, 'to', gzfile
+    in_file = open(infile, 'rb')
+    zipped_file = gzip.open(gzfile, 'wb')
+    zipped_file.writelines(in_file)
+    in_file.close()
+    zipped_file.close()
+    print '\nGzip:', gzfile, 'done'

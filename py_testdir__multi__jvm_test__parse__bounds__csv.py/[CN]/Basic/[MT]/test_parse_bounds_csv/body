@@ -1,0 +1,117 @@
+def test_parse_bounds_csv(self):
+    print 'Random 0/1 for col1. Last has max col = 1, All have zeros for class.'
+    h2b.browseTheCloud()
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(100, 100000, 'cB', 300), (1000, 1000, 'cA', 300), (100, 999, 'cC', 300)]
+    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = ('syn_%s_%s_%s.csv' % (SEEDPERFILE, rowCount, colCount))
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        synSumList = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=timeoutSecs, doSummary=False)
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=timeoutSecs)
+        num_cols = inspect['num_cols']
+        num_rows = inspect['num_rows']
+        row_size = inspect['row_size']
+        value_size_bytes = inspect['value_size_bytes']
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols), '    value_size_bytes:', '{:,}'.format(value_size_bytes), '    row_size:', '{:,}'.format(row_size)
+        expectedRowSize = (num_cols * 1)
+        expectedValueSize = (expectedRowSize * num_rows)
+        self.assertEqual(row_size, expectedRowSize, msg=('row_size %s is not expected num_cols * 1 byte: %s' % (row_size, expectedRowSize)))
+        self.assertEqual(value_size_bytes, expectedValueSize, msg=('value_size_bytes %s is not expected row_size * rows: %s' % (value_size_bytes, expectedValueSize)))
+        iCols = inspect['cols']
+        iColNameToOffset = {}
+        for iColDict in iCols:
+            iName = iColDict['name']
+            iOffset = iColDict['offset']
+            iColNameToOffset[iName] = iOffset
+            num_missing_values = iColDict['num_missing_values']
+            iMin = iColDict['min']
+            iMax = iColDict['max']
+            iMean = iColDict['mean']
+            iVariance = iColDict['variance']
+        summaryResult = h2o_cmd.runSummary(key=key2, timeoutSecs=timeoutSecs)
+        h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
+        self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
+        summary = summaryResult['summary']
+        columnsList = summary['columns']
+        self.assertEqual(colCount, len(columnsList), msg=('generated %s cols (including output).  summary has %s columns' % (colCount, len(columnsList))))
+        for columns in columnsList:
+            name = columns['name']
+            iOffset = iColNameToOffset[name]
+            iColDict = iCols[iOffset]
+            iMin = iColDict['min']
+            iMax = iColDict['max']
+            iMean = iColDict['mean']
+            iVariance = iColDict['variance']
+            iNumMissingValues = iColDict['num_missing_values']
+            N = columns['N']
+            stype = columns['type']
+            histogram = columns['histogram']
+            bin_size = histogram['bin_size']
+            bin_names = histogram['bin_names']
+            bins = histogram['bins']
+            nbins = histogram['nbins']
+            smax = columns['max']
+            smin = columns['min']
+            smean = columns['mean']
+            sigma = columns['sigma']
+            na = columns['na']
+            zeros = columns['zeros']
+            self.assertEqual(iMin, smin[0], ('inspect min %s != summary min %s' % (iMin, smin)))
+            self.assertEqual(iMax, smax[0], ('inspect max %s != summary max %s' % (iMax, smax)))
+            self.assertEqual(iMean, smean, ('inspect mean %s != summary mean %s' % (iMean, smean)))
+            self.assertEqual(iVariance, sigma, ('inspect variance %s != summary sigma %s' % (iVariance, sigma)))
+            self.assertEqual(iNumMissingValues, na, ('inspect num_missing_values %s != summary na %s' % (iNumMissingValues, na)))
+            if (name == 'V1'):
+                synNa = 0
+                synSum = synSumList[1]
+                synZeros = (num_rows - synSum)
+                synSigma = 0.5
+                synMean = ((synSum + 0.0) / num_rows)
+                synMin = [0.0, 1.0]
+                synMax = [1.0, 0.0]
+            elif (name == 'V2'):
+                synSum = 0
+                synSigma = 0
+                synMean = 0
+                if DO_NAN:
+                    synZeros = 0
+                    synNa = num_rows
+                    synMin = []
+                    synMax = []
+                else:
+                    synZeros = num_rows
+                    synNa = 0
+                    synMin = [0.0]
+                    synMax = [0.0]
+            elif (name == ('V' + str((colCount - 1)))):
+                synNa = 0
+                synSum = synSumList[(colCount - 1)]
+                synZeros = (num_rows - 1)
+                synMean = (1.0 / num_rows)
+                synSigma = math.sqrt((pow((synMean - 1), 2) / num_rows))
+                print 'last col with single 1. synSigma:', synSigma
+                synMin = [0.0, 1.0]
+                synMax = [1.0, 0.0]
+            else:
+                synNa = 0
+                synSum = 0
+                synZeros = num_rows
+                synSigma = 0.0
+                synMean = 0.0
+                synMin = [0.0]
+                synMax = [0.0]
+            if DO_MEAN:
+                self.assertAlmostEqual(float(smean), synMean, places=6, msg=('col %s mean %s is not equal to generated mean %s' % (name, smean, synMean)))
+            self.assertTrue((smin >= synMin), msg=('col %s min %s is not >= generated min %s' % (name, smin, synMin)))
+            self.assertTrue((smax <= synMax), msg=('col %s max %s is not <= generated max %s' % (name, smax, synMax)))
+            if ((name == 'V65536') or (name == 'V65537')):
+                print 'columns around possible zeros mismatch:', h2o.dump_json(columns)
+            self.assertEqual(na, synNa, msg=('col %s na %s is not equal to generated na %s' % (name, na, synNa)))
+            self.assertEqual(zeros, synZeros, msg=('col %s zeros %s is not equal to generated zeros %s' % (name, zeros, synZeros)))
+            self.assertEqual(stype, 'number', msg=('col %s type %s is not equal to %s' % (name, stype, 'number')))
+            if synSigma:
+                self.assertAlmostEqual(float(sigma), synSigma, delta=0.03, msg=('col %s sigma %s is not equal to generated sigma %s' % (name, sigma, synSigma)))

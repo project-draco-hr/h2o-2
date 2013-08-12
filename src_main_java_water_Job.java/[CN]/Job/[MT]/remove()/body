@@ -6,7 +6,7 @@
       Job[] jobs=old._jobs;
       for (int i=0; i < jobs.length; i++) {
         if (jobs[i].job_key.equals(job_key)) {
-          if (jobs[i]._endTime != CANCELLED_END_TIME)           jobs[i]._endTime=System.currentTimeMillis();
+          if (jobs[i].end_time != CANCELLED_END_TIME)           jobs[i].end_time=System.currentTimeMillis();
           break;
         }
       }
@@ -15,8 +15,8 @@
         long min=Long.MAX_VALUE;
         int n=-1;
         for (int i=0; i < jobs.length; i++) {
-          if (jobs[i]._endTime != 0 && jobs[i]._startTime < min) {
-            min=jobs[i]._startTime;
+          if (jobs[i].end_time != 0 && jobs[i].start_time < min) {
+            min=jobs[i].start_time;
             n=i;
           }
         }

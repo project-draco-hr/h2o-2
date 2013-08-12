@@ -1,0 +1,27 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    rowData = ['Target']
+    rowData.extend([('V' + str(i)) for i in range(1, colCount)])
+    rowDataCsv = ','.join(rowData)
+    dsf.write((rowDataCsv + '\n'))
+    synSumList = [0 for i in range(colCount)]
+    for i in range(rowCount):
+        rowData = []
+        for j in range(colCount):
+            if (j == 1):
+                ri = random.randint(0, 1)
+                synSumList[j] += ri
+                ri = str(ri)
+            elif (j == 2):
+                ri = ('' if DO_NAN else '0')
+            elif ((j == (colCount - 1)) and (i == (rowCount - 1))):
+                synSumList[j] += 1
+                ri = '1'
+            else:
+                ri = '0'
+            rowData.append(ri)
+        rowDataCsv = ','.join(rowData)
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
+    return synSumList

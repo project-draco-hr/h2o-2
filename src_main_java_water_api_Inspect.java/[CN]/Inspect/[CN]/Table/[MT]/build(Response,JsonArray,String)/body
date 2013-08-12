@@ -1,45 +1,45 @@
 {
   StringBuilder sb=new StringBuilder();
-  if (_va._cols.length > MAX_COLUMNS_TO_DISPLAY)   sb.append("<p style='text-align:center;'><center><h5 style='font-weight:800; color:red;'>Columns trimmed to " + MAX_COLUMNS_TO_DISPLAY + "</h5></center></p>");
+  if (_va._cols.length > _max_columns)   sb.append("<p style='text-align:center;'><center><h5 style='font-weight:800; color:red;'>Columns trimmed to " + _max_columns + "</h5></center></p>");
   if (array.size() == 0) {
     array=new JsonArray();
     JsonObject fake=new JsonObject();
     fake.addProperty(ROW,0);
-    for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); ++i)     format(fake,_va,0,i);
+    for (int i=0; i < _max_columns; ++i)     format(fake,_va,0,i);
     array.add(fake);
   }
   sb.append(header(array));
   JsonObject row=new JsonObject();
   row.addProperty(ROW,MIN);
-  for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._min);
+  for (int i=0; i < _max_columns; i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._min);
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   row.addProperty(ROW,MAX);
-  for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._max);
+  for (int i=0; i < _max_columns; i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._max);
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   row.addProperty(ROW,MEAN);
-  for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._mean);
+  for (int i=0; i < _max_columns; i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._mean);
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   row.addProperty(ROW,VARIANCE);
-  for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._sigma);
+  for (int i=0; i < _max_columns; i++)   row.addProperty(_va._cols[i]._name,_va._cols[i]._sigma);
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   row.addProperty(ROW,NUM_MISSING_VALUES);
-  for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)   row.addProperty(_va._cols[i]._name,_va._numrows - _va._cols[i]._n);
+  for (int i=0; i < _max_columns; i++)   row.addProperty(_va._cols[i]._name,_va._numrows - _va._cols[i]._n);
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   if (_offset == INFO_PAGE) {
     row.addProperty(ROW,OFFSET);
     for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._off);
     sb.append(defaultBuilder(row).build(response,row,contextName));
     row.addProperty(ROW,SIZE);
-    for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)     row.addProperty(_va._cols[i]._name,Math.abs(_va._cols[i]._size));
+    for (int i=0; i < _max_columns; i++)     row.addProperty(_va._cols[i]._name,Math.abs(_va._cols[i]._size));
     sb.append(defaultBuilder(row).build(response,row,contextName));
     row.addProperty(ROW,BASE);
-    for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._base);
+    for (int i=0; i < _max_columns; i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._base);
     sb.append(defaultBuilder(row).build(response,row,contextName));
     row.addProperty(ROW,SCALE);
-    for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)     row.addProperty(_va._cols[i]._name,(int)_va._cols[i]._scale);
+    for (int i=0; i < _max_columns; i++)     row.addProperty(_va._cols[i]._name,(int)_va._cols[i]._scale);
     sb.append(defaultBuilder(row).build(response,row,contextName));
     row.addProperty(ROW,ENUM_DOMAIN_SIZE);
-    for (int i=0; i < Math.min(MAX_COLUMNS_TO_DISPLAY,_va._cols.length); i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._domain != null ? _va._cols[i]._domain.length : 0);
+    for (int i=0; i < _max_columns; i++)     row.addProperty(_va._cols[i]._name,_va._cols[i]._domain != null ? _va._cols[i]._domain.length : 0);
     sb.append(defaultBuilder(row).build(response,row,contextName));
   }
  else {
@@ -50,6 +50,6 @@
     }
   }
   sb.append(footer(array));
-  if (_va._cols.length > MAX_COLUMNS_TO_DISPLAY)   sb.append("<p style='text-align:center;'><center><h5 style='font-weight:800; color:red;'>Columns trimmed to " + MAX_COLUMNS_TO_DISPLAY + "</h5></center></p>");
+  if (_va._cols.length > _max_columns)   sb.append("<p style='text-align:center;'><center><h5 style='font-weight:800; color:red;'>Columns trimmed to " + _max_columns + "</h5></center></p>");
   return sb.toString();
 }

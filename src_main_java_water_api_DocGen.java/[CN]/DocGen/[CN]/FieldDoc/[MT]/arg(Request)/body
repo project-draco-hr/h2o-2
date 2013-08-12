@@ -3,15 +3,20 @@
   Class clzz=R.getClass();
   while (true) {
     try {
-      Object o=clzz.getDeclaredField(_name).get(R);
+      Field field=clzz.getDeclaredField(_name);
+      field.setAccessible(true);
+      Object o=field.get(R);
       return _arg=((RequestArguments.Argument)o);
     }
  catch (    NoSuchFieldException ie) {
       clzz=clzz.getSuperclass();
     }
 catch (    IllegalAccessException ie) {
-      ie.printStackTrace();
-      return null;
+      break;
+    }
+catch (    ClassCastException ie) {
+      break;
     }
   }
+  return null;
 }

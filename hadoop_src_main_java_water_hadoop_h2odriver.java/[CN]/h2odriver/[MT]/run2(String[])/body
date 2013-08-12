@@ -65,7 +65,11 @@
   ctrlc=new CtrlCHandler();
   Runtime.getRuntime().addShutdownHook(ctrlc);
   System.out.printf("Waiting for H2O cluster to come up...\n",numNodes);
-  waitForClusterToComeUp();
+  int rv=waitForClusterToComeUp();
+  if (rv != 0) {
+    System.out.println("ERROR: H2O cluster failed to come up");
+    return rv;
+  }
   if (job.isComplete()) {
     System.out.println("ERROR: H2O cluster failed to come up");
     ctrlc.setComplete();
@@ -73,10 +77,12 @@
   }
   System.out.printf("H2O cluster (%d nodes) is up\n",numNodes);
   if (disown) {
+    Thread.sleep(CLOUD_FORMATION_SETTLE_DOWN_SECONDS);
     System.out.println("Disowning cluster and exiting.");
     Runtime.getRuntime().removeShutdownHook(ctrlc);
     return 0;
   }
+  System.out.println("(Note: Use the -disown option to exit the driver after cluster formation)");
   System.out.println("(Press Ctrl-C to kill the cluster)");
   System.out.println("Blocking until the H2O cluster shuts down...");
   waitForClusterToShutdown();

@@ -16,16 +16,28 @@
   if (docs == null)   return bodyTail(sb).toString();
   section(sb,"Input parameters");
   listHead(sb);
-  for (  FieldDoc doc : docs)   if (doc.isArg()) {
-    listBullet(sb,bold(doc._name) + ", " + doc.argHelp(R),doc._help + doc.version(),0);
-    String[] errors=doc.errors(R);
-    if (errors != null || doc.required(R)) {
-      paragraph(sb,"");
-      paragraph(sb,bold("Possible JSON error field returns:"));
-      listHead(sb);
-      if (errors != null)       for (      String err : errors)       listBullet(sb,doc.argErr() + err,"",1);
-      if (doc.required(R))       listBullet(sb,doc.argErr() + "Argument '" + doc._name+ "' is required, but not specified","",1);
-      listTail(sb);
+  for (  FieldDoc doc : docs) {
+    if (doc.isInput()) {
+      Argument arg=doc.arg(R);
+      String help=doc._help;
+      boolean required=doc._required;
+      String[] errors=null;
+      if (arg != null) {
+        String description=arg.queryDescription();
+        if (description != null && description.length() != 0)         help=description;
+        required|=arg._required;
+        errors=arg.errors();
+      }
+      listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),help + ".  " + doc.version(),0);
+      if (errors != null || required) {
+        paragraph(sb,"");
+        paragraph(sb,bold("Possible JSON error field returns:"));
+        listHead(sb);
+        String argErr="Argument '" + doc._name + "' error: ";
+        if (errors != null)         for (        String err : errors)         listBullet(sb,argErr + err,"",1);
+        if (required)         listBullet(sb,argErr + "Argument '" + doc._name+ "' is required, but not specified","",1);
+        listTail(sb);
+      }
     }
   }
   listTail(sb);
