@@ -5,5 +5,9 @@
     ByteVec vec=get();
     return vec.elem2BV(0).getBytes();
   }
+ else   if (isFrame()) {
+    Frame fr=get();
+    return ((ByteVec)fr._vecs[0]).elem2BV(0).getBytes();
+  }
   return v != null ? v.memOrLoad() : new byte[0];
 }

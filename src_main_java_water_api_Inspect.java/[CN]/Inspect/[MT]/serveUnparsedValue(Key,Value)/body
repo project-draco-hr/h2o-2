@@ -1,7 +1,9 @@
 {
   JsonObject result=new JsonObject();
   result.addProperty(VALUE_TYPE,"unparsed");
-  CustomParser.ParserSetup setup=ParseDataset.guessSetup(getFirstBytes(v));
+  byte[] bits=v.getFirstBytes();
+  bits=Utils.unzipBytes(bits,Utils.guessCompressionMethod(bits));
+  CustomParser.ParserSetup setup=ParseDataset.guessSetup(bits);
   if (setup._data != null && setup._data[1].length > 0) {
     int zipped_len=v.getFirstBytes().length;
     double bytes_per_row=(double)zipped_len / setup._data.length;
