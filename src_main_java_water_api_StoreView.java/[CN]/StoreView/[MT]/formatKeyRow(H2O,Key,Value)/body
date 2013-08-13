@@ -38,13 +38,14 @@
     }
   }
   if (rows == -1) {
-    byte[] bits=val.getFirstBytes();
+    byte[] bits=Utils.getFirstUnzipedBytes(val);
     CustomParser.ParserSetup setup=ParseDataset.guessSetup(bits);
-    if (setup._data != null && setup._data[1].length > 0) {
+    System.out.println("setup of " + val._key + ": "+ Arrays.toString(setup._data[0]));
+    if (setup._data != null && setup._ncols > 0) {
       int zipped_len=val.getFirstBytes().length;
       double bytes_per_row=(double)zipped_len / setup._data.length;
       rows=(long)(val.length() / bytes_per_row);
-      cols=setup._data[1].length;
+      cols=setup._ncols;
       result.addProperty(ROWS,"~" + rows);
       result.addProperty(COLS,cols);
       final int len=setup._data.length;
