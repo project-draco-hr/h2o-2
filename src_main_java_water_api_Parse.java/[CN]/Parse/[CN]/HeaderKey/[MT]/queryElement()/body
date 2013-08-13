@@ -1,0 +1,10 @@
+{
+  String[] colnames=_source.value()._setup._columnNames;
+  StringBuilder sb=new StringBuilder(super.queryElement() + "\n");
+  if (colnames != null) {
+    sb.append("<table class='table table-striped table-bordered'>").append("<tr><th>Header:</th>");
+    for (    String s : colnames)     sb.append("<th>").append(s).append("</th>");
+    sb.append("</tr></table>");
+  }
+  return sb.toString();
+}
