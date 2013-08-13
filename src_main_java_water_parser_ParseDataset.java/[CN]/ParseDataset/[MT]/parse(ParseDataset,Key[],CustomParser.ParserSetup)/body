@@ -1,4 +1,5 @@
 {
+  if (setup == null)   setup=guessSetup(Utils.getFirstUnzipedBytes(keys[0]));
   int j=0;
   UKV.remove(job.dest());
   Key[] nonEmptyKeys=new Key[keys.length];
@@ -11,20 +12,20 @@
     job.cancel();
     return;
   }
-  Value v=DKV.get(keys[0]);
-  DParseTask p1=tryParseXls(v,job);
-  if (p1 != null) {
-    if (keys.length == 1) {
-      DParseTask p2=p1.createPassTwo();
-      p2.passTwo();
-      p2.createValueArrayHeader();
-      job.remove();
-      return;
+  if (setup == null || setup._pType == ParserType.XLS) {
+    DParseTask p1=tryParseXls(DKV.get(keys[0]),job);
+    if (p1 != null) {
+      if (keys.length == 1) {
+        DParseTask p2=p1.createPassTwo();
+        p2.passTwo();
+        p2.createValueArrayHeader();
+        job.remove();
+        return;
+      }
+ else       throw H2O.unimpl();
     }
- else     throw H2O.unimpl();
   }
-  Compression compression=guessCompressionMethod(v);
-  if (setup == null || setup._pType == CustomParser.ParserType.AUTO)   setup=ParseDataset.guessSetup(Inspect.getFirstBytes(v));
+  Compression compression=Utils.guessCompressionMethod(DKV.get(keys[0]).getFirstBytes());
   try {
     UnzipAndParseTask tsk=new UnzipAndParseTask(job,compression,setup);
     tsk.invoke(keys);
@@ -59,6 +60,7 @@
     }
     phaseTwo.normalizeSigma();
     phaseTwo._colNames=setup._columnNames;
+    if (setup._header)     phaseTwo.setColumnNames(setup._columnNames);
     phaseTwo.createValueArrayHeader();
   }
  catch (  Throwable e) {

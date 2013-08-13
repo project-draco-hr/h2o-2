@@ -1,0 +1,38 @@
+{
+  String[] colNames=null;
+  CustomParser.ParserSetup gSetup=null, hSetup=null;
+  if (headerKey != null) {
+    Value v=DKV.get(headerKey);
+    if (!v.isRawData()) {
+      if (v.isArray()) {
+        ValueArray ary=v.get();
+        colNames=ary.colNames();
+      }
+ else       if (v.isFrame()) {
+        Frame fr=v.get();
+        colNames=fr._names;
+      }
+ else       throw new IllegalArgumentException("Headers can only come from unparsed data, ValueArray or a frame. Got " + v.newInstance().getClass().getSimpleName());
+    }
+ else {
+      hSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(headerKey),setup,checkHeader);
+      if (hSetup._data != null && hSetup._data.length > 1) {
+        if (!keys.contains(headerKey))         throw new IllegalArgumentException("Header file must either be part of the parse or contain only header (no data!).");
+        gSetup=hSetup;
+      }
+      colNames=hSetup._columnNames;
+    }
+  }
+  if (gSetup == null) {
+    Key k=keys.get(0);
+    if (headerKey != null && k.equals(headerKey) && keys.size() > 1)     k=keys.get(1);
+    gSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(k),new CustomParser.ParserSetup(),checkHeader && headerKey == null);
+    if (colNames.length != gSetup._ncols)     throw new IllegalArgumentException("number of columns in the header file and the parsed files don't match!");
+  }
+  if (colNames != null) {
+    gSetup._header=true;
+    gSetup._columnNames=colNames;
+  }
+ else   gSetup._header=false;
+  return gSetup;
+}
