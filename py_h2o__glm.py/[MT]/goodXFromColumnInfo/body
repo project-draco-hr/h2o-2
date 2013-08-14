@@ -1,7 +1,7 @@
 def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120, forRF=False, noPrint=False):
     y = str(y)
     if (key is not None):
-        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(key, exceptionOnMissingValues=False, timeoutSecs=timeoutSecs)
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(key, exceptionOnMissingValues=False, max_column_display=99999999, timeoutSecs=timeoutSecs)
         num_cols = len(colNameDict)
     if (keepPattern is not None):
         keepX = re.compile(keepPattern)
