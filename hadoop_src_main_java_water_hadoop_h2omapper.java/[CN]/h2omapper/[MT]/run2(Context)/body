@@ -16,7 +16,7 @@
   InetSocketAddress sa=new InetSocketAddress("127.0.0.1",0);
   ss.bind(sa);
   String localPortString=Integer.toString(ss.getLocalPort());
-  String[] args={"-ice_root",ice_root,"-name",jobtrackerName,"-driverip",driverIp,"-driverport",driverPortString,"-mapperport",localPortString,"-inherit_log4j"};
+  String[] args={"-ice_root",ice_root,"-name",jobtrackerName,"-hdfs_skip","-driverip",driverIp,"-driverport",driverPortString,"-mapperport",localPortString};
   context.write(textId,new Text("before water.Boot.main()"));
   try {
     Log.POST(11,"Before boot");

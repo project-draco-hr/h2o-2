@@ -1,17 +1,31 @@
-def pollWaitJobs(pattern=None, timeoutSecs=30, pollTimeoutSecs=30, retryDelaySecs=5, benchmarkLogging=None):
+def pollWaitJobs(pattern=None, timeoutSecs=30, pollTimeoutSecs=30, retryDelaySecs=5, benchmarkLogging=None, stallForNJobs=(-1)):
     anyBusy = True
     waitTime = 0
     while anyBusy:
+        patternKeys = []
         anyBusy = False
         a = h2o.nodes[0].jobs_admin(timeoutSecs=pollTimeoutSecs)
         jobs = a['jobs']
-        patternKeys = []
+        stall = (-1)
+        if (stallForNJobs != (-1)):
+            stall = 0
+            for j in jobs:
+                stall += (1 if (j['end_time'] == '') else 0)
+            if (stall <= stallForNJobs):
+                break
+            print str(stall), ' jobs in progress.', 'Waiting to poll on ', str(stallForNJobs), ' jobs.'
         for j in jobs:
             if (pattern and (pattern in j['destination_key'])):
                 patternKeys.append(j['destination_key'])
             if (j['end_time'] == ''):
                 anyBusy = True
                 h2o.verboseprint('waiting', waitTime, 'secs, still not done - ', 'destination_key:', j['destination_key'], 'progress:', j['progress'], 'cancelled:', j['cancelled'], 'end_time:', j['end_time'])
+            elif (stallForNJobs != (-1)):
+                stall -= 1
+                if (stall <= stallForNJobs):
+                    anyBusy = False
+                    break
+                print str(stall), ' jobs in progress.', 'Waiting to poll on ', str(stallForNJobs), ' jobs.'
         if (anyBusy and (waitTime > timeoutSecs)):
             print h2o.dump_json(jobs)
             raise Exception("Some queued jobs haven't completed after", timeoutSecs, 'seconds')
