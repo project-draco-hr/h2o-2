@@ -24,10 +24,11 @@ def test_parse_multi_header_single(self):
             totalDataRows += dataRowsDone
         key = ('syn_' + str(trial))
         key2 = (('syn_' + str(trial)) + '.hex')
-        h2o.nodes[0].import_files(SYNDATASETS_DIR)
-        print "Don't force header or comma selection"
+        xs = h2o.nodes[0].import_files(SYNDATASETS_DIR)['keys']
+        header = [x for x in xs if ('header' in x)][0]
+        print ('Header Key = ' + header)
         start = time.time()
-        parseKey = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs)
+        parseKey = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
         print ("parseKey['destination_key']: " + parseKey['destination_key'])
         print 'parse time:', parseKey['response']['time']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])

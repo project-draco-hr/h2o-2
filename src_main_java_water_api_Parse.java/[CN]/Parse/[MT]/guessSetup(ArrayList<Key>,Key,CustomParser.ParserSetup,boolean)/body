@@ -16,9 +16,10 @@
     }
  else {
       hSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(headerKey),setup,checkHeader);
-      if (hSetup._data != null && hSetup._data.length > 1) {
-        if (!keys.contains(headerKey))         throw new IllegalArgumentException("Header file must either be part of the parse or contain only header (no data!).");
-        gSetup=hSetup;
+      if (setup._pType != CustomParser.ParserType.AUTO && hSetup._ncols != setup._ncols && hSetup._data.length == 1)       hSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(headerKey),new CustomParser.ParserSetup(),checkHeader);
+ else       if (hSetup._data != null && hSetup._data.length > 1) {
+        if (keys.contains(headerKey))         gSetup=hSetup;
+ else         throw new IllegalArgumentException(headerKey + " can not be used as a header file. Please either parse it separately first or include the file in the parse. Raw (unparsed) files can only be used as headers if they are included in the parse or they contain ONLY the header and NO DATA.");
       }
       colNames=hSetup._columnNames;
     }
