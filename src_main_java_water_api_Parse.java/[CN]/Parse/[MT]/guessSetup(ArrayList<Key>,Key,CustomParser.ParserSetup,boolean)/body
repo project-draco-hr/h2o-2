@@ -1,6 +1,6 @@
 {
   String[] colNames=null;
-  CustomParser.ParserSetup gSetup=null, hSetup=null;
+  CustomParser.PSetupGuess gSetup=null, hSetup=null;
   if (headerKey != null) {
     Value v=DKV.get(headerKey);
     if (!v.isRawData()) {
@@ -16,24 +16,24 @@
     }
  else {
       hSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(headerKey),setup,checkHeader);
-      if (setup._pType != CustomParser.ParserType.AUTO && hSetup._ncols != setup._ncols && hSetup._data.length == 1)       hSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(headerKey),new CustomParser.ParserSetup(),checkHeader);
- else       if (hSetup._data != null && hSetup._data.length > 1) {
+      if (hSetup == null || hSetup._setup._ncols != setup._ncols)       hSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(headerKey),new CustomParser.ParserSetup(),checkHeader);
+ else       if (hSetup._setup._data != null && hSetup._setup._data.length > 1) {
         if (keys.contains(headerKey))         gSetup=hSetup;
  else         throw new IllegalArgumentException(headerKey + " can not be used as a header file. Please either parse it separately first or include the file in the parse. Raw (unparsed) files can only be used as headers if they are included in the parse or they contain ONLY the header and NO DATA.");
       }
-      colNames=hSetup._columnNames;
+      if (hSetup != null)       colNames=hSetup._setup._columnNames;
     }
   }
   if (gSetup == null) {
     Key k=keys.get(0);
     if (headerKey != null && k.equals(headerKey) && keys.size() > 1)     k=keys.get(1);
-    gSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(k),new CustomParser.ParserSetup(),checkHeader && headerKey == null);
-    if (colNames.length != gSetup._ncols)     throw new IllegalArgumentException("number of columns in the header file and the parsed files don't match!");
+    gSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(k),setup,checkHeader && headerKey == null);
+    if (gSetup == null)     throw new IllegalArgumentException(setup._pType == water.parser.CustomParser.ParserType.AUTO ? "Does not recognize the type of " + k : "File " + k + " is not in "+ setup._pType+ " format.");
+    if (colNames != null && colNames.length != gSetup._setup._ncols)     throw new IllegalArgumentException("number of columns in the header file and the parsed files don't match!");
   }
   if (colNames != null) {
-    gSetup._header=true;
-    gSetup._columnNames=colNames;
+    gSetup._setup._header=true;
+    gSetup._setup._columnNames=colNames;
   }
- else   gSetup._header=false;
   return gSetup;
 }

@@ -3,6 +3,6 @@
   ByteVec v=(ByteVec)getVec(k);
   byte[] bits=v.elem2BV(0)._mem;
   Compression cpr=Utils.guessCompressionMethod(bits);
-  CustomParser.ParserSetup globalSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),new ParserSetup(),true);
+  CustomParser.ParserSetup globalSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),new ParserSetup(),true)._setup;
   return forkParseDataset(okey,keys,globalSetup).get();
 }

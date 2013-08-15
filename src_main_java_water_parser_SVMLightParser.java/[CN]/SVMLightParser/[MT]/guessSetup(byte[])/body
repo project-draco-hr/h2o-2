@@ -8,5 +8,5 @@
  catch (  Exception e) {
     throw new RuntimeException(e);
   }
-  return (dout._ncols > 1 && dout._nlines > 0 && (double)dout._invalidLines / dout._nlines < 0.1) ? new ParserSetup(ParserType.SVMLight,CsvParser.AUTO_SEP,false,dout.data()) : null;
+  return new PSetupGuess(new ParserSetup(ParserType.SVMLight,CsvParser.AUTO_SEP,false,dout.data()),dout._nlines,dout._invalidLines,dout.errors());
 }

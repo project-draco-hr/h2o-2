@@ -21,11 +21,27 @@
     }
     if (lines.size() == 1)     data[0]=determineTokens(lines.get(0),sep);
     boolean hasHeader=(checkHeader && allStrings(data[0])) || setup._header;
-    return new ParserSetup(ParserType.CSV,sep,hasHeader,data);
+    return new PSetupGuess(new ParserSetup(ParserType.CSV,sep,hasHeader,data),lines.size(),0,null);
   }
   byte sep=setup._separator;
   if (setup._separator == AUTO_SEP)   sep=guessSeparator(lines.get(0),lines.get(1));
   for (int i=0; i < lines.size(); ++i)   data[i]=determineTokens(lines.get(i),sep);
   boolean hasHeader=(checkHeader && hasHeader(data[0],data[1])) || setup._header;
-  return new ParserSetup(ParserType.CSV,sep,hasHeader,data);
+  ParserSetup resSetup=new ParserSetup(ParserType.CSV,sep,hasHeader,data);
+  ArrayList<String> errors=new ArrayList<String>();
+  int ilines=0;
+  int start=hasHeader ? 1 : 0;
+  OUTER:   for (int i=start; i < data.length; ++i) {
+    if (data[i].length != resSetup._ncols) {
+      errors.add("error at line " + i + " : incompatoble line length. Got "+ data[i].length+ " columns.");
+      ++ilines;
+      continue;
+    }
+  }
+  String[] err=null;
+  if (!errors.isEmpty()) {
+    err=new String[errors.size()];
+    errors.toArray(err);
+  }
+  return new PSetupGuess(new ParserSetup(ParserType.CSV,sep,hasHeader,data),lines.size(),ilines,err);
 }

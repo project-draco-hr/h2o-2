@@ -1,6 +1,6 @@
 {
   _keys=keys;
-  if (_parserSetup == null)   _parserSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(keys[0]));
+  if (_parserSetup == null)   _parserSetup=ParseDataset.guessSetup(Utils.getFirstUnzipedBytes(keys[0]))._setup;
   H2O.submitTask(this);
   return this;
 }
