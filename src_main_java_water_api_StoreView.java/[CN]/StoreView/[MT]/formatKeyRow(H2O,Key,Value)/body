@@ -65,7 +65,8 @@
   }
   if (rows == -1) {
     byte[] bits=Utils.getFirstUnzipedBytes(val);
-    CustomParser.ParserSetup setup=ParseDataset.guessSetup(bits);
+    PSetupGuess sguess=ParseDataset.guessSetup(bits);
+    CustomParser.ParserSetup setup=(sguess != null) ? sguess._setup : null;
     if (setup != null && setup._data != null && setup._ncols > 0) {
       int zipped_len=val.getFirstBytes().length;
       double bytes_per_row=(double)zipped_len / setup._data.length;

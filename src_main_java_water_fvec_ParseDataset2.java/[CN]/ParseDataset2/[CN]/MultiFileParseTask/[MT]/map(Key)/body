@@ -2,7 +2,7 @@
   ByteVec vec=(ByteVec)getVec(key);
   byte[] bits=vec.elem2BV(0)._mem;
   Compression cpr=Utils.guessCompressionMethod(bits);
-  CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,true);
+  CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,true)._setup;
   if (!_setup.isCompatible(localSetup)) {
     _parserr="Conflicting file layouts, expecting: " + _setup + " but found "+ localSetup;
     return;

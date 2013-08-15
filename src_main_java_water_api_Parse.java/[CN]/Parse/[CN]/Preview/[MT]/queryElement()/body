@@ -1,13 +1,19 @@
 {
   String[][] data=null;
   PSetup psetup=_source.value();
-  StringBuilder sb=new StringBuilder("<div class='alert'>" + psetup._setup.toString() + "</div>");
-  if (psetup._setup != null)   data=psetup._setup._data;
-  String[] header=psetup._setup._columnNames;
+  String[] err=psetup._setup._errors;
+  boolean hasErrors=err != null && err.length > 0;
+  boolean parsedOk=psetup._setup.valid();
+  String parseMsgType=hasErrors ? parsedOk ? "warning" : "error" : "success";
+  StringBuilder sb=new StringBuilder("<div class='alert alert-" + parseMsgType + "'><b>"+ psetup._setup.toString()+ "</b>");
+  if (hasErrors)   for (  String s : err)   sb.append("<div>" + s + "</div>");
+  sb.append("</div>");
+  if (psetup._setup != null)   data=psetup._setup._setup._data;
+  String[] header=psetup._setup._setup._columnNames;
   if (data != null) {
     sb.append("<table class='table table-striped table-bordered'>");
     int j=0;
-    if (psetup._setup._header && header != null) {
+    if (psetup._setup._setup._header && header != null) {
       sb.append("<tr><th>Row#</th>");
       for (      String s : header)       sb.append("<th>").append(s).append("</th>");
       sb.append("</tr>");
