@@ -1,6 +1,6 @@
 def run_rf(files, configs, s3n):
     overallWallStart = time.time()
-    importFolderPath = '/home/0xdiag/datasets/mnist'
+    importFolderPath = '/home/0xdiag/datasets/mnist/mnist8m'
     importFolderResult = h2i.setupImportFolder(None, importFolderPath)
     output = None
     if (not os.path.exists('rfbench.csv')):
@@ -9,7 +9,6 @@ def run_rf(files, configs, s3n):
     else:
         output = open('rfbench.csv', 'a')
     csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
-    csvWrt.writeheader()
     try:
         java_heap_GB = h2o.nodes[0].java_heap_GB
         trainParseWallStart = time.time()
@@ -19,7 +18,7 @@ def run_rf(files, configs, s3n):
         parseKey = h2i.parseImportFolderFile(None, csvPathname, importFolderPath, key2=destKey, timeoutSecs=300, retryDelaySecs=5, pollTimeoutSecs=120)
         trainParseWallTime = (time.time() - trainParseWallStart)
         inspect = h2o.nodes[0].inspect(parseKey['destination_key'])
-        row = {'java_heap_GB': java_heap_GB, 'dataset': 'mnist8m', 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'trainParseWallTime': trainParseWallTime, }
+        row = {'java_heap_GB': java_heap_GB, 'dataset': 'mnist8m', 'nTrainRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'trainParseWallTime': trainParseWallTime, }
         kwargs = configs.copy()
         trainRFStart = time.time()
         rfView = h2o_cmd.runRFOnly(parseKey=parseKey, rfView=True, timeoutSecs=3600, pollTimeoutSecs=60, retryDelaySecs=2, **kwargs)
@@ -28,21 +27,26 @@ def run_rf(files, configs, s3n):
         h2o_rf.simpleCheckRFView(None, rfView, **kwargs)
         modelKey = rfView['model_key']
         testParseWallStart = time.time()
-        print 'Testing file is: ', file['test']
+        print 'Testing file is: ', files['test']
         csvPathname = files['test']
         destKey = (files['test'] + '.hex')
         parseKey = h2i.parseImportFolderFile(None, csvPathname, importFolderPath, key2=destKey, timeoutSecs=300, retryDelaySecs=5, pollTimeoutSecs=120)
         testParseWallTime = (time.time() - testParseWallStart)
+        inspect = h2o.nodes[0].inspect(parseKey['destination_key'])
+        row.update({'nTestRows': inspect['num_rows'], })
         row.update({'testParseWallTime': testParseWallTime, })
         modelKey = rfView['model_key']
         kwargs = configs.copy()
         testRFStart = time.time()
-        rfView = h2o_cmd.runRFView(data_key=destKey, model_key=modelKey, ntree=10, timeoutSecs=180, doSimpleCheck=False, **kwargs)
+        kwargs.update({'model_key': modelKey, 'ntree': 10, })
+        rfView = h2o_cmd.runRFView(data_key=destKey, timeoutSecs=180, doSimpleCheck=False, **kwargs)
         testViewTime = (time.time() - testRFStart)
-        errRate = rfView['classification_error']
+        pprint(rfView)
+        errRate = rfView['confusion_matrix']['classification_error']
         row.update({'testViewTime': testViewTime, })
         overallWallTime = (time.time() - overallWallStart)
         row.update({'overallWallTime': overallWallTime, })
-        row.uodate({'errRate': errRate, })
+        row.update({'errRate': errRate, })
+        csvWrt.writerow(row)
     finally:
         output.close()
