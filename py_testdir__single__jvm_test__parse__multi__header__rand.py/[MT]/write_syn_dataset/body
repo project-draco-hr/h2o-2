@@ -1,12 +1,13 @@
 def write_syn_dataset(csvPathname, rowCount, headerString, rList, commentFirst=False, sepChar=','):
     commentDone = False
     dsf = open(csvPathname, 'w+')
+    headerRowsDone = 0
     if (headerString is not None):
         if (commentFirst and (not commentDone)):
             h = ('# ' + headerString)
             commentDone = True
-        else:
-            h = headerString
+        h = headerString
+        headerRowsDone += 1
         dsf.write((h + '\n'))
     if (rowCount is not None):
         for i in range(rowCount):
@@ -16,6 +17,6 @@ def write_syn_dataset(csvPathname, rowCount, headerString, rList, commentFirst=F
                 commentDone = True
             dsf.write((r + '\n'))
         dsf.close()
-        return rowCount
+        return (headerRowsDone, rowCount)
     else:
-        return 0
+        return (headerRowsDone, 0)

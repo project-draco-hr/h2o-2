@@ -11,17 +11,14 @@ def test_parse_multi_header_rand(self):
         rowxcol = ((str(rowCount) + 'x') + str(colCount))
         totalCols = (colCount + 1)
         totalDataRows = 0
+        totalHeaderRows = 0
         HEADER_HAS_HEADER = random.randint(0, 1)
         DATA_HAS_HEADER = random.randint(0, 1)
-        CREATE_HEADER_FILE = random.randint(0, 1)
-        CREATE_DATA_FILE = 1
         DATA_FIRST_IS_COMMENT = random.randint(0, 1)
         HEADER_FIRST_IS_COMMENT = random.randint(0, 1)
         SEP_CHAR_GEN = random.choice([',', '\t', ' '])
         print '\nHEADER_HAS_HEADER:', HEADER_HAS_HEADER
         print 'DATA_HAS_HEADER:', DATA_HAS_HEADER
-        print 'CREATE_HEADER_FILE:', CREATE_HEADER_FILE
-        print 'CREATE_DATA_FILE:', CREATE_DATA_FILE
         print 'DATA_FIRST_IS_COMMENT:', DATA_FIRST_IS_COMMENT
         print 'HEADER_FIRST_IS_COMMENT:', HEADER_FIRST_IS_COMMENT
         print 'SEP_CHAR_GEN:', SEP_CHAR_GEN
@@ -41,38 +38,33 @@ def test_parse_multi_header_rand(self):
             kwargs[k] = aChoice
         if kwargs['separator']:
             kwargs['separator'] = ord(SEP_CHAR_GEN)
-        if CREATE_DATA_FILE:
-            for fileN in range(fileNum):
-                csvFilename = (((((('syn_data_' + str(fileN)) + '_') + str(SEED)) + '_') + rowxcol) + '.csv')
-                csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-                rList = rand_rowData(colCount, sepChar=SEP_CHAR_GEN)
-                dataRowsDone = write_syn_dataset(csvPathname, rowCount, headerString=(headerForData if DATA_HAS_HEADER else None), rList=rList, commentFirst=DATA_FIRST_IS_COMMENT, sepChar=SEP_CHAR_GEN)
-                totalDataRows += dataRowsDone
-        if CREATE_HEADER_FILE:
-            hdrFilename = (((('syn_header_' + str(SEED)) + '_') + rowxcol) + '.csv')
-            hdrPathname = ((SYNDATASETS_DIR + '/') + hdrFilename)
-            dataRowsDone = write_syn_dataset(hdrPathname, dataRowsWithHeader, headerString=(headerForHeader if HEADER_HAS_HEADER else None), rList=rList, commentFirst=HEADER_FIRST_IS_COMMENT, sepChar=SEP_CHAR_GEN)
+        for fileN in range(fileNum):
+            csvFilename = (((((('syn_data_' + str(fileN)) + '_') + str(SEED)) + '_') + rowxcol) + '.csv')
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            rList = rand_rowData(colCount, sepChar=SEP_CHAR_GEN)
+            (headerRowsDone, dataRowsDone) = write_syn_dataset(csvPathname, rowCount, headerString=(headerForData if DATA_HAS_HEADER else None), rList=rList, commentFirst=DATA_FIRST_IS_COMMENT, sepChar=SEP_CHAR_GEN)
             totalDataRows += dataRowsDone
+            totalHeaderRows += headerRowsDone
+        hdrFilename = (((('syn_header_' + str(SEED)) + '_') + rowxcol) + '.csv')
+        hdrPathname = ((SYNDATASETS_DIR + '/') + hdrFilename)
+        (headerRowsDone, dataRowsDone) = write_syn_dataset(hdrPathname, dataRowsWithHeader, headerString=(headerForHeader if HEADER_HAS_HEADER else None), rList=rList, commentFirst=HEADER_FIRST_IS_COMMENT, sepChar=SEP_CHAR_GEN)
+        totalDataRows += dataRowsDone
+        totalHeaderRows += headerRowsDone
         key = ('syn_' + str(trial))
         key2 = (('syn_' + str(trial)) + '.hex')
         xs = h2o.nodes[0].import_files(SYNDATASETS_DIR)['keys']
-        if CREATE_HEADER_FILE:
-            headerKey = [x for x in xs if (hdrFilename in x)][0]
-        else:
-            headerKey = None
-        if CREATE_DATA_FILE:
-            dataKey = [x for x in xs if (csvFilename not in x)][0]
-        else:
-            dataKey = None
+        headerKey = [x for x in xs if (hdrFilename in x)][0]
+        dataKey = [x for x in xs if (csvFilename not in x)][0]
         print 'Header Key =', headerKey
         if (kwargs['header_from_file'] == 'syn_header'):
             kwargs['header_from_file'] = headerKey
         elif (kwargs['header_from_file'] == 'syn_data'):
             kwargs['header_from_file'] = dataKey
-        h2oShouldSeeSomething = ((CREATE_HEADER_FILE and (kwargs['header_from_file'] == 1)) or CREATE_DATA_FILE)
-        ignoreH2oError = (not h2oShouldSeeSomething)
+        print 'If header_from_file= is used, we are currently required to force header=1 for h2o'
+        if kwargs['header_from_file']:
+            kwargs['header'] = 1
         start = time.time()
-        parseKey = h2o.nodes[0].parse((('*syn_data_*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
+        parseKey = h2o.nodes[0].parse((('*syn_data_*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs, **kwargs)
         print ("parseKey['destination_key']: " + parseKey['destination_key'])
         print 'parse time:', parseKey['response']['time']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
@@ -80,12 +72,12 @@ def test_parse_multi_header_rand(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         h2o_cmd.columnInfoFromInspect(parseKey['destination_key'], exceptionOnMissingValues=False)
         self.assertEqual(inspect['num_cols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], totalCols)))
-        h2oShouldSeeHeader = ((HEADER_HAS_HEADER and CREATE_HEADER_FILE and (kwargs['header_from_file'] == 1)) or (DATA_HAS_HEADER and CREATE_DATA_FILE))
-        h2oLosesOneData = (((not HEADER_HAS_HEADER) and (not DATA_HAS_HEADER)) and (kwargs['header'] == 1))
+        h2oLosesOneData = ((headerRowsDone == 0) and (kwargs['header'] == 1))
         print 'h2oLosesOneData:', h2oLosesOneData
         if h2oLosesOneData:
             totalDataRows -= 1
         self.assertEqual(inspect['num_rows'], totalDataRows, ("parse created result with the wrong number of rows (header shouldn't count) h2o: %s gen'ed: %s" % (inspect['num_rows'], totalDataRows)))
+        h2oShouldSeeHeader = ((HEADER_HAS_HEADER and (kwargs['header_from_file'] == 1)) or DATA_HAS_HEADER)
         if h2oShouldSeeHeader:
             kwargs = {'sample': 75, 'depth': 25, 'ntree': 1, 'ignore': 'A', }
         else:
