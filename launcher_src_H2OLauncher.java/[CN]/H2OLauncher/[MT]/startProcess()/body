@@ -6,11 +6,20 @@ synchronized (this) {
     }
   }
   try {
+    String cloudName;
+{
+      Random r=new Random();
+      Integer randValue=new Integer(r.nextInt());
+      if (randValue < 0) {
+        randValue=-randValue;
+      }
+      cloudName="h2o_cluster_" + (randValue.toString());
+    }
     File currentDirectory=new File(new File(".").getAbsolutePath());
     String javaHome=System.getProperty("java.home");
     String javaBinary=javaHome + File.separator + "bin"+ File.separator+ "java";
     String h2oJar=currentDirectory.getAbsolutePath().toString() + File.separator + "h2o.jar";
-    ProcessBuilder pb=new ProcessBuilder(javaBinary,"-Xmx" + xmxField.getText().trim(),"-jar",h2oJar,"-name",cloudField.getText().trim(),"-port",portField.getText().trim());
+    ProcessBuilder pb=new ProcessBuilder(javaBinary,"-Xmx" + xmxField.getText().trim() + "g","-jar",h2oJar,"-name",cloudName,"-ip","127.0.0.1","-port","54321");
     pb.redirectErrorStream(true);
     Process p=pb.start();
 synchronized (this) {
@@ -26,6 +35,5 @@ synchronized (this) {
  catch (  Exception e) {
     updateResult("Failed to start H2O (process start failed)");
     String s=e.getMessage() + "\n" + e.getStackTrace();
-    textArea.setText(s);
   }
 }

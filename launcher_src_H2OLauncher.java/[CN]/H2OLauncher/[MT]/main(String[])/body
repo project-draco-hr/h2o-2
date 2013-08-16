@@ -1,10 +1,12 @@
 {
-  javax.swing.SwingUtilities.invokeLater(new Runnable(){
-    public void run(){
-      createAndShowGUI();
-    }
-  }
-);
+  JFrame frame=new JFrame("H2O");
+  h2oLauncher=new H2OLauncher();
+  frame.setContentPane(h2oLauncher.panel);
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  frame.pack();
+  frame.setVisible(true);
+  status=H2oStatus.NOT_RUNNING;
+  h2oLauncher.recalcInBackground();
   final Thread mainThread=Thread.currentThread();
   Runtime.getRuntime().addShutdownHook(new Thread(){
     public void run(){

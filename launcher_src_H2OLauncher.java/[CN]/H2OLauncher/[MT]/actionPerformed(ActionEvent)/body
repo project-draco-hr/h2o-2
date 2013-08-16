@@ -1,39 +1,9 @@
 {
   String actionCommand=evt.getActionCommand();
-  if (actionCommand.equals(CLOUD_COMMAND)) {
-    String s=cloudField.getText();
-    String s2=s.trim();
-    if (s2.matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
-      updateResult("Cloud name set successfully");
-    }
- else {
-      updateResult("Cloud name must start with a letter and contain only letters, numbers and underscores");
-    }
-  }
- else   if (actionCommand.equals(PORT_COMMAND)) {
-    String s=portField.getText();
-    String s2=s.trim();
-    Integer i=Integer.parseInt(s);
-    String s3=i.toString();
-    if (!s2.equals(s3)) {
-      updateResult("Illegal characters in port");
-    }
- else     if (i < 1) {
-      updateResult("Port must be greater than 0");
-    }
- else     if (i >= 65535) {
-      updateResult("Port must be less than 65535");
-    }
- else     if (!validatePort()) {
-    }
- else {
-      updateResult("Port set successfully");
-    }
-  }
- else   if (actionCommand.equals(XMX_COMMAND)) {
+  if (actionCommand.equals(XMX_COMMAND)) {
     String s=xmxField.getText();
     String s2=s.trim();
-    if (s2.matches("^[1-9][0-9]*[MGmg]$")) {
+    if (s2.matches("^[1-9][0-9]*$")) {
       updateResult("Xmx set successfully");
     }
  else {
