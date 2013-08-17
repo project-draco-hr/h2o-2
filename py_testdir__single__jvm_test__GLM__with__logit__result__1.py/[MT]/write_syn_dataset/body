@@ -6,7 +6,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, 
     for i in range(rowCount):
         rowData = []
         for j in range(colCount):
-            ri = r1.randint(0, 1)
+            ri = r1.uniform(0, 1)
             rowData.append(ri)
         if ((noise is not None) and (r1.random() <= noise)):
             flip = True
@@ -17,8 +17,12 @@ def write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, 
             minActual = actual
         if ((maxActual is None) or (actual > maxActual)):
             maxActual = actual
-        rowData.append(binomial)
-        rowDataCsv = ','.join(map(str, rowData))
-        dsf.write((rowDataCsv + '\n'))
+        for i in range(1, 11):
+            if (actual > ((i + 0.0) / 10)):
+                binomial = 1
+            else:
+                binomial = 0
+            rowDataCsv = ','.join(map(str, (rowData + [binomial])))
+            dsf.write((rowDataCsv + '\n'))
     dsf.close()
     print 'minActual:', minActual, ' maxActual:', maxActual
