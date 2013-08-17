@@ -3,9 +3,12 @@
   if (rowIdx < 0 || rowIdx >= v.length())   return;
   String name=f._names[colIdx] != null ? f._names[colIdx] : "" + colIdx;
 switch (v.dtype()) {
-case U:
-    obj.addProperty(name,"Unknown");
+case bad:
+    obj.addProperty(name,"Bad");
   break;
+case U:
+obj.addProperty(name,"Unknown");
+break;
 case NA:
 obj.addProperty(name,"NA");
 break;
