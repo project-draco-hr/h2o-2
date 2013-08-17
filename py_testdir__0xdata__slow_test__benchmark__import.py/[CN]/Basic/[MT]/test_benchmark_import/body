@@ -77,7 +77,7 @@ def test_benchmark_import(self):
                 h2o.check_sandbox_for_errors()
             if (totalBytes is not None):
                 fileMBS = ((totalBytes / 1000000.0) / elapsed)
-                l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed)
+                l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, csvFilepattern, csvFilename, fileMBS, elapsed)
                 print l
                 h2o.cloudPerfH2O.message(l)
             print csvFilepattern, 'parse time:', parseKey['response']['time']
@@ -101,7 +101,7 @@ def test_benchmark_import(self):
                 h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
                 elapsed = (time.time() - start)
                 h2o.check_sandbox_for_errors()
-                l = '{:d} jvms, {:d}GB heap, {:s} {:s} GLM: {:6.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, elapsed)
+                l = '{:d} jvms, {:d}GB heap, {:s} {:s} GLM: {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, csvFilepattern, csvFilename, elapsed)
                 print l
                 h2o.cloudPerfH2O.message(l)
             h2o_cmd.checkKeyDistribution()
