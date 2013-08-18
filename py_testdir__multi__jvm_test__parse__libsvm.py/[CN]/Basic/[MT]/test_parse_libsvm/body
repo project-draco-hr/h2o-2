@@ -1,0 +1,64 @@
+def test_parse_libsvm(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    importFolderPath = '/home/0xdiag/datasets/libsvm'
+    csvFilenameList = [('covtype.binary.svm', 'cC', 30, 1, 2, True, True), ('mnist_train.svm', 'cM', 30, 0, 9, False, False), ('duke.svm', 'cD', 30, (-1.0), 1.0, False, False), ('colon-cancer.svm', 'cA', 30, (-1.0), 1.0, False, False), ('news20.svm', 'cH', 30, 1, 20, False, False), ('connect4.svm', 'cB', 30, (-1), 1, False, False), ('gisette_scale.svm', 'cF', 30, (-1), 1, False, False), ('mushrooms.svm', 'cG', 30, 1, 2, False, False)]
+    lenNodes = len(h2o.nodes)
+    firstDone = False
+    for (csvFilename, key2, timeoutSecs, expectedCol0Min, expectedCol0Max, enableDownloadReparse, enableSizeChecks) in csvFilenameList:
+        h2i.setupImportFolder(None, importFolderPath)
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
+        print csvPathname, 'parse time:', parseKey['response']['time']
+        print "Parse result['destination_key']:", parseKey['destination_key']
+        start = time.time()
+        inspectFirst = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=360)
+        print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        h2o_cmd.infoFromInspect(inspectFirst, csvFilename)
+        imin = inspectFirst['cols'][0]['min']
+        imax = inspectFirst['cols'][0]['max']
+        if expectedCol0Min:
+            self.assertEqual(imin, expectedCol0Min, msg=('col %s min %s is not equal to expected min %s' % (0, imin, expectedCol0Min)))
+        if expectedCol0Max:
+            self.assertEqual(imax, expectedCol0Max, msg=('col %s max %s is not equal to expected max %s' % (0, imax, expectedCol0Max)))
+        print '\nmin/max for col0:', imin, imax
+        if DO_SUMMARY:
+            goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseKey['destination_key'], timeoutSecs=300, noPrint=True)
+            summaryResult = h2o_cmd.runSummary(key=key2, timeoutSecs=360)
+            h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
+        if (DO_DOWNLOAD_REPARSE and enableDownloadReparse):
+            missingValuesListA = h2o_cmd.infoFromInspect(inspectFirst, csvPathname)
+            num_colsA = inspectFirst['num_cols']
+            num_rowsA = inspectFirst['num_rows']
+            row_sizeA = inspectFirst['row_size']
+            value_size_bytesA = inspectFirst['value_size_bytes']
+            csvDownloadPathname = (((SYNDATASETS_DIR + '/') + csvFilename) + '_csvDownload.csv')
+            print 'Trying csvDownload of', csvDownloadPathname
+            h2o.nodes[0].csv_download(key=key2, csvPathname=csvDownloadPathname)
+            start = time.time()
+            key2B = (key2 + '_B')
+            parseKeyB = h2o_cmd.parseFile(csvPathname=csvDownloadPathname, key2=key2B)
+            print csvDownloadPathname, 'download/reparse (B) parse end. Original data from', csvFilename, 'took', (time.time() - start), 'seconds'
+            inspect = h2o_cmd.runInspect(key=key2B)
+            missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
+            num_colsB = inspect['num_cols']
+            num_rowsB = inspect['num_rows']
+            row_sizeB = inspect['row_size']
+            value_size_bytesB = inspect['value_size_bytes']
+            df = h2o_util.JsonDiff(inspectFirst, inspect, with_values=True)
+            print 'df.difference:', h2o.dump_json(df.difference)
+            for (i, d) in enumerate(df.difference):
+                if (('variance' in d) or ('response.time' in d) or ('key' in d) or ('value_size_bytes' in d) or ('row_size' in d)):
+                    pass
+                else:
+                    raise Exception(('testing %s, found unexpected mismatch in df.difference[%d]: %s' % (csvPathname, i, d)))
+            if (DO_SIZE_CHECKS and enableSizeChecks):
+                print 'Comparing original inspect to the inspect after parsing the downloaded csv'
+                self.assertGreater(len(df.difference), 29, msg=('Want >=30 , not %d differences between the two rfView json responses. %s' % (len(df.difference), h2o.dump_json(df.difference))))
+                self.assertEqual(row_sizeA, row_sizeB, ('row_size mismatches after re-parse of downloadCsv result %d %d' % (row_sizeA, row_sizeB)))
+                self.assertEqual(value_size_bytesA, value_size_bytesB, ('value_size_bytes mismatches after re-parse of downloadCsv result %d %d' % (value_size_bytesA, value_size_bytesB)))
+            print 'missingValuesListA:', missingValuesListA
+            print 'missingValuesListB:', missingValuesListB
+            self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
+            self.assertEqual(num_colsA, num_colsB, ('num_cols mismatches after re-parse of downloadCsv result %d %d' % (num_colsA, num_colsB)))
+            self.assertEqual(num_rowsA, num_rowsB, ('num_rows mismatches after re-parse of downloadCsv result %d %d' % (num_rowsA, num_rowsB)))
+        h2o.check_sandbox_for_errors()
