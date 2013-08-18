@@ -1,0 +1,9 @@
+def parseS3nFile(self, s3bucket, pathname, **kwargs):
+    URI = (('s3n://' + s3bucket) + pathname)
+    importHDFSResult = h2o.nodes[0].import_hdfs(URI)
+    start = time.time()
+    parseKey = h2o.nodes[0].parse(URI, timeoutSecs=60)
+    parse_time = (time.time() - start)
+    h2o.verboseprint('py-S3 parse took {0} sec'.format(parse_time))
+    parseKey['python_call_timer'] = parse_time
+    return parseKey
