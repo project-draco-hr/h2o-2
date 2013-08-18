@@ -3,7 +3,7 @@ def random_forest_view(self, data_key, model_key, timeoutSecs=300, print_params=
         print 'random_forest_view not supported in H2O fvec yet. hacking done response'
         r = {'response': {'status': 'done', }, 'trees': {'number_built': 0, }, }
         return r
-    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'class_weights': None, 'response_variable': None, }
+    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'class_weights': None, 'response_variable': None, 'clear_confusion_matrix': None, }
     browseAlso = kwargs.pop('browseAlso', False)
     for k in kwargs:
         if (k in params_dict):
