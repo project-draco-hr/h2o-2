@@ -1,6 +1,6 @@
 def test_GLM_with_logit_result_1(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100000, 5, 'cA', 300)]
+    tryList = [(10000, 3, 'cA', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
@@ -16,7 +16,7 @@ def test_GLM_with_logit_result_1(self):
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'y': y, 'max_iter': 60, 'lambda': 0.0001, 'alpha': 0, 'weight': 1.0, 'n_folds': 3, 'beta_epsilon': 0.0001, 'thresholds': 0.5, }
+        kwargs = {'y': y, 'max_iter': 60, 'lambda': 0, 'alpha': 0.0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
