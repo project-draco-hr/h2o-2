@@ -2,16 +2,16 @@ def test_rf_big_rand_trees(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilename = 'syn.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-    rowCount = 1000
+    rowCount = 5000
     colCount = 1000
     write_syn_dataset(csvPathname, rowCount, colCount)
     for trial in range(1):
         key = ((csvFilename + '_') + str(trial))
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         seed = random.randint(0, sys.maxint)
-        kwargs = {'ntree': 3, 'depth': None, 'seed': seed, 'features': colCount, }
+        kwargs = {'ntree': 3, 'depth': 50, 'seed': seed, }
         start = time.time()
-        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=60, pollTimeoutSecs=5, **kwargs)
+        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=180, pollTimeoutSecs=5, **kwargs)
         print 'trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         inspect = h2o_cmd.runInspect(key=key2)
         cols = inspect['cols']
@@ -20,5 +20,5 @@ def test_rf_big_rand_trees(self):
             colType = c['type']
             colSize = c['size']
             self.assertEqual(colType, 'int', msg=('col %d should be type in: %s' % (i, colType)))
-            self.assertEqual(colSize, 1, msg=('col %d should be size 1: %d' % (i, colSize)))
+            self.assertEqual(colSize, 2, msg=('col %d should be size 2: %d' % (i, colSize)))
         h2o.check_sandbox_for_errors()
