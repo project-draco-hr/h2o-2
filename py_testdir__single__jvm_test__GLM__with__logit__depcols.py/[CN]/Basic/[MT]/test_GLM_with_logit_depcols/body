@@ -1,10 +1,10 @@
-def test_GLM_with_logit_result_1(self):
+def test_GLM_with_logit_depcols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100, 1, 'cA', 300), (1000, 100, 'cD', 300)]
+    tryList = [(1000, 30, 'cD', 300), (1000, 30, 'cD', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
-        csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvFilename = (((((((('syn_' + modeString) + '_') + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname, 'using random coefficients and intercept and logit eqn. for output'
         (coefficientsGen, interceptGen) = gen_rand_equation(colCount, SEEDPERFILE)
