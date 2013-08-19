@@ -1,29 +1,34 @@
 def write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, SEED, noise=0.05):
     r1 = random.Random(SEED)
     dsf = open(csvPathname, 'w+')
-    minActual = None
-    maxActual = None
+    yMin = None
+    yMax = None
+    BINS = 100
+    print ("gen'ed y will be a probability! generate 1/0 data rows to reflect that probability, binned to %d bins" % BINS)
+    print '100 implies 2 places of accuracy in getting the probability.'
+    print 'this means we should get 1 place of accuracy in the result coefficients/intercept????'
+    colModes = [r1.uniform((-1), 1) for j in range(colCount)]
+    colModes = [(((random.randint(0, 1) * (-1)) * j) / colCount) for j in range(colCount)]
     for i in range(rowCount):
         rowData = []
         for j in range(colCount):
-            ri = r1.uniform(0, 1)
+            ri = r1.triangular((-1), 1, colModes[j])
             rowData.append(ri)
         if ((noise is not None) and (r1.random() <= noise)):
             flip = True
         else:
             flip = False
-        (binomial, actual) = gen_binomial_from_eqn_and_data(coefficients, intercept, rowData, flip=flip)
-        if ((minActual is None) or (actual < minActual)):
-            minActual = actual
-        if ((maxActual is None) or (actual > maxActual)):
-            maxActual = actual
-        BINS = 100
+        y = yFromEqnAndData(coefficients, intercept, rowData)
+        if ((yMin is None) or (y < yMin)):
+            yMin = y
+        if ((yMax is None) or (y > yMax)):
+            yMax = y
         for i in range(1, (BINS + 1)):
-            if (actual > ((i + 0.0) / BINS)):
+            if (y > ((i + 0.0) / BINS)):
                 binomial = 1
             else:
                 binomial = 0
             rowDataCsv = ','.join(map(str, (rowData + [binomial])))
             dsf.write((rowDataCsv + '\n'))
     dsf.close()
-    print 'minActual:', minActual, ' maxActual:', maxActual
+    print 'yMin:', yMin, ' yMax:', yMax
