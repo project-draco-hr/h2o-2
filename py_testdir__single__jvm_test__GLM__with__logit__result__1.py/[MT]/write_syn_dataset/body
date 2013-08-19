@@ -8,7 +8,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, 
     print '100 implies 2 places of accuracy in getting the probability.'
     print 'this means we should get 1 place of accuracy in the result coefficients/intercept????'
     colModes = [r1.uniform((-1), 1) for j in range(colCount)]
-    colModes = [(((random.randint(0, 1) * (-1)) * j) / colCount) for j in range(colCount)]
+    colModes = [(((random.randint(0, 1) * (-1)) * (j + 0.0)) / colCount) for j in range(colCount)]
     for i in range(rowCount):
         rowData = []
         for j in range(colCount):

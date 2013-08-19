@@ -1,6 +1,6 @@
 def test_GLM_with_logit_depcols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(1000, 30, 'cD', 300), (1000, 30, 'cD', 300)]
+    tryList = [(500, 200, 'cD', 300), (500, 200, 'cD', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
@@ -29,5 +29,5 @@ def test_GLM_with_logit_depcols(self):
         c = intercept
         g = interceptGen
         print ('intercept: %8.4f generated: %8.4f delta: %8.4f' % (c, g, abs((g - c))))
-        print 'Why do we need larger delta allowed for intercept? 0.2 here'
+        print 'need a larger delta compare for intercept?'
         self.assertAlmostEqual(c, g, delta=0.2, msg=('not close enough. intercept: %s generated %s' % (c, g)))

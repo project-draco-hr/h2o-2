@@ -3,14 +3,13 @@ def write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, 
     dsf = open(csvPathname, 'w+')
     yMin = None
     yMax = None
-    BINS = 100
     print ("gen'ed y will be a probability! generate 1/0 data rows to reflect that probability, binned to %d bins" % BINS)
     print '100 implies 2 places of accuracy in getting the probability.'
     print 'this means we should get 1 place of accuracy in the result coefficients/intercept????'
     if (COL_DATA_DISTS == 'UNIQUE'):
         colModes = [(((random.randint(0, 1) * (-1)) * j) / colCount) for j in range(colCount)]
     elif (COL_DATA_DISTS == 'SAME'):
-        colDataMean = ((abs((DATA_VALUE_MAX - DATA_VALUE_MIN)) / 2) + DATA_VALUE_MIN)
+        colDataMean = ((DATA_VALUE_MIN + DATA_VALUE_MAX) / 2)
         colModes = [colDataMean for j in range(colCount)]
     else:
         colModes = [r1.uniform(DATA_VALUE_MIN, DATA_VALUE_MAX) for j in range(colCount)]
