@@ -2,7 +2,7 @@
   ByteVec vec=(ByteVec)getVec(key);
   byte[] bits=vec.elem2BV(0)._mem;
   Compression cpr=Utils.guessCompressionMethod(bits);
-  CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,true)._setup;
+  CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,false)._setup;
   if (!_setup.isCompatible(localSetup)) {
     _parserr="Conflicting file layouts, expecting: " + _setup + " but found "+ localSetup;
     return;
@@ -10,7 +10,7 @@
   boolean has_hdr=_setup._header && localSetup._header;
   if (has_hdr) {
     for (int i=0; i < localSetup._columnNames.length; ++i)     has_hdr=localSetup._columnNames[i].equalsIgnoreCase(_setup._columnNames[i]);
-    if (!has_hdr)     localSetup=new CustomParser.ParserSetup(ParserType.CSV,localSetup._separator,false,localSetup._data);
+    if (!has_hdr)     localSetup=new CustomParser.ParserSetup(ParserType.CSV,localSetup._separator,false);
   }
   final int ncols=_setup._ncols;
   _vecs=new Vec[ncols];

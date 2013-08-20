@@ -1,11 +1,14 @@
 {
   Timer t_extract=new Timer();
-  DataAdapter dapt=DABuilder.create(this).build(_keys);
+  final Key[] lkeys=_keys;
+  final Key[] rkeys=getNonLocalChunks(lkeys);
+  final DataAdapter dapt=DABuilder.create(this).build(lkeys,rkeys);
   Log.debug(Sys.RANDF,"Data adapter built in " + t_extract);
   Data localData=Data.make(dapt);
   int numSplitFeatures=howManySplitFeatures(localData);
   int ntrees=howManyTrees();
-  updateRFModel(_job.dest(),numSplitFeatures);
-  RandomForest.build(_job,_params,localData,ntrees,numSplitFeatures);
+  int[] rowsPerChunks=howManyRPC(lkeys,rkeys);
+  updateRFModel(_job.dest(),numSplitFeatures,rkeys);
+  RandomForest.build(_job,_params,localData,ntrees,numSplitFeatures,rowsPerChunks);
   tryComplete();
 }

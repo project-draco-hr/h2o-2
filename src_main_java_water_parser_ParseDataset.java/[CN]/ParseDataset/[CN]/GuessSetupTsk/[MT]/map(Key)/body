@@ -1,0 +1,11 @@
+{
+  _failedSetup=new IcedArrayList<Key>();
+  _conflicts=new IcedArrayList<Key>();
+  byte[] bits=Utils.getFirstUnzipedBytes(key);
+  _gSetup=ParseDataset.guessSetup(bits,_userSetup,_checkHeader);
+  if (_gSetup == null || !_gSetup.valid())   _failedSetup.add(key);
+ else {
+    _setupFromFile=key;
+    if (_checkHeader && _gSetup._setup._header)     _hdrFromFile=key;
+  }
+}
