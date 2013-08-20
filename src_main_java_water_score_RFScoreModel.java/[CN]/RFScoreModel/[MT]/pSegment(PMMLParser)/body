@@ -5,6 +5,7 @@
   AutoBuffer ab=new AutoBuffer();
   ab.put4(_tnum++);
   ab.put8(0);
+  ab.put1(0);
   rfn.toPackedTree(ab);
   pmml.skipWS().expect("</Segment>");
   return ab.buf();
