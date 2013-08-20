@@ -1,5 +1,11 @@
 {
-  if (setup == null)   setup=guessSetup(Utils.getFirstUnzipedBytes(keys[0]))._setup;
+  if (setup == null) {
+    ArrayList<Key> ks=new ArrayList<Key>(keys.length);
+    for (    Key k : keys)     ks.add(k);
+    PSetupGuess guess=guessSetup(ks,null,null,true);
+    if (!guess.valid())     throw new RuntimeException("can not parse ethis dataset, did not find working setup");
+    setup=guess._setup;
+  }
   int j=0;
   UKV.remove(job.dest());
   Key[] nonEmptyKeys=new Key[keys.length];

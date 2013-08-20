@@ -23,16 +23,12 @@ if ((res=SVMLightParser.guessSetup(bits)) != null && res.valid()) if (!res.hasEr
  catch (Exception e) {
 }
 try {
-if ((res=CsvParser.guessSetup(bits,setup,true)) != null && res.valid()) if (!res.hasErrors()) return res;
+if ((res=CsvParser.guessSetup(bits,setup,checkHeader)) != null && res.valid()) if (!res.hasErrors()) return res;
  else guesses.add(res);
 }
  catch (Exception e) {
 }
-if (guesses.isEmpty()) return null;
- else {
-for (PSetupGuess guess : guesses) if (guess._invalidLines < res._invalidLines) res=guess;
 return res;
-}
 default :
 throw new IllegalArgumentException(setup._pType + " is not implemented.");
 }
