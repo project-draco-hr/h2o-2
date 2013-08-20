@@ -1,4 +1,4 @@
-def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, **kwargs):
+def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, doNormalized=False, **kwargs):
     GLMModel = glm['GLMModel']
     warnings = None
     if ('warnings' in GLMModel):
@@ -49,7 +49,10 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if math.isnan(validations['nullDev']):
         emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validations['nullDev']))
         raise Exception(emsg)
-    coefficients = GLMModel['coefficients'].copy()
+    if doNormalized:
+        coefficients = GLMModel['normalized_coefficients'].copy()
+    else:
+        coefficients = GLMModel['coefficients'].copy()
     column_names = GLMModel['column_names']
     intercept = coefficients.pop('Intercept', None)
     y = kwargs['y']
