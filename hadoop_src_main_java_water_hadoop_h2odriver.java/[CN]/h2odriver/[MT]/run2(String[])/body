@@ -16,6 +16,11 @@
   Configuration conf=getConf();
   if (h2odriver_config.usingYarn()) {
     System.out.println("Driver program compiled with MapReduce V2 (Yarn)");
+  }
+ else {
+    System.out.println("Driver program compiled with MapReduce V1 (Classic)");
+  }
+{
     Pattern p=Pattern.compile("([1-9][0-9]*)([mgMG])");
     Matcher m=p.matcher(mapperXmx);
     boolean b=m.matches();
@@ -33,9 +38,6 @@
     }
     conf.set("mapreduce.job.ubertask.enable","false");
     conf.set("mapreduce.map.memory.mb",Long.toString(megabytes));
-  }
- else {
-    System.out.println("Driver program compiled with MapReduce V1 (Classic)");
     String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx;
     conf.set("mapred.child.java.opts",mapChildJavaOpts);
     conf.set("mapred.map.child.java.opts",mapChildJavaOpts);

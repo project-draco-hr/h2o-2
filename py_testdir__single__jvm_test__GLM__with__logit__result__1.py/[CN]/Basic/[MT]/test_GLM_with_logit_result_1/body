@@ -1,26 +1,33 @@
 def test_GLM_with_logit_result_1(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100000, 5, 'cA', 300)]
+    tryList = [(100, 1, 'cA', 300), (1000, 100, 'cD', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname, 'using random coefficients and intercept and logit eqn. for output'
-        (coefficients, intercept) = gen_rand_equation(colCount, SEEDPERFILE)
-        print coefficients, intercept
-        write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, SEEDPERFILE)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        (coefficientsGen, interceptGen) = gen_rand_equation(colCount, SEEDPERFILE)
+        print coefficientsGen, interceptGen
+        write_syn_dataset(csvPathname, rowCount, colCount, coefficientsGen, interceptGen, SEEDPERFILE)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=60)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'y': y, 'max_iter': 60, 'lambda': 0.0001, 'alpha': 0, 'weight': 1.0, 'n_folds': 3, 'beta_epsilon': 0.0001, 'thresholds': 0.5, }
+        print "GLM is ignoring the thresholds I give it? deciding what's best?"
+        kwargs = {'y': y, 'max_iter': 60, 'lambda': 0.0, 'alpha': 0.0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
-        if (not h2o.browse_disable):
-            h2b.browseJsonHistoryAsUrlLastMatch('GLM')
-            time.sleep(5)
+        for (i, c) in enumerate(coefficients):
+            g = coefficientsGen[i]
+            print ('coefficient[%d]: %8.4f generated: %8.4f delta: %8.4f' % (i, c, g, abs((g - c))))
+            self.assertAlmostEqual(c, g, delta=0.1, msg=('not close enough. coefficient[%d]: %s generated %s' % (i, c, g)))
+        c = intercept
+        g = interceptGen
+        print ('intercept: %8.4f generated: %8.4f delta: %8.4f' % (c, g, abs((g - c))))
+        print 'Why do we need larger delta allowed for intercept? 0.2 here'
+        self.assertAlmostEqual(c, g, delta=0.2, msg=('not close enough. intercept: %s generated %s' % (c, g)))

@@ -3,6 +3,7 @@ def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDela
     verboseprint('\nParsing key:', key, 'to key2:', key2, '(if None, means default)')
     params_dict = {'source_key': key, 'destination_key': key2, }
     params_dict.update(kwargs)
+    print '\nParse params list:', params_dict
     if benchmarkLogging:
         cloudPerfH2O.get_log_save(initOnly=True)
     a = self.__do_json_request(('Parse2.json' if beta_features else 'Parse.json'), timeout=timeoutSecs, params=params_dict)

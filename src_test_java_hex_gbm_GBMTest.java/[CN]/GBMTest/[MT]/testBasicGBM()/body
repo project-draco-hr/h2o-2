@@ -4,16 +4,18 @@
   Key dest=Key.make("prostate.hex");
   Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
   UKV.remove(fkey);
+  GBM gbm=null;
   try {
     assertEquals(380,fr._vecs[0].length());
     UKV.remove(fr.remove("ID")._key);
     Vec capsule=fr.remove("CAPSULE");
     fr.add("CAPSULE",capsule);
-    GBM gbm=GBM.start(GBM.makeKey(),fr,11);
+    gbm=GBM.start(GBM.makeKey(),fr,10);
     gbm.get();
     UKV.remove(gbm.destination_key);
   }
   finally {
     UKV.remove(dest);
+    if (gbm != null)     gbm.remove();
   }
 }

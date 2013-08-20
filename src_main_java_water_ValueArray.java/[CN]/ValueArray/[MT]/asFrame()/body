@@ -1,0 +1,15 @@
+{
+  String[] names=new String[_cols.length];
+  AppendableVec[] avs=new AppendableVec[_cols.length];
+  for (int i=0; i < _cols.length; ++i) {
+    names[i]=_cols[i]._name;
+    avs[i]=new AppendableVec(UUID.randomUUID().toString());
+  }
+  Converter task=new Converter();
+  task._vaKey=_key;
+  task._vecs=avs;
+  task.invoke(_key);
+  Vec[] vecs=new Vec[avs.length];
+  for (int i=0; i < avs.length; ++i)   vecs[i]=avs[i].close(null);
+  return new Frame(names,vecs);
+}
