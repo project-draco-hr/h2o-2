@@ -2,9 +2,11 @@ import unittest, time, sys, random
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_hosts
 import h2o_browse as h2b
+print 'Data rows in header_from_file are ignored unless that file was part of the parse pattern'
+print 'Tab in header is not auto-detected separator. comma and space are'
 print 'Maybe a rows count problem if using tabs? temporary only tabs'
 print 'passes if only , is used'
 print 'just do one file with tab'
-paramsDict = {'parser_type': [None, 'AUTO'], 'separator': ['\t'], 'header': [None, 0, 1], 'header_from_file': ['syn_header'], }
+paramsDict = {'parser_type': [None, 'AUTO'], 'separator': ['\x01', '|', ',', ' '], 'header': [None, 0, 1], 'header_from_file': ['syn_header'], }
 if (__name__ == '__main__'):
     h2o.unit_main()
