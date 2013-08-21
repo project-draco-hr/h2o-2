@@ -1,0 +1,13 @@
+{
+  final int idx=H2O.SELF.index();
+  new TAtomic<RFModel>(){
+    @Override public RFModel atomic(    RFModel old){
+      if (old == null)       return null;
+      RFModel newModel=(RFModel)old.clone();
+      newModel._nodesSplitFeatures[idx]=numSplitFeatures;
+      newModel._remoteChunksKeys[idx]=rkeys;
+      return newModel;
+    }
+  }
+.invoke(modelKey);
+}

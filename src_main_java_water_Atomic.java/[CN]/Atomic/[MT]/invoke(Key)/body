@@ -1,5 +1,4 @@
 {
-  RPC<Atomic> rpc=fork(key);
-  if (rpc != null)   rpc.get();
-  return this;
+  RPC<Atomic<T>> rpc=fork(key);
+  return (T)(rpc == null ? this : rpc.get());
 }

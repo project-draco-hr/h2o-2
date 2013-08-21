@@ -1,0 +1,41 @@
+{
+  if (_gSetup == null || !_gSetup.valid()) {
+    _gSetup=drt._gSetup;
+    _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
+    _gSetup._setupFromFile=drt._gSetup._setupFromFile;
+  }
+ else   if (drt._gSetup.valid() && !_gSetup._setup.isCompatible(drt._gSetup._setup)) {
+    if (_conflicts.contains(_gSetup._setupFromFile) && !drt._conflicts.contains(drt._gSetup._setupFromFile)) {
+      _gSetup=drt._gSetup;
+      _gSetup._setupFromFile=drt._gSetup._setupFromFile;
+      _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
+    }
+ else     if (!drt._conflicts.contains(drt._gSetup._setupFromFile)) {
+      _conflicts.add(_gSetup._setupFromFile);
+      _conflicts.add(drt._gSetup._setupFromFile);
+    }
+  }
+ else   if (drt._gSetup.valid()) {
+    if (!_gSetup._setup._header && drt._gSetup._setup._header) {
+      _gSetup._setup._header=true;
+      _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
+      _gSetup._setup._columnNames=drt._gSetup._setup._columnNames;
+    }
+    if (_gSetup._data.length < CustomParser.MAX_PREVIEW_LINES) {
+      int n=_gSetup._data.length;
+      int m=Math.min(CustomParser.MAX_PREVIEW_LINES,n + drt._gSetup._data.length - 1);
+      _gSetup._data=Arrays.copyOf(_gSetup._data,m);
+      for (int i=n; i < m; ++i) {
+        _gSetup._data[i]=drt._gSetup._data[i - n + 1];
+      }
+    }
+  }
+  if (_failedSetup == null) {
+    _failedSetup=drt._failedSetup;
+    _conflicts=drt._conflicts;
+  }
+ else {
+    _failedSetup.addAll(drt._failedSetup);
+    _conflicts.addAll(drt._conflicts);
+  }
+}

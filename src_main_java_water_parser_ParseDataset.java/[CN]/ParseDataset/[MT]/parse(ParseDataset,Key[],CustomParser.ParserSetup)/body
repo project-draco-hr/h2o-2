@@ -1,5 +1,11 @@
 {
-  if (setup == null)   setup=guessSetup(Utils.getFirstUnzipedBytes(keys[0]))._setup;
+  if (setup == null) {
+    ArrayList<Key> ks=new ArrayList<Key>(keys.length);
+    for (    Key k : keys)     ks.add(k);
+    PSetupGuess guess=guessSetup(ks,null,new ParserSetup(),true);
+    if (!guess.valid())     throw new RuntimeException("can not parse this dataset, did not find working setup");
+    setup=guess._setup;
+  }
   int j=0;
   UKV.remove(job.dest());
   Key[] nonEmptyKeys=new Key[keys.length];
@@ -25,9 +31,8 @@
  else       throw H2O.unimpl();
     }
   }
-  Compression compression=Utils.guessCompressionMethod(DKV.get(keys[0]).getFirstBytes());
   try {
-    UnzipAndParseTask tsk=new UnzipAndParseTask(job,compression,setup);
+    UnzipAndParseTask tsk=new UnzipAndParseTask(job,setup);
     tsk.invoke(keys);
     DParseTask[] p2s=new DParseTask[keys.length];
     DParseTask phaseTwo=tsk._tsk.createPassTwo();
@@ -47,10 +52,8 @@
     for (int i=0; i < p2s.length; ++i) {
       DParseTask t=p2s[i];
       p2s[i].get();
-      for (j=0; j < phaseTwo._ncolumns; ++j) {
-        phaseTwo._sigma[j]+=t._sigma[j];
-        phaseTwo._invalidValues[j]+=t._invalidValues[j];
-      }
+      Utils.add(phaseTwo._sigma,t._sigma);
+      Utils.add(phaseTwo._invalidValues,t._invalidValues);
       if ((t._error != null) && !t._error.isEmpty()) {
         System.err.println(phaseTwo._error);
         throw new Exception("The dataset format is not recognized/supported");

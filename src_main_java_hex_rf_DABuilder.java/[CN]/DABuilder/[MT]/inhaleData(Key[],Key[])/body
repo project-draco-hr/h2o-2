@@ -1,0 +1,32 @@
+{
+  Timer t_inhale=new Timer();
+  RFModel rfmodel=_drf._rfmodel;
+  final ValueArray ary=UKV.get(rfmodel._dataKey);
+  final int[] modelDataMap=rfmodel.columnMapping(ary.colNames());
+  final int totalRows=getRowCount(ary,lkeys,rkeys);
+  final DataAdapter dapt=new DataAdapter(ary,rfmodel,modelDataMap,totalRows,getChunkId(lkeys),_drf._params._seed,_drf._params._binLimit,_drf._params._classWt);
+  checkAndLimitFeatureUsedPerSplit(dapt);
+  final int ncolumns=rfmodel._va._cols.length;
+  ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
+  int start_row=0;
+  for (  final Key k : lkeys) {
+    final int S=start_row;
+    if (!k.home())     continue;
+    final int rows=ary.rpc(ValueArray.getChunkIndex(k));
+    Log.info(Sys.RANDF,"* loading local key: ",k," start_row: ",S);
+    dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S,totalRows));
+    start_row+=rows;
+  }
+  for (  final Key k : rkeys) {
+    final int S=start_row;
+    final int rows=ary.rpc(ValueArray.getChunkIndex(k));
+    Log.info(Sys.RANDF,"!!! loading remote key: " + k + " from "+ k.home_node()," start_row: " + S);
+    dataInhaleJobs.add(loadChunkAction(dapt,ary,k,modelDataMap,ncolumns,rows,S,totalRows));
+    start_row+=rows;
+  }
+  Log.info(Sys.RANDF,"All loaded row: ",start_row,'/',totalRows);
+  ForkJoinTask.invokeAll(dataInhaleJobs);
+  dapt.shrink();
+  Log.debug(Sys.RANDF,"Inhale done in " + t_inhale);
+  return dapt;
+}
