@@ -42,6 +42,9 @@ def write_syn_dataset(csvPathname, rowCount, colCount, coefficients, intercept, 
         elif (ALGO == 'poisson'):
             rowDataCsv = ','.join(map(str, (rowData + [int(y)])))
             dsf.write((rowDataCsv + '\n'))
+        elif (ALGO == 'gamma'):
+            rowDataCsv = ','.join(map(str, (rowData + [y])))
+            dsf.write((rowDataCsv + '\n'))
         else:
             raise Exception(('Unknown ALGO: %s' % ALGO))
     dsf.close()
