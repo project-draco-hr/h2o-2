@@ -1,21 +1,16 @@
 {
-  File file=TestUtil.find_test_file("./smalldata/logreg/prostate.csv");
-  Key fkey=NFSFileVec.make(file);
-  Key dest=Key.make("prostate.hex");
-  Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
-  UKV.remove(fkey);
-  GBM gbm=null;
-  try {
-    assertEquals(380,fr._vecs[0].length());
-    UKV.remove(fr.remove("ID")._key);
-    Vec capsule=fr.remove("CAPSULE");
-    fr.add("CAPSULE",capsule);
-    gbm=GBM.start(GBM.makeKey(),fr,10);
-    gbm.get();
-    UKV.remove(gbm.destination_key);
+  basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
+    void prep(    Frame fr){
+    }
   }
-  finally {
-    UKV.remove(dest);
-    if (gbm != null)     gbm.remove();
+);
+  basicGBM("./smalldata/logreg/prostate.csv","prostate.hex",new PrepData(){
+    void prep(    Frame fr){
+      assertEquals(380,fr._vecs[0].length());
+      UKV.remove(fr.remove("ID")._key);
+      Vec capsule=fr.remove("CAPSULE");
+      fr.add("CAPSULE",capsule);
+    }
   }
+);
 }
