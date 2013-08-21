@@ -1,11 +1,27 @@
 {
   String[][] data=null;
   PSetup psetup=_source.value();
+  if (psetup == null)   return _source.specified() ? "<div class='alert alert-error'><b>Found no valid setup!</b></div>" : "";
+  StringBuilder sb=new StringBuilder();
+  if (psetup._failedKeys != null) {
+    sb.append("<div class='alert alert-error'>");
+    sb.append("<div>\n<b>Found " + psetup._failedKeys.length + " files which are not compatible with the given setup:</b></div>");
+    int n=psetup._failedKeys.length;
+    if (n > 5) {
+      sb.append("<div>" + psetup._failedKeys[0] + "</div>\n");
+      sb.append("<div>" + psetup._failedKeys[1] + "</div>\n");
+      sb.append("<div>...</div>");
+      sb.append("<div>" + psetup._failedKeys[n - 2] + "</div>\n");
+      sb.append("<div>" + psetup._failedKeys[n - 1] + "</div>\n");
+    }
+ else     for (int i=0; i < n; ++i)     sb.append("<div>" + psetup._failedKeys[n - 1] + "</div>\n");
+    sb.append("</div>\n");
+  }
   String[] err=psetup._setup._errors;
   boolean hasErrors=err != null && err.length > 0;
   boolean parsedOk=psetup._setup.valid();
   String parseMsgType=hasErrors ? parsedOk ? "warning" : "error" : "success";
-  StringBuilder sb=new StringBuilder("<div class='alert alert-" + parseMsgType + "'><b>"+ psetup._setup.toString()+ "</b>");
+  sb.append("<div class='alert alert-" + parseMsgType + "'><b>"+ psetup._setup.toString()+ "</b>");
   if (hasErrors)   for (  String s : err)   sb.append("<div>" + s + "</div>");
   sb.append("</div>");
   if (psetup._setup != null)   data=psetup._setup._data;
