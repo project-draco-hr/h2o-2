@@ -1,0 +1,13 @@
+def yFromEqnAndData(coefficients, intercept, rowData, DATA_DISTS, ALGO):
+    cx = [(a * b) for (a, b) in zip(coefficients, rowData)]
+    if (ALGO == 'binomial'):
+        y = (1 / (1 + math.exp((- (sum(cx) + intercept)))))
+        if ((y < 0) or (y > 1)):
+            raise Exception(('Generated y result is should be between 0 and 1: %s' % y))
+    elif (ALGO == 'poisson'):
+        y = math.exp((sum(cx) + intercept))
+        if (y < 0):
+            raise Exception(('Generated y result is should be >= 0: %s' % y))
+    else:
+        raise Exception(('Unknown ALGO: %s' % ALGO))
+    return y
