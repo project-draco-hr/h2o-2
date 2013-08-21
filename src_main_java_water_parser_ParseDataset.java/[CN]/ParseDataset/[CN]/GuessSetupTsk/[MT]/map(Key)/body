@@ -5,7 +5,7 @@
   _gSetup=ParseDataset.guessSetup(bits,_userSetup,_checkHeader);
   if (_gSetup == null || !_gSetup.valid())   _failedSetup.add(key);
  else {
-    _setupFromFile=key;
-    if (_checkHeader && _gSetup._setup._header)     _hdrFromFile=key;
+    _gSetup._setupFromFile=key;
+    if (_checkHeader && _gSetup._setup._header)     _gSetup._hdrFromFile=key;
   }
 }

@@ -1,22 +1,24 @@
 {
   if (_gSetup == null || !_gSetup.valid()) {
     _gSetup=drt._gSetup;
-    _hdrFromFile=drt._hdrFromFile;
-    _setupFromFile=drt._setupFromFile;
+    _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
+    _gSetup._setupFromFile=drt._gSetup._setupFromFile;
   }
  else   if (drt._gSetup.valid() && !_gSetup._setup.isCompatible(drt._gSetup._setup)) {
-    _conflicts.add(_setupFromFile);
-    _conflicts.add(drt._setupFromFile);
-    if (Math.random() > 0.5) {
+    if (_conflicts.contains(_gSetup._setupFromFile) && !drt._conflicts.contains(drt._gSetup._setupFromFile)) {
       _gSetup=drt._gSetup;
-      _setupFromFile=drt._setupFromFile;
-      _hdrFromFile=drt._hdrFromFile;
+      _gSetup._setupFromFile=drt._gSetup._setupFromFile;
+      _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
+    }
+ else     if (!drt._conflicts.contains(drt._gSetup._setupFromFile)) {
+      _conflicts.add(_gSetup._setupFromFile);
+      _conflicts.add(drt._gSetup._setupFromFile);
     }
   }
  else   if (drt._gSetup.valid()) {
     if (!_gSetup._setup._header && drt._gSetup._setup._header) {
       _gSetup._setup._header=true;
-      _hdrFromFile=drt._hdrFromFile;
+      _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
       _gSetup._setup._columnNames=drt._gSetup._setup._columnNames;
     }
     if (_gSetup._data.length < CustomParser.MAX_PREVIEW_LINES) {
