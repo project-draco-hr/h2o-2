@@ -13,7 +13,7 @@
     p(sb,"cnt",cntW).append('/');
     p(sb,"min",mmmW).append('/');
     p(sb,"max",mmmW).append('/');
-    if (_tree._nclass == 0) {
+    if (_tree.isRegression()) {
       p(sb,"mean",mmmW).append('/');
       p(sb,"var",varW).append(colPad);
     }
@@ -30,7 +30,7 @@
         p(sb,Long.toString(_hs[j].bins(i)),cntW).append('/');
         p(sb,_hs[j].mins(i),mmmW).append('/');
         p(sb,_hs[j].maxs(i),mmmW).append('/');
-        if (_tree._nclass == 0) {
+        if (_tree.isRegression()) {
           p(sb,_hs[j].mean(i),mmmW).append('/');
           p(sb,_hs[j].var(i),varW).append(colPad);
         }
