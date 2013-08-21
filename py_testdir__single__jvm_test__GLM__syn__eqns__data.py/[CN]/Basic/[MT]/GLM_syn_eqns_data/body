@@ -1,18 +1,20 @@
-def test_GLM_with_logit_depcols(self):
+def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX=1, COEFF_VALUE_MIN=(-1), COEFF_VALUE_MAX=1, INTCPT_VALUE_MIN=(-1), INTCPT_VALUE_MAX=1, DATA_DISTS='unique_pos_neg'):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     if (ALGO == 'poisson'):
-        tryList = [(50000, 50, 'cD', 300), (50000, 50, 'cD', 300)]
+        tryList = [(50000, 5, 'cD', 300)]
     else:
         tryList = [(500, 30, 'cD', 300), (500, 30, 'cD', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
+        modeString = ((((((((((((((('_Bins' + str(BINS)) + '_Dmin') + str(DATA_VALUE_MIN)) + '_Dmax') + str(DATA_VALUE_MAX)) + '_Cmin') + str(COEFF_VALUE_MIN)) + '_Cmax') + str(COEFF_VALUE_MAX)) + '_Imin') + str(INTCPT_VALUE_MIN)) + '_Imax') + str(INTCPT_VALUE_MAX)) + '_Ddist') + str(DATA_DISTS))
+        print 'modeString:', modeString
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((((('syn_' + modeString) + '_') + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname, 'using random coefficients and intercept and logit eqn. for output'
-        (coefficientsGen, interceptGen) = gen_rand_equation(colCount, SEEDPERFILE)
+        (coefficientsGen, interceptGen) = gen_rand_equation(colCount, INTCPT_VALUE_MIN, INTCPT_VALUE_MAX, COEFF_VALUE_MIN, COEFF_VALUE_MAX, SEEDPERFILE)
         print coefficientsGen, interceptGen
-        write_syn_dataset(csvPathname, rowCount, colCount, coefficientsGen, interceptGen, SEEDPERFILE)
+        write_syn_dataset(csvPathname, rowCount, colCount, coefficientsGen, interceptGen, DATA_VALUE_MIN, DATA_VALUE_MAX, DATA_DISTS, ALGO, SEED)
         parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=60)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
@@ -20,7 +22,7 @@ def test_GLM_with_logit_depcols(self):
         print ('\n' + csvFilename)
         y = colCount
         print "GLM is ignoring the thresholds I give it? deciding what's best?"
-        kwargs = {'family': ALGO, 'y': y, 'max_iter': 60, 'lambda': 0.0, 'alpha': 0.0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
+        kwargs = {'family': ALGO, 'y': y, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
         start = time.time()
         glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
