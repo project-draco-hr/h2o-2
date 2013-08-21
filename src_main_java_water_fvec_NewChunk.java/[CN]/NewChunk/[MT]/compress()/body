@@ -23,7 +23,10 @@
  else       throw H2O.unimpl();
     }
   }
-  if (_ds != null)   return new C8DChunk(bufF(3));
+  if (_ds != null) {
+    for (int i=0; i < _len; i++)     if ((double)(float)_ds[i] != _ds[i])     return new C8DChunk(bufF(3));
+    return new C4FChunk(bufF(2));
+  }
   boolean first=true;
   for (int i=0; i < _len; i++) {
     if (isNA(i))     continue;
