@@ -1,5 +1,5 @@
 {
   HistogramTask other=(HistogramTask)drt;
   if (_histogram == null)   _histogram=other._histogram;
- else   for (int i=0; i < H2O.CLOUD.size(); ++i)   for (int j=0; j < _histogram[0].length; ++j)   _histogram[i][j]+=other._histogram[i][j];
+ else   Utils.add(_histogram,other._histogram);
 }
