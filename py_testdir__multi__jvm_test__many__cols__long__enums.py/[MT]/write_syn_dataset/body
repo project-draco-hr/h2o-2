@@ -1,0 +1,24 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
+    r1 = random.Random(SEED)
+    dsf = codecs.open(csvPathname, 'w+', 'utf-8')
+    for i in range(rowCount):
+        rowData = []
+        if JUST_EASIER_CHARS:
+            legalChars = (string.letters + '+-.,$ \t ')
+        else:
+            legalChars = string.printable
+        for j in range(colCount):
+            longEnum = ''
+            for k in range(ENUM_WIDTH):
+                if (JUST_EASY_CHARS | JUST_EASIER_CHARS):
+                    uStr = random.choice(legalChars)
+                else:
+                    u = random.randint(0, MAX_CHAR)
+                    uStr = str(unichr(u))
+                if ((uStr == '\n') or (uStr == '\r\n') or (uStr == '\r') or (uStr == "'")):
+                    uStr = 'a'
+                longEnum += uStr
+            rowData.append((("'" + longEnum) + "'"))
+        rowDataCsv = ','.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
