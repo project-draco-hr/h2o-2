@@ -2,12 +2,12 @@
   float sum=0;
   for (int i=0; i < _bins.length; i++) {
     if (_bins[i] <= 1)     continue;
-    long err=0;
+    float err=0;
     for (int j=0; j < _nclass; j++) {
-      long c=clss(i,j);
+      float c=clss(i,j);
       err+=c * c;
     }
-    sum+=(float)_bins[i] - ((float)err / _bins[i]);
+    sum+=(float)_bins[i] - (err / _bins[i]);
   }
   return sum;
 }
