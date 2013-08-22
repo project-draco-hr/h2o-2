@@ -4,12 +4,12 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
     for i in range(rowCount):
         rowData = []
         if JUST_EASIER_CHARS:
-            legalChars = ((string.letters + string.punctuation) + string.digits)
+            legalChars = (string.letters + '+-.,$ \t ')
         else:
             legalChars = string.printable
         for j in range(colCount):
             longEnum = ''
-            for k in range(3):
+            for k in range(ENUM_WIDTH):
                 if (JUST_EASY_CHARS | JUST_EASIER_CHARS):
                     uStr = random.choice(legalChars)
                 else:
