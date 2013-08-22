@@ -16,6 +16,11 @@
   Configuration conf=getConf();
   if (h2odriver_config.usingYarn()) {
     System.out.println("Driver program compiled with MapReduce V2 (Yarn)");
+  }
+ else {
+    System.out.println("Driver program compiled with MapReduce V1 (Classic)");
+  }
+{
     Pattern p=Pattern.compile("([1-9][0-9]*)([mgMG])");
     Matcher m=p.matcher(mapperXmx);
     boolean b=m.matches();
@@ -31,14 +36,19 @@
     if (units.equals("g") || units.equals("G")) {
       megabytes=megabytes * 1024;
     }
+    long jvmInternalMemoryMegabytes=(long)((double)megabytes * ((double)extraMemPercent) / 100.0);
+    long processTotalPhysicalMemoryMegabytes=megabytes + jvmInternalMemoryMegabytes;
     conf.set("mapreduce.job.ubertask.enable","false");
-    conf.set("mapreduce.map.memory.mb",Long.toString(megabytes));
-  }
- else {
-    System.out.println("Driver program compiled with MapReduce V1 (Classic)");
+    String mapreduceMapMemoryMb=Long.toString(processTotalPhysicalMemoryMegabytes);
+    conf.set("mapreduce.map.memory.mb",mapreduceMapMemoryMb);
     String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx;
     conf.set("mapred.child.java.opts",mapChildJavaOpts);
     conf.set("mapred.map.child.java.opts",mapChildJavaOpts);
+    System.out.println("Memory Settings:");
+    System.out.println("    mapred.child.java.opts:      " + mapChildJavaOpts);
+    System.out.println("    mapred.map.child.java.opts:  " + mapChildJavaOpts);
+    System.out.println("    Extra memory percent:        " + extraMemPercent);
+    System.out.println("    mapreduce.map.memory.mb:     " + mapreduceMapMemoryMb);
   }
   conf.set("mapred.used.genericoptionsparser","true");
   conf.set("mapreduce.map.speculative","false");

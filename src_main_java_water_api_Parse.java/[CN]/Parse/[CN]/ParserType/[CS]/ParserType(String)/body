@@ -1,7 +1,7 @@
 {
   super(name,false);
   setRefreshOnChange();
-  _values=new String[CustomParser.ParserType.values().length];
+  _values=new String[CustomParser.ParserType.values().length - 1];
   int i=0;
-  for (  CustomParser.ParserType t : CustomParser.ParserType.values())   _values[i++]=t.name();
+  for (  CustomParser.ParserType t : CustomParser.ParserType.values())   if (t != CustomParser.ParserType.XLSX)   _values[i++]=t.name();
 }

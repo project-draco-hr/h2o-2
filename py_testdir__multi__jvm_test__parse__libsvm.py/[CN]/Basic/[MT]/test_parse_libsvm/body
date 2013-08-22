@@ -1,8 +1,7 @@
 def test_parse_libsvm(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     importFolderPath = '/home/0xdiag/datasets/libsvm'
-    csvFilenameList = [('covtype.binary.svm', 'cC', 30, 1, 2, True, True), ('mnist_train.svm', 'cM', 30, 0, 9, False, False), ('syn_6_1000_10.svm', 'cK', 30, (-36), 36, True, False), ('syn_0_100_1000.svm', 'cL', 30, (-36), 36, True, False), ('duke.svm', 'cD', 30, (-1.0), 1.0, False, False), ('colon-cancer.svm', 'cA', 30, (-1.0), 1.0, False, False), ('news20.svm', 'cH', 30, 1, 20, False, False), ('connect4.svm', 'cB', 30, (-1), 1, False, False), ('gisette_scale.svm', 'cF', 30, (-1), 1, False, False), ('mushrooms.svm', 'cG', 30, 1, 2, False, False)]
-    h2b.browseTheCloud()
+    csvFilenameList = [('covtype.binary.svm', 'cC', 30, 1, 2, True, True), ('mnist_train.svm', 'cM', 30, 0, 9, False, False), ('duke.svm', 'cD', 30, (-1.0), 1.0, False, False), ('colon-cancer.svm', 'cA', 30, (-1.0), 1.0, False, False), ('news20.svm', 'cH', 30, 1, 20, False, False), ('connect4.svm', 'cB', 30, (-1), 1, False, False), ('gisette_scale.svm', 'cF', 30, (-1), 1, False, False), ('mushrooms.svm', 'cG', 30, 1, 2, False, False)]
     lenNodes = len(h2o.nodes)
     firstDone = False
     for (csvFilename, key2, timeoutSecs, expectedCol0Min, expectedCol0Max, enableDownloadReparse, enableSizeChecks) in csvFilenameList:
@@ -45,14 +44,21 @@ def test_parse_libsvm(self):
             num_rowsB = inspect['num_rows']
             row_sizeB = inspect['row_size']
             value_size_bytesB = inspect['value_size_bytes']
-            self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
-            self.assertEqual(num_colsA, num_colsB, ('num_cols mismatches after re-parse of downloadCsv result %d %d' % (num_colsA, num_colsB)))
-            self.assertEqual(num_rowsA, num_rowsB, ('num_rows mismatches after re-parse of downloadCsv result %d %d' % (num_rowsA, num_rowsB)))
+            df = h2o_util.JsonDiff(inspectFirst, inspect, with_values=True)
+            print 'df.difference:', h2o.dump_json(df.difference)
+            for (i, d) in enumerate(df.difference):
+                if (('variance' in d) or ('response.time' in d) or ('key' in d) or ('value_size_bytes' in d) or ('row_size' in d)):
+                    pass
+                else:
+                    raise Exception(('testing %s, found unexpected mismatch in df.difference[%d]: %s' % (csvPathname, i, d)))
             if (DO_SIZE_CHECKS and enableSizeChecks):
                 print 'Comparing original inspect to the inspect after parsing the downloaded csv'
-                df = h2o_util.JsonDiff(inspectFirst, inspect, with_values=True)
-                print 'df.difference:', h2o.dump_json(df.difference)
                 self.assertGreater(len(df.difference), 29, msg=('Want >=30 , not %d differences between the two rfView json responses. %s' % (len(df.difference), h2o.dump_json(df.difference))))
                 self.assertEqual(row_sizeA, row_sizeB, ('row_size mismatches after re-parse of downloadCsv result %d %d' % (row_sizeA, row_sizeB)))
                 self.assertEqual(value_size_bytesA, value_size_bytesB, ('value_size_bytes mismatches after re-parse of downloadCsv result %d %d' % (value_size_bytesA, value_size_bytesB)))
+            print 'missingValuesListA:', missingValuesListA
+            print 'missingValuesListB:', missingValuesListB
+            self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
+            self.assertEqual(num_colsA, num_colsB, ('num_cols mismatches after re-parse of downloadCsv result %d %d' % (num_colsA, num_colsB)))
+            self.assertEqual(num_rowsA, num_rowsB, ('num_rows mismatches after re-parse of downloadCsv result %d %d' % (num_rowsA, num_rowsB)))
         h2o.check_sandbox_for_errors()
