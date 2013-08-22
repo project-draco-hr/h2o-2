@@ -6,6 +6,7 @@
   res._normalized=normalize;
   res._randSeed=randSeed;
   res._maxIter=maxIter;
+  res._initialization=init;
   UKV.put(job.dest(),res);
   final int[] filteredCols=res.columnMapping(va.colNames());
   H2OCountedCompleter task=new H2OCountedCompleter(){

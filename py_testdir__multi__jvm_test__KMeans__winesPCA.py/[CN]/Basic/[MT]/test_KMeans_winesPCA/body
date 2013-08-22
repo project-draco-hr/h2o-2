@@ -6,7 +6,7 @@ def test_KMeans_winesPCA(self):
     h2o.check_sandbox_for_errors()
     inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
     print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-    kwargs = {'cols': None, 'epsilon': 1e-06, 'k': 3, 'seed': 265211114317615310, }
+    kwargs = {'cols': None, 'initialization': 'Furthest', 'k': 3, 'seed': 265211114317615310, }
     timeoutSecs = 480
     for trial in range(10):
         start = time.time()

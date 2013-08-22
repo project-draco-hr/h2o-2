@@ -14,7 +14,7 @@ def test_parse_bounds_libsvm(self):
         print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_cmd.infoFromInspect(inspect, csvFilename)
         for trial in range(2):
-            kwargs = {'k': 3, 'epsilon': 1e-06, 'seed': 265211114317615310, }
+            kwargs = {'k': 3, 'initialization': 'Furthest', 'seed': 265211114317615310, }
             timeoutSecs = 600
             start = time.time()
             kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)

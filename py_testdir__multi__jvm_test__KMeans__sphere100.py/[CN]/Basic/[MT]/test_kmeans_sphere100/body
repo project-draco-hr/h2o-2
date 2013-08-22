@@ -14,7 +14,7 @@ def test_kmeans_sphere100(self):
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname2, key2=(csvFilename2 + '.hex'))
     cols = ','.join(map(str, range(DIMENSIONS)))
     for trial in range(10):
-        kwargs = {'k': CLUSTERS, 'epsilon': 1e-06, 'cols': cols, 'destination_key': 'syn_spheres100.hex', }
+        kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'syn_spheres100.hex', }
         timeoutSecs = 100
         start = time.time()
         kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
