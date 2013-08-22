@@ -1,0 +1,22 @@
+{
+  try {
+    JsonObject j=new JsonObject();
+    Key dest=_dest.value();
+    ValueArray ary=_key.value();
+    PCAParams pcaParams=getPCAParams();
+    int[] cols=new int[ary._cols.length];
+    for (int i=0; i < cols.length; i++)     cols[i]=i;
+    DataFrame data=DGLM.getData(ary,cols,null,true);
+    JsonObject resPCA=DPCA.buildModel(null,dest,data,pcaParams._num_pc).toJson();
+    Response r=Response.done(resPCA);
+    return r;
+  }
+ catch (  RuntimeException e) {
+    Log.err(e);
+    return Response.error(e.getMessage());
+  }
+catch (  Throwable t) {
+    Log.err(t);
+    return Response.error(t.getMessage());
+  }
+}

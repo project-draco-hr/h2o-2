@@ -1,0 +1,18 @@
+{
+  JsonObject res=new JsonObject();
+  res.addProperty(Constants.VERSION,H2O.VERSION);
+  res.addProperty(Constants.TYPE,PCAModel.class.getName());
+  res.addProperty(Constants.MODEL_KEY,_selfKey.toString());
+  res.add("PCAParams",_pcaParams.toJson());
+  JsonObject sdev=new JsonObject();
+  for (int i=0; i < _sdev.length; i++)   sdev.addProperty("PC_" + i,_sdev[i]);
+  res.add("stdDev",sdev);
+  JsonArray eigvec=new JsonArray();
+  for (int i=0; i < _pcaParams._num_pc; i++) {
+    JsonObject vec=new JsonObject();
+    for (int j=0; j < _eigVec[i].length; j++)     vec.addProperty(_va._cols[j]._name,_eigVec[i][j]);
+    eigvec.add(vec);
+  }
+  res.add("eigenvectors",eigvec);
+  return res;
+}
