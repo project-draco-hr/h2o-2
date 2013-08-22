@@ -36,6 +36,13 @@
       }
       mapperXmx=args[i];
     }
+ else     if (s.equals("-extramempercent")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      extraMemPercent=Integer.parseInt(args[i]);
+    }
  else     if (s.equals("-driverif")) {
       i++;
       if (i >= args.length) {
@@ -83,6 +90,9 @@
   }
   if (!mapperXmx.matches("[1-9][0-9]*[mgMG]")) {
     error("-mapperXmx invalid (try something like -mapperXmx 4g)");
+  }
+  if (extraMemPercent < 0) {
+    extraMemPercent=DEFAULT_EXTRA_MEM_PERCENT;
   }
   if (jobtrackerName == null) {
     Random rng=new Random();
