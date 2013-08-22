@@ -1,12 +1,12 @@
 {
   int bin=prev.bin(chks,i);
-  long[] ycls=prev._ycls[bin];
-  long bits=0;
+  float[] ycls=prev._ycls[bin];
+  boolean empty=true;
   for (int c=0; c < _nclass; c++) {
     clss[c]+=ycls[c];
-    bits|=ycls[c];
+    if (empty && ycls[c] != 0.0f)     empty=false;
   }
-  if (bits == 0 && prev._pid != -1) {
+  if (empty && prev._pid != -1) {
     assert recur;
     prev=prev._tree.decided(prev._pid);
     classScore(prev,clss,chks,i,false);

@@ -1,4 +1,9 @@
 {
   byte[] bits=v.getFirstBytes();
-  return unzipBytes(bits,guessCompressionMethod(bits));
+  try {
+    return unzipBytes(bits,guessCompressionMethod(bits));
+  }
+ catch (  Exception e) {
+    return null;
+  }
 }
