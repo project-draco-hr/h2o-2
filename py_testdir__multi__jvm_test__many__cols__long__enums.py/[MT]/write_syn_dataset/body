@@ -6,7 +6,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
         if JUST_EASIER_CHARS:
             print 'Avoiding plus, minus and period and odd whitespace chars. % also..but $ okay?. Comma causes issues?'
             otherLegalPunctuation = '!#&()*/:;<=>?@[\\]^_`{|}~'
-            legalChars = (((string.letters + string.digits) + "'$ \t") + otherLegalPunctuation)
+            legalChars = (((string.letters + string.digits) + "+-.,$' \t") + otherLegalPunctuation)
         else:
             legalChars = string.printable
         for j in range(colCount):
