@@ -1,0 +1,13 @@
+def test_KMeans_twit(self):
+    csvFilename = 'Twitter2DB.txt'
+    print '\nStarting', csvFilename
+    csvPathname = h2o.find_file(('smalldata/' + csvFilename))
+    h2b.browseTheCloud()
+    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    expected = [([5647967.1, 40487.76], 1000000, 60028168), ([21765291.7, 93129.26], 2000000, 479913618), ([310527.2, 13433.89], 3000000, 1619244994)]
+    allowedDelta = (0.01, 0.01, 0.01)
+    for trial in range(2):
+        kwargs = {'k': 3, 'max_iter': 50, 'epsilon': 0.0001, 'normalize': 0, 'cols': '0,1', 'initialization': 'Furthest', 'destination_key': parseKey['destination_key'], 'seed': 265211114317615310, }
+        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=5, **kwargs)
+        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
+        h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=trial)
