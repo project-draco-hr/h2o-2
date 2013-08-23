@@ -1,6 +1,7 @@
 {
-  String n=" <= " + _tree._names[_col] + " <= ";
+  String n=" <= " + _tree._names[_col] + " < ";
   String s=new String();
-  for (int i=0; i < _ns.length; i++)   s+=_mins[i] + n + _maxs[i]+ " = "+ Arrays.toString(_ycls[i])+ "\n";
-  return s + " " + _min+ " "+ _step;
+  float f=_bmin;
+  for (int i=0; i < _nids.length; i++)   s+=f + n + (f+=_step)+ " = "+ Arrays.toString(_pred[i])+ "\n";
+  return s;
 }

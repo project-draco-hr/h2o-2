@@ -1,3 +1,5 @@
 {
-  return _bins[bin] > 1 ? _Ss[bin] / (_bins[bin] - 1) : 0;
+  float sum=0;
+  for (int i=0; i < _nclass; i++)   sum+=var(b,i);
+  return sum;
 }

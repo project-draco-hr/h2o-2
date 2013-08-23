@@ -15,9 +15,10 @@
     boolean found=false;
     for (int j=1; j < N; j++)     if (h2o != c0.chunkKey(j).home_node())     found=true;
     assertTrue("Expecting to find distribution",found || H2O.CLOUD.size() == 1);
+    Vec vy=fr.remove(54);
     int mtrys=Math.max((int)Math.sqrt(fr.numCols()),1);
     long seed=(1L << 32) | 2;
-    DRF drf=DRF.start(DRF.makeKey(),fr,50,5,mtrys,0.67,seed);
+    DRF drf=DRF.start(DRF.makeKey(),fr,vy,50,5,mtrys,0.67,seed);
     drf.get();
     UKV.remove(drf.destination_key);
   }

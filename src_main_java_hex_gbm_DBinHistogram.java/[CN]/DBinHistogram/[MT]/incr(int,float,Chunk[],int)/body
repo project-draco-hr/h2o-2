@@ -1,0 +1,17 @@
+{
+  int b=bin(d);
+  if (_Ms[b] == null) {
+    _Ms[b]=MemoryManager.malloc4f(_nclass);
+    _Ss[b]=MemoryManager.malloc4f(_nclass);
+  }
+  _bins[b]++;
+  long k=_bins[b];
+  if (d < _mins[b])   _mins[b]=d;
+  if (d > _maxs[b])   _maxs[b]=d;
+  for (int c=0; c < _nclass; c++) {
+    float y=(float)chks[ychk + c].at0(row);
+    float oldM=_Ms[b][c];
+    float newM=_Ms[b][c]=oldM + (y - oldM) / k;
+    _Ss[b][c]+=(y - oldM) * (y - newM);
+  }
+}

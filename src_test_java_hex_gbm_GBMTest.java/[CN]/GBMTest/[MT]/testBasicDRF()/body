@@ -1,21 +1,23 @@
 {
-  File file=TestUtil.find_test_file("./smalldata/logreg/prostate.csv");
-  Key fkey=NFSFileVec.make(file);
-  Key dest=Key.make("prostate.hex");
-  Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
-  UKV.remove(fkey);
-  try {
-    assertEquals(380,fr._vecs[0].length());
-    UKV.remove(fr.remove("ID")._key);
-    Vec capsule=fr.remove("CAPSULE");
-    fr.add("CAPSULE",capsule);
-    int mtrys=Math.max((int)Math.sqrt(fr.numCols()),1);
-    long seed=(1L << 32) | 2;
-    DRF drf=DRF.start(DRF.makeKey(),fr,50,5,mtrys,0.67,seed);
-    drf.get();
-    UKV.remove(drf.destination_key);
+  basicDRF("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      return fr.remove(1);
+    }
   }
-  finally {
-    UKV.remove(dest);
+);
+  basicDRF("./smalldata/logreg/prostate.csv","prostate.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      assertEquals(380,fr.numRows());
+      UKV.remove(fr.remove("ID")._key);
+      return fr.remove("CAPSULE");
+    }
   }
+);
+  basicDRF("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      assertEquals(581012,fr.numRows());
+      return fr.remove(54);
+    }
+  }
+);
 }

@@ -1,0 +1,11 @@
+{
+  final DRF job=new DRF(dest,fr);
+  H2O.submitTask(job.start(new H2OCountedCompleter(){
+    @Override public void compute2(){
+      job.run(fr,vresponse,maxDepth,ntrees,mtrys,(float)sampleRate,seed);
+      tryComplete();
+    }
+  }
+));
+  return job;
+}
