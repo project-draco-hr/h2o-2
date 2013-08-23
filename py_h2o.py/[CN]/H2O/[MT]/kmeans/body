@@ -1,5 +1,5 @@
 def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, **kwargs):
-    params_dict = {'epsilon': 1e-06, 'k': 1, 'source_key': key, 'destination_key': None, }
+    params_dict = {'initialization': 'Furthest', 'k': 1, 'source_key': key, 'destination_key': None, }
     if (key2 is not None):
         params_dict['destination_key'] = key2
     browseAlso = kwargs.get('browseAlso', False)

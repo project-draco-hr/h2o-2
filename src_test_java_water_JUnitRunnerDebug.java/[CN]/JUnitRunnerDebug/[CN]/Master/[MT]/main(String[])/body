@@ -8,7 +8,7 @@
   new NodeCL(("-ip 127.0.0.1 -port 54323 -flatfile " + flat).split(" ")).start();
   new NodeCL(("-ip 127.0.0.1 -port 54325 -flatfile " + flat).split(" ")).start();
   ArrayList<Class> tests=new ArrayList<Class>();
-  tests.add(ValueArrayToFrameTest.class);
+  tests.add(KMeansTest.class);
   Result result=org.junit.runner.JUnitCore.runClasses(tests.toArray(new Class[0]));
   if (result.getFailures().size() == 0)   System.out.println("Success!");
  else   for (  Failure f : result.getFailures()) {

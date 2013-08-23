@@ -32,6 +32,10 @@
             boolean val=(Boolean)defaultValue;
             arg=new Bool(f.getName(),val,api.help());
           }
+ else           if (Enum.class.isAssignableFrom(f.getType())) {
+            Enum val=(Enum)defaultValue;
+            arg=new EnumArgument(f.getName(),val);
+          }
  else           if (f.getType() == Key.class)           arg=new H2OKey(f.getName(),api.required());
         }
         if (ColumnSelect.class.isAssignableFrom(api.filter())) {

@@ -3,7 +3,7 @@
   Key target=Key.make("air.kmeans");
   ValueArray va=UKV.get(k1);
   Timer t=new Timer();
-  KMeans.start(target,va,8,1e-2,0,SEED,false,0).get();
+  KMeans.start(target,va,8,Initialization.Furthest,100,SEED,false,0).get();
   Log.debug(Sys.KMEAN,"ms= " + t);
   KMeansModel res=UKV.get(target);
   res.clusters();
