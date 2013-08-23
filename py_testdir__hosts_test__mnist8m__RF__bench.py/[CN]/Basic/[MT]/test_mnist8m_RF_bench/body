@@ -38,7 +38,7 @@ def test_mnist8m_RF_bench(self):
         modelKey = rfView['model_key']
         kwargs = configs.copy()
         testRFStart = time.time()
-        kwargs.update({'model_key': modelKey, 'ntree': 10, })
+        kwargs.update({'model_key': modelKey, 'ntree': 10, 'out_of_bag_error_estimate': 1, })
         rfView = h2o_cmd.runRFView(data_key=destKey, timeoutSecs=180, doSimpleCheck=False, **kwargs)
         testViewTime = (time.time() - testRFStart)
         pprint(rfView)
