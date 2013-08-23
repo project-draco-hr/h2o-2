@@ -1,7 +1,7 @@
 {
   ValueArray va=source_key.value();
   Key source=va._key;
-  double ep=epsilon.value();
+  Initialization init=initialization.value();
   long seed_=seed.record()._valid ? seed.value() : seed._defaultValue;
   boolean norm=normalize.record()._valid ? normalize.value() : normalize._defaultValue;
   int[] columns=cols.value();
@@ -11,5 +11,5 @@
     if (dot > 0)     n=n.substring(0,dot);
     dest=Key.make(n + Extensions.KMEANS);
   }
-  return hex.KMeans.start(dest,va,k,ep,maxIter,seed_,norm,columns);
+  return hex.KMeans.start(dest,va,k,init,maxIter,seed_,norm,columns);
 }

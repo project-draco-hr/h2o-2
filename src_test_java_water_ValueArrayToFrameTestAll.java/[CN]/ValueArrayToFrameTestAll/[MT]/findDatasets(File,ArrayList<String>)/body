@@ -1,0 +1,10 @@
+{
+  for (  File file : folder.listFiles()) {
+    if (file.isDirectory())     findDatasets(file,paths);
+ else {
+      if (file.getPath().endsWith(".csv") || file.getPath().endsWith(".data") || file.getPath().endsWith(".dat")|| file.getPath().endsWith(".xls")|| file.getPath().endsWith(".zip")|| file.getPath().endsWith(".gz")) {
+        if (true && !file.getPath().endsWith("mixed_causes_NA.csv") && !file.getPath().endsWith("badchars.csv")&& !file.getPath().endsWith("datagen1.csv")&& !file.getPath().endsWith("sdss174052.csv.gz")&& !file.getPath().endsWith("hex-443.parsetmp_1_0_0_0.data")&& !file.getPath().endsWith("iris_header.csv")&& !file.getPath().endsWith("parse_fail_double_space.csv")&& !file.getPath().endsWith("random1csv.data")&& true)         paths.add(file.getAbsolutePath());
+      }
+    }
+  }
+}

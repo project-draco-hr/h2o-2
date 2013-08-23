@@ -1,14 +1,8 @@
-def run_rf(files, configs, s3n):
+def run_rf(files, configs):
     overallWallStart = time.time()
     importFolderPath = '/home/0xdiag/datasets/mnist/mnist8m'
     importFolderResult = h2i.setupImportFolder(None, importFolderPath)
     output = None
-    if (not os.path.exists('rfbench.csv')):
-        output = open('rfbench.csv', 'w')
-        output.write((','.join(csv_header) + '\n'))
-    else:
-        output = open('rfbench.csv', 'a')
-    csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
     try:
         java_heap_GB = h2o.nodes[0].java_heap_GB
         trainParseWallStart = time.time()
@@ -47,6 +41,6 @@ def run_rf(files, configs, s3n):
         overallWallTime = (time.time() - overallWallStart)
         row.update({'overallWallTime': overallWallTime, })
         row.update({'errRate': errRate, })
-        csvWrt.writerow(row)
+        print row
     finally:
         output.close()

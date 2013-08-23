@@ -9,7 +9,7 @@
     for (int i=0; i < cols.length; i++)     cols[i]=i;
     ValueArray va=va_maker(source,(Object[])array);
     Timer t=new Timer();
-    KMeans.start(target,va,goals.length,1e-6,0,SEED,false,cols).get();
+    KMeans.start(target,va,goals.length,Initialization.Furthest,100,SEED,false,cols).get();
     Log.debug(Sys.KMEAN," testGaussian rows:" + rows + ", ms:"+ t);
     KMeansModel res=UKV.get(target);
     double[][] clusters=res.clusters();
