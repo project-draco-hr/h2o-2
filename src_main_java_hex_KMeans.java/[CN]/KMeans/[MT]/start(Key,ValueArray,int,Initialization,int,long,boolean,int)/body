@@ -1,5 +1,9 @@
 {
   final KMeans job=new KMeans(dest,k,cols);
+  if (cols == null || cols.length == 0) {
+    cols=new int[va._cols.length - 1];
+    for (int i=0; i < cols.length; i++)     cols[i]=i;
+  }
   int cols2[]=Arrays.copyOf(cols,cols.length + 1);
   cols2[cols.length]=-1;
   final KMeansModel res=new KMeansModel(job.dest(),cols2,va._key);
