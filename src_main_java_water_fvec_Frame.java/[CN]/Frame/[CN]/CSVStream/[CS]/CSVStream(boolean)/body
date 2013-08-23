@@ -1,0 +1,9 @@
+{
+  StringBuilder sb=new StringBuilder();
+  if (headers) {
+    sb.append('"' + _names[0] + '"');
+    for (int i=1; i < _vecs.length; i++)     sb.append(',').append('"' + _names[i] + '"');
+    sb.append('\n');
+  }
+  _line=sb.toString().getBytes();
+}

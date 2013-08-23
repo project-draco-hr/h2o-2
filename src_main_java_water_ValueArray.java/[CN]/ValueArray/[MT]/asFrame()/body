@@ -9,7 +9,11 @@
   task._vaKey=_key;
   task._vecs=avs;
   task.invoke(_key);
+  avs=task._vecs;
   Vec[] vecs=new Vec[avs.length];
-  for (int i=0; i < avs.length; ++i)   vecs[i]=avs[i].close(null);
+  for (int i=0; i < avs.length; ++i) {
+    vecs[i]=avs[i].close(null);
+    vecs[i]._domain=_cols[i]._domain;
+  }
   return new Frame(names,vecs);
 }

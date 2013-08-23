@@ -1,6 +1,6 @@
 def test_many_cols_with_syn(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(5, 7, 'cA', 5), (5, 7, 'cA', 5), (5, 7, 'cA', 5), (5, 7, 'cA', 5), (5, 7, 'cA', 5), (5, 7, 'cA', 5), (5, 7, 'cA', 5), (5, 7, 'cA', 5)]
+    tryList = [(5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5)]
     lenNodes = len(h2o.nodes)
     cnum = 0
     for (rowCount, colCount, key2, timeoutSecs) in tryList:
@@ -10,7 +10,7 @@ def test_many_cols_with_syn(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
         SEPARATOR = ord(',')
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10, separator=SEPARATOR)
+        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10, separator=SEPARATOR, header=1)
         print csvFilename, 'parse time:', parseKey['response']['time']
         print "Parse result['destination_key']:", parseKey['destination_key']
         inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])

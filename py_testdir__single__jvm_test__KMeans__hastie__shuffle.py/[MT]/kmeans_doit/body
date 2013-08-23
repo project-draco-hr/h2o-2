@@ -2,7 +2,7 @@ def kmeans_doit(self, csvFilename, csvPathname, num_rows, timeoutSecs=30):
     print '\nStarting KMeans of', csvFilename
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'), timeoutSecs=10)
     cols = ','.join(map(str, range(11)))
-    kwargs = {'k': 1, 'epsilon': 1e-06, 'cols': cols, 'destination_key': 'KMeansModel.hex', 'seed': 265211114317615310, }
+    kwargs = {'k': 1, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'KMeansModel.hex', 'seed': 265211114317615310, }
     start = time.time()
     kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
     elapsed = (time.time() - start)
