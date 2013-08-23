@@ -1,17 +1,20 @@
 {
-  JsonArray rows=json.getAsJsonArray("eigenvectors");
   sb.append("<span style='display: inline-block;'>");
   sb.append("<table class='table table-striped table-bordered'>");
   sb.append("<tr>");
-  sb.append("<th>Eigenvectors</th>");
-  for (int i=0; i < m._va._cols.length - 1; i++)   sb.append("<th>").append(m._va._cols[i]._name).append("</th>");
+  sb.append("<th>Feature</th>");
+  for (int i=0; i < m._pcaParams._num_pc; i++)   sb.append("<th>").append("PC" + i).append("</th>");
   sb.append("</tr>");
-  for (int r=0; r < rows.size(); r++) {
+  sb.append("<tr class='warning'>");
+  sb.append("<td>").append("&sigma;").append("</td>");
+  for (int c=0; c < m._sdev.length; c++)   sb.append("<td>").append(ElementBuilder.format(m._sdev[c])).append("</td>");
+  sb.append("</tr>");
+  for (int r=0; r < m._va._cols.length; r++) {
     sb.append("<tr>");
-    sb.append("<td>").append(r).append("</td>");
-    for (int c=0; c < m._eigVec[0].length - 1; c++) {
-      JsonElement e=rows.get(r).getAsJsonArray().get(c);
-      sb.append("<td>").append(ElementBuilder.format(e.getAsDouble())).append("</td>");
+    sb.append("<th>").append(m._va._cols[r]._name).append("</th>");
+    for (int c=0; c < m._pcaParams._num_pc; c++) {
+      double e=m._eigVec[c][r];
+      sb.append("<td>").append(ElementBuilder.format(e)).append("</td>");
     }
     sb.append("</tr>");
   }

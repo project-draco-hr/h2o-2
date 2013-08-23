@@ -7,8 +7,11 @@
     int[] cols=new int[ary._cols.length];
     for (int i=0; i < cols.length; i++)     cols[i]=i;
     DataFrame data=DGLM.getData(ary,cols,null,true);
-    JsonObject resPCA=DPCA.buildModel(null,dest,data,pcaParams._num_pc).toJson();
-    Response r=Response.done(resPCA);
+    PCAJob job=DPCA.startPCAJob(dest,data,pcaParams);
+    j.addProperty(JOB,job.self().toString());
+    j.addProperty(DEST_KEY,job.dest().toString());
+    Response r=Progress.redirect(j,job.self(),job.dest());
+    r.setBuilder(Constants.DEST_KEY,new KeyElementBuilder());
     return r;
   }
  catch (  RuntimeException e) {

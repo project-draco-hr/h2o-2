@@ -5,8 +5,13 @@
   res.addProperty(Constants.MODEL_KEY,_selfKey.toString());
   res.add("PCAParams",_pcaParams.toJson());
   JsonObject sdev=new JsonObject();
-  for (int i=0; i < _sdev.length; i++)   sdev.addProperty("PC_" + i,_sdev[i]);
+  JsonObject prop=new JsonObject();
+  for (int i=0; i < _sdev.length; i++) {
+    sdev.addProperty("PC" + i,_sdev[i]);
+    prop.addProperty("PC" + i,_propVar[i]);
+  }
   res.add("stdDev",sdev);
+  res.add("propVar",prop);
   JsonArray eigvec=new JsonArray();
   for (int i=0; i < _pcaParams._num_pc; i++) {
     JsonObject vec=new JsonObject();
