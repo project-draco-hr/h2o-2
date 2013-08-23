@@ -15,7 +15,7 @@ def test_mnist8m_RF_bench(self):
         print 'Training file is: ', files['train']
         csvPathname = files['train']
         destKey = (files['train'] + '.hex')
-        parseKey = h2i.parseImportFolderFile(None, csvPathname, importFolderPath, key2=destKey, timeoutSecs=300, retryDelaySecs=5, pollTimeoutSecs=120)
+        parseKey = h2i.parseImportFolderFile(None, csvPathname, importFolderPath, key2=destKey, timeoutSecs=3600, retryDelaySecs=5, pollTimeoutSecs=120)
         trainParseWallTime = (time.time() - trainParseWallStart)
         inspect = h2o.nodes[0].inspect(parseKey['destination_key'])
         row = {'java_heap_GB': java_heap_GB, 'dataset': 'mnist8m', 'nTrainRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'trainParseWallTime': trainParseWallTime, }
@@ -30,7 +30,7 @@ def test_mnist8m_RF_bench(self):
         print 'Testing file is: ', files['test']
         csvPathname = files['test']
         destKey = (files['test'] + '.hex')
-        parseKey = h2i.parseImportFolderFile(None, csvPathname, importFolderPath, key2=destKey, timeoutSecs=300, retryDelaySecs=5, pollTimeoutSecs=120)
+        parseKey = h2i.parseImportFolderFile(None, csvPathname, importFolderPath, key2=destKey, timeoutSecs=3600, retryDelaySecs=5, pollTimeoutSecs=120)
         testParseWallTime = (time.time() - testParseWallStart)
         inspect = h2o.nodes[0].inspect(parseKey['destination_key'])
         row.update({'nTestRows': inspect['num_rows'], })
@@ -39,7 +39,7 @@ def test_mnist8m_RF_bench(self):
         kwargs = configs.copy()
         testRFStart = time.time()
         kwargs.update({'model_key': modelKey, 'ntree': 10, 'out_of_bag_error_estimate': 1, })
-        rfView = h2o_cmd.runRFView(data_key=destKey, timeoutSecs=180, doSimpleCheck=False, **kwargs)
+        rfView = h2o_cmd.runRFView(data_key=destKey, timeoutSecs=3600, doSimpleCheck=False, **kwargs)
         testViewTime = (time.time() - testRFStart)
         pprint(rfView)
         errRate = rfView['confusion_matrix']['classification_error']
