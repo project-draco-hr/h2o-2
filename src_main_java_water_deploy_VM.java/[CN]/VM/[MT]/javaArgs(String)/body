@@ -1,0 +1,7 @@
+{
+  RuntimeMXBean r=ManagementFactory.getRuntimeMXBean();
+  ArrayList<String> list=new ArrayList<String>();
+  for (  String s : r.getInputArguments())   if (!s.startsWith("-agentlib"))   if (!s.startsWith("-Xbootclasspath"))   list.add(s);
+  list.add(main);
+  return list.toArray(new String[list.size()]);
+}

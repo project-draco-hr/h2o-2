@@ -7,7 +7,7 @@ def test_kmeans_sphere3(self):
     parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
     for trial in range(10):
         kwargs = {'k': 3, 'initialization': 'Furthest', 'epsilon': 1e-06, 'cols': None, 'destination_key': 'spheres3.hex', 'seed': 0, }
-        timeoutSecs = 30
+        timeoutSecs = 90
         start = time.time()
         kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)

@@ -1,0 +1,20 @@
+{
+  Train8mInput input=new Train8mInput();
+  double[] means=new double[PIXELS];
+  for (input._n=0; input._n < COUNT; input._n++) {
+    input.fprop(0,input._a.length);
+    for (int i=0; i < input._a.length; i++)     means[i]+=input._a[i];
+  }
+  for (int i=0; i < means.length; i++)   means[i]/=COUNT;
+  double[] sigmas=new double[PIXELS];
+  for (input._n=0; input._n < COUNT; input._n++) {
+    input.fprop(0,input._a.length);
+    for (int i=0; i < input._a.length; i++) {
+      double d=input._a[i] - means[i];
+      sigmas[i]+=d * d;
+    }
+  }
+  for (int i=0; i < means.length; i++)   sigmas[i]=Math.sqrt(sigmas[i] / (COUNT - 1));
+  System.out.println(Arrays.toString(means));
+  System.out.println(Arrays.toString(sigmas));
+}

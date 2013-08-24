@@ -1,0 +1,12 @@
+{
+  int count=1000, correct=0;
+  for (int n=0; n < count; n++) {
+    if (Mnist8m.eval(ls,n,null)) {
+      correct++;
+    }
+  }
+  double error=(count - (double)correct) / count;
+  String train=Mnist8m._format.format(error * 100f);
+  System.out.println("Error: " + train);
+  return error;
+}

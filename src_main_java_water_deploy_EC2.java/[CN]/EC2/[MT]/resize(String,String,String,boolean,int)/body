@@ -55,5 +55,8 @@
   }
   System.out.println("EC2 public IPs: " + Utils.join(' ',pub));
   System.out.println("EC2 private IPs: " + Utils.join(' ',prv));
-  return new Cloud(pub,prv);
+  Cloud cloud=new Cloud();
+  cloud._publicIPs.addAll(Arrays.asList(pub));
+  cloud._privateIPs.addAll(Arrays.asList(prv));
+  return cloud;
 }

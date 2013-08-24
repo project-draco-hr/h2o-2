@@ -1,0 +1,10 @@
+{
+  if (!new File(IMAGES_SHUFFLED).exists())   shuffle();
+  FileSystem fs=FileSystems.getDefault();
+  Set<StandardOpenOption> options=EnumSet.of(StandardOpenOption.READ);
+  FileChannel images=FileChannel.open(fs.getPath(IMAGES_SHUFFLED),options);
+  for (int i=0; i < _images.length; i++)   _images[i]=images.map(MapMode.READ_ONLY,i * PAGE_SIZE,PAGE_SIZE);
+  RandomAccessFile labels=new RandomAccessFile(LABELS_SHUFFLED,"r");
+  for (int n=0; n < _labels.length; n++)   _labels[n]=labels.readByte();
+  Utils.close(labels);
+}

@@ -1,12 +1,12 @@
 {
-  ArrayList<String> l=new ArrayList<String>();
+  Set<String> set=new HashSet<String>();
   if (Boot._init.fromJar()) {
-    if (new File("target/h2o.jar").exists())     l.add("target/h2o.jar");
- else     l.add("h2o.jar");
+    if (new File("target/h2o.jar").exists())     set.add("target/h2o.jar");
+ else     set.add("h2o.jar");
   }
  else {
-    l.add("target");
-    l.add("lib");
+    set.add("target");
+    set.add("lib");
   }
-  return l.toArray(new String[0]);
+  return set;
 }

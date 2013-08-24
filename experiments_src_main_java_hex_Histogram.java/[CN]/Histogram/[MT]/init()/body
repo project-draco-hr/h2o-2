@@ -1,0 +1,16 @@
+{
+  final CountDownLatch latch=new CountDownLatch(1);
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      initFromSwingThread();
+      latch.countDown();
+    }
+  }
+);
+  try {
+    latch.await();
+  }
+ catch (  InterruptedException e) {
+    throw new RuntimeException(e);
+  }
+}

@@ -1,7 +1,6 @@
 {
   _args=new ArrayList<String>();
   _args.add(System.getProperty("java.home") + "/bin/java");
-  if (java != null)   _args.addAll(Arrays.asList(java));
   _args.add("-cp");
   String cp="";
   for (  URL url : ((URLClassLoader)ClassLoader.getSystemClassLoader()).getURLs()) {
@@ -13,6 +12,6 @@
     }
   }
   _args.add(cp);
-  _args.add(getClass().getName());
+  _args.addAll(Arrays.asList(java));
   if (args != null)   _args.addAll(Arrays.asList(args));
 }

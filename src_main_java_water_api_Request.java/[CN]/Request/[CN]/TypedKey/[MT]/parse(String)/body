@@ -1,0 +1,7 @@
+{
+  Key k=Key.make(input);
+  Value v=DKV.get(k);
+  if (v == null)   throw new IllegalArgumentException(input + ":" + errors()[0]);
+  if (v.type() != TypeMap.onLoad(_type.getName()))   throw new IllegalArgumentException(input + ":" + errors()[1]);
+  return k;
+}

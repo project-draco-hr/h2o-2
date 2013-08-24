@@ -1,0 +1,17 @@
+{
+  if (_field.getType() == boolean.class) {
+    if (_rand.nextDouble() < _rate) {
+      _last=_best == 0 ? 1 : 0;
+      _field.set(o,_last == 1);
+    }
+  }
+ else {
+    double delta=_best * _rate;
+    double min=_best - delta, max=_best + delta;
+    _last=min + _rand.nextDouble() * (max - min);
+    if (_field.getType() == float.class)     _field.set(o,(float)_last);
+ else     if (_field.getType() == int.class)     _field.set(o,(int)_last);
+  }
+  String change=_best + " -> " + _last;
+  Log.info(this + ": " + change);
+}

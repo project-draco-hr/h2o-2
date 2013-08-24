@@ -1,11 +1,7 @@
-import unittest, time, sys
+import unittest, time, sys, os
 sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_hosts, h2o_rf, h2o_util
-import getpass
-if (getpass.getuser() == 'jenkins'):
-    USE_LOCAL = False
-else:
-    USE_LOCAL = True
+import h2o, h2o_cmd, h2o_hosts, h2o_rf, h2o_util, h2o_import as h2i
+USE_LOCAL = True
 print 'Try params to get best result on build_cloud(1) local (1 jvm) '
 print 'experimenting with class_weights and strata_samples'
 paramsTrainRF = {'sampling_strategy': 'RANDOM', 'use_non_local_data': 1, 'sample': 66, 'clear_confusion_matrix': 1, 'ntree': 10, 'depth': 300, 'parallel': 1, 'bin_limit': 20000, 'stat_type': 'ENTROPY', 'out_of_bag_error_estimate': 1, 'exclusive_split_limit': 0, 'timeoutSecs': 300, }
