@@ -1,0 +1,35 @@
+{
+  JToolBar bar=new JToolBar();
+  bar.add(new JButton("refresh"){
+    @Override protected void fireActionPerformed(    ActionEvent event){
+      MnistCanvas.this.repaint();
+    }
+  }
+);
+  bar.add(new JButton("++"){
+    @Override protected void fireActionPerformed(    ActionEvent event){
+      _level++;
+    }
+  }
+);
+  bar.add(new JButton("--"){
+    @Override protected void fireActionPerformed(    ActionEvent event){
+      _level--;
+    }
+  }
+);
+  bar.add(new JButton("histo"){
+    @Override protected void fireActionPerformed(    ActionEvent event){
+      Histogram.initFromSwingThread();
+      Histogram.build(_test._trainer.layers());
+    }
+  }
+);
+  JPanel pane=new JPanel();
+  BorderLayout bord=new BorderLayout();
+  pane.setLayout(bord);
+  pane.add("North",bar);
+  setSize(1024,1024);
+  pane.add(this);
+  return pane;
+}

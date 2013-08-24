@@ -1,0 +1,16 @@
+{
+  if (xValues.length != numInput)   throw new RuntimeException("Bad xValues array length");
+  float[] hSums=new float[numHidden];
+  float[] oSums=new float[numOutput];
+  for (int i=0; i < xValues.length; ++i)   this.inputs[i]=xValues[i];
+  for (int j=0; j < numHidden; ++j)   for (int i=0; i < numInput; ++i)   hSums[j]+=this.inputs[i] * this.ihWeights[i][j];
+  for (int i=0; i < numHidden; ++i)   hSums[i]+=this.hBiases[i];
+  for (int i=0; i < numHidden; ++i)   this.hOutputs[i]=HyperTanFunction(hSums[i]);
+  for (int j=0; j < numOutput; ++j)   for (int i=0; i < numHidden; ++i)   oSums[j]+=hOutputs[i] * hoWeights[i][j];
+  for (int i=0; i < numOutput; ++i)   oSums[i]+=oBiases[i];
+  float[] softOut=Softmax(oSums);
+  System.arraycopy(softOut,0,outputs,0,softOut.length);
+  float[] retResult=new float[numOutput];
+  System.arraycopy(this.outputs,0,retResult,0,retResult.length);
+  return retResult;
+}

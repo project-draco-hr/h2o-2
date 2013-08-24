@@ -1,0 +1,16 @@
+{
+  int numCorrect=0;
+  int numWrong=0;
+  float[] xValues=new float[numInput];
+  float[] tValues=new float[numOutput];
+  float[] yValues;
+  for (int i=0; i < testData.length; ++i) {
+    System.arraycopy(testData[i],0,xValues,0,numInput);
+    System.arraycopy(testData[i],numInput,tValues,0,numOutput);
+    yValues=this.ComputeOutputs(xValues);
+    int maxIndex=MaxIndex(yValues);
+    if (tValues[maxIndex] == 1.0)     ++numCorrect;
+ else     ++numWrong;
+  }
+  return (float)numWrong / (numCorrect + numWrong);
+}

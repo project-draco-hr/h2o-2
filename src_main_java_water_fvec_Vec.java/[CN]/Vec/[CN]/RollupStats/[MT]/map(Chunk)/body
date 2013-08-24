@@ -11,4 +11,11 @@
     }
   }
   _mean=_mean / _rows;
+  for (int i=0; i < c._len; i++) {
+    if (!c.isNA0(i)) {
+      double d=c.at0(i);
+      _sigma+=(d - _mean) * (d - _mean);
+    }
+  }
+  _sigma=Math.sqrt(_sigma / (_rows - 1));
 }

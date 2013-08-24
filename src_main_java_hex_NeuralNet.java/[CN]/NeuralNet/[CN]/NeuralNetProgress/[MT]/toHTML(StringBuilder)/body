@@ -1,0 +1,12 @@
+{
+  if (_net != null) {
+    sb.append("<dl class='dl-horizontal'>");
+    sb.append("<dt>Train error</dt>");
+    sb.append("<dd>").append(String.format("%5.3f %%",100 * _net.train_classification_error)).append("</dd>");
+    sb.append("<dt>Validation error</dt>");
+    sb.append("<dd>").append(String.format("%5.3f %%",100 * _net.validation_classification_error)).append("</dd>");
+    ;
+    sb.append("</dl>");
+  }
+  return true;
+}

@@ -1,0 +1,35 @@
+{
+  float[][] inputs=new float[trainer._batch][];
+  float[][] tester=new float[100][];
+  int n=0;
+  float trainError=0, testError=0, trainEnergy=0, testEnergy=0;
+  for (int i=0; i < 10000; i++) {
+    n=up(_train,n,inputs,upTo);
+    for (int b=0; b < trainer._batch; b++)     _ls[upTo].contrastiveDivergence(inputs[b]);
+    _ls[upTo].adjust(n);
+    if (i % 100 == 0) {
+      up(_train,0,tester,upTo);
+      for (int b=0; b < tester.length; b++) {
+        trainError+=_ls[upTo].error(tester[b]);
+        trainEnergy+=_ls[upTo].freeEnergy(tester[b]);
+      }
+      up(_train,0,tester,upTo);
+      for (int b=0; b < tester.length; b++) {
+        testError+=_ls[upTo].error(tester[b]);
+        testEnergy+=_ls[upTo].freeEnergy(tester[b]);
+      }
+      StringBuilder sb=new StringBuilder();
+      sb.append(i);
+      sb.append(", train err: ");
+      sb.append(_format.format(trainError));
+      sb.append(", test err: ");
+      sb.append(_format.format(testError));
+      sb.append(", train egy: ");
+      sb.append(_format.format(trainEnergy));
+      sb.append(", test egy: ");
+      sb.append(_format.format(testEnergy));
+      System.out.println(sb.toString());
+      trainError=testError=trainEnergy=testEnergy=0;
+    }
+  }
+}

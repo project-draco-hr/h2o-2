@@ -1,7 +1,7 @@
 {
   for (  Instance instance : instances) {
     try {
-      String ssh=Host.ssh() + " -q" + Host.SSH_OPTS+ " "+ instance.getPublicIpAddress();
+      String ssh="ssh -q" + Host.SSH_OPTS + " "+ instance.getPublicIpAddress();
       Process p=Runtime.getRuntime().exec(ssh + " exit");
       if (p.waitFor() != 0)       return false;
     }

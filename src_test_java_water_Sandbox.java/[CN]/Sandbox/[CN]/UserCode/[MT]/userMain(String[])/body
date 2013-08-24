@@ -1,0 +1,13 @@
+{
+  localCloud(1,true,args);
+  TestUtil.parseFrame("smalldata/mnist/train.csv.gz");
+  TestUtil.parseFrame("smalldata/mnist/test.csv.gz");
+  Utils.readConsole();
+  File f=new File("lib/resources/datasets/gaussian.csv");
+  Key dest=Key.make("test.hex");
+  Key key=TestUtil.load_test_file(f,"test");
+  ParseDataset.parse(dest,new Key[]{key});
+  ValueArray va=(ValueArray)UKV.get(dest);
+  Utils.readConsole();
+  System.out.println("Done!");
+}

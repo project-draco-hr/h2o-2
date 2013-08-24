@@ -1,0 +1,42 @@
+{
+  H2O.main(args);
+  Key key=TestUtil.loadAndParseFile("test.hex","lib/resources/datasets/gaussian.csv");
+  ValueArray va=DKV.get(key).get();
+  int[] cols=new int[va._cols.length];
+  for (int i=0; i < cols.length; i++)   cols[i]=i;
+  int k=7;
+  double[][] clusters=new double[k][va._cols.length];
+  Random rand=new Random();
+  for (int cluster=0; cluster < clusters.length; cluster++) {
+    long row=Math.max(0,(long)(rand.nextDouble() * va._numrows) - 1);
+    for (int i=0; i < cols.length; i++)     clusters[cluster][i]=va.datad(row,cols[i]);
+  }
+  for (int i=0; i < 20; i++) {
+    KMeans task=new KMeans();
+    task._mainKey=key;
+    task._cols=cols;
+    task._clusters=clusters;
+    task.invoke(key);
+    System.out.println("Error is " + task._error);
+    for (int cluster=0; cluster < clusters.length; cluster++) {
+      if (task._counts[cluster] > 0) {
+        for (int column=0; column < cols.length; column++) {
+          double value=task._sums[cluster][column] / task._counts[cluster];
+          clusters[cluster][column]=value;
+        }
+      }
+    }
+  }
+  System.out.println("Clusters:");
+  DecimalFormat df=new DecimalFormat("#.00");
+  for (int cluster=0; cluster < clusters.length; cluster++) {
+    for (int column=0; column < cols.length; column++)     System.out.print(df.format(clusters[cluster][column]) + ", ");
+    System.out.println("");
+  }
+  KMeansModel model=new KMeansModel(Key.make("test.kmeans"),cols,key);
+  model._clusters=clusters;
+  UKV.put(model._selfKey,model);
+  System.out.println("Plot:");
+  String host="http://127.0.0.1:" + H2O.API_PORT;
+  System.out.println(host + "/Plot.png?source_key=test.hex&cols=0%2C1&clusters=test.kmeans");
+}

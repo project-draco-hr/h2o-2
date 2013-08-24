@@ -19,32 +19,31 @@
         Object defaultValue=f.get(this);
         Argument arg=null;
         if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
- else {
-          if (f.getType() == float.class || f.getType() == double.class) {
-            double val=((Number)defaultValue).doubleValue();
-            arg=new Real(f.getName(),api.required(),val,null,null,api.help());
-          }
- else           if (f.getType() == int.class || f.getType() == long.class) {
-            long val=((Number)defaultValue).longValue();
-            arg=new LongInt(f.getName(),api.required(),val,null,null,api.help());
-          }
- else           if (f.getType() == boolean.class) {
-            boolean val=(Boolean)defaultValue;
-            arg=new Bool(f.getName(),val,api.help());
-          }
- else           if (Enum.class.isAssignableFrom(f.getType())) {
-            Enum val=(Enum)defaultValue;
-            arg=new EnumArgument(f.getName(),val);
-          }
- else           if (f.getType() == Key.class)           arg=new H2OKey(f.getName(),api.required());
+ else         if (f.getType() == float.class || f.getType() == double.class) {
+          double val=((Number)defaultValue).doubleValue();
+          arg=new Real(f.getName(),api.required(),val,null,null,api.help());
         }
-        if (ColumnSelect.class.isAssignableFrom(api.filter())) {
+ else         if (f.getType() == int.class || f.getType() == long.class) {
+          long val=((Number)defaultValue).longValue();
+          arg=new LongInt(f.getName(),api.required(),val,null,null,api.help());
+        }
+ else         if (f.getType() == boolean.class) {
+          boolean val=(Boolean)defaultValue;
+          arg=new Bool(f.getName(),val,api.help());
+        }
+ else         if (Enum.class.isAssignableFrom(f.getType())) {
+          Enum val=(Enum)defaultValue;
+          arg=new EnumArgument(f.getName(),val);
+        }
+ else         if (f.getType() == Key.class)         arg=new H2OKey(f.getName(),api.required());
+ else         if (Freezable.class.isAssignableFrom(f.getType()) && api.filter() == Default.class)         arg=new H2OKey(f.getName(),api.required());
+ else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
           for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._key.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
           arg=new HexAllColumnSelect(f.getName(),key);
         }
-        if (VecSelect.class.isAssignableFrom(api.filter())) {
+ else         if (VecSelect.class.isAssignableFrom(api.filter())) {
           VecSelect name=(VecSelect)newInstance(api);
           FrameKey key=null;
           for (          Argument a : _arguments)           if (a instanceof FrameKey && name._key.equals(((FrameKey)a)._name))           key=(FrameKey)a;

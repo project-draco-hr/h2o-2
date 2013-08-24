@@ -1,0 +1,12 @@
+{
+  float max=oSums[0];
+  for (int i=0; i < oSums.length; ++i)   if (oSums[i] > max)   max=oSums[i];
+  float[] result=new float[oSums.length];
+  float scale=0;
+  for (int i=0; i < result.length; i++) {
+    result[i]=(float)Math.exp(oSums[i] - max);
+    scale+=result[i];
+  }
+  for (int i=0; i < result.length; i++)   result[i]/=scale;
+  return result;
+}
