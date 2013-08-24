@@ -17,7 +17,7 @@ def test_KMeans_sphere15_180GB(self):
         print ('Parse starting: ' + csvFilename)
         key2 = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        timeoutSecs = 3600
+        timeoutSecs = (2 * 3600)
         kwargs = {}
         if FROM_HDFS:
             parseKey = h2i.parseImportHdfsFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
@@ -31,7 +31,7 @@ def test_KMeans_sphere15_180GB(self):
             kwargs['initialization'] = 'Furthest'
         else:
             kwargs['initialization'] = None
-        timeoutSecs = 3600
+        timeoutSecs = (4 * 3600)
         start = time.time()
         kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, benchmarkLogging=benchmarkLogging, **kwargs)
         elapsed = (time.time() - start)
