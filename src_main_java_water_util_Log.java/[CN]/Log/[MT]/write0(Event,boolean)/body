@@ -9,20 +9,27 @@
       l4j=createLog4jLogger(dir.toString());
     }
   }
-  String s=e.toString();
-  if (l4j != null) {
-    if (e.kind == Kind.ERRR) {
-      l4j.error(s);
-    }
- else     if (e.kind == Kind.WARN) {
-      l4j.warn(s);
-    }
- else     if (e.kind == Kind.INFO) {
-      l4j.info(s);
-    }
+  if (l4j == null) {
+    String s=e.toString();
+synchronized (startupLogEventsLock) {
+      if (startupLogEvents != null) {
+        startupLogEvents.add(e);
+      }
  else {
-      l4j.error(s);
+      }
     }
+  }
+ else {
+    if (startupLogEvents != null) {
+synchronized (startupLogEventsLock) {
+        for (int i=0; i < startupLogEvents.size(); i++) {
+          Event bufferedEvent=startupLogEvents.get(i);
+          log0(l4j,bufferedEvent);
+        }
+        startupLogEvents=null;
+      }
+    }
+    log0(l4j,e);
   }
   if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.kind,e.sys,e.body(0));
   if (printOnOut || printAll)   unwrap(System.out,(H2O.DEBUG ? e.toString() : e.toShortString()));
