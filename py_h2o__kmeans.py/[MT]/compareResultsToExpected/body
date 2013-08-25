@@ -1,4 +1,4 @@
-def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=None, trial=0):
+def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=None, allowError=False, trial=0):
     from operator import itemgetter
     tupleResultList.sort(key=itemgetter(0))
     if (expected is not None):
@@ -9,7 +9,7 @@ def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=
     print ('\nTrial #%d Actual:' % trial)
     for t in tupleResultList:
         print t, ','
-    if (expected is not None):
+    if ((expected is not None) and (not allowError)):
         for (i, (expCenter, expRows, expError)) in enumerate(expected):
             (actCenter, actRows, actError) = tupleResultList[i]
             for (a, b) in zip(expCenter, actCenter):
