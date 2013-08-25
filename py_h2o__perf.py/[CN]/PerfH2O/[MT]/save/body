@@ -9,6 +9,11 @@ def save(self, cpu_percent=None, dioc=None, nioc=None, jstack=None, iostats=None
     if nioc:
         self.pollStats['bytes_sent'] = nioc.bytes_sent
         self.pollStats['bytes_recv'] = nioc.bytes_recv
+        if (1 == 1):
+            self.pollStats['dropin'] = nioc.dropin
+            self.pollStats['dropout'] = nioc.dropout
+            self.pollStats['errin'] = nioc.errin
+            self.pollStats['errout'] = nioc.errout
     if jstack:
         self.pollStats['lastJstackTime'] = self.snapshotTime
     if iostats:
