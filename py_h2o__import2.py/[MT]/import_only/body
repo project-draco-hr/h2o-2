@@ -1,0 +1,31 @@
+def import_only(node=None, schema='put', bucket=None, path=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, noPoll=False, doSummary=True, src_key='python_src_key', **kwargs):
+    if (not node):
+        node = h2o.nodes[0]
+    if ('/' in path):
+        (head, pattern) = os.path.split(path)
+    else:
+        (head, pattern) = ('', path)
+    if (schema == 'put'):
+        if (not path):
+            raise Exception('path=, No file to putfile')
+        (folderPath, filename) = find_folder_path_and_pattern(bucket, path)
+        print 'folderPath:', folderPath, 'filename:', filename
+        filePath = os.path.join(folderPath, filename)
+        print 'filePath:', filePath
+        key = node.put_file(filePath, key=src_key, timeoutSecs=timeoutSecs)
+        return (None, key)
+    elif ((schema == 's3') or node.redirect_import_folder_to_s3_path):
+        importResult = node.import_s3(bucket, timeoutSecs=timeoutSecs)
+    elif (schema == 's3n'):
+        URI = ((((schema + '://') + bucket) + '/') + head)
+        importResult = node.import_hdfs(URI, timeoutSecs=timeoutSecs)
+    elif (schema == 'maprfs'):
+        URI = ((((schema + '://') + bucket) + '/') + head)
+        importResult = node.import_hdfs(URI, timeoutSecs=timeoutSecs)
+    elif ((schema == 'hdfs') or node.redirect_import_folder_to_s3n_path):
+        URI = ((((((schema + '://') + node.hdfs_name_node) + '/') + bucket) + '/') + head)
+        importResult = node.import_hdfs(URI, timeoutSecs=timeoutSecs)
+    elif (schema == 'local'):
+        (folderPath, pattern) = find_folder_path_and_pattern(bucket, path)
+        importResult = node.import_files(folderPath, timeoutSecs=timeoutSecs)
+    return (importResult, pattern)

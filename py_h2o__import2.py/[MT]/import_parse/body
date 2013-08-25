@@ -1,0 +1,11 @@
+def import_parse(node=None, schema='put', bucket=None, path=None, src_key=None, hex_key=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, noPoll=False, doSummary=False, **kwargs):
+    if (not node):
+        node = h2o.nodes[0]
+    (importResult, pattern) = import_only(node, schema, bucket, path, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, noPoll, **kwargs)
+    print 'pattern:', pattern
+    print 'importResult', h2o.dump_json(importResult)
+    parseResult = node.parse(pattern, hex_key, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, noPoll, **kwargs)
+    print 'parseResult:', h2o.dump_json(parseResult)
+    if doSummary:
+        node.summary_page(myKey2, timeoutSecs=timeoutSecs)
+    return parseResult
