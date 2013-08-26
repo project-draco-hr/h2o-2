@@ -1,7 +1,6 @@
 {
   AppendableVec av=mock(AppendableVec.class);
   Vec vv=mock(Vec.class);
-  vv.setNAs(Double.NaN,Long.MIN_VALUE);
   when(av.close(any(Futures.class))).thenReturn(vv);
   NewChunk nc=new NewChunk(av,0);
   nc._ls=ls;
