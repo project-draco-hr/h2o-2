@@ -1,5 +1,5 @@
 {
-  for (int depth=0; depth < maxDepth; depth++) {
+  for (int depth=0; depth < max_depth; depth++) {
     Timer t_pass=new Timer();
     ScoreBuildHistogram sbh=new ScoreBuildHistogram(trees,leafs,ncols,nclass,ymin,fr).doAll(fr);
     for (int t=0; t < ntrees; t++) {
@@ -25,5 +25,5 @@
     }
     if (!still_splitting)     return depth;
   }
-  return maxDepth;
+  return max_depth;
 }
