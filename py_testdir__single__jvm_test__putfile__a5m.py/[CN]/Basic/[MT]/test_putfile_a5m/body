@@ -4,14 +4,14 @@ def test_putfile_a5m(self):
     h2b.browseTheCloud()
     for (csvFilename, key, trees) in csvFilenameList:
         csvPathname = h2o.find_dataset(csvFilename)
-        parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, timeoutSecs=500)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
+        parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, timeoutSecs=500)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
         if (trees is not None):
-            RFview = h2o_cmd.runRFOnly(trees=trees, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
+            RFview = h2o_cmd.runRFOnly(trees=trees, depth=25, parseResult=parseKey, timeoutSecs=timeoutSecs)
         h2b.browseJsonHistoryAsUrlLastMatch('RFView')
         time.sleep(10)
         sys.stdout.write('.')

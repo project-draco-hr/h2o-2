@@ -18,25 +18,25 @@ def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, key2, rowCount, colCo
     start = time.time()
     print 'Parse start:', csvPathnameReplgz
     doSummary = False
-    parseKey = h2o_cmd.parseFile(None, csvPathnameReplgz, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, doSummary=doSummary)
-    print csvFilenameReplgz, 'parse time:', parseKey['response']['time']
+    parseResult = h2o_cmd.parseFile(None, csvPathnameReplgz, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, doSummary=doSummary)
+    print csvFilenameReplgz, 'parse time:', parseResult['response']['time']
     if doSummary:
         algo = 'Parse and Summary:'
     else:
         algo = 'Parse:'
-    print algo, parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+    print algo, parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
     print 'Inspecting..'
     start = time.time()
-    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=timeoutSecs)
-    print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=timeoutSecs)
+    print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
     if (inspect['num_cols'] != (colCount + 1)):
         raise Exception(('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], colCount)))
     if (inspect['num_rows'] != totalRows):
         raise Exception(("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], rowCount)))
-    parseKey['python_source_key'] = csvFilenameReplgz
-    parseKey['num_rows'] = inspect['num_rows']
-    parseKey['num_cols'] = inspect['num_cols']
-    parseKey['value_size_bytes'] = inspect['value_size_bytes']
-    return parseKey
+    parseResult['python_source_key'] = csvFilenameReplgz
+    parseResult['num_rows'] = inspect['num_rows']
+    parseResult['num_cols'] = inspect['num_cols']
+    parseResult['value_size_bytes'] = inspect['value_size_bytes']
+    return parseResult

@@ -15,12 +15,12 @@ def test_cols_enum_multi_import(self):
     for (rowCount, colCount, key2, timeoutSecs, excludePattern) in tryList:
         cnum += 1
         h2o.nodes[0].import_files(SYNDATASETS_DIR)
-        parseKey = h2o.nodes[0].parse('*', key2=key2, exclude=excludePattern, header=1, timeoutSecs=timeoutSecs)
-        print ("parseKey['destination_key']: " + parseKey['destination_key'])
-        print 'parse time:', parseKey['response']['time']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2o.nodes[0].parse('*', key2=key2, exclude=excludePattern, header=1, timeoutSecs=timeoutSecs)
+        print ("parseResult['destination_key']: " + parseKey['destination_key'])
+        print 'parse time:', parseResult['response']['time']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
-        print (('\n' + parseKey['destination_key']) + ':'), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
+        print (('\n' + parseResult['destination_key']) + ':'), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
         self.assertEqual(num_rows, (rowCount * FILENUM), msg=('got num_rows: %s. Should be rowCount: %s * FILENUM: %s' % (num_rows, rowCount, FILENUM)))

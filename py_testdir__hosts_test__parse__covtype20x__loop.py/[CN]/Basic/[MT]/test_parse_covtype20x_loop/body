@@ -11,7 +11,7 @@ def test_parse_covtype20x_loop(self):
                 h2i.setupImportFolder(None, importFolderPath)
                 key2 = (((csvFilename + '_') + str(trial)) + '.hex')
                 start = time.time()
-                parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, retryDelaySecs=4, pollTimeoutSecs=60)
+                parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, retryDelaySecs=4, pollTimeoutSecs=60)
                 elapsed = (time.time() - start)
                 print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
                 print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'

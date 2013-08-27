@@ -6,8 +6,8 @@ def test_GLM_covtype_train(self):
     key2 = (csvFilename + '.hex')
     h2i.setupImportFolder(None, importFolderPath)
     print '\nUsing header=0 on the normal covtype.data'
-    parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, header=0, timeoutSecs=180)
-    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+    parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, header=0, timeoutSecs=180)
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
     num_rows = inspect['num_rows']
     pct10 = int((num_rows * 0.1))
@@ -26,10 +26,10 @@ def test_GLM_covtype_train(self):
         resultKey = ('r' + str(trial))
         execExpr = (((((resultKey + ' = slice(') + key2) + ',1,') + str(rowsToUse)) + ')')
         h2o_exec.exec_expr(None, execExpr, resultKey=resultKey, timeoutSecs=10)
-        parseKey['destination_key'] = resultKey
+        parseResult['destination_key'] = resultKey
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
-        print 'glm end on ', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+        print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         GLMModel = glm['GLMModel']
         modelKey = GLMModel['model_key']

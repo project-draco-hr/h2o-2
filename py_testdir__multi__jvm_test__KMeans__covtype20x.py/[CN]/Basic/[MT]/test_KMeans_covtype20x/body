@@ -8,15 +8,15 @@ def test_KMeans_covtype20x(self):
     for (csvFilename, timeoutSecs, key2) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         start = time.time()
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, key2=key2)
+        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, key2=key2)
         print 'parse end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         kwargs = {'cols': None, 'initialization': 'Furthest', 'k': 2, 'seed': 265211114317615310, }
         start = time.time()
-        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
+        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)

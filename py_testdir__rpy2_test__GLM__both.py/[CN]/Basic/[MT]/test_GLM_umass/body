@@ -8,8 +8,8 @@ def test_GLM_umass(self):
         csvPathname1 = h2o.find_file(('smalldata/logreg/umass_statdata/' + csvFilename))
         csvPathname2 = (((SYNDATASETS_DIR + '/') + csvFilename) + '_2.csv')
         h2o_util.file_clean_for_R(csvPathname1, csvPathname2)
-        parseKey = h2o_cmd.parseFile(None, csvPathname2, key=csvFilename, timeoutSecs=10)
-        destination_key = parseKey['destination_key']
+        parseResult = h2o_cmd.parseFile(None, csvPathname2, key=csvFilename, timeoutSecs=10)
+        destination_key = parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, destination_key)
         num_cols = inspect['num_cols']
         num_rows = inspect['num_rows']
@@ -37,7 +37,7 @@ def test_GLM_umass(self):
         print 'x:', x
         kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_epsilon': 0.0001, 'max_iter': 50, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end (w/check) on ', csvPathname2, 'took', (time.time() - start), 'seconds'
         h2oResults = h2o_glm.simpleCheckGLM(self, glm, None, prettyPrint=True, **kwargs)
         (warningsR, cListR, interceptR) = glm_R_and_compare(self, csvPathname2, family, formula, y, header=header, h2oResults=h2oResults)

@@ -15,16 +15,16 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
         (coefficientsGen, interceptGen) = gen_rand_equation(colCount, INTCPT_VALUE_MIN, INTCPT_VALUE_MAX, COEFF_VALUE_MIN, COEFF_VALUE_MAX, SEEDPERFILE)
         print coefficientsGen, interceptGen
         write_syn_dataset(csvPathname, rowCount, colCount, coefficientsGen, interceptGen, DATA_VALUE_MIN, DATA_VALUE_MAX, DATA_DISTS, ALGO, SEED)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=60)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=60)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
         print "GLM is ignoring the thresholds I give it? deciding what's best?"
         kwargs = {'family': ALGO, 'y': y, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         if (ALGO == 'binomial'):

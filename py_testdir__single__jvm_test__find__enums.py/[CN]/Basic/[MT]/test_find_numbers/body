@@ -25,8 +25,8 @@ def test_find_numbers(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, quoteChars=quoteChars)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
+        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
         print ('\n' + csvFilename)
-        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseKey['destination_key'], exceptionOnMissingValues=True)
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=True)

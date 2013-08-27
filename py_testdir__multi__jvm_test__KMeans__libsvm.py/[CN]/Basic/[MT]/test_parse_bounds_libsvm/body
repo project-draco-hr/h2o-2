@@ -6,19 +6,19 @@ def test_parse_bounds_libsvm(self):
     for (csvFilename, key2, timeoutSecs, resultMult) in csvFilenameList:
         h2i.setupImportFolder(None, importFolderPath)
         csvPathname = ((importFolderPath + '/') + csvFilename)
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
-        print csvPathname, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
+        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
+        print csvPathname, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
         start = time.time()
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], timeoutSecs=360)
-        print 'Inspect:', parseKey['destination_key'], 'took', (time.time() - start), 'seconds'
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=360)
+        print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_cmd.infoFromInspect(inspect, csvFilename)
         for trial in range(2):
             kwargs = {'k': 3, 'initialization': 'Furthest', 'seed': 265211114317615310, }
             timeoutSecs = 600
             start = time.time()
-            kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+            kmeans = h2o_cmd.runKMeansOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **kwargs)
             elapsed = (time.time() - start)
             print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-            (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
+            (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)

@@ -55,18 +55,18 @@ def test_benchmark_import(self):
             h2o.cloudPerfH2O.message('')
             h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
             start = time.time()
-            parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+            parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
             if noPoll:
                 if ((i + 1) < len(csvFilenameList)):
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
                     (csvFilepattern, csvFilename, totalBytes2, timeoutSecs) = csvFilenameList[(i + 1)]
-                    parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                    parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 if ((i + 2) < len(csvFilenameList)):
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
                     (csvFilepattern, csvFilename, totalBytes3, timeoutSecs) = csvFilenameList[(i + 2)]
-                    parseKey = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                    parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
             elapsed = (time.time() - start)
             print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             if noPoll:
@@ -80,11 +80,11 @@ def test_benchmark_import(self):
                 l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, csvFilepattern, csvFilename, fileMBS, elapsed)
                 print l
                 h2o.cloudPerfH2O.message(l)
-            print csvFilepattern, 'parse time:', parseKey['response']['time']
-            print "Parse result['destination_key']:", parseKey['destination_key']
+            print csvFilepattern, 'parse time:', parseResult['response']['time']
+            print "Parse result['destination_key']:", parseResult['destination_key']
             if (not noPoll):
-                h2o_cmd.columnInfoFromInspect(parseKey['destination_key'], exceptionOnMissingValues=False)
-            origKey = parseKey['destination_key']
+                h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
+            origKey = parseResult['destination_key']
             execExpr = (('a = slice(' + origKey) + ',1,200)')
             h2e.exec_expr(h2o.nodes[0], execExpr, 'a', timeoutSecs=30)
             newParseKey = {'destination_key': 'a', }
@@ -97,7 +97,7 @@ def test_benchmark_import(self):
                 x = ','.join(map(str, x))
                 GLMkwargs = {'x': x, 'y': 378, 'case': 15, 'case_mode': '>', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
                 start = time.time()
-                glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **GLMkwargs)
+                glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **GLMkwargs)
                 h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
                 elapsed = (time.time() - start)
                 h2o.check_sandbox_for_errors()

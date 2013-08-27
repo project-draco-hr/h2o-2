@@ -3,7 +3,7 @@ def test_rf_big1_nopoll(self):
     csvPathname = h2o.find_file(('smalldata/' + csvFilename))
     key2 = (csvFilename + '.hex')
     print ('\n' + csvPathname)
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=15)
+    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=15)
     rfViewInitial = []
     for jobDispatch in range(3):
         start = time.time()
@@ -20,7 +20,7 @@ def test_rf_big1_nopoll(self):
             kwargs['ntree'] += 1
         kwargs['seed'] = random.randint(0, sys.maxint)
         randomNode = h2o.nodes[random.randint(0, (len(h2o.nodes) - 1))]
-        h2o_cmd.runRFOnly(node=randomNode, parseKey=parseKey, model_key=model_key, timeoutSecs=300, noPoll=(False if OVERWRITE_RF_MODEL else True), **kwargs)
+        h2o_cmd.runRFOnly(node=randomNode, parseResult=parseKey, model_key=model_key, timeoutSecs=300, noPoll=(False if OVERWRITE_RF_MODEL else True), **kwargs)
         rfView = {}
         rfView['data_key'] = key2
         rfView['model_key'] = model_key

@@ -7,13 +7,13 @@ def test_B_putfile_files(self):
         node = h2o.nodes[0]
         key = node.put_file(csvPathname, key=csvFilename, timeoutSecs=timeoutSecs)
         inspect1 = h2o_cmd.runInspect(key=csvFilename)
-        parseKey = node.parse(key, timeoutSecs=500)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect2 = h2o_cmd.runInspect(key=parseKey['destination_key'])
+        parseResult = node.parse(key, timeoutSecs=500)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect2 = h2o_cmd.runInspect(key=parseResult['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
         if (trees is not None):
-            RFview = h2o_cmd.runRFOnly(trees=trees, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
+            RFview = h2o_cmd.runRFOnly(trees=trees, depth=25, parseResult=parseKey, timeoutSecs=timeoutSecs)
         sys.stdout.write('.')
         sys.stdout.flush()

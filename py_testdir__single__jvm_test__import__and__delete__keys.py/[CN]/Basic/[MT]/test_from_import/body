@@ -7,12 +7,12 @@ def test_from_import(self):
         for csvFilename in csvFilenameList:
             h2i.setupImportFolder(None, importFolderPath)
             start = time.time()
-            parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
+            parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
             elapsed = (time.time() - start)
             print csvFilename, 'parsed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs)), '\n'
-            print csvFilename, 'H2O reports parse time:', parseKey['response']['time']
-            print "Parse result['python_source_key']:", parseKey['python_source_key']
-            print "Parse result['destination_key']:", parseKey['destination_key']
+            print csvFilename, 'H2O reports parse time:', parseResult['response']['time']
+            print "Parse result['python_source_key']:", parseResult['python_source_key']
+            print "Parse result['destination_key']:", parseResult['destination_key']
             print ('\n' + csvFilename)
             storeView = h2o.nodes[0].store_view()
             print 'storeView:', h2o.dump_json(storeView)
