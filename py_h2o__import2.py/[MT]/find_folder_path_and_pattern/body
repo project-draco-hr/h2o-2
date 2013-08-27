@@ -1,6 +1,6 @@
 def find_folder_path_and_pattern(bucket, pathWithRegex):
     if ((bucket is not None) and re.match('/', pathWithRegex)):
-        print 'You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex
+        h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
         pathWithRegex = pathWithRegex.lstrip('/')
     if (bucket is None):
         bucketPath = ''
@@ -17,10 +17,10 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
             raise Exception(("H2O_BUCKETS_ROOT and path used to form %s which doesn't exist." % bucketPath))
     else:
         (head, tail) = os.path.split(os.path.abspath(bucket))
-        print 'find_bucket looking upwards from', head, 'for', tail
+        h2o.verboseprint('find_bucket looking upwards from', head, 'for', tail)
         levels = 0
         while (not os.path.exists(os.path.join(head, tail))):
-            print "Didn't find", tail, 'at', head
+            h2o.verboseprint("Didn't find", tail, 'at', head)
             head = os.path.split(head)[0]
             levels += 1
             if (levels == 10):
@@ -37,5 +37,5 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
     else:
         folderPath = bucketPath
         tail = pathWithRegex
-    print 'folderPath:', folderPath, 'tail:', tail
+    h2o.verboseprint('folderPath:', folderPath, 'tail:', tail)
     return (folderPath, tail)

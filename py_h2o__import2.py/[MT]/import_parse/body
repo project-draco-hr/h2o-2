@@ -1,11 +1,11 @@
 def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None, hex_key=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, noPoll=False, doSummary=False, **kwargs):
     if (not node):
         node = h2o.nodes[0]
-    (importResult, importPattern) = import_only(node, schema, bucket, path, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, noPoll, **kwargs)
-    print 'importPattern:', importPattern
-    print 'importResult', h2o.dump_json(importResult)
+    (importResult, importPattern) = import_only(node, schema, bucket, path, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, noPoll, doSummary, src_key, **kwargs)
+    h2o.verboseprint('importPattern:', importPattern)
+    h2o.verboseprint('importResult', h2o.dump_json(importResult))
     parseResult = parse_only(node, importPattern, hex_key, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, noPoll, **kwargs)
-    print 'parseResult:', h2o.dump_json(parseResult)
+    h2o.verboseprint('parseResult:', h2o.dump_json(parseResult))
     if doSummary:
         node.summary_page(myKey2, timeoutSecs=timeoutSecs)
     return parseResult
