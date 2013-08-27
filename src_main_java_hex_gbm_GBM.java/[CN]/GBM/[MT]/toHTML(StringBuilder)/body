@@ -39,7 +39,7 @@
   for (int i=0; i < errs.length; i++)   sb.append("<td>").append(i + 1).append("</td>");
   sb.append("</tr>");
   sb.append("<tr><th class='warning'>Error Rate</th>");
-  for (int i=0; i < errs.length; i++)   sb.append("<td>").append(errs[i]).append("</td>");
+  for (int i=0; i < errs.length; i++)   sb.append(String.format("<td>%5.3f</td>",errs[i]));
   sb.append("</tr>");
   DocGen.HTML.arrayTail(sb);
   return true;
