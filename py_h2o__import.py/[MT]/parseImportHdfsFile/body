@@ -22,7 +22,7 @@ def parseImportHdfsFile(node=None, csvFilename=None, path='/datasets', key2=None
         myKey2 = (csvFilename + '.hex')
     else:
         myKey2 = key2
-    parseKey = node.parse(hdfsKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
-    parseKey['source_key'] = hdfsKey
-    print 'parseImportHdfsFile:', parseKey
-    return parseKey
+    parseResult = node.parse(hdfsKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
+    parseResult['source_key'] = hdfsKey
+    print 'parseImportHdfsFile:', parseResult
+    return parseResult

@@ -5,13 +5,13 @@ def test_rf_from_import_hosts(self):
     csvFilenameAll = ['billion_rows.csv.gz']
     csvFilenameList = csvFilenameAll
     for csvFilename in csvFilenameList:
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
-        RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
+        RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseResult=parseResult, timeoutSecs=timeoutSecs)
         h2b.browseJsonHistoryAsUrlLastMatch('RFView')
         time.sleep(10)
         sys.stdout.write('.')

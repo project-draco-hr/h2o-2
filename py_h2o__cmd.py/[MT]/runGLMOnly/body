@@ -1,6 +1,6 @@
-def runGLMOnly(node=None, parseKey=None, timeoutSecs=20, retryDelaySecs=2, noise=None, **kwargs):
-    if (not parseKey):
+def runGLMOnly(node=None, parseResult=None, timeoutSecs=20, retryDelaySecs=2, noise=None, **kwargs):
+    if (not parseResult):
         raise Exception('No parsed key for GLM specified')
     if (not node):
         node = h2o.nodes[0]
-    return node.GLM(parseKey['destination_key'], timeoutSecs, retryDelaySecs, noise=noise, **kwargs)
+    return node.GLM(parseResult['destination_key'], timeoutSecs, retryDelaySecs, noise=noise, **kwargs)

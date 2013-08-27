@@ -11,20 +11,20 @@ def test_GLM_many_cols_real(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
         start = time.time()
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
         elapsed = (time.time() - start)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
         algo = 'Parse'
         l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), tryHeap, algo, csvFilename, elapsed)
         print l
         h2o.cloudPerfH2O.message(l)
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
         kwargs = {'y': y, 'max_iter': 2, 'case': 1, 'case_mode': '=', 'family': 'binomial', 'lambda': 0.0001, 'alpha': 0.6, 'weight': 1.0, 'thresholds': 0.5, 'n_folds': 1, 'beta_epsilon': 0.0001, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         h2o.check_sandbox_for_errors()
         print 'glm end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))

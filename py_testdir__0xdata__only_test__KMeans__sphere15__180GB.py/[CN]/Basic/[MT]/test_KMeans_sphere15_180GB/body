@@ -23,9 +23,9 @@ def test_KMeans_sphere15_180GB(self):
         timeoutSecs = (2 * 3600)
         kwargs = {}
         if FROM_HDFS:
-            parseKey = h2i.parseImportHdfsFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
+            parseResult = h2i.parseImportHdfsFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
         else:
-            parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
+            parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
         elapsed = (time.time() - start)
         fileMBS = ((totalBytes / 1000000.0) / elapsed)
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, fileMBS, elapsed)
@@ -43,12 +43,12 @@ def test_KMeans_sphere15_180GB(self):
         params = kwargs
         paramsString = json.dumps(params)
         start = time.time()
-        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, benchmarkLogging=benchmarkLogging, **kwargs)
+        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, benchmarkLogging=benchmarkLogging, **kwargs)
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:s} for {:.2f} secs {:s}'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'KMeans', ('trial ' + str(trial)), csvFilename, elapsed, paramsString)
         print l
         h2o.cloudPerfH2O.message(l)
-        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
+        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         allowedDelta = (0.01, 0.01, 0.01)
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, allowError=True, trial=trial)

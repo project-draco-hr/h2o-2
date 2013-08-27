@@ -15,7 +15,7 @@ def test_parse_small_nopoll(self):
             key = ((csvFilename + '_') + str(trial))
             key2 = (((csvFilename + '_') + str(trial)) + '.hex')
             noPoll = (trial == (trialMax - 1))
-            parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=30)
+            parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=30)
             if (not (trial % 10)):
                 sys.stdout.write('.')
                 sys.stdout.flush()

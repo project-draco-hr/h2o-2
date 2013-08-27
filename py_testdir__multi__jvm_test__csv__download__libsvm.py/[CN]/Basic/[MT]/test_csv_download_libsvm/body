@@ -10,7 +10,7 @@ def test_csv_download_libsvm(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
         start = time.time()
-        parseKeyA = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=timeoutSecs)
+        parseResultA = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=timeoutSecs)
         print '\nA Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         inspect = h2o_cmd.runInspect(key=key2, timeoutSecs=timeoutSecs)
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
@@ -25,7 +25,7 @@ def test_csv_download_libsvm(self):
         print 'csv_download end.', 'took', (time.time() - start), 'seconds. Originally from:', csvFilename
         h2o.nodes[0].remove_key(key2)
         start = time.time()
-        parseKeyB = h2o_cmd.parseFile(csvPathname=csvDownloadPathname, key2=key2, timeoutSecs=timeoutSecs)
+        parseResultB = h2o_cmd.parseFile(csvPathname=csvDownloadPathname, key2=key2, timeoutSecs=timeoutSecs)
         print '\nB Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         inspect = h2o_cmd.runInspect(key=key2, timeoutSecs=timeoutSecs)
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)

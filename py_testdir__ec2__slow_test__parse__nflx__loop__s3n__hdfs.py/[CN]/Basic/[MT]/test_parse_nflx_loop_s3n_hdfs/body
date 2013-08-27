@@ -48,7 +48,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                 key2 = (((csvFilename + '_') + str(trial)) + '.hex')
                 print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                 start = time.time()
-                parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                parseResult = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 if noPoll:
                     if ((i + 1) < len(csvFilenameList)):
                         time.sleep(1)
@@ -67,8 +67,8 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                         print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                         parse3Key = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 elapsed = (time.time() - start)
-                print s3nKey, 'parse time:', parseKey['response']['time']
-                print 'parse result:', parseKey['destination_key']
+                print s3nKey, 'parse time:', parseResult['response']['time']
+                print 'parse result:', parseResult['destination_key']
                 print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
                 if noPoll:
                     time.sleep(2)
@@ -83,7 +83,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                     h2o.cloudPerfH2O.message(l)
                 y = 378
                 if (not noPoll):
-                    x = h2o_glm.goodXFromColumnInfo(y, key=parseKey['destination_key'], timeoutSecs=300)
+                    x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
                 if (DO_GLM or DO_GLMGRID):
                     x = range(542)
                     for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, y]:
@@ -93,14 +93,14 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                         algo = 'GLM'
                         GLMkwargs = {'x': x, 'y': y, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
                         start = time.time()
-                        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
+                        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
                         elapsed = (time.time() - start)
                         h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
                     else:
                         algo = 'GLMGrid'
                         GLMkwargs = {'x': x, 'y': y, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, 'lambda': '1e-4', 'alpha': '0,0.5', 'thresholds': '0.5', }
                         start = time.time()
-                        glm = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
+                        glm = h2o_cmd.runGLMGridOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
                         elapsed = (time.time() - start)
                         h2o_glm.simpleCheckGLMGrid(self, glm, None, **GLMkwargs)
                     h2o.check_sandbox_for_errors()
