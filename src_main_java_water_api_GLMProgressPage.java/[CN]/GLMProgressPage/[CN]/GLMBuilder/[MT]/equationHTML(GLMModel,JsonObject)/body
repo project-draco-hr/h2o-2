@@ -13,6 +13,9 @@ break;
 case inverse:
 eq=new RString("y = 1/(%equation)");
 break;
+case tweedie:
+eq=new RString("y = (%equation)^(1 - " + m._glmParams._family.defaultLink.tweedieLinkPower + ")");
+break;
 default :
 eq=new RString("equation display not implemented");
 break;

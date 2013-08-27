@@ -8,6 +8,8 @@ case log:
 return 1.0 / x;
 case inverse:
 return -1.0 / (x * x);
+case tweedie:
+return tweedieLinkPower * Math.pow(x,tweedieLinkPower - 1.);
 default :
 throw H2O.unimpl();
 }

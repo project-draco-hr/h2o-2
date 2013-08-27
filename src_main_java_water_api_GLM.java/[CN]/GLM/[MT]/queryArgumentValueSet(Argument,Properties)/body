@@ -9,6 +9,9 @@
       _caseWeight.disable("Only for family binomial");
       _thresholds.disable("Only for family binomial");
     }
+    if (_family.value() != Family.tweedie) {
+      _tweediePower.disable("Only for family tweedie");
+    }
   }
  else   if (arg == _expertSettings) {
     if (_expertSettings.value()) {
