@@ -37,7 +37,7 @@ def test_GLM_umass(self):
         print 'x:', x
         kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'link': 'familyDefault', 'alpha': 0, 'lambda': 0, 'case_mode': '=', 'case': 1, 'beta_epsilon': 0.0001, 'max_iter': 50, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end (w/check) on ', csvPathname2, 'took', (time.time() - start), 'seconds'
         h2oResults = h2o_glm.simpleCheckGLM(self, glm, None, prettyPrint=True, **kwargs)
         (warningsR, cListR, interceptR) = glm_R_and_compare(self, csvPathname2, family, formula, y, header=header, h2oResults=h2oResults)

@@ -21,7 +21,7 @@ def test_GLM_many_cols_4(self):
         kwargs = {'y': y, 'max_iter': 50, }
         kwargs.update(paramDict2)
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print 'y:', y
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

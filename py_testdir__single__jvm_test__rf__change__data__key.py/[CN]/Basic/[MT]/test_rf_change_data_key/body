@@ -20,7 +20,7 @@ def test_rf_change_data_key(self):
     kwargs = params.copy()
     timeoutSecs = (30 + ((kwargs['ntree'] * 60) * ((kwargs['parallel'] and 1) or 5)))
     start = time.time()
-    rfv = h2o_cmd.runRFOnly(parseResult=parseKeyTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, noPoll=True, **kwargs)
+    rfv = h2o_cmd.runRFOnly(parseResult=parseResultTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, noPoll=True, **kwargs)
     print 'rf job dispatch end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
     start = time.time()
     h2o_jobs.pollWaitJobs(pattern='RF_model', timeoutSecs=180, pollTimeoutSecs=120, retryDelaySecs=5)

@@ -28,7 +28,7 @@ def test_GLM_covtype_train(self):
         h2o_exec.exec_expr(None, execExpr, resultKey=resultKey, timeoutSecs=10)
         parseResult['destination_key'] = resultKey
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         GLMModel = glm['GLMModel']

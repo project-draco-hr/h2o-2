@@ -7,6 +7,6 @@ def test_B_kmeans_benign(self):
     allowedDelta = (0.01, 0.01, 0.01)
     for trial in range(2):
         kwargs = {'k': 3, 'initialization': 'Furthest', 'cols': None, 'destination_key': 'benign_k.hex', 'seed': 265211114317615310, }
-        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseKey, timeoutSecs=5, **kwargs)
+        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=5, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=trial)

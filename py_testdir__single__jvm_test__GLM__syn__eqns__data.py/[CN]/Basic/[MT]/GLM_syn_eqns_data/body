@@ -24,7 +24,7 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
         print "GLM is ignoring the thresholds I give it? deciding what's best?"
         kwargs = {'family': ALGO, 'y': y, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         if (ALGO == 'binomial'):

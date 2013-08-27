@@ -13,6 +13,6 @@ def test_KMeans_constant_col(self):
         parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
         print "Parse result['destination_key']:", parseResult['destination_key']
         kwargs = {'k': 2, 'initialization': 'Furthest', 'cols': None, 'destination_key': 'benign_k.hex', }
-        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseKey, timeoutSecs=5, **kwargs)
+        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=5, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         self.assertEqual(colCount, len(centers[0]), ("kmeans first center doesn't have same # of values as dataset row %s %s" % (colCount, len(centers[0]))))

@@ -4,7 +4,7 @@ def kmeans_doit(self, csvFilename, csvPathname, num_rows, timeoutSecs=30):
     cols = ','.join(map(str, range(11)))
     kwargs = {'k': 1, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'KMeansModel.hex', 'seed': 265211114317615310, }
     start = time.time()
-    kmeans = h2o_cmd.runKMeansOnly(parseResult=parseKey, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+    kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
     elapsed = (time.time() - start)
     print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
     (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
