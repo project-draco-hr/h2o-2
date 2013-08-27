@@ -1,4 +1,8 @@
 @classmethod
 def setUpClass(cls):
-    h2o.build_cloud(1, java_heap_GB=1, use_hdfs=True, hdfs_name_node='192.168.1.176', hdfs_version='cdh3')
-    h2b.browseTheCloud()
+    global localhost
+    localhost = h2o.decide_if_localhost()
+    if localhost:
+        h2o.build_cloud(node_count=1)
+    else:
+        h2o_hosts.build_cloud_with_hosts(node_count=1)

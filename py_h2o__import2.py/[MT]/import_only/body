@@ -6,7 +6,7 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
     else:
         (head, pattern) = ('', path)
     print 'head:', head
-    print 'pattern;', pattern
+    print 'pattern:', pattern
     if re.search('[\\*<>{}[\\]~`]', head):
         raise Exception(("h2o folder path %s can't be regex. path= was %s" % (head, path)))
     if (schema == 'put'):
