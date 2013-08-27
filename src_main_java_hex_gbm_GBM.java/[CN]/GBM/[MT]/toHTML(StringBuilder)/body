@@ -14,9 +14,9 @@
     long sum=0, err=0;
     for (int j=0; j < domain.length; j++) {
       sb.append(i == j ? "<td style='background-color:LightGreen'>" : "<td>");
-      sb.append(_cm[i][j]).append("</td>");
-      sum+=_cm[i][j];
-      if (i != j)       err+=_cm[i][j];
+      sb.append(cm[i][j]).append("</td>");
+      sum+=cm[i][j];
+      if (i != j)       err+=cm[i][j];
     }
     sb.append(String.format("<th>%5.3f = %d / %d</th>",(double)err / sum,err,sum));
     tsum+=sum;
@@ -27,10 +27,19 @@
   sb.append("<th>Totals</th>");
   for (int j=0; j < domain.length; j++) {
     long sum=0;
-    for (int i=0; i < domain.length; i++)     sum+=_cm[i][j];
+    for (int i=0; i < domain.length; i++)     sum+=cm[i][j];
     sb.append("<td>").append(sum).append("</td>");
   }
   sb.append(String.format("<th>%5.3f = %d / %d</th>",(double)terr / tsum,terr,tsum));
+  sb.append("</tr>");
+  DocGen.HTML.arrayTail(sb);
+  DocGen.HTML.section(sb,"Error Rate by Tree");
+  DocGen.HTML.arrayHead(sb);
+  sb.append("<tr><th>Trees</th>");
+  for (int i=0; i < errs.length; i++)   sb.append("<td>").append(i + 1).append("</td>");
+  sb.append("</tr>");
+  sb.append("<tr><th class='warning'>Error Rate</th>");
+  for (int i=0; i < errs.length; i++)   sb.append("<td>").append(errs[i]).append("</td>");
   sb.append("</tr>");
   DocGen.HTML.arrayTail(sb);
   return true;
