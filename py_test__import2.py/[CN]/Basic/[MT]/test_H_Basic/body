@@ -1,0 +1,5 @@
+def test_H_Basic(self):
+    h2i.import_only(path='testdir_multi_jvm/syn_test/syn_header.csv')
+    headerKey = h2i.find_key('syn_header.csv')
+    h2i.import_parse(path='testdir_multi_jvm/syn_test/syn[1-2].csv', header=1, header_from_file=headerKey, separator=44)
+    h2i.import_parse(path='standard/covtype.data', bucket='home-0xdiag-datasets')

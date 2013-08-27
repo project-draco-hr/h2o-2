@@ -1,6 +1,5 @@
 def find_folder_path_and_pattern(bucket, pathWithRegex):
-    print 'pathWithRegex:', pathWithRegex
-    if re.match('/', pathWithRegex):
+    if ((bucket is not None) and re.match('/', pathWithRegex)):
         print 'You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex
         pathWithRegex = pathWithRegex.lstrip('/')
     if (bucket is None):
@@ -32,7 +31,7 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
         return (bucketPath, None)
     elif ('/' in pathWithRegex):
         (head, tail) = os.path.split(pathWithRegex)
-        folderPath = os.path.join(bucketPath, head)
+        folderPath = os.path.abspath(os.path.join(bucketPath, head))
         if (not os.path.exists(folderPath)):
             raise Exception(("%s doesn't exist. %s under %s may be wrong?" % (folderPath, head, bucketPath)))
     else:

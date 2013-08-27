@@ -1,3 +1,4 @@
-def store_view(self, timeoutSecs=60):
-    a = self.__do_json_request('StoreView.json', timeout=timeoutSecs)
+def store_view(self, timeoutSecs=60, **kwargs):
+    params = kwargs
+    a = self.__do_json_request('StoreView.json', params=params, timeout=timeoutSecs)
     return a
