@@ -1,0 +1,9 @@
+def delete_all_keys_at_all_nodes(node=None, timeoutSecs=30):
+    if (not node):
+        node = h2o.nodes[0]
+    totalDeletedCnt = 0
+    for node in reversed(h2o.nodes):
+        deletedCnt = delete_all_keys(node, timeoutSecs=timeoutSecs)
+        totalDeletedCnt += deletedCnt
+    print '\nTotal: Deleted', totalDeletedCnt, 'keys at', len(h2o.nodes), 'nodes'
+    return totalDeletedCnt
