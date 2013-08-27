@@ -1,0 +1,9 @@
+def find_key(filter):
+    found = None
+    storeViewResult = h2o.nodes[0].store_view(filter=filter)
+    keys = storeViewResult['keys']
+    if (len(keys) == 0):
+        return None
+    if (len(keys) > 1):
+        h2o.verboseprint(('Warning: multiple imported keys match the key pattern given, Using: %s' % keys[0]['key']))
+    return keys[0]['key']
