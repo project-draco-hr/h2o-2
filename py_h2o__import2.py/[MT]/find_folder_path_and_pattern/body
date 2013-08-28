@@ -16,10 +16,18 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
         if (not os.path.exists(bucketPath)):
             raise Exception(("H2O_BUCKETS_ROOT and path used to form %s which doesn't exist." % bucketPath))
     else:
-        rootPath = os.path.expanduser('~')
-        if os.path.exists(os.path.join(rootPath, bucket)):
-            print 'Did find', bucket, 'at', rootPath
+        possibleUsers = ['~']
+        print 'username:', h2o.nodes[0].username
+        if h2o.nodes[0].username:
+            print 'remote username:', h2o.nodes[0].username
+            possibleUsers.insert(0, ('~' + h2o.nodes[0].username))
+        for u in possibleUsers:
+            rootPath = os.path.expanduser(u)
             bucketPath = os.path.join(rootPath, bucket)
+            print 'Checking bucketPath:', bucketPath, 'assuming home is', rootPath
+            if os.path.exists(bucketPath):
+                print 'Did find', bucket, 'at', rootPath
+                break
         else:
             rootPath = os.getcwd()
             h2o.verboseprint('find_bucket looking upwards from', rootPath, 'for', bucket)

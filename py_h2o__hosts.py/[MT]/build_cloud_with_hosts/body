@@ -30,7 +30,6 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
             h2o.verboseprint('Connecting to:', h)
             hosts.append(h2o.RemoteHost(addr=h, username=paramsToUse['username'], password=paramsToUse['password'], key_filename=paramsToUse['key_filename']))
     paramsToUse.pop('ip')
-    paramsToUse.pop('username')
     paramsToUse.pop('password')
     paramsToUse.pop('key_filename')
     h2o.write_flatfile(node_count=paramsToUse['h2o_per_host'], base_port=paramsToUse['base_port'], hosts=hosts, rand_shuffle=paramsToUse['rand_shuffle'])
