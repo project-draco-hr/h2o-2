@@ -1,6 +1,7 @@
-def glm_doit(self, csvFilename, csvPathname, timeoutSecs, pollTimeoutSecs, **kwargs):
+def glm_doit(self, csvFilename, bucket, csvPathname, timeoutSecs, pollTimeoutSecs, **kwargs):
     print '\nStarting GLM of', csvFilename
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'), timeoutSecs=60, pollTimeoutSecs=pollTimeoutSecs)
+    hex_key = (csvFilename + '.hex')
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, hex_key=hex_key, timeoutSecs=60, pollTimeoutSecs=pollTimeoutSecs)
     start = time.time()
     glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'GLM in', (time.time() - start), 'secs (python)'
@@ -9,4 +10,4 @@ def glm_doit(self, csvFilename, csvPathname, timeoutSecs, pollTimeoutSecs, **kwa
     validationsList = glm['GLMModel']['validations']
     validations = validationsList[0]
     modelKey = GLMModel['model_key']
-    return (modelKey, validations)
+    return (modelKey, validations, parseResult)
