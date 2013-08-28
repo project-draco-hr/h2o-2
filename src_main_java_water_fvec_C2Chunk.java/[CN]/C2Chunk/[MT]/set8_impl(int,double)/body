@@ -1,3 +1,5 @@
 {
-  return false;
+  if (Double.isNaN(d))   return setNA_impl(idx);
+  long l=(long)d;
+  return l == d ? set8_impl(idx,l) : false;
 }
