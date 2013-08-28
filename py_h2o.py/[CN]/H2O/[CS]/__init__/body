@@ -44,7 +44,10 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar
     self.java_extra_args = java_extra_args
     self.use_home_for_ice = use_home_for_ice
     self.node_id = node_id
-    self.username = username
+    if username:
+        self.username = username
+    else:
+        self.username = getpass.getuser()
     self.sandbox_error_was_reported = False
     self.sandbox_ignore_errors = False
     self.random_udp_drop = random_udp_drop
