@@ -1,14 +1,14 @@
 def test_prostate_poisson(self):
     errors = []
-    key = h2o_cmd.parseFile(csvPathname=h2o.find_file('smalldata/logreg/prostate.csv'), key2='prostate_p')
+    parseResult = h2i.import_parse(bucket='smalldata', path='logreg/prostate.csv', schema='put', hex_key='poisson_p')
     poisson_coefficients = {'Intercept': (-4.107484), 'ID': 0.000508, 'AGE': (-0.004357), 'RACE': (-0.149412), 'DPROS': 0.230458, 'DCAPS': 0.071546, 'PSA': 0.002944, 'VOL': (-0.007488), 'GLEASON': 0.441659, }
     poisson_nd = 278.4
     poisson_rd = 215.7
     poisson_aic = 539.7
-    errors = self.process_dataset(key, 'CAPSULE', poisson_coefficients, poisson_nd, poisson_rd, poisson_aic, family='poisson')
+    errors = self.process_dataset(parseResult, 'CAPSULE', poisson_coefficients, poisson_nd, poisson_rd, poisson_aic, family='poisson')
     if errors:
         self.fail(str(errors))
-    key = h2o_cmd.parseFile(csvPathname=h2o.find_file('smalldata/logreg/prostate_long.csv.gz'), key2='poisson_long_p')
-    errors = self.process_dataset(key, 'CAPSULE', poisson_coefficients, poisson_nd, poisson_rd, poisson_aic, family='poisson')
+    parseResult = h2i.import_parse(bucket='smalldata', path='logreg/prostate_long.csv.gz', schema='put', hex_key='poisson_long_p')
+    errors = self.process_dataset(parseResult, 'CAPSULE', poisson_coefficients, poisson_nd, poisson_rd, poisson_aic, family='poisson')
     if errors:
         self.fail(str(errors))
