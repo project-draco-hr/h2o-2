@@ -1,4 +1,5 @@
 def find_folder_path_and_pattern(bucket, pathWithRegex):
+    checkPath = True
     if ((bucket is not None) and re.match('/', pathWithRegex)):
         h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
         pathWithRegex = pathWithRegex.lstrip('/')
@@ -6,10 +7,13 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
         bucketPath = ''
     elif (bucket == '.'):
         bucketPath = os.getcwd()
+    elif (h2o.nodes[0].remoteH2O and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
+        rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
+        bucketPath = os.path.join(rootPath, bucket)
+        checkpath = False
     elif os.environ.get('H2O_BUCKETS_ROOT'):
-        h2oBucketsRoot = os.environ.get('H2O_BUCKETS_ROOT')
-        print 'Using H2O_BUCKETS_ROOT environment variable:', h2oBucketsRoot
-        rootPath = os.path.abspath(h2oBucketsRoot)
+        rootPath = os.environ.get('H2O_BUCKETS_ROOT')
+        print 'Using H2O_BUCKETS_ROOT environment variable:', rootPath
         if (not os.path.exists(rootPath)):
             raise Exception(("H2O_BUCKETS_ROOT in env but %s doesn't exist." % rootPath))
         bucketPath = os.path.join(rootPath, bucket)
@@ -17,15 +21,15 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
             raise Exception(("H2O_BUCKETS_ROOT and path used to form %s which doesn't exist." % bucketPath))
     else:
         possibleUsers = ['~']
-        print 'username:', h2o.nodes[0].username
+        print 'h2o.nodes[0].username:', h2o.nodes[0].username
         if h2o.nodes[0].username:
             possibleUsers.insert(0, ('~' + h2o.nodes[0].username))
         for u in possibleUsers:
             rootPath = os.path.expanduser(u)
             bucketPath = os.path.join(rootPath, bucket)
-            print 'Checking bucketPath:', bucketPath, 'assuming home is', rootPath
+            h2o.verboseprint('Checking bucketPath:', bucketPath, 'assuming home is', rootPath)
             if os.path.exists(bucketPath):
-                print 'Did find', bucket, 'at', rootPath
+                print 'search A did find', bucket, 'at', rootPath
                 break
         else:
             rootPath = os.getcwd()
@@ -37,14 +41,14 @@ def find_folder_path_and_pattern(bucket, pathWithRegex):
                 levels += 1
                 if (levels == 6):
                     raise Exception(('unable to find bucket: %s' % bucket))
-            print 'Did find', bucket, 'at', rootPath
+            print 'search B did find', bucket, 'at', rootPath
             bucketPath = os.path.join(rootPath, bucket)
     if (pathWithRegex is None):
         return (bucketPath, None)
     elif ('/' in pathWithRegex):
         (head, tail) = os.path.split(pathWithRegex)
         folderPath = os.path.abspath(os.path.join(bucketPath, head))
-        if (not os.path.exists(folderPath)):
+        if (checkPath and (not os.path.exists(folderPath))):
             raise Exception(("%s doesn't exist. %s under %s may be wrong?" % (folderPath, head, bucketPath)))
     else:
         folderPath = bucketPath
