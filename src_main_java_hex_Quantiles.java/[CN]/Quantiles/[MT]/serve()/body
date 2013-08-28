@@ -1,0 +1,8 @@
+{
+  long start=System.currentTimeMillis();
+  nrows=vec.length();
+  MergeSortTask ms1=new MergeSortTask().doAll(vec);
+  long pass1=System.currentTimeMillis();
+  pass1time=pass1 - start;
+  return new Response(Response.Status.done,this,-1,-1,null);
+}

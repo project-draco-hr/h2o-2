@@ -1,4 +1,8 @@
 {
+  if (nc == null) {
+    System.err.println("DEBUG: Bad Chunk ns");
+    System.err.flush();
+  }
   for (int i=0; i < _len; i++) {
     long res=at8_impl(i);
     if (_vec.valueIsNA(res))     nc.setInvalid(i);
