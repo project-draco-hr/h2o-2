@@ -10,10 +10,10 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
     print 'Waiting for the slow parse of the file:', csvFilename
     if node.redirect_import_folder_to_s3_path:
         path = re.sub('/home/0xdiag/datasets', 'home-0xdiag-datasets', path)
-        parseKey = parseImportS3File(node, csvFilename, path, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll)
+        parseResult = parseImportS3File(node, csvFilename, path, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll)
     elif node.redirect_import_folder_to_s3n_path:
         path = re.sub('/home/0xdiag/datasets', '/home-0xdiag-datasets', path)
-        parseKey = parseImportHdfsFile(node, csvFilename, path, myKey2, 's3n', timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll)
+        parseResult = parseImportHdfsFile(node, csvFilename, path, myKey2, 's3n', timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll)
     else:
         if (getpass.getuser() == 'jenkins'):
             print 'Now: not doing Temp hack of /home/0xdiag/datasets/standard to /home/0xdiag/datasets'
@@ -21,7 +21,7 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
         if h2o.beta_features:
             print 'Temp hack to look at the jobs list for parse completion. No multiple outstanding parses'
             print 'The parse result will be just from the first noPoll response. Parse is done as noPoll'
-        parseKey = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll=(noPoll or h2o.beta_features), **kwargs)
+        parseResult = node.parse(importKey, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll=(noPoll or h2o.beta_features), **kwargs)
         if h2o.beta_features:
             print 'Temp hack to look at the jobs list for parse completion. No multiple outstanding parses'
             print 'The parse result will be just from the first noPoll response.'
@@ -29,6 +29,6 @@ def parseImportFolderFile(node=None, csvFilename=None, path=None, key2=None, tim
             start = time.time()
             h2o_jobs.pollWaitJobs(pattern='arse', timeoutSecs=timeoutSecs, pollTimeoutSecs=120, retryDelaySecs=5)
             print 'Parse job end for ', importKey, 'took', (time.time() - start), 'seconds'
-        parseKey['python_source_key'] = importKey
-        print '\nParse result:', parseKey
-    return parseKey
+        parseResult['python_source_key'] = importKey
+        print '\nParse result:', parseResult
+    return parseResult

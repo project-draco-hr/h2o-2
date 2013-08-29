@@ -12,10 +12,10 @@ def test_B_load_hdfs_and_store_hex_to_hdfs(self):
     h2i.setupImportHdfs()
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
-        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=1000)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print 'parse result:', parseKey['destination_key']
+        parseResult = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=1000)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print 'parse result:', parseResult['destination_key']
         print ('\n' + csvFilename)
         start = time.time()
-        print 'Storing', parseKey['destination_key'], 'to HDFS'
-        storeKey = h2o_cmd.runStore2HDFS(key=parseKey['destination_key'], timeoutSecs=1000)
+        print 'Storing', parseResult['destination_key'], 'to HDFS'
+        storeKey = h2o_cmd.runStore2HDFS(key=parseResult['destination_key'], timeoutSecs=1000)

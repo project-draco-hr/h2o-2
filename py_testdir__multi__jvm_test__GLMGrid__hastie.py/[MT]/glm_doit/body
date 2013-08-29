@@ -1,11 +1,11 @@
 def glm_doit(self, csvFilename, csvPathname, timeoutSecs=30):
     print '\nStarting parse of', csvFilename
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'), timeoutSecs=10)
+    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'), timeoutSecs=10)
     y = '10'
     x = ''
     kwargs = {'x': x, 'y': y, 'case': '1', 'destination_key': 'gg', 'max_iter': 10, 'case': (-1), 'case_mode': '=', 'n_folds': 2, 'lambda': '1e-8,1e-4,1e-3', 'alpha': '0,0.25,0.8', 'thresholds': '0.5', }
     start = time.time()
     print '\nStarting GLMGrid of', csvFilename
-    glmGridResult = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+    glmGridResult = h2o_cmd.runGLMGridOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'GLMGrid in', (time.time() - start), 'secs (python)'
     h2o_glm.simpleCheckGLMGrid(self, glmGridResult, allowZeroCoeff=True, **kwargs)

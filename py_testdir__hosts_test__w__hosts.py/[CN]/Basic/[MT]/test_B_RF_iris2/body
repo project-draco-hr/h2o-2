@@ -1,0 +1,3 @@
+def test_B_RF_iris2(self):
+    parseResult = h2i.import_parse(bucket='smalldata', path='iris/iris2.csv')
+    h2o_cmd.runRFOnly(parseResult=parseResult, trees=6, model_key='iris2', timeoutSecs=10, retryDelaySecs=1)

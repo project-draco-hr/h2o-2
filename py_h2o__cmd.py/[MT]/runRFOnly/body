@@ -1,10 +1,10 @@
-def runRFOnly(node=None, parseKey=None, trees=5, timeoutSecs=20, retryDelaySecs=2, rfView=True, noise=None, noPrint=False, **kwargs):
-    if (not parseKey):
+def runRFOnly(node=None, parseResult=None, trees=5, timeoutSecs=20, retryDelaySecs=2, rfView=True, noise=None, noPrint=False, **kwargs):
+    if (not parseResult):
         raise Exception('No parsed key for RF specified')
     if (not node):
         node = h2o.nodes[0]
-    h2o.verboseprint('runRFOnly parseKey:', parseKey)
-    Key = parseKey['destination_key']
+    h2o.verboseprint('runRFOnly parseResult:', parseResult)
+    Key = parseResult['destination_key']
     rf = node.random_forest(Key, trees, timeoutSecs, **kwargs)
     if (h2o.beta_features and (rfView == False)):
         return rf

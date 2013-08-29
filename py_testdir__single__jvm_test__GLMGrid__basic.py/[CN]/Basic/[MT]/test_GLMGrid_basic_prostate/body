@@ -2,7 +2,7 @@ def test_GLMGrid_basic_prostate(self):
     csvFilename = 'prostate.csv'
     print '\nStarting', csvFilename
     csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
     y = '1'
     x = range(9)
     x.remove(0)
@@ -11,6 +11,6 @@ def test_GLMGrid_basic_prostate(self):
     print '\nx:', x
     print 'y:', y
     kwargs = {'x': x, 'y': y, 'n_folds': 2, 'beta_epsilon': 0.0001, 'lambda': '1e-8:1e3:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
-    gg = h2o_cmd.runGLMGridOnly(parseKey=parseKey, timeoutSecs=120, **kwargs)
+    gg = h2o_cmd.runGLMGridOnly(parseResult=parseResult, timeoutSecs=120, **kwargs)
     colNames = ['D', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
     h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)

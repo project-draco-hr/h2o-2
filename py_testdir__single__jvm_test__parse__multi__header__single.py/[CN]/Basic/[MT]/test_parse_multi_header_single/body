@@ -28,10 +28,10 @@ def test_parse_multi_header_single(self):
         header = [x for x in xs if ('header' in x)][0]
         print ('Header Key = ' + header)
         start = time.time()
-        parseKey = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
-        print ("parseKey['destination_key']: " + parseKey['destination_key'])
-        print 'parse time:', parseKey['response']['time']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
+        print ("parseResult['destination_key']: " + parseResult['destination_key'])
+        print 'parse time:', parseResult['response']['time']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         self.assertEqual(inspect['num_cols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], totalCols)))
@@ -41,7 +41,7 @@ def test_parse_multi_header_single(self):
         else:
             kwargs = {'sample': 75, 'depth': 25, 'ntree': 1, }
         start = time.time()
-        rfv = h2o_cmd.runRFOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        rfv = h2o_cmd.runRFOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         print 'trial #', trial, 'totalDataRows:', totalDataRows, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'

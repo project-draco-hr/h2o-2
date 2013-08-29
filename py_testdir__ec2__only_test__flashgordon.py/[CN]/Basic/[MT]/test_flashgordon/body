@@ -36,7 +36,7 @@ def test_flashgordon(self):
                 key2 = (((csvFilename + '_') + str(trial)) + '.hex')
                 print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                 start = time.time()
-                parseKey = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                parseResult = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 if noPoll:
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
@@ -53,8 +53,8 @@ def test_flashgordon(self):
                     print 'Loading', protocol, 'key:', s3nKey, 'to', key2
                     parse3Key = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 elapsed = (time.time() - start)
-                print s3nKey, 'parse time:', parseKey['response']['time']
-                print 'parse result:', parseKey['destination_key']
+                print s3nKey, 'parse time:', parseResult['response']['time']
+                print 'parse result:', parseResult['destination_key']
                 print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
                 if noPoll:
                     time.sleep(2)
@@ -67,7 +67,7 @@ def test_flashgordon(self):
                     print '\nMB/sec (before uncompress)', ('%6.2f' % fileMBS)
                     h2o.cloudPerfH2O.message('{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} MB/sec for {:6.2f} secs'.format(len(h2o.nodes), tryHeap, csvFilepattern, csvFilename, fileMBS, elapsed))
                 if (not noPoll):
-                    inspect = h2o_cmd.runInspect(key=parseKey['destination_key'])
+                    inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
                 print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
                 storeView = h2o.nodes[0].store_view()
                 for k in s3nFullList:

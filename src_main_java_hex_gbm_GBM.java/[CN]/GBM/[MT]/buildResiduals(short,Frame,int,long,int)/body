@@ -1,0 +1,29 @@
+{
+  float preds[]=new float[nclass];
+  if (nclass == 1) {
+    fr.add("Residual-" + fr._names[ncols],vresponse.makeCon(vresponse.mean()));
+    throw H2O.unimpl();
+  }
+ else {
+    long cs[]=new ClassDist(nclass,ymin).doAll(vresponse)._cs;
+    String[] domain=vresponse.domain();
+    for (int i=0; i < nclass; i++) {
+      preds[i]=(float)cs[i] / nrows;
+      fr.add("Residual-" + domain[i],vresponse.makeCon(-preds[i]));
+    }
+  }
+  fr.add("response",vresponse);
+  new MRTask2(){
+    @Override public void map(    Chunk chks[]){
+      Chunk cy=chks[chks.length - 1];
+      for (int i=0; i < cy._len; i++) {
+        int cls=(int)cy.at80(i) - ymin;
+        Chunk res=chks[ncols + cls];
+        res.set40(i,1.0f + (float)res.at0(i));
+      }
+    }
+  }
+.doAll(fr);
+  fr.remove(ncols + nclass);
+  return preds;
+}

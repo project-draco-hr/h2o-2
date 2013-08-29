@@ -1,0 +1,57 @@
+def find_folder_and_filename(bucket, pathWithRegex):
+    checkPath = True
+    if ((bucket is not None) and re.match('/', pathWithRegex)):
+        h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
+        pathWithRegex = pathWithRegex.lstrip('/')
+    if (bucket is None):
+        bucketPath = ''
+    elif (bucket == '.'):
+        bucketPath = os.getcwd()
+    elif (h2o.nodes[0].remoteH2O and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
+        rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
+        bucketPath = os.path.join(rootPath, bucket)
+        checkpath = False
+    elif os.environ.get('H2O_BUCKETS_ROOT'):
+        rootPath = os.environ.get('H2O_BUCKETS_ROOT')
+        print 'Using H2O_BUCKETS_ROOT environment variable:', rootPath
+        if (not os.path.exists(rootPath)):
+            raise Exception(("H2O_BUCKETS_ROOT in env but %s doesn't exist." % rootPath))
+        bucketPath = os.path.join(rootPath, bucket)
+        if (not os.path.exists(bucketPath)):
+            raise Exception(("H2O_BUCKETS_ROOT and path used to form %s which doesn't exist." % bucketPath))
+    else:
+        possibleUsers = ['~']
+        h2o.verboseprint('h2o.nodes[0].username:', h2o.nodes[0].username)
+        if h2o.nodes[0].username:
+            possibleUsers.insert(0, ('~' + h2o.nodes[0].username))
+        for u in possibleUsers:
+            rootPath = os.path.expanduser(u)
+            bucketPath = os.path.join(rootPath, bucket)
+            h2o.verboseprint('Checking bucketPath:', bucketPath, 'assuming home is', rootPath)
+            if os.path.exists(bucketPath):
+                h2o.verboseprint('search A did find', bucket, 'at', rootPath)
+                break
+        else:
+            rootPath = os.getcwd()
+            h2o.verboseprint('find_bucket looking upwards from', rootPath, 'for', bucket)
+            levels = 0
+            while (not os.path.exists(os.path.join(rootPath, bucket))):
+                h2o.verboseprint("Didn't find", bucket, 'at', rootPath)
+                rootPath = os.path.split(rootPath)[0]
+                levels += 1
+                if (levels == 6):
+                    raise Exception(('unable to find bucket: %s' % bucket))
+            h2o.verboseprint('search B did find', bucket, 'at', rootPath)
+            bucketPath = os.path.join(rootPath, bucket)
+    if (pathWithRegex is None):
+        return (bucketPath, None)
+    elif ('/' in pathWithRegex):
+        (head, tail) = os.path.split(pathWithRegex)
+        folderPath = os.path.abspath(os.path.join(bucketPath, head))
+        if (checkPath and (not os.path.exists(folderPath))):
+            raise Exception(("%s doesn't exist. %s under %s may be wrong?" % (folderPath, head, bucketPath)))
+    else:
+        folderPath = bucketPath
+        tail = pathWithRegex
+    h2o.verboseprint('folderPath:', folderPath, 'tail:', tail)
+    return (folderPath, tail)

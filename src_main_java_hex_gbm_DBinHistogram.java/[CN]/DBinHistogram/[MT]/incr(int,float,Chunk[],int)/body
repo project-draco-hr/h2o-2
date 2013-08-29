@@ -1,17 +1,28 @@
 {
   int b=bin(d);
-  if (_Ms[b] == null) {
-    _Ms[b]=MemoryManager.malloc4f(_nclass);
-    _Ss[b]=MemoryManager.malloc4f(_nclass);
+  float Ms[]=_Ms[b];
+  float Ss[]=_Ss[b];
+  if (Ms == null) {
+    _Ms[b]=Ms=MemoryManager.malloc4f(_nclass);
+    _Ss[b]=Ss=MemoryManager.malloc4f(_nclass);
   }
   _bins[b]++;
   long k=_bins[b];
   if (d < _mins[b])   _mins[b]=d;
   if (d > _maxs[b])   _maxs[b]=d;
   for (int c=0; c < _nclass; c++) {
-    float y=(float)chks[ychk + c].at0(row);
-    float oldM=_Ms[b][c];
-    float newM=_Ms[b][c]=oldM + (y - oldM) / k;
-    _Ss[b][c]+=(y - oldM) * (y - newM);
+    Chunk chk=chks[ychk + c];
+    if (chk instanceof C4FChunk) {
+      float y=(float)((C4FChunk)chk).at0(row);
+      float oldM=Ms[c];
+      float newM=Ms[c]=oldM + (y - oldM) / k;
+      Ss[c]+=(y - oldM) * (y - newM);
+    }
+ else {
+      float y=(float)chk.at0(row);
+      float oldM=Ms[c];
+      float newM=Ms[c]=oldM + (y - oldM) / k;
+      Ss[c]+=(y - oldM) * (y - newM);
+    }
   }
 }

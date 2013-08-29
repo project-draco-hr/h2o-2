@@ -10,7 +10,7 @@ def test_GenParity1(self):
         sys.stdout.flush()
         csvFilename = (('parity_128_4_' + str(10000)) + '_quad.data')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-        parseKey = h2o_cmd.parseFile(None, csvPathname)
+        parseResult = h2i.import_parse(path=csvPathname)
         h2o.verboseprint('Trial', trial)
-        h2o_cmd.runRFOnly(parseKey=parseKey, trees=237, depth=45, timeoutSecs=120)
+        h2o_cmd.runRFOnly(parseResult=parseResult, trees=237, depth=45, timeoutSecs=120)
         trial += 1

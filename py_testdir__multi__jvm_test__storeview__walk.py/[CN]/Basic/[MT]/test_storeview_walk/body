@@ -1,0 +1,39 @@
+def test_storeview_walk(self):
+    print 'Walk storeview using offset, and just view=1'
+    print 'Do an import to get keys'
+    importFolderPath = '/home/0xdiag/datasets/syn_datasets'
+    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+    if ('succeeded' in importFolderResult):
+        succeededList = importFolderResult['succeeded']
+    elif ('files' in importFolderResult):
+        succeededList = importFolderResult['files']
+    else:
+        raise Exception("Can't find 'files' or 'succeeded' in import list")
+    print len(succeededList), 'keys reported by import result'
+    self.assertEqual(len(succeededList), 100, 'There should be 100 files imported as keys')
+    print '\nTrying StoreView after the import folder'
+    storeViewResult = h2o_cmd.runStoreView(offset=0, view=None, timeoutSecs=30)
+    l = len(storeViewResult['keys'])
+    print 'Check 1:', l, ('%s keys if view= not used' % l)
+    self.assertEqual(20, l, 'Expect 20 (default) for view= not used')
+    storeViewResult = h2o_cmd.runStoreView(offset=0, view=1024, timeoutSecs=60)
+    l = len(storeViewResult['keys'])
+    print 'Check 2:', l, ('%s keys if view=1024' % l)
+    self.assertEqual(100, l, 'Expect 100 for view=1024')
+    storeViewResult = h2o_cmd.runStoreView(offset=0, view=100, timeoutSecs=60)
+    l = len(storeViewResult['keys'])
+    print 'Check 3:', l, '%s keys if view= expected number', len(succeededList)
+    self.assertEqual(100, l, 'Expect 100 for view=100')
+    storeViewResult = h2o_cmd.runStoreView(offset=0, view=0, timeoutSecs=60)
+    l = len(storeViewResult['keys'])
+    print 'Check 4:', l, ('%s keys if view= 0' % l)
+    self.assertEqual(0, l, 'Expect 0 for view=0')
+    keys = storeViewResult['keys']
+    i = 0
+    while (i < len(keys)):
+        h2o_cmd.runStoreView(timeoutSecs=30, offset=i, view=2)
+        i += 1
+    i = 0
+    while (i < len(keys)):
+        h2o_cmd.runStoreView(timeoutSecs=30, offset=i, view=2)
+        i += 2

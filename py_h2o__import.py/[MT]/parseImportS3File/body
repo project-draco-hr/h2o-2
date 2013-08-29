@@ -9,7 +9,7 @@ def parseImportS3File(node=None, csvFilename='covtype.data', path='home-0xdiag-d
     else:
         myKey2 = key2
     print 'Waiting for the slow parse of the file:', csvFilename
-    parseKey = node.parse(s3Key, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
-    parseKey['source_key'] = s3Key
-    print '\nParse result:', parseKey
-    return parseKey
+    parseResult = node.parse(s3Key, myKey2, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
+    parseResult['source_key'] = s3Key
+    print '\nParse result:', parseResult
+    return parseResult
