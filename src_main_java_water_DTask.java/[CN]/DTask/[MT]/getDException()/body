@@ -1,0 +1,8 @@
+{
+  if (!hasException())   return null;
+  StackTraceElement[] stk=new StackTraceElement[_cls.length];
+  for (int i=0; i < _cls.length; ++i)   stk[i]=new StackTraceElement(_cls[i],_mth[i],_fname[i],_lineNum[i]);
+  DistributedException dex=new DistributedException("DistributedException(" + _exception + ") from "+ _eFromNode+ ": "+ _msg,null);
+  dex.setStackTrace(stk);
+  return dex;
+}

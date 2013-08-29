@@ -1,4 +1,7 @@
 {
-  System.out.println("RPC sees an exceptional completion");
+  if (!_firstException.getAndSet(true)) {
+    _dt.setException(ex);
+    onCompletion(caller);
+  }
   return true;
 }

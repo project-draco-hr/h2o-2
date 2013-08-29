@@ -1,20 +1,4 @@
 {
-  if (_is_local) {
-    try {
-      lcompute();
-    }
- catch (    RuntimeException e) {
-      _exception=new DException(e);
-      completeExceptionally(e);
-    }
-catch (    AssertionError e) {
-      _exception=new DException(e);
-      completeExceptionally(e);
-    }
-catch (    OutOfMemoryError e) {
-      _exception=new DException(e);
-      completeExceptionally(e);
-    }
-  }
+  if (_is_local)   lcompute();
  else   dcompute();
 }

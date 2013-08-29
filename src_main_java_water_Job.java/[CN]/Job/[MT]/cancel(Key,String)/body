@@ -1,0 +1,19 @@
+{
+  DKV.remove(self);
+  DKV.write_barrier();
+  new TAtomic<List>(){
+    @Override public List atomic(    List old){
+      if (old == null)       old=new List();
+      Job[] jobs=old._jobs;
+      for (int i=0; i < jobs.length; i++) {
+        if (jobs[i].job_key.equals(self)) {
+          jobs[i].end_time=CANCELLED_END_TIME;
+          jobs[i].exception=exception;
+          break;
+        }
+      }
+      return old;
+    }
+  }
+.fork(LIST);
+}

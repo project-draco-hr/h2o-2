@@ -1,4 +1,4 @@
-def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, hadoop=False, conservative=False, **kwargs):
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, fake_cloud=False, conservative=False, **kwargs):
     clean_sandbox()
     if kwargs.setdefault('enable_benchmark_log', False):
         global cloudPerfH2O
@@ -27,11 +27,8 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
             if rand_shuffle:
                 random.shuffle(hostPortList)
             for (h, p) in hostPortList:
-                if hadoop:
-                    newNode = h.hadoop_h2o(port=p, node_id=totalNodes, **kwargs)
-                else:
-                    verboseprint('ssh starting node', totalNodes, 'via', h)
-                    newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)
+                verboseprint('ssh starting node', totalNodes, 'via', h)
+                newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)
                 nodeList.append(newNode)
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')

@@ -1,7 +1,7 @@
-def process_dataset(self, key, Y, e_coefs, e_ndev, e_rdev, e_aic, **kwargs):
+def process_dataset(self, parseResult, Y, e_coefs, e_ndev, e_rdev, e_aic, **kwargs):
     kwargs['alpha'] = 0
     kwargs['lambda'] = 0
-    glm = h2o_cmd.runGLMOnly(parseResult=key, Y='CAPSULE', timeoutSecs=10, **kwargs)
+    glm = h2o_cmd.runGLMOnly(parseResult=parseResult, Y='CAPSULE', timeoutSecs=10, **kwargs)
     GLMModel = glm['GLMModel']
     GLMParams = GLMModel['GLMParams']
     family = GLMParams['family']
