@@ -3,6 +3,7 @@
   Key h2okey=load_test_file(file);
   ByteHistoThrow bh=new ByteHistoThrow();
   try {
+    bh._throwAt=getRemote().toString();
     bh.invoke(h2okey);
   }
  catch (  DException.DistributedException de) {

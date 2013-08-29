@@ -8,6 +8,7 @@
       for (int i=0; i < jobs.length; i++) {
         if (jobs[i].job_key.equals(self)) {
           jobs[i].end_time=CANCELLED_END_TIME;
+          jobs[i].exception=exception;
           break;
         }
       }
