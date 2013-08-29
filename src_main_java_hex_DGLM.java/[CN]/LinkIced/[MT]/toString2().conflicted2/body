@@ -1,0 +1,25 @@
+{
+  String s="family(";
+switch (this) {
+case gaussian:
+    s+="gaussian: ";
+  break;
+case binomial:
+s+="binomial: ";
+break;
+case gamma:
+s+="gamma: ";
+break;
+case poisson:
+s+="poisson: ";
+break;
+case tweedie:
+s+=String.format("tweedie: variancePower %2.2f",this.tweedieVariancePower);
+break;
+default :
+s+="BAD UNKNOWN";
+break;
+}
+s+=String.format(", link: %s)",defaultLink);
+return s;
+}

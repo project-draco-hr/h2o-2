@@ -5,14 +5,14 @@ def test_GLM_many_cols_enum(self):
         tryList = [(10000, 100, 'cA', 100), (10000, 300, 'cB', 300), (10000, 500, 'cC', 700), (10000, 700, 'cD', 3600), (10000, 900, 'cE', 3600), (10000, 1000, 'cF', 3600), (10000, 1300, 'cG', 3600), (10000, 1700, 'cH', 3600), (10000, 2000, 'cI', 3600), (10000, 2500, 'cJ', 3600), (10000, 3000, 'cK', 3600)]
     else:
         tryList = [(10000, 100, 'cA', 100), (10000, 300, 'cC', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print '\nCreating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, translateList)
         start = time.time()
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, schema='put', timeoutSecs=30)
         elapsed = (time.time() - start)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']

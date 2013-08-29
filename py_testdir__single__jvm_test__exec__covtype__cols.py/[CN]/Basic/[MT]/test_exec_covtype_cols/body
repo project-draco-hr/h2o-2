@@ -1,6 +1,6 @@
 def test_exec_covtype_cols(self):
-    csvPathname = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
-    parseResult = h2o_cmd.parseFile(None, csvPathname, 'covtype.data', 'c.hex', 10)
+    csvPathname = 'UCI/UCI-large/covtype/covtype.data'
+    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put', hex_key='c.hex', timeoutSecs=10)
     print '\nParse key is:', parseResult['destination_key']
     start = time.time()
     suffix = '.hex'

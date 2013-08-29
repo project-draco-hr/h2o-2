@@ -1,12 +1,11 @@
 def test_rf_covtype_train_oobe3(self):
     print '\nUse randomFilter to sample the dataset randomly. then slice it'
-    importFolderPath = '/home/0xdiag/datasets/standard'
+    importFolderPath = 'standard'
     csvFilename = 'covtype.data'
     csvPathname = ((importFolderPath + '/') + csvFilename)
-    key2 = (csvFilename + '.hex')
-    h2i.setupImportFolder(None, importFolderPath)
+    hex_key = (csvFilename + '.hex')
     print '\nUsing header=0 on the normal covtype.data'
-    parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, header=0, timeoutSecs=100)
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, header=0, timeoutSecs=100)
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
     num_rows = inspect['num_rows']
@@ -20,9 +19,9 @@ def test_rf_covtype_train_oobe3(self):
     print 'Creating the key of the last 10% data, for scoring'
     dataKeyTest = 'rTest'
     dataKeyTrain = 'rTrain'
-    execExpr = (((((dataKeyTest + '=randomFilter(') + key2) + ',') + str(pct10)) + ',12345)')
+    execExpr = (((((dataKeyTest + '=randomFilter(') + hex_key) + ',') + str(pct10)) + ',12345)')
     h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTest, timeoutSecs=10)
-    execExpr = (((((dataKeyTrain + '=randomFilter(') + key2) + ',') + str(rowsForPct[9])) + ',12345)')
+    execExpr = (((((dataKeyTrain + '=randomFilter(') + hex_key) + ',') + str(rowsForPct[9])) + ',12345)')
     h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTrain, timeoutSecs=10)
     actualTrainPctRightList = [0]
     actualScorePctRightList = [0]

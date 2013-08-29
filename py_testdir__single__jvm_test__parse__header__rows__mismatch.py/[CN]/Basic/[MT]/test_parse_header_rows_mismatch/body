@@ -8,12 +8,12 @@ def test_parse_header_rows_mismatch(self):
     rList = rand_rowData(totalCols)
     write_syn_dataset(csvPathname, totalRows, headerData, rList)
     for trial in range(2):
-        key = ((csvFilename + '_') + str(trial))
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        src_key = ((csvFilename + '_') + str(trial))
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
         timeoutSecs = 30
         print "Force it to think there's a header. using comma forced as separator"
-        parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutSecs=30, header=1, separator=44)
+        parseResult = h2i.import_parse(path=csvPathname, src_key=src_key, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=30, header=1, separator=44)
         print ("parseResult['destination_key']: " + parseResult['destination_key'])
         print 'parse time:', parseResult['response']['time']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

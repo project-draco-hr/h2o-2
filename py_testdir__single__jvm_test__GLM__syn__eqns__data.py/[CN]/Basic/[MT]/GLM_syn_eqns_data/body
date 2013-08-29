@@ -5,7 +5,7 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
     else:
         tryList = [(500, 30, 'cD', 300), (500, 30, 'cD', 300)]
     lenNodes = len(h2o.nodes)
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         modeString = ((((((((((((((('_Bins' + str(BINS)) + '_Dmin') + str(DATA_VALUE_MIN)) + '_Dmax') + str(DATA_VALUE_MAX)) + '_Cmin') + str(COEFF_VALUE_MIN)) + '_Cmax') + str(COEFF_VALUE_MAX)) + '_Imin') + str(INTCPT_VALUE_MIN)) + '_Imax') + str(INTCPT_VALUE_MAX)) + '_Ddist') + str(DATA_DISTS))
         print 'modeString:', modeString
         SEEDPERFILE = random.randint(0, sys.maxint)
@@ -15,7 +15,7 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
         (coefficientsGen, interceptGen) = gen_rand_equation(colCount, INTCPT_VALUE_MIN, INTCPT_VALUE_MAX, COEFF_VALUE_MIN, COEFF_VALUE_MAX, SEEDPERFILE)
         print coefficientsGen, interceptGen
         write_syn_dataset(csvPathname, rowCount, colCount, coefficientsGen, interceptGen, DATA_VALUE_MIN, DATA_VALUE_MAX, DATA_DISTS, ALGO, SEED)
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=60)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, schema='put', timeoutSecs=60)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

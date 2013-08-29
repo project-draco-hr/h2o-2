@@ -1,14 +1,14 @@
 def test_parse_1m_cols(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(10, 1000000, 'cD', 60, 360)]
-    for (rowCount, colCount, key2, timeoutSecs, timeoutSecs2) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs, timeoutSecs2) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print '\nCreating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
         start = time.time()
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=timeoutSecs, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, doSummary=False)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print 'Parse:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         start = time.time()

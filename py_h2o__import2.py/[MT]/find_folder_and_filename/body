@@ -7,7 +7,7 @@ def find_folder_and_filename(bucket, pathWithRegex):
         bucketPath = ''
     elif (bucket == '.'):
         bucketPath = os.getcwd()
-    elif (h2o.nodes[0].remoteH2O and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
+    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
         rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
         bucketPath = os.path.join(rootPath, bucket)
         checkpath = False
@@ -20,12 +20,15 @@ def find_folder_and_filename(bucket, pathWithRegex):
         if (not os.path.exists(bucketPath)):
             raise Exception(("H2O_BUCKETS_ROOT and path used to form %s which doesn't exist." % bucketPath))
     else:
-        possibleUsers = ['~']
-        h2o.verboseprint('h2o.nodes[0].username:', h2o.nodes[0].username)
-        if h2o.nodes[0].username:
-            possibleUsers.insert(0, ('~' + h2o.nodes[0].username))
+        username = getpass.getuser()
+        h2oUsername = h2o.nodes[0].username
+        h2o.verboseprint('username:', username, 'h2oUsername:', h2oUsername)
+        if (h2oUsername != username):
+            possibleUsers = [username, h2oUsername, '0xdiag']
+        else:
+            possibleUsers = [username, '0xdiag']
         for u in possibleUsers:
-            rootPath = os.path.expanduser(u)
+            rootPath = os.path.expanduser(('~' + u))
             bucketPath = os.path.join(rootPath, bucket)
             h2o.verboseprint('Checking bucketPath:', bucketPath, 'assuming home is', rootPath)
             if os.path.exists(bucketPath):

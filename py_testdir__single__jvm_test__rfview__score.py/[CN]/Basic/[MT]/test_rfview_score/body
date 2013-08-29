@@ -1,11 +1,11 @@
 def test_rfview_score(self):
-    csvPathnameTrain = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
+    csvPathnameTrain = 'UCI/UCI-large/covtype/covtype.data'
     print 'Train with:', csvPathnameTrain
-    parseResultTrain = h2o_cmd.parseFile(csvPathname=csvPathnameTrain, key2='covtype.hex', timeoutSecs=15)
+    parseResultTrain = h2i.import_parse(bucket='datasets', path=csvPathnameTrain, schema='put', hex_key='covtype.hex', timeoutSecs=15)
     dataKeyTrain = parseResultTrain['destination_key']
-    csvPathnameTest = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
+    csvPathnameTest = 'UCI/UCI-large/covtype/covtype.data'
     print 'Test with:', csvPathnameTest
-    parseResultTest = h2o_cmd.parseFile(csvPathname=csvPathnameTrain, key2='covtype.hex', timeoutSecs=15)
+    parseResultTest = h2i.import_parse(bucket='datasets', path=csvPathnameTest, schema='put', hex_key='covtype.hex', timeoutSecs=15)
     dataKeyTest = parseResultTest['destination_key']
     for trial in range(5):
         params = {'ntree': 13, 'parallel': 1, 'out_of_bag_error_estimate': 0, }

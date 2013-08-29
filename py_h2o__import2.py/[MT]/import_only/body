@@ -1,6 +1,8 @@
 def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, doSummary=True, src_key='python_src_key', **kwargs):
     if (not node):
         node = h2o.nodes[0]
+    if (path is None):
+        raise Exception('import_only: path parameter needs to be specified')
     if ('/' in path):
         (head, pattern) = os.path.split(path)
     else:

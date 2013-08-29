@@ -1,6 +1,6 @@
 def test_GLM_params_rand2_4082088627997819015(self):
-    csvPathname = h2o.find_dataset('UCI/UCI-large/covtype/covtype.data')
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key='covtype')
+    csvPathname = 'UCI/UCI-large/covtype/covtype.data'
+    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put', hex_key='covtype.hex')
     paramDict = define_params()
     for trial in range(40):
         params = {'y': 54, 'n_folds': 3, 'family': 'binomial', 'max_iter': 5, 'case': 1, 'alpha': 0, 'lambda': 0, }

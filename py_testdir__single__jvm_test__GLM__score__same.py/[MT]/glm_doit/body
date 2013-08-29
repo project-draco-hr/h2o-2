@@ -1,7 +1,7 @@
 def glm_doit(self, csvFilename, bucket, csvPathname, timeoutSecs, pollTimeoutSecs, **kwargs):
     print '\nStarting GLM of', csvFilename
     hex_key = (csvFilename + '.hex')
-    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, hex_key=hex_key, timeoutSecs=60, pollTimeoutSecs=pollTimeoutSecs)
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=60, pollTimeoutSecs=pollTimeoutSecs)
     start = time.time()
     glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'GLM in', (time.time() - start), 'secs (python)'

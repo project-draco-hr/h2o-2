@@ -3,8 +3,8 @@ def test_putfile_a5m(self):
     csvFilenameList = [('a5m.csv', 'A', None), ('a5m.csv', 'B', None), ('a5m.csv', 'C', None)]
     h2b.browseTheCloud()
     for (csvFilename, key, trees) in csvFilenameList:
-        csvPathname = h2o.find_dataset(csvFilename)
-        parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, timeoutSecs=500)
+        csvPathname = csvFilename
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', timeoutSecs=500)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])

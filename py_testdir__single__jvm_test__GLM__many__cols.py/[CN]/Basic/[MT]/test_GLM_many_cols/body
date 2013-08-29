@@ -5,13 +5,13 @@ def test_GLM_many_cols(self):
     else:
         tryList = [(10000, 100, 'cD', 300), (10000, 200, 'cE', 300), (10000, 300, 'cF', 300), (10000, 400, 'cG', 300), (10000, 500, 'cH', 300), (10000, 1000, 'cI', 300)]
     lenNodes = len(h2o.nodes)
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, schema='put', timeoutSecs=10)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
