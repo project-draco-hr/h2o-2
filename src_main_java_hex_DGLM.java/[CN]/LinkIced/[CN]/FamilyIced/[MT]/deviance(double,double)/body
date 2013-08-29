@@ -1,0 +1,15 @@
+{
+switch (_family) {
+case gaussian:
+case binomial:
+case poisson:
+case gamma:
+    return _family.deviance(yr,ym);
+case tweedie:
+  double one_minus_p=1. - _tweedieVariancePower;
+double two_minus_p=2. - _tweedieVariancePower;
+return Math.pow(yr,two_minus_p) / (one_minus_p * two_minus_p) - (yr * (Math.pow(ym,one_minus_p))) / one_minus_p + Math.pow(ym,two_minus_p) / two_minus_p;
+default :
+throw new RuntimeException("FamilyIced.deviance unknown family");
+}
+}
