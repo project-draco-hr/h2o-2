@@ -1,12 +1,12 @@
 import unittest, random, sys, time, os
 sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import, h2o_exec as h2e
+import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import2, h2o_exec as h2e
 zeroList = []
 for i in range(5):
     zeroList.append((('ColumnRes' + str(i)) + ' = 0'))
     zeroList.append((('ScalarRes' + str(i)) + ' = 0'))
     zeroList.append((('MatrixRes' + str(i)) + ' = 0'))
-exprList = ['MatrixRes<n> = slice(<keyX>[<col1>],<row>)', 'MatrixRes<n> = slice(<keyX>[<col1>],1)', 'MatrixRes<n> = slice(<keyX>[<col1>],2)', 'MatrixRes<n> = slice(<keyX>[<col1>],<row>,123)', 'MatrixRes<n> = slice(<keyX>[<col1>],<row>,1)', 'ColumnRes<n> = <keyX>[<col1>] + <keyX>[<col2>] + <keyX>[2]', 'ColumnRes<n> = colSwap(<keyX>,<col1>,(<keyX>[2]==0 ? 54321 : 54321))', 'ColumnRes<n> = <keyX>[<col1>]', 'ScalarRes<n> = sum(<keyX>[<col1>]) + ScalarRes0']
-exprErrorCaseList = ['MatrixRes<n> = slice(<keyX>[<col1>],1,1000000)']
+exprList = ['MatrixRes<n> = slice(<hex_keyX>[<col1>],<row>)', 'MatrixRes<n> = slice(<hex_keyX>[<col1>],1)', 'MatrixRes<n> = slice(<hex_keyX>[<col1>],2)', 'MatrixRes<n> = slice(<hex_keyX>[<col1>],<row>,123)', 'MatrixRes<n> = slice(<hex_keyX>[<col1>],<row>,1)', 'ColumnRes<n> = <hex_keyX>[<col1>] + <hex_keyX>[<col2>] + <hex_keyX>[2]', 'ColumnRes<n> = colSwap(<hex_keyX>,<col1>,(<hex_keyX>[2]==0 ? 54321 : 54321))', 'ColumnRes<n> = <hex_keyX>[<col1>]', 'ScalarRes<n> = sum(<hex_keyX>[<col1>]) + ScalarRes0']
+exprErrorCaseList = ['MatrixRes<n> = slice(<hex_keyX>[<col1>],1,1000000)']
 if (__name__ == '__main__'):
     h2o.unit_main()

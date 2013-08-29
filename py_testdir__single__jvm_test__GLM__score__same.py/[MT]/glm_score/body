@@ -1,7 +1,7 @@
 def glm_score(self, csvFilename, bucket, csvPathname, modelKey, thresholds='0.5', timeoutSecs=30, pollTimeoutSecs=30):
     print '\nStarting GLM score of', csvFilename
     hex_key = (csvFilename + '.hex')
-    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=pollTimeoutSecs)
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=pollTimeoutSecs)
     y = '10'
     x = ''
     kwargs = {'x': x, 'y': y, 'case': (-1), 'thresholds': 0.5, }

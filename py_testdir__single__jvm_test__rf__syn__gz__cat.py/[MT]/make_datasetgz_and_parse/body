@@ -1,4 +1,4 @@
-def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, key2, rowCount, colCount, FILEREPL, SEEDPERFILE, timeoutSecs):
+def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, hex_key, rowCount, colCount, FILEREPL, SEEDPERFILE, timeoutSecs):
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     print 'Creating random', csvPathname
     write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
@@ -18,7 +18,7 @@ def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, key2, rowCount, colCo
     start = time.time()
     print 'Parse start:', csvPathnameReplgz
     doSummary = False
-    parseResult = h2o_cmd.parseFile(None, csvPathnameReplgz, key2=key2, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, doSummary=doSummary)
+    parseResult = h2i.import_parse(path=csvPathnameReplgz, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, doSummary=doSummary)
     print csvFilenameReplgz, 'parse time:', parseResult['response']['time']
     if doSummary:
         algo = 'Parse and Summary:'

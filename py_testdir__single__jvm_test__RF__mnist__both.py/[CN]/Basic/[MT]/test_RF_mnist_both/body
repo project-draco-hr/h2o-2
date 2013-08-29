@@ -1,7 +1,7 @@
 def test_RF_mnist_both(self):
-    importFolderPath = '/home/0xdiag/datasets/mnist'
+    importFolderPath = 'mnist'
     csvFilelist = [('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600, None, '*mnist*gz'), ('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600, None, '*mnist*gz')]
-    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+    (importFolderResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=(importFolderPath + '/*'))
     if ('files' in importFolderResult):
         succeededList = importFolderResult['files']
     else:
@@ -15,7 +15,7 @@ def test_RF_mnist_both(self):
         trialStart = time.time()
         testKey2 = (((testCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.parseImportFolderFile(None, testCsvFilename, importFolderPath, key2=testKey2, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=((importFolderPath + '/') + testCsvFilename), hex_key=testKey2, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', testCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
@@ -26,7 +26,7 @@ def test_RF_mnist_both(self):
         print 'Use multi-file parse to grab both the mnist_testing.csv.gz and mnist_training.csv.gz for training'
         trainKey2 = (((trainCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.parseImportFolderFile(None, parsePattern, importFolderPath, key2=trainKey2, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=((importFolderPath + '/') + trainCsvFilename), hex_key=trainKey2, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']

@@ -7,7 +7,7 @@ def find_folder_and_filename(bucket, pathWithRegex):
         bucketPath = ''
     elif (bucket == '.'):
         bucketPath = os.getcwd()
-    elif (h2o.nodes[0].remoteH2O and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
+    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
         rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
         bucketPath = os.path.join(rootPath, bucket)
         checkpath = False

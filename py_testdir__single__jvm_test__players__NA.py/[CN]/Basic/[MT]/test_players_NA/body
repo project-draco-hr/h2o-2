@@ -1,7 +1,7 @@
 def test_players_NA(self):
     csvFilename = 'Players.csv'
-    csvPathname = h2o.find_file(('/home/0xdiag/datasets/ncaa/' + csvFilename))
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=15)
+    csvPathname = ('ncaa/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', timeoutSecs=15)
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     missingValuesList = h2o_cmd.infoFromInspect(inspect, csvPathname)
     print missingValuesList

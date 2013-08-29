@@ -6,7 +6,7 @@ def test_commented_header(self):
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON,output'
     tryList = [(2, 300, 9, 'cA', 60, '#'), (2, 300, 9, 'cA', 60, '# '), (2, 300, 9, 'cA', 60, ' #'), (2, 300, 9, 'cA', 60, ' # '), (2, 300, 9, 'cA', 60, '#  ')]
     trial = 0
-    for (fileNum, rowCount, colCount, key2, timeoutSecs, headerPrefix) in tryList:
+    for (fileNum, rowCount, colCount, hex_key, timeoutSecs, headerPrefix) in tryList:
         trial += 1
         print 'Wait while', fileNum, 'synthetic files are created in', SYNDATASETS_DIR
         rowxcol = ((str(rowCount) + 'x') + str(colCount))
@@ -19,10 +19,10 @@ def test_commented_header(self):
             write_syn_dataset(csvPathname, rowCount, headerData=(headerPrefix + headerData), rList=rList)
             totalRows += rowCount
         key = ('syn_' + str(trial))
-        key2 = (('syn_' + str(trial)) + '.hex')
-        h2o.nodes[0].import_files(SYNDATASETS_DIR)
+        hex_key = (('syn_' + str(trial)) + '.hex')
+        h2i.import_only(path=(SYNDATASETS_DIR + '/*'))
         start = time.time()
-        parseResult = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, header=1, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(path=(((SYNDATASETS_DIR + '/*') + rowxcol) + '*'), schema='put', hex_key=hex_key, header=1, timeoutSecs=timeoutSecs)
         print ("parseResult['destination_key']: " + parseResult['destination_key'])
         print 'parse time:', parseResult['response']['time']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
