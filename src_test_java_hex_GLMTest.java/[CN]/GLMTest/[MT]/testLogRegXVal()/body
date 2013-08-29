@@ -3,7 +3,7 @@
   ValueArray va=DKV.get(k1).get();
   LSMSolver lsms=new ADMMSolver(0.0001,1);
   GLMParams glmp=new GLMParams(Family.gaussian);
-  glmp._link=glmp._family.defaultLink;
+  glmp._link=new LinkIced(glmp._family._family.defaultLink);
   glmp._betaEps=0.000001;
   glmp._maxIter=50;
   int[] cols=new int[va._cols.length];

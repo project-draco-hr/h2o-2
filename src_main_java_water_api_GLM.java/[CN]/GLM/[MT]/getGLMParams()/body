@@ -15,7 +15,7 @@
     f.tweedieVariancePower=variancePower;
     res=new GLMParams(f,l);
   }
-  if (res._link == Link.familyDefault && res._link != Link.tweedie)   res._link=res._family.defaultLink;
+  if (res._link._link == Link.familyDefault && res._link._link != Link.tweedie)   res._link=new LinkIced(res._family._family.defaultLink);
   res._maxIter=_maxIter.value();
   res._betaEps=_betaEps.value();
   if (_caseWeight.valid())   res._caseWeight=_caseWeight.value();
