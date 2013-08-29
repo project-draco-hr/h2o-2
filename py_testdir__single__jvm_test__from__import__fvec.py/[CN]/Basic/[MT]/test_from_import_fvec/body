@@ -3,13 +3,13 @@ def test_from_import_fvec(self):
     print 'this will redirect import and parse to the 2 variants'
     h2o.beta_features = True
     importFolderPath = '/home/0xdiag/datasets/standard'
-    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 500
     csvFilenameAll = ['covtype.data', 'covtype20x.data']
     csvFilenameList = csvFilenameAll
     h2b.browseTheCloud()
     for csvFilename in csvFilenameList:
-        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
+        (importResult, importPattern) = h2i.import_only(path=((importFolderPath + '/') + csvFilename), timeoutSecs=50)
+        parseResult = h2i.import_parse(path=((importFolderPath + '/') + csvFilename), timeoutSecs=500)
         if (not h2o.beta_features):
             print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
@@ -17,6 +17,6 @@ def test_from_import_fvec(self):
         if (not h2o.beta_features):
             RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseResult=parseResult, timeoutSecs=timeoutSecs)
         if (1 == 0):
-            h2o_cmd.deleteCsvKey(csvFilename, importFolderResult)
+            h2i.delete_keys_from_import_result(pattern=csvFilename, importResult=importResult)
         sys.stdout.write('.')
         sys.stdout.flush()
