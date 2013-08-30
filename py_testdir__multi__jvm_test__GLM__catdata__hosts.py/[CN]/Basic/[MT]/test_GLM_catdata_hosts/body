@@ -1,14 +1,14 @@
 def test_GLM_catdata_hosts(self):
     csvFilenameList = ['1_100kx7_logreg.data.gz', '2_100kx7_logreg.data.gz']
-    h2b.browseTheCloud()
     validations1 = {}
     for csvFilename in csvFilenameList:
-        csvPathname = h2o.find_file(('smalldata/' + csvFilename))
+        csvPathname = csvFilename
+        parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
         print ('\n' + csvPathname)
         start = time.time()
         kwargs = {'y': 7, 'x': '1,2,3,4,5,6', 'family': 'binomial', 'n_folds': 3, 'lambda': 0.0001, }
         timeoutSecs = 200
-        glm = h2o_cmd.runGLM(csvPathname=csvPathname, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 6, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         GLMModel = glm['GLMModel']
@@ -19,5 +19,3 @@ def test_GLM_catdata_hosts(self):
             h2o_glm.compareToFirstGlm(self, 'err', validations, validations1)
         else:
             validations1 = copy.deepcopy(validations)
-        sys.stdout.write('.')
-        sys.stdout.flush()
