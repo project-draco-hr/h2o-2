@@ -1,4 +1,4 @@
-def find_folder_and_filename(bucket, pathWithRegex):
+def find_folder_and_filename(bucket, pathWithRegex, schema=None):
     checkPath = True
     if ((bucket is not None) and re.match('/', pathWithRegex)):
         h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
