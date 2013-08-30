@@ -3,12 +3,11 @@ def test_KMeans_params_rand2(self):
         csvFilenameList = [('covtype20x.data', 800)]
     else:
         csvFilenameList = [('covtype20x.data', 800)]
-    importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath)
+    importFolderPath = 'standard'
     for (csvFilename, timeoutSecs) in csvFilenameList:
-        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000, pollTimeoutSecs=60)
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=2000, pollTimeoutSecs=60)
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         paramDict = define_params(SEED)
         for trial in range(3):

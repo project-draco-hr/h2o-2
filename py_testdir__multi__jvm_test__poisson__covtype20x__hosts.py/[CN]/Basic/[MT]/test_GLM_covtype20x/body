@@ -3,13 +3,11 @@ def test_GLM_covtype20x(self):
         csvFilenameList = [('covtype20x.data', 480)]
     else:
         csvFilenameList = [('covtype20x.data', 480)]
-    h2b.browseTheCloud()
-    importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath)
+    importFolderPath = 'standard'
     for (csvFilename, timeoutSecs) in csvFilenameList:
-        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=2000)
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=2000)
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         if (1 == 0):
             print 'WARNING: just doing the first 33 features, for comparison to allstate numbers'
