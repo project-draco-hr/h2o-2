@@ -1,8 +1,9 @@
 def test_storeview_walk(self):
     print 'Walk storeview using offset, and just view=1'
     print 'Do an import to get keys'
-    importFolderPath = '/home/0xdiag/datasets/syn_datasets'
-    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
+    importFolderPath = 'syn_datasets'
+    csvPathname = (importFolderPath + '/*')
+    (importFolderResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname)
     if ('succeeded' in importFolderResult):
         succeededList = importFolderResult['succeeded']
     elif ('files' in importFolderResult):

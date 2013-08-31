@@ -1,10 +1,8 @@
-def test_B_benign(self):
-    h2o.nodes[0].log_view()
-    namelist = h2o.nodes[0].log_download()
-    print '\nStarting tweede.csv'
+def test_GLM_tweedie(self):
     csvFilename = 'AutoClaim.csv'
-    csvPathname = h2o.find_dataset(('tweedie/' + csvFilename))
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    csvPathname = ('tweedie/' + csvFilename)
+    print '\nStarting', csvPathname
+    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put')
     y = '4'
     coefs = [7, 13, 20, 27, 21, 11]
     x = ','.join([str(x) for x in coefs])
@@ -19,7 +17,3 @@ def test_B_benign(self):
         g = coefTruth[i]
         print ('coefficient[%d]: %8.4f,    truth: %8.4f,    delta: %8.4f' % (i, c, g, abs((g - c))))
         self.assertAlmostEqual(c, g, delta=deltaCoeff, msg=('not close enough. coefficient[%d]: %s,    generated %s' % (i, c, g)))
-    sys.stdout.write('.')
-    sys.stdout.flush()
-    h2o.nodes[0].log_view()
-    namelist = h2o.nodes[0].log_download()
