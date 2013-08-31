@@ -2,6 +2,26 @@
   Key k=Key.make(input);
   Value v=DKV.get(k);
   if (v == null)   throw new IllegalArgumentException(input + ":" + errors()[0]);
-  if (v.type() != TypeMap.onLoad(Frame.class.getName()))   throw new IllegalArgumentException(input + ":" + errors()[1]);
+  if (v.isArray()) {
+    ValueArray va=v.get();
+    String frameKeyString=DKV.calcConvertedFrameKeyString(input);
+    Key k2=Key.make(frameKeyString);
+    Value v2=DKV.get(k2);
+    if (v2 != null) {
+      if (!v2.isFrame()) {
+        throw new IllegalArgumentException(input + ":" + errors()[1]);
+      }
+      Log.info("Using existing cached Frame conversion (" + frameKeyString + ").");
+      return k2;
+    }
+    Log.info("Converting ValueArray to Frame (" + frameKeyString + ")...");
+    Frame f2=va.asFrame();
+    DKV.put(k2,f2);
+    Log.info("Conversion complete.");
+    return k2;
+  }
+  if (!v.isFrame()) {
+    throw new IllegalArgumentException(input + ":" + errors()[1]);
+  }
   return k;
 }
