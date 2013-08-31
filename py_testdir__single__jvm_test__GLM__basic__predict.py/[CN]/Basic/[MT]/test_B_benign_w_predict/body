@@ -1,0 +1,21 @@
+def test_B_benign_w_predict(self):
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()
+    print '\nStarting benign.csv'
+    csvFilename = 'benign.csv'
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    y = '3'
+    for maxx in range(11, 14):
+        x = range(maxx)
+        x.remove(3)
+        x = ','.join(map(str, x))
+        print '\nx:', x
+        print 'y:', y
+        kwargs = {'x': x, 'y': y, }
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=15, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        GLMModel = glm['GLMModel']
+        modelKey = GLMModel['model_key']
+        print 'Doing predict with same dataset, and the GLM model'
+        h2o.nodes[0].generate_predictions(model_key=modelKey, data_key=parseResult['destination_key'])

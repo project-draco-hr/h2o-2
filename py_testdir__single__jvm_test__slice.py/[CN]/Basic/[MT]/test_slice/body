@@ -3,12 +3,13 @@ def test_slice(self):
     csvFilenameAll = [('covtype.data', 'cA', 5)]
     csvFilenameList = csvFilenameAll
     lenNodes = len(h2o.nodes)
-    for (csvFilename, hex_key2, timeoutSecs) in csvFilenameList:
-        parseResult = h2i.import_parse(bucket='standard', path=csvFilenamea, schema='put', hex_key2=hex_key2, timeoutSecs=2000)
+    for (csvFilename, hex_key, timeoutSecs) in csvFilenameList:
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=2000)
         print csvFilename, 'parse time:', parseResult['response']['time']
-        print "Parse result['desination_hex_key']:", parseResult['destination_hex_key']
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_hex_key'])
+        print "Parse result['desination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         h2e.exec_zero_list(zeroList)
-        h2e.exec_expr_list_rand(lenNodes, exprErrorCaseList, hex_key2, maxCol=53, maxRow=400000, maxTrials=5, timeoutSecs=timeoutSecs, ignoreH2oError=True)
-        h2e.exec_expr_list_rand(lenNodes, exprList, hex_key2, maxCol=53, maxRow=400000, maxTrials=100, timeoutSecs=timeoutSecs)
+        h2e.exec_expr_list_rand(lenNodes, exprErrorCaseList, hex_key, maxCol=53, maxRow=400000, maxTrials=5, timeoutSecs=timeoutSecs, ignoreH2oError=True)
+        h2e.exec_expr_list_rand(lenNodes, exprList, hex_key, maxCol=53, maxRow=400000, maxTrials=100, timeoutSecs=timeoutSecs)

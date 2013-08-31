@@ -1,0 +1,9 @@
+@classmethod
+def setUpClass(cls):
+    global SEED, localhost
+    SEED = 8977501266014959103
+    localhost = h2o.decide_if_localhost()
+    if localhost:
+        h2o.build_cloud(node_count=1)
+    else:
+        h2o_hosts.build_cloud_with_hosts(node_count=1)

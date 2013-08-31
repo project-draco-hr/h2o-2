@@ -5,8 +5,8 @@ def test_parse_multi_header_rand(self):
     headerChoices = ['aA', 'aB', 'aC', 'aD', 'aE', 'aF', 'aG', 'aH', 'aI', 'tomas']
     tryList = [(1, 5, 9, 'cA', 60, 0), (1, 5, 25, 'cA', 60, 0)]
     for trial in range(50):
-        (fileNum, rowCount, colCount, key2, timeoutSecs, dataRowsWithHeader) = random.choice(tryList)
-        print fileNum, rowCount, colCount, key2, timeoutSecs, dataRowsWithHeader
+        (fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader) = random.choice(tryList)
+        print fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader
         print 'Wait while', fileNum, 'synthetic files are created in', SYNDATASETS_DIR
         rowxcol = ((str(rowCount) + 'x') + str(colCount))
         totalCols = (colCount + 1)
@@ -60,8 +60,7 @@ def test_parse_multi_header_rand(self):
         if PARSE_PATTERN_INCLUDES_HEADER:
             totalDataRows += dataRowsDone
         totalHeaderRows += headerRowsDone
-        key = ('syn_dst' + str(trial))
-        key2 = (('syn_dst' + str(trial)) + '.hex')
+        hex_key = (('syn_dst' + str(trial)) + '.hex')
         xs = h2o.nodes[0].import_files(SYNDATASETS_DIR)['keys']
         headerKey = [x for x in xs if (hdrFilename in x)][0]
         dataKey = [x for x in xs if (csvFilename not in x)][0]
@@ -84,7 +83,7 @@ def test_parse_multi_header_rand(self):
             pattern = (((('*syn_*' + str(trial)) + '_') + rowxcol) + '*')
         else:
             pattern = (((('*syn_data_*' + str(trial)) + '_') + rowxcol) + '*')
-        parseResult = h2o.nodes[0].parse(pattern, key2=key2, timeoutSecs=timeoutSecs, **kwargs)
+        parseResult = h2o.nodes[0].parse(pattern, hex_key=hex_key, timeoutSecs=timeoutSecs, **kwargs)
         print ("parseResult['destination_key']: " + parseResult['destination_key'])
         print 'parse time:', parseResult['response']['time']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
