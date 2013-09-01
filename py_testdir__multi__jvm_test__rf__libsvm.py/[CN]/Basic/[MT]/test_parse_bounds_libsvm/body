@@ -5,7 +5,7 @@ def test_parse_bounds_libsvm(self):
     for (csvFilename, hex_key, timeoutSecs, resultMult) in csvFilenameList:
         bucket = 'home-0xdiag-datasets'
         csvPathname = ('libsvm/' + csvFilename)
-        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, hex_key=hex_key, timeoutSecs=2000)
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=2000)
         print csvPathname, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         start = time.time()

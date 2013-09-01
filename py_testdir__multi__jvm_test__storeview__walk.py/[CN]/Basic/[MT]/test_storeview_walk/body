@@ -1,7 +1,12 @@
 def test_storeview_walk(self):
     print 'Walk storeview using offset, and just view=1'
     print 'Do an import to get keys'
-    importFolderPath = 'syn_datasets'
+    if (1 == 0):
+        MAX_FILE_NUM = 1201
+        importFolderPath = 'more1_1200_link'
+    else:
+        MAX_FILE_NUM = 235
+        importFolderPath = 'manyfiles-nflx-gz'
     csvPathname = (importFolderPath + '/*')
     (importFolderResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname)
     if ('succeeded' in importFolderResult):
@@ -11,7 +16,7 @@ def test_storeview_walk(self):
     else:
         raise Exception("Can't find 'files' or 'succeeded' in import list")
     print len(succeededList), 'keys reported by import result'
-    self.assertEqual(len(succeededList), 100, 'There should be 100 files imported as keys')
+    self.assertEqual(len(succeededList), MAX_FILE_NUM, ('There should be %s files imported as keys' % MAX_FILE_NUM))
     print '\nTrying StoreView after the import folder'
     storeViewResult = h2o_cmd.runStoreView(offset=0, view=None, timeoutSecs=30)
     l = len(storeViewResult['keys'])
@@ -20,15 +25,15 @@ def test_storeview_walk(self):
     storeViewResult = h2o_cmd.runStoreView(offset=0, view=1024, timeoutSecs=60)
     l = len(storeViewResult['keys'])
     print 'Check 2:', l, ('%s keys if view=1024' % l)
-    self.assertEqual(100, l, 'Expect 100 for view=1024')
-    storeViewResult = h2o_cmd.runStoreView(offset=0, view=100, timeoutSecs=60)
-    l = len(storeViewResult['keys'])
-    print 'Check 3:', l, '%s keys if view= expected number', len(succeededList)
-    self.assertEqual(100, l, 'Expect 100 for view=100')
+    self.assertEqual(MAX_FILE_NUM, l, 'Expect 1024 for view=1024')
     storeViewResult = h2o_cmd.runStoreView(offset=0, view=0, timeoutSecs=60)
     l = len(storeViewResult['keys'])
-    print 'Check 4:', l, ('%s keys if view= 0' % l)
+    print 'Check 3:', l, ('%s keys if view= 0' % l)
     self.assertEqual(0, l, 'Expect 0 for view=0')
+    storeViewResult = h2o_cmd.runStoreView(offset=0, view=MAX_FILE_NUM, timeoutSecs=60)
+    l = len(storeViewResult['keys'])
+    print 'Check 4:', l, '%s keys if view= number of files in the dir', MAX_FILE_NUM
+    self.assertEqual(MAX_FILE_NUM, l, ('Expect %s for view=%s' % (MAX_FILE_NUM, MAX_FILE_NUM)))
     keys = storeViewResult['keys']
     i = 0
     while (i < len(keys)):

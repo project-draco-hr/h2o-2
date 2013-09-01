@@ -17,7 +17,7 @@ def test_summary_percentile(self):
         expectedMean = 0.5
         expectedSigma = 0.5
         write_syn_dataset(csvPathname, rowCount, colCount, low=expectedMin, high=expectedMax, mode=mode, SEED=SEEDPERFILE)
-        parseResult = h2i.import_parse(None, csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

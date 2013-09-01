@@ -3,13 +3,13 @@ def test_parse_bounds_csv(self):
     h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 100000, 'cB', 300), (1000, 1000, 'cA', 300), (100, 999, 'cC', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = ('syn_%s_%s_%s.csv' % (SEEDPERFILE, rowCount, colCount))
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         synSumList = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=timeoutSecs, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, schema='put', timeoutSecs=timeoutSecs, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], max_column_display=colCount, timeoutSecs=timeoutSecs)
         num_cols = inspect['num_cols']
@@ -32,7 +32,7 @@ def test_parse_bounds_csv(self):
             iMax = iColDict['max']
             iMean = iColDict['mean']
             iVariance = iColDict['variance']
-        summaryResult = h2o_cmd.runSummary(key=key2, max_column_display=colCount, timeoutSecs=timeoutSecs)
+        summaryResult = h2o_cmd.runSummary(key=hex_key, max_column_display=colCount, timeoutSecs=timeoutSecs)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
         summary = summaryResult['summary']
