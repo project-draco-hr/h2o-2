@@ -11,23 +11,15 @@ def test_import_nflx_parse_loop(self):
         else:
             h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, use_hdfs=True, hdfs_name_node='192.168.1.176', hdfs_version='cdh3')
         timeoutSecs = 500
-        importFolderPath = '/datasets/manyfiles-nflx-gz'
+        importFolderPath = 'datasets/manyfiles-nflx-gz'
         for trial in range(trialMax):
-            importHdfsResult = h2i.setupImportHdfs(path=importFolderPath)
-            hdfsFullList = importHdfsResult['succeeded']
-            for k in hdfsFullList:
-                key = k['key']
-                if (('nflx' in key) and ('file_1.dat.gz' in key)):
-                    print "example file we'll use:", key
-            self.assertGreater(len(hdfsFullList), 8, "Didn't see more than 8 files in hdfs?")
-            key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+            hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
             csvFilePattern = 'file_1.dat.gz'
             time.sleep(5)
-            print 'Loading from hdfs:', ((importFolderPath + '/') + csvFilePattern)
+            csvPathname = ((importFolderPath + '/') + csvFilePattern)
             start = time.time()
-            parseResult = h2i.parseImportHdfsFile(csvFilename=csvFilePattern, path=importFolderPath, key2=key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
+            parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
             elapsed = (time.time() - start)
-            print hdfsKey, 'parse time:', parseResult['response']['time']
             print 'parse result:', parseResult['destination_key']
             print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             h2o_cmd.runStoreView()

@@ -5,6 +5,6 @@ def test_loop_random_param_poker1000(self):
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = (30 + ((kwargs['ntree'] * 10) * ((kwargs['parallel'] and 1) or 5)))
-        h2i.import_and_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=timeoutSecs, **kwargs)
+        h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=timeoutSecs, **kwargs)
         h2o_cmd.runRFOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'Trial #', trial, 'completed'

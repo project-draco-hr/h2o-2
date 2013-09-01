@@ -1,9 +1,8 @@
 def test_rf_allyears2k_oobe(self):
-    importFolderPath = '/home/0xdiag/datasets/standard'
+    importFolderPath = 'standard'
     csvFilename = 'allyears2k.csv'
     csvPathname = ((importFolderPath + '/') + csvFilename)
-    h2i.setupImportFolder(None, importFolderPath)
-    parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=60)
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=60)
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     for trial in range(10):

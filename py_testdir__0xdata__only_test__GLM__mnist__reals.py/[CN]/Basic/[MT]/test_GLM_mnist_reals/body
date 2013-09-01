@@ -1,17 +1,13 @@
 def test_GLM_mnist_reals(self):
-    importFolderPath = '/home/0xdiag/datasets/mnist'
+    importFolderPath = 'mnist'
     csvFilelist = [('mnist_reals_training.csv.gz', 'mnist_reals_testing.csv.gz', 600)]
-    importFolderResult = h2i.setupImportFolder(None, importFolderPath)
-    succeededList = importFolderResult['files']
-    self.assertGreater(len(succeededList), 1, 'Should see more than 1 files in the import?')
-    print '\nTrying StoreView after the import folder'
-    h2o_cmd.runStoreView(timeoutSecs=30)
     trial = 0
     for (trainCsvFilename, testCsvFilename, timeoutSecs) in csvFilelist:
         trialStart = time.time()
-        testKey2 = (((testCsvFilename + '_') + str(trial)) + '.hex')
+        csvPathname = ((importFolderPath + '/') + testCsvFilename)
+        testKey = (((testCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.parseImportFolderFile(None, testCsvFilename, importFolderPath, key2=testKey2, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=testKey, key2=testKey, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', testCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
@@ -19,9 +15,10 @@ def test_GLM_mnist_reals(self):
         y = 0
         print 'y:'
         x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
-        trainKey2 = (((trainCsvFilename + '_') + str(trial)) + '.hex')
+        trainKey = (((trainCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.parseImportFolderFile(None, trainCsvFilename, importFolderPath, key2=trainKey2, timeoutSecs=timeoutSecs)
+        csvPathname = ((importFolderPath + '/') + trainCsvFilename)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=trainKey, key2=trainKey, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
@@ -42,7 +39,7 @@ def test_GLM_mnist_reals(self):
             GLMModel = glm['GLMModel']
             modelKey = GLMModel['model_key']
             start = time.time()
-            glmScore = h2o_cmd.runGLMScore(key=testKey2, model_key=modelKey, thresholds='0.5', timeoutSecs=60)
+            glmScore = h2o_cmd.runGLMScore(key=testKey, model_key=modelKey, thresholds='0.5', timeoutSecs=60)
             elapsed = (time.time() - start)
             print 'GLMScore in', elapsed, 'secs', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             h2o_glm.simpleCheckGLMScore(self, glmScore, **kwargs)
