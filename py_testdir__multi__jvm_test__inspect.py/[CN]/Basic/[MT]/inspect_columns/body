@@ -1,8 +1,6 @@
-def inspect_columns(self, filename, rows=1, cols=26, columnNames=crange('A', 'Z'), columnTypes=None):
-    cvsfile = h2o.find_file(filename)
-    node = h2o.nodes[0]
-    res = h2o_cmd.parseFile(node=node, csvPathname=cvsfile)
-    ary = node.inspect(res['destination_key'])
+def inspect_columns(self, bucket, csvPathname, rows=1, cols=26, columnNames=crange('A', 'Z'), columnTypes=None):
+    res = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put')
+    ary = h2o_cmd.runInspect(key=res['destination_key'])
     self.assertEqual(rows, ary['num_rows'])
     self.assertEqual(cols, ary['num_cols'])
     if (not (columnNames is None)):

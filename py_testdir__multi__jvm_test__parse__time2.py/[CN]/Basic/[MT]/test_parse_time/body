@@ -14,12 +14,12 @@ def test_parse_time(self):
             rowData = max_rowData()
         else:
             rowData = rand_rowData()
-        key = ((csvFilename + '_') + str(trial))
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        src_key = ((csvFilename + '_') + str(trial))
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResultA = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2)
+        parseResultA = h2i.import_parse(path=csvPathname, schema='put', src_key=src_key, hex_key=hex_key)
         print '\nA trial #', trial, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
-        inspect = h2o_cmd.runInspect(key=key2)
+        inspect = h2o_cmd.runInspect(key=hex_key)
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
         print 'missingValuesListA', missingValuesListA
         num_colsA = inspect['num_cols']

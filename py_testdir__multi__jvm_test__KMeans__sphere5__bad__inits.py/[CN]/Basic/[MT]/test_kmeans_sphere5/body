@@ -6,7 +6,7 @@ def test_kmeans_sphere5(self):
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     centersList = write_spheres_dataset(csvPathname, CLUSTERS, SPHERE_PTS)
     print '\nStarting', csvFilename
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'))
     for trial in range(5):
         kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'cols': None, 'destination_key': 'syn_spheres100.hex', }
         timeoutSecs = 30

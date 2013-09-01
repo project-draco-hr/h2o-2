@@ -11,7 +11,7 @@ def test_kmeans_sphere100(self):
         csvFilename2 = csvFilename
         csvPathname2 = csvPathname
     print '\nStarting', csvFilename
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname2, key2=(csvFilename2 + '.hex'))
+    parseResult = h2i.import_parse(path=csvPathname2, schema='put', hex_key=(csvFilename2 + '.hex'))
     cols = ','.join(map(str, range(DIMENSIONS)))
     for trial in range(10):
         kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'syn_spheres100.hex', }

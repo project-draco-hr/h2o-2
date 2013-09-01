@@ -1,6 +1,7 @@
 def test_parse_covtype20x_loop(self):
     csvFilename = 'covtype20x.data'
-    importFolderPath = '/home/0xdiag/datasets/standard'
+    importFolderPath = 'standard'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
     trialMax = 2
     for tryJvms in [1, 2, 3, 4]:
         for tryHeap in [3]:
@@ -8,13 +9,10 @@ def test_parse_covtype20x_loop(self):
             h2o_hosts.build_cloud_with_hosts(node_count=tryJvms, java_heap_GB=tryHeap)
             timeoutSecs = 300
             for trial in range(trialMax):
-                h2i.setupImportFolder(None, importFolderPath)
-                key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+                hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
                 start = time.time()
-                parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, retryDelaySecs=4, pollTimeoutSecs=60)
+                parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=4, pollTimeoutSecs=60)
                 elapsed = (time.time() - start)
                 print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
-                print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
-                storeView = h2o.nodes[0].store_view()
             h2o.tear_down_cloud()
             time.sleep((tryJvms * 5))

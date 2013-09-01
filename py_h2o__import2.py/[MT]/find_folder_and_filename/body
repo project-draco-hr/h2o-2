@@ -1,4 +1,4 @@
-def find_folder_and_filename(bucket, pathWithRegex, schema=None):
+def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=False):
     checkPath = True
     if ((bucket is not None) and re.match('/', pathWithRegex)):
         h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
@@ -11,7 +11,11 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None):
         rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
         bucketPath = os.path.join(rootPath, bucket)
         checkpath = False
-    elif os.environ.get('H2O_BUCKETS_ROOT'):
+    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and h2o.nodes[0].h2o_remote_buckets_root):
+        rootPath = h2o.nodes[0].h2o_remote_buckets_root
+        bucketPath = os.path.join(rootPath, bucket)
+        checkpath = False
+    elif (((not h2o.nodes[0].remoteH2O) or (schema == 'put')) and os.environ.get('H2O_BUCKETS_ROOT')):
         rootPath = os.environ.get('H2O_BUCKETS_ROOT')
         print 'Using H2O_BUCKETS_ROOT environment variable:', rootPath
         if (not os.path.exists(rootPath)):
@@ -47,7 +51,10 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None):
             h2o.verboseprint('search B did find', bucket, 'at', rootPath)
             bucketPath = os.path.join(rootPath, bucket)
     if (pathWithRegex is None):
-        return (bucketPath, None)
+        if returnFullPath:
+            return bucketPath
+        else:
+            return (bucketPath, None)
     elif ('/' in pathWithRegex):
         (head, tail) = os.path.split(pathWithRegex)
         folderPath = os.path.abspath(os.path.join(bucketPath, head))
@@ -57,4 +64,7 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None):
         folderPath = bucketPath
         tail = pathWithRegex
     h2o.verboseprint('folderPath:', folderPath, 'tail:', tail)
-    return (folderPath, tail)
+    if returnFullPath:
+        return os.path.join(folderPath, tail)
+    else:
+        return (folderPath, tail)

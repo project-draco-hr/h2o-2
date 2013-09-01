@@ -1,2 +1,3 @@
 def test_iris_xls(self):
-    h2o_cmd.runRF(None, h2o.find_dataset('iris/iris.xls'), timeoutSecs=5)
+    parseResult = h2i.import_parse(bucket='smalldata', path='iris/iris.xls', schema='put')
+    h2o_cmd.runRFOnly(parseResult=parseResult, timeoutSecs=5)

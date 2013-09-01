@@ -1,7 +1,7 @@
 def test_sum(self):
     print 'Replicating covtype.data by 2x for results comparison to 1x'
     filename1x = 'covtype.data'
-    pathname1x = h2o.find_dataset((('UCI/UCI-large/covtype' + '/') + filename1x))
+    pathname1x = h2i.find_folder_and_filename('datasets', 'UCI/UCI-large/covtype/covtype.data', returnFullPath=True)
     filename2x = 'covtype_2x.data'
     pathname2x = ((SYNDATASETS_DIR + '/') + filename2x)
     h2o_util.file_cat(pathname1x, pathname1x, pathname2x)
@@ -9,13 +9,13 @@ def test_sum(self):
     h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
     firstDone = False
-    for (csvPathname, key2, timeoutSecs, resultMult) in csvAll:
-        parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=key2, timeoutSecs=2000)
+    for (csvPathname, hex_key, timeoutSecs, resultMult) in csvAll:
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=2000)
         print "Parse result['Key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname)
         h2o_exec.exec_zero_list(zeroList)
-        colResultList = h2o_exec.exec_expr_list_across_cols(lenNodes, exprList, key2, maxCol=54, timeoutSecs=timeoutSecs)
+        colResultList = h2o_exec.exec_expr_list_across_cols(lenNodes, exprList, hex_key, maxCol=54, timeoutSecs=timeoutSecs)
         print '\ncolResultList', colResultList
         if (not firstDone):
             colResultList0 = list(colResultList)
