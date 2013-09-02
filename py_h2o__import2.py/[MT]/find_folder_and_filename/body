@@ -27,7 +27,9 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=
         username = getpass.getuser()
         h2oUsername = h2o.nodes[0].username
         h2o.verboseprint('username:', username, 'h2oUsername:', h2oUsername)
-        if (h2oUsername != username):
+        if (bucket == 'datasets'):
+            possibleUsers = []
+        elif (h2oUsername != username):
             possibleUsers = [username, h2oUsername, '0xdiag']
         else:
             possibleUsers = [username, '0xdiag']
