@@ -1,10 +1,12 @@
 def test_1mx10_hastie_10_2_cat_and_shuffle(self):
     csvFilename = '1mx10_hastie_10_2.data.gz'
-    csvPathname = h2o.find_dataset((('logreg' + '/') + csvFilename))
-    glm_doit(self, csvFilename, csvPathname, timeoutSecs=30)
+    bucket = 'datasets'
+    csvPathname = (('logreg' + '/') + csvFilename)
+    fullPathname = h2i.find_folder_and_filename(bucket, csvPathname, returnFullPath=True)
+    glm_doit(self, csvFilename, bucket, csvPathname, timeoutSecs=30)
     filename1x = 'hastie_1x.data'
     pathname1x = ((SYNDATASETS_DIR + '/') + filename1x)
-    h2o_util.file_gunzip(csvPathname, pathname1x)
+    h2o_util.file_gunzip(fullPathname, pathname1x)
     filename1xShuf = 'hastie_1x.data_shuf'
     pathname1xShuf = ((SYNDATASETS_DIR + '/') + filename1xShuf)
     h2o_util.file_shuffle(pathname1x, pathname1xShuf)
