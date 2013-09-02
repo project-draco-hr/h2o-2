@@ -8,7 +8,7 @@ def test_GLM_umass(self):
         csvPathname1 = h2o.find_file(('smalldata/logreg/umass_statdata/' + csvFilename))
         csvPathname2 = (((SYNDATASETS_DIR + '/') + csvFilename) + '_2.csv')
         h2o_util.file_clean_for_R(csvPathname1, csvPathname2)
-        parseResult = h2o_cmd.parseFile(None, csvPathname2, key=csvFilename, timeoutSecs=10)
+        parseResult = h2o_cmd.import_parse(path=csvPathname2, schema='put', hex_key=csvFilename, timeoutSecs=10)
         destination_key = parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, destination_key)
         num_cols = inspect['num_cols']

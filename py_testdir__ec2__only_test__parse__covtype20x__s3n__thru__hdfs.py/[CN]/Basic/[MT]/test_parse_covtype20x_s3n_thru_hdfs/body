@@ -1,20 +1,15 @@
 def test_parse_covtype20x_s3n_thru_hdfs(self):
+    bucket = 'home-0xdiag-datasets'
     csvFilename = 'covtype20x.data'
+    importFolderPath = 'standard'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
     trialMax = 3
     timeoutSecs = 500
-    URI = 's3n://home-0xdiag-datasets'
-    s3nKey = ((URI + '/') + csvFilename)
     for trial in range(trialMax):
-        importHDFSResult = h2o.nodes[0].import_hdfs(URI)
-        s3nFullList = importHDFSResult['succeeded']
-        self.assertGreater(len(s3nFullList), 1, "Didn't see more than 1 files in s3n?")
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
-        print 'Loading s3n key: ', s3nKey, 'thru HDFS'
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2o.nodes[0].parse(s3nKey, key2, timeoutSecs=500, retryDelaySecs=10, pollTimeoutSecs=60)
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='s3n', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
-        print s3nKey, 'parse time:', parseResult['response']['time']
+        print 'h2o reported parse time:', parseResult['response']['time']
         print 'parse result:', parseResult['destination_key']
         print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
-        print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again.', 'Otherwise it would just parse the cached key.'
-        storeView = h2o.nodes[0].store_view()

@@ -20,5 +20,5 @@ def test_D_GenParity1(self):
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             timeoutSecs = (30 + (trees * len(h2o.nodes)))
             model_key = ((csvFilename + '_') + str(trials))
-            parseResult = h2i.import_parse(path=csvPathname)
+            parseResult = h2i.import_parse(path=csvPathname, schema='put')
             h2o_cmd.runRFOnly(parseResult=parseResult, trees=trees, model_key=model_key, timeoutSecs=timeoutSecs, retryDelaySecs=1)
