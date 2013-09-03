@@ -1,4 +1,5 @@
 {
   long res=0xFF & _mem[i + OFF];
-  return (res == _NA) ? _vec._iNA : res;
+  if (res == _NA)   throw new IllegalArgumentException("at8 but value is missing");
+  return res;
 }

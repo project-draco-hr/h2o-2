@@ -1,4 +1,5 @@
 {
   byte b=atb(idx);
-  return b == _NA ? _vec._iNA : b;
+  if (b == _NA)   throw new IllegalArgumentException("at8 but value is missing");
+  return b;
 }
