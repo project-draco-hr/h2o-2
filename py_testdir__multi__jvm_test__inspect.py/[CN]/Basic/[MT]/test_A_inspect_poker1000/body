@@ -1,8 +1,0 @@
-def test_A_inspect_poker1000(self):
-    csvPathname = 'poker/poker1000'
-    res = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
-    ary = h2o_cmd.runInspect(key=res['destination_key'])
-    fullPathname = h2i.find_folder_and_filename('smalldata', csvPathname, returnFullPath=True)
-    rows = wcl(fullPathname)
-    self.assertEqual(rows, ary['num_rows'])
-    self.assertEqual(11, ary['num_cols'])
