@@ -1,8 +1,8 @@
 def test_B_benign(self):
     print '\nStarting benign.csv'
     csvFilename = 'benign.csv'
-    csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     y = '3'
     for maxx in range(4, 14):
         x = range(maxx)

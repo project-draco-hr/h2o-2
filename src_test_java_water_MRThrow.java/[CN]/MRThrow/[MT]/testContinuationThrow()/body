@@ -1,0 +1,35 @@
+{
+  File file=find_test_file("target/h2o.jar");
+  Key h2okey=load_test_file(file);
+  try {
+    for (int i=0; i < H2O.CLOUD._memary.length; ++i) {
+      ByteHistoThrow bh=new ByteHistoThrow();
+      bh._throwAt=H2O.CLOUD._memary[i].toString();
+      System.out.println("RUNNING NODE:" + bh._throwAt);
+      final boolean[] ok=new boolean[]{false};
+      try {
+        bh.setCompleter(new CountedCompleter(){
+          @Override public void compute(){
+          }
+          @Override public boolean onExceptionalCompletion(          Throwable ex,          CountedCompleter cc){
+            ok[0]=ex.getMessage().indexOf("test") != -1;
+            return true;
+          }
+        }
+);
+        bh.dfork(h2okey).get();
+        assertTrue(ok[0]);
+      }
+ catch (      ExecutionException eex) {
+        assertTrue(eex.getCause().getMessage().indexOf("test") != -1);
+      }
+catch (      Throwable ex) {
+        ex.printStackTrace();
+        fail("Unexpected exception" + ex.toString());
+      }
+    }
+  }
+  finally {
+    UKV.remove(h2okey);
+  }
+}

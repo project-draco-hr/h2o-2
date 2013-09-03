@@ -1,5 +1,6 @@
 def __init__(self, host, *args, **kwargs):
     super(RemoteH2O, self).__init__(*args, **kwargs)
+    self.remoteH2O = True
     self.jar = host.upload_file('target/h2o.jar')
     self.flatfile = host.upload_file(flatfile_name())
     if self.aws_credentials:
@@ -10,6 +11,10 @@ def __init__(self, host, *args, **kwargs):
         self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
     else:
         self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
+    if self.fake_cloud:
+        comment = ('Fake Remote on %s' % self.addr)
+        log(cmd, comment=comment)
+        return
     self.channel = host.open_channel()
     cmd = ' '.join(self.get_args())
     self.channel.exec_command(((('cd /tmp; ls -ltr ' + self.jar) + '; ') + re.sub('/tmp/', '', cmd)))

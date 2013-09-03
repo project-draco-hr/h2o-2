@@ -3,10 +3,17 @@
     cols=new int[va._cols.length];
     for (int i=0; i < cols.length; i++)     cols[i]=i;
   }
-  GLMParams glmp=new GLMParams(family);
-  glmp._link=glmp._family.defaultLink;
-  glmp._betaEps=0.000001;
-  glmp._maxIter=100;
-  GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0,true).get();
-  return m.toJson();
+  GLMParams glmp;
+switch (family) {
+default :
+    glmp=new GLMParams(family);
+  break;
+case tweedie:
+glmp=new GLMParams(family,family.defaultLink,family.tweedieVariancePower,family.defaultLink.tweedieLinkPower);
+}
+glmp._link=new LinkIced(glmp._family._family.defaultLink,family.defaultLink.tweedieLinkPower);
+glmp._betaEps=0.000001;
+glmp._maxIter=100;
+GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0,true).get();
+return m.toJson();
 }

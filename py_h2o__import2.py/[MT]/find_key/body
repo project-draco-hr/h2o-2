@@ -1,6 +1,7 @@
-def find_key(filter):
+def find_key(pattern=None):
     found = None
-    storeViewResult = h2o.nodes[0].store_view(filter=filter)
+    kwargs = {'filter': pattern, }
+    storeViewResult = h2o.nodes[0].store_view(**kwargs)
     keys = storeViewResult['keys']
     if (len(keys) == 0):
         return None

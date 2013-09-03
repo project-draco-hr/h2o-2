@@ -1,7 +1,7 @@
 def test_KMeans_winesPCA(self):
-    csvPathname = h2o.find_file('smalldata/winesPCA.csv')
+    csvPathname = 'winesPCA.csv'
     start = time.time()
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=10)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=10)
     print 'parse end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     h2o.check_sandbox_for_errors()
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

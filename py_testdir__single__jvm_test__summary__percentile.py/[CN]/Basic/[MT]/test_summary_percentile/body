@@ -3,7 +3,7 @@ def test_summary_percentile(self):
     tryList = [(100000, 1, 'cD', 300), (100000, 2, 'cE', 300)]
     timeoutSecs = 10
     trial = 1
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         print 'Trial:', trial
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -17,12 +17,12 @@ def test_summary_percentile(self):
         expectedMean = 0.5
         expectedSigma = 0.5
         write_syn_dataset(csvPathname, rowCount, colCount, low=expectedMin, high=expectedMax, mode=mode, SEED=SEEDPERFILE)
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
-        summaryResult = h2o_cmd.runSummary(key=key2)
+        summaryResult = h2o_cmd.runSummary(key=hex_key)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
         summary = summaryResult['summary']
         columnsList = summary['columns']

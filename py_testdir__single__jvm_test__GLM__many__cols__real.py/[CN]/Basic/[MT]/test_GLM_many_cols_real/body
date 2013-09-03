@@ -1,17 +1,14 @@
 def test_GLM_many_cols_real(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    if (getpass.getuser() == 'kevin'):
-        tryList = [(100, 1000, 'cA', 100), (100, 3000, 'cB', 300), (100, 5000, 'cC', 1500), (100, 7000, 'cD', 3600), (100, 9000, 'cE', 3600), (100, 10000, 'cF', 3600)]
-    else:
-        tryList = [(100, 1000, 'cA', 100), (100, 3000, 'cB', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    tryList = [(100, 1000, 'cA', 100), (100, 3000, 'cB', 300)]
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
         start = time.time()
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10)
         elapsed = (time.time() - start)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']

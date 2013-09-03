@@ -1,6 +1,6 @@
 def test_GLM_params_rand2(self):
-    csvPathname = h2o.find_file('smalldata/covtype/covtype.20k.data')
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key='covtype.20k')
+    csvPathname = 'covtype/covtype.20k.data'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key='covtype.20k')
     paramDict = define_params()
     for trial in range(20):
         params = {'y': 54, 'case': 1, 'alpha': 0, 'lambda': 0, 'n_folds': 1, }

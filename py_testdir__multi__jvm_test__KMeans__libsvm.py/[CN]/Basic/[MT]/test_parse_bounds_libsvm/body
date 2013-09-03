@@ -1,12 +1,11 @@
 def test_parse_bounds_libsvm(self):
-    importFolderPath = '/home/0xdiag/datasets/libsvm'
-    csvFilenameList = [('tmc2007_train.svm', 'cJ', 30, 1), ('mnist_train.svm', 'cM', 30, 1), ('covtype.binary.svm', 'cC', 30, 1), ('colon-cancer.svm', 'cA', 30, 1), ('connect4.svm', 'cB', 30, 1), ('duke.svm', 'cD', 30, 1), ('gisette_scale.svm', 'cF', 30, 1), ('mushrooms.svm', 'cG', 30, 1), ('news20.svm', 'cH', 30, 1), ('syn_6_1000_10.svm', 'cK', 30, 1), ('syn_0_100_1000.svm', 'cL', 30, 1)]
+    csvFilenameList = [('colon-cancer.svm', 'cA', 30, 1), ('connect4.svm', 'cB', 30, 1), ('covtype.binary.svm', 'cC', 30, 1), ('mnist_train.svm', 'cM', 30, 1), ('duke.svm', 'cD', 30, 1), ('gisette_scale.svm', 'cF', 30, 1), ('mushrooms.svm', 'cG', 30, 1), ('news20.svm', 'cH', 30, 1), ('syn_6_1000_10.svm', 'cK', 30, 1), ('syn_0_100_1000.svm', 'cL', 30, 1)]
     lenNodes = len(h2o.nodes)
     firstDone = False
-    for (csvFilename, key2, timeoutSecs, resultMult) in csvFilenameList:
-        h2i.setupImportFolder(None, importFolderPath)
+    importFolderPath = 'libsvm'
+    for (csvFilename, hex_key, timeoutSecs, resultMult) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
-        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=2000)
         print csvPathname, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         start = time.time()

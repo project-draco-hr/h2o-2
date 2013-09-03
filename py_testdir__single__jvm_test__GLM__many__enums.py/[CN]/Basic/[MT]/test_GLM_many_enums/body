@@ -6,7 +6,7 @@ def test_GLM_many_enums(self):
     else:
         n = 150
         tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300), (n, 7, 'cJ', 300), (n, 9, 'cK', 300), (n, 10, 'cLA', 300), (n, 11, 'cDA', 300), (n, 12, 'cEA', 300), (n, 13, 'cFA', 300), (n, 14, 'cGA', 300), (n, 15, 'cHA', 300), (n, 16, 'cIA', 300), (n, 17, 'cJA', 300), (n, 19, 'cKA', 300), (n, 20, 'cLA', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         colSepCase = random.randint(0, 1)
         colSepCase = 1
         if (colSepCase == 0):
@@ -31,7 +31,7 @@ def test_GLM_many_enums(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar, quoteChars=quoteChars)
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, separator=colSepInt)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         print ('\n' + csvFilename)

@@ -1,0 +1,28 @@
+{
+  System.err.println("Chunk 0x" + xs + " of length="+ xs._len);
+  PrintChunk("",xs);
+  _counts=new long[bins._len];
+  double value;
+  for (int i=0; i < xs._len; i++) {
+    value=xs.at0(i);
+    int b=bins._len / 2;
+    int oldB=b;
+    int deltaB=Math.max((bins._len / 2 + 1) / 2,1);
+    int oldDeltaB=deltaB;
+    while (b != oldB && oldDeltaB != 1) {
+      oldB=b;
+      if (value == bins.at0(b)) {
+        break;
+      }
+ else       if (value < bins.at0(b)) {
+        b-=deltaB;
+      }
+ else       if (value > bins.at0(b)) {
+        b+=deltaB;
+      }
+      oldDeltaB=deltaB;
+      deltaB=Math.min((deltaB + 1) / 2,1);
+    }
+    _counts[b]++;
+  }
+}

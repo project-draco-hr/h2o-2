@@ -2,8 +2,8 @@ def test_C_prostate(self):
     print '\nStarting prostate.csv'
     y = '1'
     csvFilename = 'prostate.csv'
-    csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     for maxx in range(2, 9):
         x = range(maxx)
         x.remove(0)

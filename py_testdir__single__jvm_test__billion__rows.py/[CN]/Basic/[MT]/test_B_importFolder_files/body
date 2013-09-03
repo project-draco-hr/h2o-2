@@ -1,12 +1,10 @@
 def test_B_importFolder_files(self):
-    importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 1500
     csvFilenameAll = ['covtype.data', 'billion_rows.csv.gz']
     csvFilenameList = csvFilenameAll
     for csvFilename in csvFilenameList:
         start = time.time()
-        parseResult = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=timeoutSecs, pollTimeoutSecs=60)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=('standard/' + csvFilename), timeoutSecs=timeoutSecs, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']

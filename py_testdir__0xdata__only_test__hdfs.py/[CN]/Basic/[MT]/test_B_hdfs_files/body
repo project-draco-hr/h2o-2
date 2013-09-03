@@ -6,13 +6,10 @@ def test_B_hdfs_files(self):
         csvFilenameList = random.sample(csvFilenameAll, 8)
     else:
         csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
-    timeoutSecs = 200
-    firstglm = {}
-    h2i.setupImportHdfs()
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
-        parseResult = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets', timeoutSecs=1000)
+        csvPathname = ('datasets/' + csvFilename)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', timeoutSecs=1000)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print 'parse result:', parseResult['destination_key']
         print ('\n' + csvFilename)

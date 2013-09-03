@@ -2,16 +2,16 @@ def test_many_fp_formats_libsvm_2(self):
     h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 10000, 'cA', 300, 'sparse50'), (100, 10000, 'cB', 300, 'sparse'), (100, 40000, 'cC', 300, 'sparse50'), (100, 40000, 'cD', 300, 'sparse')]
-    for (rowCount, colCount, key2, timeoutSecs, distribution) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs, distribution) in tryList:
         for sel in [random.randint(0, 47)]:
             SEEDPERFILE = random.randint(0, sys.maxint)
             csvFilename = ('syn_%s_%s_%s_%s.csv' % (SEEDPERFILE, sel, rowCount, colCount))
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             print 'Creating random', csvPathname
             (colNumberMax, synColSumDict) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distribution)
-            selKey2 = ((key2 + '_') + str(sel))
+            selKey2 = ((hex_key + '_') + str(sel))
             print "This dataset requires telling h2o parse it's a libsvm..doesn't detect automatically"
-            parseResult = h2o_cmd.parseFile(None, csvPathname, key2=selKey2, timeoutSecs=timeoutSecs, doSummary=False, parser_type='SVMLight')
+            parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=selKey2, timeoutSecs=timeoutSecs, doSummary=False, parser_type='SVMLight')
             print csvFilename, 'parse time:', parseResult['response']['time']
             print "Parse result['destination_key']:", parseResult['destination_key']
             inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)

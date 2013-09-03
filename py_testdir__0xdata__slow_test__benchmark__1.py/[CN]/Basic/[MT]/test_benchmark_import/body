@@ -26,26 +26,26 @@ def test_benchmark_import(self):
         else:
             h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=tryHeap, base_port=base_port, enable_benchmark_log=True)
         for trial in range(trialMax):
-            importFolderResult = h2i.setupImportFolder(None, importFolderPath)
-            importFullList = importFolderResult['files']
-            importFailList = importFolderResult['fails']
+            (importResult, importPattern) = h2i.import_only(path=(importFolderPath + '/*'))
+            importFullList = importResult['files']
+            importFailList = importResult['fails']
             print '\n Problem if this is not empty: importFailList:', h2o.dump_json(importFailList)
             h2o.cloudPerfH2O.change_logfile(csvFilename)
             h2o.cloudPerfH2O.message('')
             h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
             start = time.time()
-            parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+            parseResult = h2i.import_parse(path=(importFolderPath + '/*'), hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
             if noPoll:
                 if ((i + 1) < len(csvFilenameList)):
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
                     (csvFilepattern, csvFilename, totalBytes2, timeoutSecs) = csvFilenameList[(i + 1)]
-                    parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                    parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 if ((i + 2) < len(csvFilenameList)):
                     time.sleep(1)
                     h2o.check_sandbox_for_errors()
                     (csvFilepattern, csvFilename, totalBytes3, timeoutSecs) = csvFilenameList[(i + 2)]
-                    parseResult = h2i.parseImportFolderFile(None, csvFilepattern, importFolderPath, key2=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                    parseResult = h2i.import_parse(path=(importFolderPath + '/*'), hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
             elapsed = (time.time() - start)
             print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             if noPoll:
@@ -84,7 +84,7 @@ def test_benchmark_import(self):
                 print l
                 h2o.cloudPerfH2O.message(l)
             h2o_cmd.checkKeyDistribution()
-            h2o_cmd.deleteCsvKey(csvFilename, importFolderResult)
+            h2i.delete_keys_from_import_result(pattern=csvFilename, importResult=importResult)
             h2o.tear_down_cloud()
             if (not localhost):
                 print 'Waiting 30 secs before building cloud again (sticky ports?)'

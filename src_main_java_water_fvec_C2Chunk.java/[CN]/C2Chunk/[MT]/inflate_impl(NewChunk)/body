@@ -1,4 +1,8 @@
 {
+  if (nc == null) {
+    System.err.println("DEBUG: Bad Chunk ns");
+    System.err.flush();
+  }
   for (int i=0; i < _len; i++) {
     if (isNA_impl(i))     nc.setInvalid(i);
  else     nc._ls[i]=at8_impl(i);

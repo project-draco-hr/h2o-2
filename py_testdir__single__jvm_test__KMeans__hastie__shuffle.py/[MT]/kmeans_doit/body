@@ -1,6 +1,6 @@
-def kmeans_doit(self, csvFilename, csvPathname, num_rows, timeoutSecs=30):
+def kmeans_doit(self, csvFilename, bucket, csvPathname, num_rows, timeoutSecs=30):
     print '\nStarting KMeans of', csvFilename
-    parseResult = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'), timeoutSecs=10)
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'), timeoutSecs=10)
     cols = ','.join(map(str, range(11)))
     kwargs = {'k': 1, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'KMeansModel.hex', 'seed': 265211114317615310, }
     start = time.time()

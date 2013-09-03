@@ -2,13 +2,13 @@ def test_parse_bounds_libsvm(self):
     print 'Random 0/1 for col1. Last has max col = 1, All have zeros for class.'
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 100000, 'cC', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = ('syn_%s_%s_%s.csv' % (SEEDPERFILE, rowCount, colCount))
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         (colNumberMax, synColSumDict) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        parseResult = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=timeoutSecs, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, schema='put', timeoutSecs=timeoutSecs, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=timeoutSecs)
         num_cols = inspect['num_cols']
@@ -21,10 +21,10 @@ def test_parse_bounds_libsvm(self):
         self.assertEqual(row_size, expectedRowSize, msg=('row_size %s is not expected num_cols * 1 byte: %s' % (row_size, expectedRowSize)))
         self.assertEqual(value_size_bytes, expectedValueSize, msg=('value_size_bytes %s is not expected row_size * rows: %s' % (value_size_bytes, expectedValueSize)))
         col_limit = int(floor((0.3 * colNumberMax)))
-        summaryResult = h2o_cmd.runSummary(key=key2, max_column_display=col_limit, timeoutSecs=timeoutSecs)
+        summaryResult = h2o_cmd.runSummary(key=hex_key, max_column_display=col_limit, timeoutSecs=timeoutSecs)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
-        self.assertEqual(col_limit, len(summaryResult['summary']['columns']), ('summary respects column limit of %d on %d cols' % (col_limit, (colNumberMax + 1))))
-        summaryResult = h2o_cmd.runSummary(key=key2, max_column_display=(10 * num_cols), timeoutSecs=timeoutSecs)
+        self.assertEqual(col_limit, len(summaryResult['summary']['columns']), ("summary doesn't respect column limit of %d on %d cols" % (col_limit, (colNumberMax + 1))))
+        summaryResult = h2o_cmd.runSummary(key=hex_key, max_column_display=(10 * num_cols), timeoutSecs=timeoutSecs)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         self.assertEqual((colNumberMax + 1), num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), num_cols)))
         self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
