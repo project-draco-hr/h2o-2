@@ -2,7 +2,7 @@ def test_GLMGrid_basic_prostate(self):
     csvFilename = 'prostate.csv'
     print '\nStarting', csvFilename
     csvPathname = ('logreg/' + csvFilename)
-    parseResult = h2o_cmd.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     y = '1'
     x = range(9)
     x.remove(0)
