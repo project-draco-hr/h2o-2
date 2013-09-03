@@ -16,10 +16,10 @@ def test_rf_syn_gz_cat(self):
         start = time.time()
         rfView = h2o_cmd.runRFOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
-        print 'RF end on ', parseResult['python_source_key'], 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        print 'RF end on ', parseResult['destination_key'], 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         classification_error = rfView['confusion_matrix']['classification_error']
         algo = 'RF '
-        l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs. trees: {:d} Error: {:6.2f}                 num_rows: {:d} num_cols: {:d} value_size_bytes: {:d}'.format(len(h2o.nodes), tryHeap, algo, parseResult['python_source_key'], elapsed, kwargs['ntree'], classification_error, parseResult['num_rows'], parseResult['num_cols'], parseResult['value_size_bytes'])
+        l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs. trees: {:d} Error: {:6.2f}                 num_rows: {:d} num_cols: {:d} value_size_bytes: {:d}'.format(len(h2o.nodes), tryHeap, algo, parseResult['destination_key'], elapsed, kwargs['ntree'], classification_error, parseResult['num_rows'], parseResult['num_cols'], parseResult['value_size_bytes'])
         print l
         h2o.cloudPerfH2O.message(l)
         print 'Trial #', trial, 'completed'
