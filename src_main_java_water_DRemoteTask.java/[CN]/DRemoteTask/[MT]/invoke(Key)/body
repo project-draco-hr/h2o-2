@@ -3,6 +3,7 @@
     dfork(keys).get();
   }
  catch (  ExecutionException eex) {
+    throw new DException(eex.getCause()).toEx();
   }
 catch (  InterruptedException iex) {
     Log.errRTExcept(iex);
@@ -10,6 +11,5 @@ catch (  InterruptedException iex) {
 catch (  CancellationException cex) {
     Log.errRTExcept(cex);
   }
-  if (_exception != null)   throw _exception.toEx();
   return self();
 }

@@ -1,45 +1,33 @@
 {
+  final int nclass=_tree._nclass;
   final String colPad="  ";
-  final int cntW=4, mmmW=4, varW=4;
-  final int colW=cntW + 1 + mmmW+ 1+ mmmW+ 1+ mmmW+ 1+ varW;
+  final int cntW=4, mmmW=4, menW=4, varW=4;
+  final int colW=cntW + 1 + mmmW+ 1+ mmmW+ 1+ nclass * (menW + 1) + varW;
   StringBuilder sb=new StringBuilder();
   sb.append("Nid# ").append(_nid).append(", ");
   printLine(sb).append("\n");
   final int ncols=_hs.length;
-  for (int j=0; j < ncols; j++)   if (_hs[j] != null)   p(sb,_hs[j]._name + String.format(", err=%5.2f %f",_hs[j].score(),_hs[j]._min),colW).append(colPad);
+  for (int j=0; j < ncols; j++)   if (_hs[j] != null)   p(sb,_hs[j]._name + String.format(", err=%5.2f %4.1f",_hs[j].score(),_hs[j]._min),colW).append(colPad);
   sb.append('\n');
   for (int j=0; j < ncols; j++) {
     if (_hs[j] == null)     continue;
     p(sb,"cnt",cntW).append('/');
     p(sb,"min",mmmW).append('/');
     p(sb,"max",mmmW).append('/');
-    if (_tree.isRegression()) {
-      p(sb,"mean",mmmW).append('/');
-      p(sb,"var",varW).append(colPad);
-    }
- else {
-      p(sb,"C0",mmmW).append('-');
-      p(sb,"C" + (_tree._nclass - 1),varW).append(colPad);
-    }
+    for (int c=0; c < nclass; c++)     p(sb,Integer.toString(c),menW).append('/');
+    p(sb,"var",varW).append(colPad);
   }
   sb.append('\n');
   for (int i=0; i < DHistogram.BINS; i++) {
     for (int j=0; j < ncols; j++) {
-      if (_hs[j] == null)       continue;
-      if (i < _hs[j].nbins()) {
-        p(sb,Long.toString(_hs[j].bins(i)),cntW).append('/');
-        p(sb,_hs[j].mins(i),mmmW).append('/');
-        p(sb,_hs[j].maxs(i),mmmW).append('/');
-        if (_tree.isRegression()) {
-          p(sb,_hs[j].mean(i),mmmW).append('/');
-          p(sb,_hs[j].var(i),varW).append(colPad);
-        }
- else {
-          StringBuilder sb2=new StringBuilder();
-          long N=_hs[j].bins(i);
-          for (int k=0; k < _tree._nclass; k++)           sb2.append(_hs[j].clss(i,k)).append(',');
-          p(sb,sb2.toString(),mmmW + 1 + varW).append(colPad);
-        }
+      DHistogram h=_hs[j];
+      if (h == null)       continue;
+      if (i < h.nbins()) {
+        p(sb,h.bins(i),cntW).append('/');
+        p(sb,h.mins(i),mmmW).append('/');
+        p(sb,h.maxs(i),mmmW).append('/');
+        for (int c=0; c < nclass; c++)         p(sb,h.mean(i,c),menW).append('/');
+        p(sb,h.var(i),varW).append(colPad);
       }
  else {
         p(sb,"",colW).append(colPad);

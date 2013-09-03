@@ -1,0 +1,6 @@
+{
+  if (_caches == null)   _caches=new Chunk[_frame._vecs.length];
+  Chunk c=_caches[i];
+  if (c != null && c._start <= n && n < c._start + c._len)   return c;
+  return _caches[i]=_frame._vecs[i].chunk(n);
+}

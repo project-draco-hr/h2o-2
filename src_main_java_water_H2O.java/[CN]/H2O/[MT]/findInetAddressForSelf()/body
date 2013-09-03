@@ -1,60 +1,63 @@
 {
-  ArrayList<InetAddress> ips=new ArrayList<InetAddress>();
-  try {
-    Enumeration<NetworkInterface> nis=NetworkInterface.getNetworkInterfaces();
-    while (nis.hasMoreElements()) {
-      NetworkInterface ni=nis.nextElement();
-      Enumeration<InetAddress> ias=ni.getInetAddresses();
-      while (ias.hasMoreElements()) {
-        ips.add(ias.nextElement());
+  if (SELF_ADDRESS == null) {
+    ArrayList<InetAddress> ips=new ArrayList<InetAddress>();
+    try {
+      Enumeration<NetworkInterface> nis=NetworkInterface.getNetworkInterfaces();
+      while (nis.hasMoreElements()) {
+        NetworkInterface ni=nis.nextElement();
+        Enumeration<InetAddress> ias=ni.getInetAddresses();
+        while (ias.hasMoreElements()) {
+          ips.add(ias.nextElement());
+        }
       }
     }
-  }
- catch (  SocketException e) {
-    Log.err(e);
-  }
-  InetAddress local=null;
-  InetAddress arg=null;
-  if (OPT_ARGS.ip != null) {
-    try {
-      arg=InetAddress.getByName(OPT_ARGS.ip);
-    }
- catch (    UnknownHostException e) {
+ catch (    SocketException e) {
       Log.err(e);
-      H2O.exit(-1);
     }
-    if (!(arg instanceof Inet4Address)) {
-      Log.warn("Only IP4 addresses allowed.");
-      H2O.exit(-1);
+    InetAddress local=null;
+    InetAddress arg=null;
+    if (OPT_ARGS.ip != null) {
+      try {
+        arg=InetAddress.getByName(OPT_ARGS.ip);
+      }
+ catch (      UnknownHostException e) {
+        Log.err(e);
+        H2O.exit(-1);
+      }
+      if (!(arg instanceof Inet4Address)) {
+        Log.warn("Only IP4 addresses allowed.");
+        H2O.exit(-1);
+      }
+      if (!ips.contains(arg)) {
+        Log.warn("IP address not found on this machine");
+        H2O.exit(-1);
+      }
+      local=arg;
     }
-    if (!ips.contains(arg)) {
-      Log.warn("IP address not found on this machine");
-      H2O.exit(-1);
-    }
-    local=arg;
-  }
  else {
-    ArrayList<InetAddress> validIps=new ArrayList();
-    for (    InetAddress ip : ips) {
-      if (ip instanceof Inet4Address && !ip.isLoopbackAddress() && !ip.isLinkLocalAddress()) {
-        validIps.add(ip);
+      ArrayList<InetAddress> validIps=new ArrayList();
+      for (      InetAddress ip : ips) {
+        if (ip instanceof Inet4Address && !ip.isLoopbackAddress() && !ip.isLinkLocalAddress()) {
+          validIps.add(ip);
+        }
+      }
+      if (validIps.size() == 1) {
+        local=validIps.get(0);
+      }
+ else {
+        local=guessInetAddress(validIps);
       }
     }
-    if (validIps.size() == 1) {
-      local=validIps.get(0);
+    if (local == null) {
+      try {
+        Log.warn("Failed to determine IP, falling back to localhost.");
+        local=InetAddress.getByName("127.0.0.1");
+      }
+ catch (      UnknownHostException e) {
+        throw Log.errRTExcept(e);
+      }
     }
- else {
-      local=guessInetAddress(validIps);
-    }
+    SELF_ADDRESS=local;
   }
-  if (local == null) {
-    try {
-      Log.warn("Failed to determine IP, falling back to localhost.");
-      local=InetAddress.getByName("127.0.0.1");
-    }
- catch (    UnknownHostException e) {
-      throw Log.errRTExcept(e);
-    }
-  }
-  return local;
+  return SELF_ADDRESS;
 }

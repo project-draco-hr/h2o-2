@@ -3,7 +3,7 @@ def test_GLM_convergence_2(self):
     tryList = [(100, 1, 'cD', 300)]
     lenNodes = len(h2o.nodes)
     USEKNOWNFAILURE = False
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = ('syn_%s_%sx%s.csv' % (SEEDPERFILE, rowCount, colCount))
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
@@ -11,11 +11,11 @@ def test_GLM_convergence_2(self):
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
         if USEKNOWNFAILURE:
             csvFilename = 'failtoconverge_100x50.csv'
-            csvPathname = h2o.find_file(('smalldata/logreg/' + csvFilename))
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=10)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+            csvPathname = ('logreg/' + csvFilename)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, timeoutSecs=10, schema='put')
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
         kwargs = {'max_iter': 40, 'lambda': 1.0, 'alpha': 0.5, 'weight': 1.0, 'link': 'familyDefault', 'n_folds': 0, 'beta_epsilon': 0.0001, 'thresholds': '0:1:0.01', }
@@ -26,7 +26,7 @@ def test_GLM_convergence_2(self):
         emsg = None
         for i in range(3):
             start = time.time()
-            glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+            glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
             print 'glm #', i, 'end on', csvPathname, 'took', (time.time() - start), 'seconds'
             (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, allowFailWarning=True, **kwargs)
             if (1 == 0):

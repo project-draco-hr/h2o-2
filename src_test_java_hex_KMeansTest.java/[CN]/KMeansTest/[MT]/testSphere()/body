@@ -2,7 +2,7 @@
   Key k1=loadAndParseFile("syn_sphere3.hex","smalldata/syn_sphere3.csv");
   Key target=Key.make(KMeans.KEY_PREFIX + "sphere");
   ValueArray va=UKV.get(k1);
-  KMeans.start(target,va,3,1e-2,0,SEED,false,0,1,2).get();
+  KMeans.start(target,va,3,Initialization.Furthest,100,SEED,false,0,1,2).get();
   KMeansModel res=UKV.get(target);
   res.clusters();
   UKV.remove(k1);

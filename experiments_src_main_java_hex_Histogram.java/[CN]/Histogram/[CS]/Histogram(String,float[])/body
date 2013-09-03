@@ -1,0 +1,11 @@
+{
+  super(new NumberAxis(),new NumberAxis());
+  _data=data;
+  ObservableList<Series<Float,Float>> series=FXCollections.observableArrayList();
+  for (int i=0; i < SLICES; i++)   _list.add(new Data<Float,Float>(0f,0f));
+  series.add(new LineChart.Series<Float,Float>(title,_list));
+  setData(series);
+  setPrefWidth(600);
+  setPrefHeight(250);
+  _instances.add(this);
+}

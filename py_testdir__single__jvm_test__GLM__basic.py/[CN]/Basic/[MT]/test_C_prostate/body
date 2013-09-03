@@ -5,8 +5,8 @@ def test_C_prostate(self):
     y = '1'
     x = ''
     csvFilename = 'prostate.csv'
-    csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    csvPathname = (('logreg' + '/') + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     for maxx in range(2, 6):
         x = range(maxx)
         x.remove(0)
@@ -15,7 +15,7 @@ def test_C_prostate(self):
         print '\nx:', x
         print 'y:', y
         kwargs = {'x': x, 'y': y, 'n_folds': 5, }
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=15, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=15, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
         sys.stdout.write('.')
         sys.stdout.flush()

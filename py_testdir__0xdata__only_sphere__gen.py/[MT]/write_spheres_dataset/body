@@ -1,0 +1,51 @@
+def write_spheres_dataset(csvPathname, CLUSTERS, n):
+    dsf = open(csvPathname, 'w+')
+    centersList = []
+    currentCenter = None
+    totalRows = 0
+    sphereCnt = 0
+    for sphereCnt in range(CLUSTERS):
+        R = (10 * (sphereCnt + 1))
+        if RANDOMIZE_SPHERE_PTS:
+            numPts = random.randint(int((0.5 * n)), int((1.5 * n)))
+        else:
+            numPts = n
+        if (DIMENSIONS < 3):
+            raise Exception(('DIMENSIONS must be >= 3, is:' + DIMENSIONS))
+        xyzShift = random.randint(0, (DIMENSIONS - 3))
+        print 'xyzShift:', xyzShift
+        initial = [int((0.5 * random.randint(0, MAXINTS[i]))) for i in range(DIMENSIONS)]
+        scale = []
+        for i in range(3):
+            MAX = MAXINTS[(xyzShift + i)]
+            a = int(((0.5 * random.randint(0, MAX)) + R))
+            if random.randint(0, 1):
+                a = (- a)
+            initial[(xyzShift + i)] = a
+            scale.append((0.5 * random.randint(0, MAX)))
+        if (currentCenter is None):
+            currentCenter = initial[:]
+            lastCenter = currentCenter[:]
+        else:
+            currentCenter = initial[:]
+            delta = [(a - b) for (a, b) in zip(lastCenter, currentCenter)]
+            maxDelta = max(delta)
+            if (maxDelta < (ALLOWED_CENTER_DELTA * R)):
+                print 'currentCenter:', currentCenter, 'lastCenter:', lastCenter
+                print ('ERROR: adjacent centers are too close for our sort algorithm %s %s' % (maxDelta, R))
+                continue
+            lastCenter = currentCenter[:]
+        centersList.append(currentCenter)
+        print 'currentCenter:', currentCenter, 'R:', R, 'numPts', numPts
+        for n in range(numPts):
+            interestingEnum = getInterestingEnum()
+            thisPt = currentCenter[:]
+            xyz = get_xyz_sphere(R)
+            for i in range(3):
+                thisPt[(xyzShift + i)] += int(xyz[i])
+            dsf.write((','.join(map(str, ([interestingEnum] + thisPt))) + '\n'))
+            totalRows += 1
+        sphereCnt += 1
+    dsf.close()
+    print 'Spheres created:', len(centersList), 'totalRows:', totalRows
+    return centersList

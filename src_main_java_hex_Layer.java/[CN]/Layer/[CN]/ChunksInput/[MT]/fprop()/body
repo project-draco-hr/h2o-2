@@ -1,0 +1,10 @@
+{
+  for (int i=0; i < _a.length; i++) {
+    double d=_chunks[i].at0(_row);
+    if (_normalize) {
+      Vec v=_chunks[i]._vec;
+      d=(d - v.mean()) / v.sigma();
+    }
+    _a[i]=(float)d;
+  }
+}

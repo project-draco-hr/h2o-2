@@ -6,7 +6,7 @@ def test_GLM_many_rooz_enums(self):
     else:
         n = 5
         tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300), (n, 7, 'cJ', 300), (n, 9, 'cK', 300), (n, 10, 'cLA', 300), (n, 11, 'cDA', 300), (n, 12, 'cEA', 300), (n, 13, 'cFA', 300), (n, 14, 'cGA', 300), (n, 15, 'cHA', 300), (n, 16, 'cIA', 300), (n, 17, 'cJA', 300), (n, 19, 'cKA', 300), (n, 20, 'cLA', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         colSepCase = 1
         if (colSepCase == 0):
             colSepHexString = '01'
@@ -31,16 +31,16 @@ def test_GLM_many_rooz_enums(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=30, separator=colSepInt)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, separator=colSepInt)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
         print ('\n' + csvFilename)
-        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseKey['destination_key'], exceptionOnMissingValues=False)
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
         y = colCount
         x = range(colCount)
         x = ','.join(map(str, x))
         kwargs = {'y': y, 'max_iter': 6, 'n_folds': 1, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'poisson', 'case_mode': '=', 'case': 0, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

@@ -1,9 +1,9 @@
 def test_C_hhp_107_01(self):
-    csvPathname = h2o.find_file('smalldata/hhp_107_01.data.gz')
+    csvPathname = 'hhp_107_01.data.gz'
     print ('\n' + csvPathname)
     y = '106'
     x = ''
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=15)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, timeoutSecs=15, schema='put')
     for trial in xrange(3):
         sys.stdout.write('.')
         sys.stdout.flush()
@@ -11,7 +11,7 @@ def test_C_hhp_107_01(self):
         print 'y:', y
         start = time.time()
         kwargs = {'x': x, 'y': y, 'n_folds': 6, }
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=300, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=300, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 57, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print '\nTrial #', trial

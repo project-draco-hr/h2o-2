@@ -1,4 +1,5 @@
 {
   double res=UDP.get8d(_mem,i << 3);
-  return Double.isNaN(res) ? _vec._iNA : (long)res;
+  if (Double.isNaN(res))   throw new IllegalArgumentException("at8 but value is missing");
+  return (long)res;
 }

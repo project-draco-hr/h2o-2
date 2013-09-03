@@ -11,13 +11,13 @@ def test_kmeans_sphere100(self):
         csvFilename2 = csvFilename
         csvPathname2 = csvPathname
     print '\nStarting', csvFilename
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname2, key2=(csvFilename2 + '.hex'))
+    parseResult = h2i.import_parse(path=csvPathname2, schema='put', hex_key=(csvFilename2 + '.hex'))
     cols = ','.join(map(str, range(DIMENSIONS)))
     for trial in range(10):
-        kwargs = {'k': CLUSTERS, 'epsilon': 1e-06, 'cols': cols, 'destination_key': 'syn_spheres100.hex', }
+        kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'syn_spheres100.hex', }
         timeoutSecs = 100
         start = time.time()
-        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')

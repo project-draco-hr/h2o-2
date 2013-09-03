@@ -3,16 +3,16 @@ def test_KMeans_constant_col(self):
     tryList = [(100, 11, 'cA', 5), (100, 10, 'cB', 5), (100, 9, 'cC', 5), (100, 8, 'cD', 5), (100, 7, 'cE', 5), (100, 6, 'cF', 5), (100, 5, 'cG', 5)]
     lenNodes = len(h2o.nodes)
     cnum = 0
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         print 'Generate synthetic dataset with first column constant = 0 and see what KMeans does'
         cnum += 1
         csvFilename = (((((('syn_' + str(SEED)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
-        parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        kwargs = {'k': 2, 'epsilon': 1e-06, 'cols': None, 'destination_key': 'benign_k.hex', }
-        kmeans = h2o_cmd.runKMeansOnly(parseKey=parseKey, timeoutSecs=5, **kwargs)
-        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseKey, 'd', **kwargs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'))
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        kwargs = {'k': 2, 'initialization': 'Furthest', 'cols': None, 'destination_key': 'benign_k.hex', }
+        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=5, **kwargs)
+        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         self.assertEqual(colCount, len(centers[0]), ("kmeans first center doesn't have same # of values as dataset row %s %s" % (colCount, len(centers[0]))))

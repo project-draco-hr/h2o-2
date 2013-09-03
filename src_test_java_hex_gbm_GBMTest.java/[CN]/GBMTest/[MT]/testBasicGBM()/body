@@ -1,15 +1,29 @@
 {
+  basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      UKV.remove(fr.remove("name")._key);
+      return fr.remove("cylinders");
+    }
+  }
+);
   basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
-    void prep(    Frame fr){
+    Vec prep(    Frame fr){
+      return fr.remove(1);
     }
   }
 );
   basicGBM("./smalldata/logreg/prostate.csv","prostate.hex",new PrepData(){
-    void prep(    Frame fr){
-      assertEquals(380,fr._vecs[0].length());
+    Vec prep(    Frame fr){
+      assertEquals(380,fr.numRows());
       UKV.remove(fr.remove("ID")._key);
-      Vec capsule=fr.remove("CAPSULE");
-      fr.add("CAPSULE",capsule);
+      return fr.remove("CAPSULE");
+    }
+  }
+);
+  basicGBM("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      assertEquals(581012,fr.numRows());
+      return fr.remove(54);
     }
   }
 );

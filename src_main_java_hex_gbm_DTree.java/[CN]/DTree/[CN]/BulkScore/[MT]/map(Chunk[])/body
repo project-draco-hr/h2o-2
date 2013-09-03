@@ -1,2 +1,14 @@
 {
+  Chunk ys=chks[chks.length - 1];
+  _cm=new long[_nclass][_nclass];
+  Random rands[]=null;
+  if (_sampleRate < 1.0f) {
+    rands=new Random[_trees.length];
+    for (int t=0; t < _trees.length; t++)     rands[t]=_trees[t].rngForChunk(ys.cidx());
+  }
+  float pred[]=new float[_nclass];
+  for (int i=0; i < ys._len; i++) {
+    float err=score0(chks,i,(float)(ys.at0(i) - _ymin),pred,rands);
+    _sum+=err * err;
+  }
 }

@@ -1,17 +1,16 @@
 def test_rf_from_import_hosts(self):
-    importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath)
     timeoutSecs = 500
-    csvFilenameAll = ['billion_rows.csv.gz']
-    csvFilenameList = csvFilenameAll
+    csvFilenameList = ['billion_rows.csv.gz']
+    importFolderPath = 'standard'
     for csvFilename in csvFilenameList:
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=500)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=500)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         start = time.time()
-        RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseKey=parseKey, timeoutSecs=timeoutSecs)
+        RFview = h2o_cmd.runRFOnly(trees=1, depth=25, parseResult=parseResult, timeoutSecs=timeoutSecs)
         h2b.browseJsonHistoryAsUrlLastMatch('RFView')
         time.sleep(10)
         sys.stdout.write('.')

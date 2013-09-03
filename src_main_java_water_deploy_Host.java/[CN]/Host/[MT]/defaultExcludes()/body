@@ -1,9 +1,10 @@
 {
-  ArrayList<String> l=new ArrayList<String>();
+  Set<String> set=new HashSet<String>();
   if (!Boot._init.fromJar()) {
-    l.add("target/*.jar");
-    l.add("lib/javassist");
-    l.add("**/*-sources.jar");
+    set.add("target/*.jar");
+    set.add("target/javadoc/**");
+    set.add("lib/javassist");
+    set.add("**/*-sources.jar");
   }
-  return l.toArray(new String[0]);
+  return set;
 }

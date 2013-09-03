@@ -1,0 +1,33 @@
+{
+  Process process=null;
+  try {
+    ArrayList<String> args=new ArrayList<String>();
+    args.add("rsync");
+    args.add("-vrzute");
+    args.add(sshWithArgs());
+    args.add("--chmod=u=rwx");
+    for (    String s : includes)     args.add(new File(s).getCanonicalPath());
+    File file=Utils.writeFile(Utils.join('\n',excludes));
+    args.add("--exclude-from");
+    args.add(file.getCanonicalPath());
+    if (delete)     args.add("--delete");
+    args.add(_address + ":" + "/home/"+ _user+ "/"+ FOLDER);
+    ProcessBuilder builder=new ProcessBuilder(args);
+    process=builder.start();
+    String log="rsync " + H2O.findInetAddressForSelf() + " -> "+ _address;
+    NodeVM.inheritIO(process,Log.padRight(log + ": ",24));
+    process.waitFor();
+  }
+ catch (  Exception ex) {
+    throw new RuntimeException(ex);
+  }
+ finally {
+    if (process != null) {
+      try {
+        process.destroy();
+      }
+ catch (      Exception _) {
+      }
+    }
+  }
+}

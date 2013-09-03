@@ -2,17 +2,17 @@ def test_GLM_many_cols_4(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     translateList = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u']
     tryList = [(100000, 100, 'cA', 600)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print '\nCreating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, translateList)
         print '\nUpload and parse', csvPathname
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=240, retryDelaySecs=0.5)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=240, retryDelaySecs=0.5)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         paramDict2 = {}
         for k in paramDict:
@@ -21,7 +21,7 @@ def test_GLM_many_cols_4(self):
         kwargs = {'y': y, 'max_iter': 50, }
         kwargs.update(paramDict2)
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print 'y:', y
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

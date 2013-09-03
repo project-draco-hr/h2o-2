@@ -1,0 +1,18 @@
+{
+  this.numInput=numInput;
+  this.numHidden=numHidden;
+  this.numOutput=numOutput;
+  this.inputs=new float[numInput];
+  this.ihWeights=MakeMatrix(numInput,numHidden);
+  this.hBiases=new float[numHidden];
+  this.hOutputs=new float[numHidden];
+  this.hoWeights=MakeMatrix(numHidden,numOutput);
+  this.oBiases=new float[numOutput];
+  this.outputs=new float[numOutput];
+  this.hGrads=new float[numHidden];
+  this.oGrads=new float[numOutput];
+  this.ihPrevWeightsDelta=MakeMatrix(numInput,numHidden);
+  this.hPrevBiasesDelta=new float[numHidden];
+  this.hoPrevWeightsDelta=MakeMatrix(numHidden,numOutput);
+  this.oPrevBiasesDelta=new float[numOutput];
+}

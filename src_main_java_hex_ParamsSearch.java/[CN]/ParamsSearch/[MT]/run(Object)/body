@@ -1,0 +1,37 @@
+{
+  ArrayList<Object> expanded=new ArrayList<Object>();
+  for (  Object o : os) {
+    if (o instanceof Object[])     expanded.addAll(Arrays.asList((Object[])o));
+ else     if (o instanceof Collection)     expanded.addAll((Collection)o);
+ else     expanded.add(o);
+  }
+  if (_params == null) {
+    ArrayList<Param> params=new ArrayList<Param>();
+    for (int i=0; i < expanded.size(); i++) {
+      Class c=expanded.get(i).getClass();
+      ArrayList<Field> fields=new ArrayList<Field>();
+      Utils.getAllFields(fields,c);
+      for (      Field f : fields) {
+        f.setAccessible(true);
+        if ((f.getModifiers() & Modifier.STATIC) == 0) {
+          Object v=f.get(expanded.get(i));
+          if (v instanceof Number || (_booleans && v instanceof Boolean)) {
+            Param param=new Param();
+            param._objectIndex=i;
+            param._field=f;
+            if (v instanceof Boolean)             param._initial=((Boolean)v).booleanValue() ? 1 : 0;
+ else             param._initial=((Number)v).doubleValue();
+            param._last=param._best=param._initial;
+            params.add(param);
+            param.write();
+          }
+        }
+      }
+    }
+    _params=params.toArray(new Param[0]);
+    Log.info(toString());
+  }
+ else {
+    for (int i=0; i < _params.length; i++)     modify(expanded,i);
+  }
+}

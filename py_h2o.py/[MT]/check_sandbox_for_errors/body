@@ -1,4 +1,8 @@
 def check_sandbox_for_errors(sandbox_ignore_errors=False):
+    if nodes:
+        if nodes[0].fake_cloud:
+            print "fake_cloud. So check_sandbox_for_errors didn't check any stdout/stderr from h2o"
+            return
     if (not os.path.exists(LOG_DIR)):
         return
     if (nodes and nodes[0].sandbox_error_report()):
@@ -18,7 +22,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
                 if (not (' bytes)' in line)):
                     printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)) and (not ('RestS3Service' in line)))
                     printSingleWarning = False
-                    foundBad = (regex1.search(line) and (not (('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
+                    foundBad = (regex1.search(line) and (not (('Training Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
                     lines = 1

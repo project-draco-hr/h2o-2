@@ -11,9 +11,9 @@ def test_rf_float_many_bins(self):
         append_syn_dataset(csvPathname, num)
         totalRows += num
         start = time.time()
-        key = ((csvFilename + '_') + str(trial))
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         kwargs = {'ntree': 5, 'depth': 5, 'bin_limit': 32000, }
-        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=10, pollTimeoutSecs=5, **kwargs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put')
+        h2o_cmd.runRFOnly(parseResult=parseResult, hex_key=hex_key, timeoutSecs=10, pollTimeoutSecs=5, **kwargs)
         print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()

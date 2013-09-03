@@ -1,0 +1,10 @@
+{
+  File f=find_test_file("smalldata");
+  ArrayList<String> paths=new ArrayList<String>();
+  findDatasets(f,paths);
+  Collections.sort(paths);
+  for (  String path : paths) {
+    Log.info("ValueArrayToFrame: " + path);
+    ValueArrayToFrameTest.test(path);
+  }
+}

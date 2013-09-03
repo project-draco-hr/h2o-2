@@ -1,16 +1,39 @@
 {
   ValueArray va=DKV.get(source_key).get();
-  hex.KMeans first=hex.KMeans.start(Key.make(),va,k[0],0,max_iter[0],seed,normalize,cols);
-  KMeansModel model=first.get();
-  errors=new double[k.length][max_iter.length];
-  for (int ki=0; ki < k.length; ki++) {
-    for (int mi=0; mi < max_iter.length; mi++) {
-      if (ki != 0 || mi != 0) {
-        KMeans job=KMeans.start(first.dest(),va,k[mi],0,max_iter[mi],seed,normalize,cols);
-        model=job.get();
-      }
-      errors[ki][mi]=model._error;
+  Key temp=null;
+  try {
+    temp=Key.make(UUID.randomUUID().toString(),(byte)1,Key.DFJ_INTERNAL_USER);
+    hex.KMeans first=hex.KMeans.start(temp,va,k[0],initialization,max_iter[0],seed,normalize,cols);
+    KMeansModel model=first.get();
+    String[] names=new String[3];
+    Vec[] vecs=new Vec[names.length];
+    NewChunk[] chunks=new NewChunk[names.length];
+    for (int c=0; c < chunks.length; c++) {
+      vecs[c]=new AppendableVec(UUID.randomUUID().toString());
+      chunks[c]=new NewChunk(vecs[c],0);
     }
-    remove();
+    names[0]="k";
+    names[1]="max_iter";
+    names[2]="error";
+    for (int ki=0; ki < k.length; ki++) {
+      for (int mi=0; mi < max_iter.length; mi++) {
+        if (ki != 0 || mi != 0) {
+          KMeans job=KMeans.start(first.dest(),va,k[ki],initialization,max_iter[mi],seed,normalize,cols);
+          model=job.get();
+        }
+        chunks[0].addNum(k[ki]);
+        chunks[1].addNum(max_iter[mi]);
+        chunks[2].addNum(model._error);
+      }
+    }
+    for (int c=0; c < vecs.length; c++) {
+      chunks[c].close(0,null);
+      vecs[c]=((AppendableVec)vecs[c]).close(null);
+    }
+    UKV.put(destination_key,new Frame(names,vecs));
   }
+  finally {
+    UKV.remove(temp);
+  }
+  remove();
 }

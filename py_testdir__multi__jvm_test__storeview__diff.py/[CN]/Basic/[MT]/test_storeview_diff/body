@@ -1,0 +1,34 @@
+def test_storeview_diff(self):
+    print 'Do an import/parse then compare the store views on all nodes'
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilelist = [('covtype.data', 300)]
+    trial = 0
+    importFolderPath = 'standard'
+    for (csvFilename, timeoutSecs) in csvFilelist:
+        trialStart = time.time()
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        print 'parse start on:', csvFilename
+        start = time.time()
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        start = time.time()
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=360)
+        print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+        h2o_cmd.infoFromInspect(inspect, csvPathname)
+        goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseResult['destination_key'], timeoutSecs=300)
+        summaryResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=360)
+        h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
+        print 'Trying StoreView to all nodes after the parse'
+        for (n, node) in enumerate(h2o.nodes):
+            print '\n*****************'
+            print ('StoreView node %s:%s' % (node.http_addr, node.port))
+            storeViewResult = h2o_cmd.runStoreView(node, timeoutSecs=30)
+            f = open((((SYNDATASETS_DIR + '/storeview_') + str(n)) + '.txt'), 'w')
+            result = json.dump(storeViewResult, f, indent=4, sort_keys=True, default=str)
+            f.close()
+            lastStoreViewResult = storeViewResult
+        print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
+        trial += 1

@@ -1,4 +1,9 @@
 {
+  if (!isConvertedFrameKeyString(key.toString())) {
+    String frameKeyString=calcConvertedFrameKeyString(key.toString());
+    Key k=Key.make(frameKeyString);
+    remove(k);
+  }
   if (old != null && !key.home())   old.startRemotePut();
   Value res=H2O.putIfMatch(key,val,old);
   if (res != old)   return res;

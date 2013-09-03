@@ -1,8 +1,11 @@
 {
   _min=Math.min(_min,rs._min);
   _max=Math.max(_max,rs._max);
-  _nas+=rs._nas;
+  _naCnt+=rs._naCnt;
   _mean=(_mean * _rows + rs._mean * rs._rows) / (_rows + rs._rows);
+  double delta=_mean - rs._mean;
+  _sigma=_sigma + rs._sigma + delta * delta * _rows* rs._rows / (_rows + rs._rows);
   _rows+=rs._rows;
   _size+=rs._size;
+  _isInt&=rs._isInt;
 }

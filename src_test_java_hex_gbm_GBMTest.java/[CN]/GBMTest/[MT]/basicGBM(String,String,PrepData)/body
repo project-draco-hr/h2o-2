@@ -1,18 +1,24 @@
 {
   File file=TestUtil.find_test_file(fname);
+  if (file == null)   return;
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make(hexname);
-  Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
-  UKV.remove(fkey);
   GBM gbm=null;
   try {
-    prep.prep(fr);
-    gbm=GBM.start(GBM.makeKey(),fr,5);
-    gbm.get();
-    UKV.remove(gbm.destination_key);
+    gbm=new GBM();
+    gbm.source=ParseDataset2.parse(dest,new Key[]{fkey});
+    UKV.remove(fkey);
+    gbm.vresponse=prep.prep(gbm.source);
+    gbm.ntrees=5;
+    gbm.max_depth=8;
+    gbm.serve();
   }
   finally {
     UKV.remove(dest);
-    if (gbm != null)     gbm.remove();
+    if (gbm != null) {
+      gbm.source.remove();
+      UKV.remove(gbm.vresponse._key);
+      gbm.remove();
+    }
   }
 }

@@ -1,0 +1,44 @@
+{
+  if (tValues.length != numOutput)   throw new RuntimeException("target values not same length as output in UpdateWeights");
+  for (int i=0; i < oGrads.length; ++i) {
+    float derivative=(1 - outputs[i]) * outputs[i];
+    oGrads[i]=derivative * (tValues[i] - outputs[i]);
+  }
+  for (int i=0; i < hGrads.length; ++i) {
+    float derivative=(1 - hOutputs[i]) * (1 + hOutputs[i]);
+    float sum=0;
+    for (int j=0; j < numOutput; ++j) {
+      float x=oGrads[j] * hoWeights[i][j];
+      sum+=x;
+    }
+    hGrads[i]=derivative * sum;
+  }
+  for (int i=0; i < ihWeights.length; ++i) {
+    for (int j=0; j < ihWeights[0].length; ++j) {
+      float delta=learnRate * hGrads[j] * inputs[i];
+      ihWeights[i][j]+=delta;
+      ihWeights[i][j]+=momentum * ihPrevWeightsDelta[i][j];
+      ihPrevWeightsDelta[i][j]=delta;
+    }
+  }
+  for (int i=0; i < hBiases.length; ++i) {
+    float delta=learnRate * hGrads[i] * 1;
+    hBiases[i]+=delta;
+    hBiases[i]+=momentum * hPrevBiasesDelta[i];
+    hPrevBiasesDelta[i]=delta;
+  }
+  for (int i=0; i < hoWeights.length; ++i) {
+    for (int j=0; j < hoWeights[0].length; ++j) {
+      float delta=learnRate * oGrads[j] * hOutputs[i];
+      hoWeights[i][j]+=delta;
+      hoWeights[i][j]+=momentum * hoPrevWeightsDelta[i][j];
+      hoPrevWeightsDelta[i][j]=delta;
+    }
+  }
+  for (int i=0; i < oBiases.length; ++i) {
+    float delta=learnRate * oGrads[i] * 1;
+    oBiases[i]+=delta;
+    oBiases[i]+=momentum * oPrevBiasesDelta[i];
+    oPrevBiasesDelta[i]=delta;
+  }
+}

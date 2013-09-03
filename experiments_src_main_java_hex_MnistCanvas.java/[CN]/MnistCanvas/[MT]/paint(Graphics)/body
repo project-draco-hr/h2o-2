@@ -1,0 +1,56 @@
+{
+  water.fvec.Frame frame=((FrameInput)_test._ls[0])._frame;
+  int edge=56, pad=10;
+  int rand=_rand.nextInt((int)frame.numRows());
+{
+    BufferedImage in=new BufferedImage(Sample07_NeuralNet_Mnist.EDGE,Sample07_NeuralNet_Mnist.EDGE,BufferedImage.TYPE_INT_RGB);
+    WritableRaster r=in.getRaster();
+    int[] pix=new int[Sample07_NeuralNet_Mnist.PIXELS];
+    for (int i=0; i < pix.length; i++)     pix[i]=(int)(frame._vecs[i].at8(rand));
+    r.setDataElements(0,0,Sample07_NeuralNet_Mnist.EDGE,Sample07_NeuralNet_Mnist.EDGE,pix);
+    g.drawImage(in,pad,pad,null);
+    g.drawString("" + frame._vecs[Sample07_NeuralNet_Mnist.PIXELS].at8(rand),10,50);
+    g.drawString("RBM " + _level,10,70);
+  }
+  int offset=pad;
+  int buf=Sample07_NeuralNet_Mnist.EDGE + pad + pad;
+  Layer layer=_test._trainer.layers()[_level];
+  double mean=0;
+  int n=layer._w.length;
+  for (int i=0; i < n; i++)   mean+=layer._w[i];
+  mean/=layer._w.length;
+  double sigma=0;
+  for (int i=0; i < layer._w.length; i++) {
+    double d=layer._w[i] - mean;
+    sigma+=d * d;
+  }
+  sigma=Math.sqrt(sigma / (layer._w.length - 1));
+  for (int o=0; o < layer._b.length; o++) {
+    if (o % 10 == 0) {
+      offset=pad;
+      buf+=pad + edge;
+    }
+    int[] start=new int[layer._in._a.length];
+    for (int i=0; i < layer._in._a.length; i++) {
+      double w=layer._w[o * layer._in._a.length + i];
+      w=((w - mean) / sigma) * 200;
+      if (w >= 0)       start[i]=((int)Math.min(+w,255)) << 8;
+ else       start[i]=((int)Math.min(-w,255)) << 16;
+    }
+    BufferedImage out=new BufferedImage(Sample07_NeuralNet_Mnist.EDGE,Sample07_NeuralNet_Mnist.EDGE,BufferedImage.TYPE_INT_RGB);
+    WritableRaster r=out.getRaster();
+    r.setDataElements(0,0,Sample07_NeuralNet_Mnist.EDGE,Sample07_NeuralNet_Mnist.EDGE,start);
+    BufferedImage resized=new BufferedImage(edge,edge,BufferedImage.TYPE_INT_RGB);
+    Graphics2D g2=resized.createGraphics();
+    try {
+      g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+      g2.clearRect(0,0,edge,edge);
+      g2.drawImage(out,0,0,edge,edge,null);
+    }
+  finally {
+      g2.dispose();
+    }
+    g.drawImage(resized,buf,offset,null);
+    offset+=pad + edge;
+  }
+}

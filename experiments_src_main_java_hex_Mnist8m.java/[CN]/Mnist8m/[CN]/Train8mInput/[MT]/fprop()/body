@@ -1,0 +1,12 @@
+{
+  long offset=_n * PIXELS;
+  int page=(int)(offset / PAGE_SIZE);
+  int indx=(int)(offset % PAGE_SIZE);
+  ByteBuffer buffer=_images[page];
+  for (int i=0; i < _a.length; i++) {
+    double d=convert(buffer.get(indx + i));
+    d-=Mnist8mNorm.MEANS[i];
+    d=Mnist8mNorm.SIGMS[i] > 1e-4 ? d / Mnist8mNorm.SIGMS[i] : d;
+    _a[i]=(float)d;
+  }
+}

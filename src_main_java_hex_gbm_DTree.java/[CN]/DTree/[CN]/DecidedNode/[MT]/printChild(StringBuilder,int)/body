@@ -1,4 +1,4 @@
 {
-  for (int i=0; i < _ns.length; i++)   if (_ns[i] == nid)   return sb.append("[").append(_mins[i]).append(" <= ").append(_tree._names[_col]).append(" <= ").append(_maxs[i]).append("]");
+  for (int i=0; i < _nids.length; i++)   if (_nids[i] == nid)   return sb.append("[").append(_bmin + i * _step).append(" <= ").append(_tree._names[_col]).append(" < ").append(_bmin + (i + 1) * _step).append("]");
   throw H2O.fail();
 }

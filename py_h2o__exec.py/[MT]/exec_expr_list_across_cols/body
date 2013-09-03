@@ -1,4 +1,4 @@
-def exec_expr_list_across_cols(lenNodes, exprList, key2, minCol=0, maxCol=54, timeoutSecs=10, incrementingResult=True):
+def exec_expr_list_across_cols(lenNodes, exprList, keyX, minCol=0, maxCol=54, timeoutSecs=10, incrementingResult=True):
     colResultList = []
     for colX in range(minCol, maxCol):
         for exprTemplate in exprList:
@@ -6,11 +6,11 @@ def exec_expr_list_across_cols(lenNodes, exprList, key2, minCol=0, maxCol=54, ti
                 execNode = 0
             else:
                 execNode = 0
-            execExpr = fill_in_expr_template(exprTemplate, colX, colX, 0, key2)
+            execExpr = fill_in_expr_template(exprTemplate, colX, colX, 0, keyX)
             if incrementingResult:
                 resultKey = ('Result' + str(colX))
             else:
-                resultKey = key2
+                resultKey = keyX
             execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, resultKey, timeoutSecs)
             execResultKey = execResultInspect[0]['key']
             resultInspect = h2o_cmd.runInspect(None, execResultKey)

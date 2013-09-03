@@ -1,0 +1,37 @@
+{
+  _trainers=new Base[Runtime.getRuntime().availableProcessors()];
+  _threads=new Thread[_trainers.length];
+  _stepsPerThread=steps / _threads.length;
+  _resume=new CyclicBarrier(_threads.length + 1);
+  for (int t=0; t < _trainers.length; t++) {
+    Layer[] clones=new Layer[ls.length];
+    for (int i=0; i < ls.length; i++)     clones[i]=Utils.deepClone(ls[i],"_w","_b","_in","_images","_labels","_frame","_caches");
+    for (int i=1; i < ls.length; i++)     clones[i]._in=clones[i - 1];
+    _trainers[t]=new Base(clones);
+    FrameInput input=(FrameInput)_trainers[t]._ls[0];
+    int chunks=nodes * _trainers.length;
+    input._row=input._frame.numRows() * ((long)index * _trainers.length + t) / chunks;
+    final Base trainer=_trainers[t];
+    _threads[t]=new Thread("H2O Trainer " + t){
+      @Override public void run(){
+        for (int i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
+          CyclicBarrier b=_suspend;
+          if (b == DONE)           break;
+          if (b != null) {
+            try {
+              b.await();
+              _resume.await();
+            }
+ catch (            Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+          trainer.step();
+          _steps.incrementAndGet();
+        }
+      }
+    }
+;
+  }
+  Log.info("Started " + _trainers.length + " neural network trainers");
+}

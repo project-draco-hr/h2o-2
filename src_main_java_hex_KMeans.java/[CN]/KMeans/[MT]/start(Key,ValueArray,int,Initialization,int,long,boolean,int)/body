@@ -1,0 +1,25 @@
+{
+  if (cols == null || cols.length == 0) {
+    cols=new int[va._cols.length - 1];
+    for (int i=0; i < cols.length; i++)     cols[i]=i;
+  }
+  int cols2[]=Arrays.copyOf(cols,cols.length + 1);
+  cols2[cols.length]=-1;
+  final KMeans job=new KMeans(dest,k,cols);
+  final KMeansModel res=new KMeansModel(job.dest(),cols2,va._key);
+  res._normalized=normalize;
+  res._randSeed=randSeed;
+  res._maxIter=maxIter;
+  res._initialization=init;
+  UKV.put(job.dest(),res);
+  final int[] filteredCols=res.columnMapping(va.colNames());
+  H2OCountedCompleter task=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      job.run(res,va,k,init,filteredCols);
+      tryComplete();
+    }
+  }
+;
+  H2O.submitTask(job.start(task));
+  return job;
+}

@@ -1,0 +1,11 @@
+{
+  float energy=0.0f;
+  for (int i=0; i < in.length; i++)   energy-=in[i] * _v[i];
+  for (int o=0; o < _b.length; o++) {
+    float out=0;
+    for (int i=0; i < in.length; i++)     out+=_w[o * in.length + i] * in[i];
+    out+=_b[o];
+    energy-=Math.log(1 + Math.exp(out));
+  }
+  return energy;
+}

@@ -1,0 +1,24 @@
+import time, sys, random, math
+sys.path.extend(['.', '..', 'py'])
+CLUSTERS = 15
+GB_SPHERE_PTS = 4000000
+SPHERE_PTS = (10 * GB_SPHERE_PTS)
+RANDOMIZE_SPHERE_PTS = True
+JUMP_RANDOM_ALL_DIRS = True
+SHUFFLE_SPHERES = False
+RADIUS_NOISE = True
+ALLOWED_CENTER_DELTA = 1
+MAX_DIGITS_IN_DIMENSIONS = [2, 1, 3, 4, 8, 5]
+MAXINTS = [(pow(10, d) - 1) for d in MAX_DIGITS_IN_DIMENSIONS]
+DIMENSIONS = len(MAX_DIGITS_IN_DIMENSIONS)
+csvFilename = 'syn_sphere_gen.csv'
+csvPathname = ('./' + csvFilename)
+centersList = write_spheres_dataset(csvPathname, CLUSTERS, SPHERE_PTS)
+if SHUFFLE_SPHERES:
+    csvFilename2 = 'syn_sphere_gen_shuffled.csv'
+    csvPathname2 = ('./' + csvFilename2)
+    import h2o_util
+    h2o_util.file_shuffle(csvPathname, csvPathname2)
+else:
+    csvFilename2 = csvFilename
+    csvPathname2 = csvPathname

@@ -1,0 +1,50 @@
+{
+  _ls=new Layer[3];
+  _ls[0]=new FrameInput(source);
+  _ls[0].init(null,source.numCols() - 1);
+  for (int i=0; i < hidden.length; i++) {
+    if (activation == Activation.Rectifier)     _ls[i + 1]=new Layer.Rectifier();
+ else     _ls[i + 1]=new Layer.Tanh();
+    _ls[i + 1]._rate=(float)rate;
+    _ls[i + 1]._l2=(float)l2;
+    _ls[i + 1].init(_ls[i],hidden[i]);
+  }
+  _ls[_ls.length - 1]=new Layer.Softmax();
+  _ls[_ls.length - 1]._rate=(float)rate;
+  _ls[_ls.length - 1]._l2=(float)l2;
+  int classes=source._vecs[source._vecs.length - 1].domain().length;
+  _ls[_ls.length - 1].init(_ls[_ls.length - 2],classes);
+  for (int i=1; i < _ls.length; i++)   _ls[i].randomize();
+  final ThreadedTrainers trainer=new ThreadedTrainers(_ls);
+  weights=Key.make(destination_key.toString() + "_weights");
+  UKV.put(destination_key,this);
+  trainer.start();
+  Thread thread=new Thread(){
+    @Override public void run(){
+      long lastTime=System.nanoTime();
+      long lastItems=0;
+      while (!cancelled()) {
+        Error train=NeuralNetScore.eval(_ls,EVAL_ROW_COUNT);
+        train_classification_error=train.Value;
+        train_sqr_error=train.SqrDist;
+        long time=System.nanoTime();
+        double delta=(time - lastTime) / 1e9;
+        lastTime=time;
+        long items=trainer.steps();
+        rows_per_second=(int)((items - lastItems) / delta);
+        UKV.put(destination_key,NeuralNet.this);
+        UKV.put(weights,Weights.get(_ls));
+        try {
+          Thread.sleep(2000);
+        }
+ catch (        InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      trainer.close();
+      ;
+    }
+  }
+;
+  thread.start();
+}

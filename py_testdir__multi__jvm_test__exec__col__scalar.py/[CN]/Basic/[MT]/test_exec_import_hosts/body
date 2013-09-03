@@ -1,6 +1,4 @@
 def test_exec_import_hosts(self):
-    importFolderPath = '/home/0xdiag/datasets/standard'
-    h2i.setupImportFolder(None, importFolderPath)
     if localhost:
         maxTrials = 200
         csvFilenameAll = [('covtype.data', 'cA', 15)]
@@ -8,14 +6,15 @@ def test_exec_import_hosts(self):
         maxTrials = 20
         csvFilenameAll = [('covtype.data', 'cA', 15), ('covtype20x.data', 'cC', 60)]
     csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
-    for (csvFilename, key2, timeoutSecs) in csvFilenameList:
+    importFolderPath = 'standard'
+    for (csvFilename, hex_key, timeoutSecs) in csvFilenameList:
         SEEDPERFILE = random.randint(0, sys.maxint)
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=2000)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=2000)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         h2e.exec_zero_list(zeroList)
-        h2e.exec_expr_list_rand(lenNodes, exprList, key2, maxCol=54, maxRow=400000, maxTrials=maxTrials, timeoutSecs=timeoutSecs)
+        h2e.exec_expr_list_rand(lenNodes, exprList, hex_key, maxCol=54, maxRow=400000, maxTrials=maxTrials, timeoutSecs=timeoutSecs)

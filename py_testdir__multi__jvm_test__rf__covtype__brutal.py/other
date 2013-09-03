@@ -1,12 +1,12 @@
-import unittest, time, sys
+import unittest, time, sys, os
 sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_hosts, h2o_rf, h2o_util
+import h2o, h2o_cmd, h2o_hosts, h2o_rf, h2o_util, h2o_import2 as h2i
 USE_LOCAL = True
 paramsTrainRF = {'use_non_local_data': 1, 'clear_confusion_matrix': 1, 'ntree': 10, 'depth': 300, 'parallel': 1, 'bin_limit': 20000, 'stat_type': 'ENTROPY', 'out_of_bag_error_estimate': 1, 'exclusive_split_limit': 0, 'timeoutSecs': 60, }
 paramsScoreRF = {'response_variable': None, 'timeoutSecs': 60, 'out_of_bag_error_estimate': 0, 'clear_confusion_matrix': 1, }
-trainDS1 = {'s3bucket': 'home-0xdiag-datasets', 'localbucket': 'home/0xdiag/datasets', 'pathname': '/standard/covtype.shuffled.90pct.sorted.data', 'timeoutSecs': 60, 'header': 0, }
-scoreDS1 = {'s3bucket': 'home-0xdiag-datasets', 'localbucket': 'home/0xdiag/datasets', 'pathname': '/standard/covtype.shuffled.10pct.sorted.data', 'timeoutSecs': 60, 'header': 0, }
-trainDS2 = {'s3bucket': 'home-0xdiag-datasets', 'localbucket': 'home/0xdiag/datasets', 'pathname': '/standard/covtype.shuffled.90pct.data', 'timeoutSecs': 60, 'header': 0, }
-scoreDS2 = {'s3bucket': 'home-0xdiag-datasets', 'localbucket': 'home/0xdiag/datasets', 'pathname': '/standard/covtype.shuffled.10pct.data', 'timeoutSecs': 60, 'header': 0, }
+trainDS1 = {'bucket': 'home-0xdiag-datasets', 'pathname': 'standard/covtype.shuffled.90pct.sorted.data', 'timeoutSecs': 60, 'header': 0, }
+scoreDS1 = {'bucket': 'home-0xdiag-datasets', 'pathname': 'standard/covtype.shuffled.10pct.sorted.data', 'timeoutSecs': 60, 'header': 0, }
+trainDS2 = {'bucket': 'home-0xdiag-datasets', 'pathname': 'standard/covtype.shuffled.90pct.data', 'timeoutSecs': 60, 'header': 0, }
+scoreDS2 = {'bucket': 'home-0xdiag-datasets', 'pathname': 'standard/covtype.shuffled.10pct.data', 'timeoutSecs': 60, 'header': 0, }
 if (__name__ == '__main__'):
     h2o.unit_main()

@@ -1,0 +1,33 @@
+{
+  for (  Histogram h : _instances) {
+    if (h._data != null) {
+      float[] data=h._data.clone();
+      float min=Float.MAX_VALUE, max=Float.MIN_VALUE;
+      for (int i=0; i < data.length; i++) {
+        max=Math.max(max,data[i]);
+        min=Math.min(min,data[i]);
+      }
+      int[] counts=new int[SLICES];
+      float inc=(max - min) / (SLICES - 1);
+      for (int i=0; i < data.length; i++)       counts[(int)Math.floor((data[i] - min) / inc)]++;
+      for (int i=0; i < SLICES; i++) {
+        Data<Float,Float> point=h._list.get(i);
+        point.setXValue(min + inc * i);
+        point.setYValue((float)counts[i] / data.length);
+      }
+    }
+  }
+  if (_auto.selectedProperty().get()) {
+    _executor.schedule(new Runnable(){
+      @Override public void run(){
+        Platform.runLater(new Runnable(){
+          @Override public void run(){
+            refresh();
+          }
+        }
+);
+      }
+    }
+,1000,TimeUnit.MILLISECONDS);
+  }
+}

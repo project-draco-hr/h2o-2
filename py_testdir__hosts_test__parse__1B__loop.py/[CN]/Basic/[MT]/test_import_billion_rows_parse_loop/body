@@ -1,17 +1,17 @@
 def test_import_billion_rows_parse_loop(self):
     print "Apparently we can't handle 1B rows .gzed"
     csvFilename = 'billion_rows.csv.gz'
-    importFolderPath = '/home/0xdiag/datasets/standard'
+    importFolderPath = 'standard'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
     trialMax = 3
     for tryHeap in [4, 16]:
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import folder,', "then loop parsing 'billion_rows.csv' to unique keys"
-        h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap)
+        h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=tryHeap)
         timeoutSecs = 800
         for trial in range(trialMax):
-            h2i.setupImportFolder(None, importFolderPath)
-            key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+            hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
             start = time.time()
-            parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, key2=key2, timeoutSecs=timeoutSecs, retryDelaySecs=4, pollTimeoutSecs=60)
+            parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=4, pollTimeoutSecs=60)
             elapsed = (time.time() - start)
             print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             print 'Deleting key in H2O so we get it from S3 (if ec2) or nfs again. ', 'Otherwise it would just parse the cached key.'

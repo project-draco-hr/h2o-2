@@ -1,10 +1,12 @@
 {
   try {
     if (arg._field.getType() == Key.class && value instanceof ValueArray)     value=((ValueArray)value)._key;
-    if (arg._field.getType() == Frame.class && value instanceof Key)     value=UKV.get((Key)value);
-    if (arg._field.getType() == int.class && value instanceof Long)     value=((Long)value).intValue();
-    if (arg._field.getType() == float.class && value instanceof Double)     value=((Double)value).floatValue();
-    if (value instanceof NumberSequence) {
+ else     if (arg._field.getType() == int.class && value instanceof Long)     value=((Long)value).intValue();
+ else     if (arg._field.getType() == float.class && value instanceof Double)     value=((Double)value).floatValue();
+ else     if (arg._field.getType() == Frame.class && value instanceof ValueArray)     value=((ValueArray)value).asFrame();
+ else     if (arg._field.getType() == Frame.class && value instanceof Key)     value=UKV.get((Key)value);
+ else     if (arg._field.getType() != Key.class && Freezable.class.isAssignableFrom(arg._field.getType()) && value instanceof Key)     value=UKV.get((Key)value);
+ else     if (value instanceof NumberSequence) {
       double[] ds=((NumberSequence)value)._arr;
       if (arg._field.getType() == int[].class) {
         int[] is=new int[ds.length];

@@ -1,0 +1,18 @@
+{
+  String cp="";
+  try {
+    int shared=new File(".").getCanonicalPath().length() + 1;
+    for (    String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
+      cp+=cp.length() != 0 ? ":" : "";
+      if (Boot._init.fromJar())       cp+=new File(s).getName();
+ else       cp+=new File(s).getCanonicalPath().substring(shared).replace('\\','/');
+    }
+  }
+ catch (  IOException e) {
+    throw Log.errRTExcept(e);
+  }
+  String command="cd " + Host.FOLDER + ";jdk/jre/bin/java -cp "+ cp;
+  for (  String s : javaArgs)   command+=" " + s;
+  for (  String s : nodeArgs)   command+=" " + s;
+  return command.replace("$","\\$");
+}

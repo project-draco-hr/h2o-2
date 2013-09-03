@@ -1,3 +1,8 @@
 {
-  this(ary,pm,true);
+  super(ary,pm);
+  StringBuilder sb=new StringBuilder('"' + ary._cols[0]._name + '"');
+  for (int i=1; i < ary._cols.length; ++i)   sb.append(',').append('"' + ary._cols[i]._name + '"');
+  sb.append('\n');
+  _currentLine=sb.toString().getBytes();
+  _numrows=1;
 }

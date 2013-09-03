@@ -1,3 +1,4 @@
 {
-  return Double.isNaN(_con) ? _vec._iNA : (long)_con;
+  if (Double.isNaN(_con))   throw new IllegalArgumentException("at8 but value is missing");
+  return (long)_con;
 }
