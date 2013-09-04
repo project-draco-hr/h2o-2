@@ -2,6 +2,7 @@
   DHistogram hs[]=u._hs;
   double bs=Double.MAX_VALUE;
   int idx=-1;
+  if (u._hs == null)   return idx;
   for (int i=0; i < hs.length; i++) {
     if (hs[i] == null || hs[i].nbins() <= 1)     continue;
     double s=hs[i].score();
