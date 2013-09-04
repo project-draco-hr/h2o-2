@@ -1,12 +1,3 @@
 {
-  if (Double.isNaN(_min)) {
-    RollupStats rs=new RollupStats().doAll(this);
-    _min=rs._min;
-    _max=rs._max;
-    _mean=rs._mean;
-    _sigma=rs._sigma;
-    _nas=rs._nas;
-    _byteSize=rs._size;
-  }
-  return _min;
+  return rollupStats()._min;
 }

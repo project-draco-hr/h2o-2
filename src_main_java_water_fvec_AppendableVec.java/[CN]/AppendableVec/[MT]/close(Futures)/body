@@ -17,8 +17,8 @@
     x+=_espc[i];
   }
   espc[nchunk]=x;
-  Vec vec=new Vec(_key,espc,!_hasFloat,_missingCnt);
-  vec._dtype=dtype();
+  Vec vec=new Vec(_key,espc);
+  if (shouldBeEnum())   vec._domain=new String[0];
   DKV.put(_key,vec,fs);
   return vec;
 }

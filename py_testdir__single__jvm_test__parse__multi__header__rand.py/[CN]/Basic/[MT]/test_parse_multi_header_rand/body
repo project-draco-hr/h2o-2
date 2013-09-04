@@ -2,7 +2,12 @@ def test_parse_multi_header_rand(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilename = 'syn_ints.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-    headerChoices = ['aA', 'aB', 'aC', 'aD', 'aE', 'aF', 'aG', 'aH', 'aI', 'tomas']
+    allowedLetters = 'abcdeABCDE01234[]'
+    headerChoices = []
+    for n in range(20):
+        l = random.randint(1, 64)
+        headerName = ''.join([random.choice(allowedLetters) for _ in range(l)])
+        headerChoices.append(headerName)
     tryList = [(1, 5, 9, 'cA', 60, 0), (1, 5, 25, 'cA', 60, 0)]
     for trial in range(50):
         (fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader) = random.choice(tryList)
@@ -27,7 +32,7 @@ def test_parse_multi_header_rand(self):
         print 'SEP_CHAR_GEN:', SEP_CHAR_GEN
         hh = ([random.choice(headerChoices) for h in range(colCount)] + ['output'])
         print hh
-        headerForHeader = SEP_CHAR_GEN.join(hh)
+        headerForHeader = ','.join(hh)
         hh = ([random.choice(headerChoices) for h in range(colCount)] + ['output'])
         headerForData = SEP_CHAR_GEN.join(hh)
         kwargs = {}
