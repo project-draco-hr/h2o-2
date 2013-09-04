@@ -5,7 +5,7 @@
   Matrix myGram=new Matrix(gram.getXX());
   SingularValueDecomposition mySVD=myGram.svd();
   double[] Sval=mySVD.getSingularValues();
-  int ncomp=Math.min(num_pc,Sval.length);
+  int ncomp=getNumPC(Sval,params._tol);
   double[] sdev=new double[ncomp];
   double totVar=0;
   for (int i=0; i < ncomp; i++) {
@@ -20,8 +20,7 @@
     eigVec[i]=eigV.getMatrix(0,nfeat - 1,i,i).getColumnPackedCopy();
     propVar[i]=Sval[i] / totVar;
   }
-  PCAParams params=new PCAParams(ncomp);
-  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,0,params);
+  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,0,ncomp,params);
   myModel.store();
   return myModel;
 }
