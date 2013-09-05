@@ -1,0 +1,5 @@
+def PCA(self, data_key, timeoutSecs=600, **kwargs):
+    params_dict = {'destination_key': None, 'key': None, 'ignore': None, 'tolerance': None, 'standardize': None, }
+    params_dict.update(kwargs)
+    a = self.__do_json_request('PCA.json', timeout=timeoutSecs, params=params_dict)
+    return a
