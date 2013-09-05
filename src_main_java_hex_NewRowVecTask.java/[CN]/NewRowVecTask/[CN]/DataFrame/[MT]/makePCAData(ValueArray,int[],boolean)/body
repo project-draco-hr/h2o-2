@@ -1,0 +1,7 @@
+{
+  for (int i=0; i < colIds.length - 1; ++i) {
+    int c=colIds[i];
+    if (ary._cols[c]._domain != null)     throw new RuntimeException("categorical columns can not be used with PCA!");
+  }
+  return new DataFrame(ary,colIds,standardize);
+}
