@@ -1,0 +1,19 @@
+def test_GBM_mnist(self):
+    importFolderPath = 'mnist'
+    csvFilename = 'train.csv.gz'
+    timeoutSecs = 1800
+    trialStart = time.time()
+    trainKey = ((csvFilename + '_') + '.hex')
+    start = time.time()
+    parseResult = h2i.import_parse(bucket='smalldata', path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
+    elapsed = (time.time() - start)
+    print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+    print 'parse result:', parseResult['destination_key']
+    params = {'destination_key': 'GBMKEY', 'learn_rate': 0.1, 'ntrees': 10, 'max_depth': 8, 'min_rows': 1, 'vresponse': 784, }
+    kwargs = params.copy()
+    timeoutSecs = 1800
+    start = time.time()
+    node = h2o.nodes[0]
+    GBMResult = node.GBM(data_key=trainKey, **kwargs)
+    elapsed = (time.time() - start)
+    print 'GBM completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
