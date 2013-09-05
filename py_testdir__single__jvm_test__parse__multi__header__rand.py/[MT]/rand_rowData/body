@@ -1,7 +1,13 @@
 def rand_rowData(colCount, sepChar):
-    rowData = [random.randint(0, 7) for i in range(colCount)]
+    if (colCount <= 3):
+        raise Exception('Test expects desired colCount to be 3 or more', colCount)
+    randomReal = ('%0.2f' % (random.random() * float(random.randint(1, 1000))))
+    randomEnum = random.choice(['hello', 'there', 'how', 'are', 'you'])
+    rowData = ([randomReal, randomEnum] + [random.randint(0, 7) for i in range((colCount - 2))])
     rowData1 = sepChar.join(map(str, rowData))
-    rowData = [random.randint(0, 7) for i in range(colCount)]
+    randomReal = ('%0.2f' % (random.random() * float(random.randint(1, 10000))))
+    randomEnum = random.choice(['hello2', '2there', '2how', '2are', '2you'])
+    rowData = ([randomReal, randomEnum] + [random.randint(0, 7) for i in range((colCount - 2))])
     rowData2 = sepChar.join(map(str, rowData))
     r = [rowData1, rowData2]
     return r

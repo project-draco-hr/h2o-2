@@ -62,7 +62,7 @@
     return ((long)_min == _min) ? new C0LChunk((long)_min,_len) : new C0DChunk(_min,_len);
   }
   if (lemax - lemin == 1 && lemin == 0 && xmin == 0) {
-    int bpv=_naCnt > 0 ? 2 : 1;
+    int bpv=_strCnt + _naCnt > 0 ? 2 : 1;
     byte[] cbuf=bufB(CBSChunk.OFF,bpv);
     return new CBSChunk(cbuf,cbuf[0],cbuf[1]);
   }

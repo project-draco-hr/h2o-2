@@ -1,0 +1,24 @@
+def test_rf_kddcup_1999(self):
+    importFolderPath = 'standard'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    csvFilename = 'kddcup_1999.data.gz'
+    print (('Want to see that I get similar results when using H2O RF defaults (no params to json)' + 'compared to running with the parameters specified and matching the browser RF query defaults. ') + 'Also run the param for full scoring vs OOBE scoring.')
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=300)
+    print csvFilename, 'parse time:', parseResult['response']['time']
+    print "Parse result['destination_key']:", parseResult['destination_key']
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+    for trials in range(4):
+        print ('\n' + csvFilename), 'Trial #', trials
+        start = time.time()
+        kwargs = {'response_variable': 'classifier', 'ntree': 200, 'gini': 1, 'class_weights': None, 'stratify': 0, 'features': 7, 'ignore': None, 'sample': 67, 'bin_limit': 1024, 'depth': 2147483647, 'seed': 784834182943470027, 'parallel': 1, 'exclusive_split_limit': None, }
+        if (trials == 0):
+            kwargs = {}
+        elif (trials == 1):
+            kwargs['out_of_bag_error_estimate'] = None
+        elif (trials == 2):
+            kwargs['out_of_bag_error_estimate'] = 0
+        elif (trials == 3):
+            kwargs['out_of_bag_error_estimate'] = 1
+        start = time.time()
+        RFview = h2o_cmd.runRFOnly(parseResult=parseResult, trees=50, timeoutSecs=300, retryDelaySecs=1.0, **kwargs)
+        print 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'

@@ -1,4 +1,5 @@
 {
+  if (_vec != null)   return _vec;
   int nchunk=_espc.length;
   while (nchunk > 0 && _espc[nchunk - 1] == 0)   nchunk--;
   DKV.remove(chunkKey(nchunk));
@@ -17,8 +18,8 @@
     x+=_espc[i];
   }
   espc[nchunk]=x;
-  Vec vec=new Vec(_key,espc);
-  if (shouldBeEnum())   vec._domain=new String[0];
-  DKV.put(_key,vec,fs);
-  return vec;
+  _vec=new Vec(_key,espc);
+  if (shouldBeEnum())   _vec._domain=new String[0];
+  DKV.put(_key,_vec,fs);
+  return _vec;
 }
