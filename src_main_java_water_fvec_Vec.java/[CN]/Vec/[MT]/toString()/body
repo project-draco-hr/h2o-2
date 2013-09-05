@@ -1,5 +1,5 @@
 {
-  String s="[" + length() + (_rs == null ? "" : "," + _rs._min + "/"+ _rs._mean+ "/"+ _rs._max+ ", "+ PrettyPrint.bytes(_rs._size)+ ", {");
+  String s="[" + length() + (_naCnt < 0 ? "" : "," + _min + "/"+ _mean+ "/"+ _max+ ", "+ PrettyPrint.bytes(_size)+ ", {");
   int nc=nChunks();
   for (int i=0; i < nc; i++) {
     s+=chunkKey(i).home_node() + ":" + chunk2StartElem(i)+ ":";
