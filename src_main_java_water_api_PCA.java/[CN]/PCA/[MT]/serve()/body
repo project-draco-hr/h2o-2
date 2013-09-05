@@ -4,9 +4,7 @@
     Key dest=_dest.value();
     ValueArray ary=_key.value();
     PCAParams pcaParams=getPCAParams();
-    int[] cols=new int[ary._cols.length];
-    for (int i=0; i < cols.length; i++)     cols[i]=i;
-    DataFrame data=DataFrame.makePCAData(ary,cols,true);
+    DataFrame data=DataFrame.makePCAData(ary,createColumns(ary),_standardize.value());
     PCAJob job=DPCA.startPCAJob(dest,data,pcaParams);
     j.addProperty(JOB,job.self().toString());
     j.addProperty(DEST_KEY,job.dest().toString());

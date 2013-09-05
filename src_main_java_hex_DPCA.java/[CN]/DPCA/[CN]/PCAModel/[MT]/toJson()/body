@@ -13,7 +13,7 @@
   res.add("stdDev",sdev);
   res.add("propVar",prop);
   JsonArray eigvec=new JsonArray();
-  for (int i=0; i < _pcaParams._num_pc; i++) {
+  for (int i=0; i < _eigVec.length; i++) {
     JsonObject vec=new JsonObject();
     for (int j=0; j < _eigVec[i].length; j++)     vec.addProperty(_va._cols[j]._name,_eigVec[i][j]);
     eigvec.add(vec);
