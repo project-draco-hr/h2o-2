@@ -26,7 +26,7 @@ case NONE:
         Vec bvs[]=Arrays.copyOf(_vecs,_vecs.length + 1,Vec[].class);
         bvs[bvs.length - 1]=vec;
         DParse dp=new DParse(localSetup).doAll(bvs);
-        for (int i=0; i < _vecs.length; i++)         _vecs[i]=bvs[i];
+        for (int i=0; i < _vecs.length; i++)         _vecs[i]=dp.vecs(i);
       }
  else {
         SVMLightDParse sdp=new SVMLightDParse().doAll(vec);
