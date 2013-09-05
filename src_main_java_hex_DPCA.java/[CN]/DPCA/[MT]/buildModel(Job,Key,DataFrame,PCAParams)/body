@@ -3,6 +3,7 @@
   GramMatrixFunc gramF=new GramMatrixFunc(data,new GLMParams(Family.gaussian),null);
   Gram gram=gramF.apply(job,data);
   Matrix myGram=new Matrix(gram.getXX());
+  int nfeat=myGram.getRowDimension();
   SingularValueDecomposition mySVD=myGram.svd();
   double[] Sval=mySVD.getSingularValues();
   int ncomp=getNumPC(Sval,params._tol);
@@ -13,11 +14,9 @@
     totVar+=Sval[i];
   }
   Matrix eigV=mySVD.getV();
-  int nfeat=eigV.getRowDimension();
-  double[][] eigVec=new double[ncomp][nfeat];
+  double[][] eigVec=eigV.getMatrix(0,nfeat - 1,0,ncomp - 1).transpose().getArray();
   double[] propVar=new double[ncomp];
   for (int i=0; i < ncomp; i++) {
-    eigVec[i]=eigV.getMatrix(0,nfeat - 1,i,i).getColumnPackedCopy();
     propVar[i]=Sval[i] / totVar;
   }
   PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,0,ncomp,params);
