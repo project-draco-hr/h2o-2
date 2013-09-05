@@ -57,5 +57,6 @@
     UKV.remove(val._key);
     return Response.error(((Job.Fail)f)._message);
   }
+  if (f instanceof GBMModel)   return GBMModelView.redirect(this,key);
   return Response.error("No idea how to display a " + f.getClass());
 }
