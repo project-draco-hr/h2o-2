@@ -3,7 +3,11 @@
   int[] res=new int[va._cols.length];
   int selected=0;
   for (int i=0; i < va._cols.length; ++i) {
-    if (va._cols[i]._domain != null)     res[selected++]=i;
+    if (va._cols[i]._domain != null) {
+      res[selected++]=i;
+      if (_nonNumColumns.get() == null)       _nonNumColumns.set(new TreeSet<String>());
+      _nonNumColumns.get().add(Objects.firstNonNull(va._cols[i]._name,String.valueOf(i)));
+    }
   }
   return Arrays.copyOfRange(res,0,selected);
 }

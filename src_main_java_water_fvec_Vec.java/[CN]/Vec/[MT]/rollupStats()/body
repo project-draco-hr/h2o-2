@@ -1,5 +1,14 @@
 {
-  if (_rs != null)   return _rs;
+  if (_naCnt >= 0)   return this;
   if (_activeWrites)   throw new IllegalArgumentException("Cannot ask for roll-up stats while the vector is being actively written.");
-  return (_rs=new RollupStats().doAll(this));
+  RollupStats rs=new RollupStats().doAll(this);
+  _min=rs._min;
+  _max=rs._max;
+  _mean=rs._mean;
+  _sigma=rs._sigma;
+  _rows=rs._rows;
+  _size=rs._size;
+  _isInt=rs._isInt;
+  _naCnt=rs._naCnt;
+  return this;
 }
