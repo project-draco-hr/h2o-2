@@ -23,16 +23,40 @@
     _systemLoader=(URLClassLoader)getSystemClassLoader();
     _addUrl=URLClassLoader.class.getDeclaredMethod("addURL",URL.class);
     _addUrl.setAccessible(true);
-    String sroot=System.getProperty("java.io.tmpdir");
-    for (int i=0; i < args.length; i++)     if (args[i].startsWith("--ice_root="))     sroot=args[i].substring(11);
- else     if (args[i].startsWith("-ice_root="))     sroot=args[i].substring(10);
- else     if ((args[i].equals("--ice_root") || args[i].startsWith("-ice_root")) && i < args.length - 1)     sroot=args[i + 1];
-    File tmproot=new File(sroot);
-    if (!tmproot.mkdirs() && !tmproot.isDirectory())     throw new IOException("Unable to create ice root: " + tmproot.getAbsolutePath());
-    File dir=File.createTempFile("h2o-temp-","",tmproot);
-    if (!dir.delete())     throw new IOException("Failed to remove tmp file: " + dir.getAbsolutePath());
+    String tmproottmpdir;
+{
+      String ice_root;
+{
+        ice_root=H2O.DEFAULT_ICE_ROOT();
+        for (int i=0; i < args.length; i++)         if (args[i].startsWith("--ice_root="))         ice_root=args[i].substring(11);
+ else         if (args[i].startsWith("-ice_root="))         ice_root=args[i].substring(10);
+ else         if ((args[i].equals("--ice_root") || args[i].equals("-ice_root")) && (i < args.length - 1))         ice_root=args[i + 1];
+      }
+      File tmproot=new File(ice_root);
+      if (!tmproot.mkdirs() && !tmproot.isDirectory())       throw new IOException("Unable to create ice root: " + tmproot.getAbsolutePath());
+      long now=System.currentTimeMillis();
+      String pid="unknown";
+      try {
+        String s=ManagementFactory.getRuntimeMXBean().getName();
+        Pattern p=Pattern.compile("([0-9]*).*");
+        Matcher m=p.matcher(s);
+        boolean b=m.matches();
+        if (b == true) {
+          pid=m.group(1);
+        }
+      }
+ catch (      Exception _) {
+      }
+      tmproottmpdir=tmproot + File.separator + "h2o-temp-"+ now+ "-"+ pid;
+    }
+    File dir=new File(tmproottmpdir);
+    if (dir.exists()) {
+      if (!dir.delete())       throw new IOException("Failed to remove tmp file: " + dir.getAbsolutePath());
+    }
     if (!dir.mkdir())     throw new IOException("Failed to create tmp dir: " + dir.getAbsolutePath());
-    dir.deleteOnExit();
+    DeleteDirHandler deleteDirHandler=new DeleteDirHandler();
+    deleteDirHandler.setDir(dir.toString());
+    Runtime.getRuntime().addShutdownHook(deleteDirHandler);
     _parentDir=dir;
     Log.debug("Extracting jar into " + _parentDir);
     extractInternalFiles();
