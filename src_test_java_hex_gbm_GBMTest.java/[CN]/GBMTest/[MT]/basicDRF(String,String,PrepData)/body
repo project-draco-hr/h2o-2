@@ -11,14 +11,16 @@
     drf.vresponse=prep.prep(drf.source);
     drf.ntrees=5;
     drf.max_depth=50;
+    drf.min_rows=1;
     drf.mtries=-1;
     drf.seed=(1L << 32) | 2;
     drf.serve();
+    drf.get();
   }
   finally {
     UKV.remove(dest);
     if (drf != null) {
-      drf.source.remove();
+      UKV.remove(drf.dest());
       UKV.remove(drf.vresponse._key);
       drf.remove();
     }

@@ -3,7 +3,10 @@
     if (fs == null)     continue;
     float sum=0;
     for (    float f : fs)     sum+=f;
-    if (!(-0.00001 < sum && sum < 0.00001))     return false;
+    if (!(-0.0001 < sum && sum < 0.0001)) {
+      System.out.println("crap distro: " + Arrays.toString(fs) + "="+ sum);
+      return false;
+    }
   }
   return true;
 }

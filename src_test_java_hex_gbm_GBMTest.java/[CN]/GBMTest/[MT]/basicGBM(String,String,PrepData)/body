@@ -14,11 +14,12 @@
     gbm.learn_rate=0.1f;
     gbm.min_rows=1;
     gbm.serve();
+    gbm.get();
   }
   finally {
     UKV.remove(dest);
     if (gbm != null) {
-      gbm.source.remove();
+      UKV.remove(gbm.dest());
       UKV.remove(gbm.vresponse._key);
       gbm.remove();
     }
