@@ -6,8 +6,12 @@
   for (int i=0; i < m._num_pc; i++)   sb.append("<th>").append("PC" + i).append("</th>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
-  sb.append("<td>").append("&sigma;").append("</td>");
+  sb.append("<td>").append("Std Dev").append("</td>");
   for (int c=0; c < m._sdev.length; c++)   sb.append("<td>").append(ElementBuilder.format(m._sdev[c])).append("</td>");
+  sb.append("</tr>");
+  sb.append("<tr class='warning'>");
+  sb.append("<td>").append("Prop Var").append("</td>");
+  for (int c=0; c < m._propVar.length; c++)   sb.append("<td>").append(ElementBuilder.format(m._propVar[c])).append("</td>");
   sb.append("</tr>");
   for (int r=0; r < m._va._cols.length; r++) {
     sb.append("<tr>");
