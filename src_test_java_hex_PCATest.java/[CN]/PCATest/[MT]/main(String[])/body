@@ -15,7 +15,7 @@
   DataFrame df=DataFrame.makePCAData(va,cols,true);
   double tol=0.25;
   Key kdst=Key.make("prostate.pca");
-  JsonObject resPCA=DPCA.buildModel(null,kdst,df,new PCAParams(tol)).toJson();
+  JsonObject resPCA=DPCA.buildModel(null,kdst,df,new PCAParams(tol,true)).toJson();
   System.out.println(resPCA.toString());
   UKV.remove(ksrc);
   System.out.println("DONE!");
