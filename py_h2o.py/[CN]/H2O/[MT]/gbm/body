@@ -1,4 +1,4 @@
-def gbm(self, data_key, timeoutSecs=600, **kwargs):
+def gbm(self, data_key, timeoutSecs=600, retryDelaySecs=50, initialDelaySecs=100, pollTimeoutSecs=180, **kwargs):
     params_dict = {'destination_key': None, 'source': data_key, 'learn_rate': None, 'ntrees': None, 'max_depth': None, 'min_rows': None, 'vresponse': None, }
     params_dict.update(kwargs)
     a = self.__do_json_request('GBM.json', timeout=timeoutSecs, params=params_dict)
