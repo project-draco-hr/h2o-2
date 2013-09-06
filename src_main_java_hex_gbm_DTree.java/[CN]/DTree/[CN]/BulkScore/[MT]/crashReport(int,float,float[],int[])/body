@@ -1,0 +1,11 @@
+{
+  String s="Expect predictions to be a probability distribution but found " + Arrays.toString(pred) + "="+ sum+ ", scoring row "+ row+ "\n";
+  for (int t=0; t < nids.length; t++) {
+    if (nids[t] == -1)     s+="Skipping tree " + t + "\n";
+ else {
+      DecidedNode dn=_trees[t].decided(nids[t]);
+      s+="Tree " + t + " = "+ dn+ "\n";
+    }
+  }
+  return s;
+}

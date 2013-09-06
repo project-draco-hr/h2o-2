@@ -7,8 +7,9 @@
     for (int t=0; t < _trees.length; t++)     rands[t]=_trees[t].rngForChunk(ys.cidx());
   }
   float pred[]=new float[_nclass];
+  int nids[]=new int[_trees.length];
   for (int i=0; i < ys._len; i++) {
-    float err=score0(chks,i,(float)(ys.at0(i) - _ymin),pred,rands);
+    float err=score0(chks,i,(float)(ys.at0(i) - _ymin),pred,nids,rands);
     _sum+=err * err;
   }
 }
