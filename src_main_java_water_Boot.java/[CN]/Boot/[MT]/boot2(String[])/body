@@ -54,9 +54,7 @@
       if (!dir.delete())       throw new IOException("Failed to remove tmp file: " + dir.getAbsolutePath());
     }
     if (!dir.mkdir())     throw new IOException("Failed to create tmp dir: " + dir.getAbsolutePath());
-    DeleteDirHandler deleteDirHandler=new DeleteDirHandler();
-    deleteDirHandler.setDir(dir.toString());
-    Runtime.getRuntime().addShutdownHook(deleteDirHandler);
+    Runtime.getRuntime().addShutdownHook(new DeleteDirHandler(dir.toString()));
     _parentDir=dir;
     Log.debug("Extracting jar into " + _parentDir);
     extractInternalFiles();
