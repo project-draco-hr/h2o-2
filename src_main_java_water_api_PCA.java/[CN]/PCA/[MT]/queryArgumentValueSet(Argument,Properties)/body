@@ -1,0 +1,8 @@
+{
+  if (arg == _ignore) {
+    int[] ii=_ignore.value();
+    if (ii != null && ii.length >= _key.value()._cols.length)     throw new IllegalArgumentException("Cannot ignore all columns");
+    int numIgnore=ii == null ? 0 : ii.length;
+    if (_key.value() != null && _key.value()._cols.length - numIgnore > _key.value()._numrows - 1)     throw new IllegalArgumentException("Cannot have more columns than degrees of freedom = " + String.valueOf(_key.value()._numrows - 1));
+  }
+}
