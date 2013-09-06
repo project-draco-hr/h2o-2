@@ -15,3 +15,6 @@ def test_PCA_UCIwine(self):
     PCAResult = node.pca(data_key=trainKey, **kwargs)
     elapsed = (time.time() - start)
     print 'PCA completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+    h2j.pollWaitJobs(pattern='python_PCA_key')
+    h2o_pca.simpleCheckPCA(self, PCAResult)
+    h2o_pca.resultsCheckPCA(self, PCAResult)
