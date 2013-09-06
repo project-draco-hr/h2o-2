@@ -26,7 +26,7 @@ def test_RF_mnist_both(self):
         print 'Use multi-file parse to grab both the mnist_testing.csv.gz and mnist_training.csv.gz for training'
         trainKey2 = (((trainCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=((importFolderPath + '/') + trainCsvFilename), hex_key=trainKey2, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=((importFolderPath + '/') + parsePattern), hex_key=trainKey2, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
