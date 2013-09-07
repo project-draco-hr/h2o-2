@@ -9,8 +9,5 @@ def __init__(self, *args, **kwargs):
         logPrefix = ('local-h2o-' + str(self.node_id))
     else:
         logPrefix = 'local-h2o'
-    if self.fake_cloud:
-        self.ps = None
-    else:
-        spawn = spawn_cmd(logPrefix, cmd=self.get_args(), capture_output=self.capture_output)
-        self.ps = spawn[0]
+    spawn = spawn_cmd(logPrefix, cmd=self.get_args(), capture_output=self.capture_output)
+    self.ps = spawn[0]

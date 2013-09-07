@@ -1,8 +1,4 @@
 def check_sandbox_for_errors(sandbox_ignore_errors=False):
-    if nodes:
-        if nodes[0].fake_cloud:
-            print "fake_cloud. So check_sandbox_for_errors didn't check any stdout/stderr from h2o"
-            return
     if (not os.path.exists(LOG_DIR)):
         return
     if (nodes and nodes[0].sandbox_error_report()):
