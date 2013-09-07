@@ -1,4 +1,4 @@
-def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, fake_cloud=False, conservative=False, **kwargs):
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, fake_cloud=False, conservative=False, create_json=False, **kwargs):
     clean_sandbox()
     check_h2o_version()
     if kwargs.setdefault('enable_benchmark_log', False):
@@ -53,4 +53,8 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
         raise
     nodes[:] = nodeList
     print len(nodeList), 'total jvms in H2O cloud'
+    if create_json:
+        p = h2o_util.json_repr(nodes)
+        with open('h2o-nodes.json', 'w+') as f:
+            f.write(json.dumps(p, indent=4))
     return nodeList

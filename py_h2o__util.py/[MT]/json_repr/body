@@ -1,0 +1,22 @@
+def json_repr(obj):
+    'Represent instance of a class as JSON.\n    Arguments:\n    obj -- any object\n    Return:\n    String that reprent JSON-encoded object.\n    '
+
+    def serialize(obj):
+        "Recursively walk object's hierarchy."
+        if isinstance(obj, (bool, int, long, float, basestring)):
+            return obj
+        elif isinstance(obj, dict):
+            obj = obj.copy()
+            for key in obj:
+                obj[key] = serialize(obj[key])
+            return obj
+        elif isinstance(obj, list):
+            return [serialize(item) for item in obj]
+        elif isinstance(obj, tuple):
+            return tuple(serialize([item for item in obj]))
+        elif hasattr(obj, '__dict__'):
+            return serialize(obj.__dict__)
+        else:
+            return repr(obj)
+    a = serialize(obj)
+    return a
