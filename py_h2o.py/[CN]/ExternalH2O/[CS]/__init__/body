@@ -1,4 +1,6 @@
 def __init__(self, nodeState):
     for (k, v) in nodeState.iteritems():
         print 'init:', k, v
+        if (v == 'None'):
+            v = None
         setattr(self, k, v)

@@ -1,9 +1,14 @@
 def build_cloud_with_json(h2o_nodes_json='h2o-nodes.json'):
+    print 'This only makes sense if h2o is running as defined by', h2o_nodes_json
+    print "For now, assuming it's a cloud on this machine, and here's info on h2o processes running here"
+    print 'No output means no h2o here! Some other info about stuff on the system is printed first though.'
+    import h2o_os_util
+    h2o_os_util.show_h2o_processes()
     with open(h2o_nodes_json, 'rb') as f:
         nodeStateList = json.load(f)
     nodeList = []
     for nodeState in nodeStateList:
-        print 'Cloning state for node', nodeState['node_id'], 'from', h2o_nodes_json
+        print '\nCloning state for node', nodeState['node_id'], 'from', h2o_nodes_json
         newNode = ExternalH2O(nodeState)
         nodeList.append(newNode)
     print len(nodeList), 'total nodes in H2O cloud state ingested from json'

@@ -24,7 +24,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                 protocol = 's3n'
             print '\n', tryHeap, 'GB heap,', h2oPerNode, 'jvm per host, import', protocol, 'then parse'
             h2o_hosts.build_cloud_with_hosts(h2oPerNode, java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
-            h2o.nodes[0].sandbox_ignore_errors = True
+            h2o.nodes[0].sandboxIgnoreErrors = True
             for trial in range(trialMax):
                 for csvFolder in csvFolderList:
                     if USE_S3:

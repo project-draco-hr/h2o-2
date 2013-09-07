@@ -1,4 +1,4 @@
-def check_sandbox_for_errors(sandbox_ignore_errors=False):
+def check_sandbox_for_errors(sandboxIgnoreErrors=False, cloudShutdownIsError=False):
     if (not os.path.exists(LOG_DIR)):
         return
     if (nodes and nodes[0].sandbox_error_report()):
@@ -7,7 +7,10 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
     for filename in os.listdir(LOG_DIR):
         if re.search('stdout|stderr', filename):
             sandFile = open(((LOG_DIR + '/') + filename), 'r')
-            regex1 = re.compile('found multiple|exception|error|ERRR|assert|killing|killed|required ports', re.IGNORECASE)
+            regex1String = 'found multiple|exception|error|ERRR|assert|killing|killed|required ports'
+            if cloudShutdownIsError:
+                regex1String += '|shutdown command'
+            regex1 = re.compile(regex1String, re.IGNORECASE)
             regex2 = re.compile('Caused', re.IGNORECASE)
             regex3 = re.compile('warn|info|TCP', re.IGNORECASE)
             printing = 0
@@ -45,7 +48,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
             emsg2 = ''.join(errLines)
             if nodes:
                 nodes[0].sandbox_error_report(True)
-            if (sandbox_ignore_errors or (nodes and nodes[0].sandbox_ignore_errors)):
+            if (sandboxIgnoreErrors or (nodes and nodes[0].sandbox_ignore_errors)):
                 pass
             else:
                 raise Exception(((python_test_name + emsg1) + emsg2))
