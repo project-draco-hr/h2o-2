@@ -12,17 +12,15 @@
   if (d > _maxs[b])   _maxs[b]=d;
   for (int c=0; c < _nclass; c++) {
     Chunk chk=chks[ychk + c];
+    float y;
     if (chk instanceof C4FChunk) {
-      float y=(float)((C4FChunk)chk).at0(row);
-      float oldM=Ms[c];
-      float newM=Ms[c]=oldM + (y - oldM) / k;
-      Ss[c]+=(y - oldM) * (y - newM);
+      y=(float)((C4FChunk)chk).at0(row);
     }
  else {
-      float y=(float)chk.at0(row);
-      float oldM=Ms[c];
-      float newM=Ms[c]=oldM + (y - oldM) / k;
-      Ss[c]+=(y - oldM) * (y - newM);
+      y=(float)chk.at0(row);
     }
+    float oldM=Ms[c];
+    float newM=Ms[c]=oldM + (y - oldM) / k;
+    Ss[c]+=(y - oldM) * (y - newM);
   }
 }
