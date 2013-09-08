@@ -1,4 +1,6 @@
 def test_build_for_clone(self):
+    elapsed = (time.time() - start)
+    print ('\n%0.2f seconds to get here from start' % elapsed)
     maxTime = (4 * 3600)
     totalTime = 0
     incrTime = 60
@@ -10,9 +12,10 @@ def test_build_for_clone(self):
     while (totalTime < maxTime):
         h2o.sleep(incrTime)
         totalTime += incrTime
+        h2o.verify_cloud_size(timeoutSecs=120)
         print 'Checking sandbox log files'
         h2o.check_sandbox_for_errors(cloudShutdownIsError=True)
-    start = time.time()
+    start2 = time.time()
     h2i.delete_keys_at_all_nodes()
-    elapsed = (time.time() - start)
+    elapsed = (time.time() - start2)
     print 'delete_keys_at_all_nodes(): took', elapsed, 'secs'
