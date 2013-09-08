@@ -17,5 +17,5 @@ def test_B_hdfs_files(self):
         print 'parse result:', parseResult['destination_key']
         print ('\n' + csvFilename)
         start = time.time()
-        RFview = h2o_cmd.runRFOnly(trees=1, parseResult=parseResult, timeoutSecs=2000, modelKey='rfmodel.hex')
+        RFview = h2o_cmd.runRF(trees=1, parseResult=parseResult, timeoutSecs=2000, modelKey='rfmodel.hex')
         e = h2o.nodes[0].export_hdfs(source_key='rfmodel.hex', path='/datasets/rfmodel.hex')

@@ -25,7 +25,7 @@ def test_GLM_many_cols_enum(self):
         y = colCount
         kwargs = {'y': y, 'max_iter': 2, 'case': 1, 'case_mode': '=', 'family': 'binomial', 'lambda': 0.0001, 'alpha': 0.6, 'weight': 1.0, 'thresholds': 0.5, 'n_folds': 1, 'beta_epsilon': 0.0001, }
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         h2o.check_sandbox_for_errors()
         print 'glm end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
