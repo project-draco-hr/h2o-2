@@ -1,4 +1,5 @@
 def test_B_c1_rel_long(self):
+    h2o.setup_benchmark_log()
     avgMichalSize = 116561140
     bucket = 'home-0xdiag-datasets'
     importFolderPath = 'more1_1200_link'
@@ -6,7 +7,8 @@ def test_B_c1_rel_long(self):
     csvFilenameList = [('*[3][0][0-9].dat.gz', 'file_10_A.dat.gz', (10 * avgMichalSize), 600)]
     tryHeap = 28
     DO_GLM = False
-    if h2o.nodes[0].enable_benchmark_log:
+    LOG_MACHINE_STATS = False
+    if LOG_MACHINE_STATS:
         benchmarkLogging = ['cpu', 'disk', 'network']
     else:
         benchmarkLogging = []
@@ -18,10 +20,9 @@ def test_B_c1_rel_long(self):
         importFullList = importResult['files']
         importFailList = importResult['fails']
         print '\n Problem if this is not empty: importFailList:', h2o.dump_json(importFailList)
-        if h2o.nodes[0].enable_benchmark_log:
-            h2o.cloudPerfH2O.change_logfile(csvFilename)
-            h2o.cloudPerfH2O.message('')
-            h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
+        h2o.cloudPerfH2O.change_logfile(csvFilename)
+        h2o.cloudPerfH2O.message('')
+        h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
         start = time.time()
         parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging)
         elapsed = (time.time() - start)
@@ -33,8 +34,7 @@ def test_B_c1_rel_long(self):
             fileMBS = ((totalBytes / 1000000.0) / elapsed)
             msg = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, csvFilepattern, csvFilename, fileMBS, elapsed)
             print msg
-            if h2o.nodes[0].enable_benchmark_log:
-                h2o.cloudPerfH2O.message(msg)
+            h2o.cloudPerfH2O.message(msg)
         if DO_GLM:
             x = range(542)
             for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, 378]:
@@ -48,6 +48,5 @@ def test_B_c1_rel_long(self):
             h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
             msg = '{:d} jvms, {:d}GB heap, {:s} {:s} GLM: {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, csvFilepattern, csvFilename, elapsed)
             print msg
-            if h2o.nodes[0].enable_benchmark_log:
-                h2o.cloudPerfH2O.message(msg)
+            h2o.cloudPerfH2O.message(msg)
         h2o_cmd.checkKeyDistribution()
