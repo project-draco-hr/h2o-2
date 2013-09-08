@@ -3,6 +3,8 @@ def build_cloud_with_json(h2o_nodes_json='h2o-nodes.json'):
     print "For now, assuming it's a cloud on this machine, and here's info on h2o processes running here"
     print 'No output means no h2o here! Some other info about stuff on the system is printed first though.'
     import h2o_os_util
+    if (not os.path.exists(h2o_nodes_json)):
+        raise Exception((("build_cloud_with_json: Can't find " + h2o_nodes_json) + ' file'))
     h2o_os_util.show_h2o_processes()
     with open(h2o_nodes_json, 'rb') as f:
         nodeStateList = json.load(f)
