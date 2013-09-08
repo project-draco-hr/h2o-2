@@ -1,7 +1,9 @@
 @classmethod
 def tearDownClass(cls):
     print 'tearDownClass'
-    start = time.time()
-    h2i.delete_keys_at_all_nodes()
-    elapsed = (time.time() - start)
-    print 'delete_keys_at_all_nodes(): took', elapsed, 'secs'
+    h2o.nodes[0].log_download()
+    if h2o.nodes[0].delete_keys_at_teardown:
+        start = time.time()
+        h2i.delete_keys_at_all_nodes()
+        elapsed = (time.time() - start)
+        print 'delete_keys_at_all_nodes(): took', elapsed, 'secs'

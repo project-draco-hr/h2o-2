@@ -2,8 +2,7 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
     clean_sandbox()
     check_h2o_version()
     if kwargs.setdefault('enable_benchmark_log', False):
-        global cloudPerfH2O
-        cloudPerfH2O = h2o_perf.PerfH2O(python_test_name)
+        setup_benchmark_log()
     ports_per_node = 2
     nodeList = []
     try:
