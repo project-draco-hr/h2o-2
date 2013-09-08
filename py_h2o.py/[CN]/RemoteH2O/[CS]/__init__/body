@@ -11,10 +11,6 @@ def __init__(self, host, *args, **kwargs):
         self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
     else:
         self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
-    if self.fake_cloud:
-        comment = ('Fake Remote on %s' % self.addr)
-        log(cmd, comment=comment)
-        return
     self.channel = host.open_channel()
     cmd = ' '.join(self.get_args())
     cmdList = ['cd /tmp']

@@ -1,0 +1,7 @@
+@classmethod
+def tearDownClass(cls):
+    print 'tearDownClass'
+    start = time.time()
+    h2i.delete_keys_at_all_nodes()
+    elapsed = (time.time() - start)
+    print 'delete_keys_at_all_nodes(): took', elapsed, 'secs'
