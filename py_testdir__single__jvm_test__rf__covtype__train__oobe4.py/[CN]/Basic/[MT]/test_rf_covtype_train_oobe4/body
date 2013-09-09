@@ -55,7 +55,9 @@ def test_rf_covtype_train_oobe4(self):
         kwargs['iterative_cm'] = 1
         kwargs['out_of_bag_error_estimate'] = 0
         rfv = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
-        h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfv, ntree=ntree)
+        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         fullScorePctRight = (100 * (1.0 - rfv['confusion_matrix']['classification_error']))
         self.assertAlmostEqual(fullScorePctRight, expectScorePctRightList[trial], msg=('Full: pct. right for scoring after %s pct. training not close enough %6.2f %6.2f' % ((trial * 10), fullScorePctRight, expectScorePctRightList[trial])), delta=1)
         actualScorePctRightList.append(fullScorePctRight)
