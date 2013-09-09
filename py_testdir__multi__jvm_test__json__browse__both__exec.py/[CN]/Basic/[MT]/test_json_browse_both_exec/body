@@ -20,7 +20,7 @@ def test_json_browse_both_exec(self):
             randNode = random.randint(0, (lenNodes - 1))
             print '\nexecExpr:', execExpr, 'on node', randNode
             start = time.time()
-            resultExec = h2o_cmd.runExecOnly(node=h2o.nodes[randNode], expression=execExpr, timeoutSecs=15)
+            resultExec = h2o_cmd.runExec(node=h2o.nodes[randNode], expression=execExpr, timeoutSecs=15)
             h2o.verboseprint(h2o.dump_json(resultExec))
             if (trial > 1):
                 inspectMe = random.choice(inspectList)

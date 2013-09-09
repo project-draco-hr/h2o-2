@@ -12,6 +12,6 @@ def test_GLMGrid_basic_benign(self):
     print 'y:', y
     kwargs = {'x': x, 'y': y, 'n_folds': 0, 'lambda': '1e-8:1e-2:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
     print "Not doing n_folds with benign. Fails with 'unable to solve?'"
-    gg = h2o_cmd.runGLMGridOnly(parseResult=parseResult, timeoutSecs=120, **kwargs)
+    gg = h2o_cmd.runGLMGrid(parseResult=parseResult, timeoutSecs=120, **kwargs)
     colNames = ['STR', 'OBS', 'AGMT', 'FNDX', 'HIGD', 'DEG', 'CHK', 'AGP1', 'AGMN', 'NLV', 'LIV', 'WT', 'AGLP', 'MST']
     h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)
