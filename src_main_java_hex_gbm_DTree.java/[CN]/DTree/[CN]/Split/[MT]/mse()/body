@@ -1,0 +1,10 @@
+{
+  if (_mses[0] == Double.MAX_VALUE)   return Double.MAX_VALUE;
+  double sum=0;
+  long rows=0;
+  for (int i=0; i < _mses.length; i++) {
+    sum+=_mses[i] * _nrows[i];
+    rows+=_nrows[i];
+  }
+  return sum / rows;
+}

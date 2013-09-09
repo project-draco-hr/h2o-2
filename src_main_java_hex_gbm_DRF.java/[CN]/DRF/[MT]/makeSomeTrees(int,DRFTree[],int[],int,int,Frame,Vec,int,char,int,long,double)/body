@@ -6,6 +6,7 @@
     for (int t=0; t < ntrees; t++) {
       final int tmax=trees[t]._len;
       final DTree tree=trees[t];
+      long sum=0;
       for (int i=leafs[t]; i < tmax; i++) {
         DHistogram hs[]=sbh.getFinalHisto(t,i);
         tree.undecided(i)._hs=hs;
