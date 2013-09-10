@@ -56,7 +56,12 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
     nodes[:] = nodeList
     print len(nodeList), 'total jvms in H2O cloud'
     if create_json:
-        p = h2o_util.json_repr(nodes)
+        p = ('python %s %s' % (python_test_name, pythonCmdLineArgs))
+        if config_json:
+            c = os.path.abspath(config_json)
+        else:
+            c = 'None'
+        q = {'cloud_start': {'time': str(datetime.datetime.now()), 'cwd': os.getcwd(), 'python_cmd_line': p, 'config_json': c, 'username': getpass.getuser(), 'ip': get_ip_address(), }, 'h2o_nodes': h2o_util.json_repr(nodes), }
         with open('h2o-nodes.json', 'w+') as f:
-            f.write(json.dumps(p, indent=4))
+            f.write(json.dumps(q, indent=4))
     return nodeList
