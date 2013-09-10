@@ -1,9 +1,11 @@
-def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, fake_cloud=False, conservative=False, **kwargs):
+def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, **kwargs):
+    if (clone_cloud_json or clone_cloud):
+        nodeList = build_cloud_with_json(h2o_nodes_json=(clone_cloud_json if clone_cloud_json else clone_cloud))
+        return nodeList
     clean_sandbox()
     check_h2o_version()
     if kwargs.setdefault('enable_benchmark_log', False):
-        global cloudPerfH2O
-        cloudPerfH2O = h2o_perf.PerfH2O(python_test_name)
+        setup_benchmark_log()
     ports_per_node = 2
     nodeList = []
     try:
@@ -53,4 +55,13 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
         raise
     nodes[:] = nodeList
     print len(nodeList), 'total jvms in H2O cloud'
+    if create_json:
+        p = ('python %s %s' % (python_test_name, pythonCmdLineArgs))
+        if config_json:
+            c = os.path.abspath(config_json)
+        else:
+            c = 'None'
+        q = {'cloud_start': {'time': str(datetime.datetime.now()), 'cwd': os.getcwd(), 'python_cmd_line': p, 'config_json': c, 'username': getpass.getuser(), 'ip': get_ip_address(), }, 'h2o_nodes': h2o_util.json_repr(nodes), }
+        with open('h2o-nodes.json', 'w+') as f:
+            f.write(json.dumps(q, indent=4))
     return nodeList

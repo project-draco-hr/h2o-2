@@ -13,7 +13,7 @@ def test_KMeansGrid_basic(self):
         for trial in range(3):
             kwargs = params.copy()
             start = time.time()
-            kmeans = h2o_cmd.runKMeansGridOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+            kmeans = h2o_cmd.runKMeansGrid(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
             elapsed = (time.time() - start)
             print 'kmeans grid end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)

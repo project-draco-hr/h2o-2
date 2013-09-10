@@ -8,7 +8,7 @@ def test_GLM_params_rand2_4082088627997819015(self):
         kwargs = params.copy()
         start = time.time()
         timeoutSecs = max(150, ((params['n_folds'] * 10) + (params['max_iter'] * 10)))
-        glm = h2o_cmd.runGLMOnly(timeoutSecs=timeoutSecs, parseResult=parseResult, **kwargs)
+        glm = h2o_cmd.runGLM(timeoutSecs=timeoutSecs, parseResult=parseResult, **kwargs)
         elapsed = (time.time() - start)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         h2o.check_sandbox_for_errors()

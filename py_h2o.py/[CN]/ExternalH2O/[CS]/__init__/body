@@ -1,0 +1,7 @@
+def __init__(self, nodeState):
+    for (k, v) in nodeState.iteritems():
+        verboseprint('init:', k, v)
+        if (v == 'None'):
+            v = None
+        setattr(self, k, v)
+    print 'Cloned', len(nodeState), 'things for a h2o node'

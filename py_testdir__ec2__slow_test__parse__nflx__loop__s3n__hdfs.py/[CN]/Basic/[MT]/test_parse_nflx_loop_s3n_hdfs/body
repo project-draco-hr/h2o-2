@@ -23,8 +23,8 @@ def test_parse_nflx_loop_s3n_hdfs(self):
             else:
                 protocol = 's3n'
             print '\n', tryHeap, 'GB heap,', h2oPerNode, 'jvm per host, import', protocol, 'then parse'
-            h2o_hosts.build_cloud_with_hosts(h2oPerNode, java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10, hdfs_name_node='10.78.14.235:9000', hdfs_version='0.20.2')
-            h2o.nodes[0].sandbox_ignore_errors = True
+            h2o_hosts.build_cloud_with_hosts(h2oPerNode, java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10)
+            h2o.nodes[0].sandboxIgnoreErrors = True
             for trial in range(trialMax):
                 for csvFolder in csvFolderList:
                     if USE_S3:
@@ -89,14 +89,14 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                         algo = 'GLM'
                         GLMkwargs = {'x': x, 'y': y, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
                         start = time.time()
-                        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
+                        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
                         elapsed = (time.time() - start)
                         h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)
                     else:
                         algo = 'GLMGrid'
                         GLMkwargs = {'x': x, 'y': y, 'case': 15, 'case_mode': '>', 'family': 'binomial', 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, 'lambda': '1e-4', 'alpha': '0,0.5', 'thresholds': '0.5', }
                         start = time.time()
-                        glm = h2o_cmd.runGLMGridOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
+                        glm = h2o_cmd.runGLMGrid(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging, **GLMkwargs)
                         elapsed = (time.time() - start)
                         h2o_glm.simpleCheckGLMGrid(self, glm, None, **GLMkwargs)
                     h2o.check_sandbox_for_errors()

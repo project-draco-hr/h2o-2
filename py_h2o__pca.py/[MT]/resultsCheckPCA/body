@@ -7,7 +7,7 @@ def resultsCheckPCA(self, pca, **kwargs):
     for (PC, propVar) in propVars.iteritems():
         sum_ -= propVar
     self.assertAlmostEqual(sum_, 0, msg='PropVar does not sum to 1.')
-    if ((pcaResult['PCAModel']['PCAParams']['tolerance'] != 0.0) or (pcaResult['PCAModel']['PCAParams']['standardize'] != 'true')):
+    if ((pcaResult['PCAModel']['PCAParams']['tolerance'] != 0.0) or (pcaResult['PCAModel']['PCAParams']['standardized'] != 'True')):
         return
     print 'Checking that sdevs^2 sums to number of variables'
     sdevs = pcaResult['PCAModel']['stdDev']
