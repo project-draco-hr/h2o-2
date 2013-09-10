@@ -8,7 +8,8 @@ def simpleCheckPCA(self, pca, **kwargs):
             if re.search(x, w):
                 raise Exception(w)
     destination_key = pca['destination_key']
-    pcaResult = h2o_cmd.runInspect(key=destination_key, **{'view': 100, })
+    pcaResult = h2o_cmd.runInspect(key=destination_key, view=100)
+    h2o.verboseprint('pcaResult Inspect:', h2o.dump_json(pcaResult))
     print 'Checking sdevs...'
     sdevs = pcaResult['PCAModel']['stdDev']
     for (PC, s) in sdevs.iteritems():

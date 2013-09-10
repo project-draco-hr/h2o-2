@@ -18,7 +18,9 @@
     p(sb,"var",varW).append(colPad);
   }
   sb.append('\n');
-  for (int i=0; i < DHistogram.BINS; i++) {
+  int nbins=0;
+  for (int j=0; j < ncols; j++)   if (_hs[j] != null && _hs[j].nbins() > nbins)   nbins=_hs[j].nbins();
+  for (int i=0; i < nbins; i++) {
     for (int j=0; j < ncols; j++) {
       DHistogram h=_hs[j];
       if (h == null)       continue;

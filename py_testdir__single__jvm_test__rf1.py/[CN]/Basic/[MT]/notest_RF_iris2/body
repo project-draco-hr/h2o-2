@@ -3,4 +3,4 @@ def notest_RF_iris2(self):
     timeoutSecs = 20
     csvPathname = 'iris/iris2.csv'
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
-    h2o_cmd.runRFOnly(parseResult=parseResult, trees=trees, timeoutSecs=timeoutSecs)
+    h2o_cmd.runRF(parseResult=parseResult, trees=trees, timeoutSecs=timeoutSecs)

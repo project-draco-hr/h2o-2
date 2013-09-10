@@ -1,7 +1,7 @@
 {
   for (int i=0; i < _nids.length; i++) {
     for (int d=0; d < depth; d++)     sb.append("  ");
-    (_col >= 0 ? sb.append(_tree._names[_col]).append(" < ").append(_bmin + _step * (1 + i)) : sb.append("init")).append(":").append(Arrays.toString(_pred[i])).append("\n");
+    (_col >= 0 ? sb.append(_tree._names[_col]).append(" < ").append(i == 0 ? _splat : "infinity") : sb.append("init")).append(":").append(Arrays.toString(_pred[i])).append("\n");
     if (_nids[i] >= 0)     _tree.node(_nids[i]).toString2(sb,depth + 1);
   }
   return sb;

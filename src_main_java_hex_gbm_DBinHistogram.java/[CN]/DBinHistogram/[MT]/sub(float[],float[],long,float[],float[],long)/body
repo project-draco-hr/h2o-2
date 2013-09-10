@@ -1,0 +1,10 @@
+{
+  if (Ms1 != null)   for (int c=0; c < _nclass; c++) {
+    float m0=Ms0[c], m1=Ms1[c];
+    float s0=Ss0[c], s1=Ss1[c];
+    float delta=m1 - m0;
+    Ms0[c]=(n0 * m0 - n1 * m1) / (n0 - n1);
+    Ss0[c]=s0 - s1 - delta * delta * n0* n1 / (n0 - n1);
+  }
+  return n0 - n1;
+}

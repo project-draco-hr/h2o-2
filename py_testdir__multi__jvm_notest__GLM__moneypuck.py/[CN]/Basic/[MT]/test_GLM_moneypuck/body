@@ -16,7 +16,7 @@ def test_GLM_moneypuck(self):
         if (1 == 0):
             kwargs.update({'alpha': 0, 'lambda': 0, })
             start = time.time()
-            glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+            glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
             print 'glm (L2) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
             column_names = glm['GLMModel']['column_names']
             print 'column_names[0]:', column_names[0]
@@ -24,11 +24,11 @@ def test_GLM_moneypuck(self):
             h2b.browseJsonHistoryAsUrlLastMatch('GLM')
         kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm (Elastic) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
         start = time.time()
-        glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm (L1) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
