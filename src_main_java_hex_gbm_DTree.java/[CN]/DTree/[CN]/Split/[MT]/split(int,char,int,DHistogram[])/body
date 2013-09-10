@@ -1,5 +1,6 @@
 {
-  if (_nrows[splat] <= min_rows)   return null;
+  if (_nrows[splat] < min_rows)   return null;
+  if (_nrows[splat] <= 1)   return null;
   if (_mses[splat] <= 1e-8)   return null;
   final char nclass=(char)_preds[0].length;
   int cnt=0;

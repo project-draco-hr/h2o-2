@@ -1,7 +1,8 @@
 {
-  basicDRF("./smalldata/iris/iris_wheader.csv","iris.hex",new PrepData(){
+  basicDRF("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
     Vec prep(    Frame fr){
-      return fr.remove("class");
+      for (      int ign : IGNS)       UKV.remove(fr.remove(Integer.toString(ign))._key);
+      return fr.remove(fr.numCols() - 1);
     }
   }
 );

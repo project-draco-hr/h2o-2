@@ -4,7 +4,7 @@
   if (hs == null)   return best;
   for (int i=0; i < hs.length; i++) {
     if (hs[i] == null || hs[i].nbins() <= 1)     continue;
-    DTree.Split s=hs[i].scoreMSE(i);
+    DTree.Split s=hs[i].scoreMSE(i,u._tree._names[i]);
     if (s.mse() < best.mse())     best=s;
     if (s.mse() <= 0)     break;
   }
