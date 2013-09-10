@@ -14,7 +14,7 @@
   }
   System.out.println("RF1 cols=" + Arrays.toString(cols));
   final Key modelKey=Key.make("model");
-  DRFJob result=hex.rf.DRF.execute(modelKey,cols,val,ntrees,depth,1024,statType,seed,true,null,-1,Sampling.Strategy.RANDOM,1.0f,null,1,0,false);
+  DRFJob result=hex.rf.DRF.execute(modelKey,cols,val,ntrees,depth,1024,statType,seed,true,null,-1,Sampling.Strategy.RANDOM,0.66667f,null,1,0,false);
   RFModel model=result.get();
   CMJob cmjob=ConfusionTask.make(model,val._key,cols[cols.length - 1],null,false);
   CMFinal cm=cmjob.get();
