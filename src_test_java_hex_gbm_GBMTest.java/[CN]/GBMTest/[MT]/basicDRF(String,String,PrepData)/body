@@ -18,6 +18,7 @@
     drf.seed=(1L << 32) | 2;
     drf.serve();
     drf.get();
+    System.out.println(new String(drf.writeJSON(new AutoBuffer()).buf()));
   }
   finally {
     UKV.remove(dest);
