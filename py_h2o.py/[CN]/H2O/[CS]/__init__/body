@@ -1,4 +1,4 @@
-def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar=False, use_debugger=None, classpath=None, use_hdfs=False, use_maprfs=False, hdfs_version=None, hdfs_name_node=None, hdfs_config=None, aws_credentials=None, use_flatfile=False, java_heap_GB=None, java_heap_MB=None, java_extra_args=None, use_home_for_ice=False, node_id=None, username=None, random_udp_drop=False, redirect_import_folder_to_s3_path=None, redirect_import_folder_to_s3n_path=None, disable_h2o_log=False, enable_benchmark_log=False, h2o_remote_buckets_root=None, delete_keys_at_teardown=False):
+def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, use_debugger=None, classpath=None, use_hdfs=False, use_maprfs=False, hdfs_version=None, hdfs_name_node=None, hdfs_config=None, aws_credentials=None, use_flatfile=False, java_heap_GB=None, java_heap_MB=None, java_extra_args=None, use_home_for_ice=False, node_id=None, username=None, random_udp_drop=False, redirect_import_folder_to_s3_path=None, redirect_import_folder_to_s3n_path=None, disable_h2o_log=False, enable_benchmark_log=False, h2o_remote_buckets_root=None, delete_keys_at_teardown=False):
     if use_hdfs:
         try:
             a = requests.get('http://192.168.1.176:80', timeout=1)
@@ -17,8 +17,6 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar
                 hdfs_version = '0.20.2'
     self.redirect_import_folder_to_s3_path = redirect_import_folder_to_s3_path
     self.redirect_import_folder_to_s3n_path = redirect_import_folder_to_s3n_path
-    if (use_debugger is None):
-        use_debugger = debugger
     self.aws_credentials = aws_credentials
     self.port = port
     if ipaddr:
@@ -29,7 +27,8 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, sigar
         self.http_addr = self.addr
     else:
         self.http_addr = get_ip_address()
-    self.sigar = sigar
+    if debugger:
+        use_debugger = True
     self.use_debugger = use_debugger
     self.classpath = classpath
     self.capture_output = capture_output
