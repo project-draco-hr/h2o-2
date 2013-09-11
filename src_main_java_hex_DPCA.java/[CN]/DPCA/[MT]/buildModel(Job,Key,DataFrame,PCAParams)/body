@@ -19,7 +19,7 @@
     propVar[i]=Sval[i] / totVar;
   }
   int ncomp=getNumPC(sdev,params._tol);
-  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,0,ncomp,params);
+  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,mySVD.rank(),0,ncomp,params);
   myModel.store();
   return myModel;
 }

@@ -1,10 +1,17 @@
 {
   try {
     JsonObject res=new JsonObject();
+    res.addProperty(RequestStatics.DEST_KEY,_destKey.value().toString());
     ValueArray ary=_dataKey.value();
     PCAModel m=_modelKey.value();
-    if (m._pcaParams._standardized)     PCAScoreTask.score(ary.asFrame(),m._eigVec,_destKey.value());
-    return Response.done(res);
+    int[] cols=new int[ary._cols.length];
+    for (int i=0; i < cols.length; i++)     cols[i]=i;
+    DataFrame temp=DataFrame.makePCAData(ary,cols,m._pcaParams._standardized);
+    Frame data=DPCA.StandardizeTask.standardize(temp);
+    PCAScoreTask.score(data,m._eigVec,_numPC.value(),_destKey.value());
+    JsonObject redir=new JsonObject();
+    redir.addProperty(KEY,_destKey.value().toString());
+    return Response.redirect(res,Inspect.class,redir);
   }
  catch (  Error e) {
     return Response.error(e.getMessage());
