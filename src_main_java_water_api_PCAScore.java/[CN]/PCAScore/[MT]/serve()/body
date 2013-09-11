@@ -1,0 +1,12 @@
+{
+  try {
+    JsonObject res=new JsonObject();
+    ValueArray ary=_dataKey.value();
+    PCAModel m=_modelKey.value();
+    if (m._pcaParams._standardized)     PCAScoreTask.score(ary.asFrame(),m._eigVec,_destKey.value());
+    return Response.done(res);
+  }
+ catch (  Error e) {
+    return Response.error(e.getMessage());
+  }
+}

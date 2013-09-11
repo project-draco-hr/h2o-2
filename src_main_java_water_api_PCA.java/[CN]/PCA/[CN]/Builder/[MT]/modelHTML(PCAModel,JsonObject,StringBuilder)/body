@@ -7,17 +7,17 @@
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Std Dev").append("</td>");
-  for (int c=0; c < m._sdev.length; c++)   sb.append("<td>").append(ElementBuilder.format(m._sdev[c])).append("</td>");
+  for (int c=0; c < m._num_pc; c++)   sb.append("<td>").append(ElementBuilder.format(m._sdev[c])).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Prop Var").append("</td>");
-  for (int c=0; c < m._propVar.length; c++)   sb.append("<td>").append(ElementBuilder.format(m._propVar[c])).append("</td>");
+  for (int c=0; c < m._num_pc; c++)   sb.append("<td>").append(ElementBuilder.format(m._propVar[c])).append("</td>");
   sb.append("</tr>");
   for (int r=0; r < m._va._cols.length; r++) {
     sb.append("<tr>");
     sb.append("<th>").append(m._va._cols[r]._name).append("</th>");
     for (int c=0; c < m._num_pc; c++) {
-      double e=m._eigVec[c][r];
+      double e=m._eigVec[r][c];
       sb.append("<td>").append(ElementBuilder.format(e)).append("</td>");
     }
     sb.append("</tr>");

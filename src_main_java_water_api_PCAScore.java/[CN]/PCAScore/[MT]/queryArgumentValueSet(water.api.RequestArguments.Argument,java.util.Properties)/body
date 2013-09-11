@@ -1,0 +1,10 @@
+{
+  if (arg == _dataKey) {
+    ValueArray va=_dataKey.value();
+    PCAModel model=_modelKey.value();
+    int colIds[]=model.columnMapping(va.colNames());
+    if (!Model.isCompatible(colIds)) {
+      for (int i=0; i < colIds.length; i++)       if (colIds[i] == -1)       throw new IllegalArgumentException("Incompatible dataset: " + va._key + " does not have column '"+ model._va._cols[i]._name+ "'");
+    }
+  }
+}
