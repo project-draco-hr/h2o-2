@@ -6,7 +6,7 @@
     long localChunks=localCKeys.length * ValueArray.CHUNK_SZ;
     long availMem=(long)(OVERHEAD_MAGIC * totalmem) - localChunks;
     if (availMem > 0) {
-      final ValueArray ary=UKV.get(_rfmodel._dataKey);
+      final ValueArray ary=UKV.get(_rfmodel.dataKey);
       int numkeys=Math.min((int)(availMem / ValueArray.CHUNK_SZ),(int)(ary.chunks() - localCKeys.length));
       Log.info(Sys.RANDF,"Avail. mem: " + PrettyPrint.bytes(availMem));
       Log.info(Sys.RANDF,"Can load keys: " + numkeys);

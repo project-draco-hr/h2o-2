@@ -52,7 +52,7 @@
   Response r;
   if (done) {
     r=jobDone(response);
-    r.addHeader("<div class='alert'>" + GeneratePredictionsPage.link(model._selfKey,"Predict!") + " </div>");
+    r.addHeader("<div class='alert'>" + GeneratePredictionsPage.link(model.selfKey,"Predict!") + " </div>");
   }
  else {
     r=Response.poll(response,finished,tasks);

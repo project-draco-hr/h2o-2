@@ -1,0 +1,14 @@
+{
+  Vec v=fr.anyVec().makeZero();
+  fr.add("predict",v);
+  new MRTask2(){
+    @Override public void map(    Chunk chks[]){
+      double tmp[]=new double[_names.length];
+      Chunk p=chks[chks.length - 1];
+      for (int i=0; i < p._len; i++)       p.set0(i,score0(chks,i,tmp));
+    }
+  }
+.doAll(fr);
+  fr.remove(fr.numCols() - 1);
+  return v;
+}

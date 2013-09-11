@@ -1,7 +1,7 @@
 {
   Timer t_inhale=new Timer();
   RFModel rfmodel=_drf._rfmodel;
-  final ValueArray ary=UKV.get(rfmodel._dataKey);
+  final ValueArray ary=UKV.get(rfmodel.dataKey);
   final int[] modelDataMap=rfmodel.columnMapping(ary.colNames());
   final int totalRows=getRowCount(ary,lkeys,rkeys);
   final DataAdapter dapt=new DataAdapter(ary,rfmodel,modelDataMap,totalRows,getChunkId(lkeys),_drf._params._seed,_drf._params._binLimit,_drf._params._classWt);

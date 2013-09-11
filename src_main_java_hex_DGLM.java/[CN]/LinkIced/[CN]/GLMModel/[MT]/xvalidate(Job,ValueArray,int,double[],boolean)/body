@@ -21,7 +21,7 @@
     }
   }
   if (job.cancelled())   throw new JobCancelledException();
-  GLMValidation res=new GLMValidation(_selfKey,tsk._models,ErrMetric.SUMC,thresholds,System.currentTimeMillis() - t1);
+  GLMValidation res=new GLMValidation(selfKey,tsk._models,ErrMetric.SUMC,thresholds,System.currentTimeMillis() - t1);
   if (_vals == null)   _vals=new GLMValidation[]{res};
  else {
     _vals=Arrays.copyOf(_vals,_vals.length + 1);

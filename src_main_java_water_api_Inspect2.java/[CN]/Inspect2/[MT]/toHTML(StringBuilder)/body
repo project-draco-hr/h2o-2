@@ -38,7 +38,7 @@
     sb.append("<td>").append("Size").append("</td>");
     for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(fr._vecs[i].byteSize())).append("</td>");
     sb.append("</tr>");
-    Vec c0=fr.firstReadable();
+    Vec c0=fr.anyVec();
     int N=c0.nChunks();
     for (int j=0; j < N; j++) {
       sb.append("<tr>");
