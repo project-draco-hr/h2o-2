@@ -4,7 +4,7 @@
   Value v=DKV.get(key);
   if (v == null)   throw new IllegalArgumentException("Key " + sk + " not found!");
   try {
-    return scoreModel(v.get(),colNames,row);
+    return scoreModel(v.get(),colNames,domains,row);
   }
  catch (  Throwable t) {
     Log.err(t);

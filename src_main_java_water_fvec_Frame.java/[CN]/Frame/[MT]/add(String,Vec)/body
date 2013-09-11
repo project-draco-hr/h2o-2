@@ -2,14 +2,6 @@
   final int len=_names.length;
   _names=Arrays.copyOf(_names,len + 1);
   _vecs=Arrays.copyOf(_vecs,len + 1);
-  if (_hasResponse) {
-    String nres=_names[len - 1];
-    Vec vres=_vecs[len - 1];
-    _names[len - 1]=name;
-    _vecs[len - 1]=vec;
-    name=nres;
-    vec=vres;
-  }
   _names[len]=name;
   _vecs[len]=vec;
 }
