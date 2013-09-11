@@ -9,7 +9,7 @@
  else {
       int d=(int)data[i];
       if (d == 0)       continue;
-      if (d > 0 && (idx+=d) < _colCatMap[i + 1])       p+=_beta[idx];
+      if (d > 0 && (idx+=d) <= _colCatMap[i + 1])       p+=_beta[idx - 1];
  else       p=Double.NaN;
     }
   }
