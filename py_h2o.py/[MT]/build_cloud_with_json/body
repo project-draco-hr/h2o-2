@@ -15,10 +15,24 @@ def build_cloud_with_json(h2o_nodes_json='h2o-nodes.json'):
         print ("Info on the how the cloud we're cloning was apparently started (info from %s)" % h2o_nodes_json)
         print cs['time']
         print cs['cwd']
+        print cs['python_test_name']
         print cs['python_cmd_line']
         print cs['config_json']
         print cs['username']
         print cs['ip']
+        build_cloud_rerun_sh = ((LOG_DIR + '/') + 'build_cloud_rerun.sh')
+        with open(build_cloud_rerun_sh, 'w') as f:
+            f.write('echo << ! > ./temp_for_build_cloud_rerun.sh\n')
+            f.write(("echo 'Rebuilding a cloud built with %s at %s by %s on %s in %s'\n" % (cs['python_test_name'], cs['time'], cs['username'], cs['ip'], cs['cwd'])))
+            f.write(('cd %s\n' % cs['cwd']))
+            if cs['config_json']:
+                f.write(('%s -cj %s\n' % (cs['python_cmd_line'], cs['config_json'])))
+            else:
+                f.write(('%s\n' % cs['python_cmd_line']))
+            f.write('!\n')
+            f.write(('ssh %s@%s < ./temp_for_build_cloud_rerun.sh\n' % (cs['username'], cs['ip'])))
+        t = os.stat(build_cloud_rerun_sh)
+        os.chmod(build_cloud_rerun_sh, (t.st_mode | stat.S_IEXEC))
         nodeStateList = cloneJson['h2o_nodes']
     nodeList = []
     for nodeState in nodeStateList:
