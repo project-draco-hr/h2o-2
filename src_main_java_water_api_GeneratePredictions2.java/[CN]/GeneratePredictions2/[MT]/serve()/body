@@ -1,0 +1,9 @@
+{
+  try {
+    return Inspect2.redirect(this,ScoreTask.score(model,data,prediction_key).toString());
+  }
+ catch (  Throwable t) {
+    Log.err(t);
+    return Response.error(t.getMessage());
+  }
+}
