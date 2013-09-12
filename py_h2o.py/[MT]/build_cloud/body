@@ -1,11 +1,11 @@
 def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, **kwargs):
-    log('#*********************************************************************')
-    log((('Starting new test: ' + python_test_name) + ' at build_cloud()'))
-    log('#*********************************************************************')
     if (clone_cloud_json or clone_cloud):
         nodeList = build_cloud_with_json(h2o_nodes_json=(clone_cloud_json if clone_cloud_json else clone_cloud))
         return nodeList
     clean_sandbox()
+    log('#*********************************************************************')
+    log((('Starting new test: ' + python_test_name) + ' at build_cloud()'))
+    log('#*********************************************************************')
     check_h2o_version()
     if kwargs.setdefault('enable_benchmark_log', False):
         setup_benchmark_log()
