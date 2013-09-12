@@ -1,0 +1,14 @@
+{
+  if (arg == _dataKey) {
+    ValueArray va=_dataKey.value();
+    PCAModel model=_modelKey.value();
+    int colIds[]=model == null ? null : model.columnMapping(va.colNames());
+    if (!Model.isCompatible(colIds)) {
+      for (int i=0; i < colIds.length; i++)       if (colIds[i] == -1)       throw new IllegalArgumentException("Incompatible dataset: " + va._key + " does not have column '"+ model._va._cols[i]._name+ "'");
+    }
+  }
+  if (arg == _numPC) {
+    PCAModel model=_modelKey.value();
+    if (model != null && model._eigVec[0].length < _numPC.value())     throw new IllegalArgumentException("Maximum number of principal components is " + model._eigVec[0].length);
+  }
+}
