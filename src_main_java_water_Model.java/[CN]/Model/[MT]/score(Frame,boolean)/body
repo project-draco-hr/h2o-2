@@ -1,6 +1,8 @@
 {
-  Vec v=fr.anyVec().makeZero();
-  fr.add("predict",v);
+  Frame fr2=adapt(fr,exact);
+  Vec v=fr2.anyVec().makeZero();
+  v._domain=_domains[_domains.length - 1];
+  fr2.add("predict",v);
   new MRTask2(){
     @Override public void map(    Chunk chks[]){
       double tmp[]=new double[_names.length];
@@ -8,7 +10,6 @@
       for (int i=0; i < p._len; i++)       p.set0(i,score0(chks,i,tmp));
     }
   }
-.doAll(fr);
-  fr.remove(fr.numCols() - 1);
+.doAll(fr2);
   return v;
 }
