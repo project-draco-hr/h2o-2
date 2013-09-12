@@ -1,8 +1,5 @@
 {
   String bucket=_bucket.value();
-  if (isBareS3BucketWithoutTrailingSlash(bucket)) {
-    bucket=bucket + "/";
-  }
   Log.info("ImportS3 processing (" + bucket + ")");
   JsonObject json=new JsonObject();
   JsonArray succ=new JsonArray();
