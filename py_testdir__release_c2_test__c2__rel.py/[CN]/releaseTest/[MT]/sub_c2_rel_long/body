@@ -5,10 +5,11 @@ def sub_c2_rel_long(self):
     importFolderPath = 'manyfiles-nflx-gz'
     print "Using .gz'ed files in", importFolderPath
     if (len(h2o.nodes) == 1):
+        tryHeap = 28
         csvFilenameList = [('*[1][0][0-9].dat.gz', 'file_10_A.dat.gz', (10 * avgMichalSize), 600)]
     else:
-        csvFilenameList = [('*[1][0-4][0-9].dat.gz', 'file_50_A.dat.gz', (10 * avgMichalSize), 600)]
-    tryHeap = 28
+        tryHeap = 28
+        csvFilenameList = [('*[1][0-5][0-9].dat.gz', 'file_50_A.dat.gz', (50 * avgMichalSize), 1800)]
     if LOG_MACHINE_STATS:
         benchmarkLogging = ['cpu', 'disk', 'network']
     else:
