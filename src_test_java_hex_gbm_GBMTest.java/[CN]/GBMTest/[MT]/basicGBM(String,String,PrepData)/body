@@ -3,6 +3,7 @@
   if (file == null)   return;
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make(hexname);
+  Key skey=null;
   GBM gbm=null;
   try {
     gbm=new GBM();
@@ -16,6 +17,9 @@
     gbm.nbins=4;
     gbm.serve();
     gbm.get();
+    Vec vec=gbm.score(gbm.source);
+    skey=vec._key;
+    System.out.println(vec);
   }
   finally {
     UKV.remove(dest);
@@ -23,6 +27,7 @@
       UKV.remove(gbm.dest());
       UKV.remove(gbm.vresponse._key);
       gbm.remove();
+      if (skey != null)       UKV.remove(skey);
     }
   }
 }
