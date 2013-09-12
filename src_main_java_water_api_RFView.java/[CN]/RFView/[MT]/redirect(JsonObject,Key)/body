@@ -1,5 +1,5 @@
 {
   RFModel rfModel=DKV.get(rfModelKey).get();
-  ValueArray data=DKV.get(rfModel.dataKey).get();
-  return redirect(fromPageResponse,null,rfModelKey,rfModel.dataKey,rfModel._totalTrees,data.numCols() - 1,null,true,false);
+  ValueArray data=DKV.get(rfModel._dataKey).get();
+  return redirect(fromPageResponse,null,rfModelKey,rfModel._dataKey,rfModel._totalTrees,data.numCols() - 1,null,true,false);
 }

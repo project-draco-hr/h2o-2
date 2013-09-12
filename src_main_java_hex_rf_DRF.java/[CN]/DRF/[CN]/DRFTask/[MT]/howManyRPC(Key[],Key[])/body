@@ -1,6 +1,6 @@
 {
   int[] result=new int[lkeys.length + rkeys.length];
-  final ValueArray ary=UKV.get(_rfmodel.dataKey);
+  final ValueArray ary=UKV.get(_rfmodel._dataKey);
   int idx=0;
   for (  Key k : lkeys)   result[idx++]=ary.rpc(ValueArray.getChunkIndex(k));
   for (  Key k : rkeys)   result[idx++]=ary.rpc(ValueArray.getChunkIndex(k));
