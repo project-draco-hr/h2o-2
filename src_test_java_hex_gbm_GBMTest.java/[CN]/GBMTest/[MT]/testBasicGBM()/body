@@ -1,7 +1,8 @@
 {
-  basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
+  basicGBM("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
     Vec prep(    Frame fr){
-      return fr.remove(1);
+      assertEquals(581012,fr.numRows());
+      return fr.remove(54);
     }
   }
 );
