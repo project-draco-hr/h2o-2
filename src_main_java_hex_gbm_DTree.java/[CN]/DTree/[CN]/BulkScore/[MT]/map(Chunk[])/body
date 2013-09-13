@@ -10,6 +10,9 @@
   int nids[]=new int[_trees.length];
   for (int i=0; i < ys._len; i++) {
     float err=score0(chks,i,(float)(ys.at0(i) - _ymin),pred,nids,rands);
-    _sum+=err * err;
+    if (!Float.isNaN(err)) {
+      _sum+=err * err;
+      _nrows++;
+    }
   }
 }

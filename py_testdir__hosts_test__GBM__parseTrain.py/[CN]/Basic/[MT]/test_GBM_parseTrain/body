@@ -1,0 +1,14 @@
+def test_GBM_parseTrain(self):
+    bucket = 'home-0xdiag-datasets'
+    files = [('airlines', '1988.csv', '1988.hex', 1800, 'LateAircraftDelay'), ('mnist', 'mnist_training.csv.gz', 'mnistsmalltrain.hex', 1800, 784), ('manyfiles-nflx-gz', 'file_95.dat.gz', 'nflx.hex', 1800, 541), ('mnist/mnist8m', 'mnist8m-train-1.csv', 'mnist8mtrain.hex', 1800, 0), ('airlines', '1988_2008.csv', 'airlines.hex', 1800, 'LateAircraftDelay'), ('standard', 'covtype200x.data', 'covtype.hex', 1800, 55)]
+    for (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) in files:
+        start = time.time()
+        parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        params = {'destination_key': 'GBMKEY', 'learn_rate': 0.1, 'ntrees': 10, 'max_depth': 8, 'min_rows': 1, 'vresponse': vresponse, }
+        kwargs = params.copy()
+        h2o.beta_features = True
+        GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=timeoutSecs, **kwargs)
+        print 'GBM training completed in', GBMResult['python_elapsed'], 'seconds.', ('%f pct. of timeout' % GBMResult['python_%timeout'])

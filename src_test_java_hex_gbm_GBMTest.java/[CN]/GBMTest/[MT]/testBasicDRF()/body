@@ -1,7 +1,41 @@
 {
-  basicDRF("./smalldata/test/test_manycol_tree.csv","tree.hex",new PrepData(){
+  basicDRF("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
     Vec prep(    Frame fr){
       return fr.remove(fr.numCols() - 1);
+    }
+  }
+);
+  basicDRF("./smalldata/logreg/prostate.csv","prostate.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      assertEquals(380,fr.numRows());
+      UKV.remove(fr.remove("ID")._key);
+      return fr.remove("CAPSULE");
+    }
+  }
+);
+  basicDRF("./smalldata/iris/iris_wheader.csv","iris.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      return fr.remove("class");
+    }
+  }
+);
+  basicDRF("./smalldata/airlines/allyears2k_headers.zip","airlines.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      UKV.remove(fr.remove("IsArrDelayed")._key);
+      return fr.remove("IsDepDelayed");
+    }
+  }
+);
+  basicDRF("./smalldata/cars.csv","cars.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      UKV.remove(fr.remove("name")._key);
+      return fr.remove("cylinders");
+    }
+  }
+);
+  basicDRF("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      return fr.remove("IsDepDelayed");
     }
   }
 );

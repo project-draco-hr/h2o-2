@@ -10,8 +10,13 @@
     if (h == null)     continue;
     float min=h._min, max=h._max;
     if (_col == j) {
-      if (splat == 0)       max=h.maxs(_bin - 1);
- else       min=h.mins(_bin);
+      if (_equal) {
+        if (splat == 1)         max=min=h.mins(_bin);
+      }
+ else {
+        if (splat == 0)         max=h.maxs(_bin - 1);
+ else         min=h.mins(_bin);
+      }
     }
     if (min == max)     continue;
     if (min > max)     continue;
