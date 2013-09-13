@@ -1,0 +1,15 @@
+{
+  assert(getSubTree(i) == null);
+  int res=0;
+  if (singleClass(i)) {
+    _nodeType|=(byte)(8 << i * 2);
+    res+=(_tree._nclass < 256) ? 1 : 2;
+  }
+ else {
+    _nodeType|=(byte)(24 << i * 2);
+    int sz=4 * (_tree._nclass);
+    if (sz > 255)     _nodeType|=(sz < 65535) ? 2 : 3;
+    res+=sz;
+  }
+  return res;
+}

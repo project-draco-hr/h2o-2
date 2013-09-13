@@ -1,3 +1,10 @@
 {
-  throw new RuntimeException("TODO: Score me");
+  int nclasses=treeBits[0]._nclass;
+  float[] pred=new float[nclasses];
+  float[] pred_acc=pred.clone();
+  for (  CompressedTree t : treeBits) {
+    t.score(data,pred);
+    Utils.add(pred_acc,pred);
+  }
+  return Utils.maxIndex(pred_acc);
 }
