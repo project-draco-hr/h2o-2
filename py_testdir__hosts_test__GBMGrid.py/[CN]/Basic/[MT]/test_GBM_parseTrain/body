@@ -1,0 +1,23 @@
+def test_GBM_parseTrain(self):
+    bucket = 'home-0xdiag-datasets'
+    files = [('mnist', 'mnist_training.csv.gz', 'mnistsmalltrain.hex', 1800, 0)]
+    ntrees = 2
+    learn_rate = 2
+    max_depth = 2
+    grid = [range(1, ntrees), [((i + 0.0) / learn_rate) for i in range(1, (learn_rate + 1))], range(1, max_depth)]
+    grid = list(itertools.product(*grid))
+    for (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) in files:
+        start = time.time()
+        parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        for (ntree, learn_rate, max_depth) in grid:
+            params = {'destination_key': 'GBMKEY', 'learn_rate': learn_rate, 'ntrees': ntree, 'max_depth': max_depth, 'min_rows': 1, 'vresponse': vresponse, }
+            print 'Using these parameters for GBM: ', params
+            kwargs = params.copy()
+            h2o.beta_features = True
+            GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=timeoutSecs, **kwargs)
+            h2j.pollWaitJobs(pattern='GBMKEY', timeoutSecs=1800, pollTimeoutSecs=1800)
+            GBMView = h2o_cmd.runGBMView(model_key='GBMKEY')
+            pprint(GBMView)
