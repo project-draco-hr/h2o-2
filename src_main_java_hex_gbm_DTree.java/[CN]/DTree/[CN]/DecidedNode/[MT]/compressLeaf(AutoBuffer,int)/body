@@ -1,7 +1,8 @@
 {
   if (singleClass(i)) {
-    if (_tree._nclass < 256)     ab.put1(Utils.maxIndex(_pred[i]));
- else     ab.put2((short)Utils.maxIndex(_pred[i]));
+    int c=Utils.maxIndex(_pred[i]);
+    if (_tree._nclass < 256)     ab.put1(c);
+ else     ab.put2((short)c);
   }
  else   for (  float f : _pred[i])   ab.put4f(f);
   return ab;

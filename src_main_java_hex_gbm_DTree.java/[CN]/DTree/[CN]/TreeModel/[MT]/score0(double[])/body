@@ -3,8 +3,7 @@
   float[] pred=new float[nclasses];
   float[] pred_acc=pred.clone();
   for (  CompressedTree t : treeBits) {
-    t.score(data,pred);
-    Utils.add(pred_acc,pred);
+    throw H2O.unimpl();
   }
   return Utils.maxIndex(pred_acc);
 }
