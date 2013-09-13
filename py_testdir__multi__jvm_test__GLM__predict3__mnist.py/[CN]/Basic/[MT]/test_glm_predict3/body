@@ -14,7 +14,7 @@ def test_glm_predict3(self):
     csvPredictPathname = ((SYNDATASETS_DIR + '/') + predictCsv)
     csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
 
-    def predict_and_compare_csvs(model_key):
+    def predict_and_compare_csvs(model_key, hex_key):
         h2e.exec_expr(execExpr=(('P.hex=' + hex_key) + '[1:784]'), timeoutSecs=30)
         h2e.exec_expr(execExpr=(('Z.hex=' + hex_key) + '[0]'), timeoutSecs=30)
         start = time.time()
@@ -28,8 +28,8 @@ def test_glm_predict3(self):
         h2o.check_sandbox_for_errors()
         print 'Do a check of the original output col against predicted output'
         translate = {0: 0.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, }
-        (rowNum1, originalOutput) = compare_csv_one_col(csvSrcOutputPathname, msg='Original', translate=translate, skipHeader=False)
-        (rowNum2, predictOutput) = compare_csv_one_col(csvPredictPathname, msg='Predicted', skipHeader=True)
+        (rowNum1, originalOutput) = compare_csv_at_one_col(csvSrcOutputPathname, msg='Original', colIndex=0, translate=translate, skipHeader=False)
+        (rowNum2, predictOutput) = compare_csv_at_one_col(csvPredictPathname, msg='Predicted', colIndex=0, skipHeader=True)
         if ((rowNum1 + 1) != rowNum2):
             raise Exception(('original rowNum1: %s + 1 not same as downloaded predict (w/header) rowNum2:                     %s' % (rowNum1, rowNum2)))
         wrong = 0
@@ -75,16 +75,16 @@ def test_glm_predict3(self):
     glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'glm (L2) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
-    predict_and_compare_csvs(model_key=glm['destination_key'])
+    predict_and_compare_csvs(model_key=glm['destination_key'], hex_key=hexKey)
     kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
     start = time.time()
     glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'glm (Elastic) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
-    predict_and_compare_csvs(model_key=glm['destination_key'])
+    predict_and_compare_csvs(model_key=glm['destination_key'], hex_key=hexKey)
     kwargs.update({'alpha': 1, 'lambda': 0.0001, })
     start = time.time()
     glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'glm (L1) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
-    predict_and_compare_csvs(model_key=glm['destination_key'])
+    predict_and_compare_csvs(model_key=glm['destination_key'], hex_key=hexKey)
