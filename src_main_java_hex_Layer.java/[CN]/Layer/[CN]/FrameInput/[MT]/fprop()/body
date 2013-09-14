@@ -3,9 +3,8 @@
     Chunk chunk=chunk(i,_row);
     double d=chunk.at(_row);
     if (_normalize) {
-      Vec v=_frame._vecs[i];
-      d-=v.mean();
-      d=v.sigma() > 1e-4 ? d / v.sigma() : d;
+      d-=_means[i];
+      d=_sigmas[i] > 1e-4 ? d / _sigmas[i] : d;
     }
     _a[i]=(float)d;
   }

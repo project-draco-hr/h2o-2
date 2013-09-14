@@ -1,6 +1,10 @@
 {
+  Input input=(Input)_ls[0];
   for (_current=0; _batches == 0 || _current < _batches; _current++) {
-    for (int s=0; s < _batch; s++)     step();
+    for (int s=0; s < _batch; s++) {
+      step();
+      input.move();
+    }
     adjust(_current * _batch);
   }
 }

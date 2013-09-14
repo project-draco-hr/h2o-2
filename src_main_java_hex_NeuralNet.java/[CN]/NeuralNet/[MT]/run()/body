@@ -12,10 +12,10 @@
   _ls[_ls.length - 1]=new Layer.Softmax();
   _ls[_ls.length - 1]._rate=(float)rate;
   _ls[_ls.length - 1]._l2=(float)l2;
-  int classes=source._vecs[source._vecs.length - 1].domain().length;
+  int classes=(int)(source._vecs[source._vecs.length - 1].max() + 1);
   _ls[_ls.length - 1].init(_ls[_ls.length - 2],classes);
   for (int i=1; i < _ls.length; i++)   _ls[i].randomize();
-  final ThreadedTrainers trainer=new ThreadedTrainers(_ls);
+  final Threaded trainer=new Threaded(_ls);
   weights=Key.make(destination_key.toString() + "_weights");
   UKV.put(destination_key,this);
   trainer.start();
@@ -33,7 +33,7 @@
         long items=trainer.steps();
         rows_per_second=(int)((items - lastItems) / delta);
         UKV.put(destination_key,NeuralNet.this);
-        UKV.put(weights,Weights.get(_ls));
+        UKV.put(weights,Weights.get(_ls,false));
         try {
           Thread.sleep(2000);
         }
