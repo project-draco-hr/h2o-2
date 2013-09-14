@@ -1,6 +1,0 @@
-def put_file(self, f, key=None, timeoutSecs=60):
-    if (key is None):
-        key = os.path.basename(f)
-    resp = self.__do_json_request('PostFile.json', cmd='post', timeout=timeoutSecs, params={'key': key, }, files={'file': open(f, 'rb'), }, extraComment=str(f))
-    verboseprint('\nput_file response: ', dump_json(resp))
-    return key
