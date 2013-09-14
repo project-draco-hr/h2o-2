@@ -1,0 +1,51 @@
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False):
+    verboseprint('poll_url input: response:', dump_json(response))
+    url = self.__url(response['redirect_request'])
+    params = response['redirect_request_args']
+    paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])
+    noise_enable = ((noise is not None) and (noise != ('JStack', None)))
+    if noise_enable:
+        print 'Using noise during poll_url:', noise
+        (noise_json, noiseParams) = noise
+        noiseUrl = self.__url((noise_json + '.json'))
+        if (noiseParams is None):
+            noiseParamsStr = ''
+        else:
+            noiseParamsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in noiseParams.items()])
+    status = 'poll'
+    r = {}
+    start = time.time()
+    count = 0
+    if initialDelaySecs:
+        time.sleep(initialDelaySecs)
+    while (status == 'poll'):
+        time.sleep(retryDelaySecs)
+        create_noise = (noise_enable and ((count % 2) == 0))
+        if create_noise:
+            urlUsed = noiseUrl
+            paramsUsed = noiseParams
+            paramsUsedStr = noiseParamsStr
+            msgUsed = '\nNoise during polling with'
+        else:
+            urlUsed = url
+            paramsUsed = params
+            paramsUsedStr = paramsStr
+            msgUsed = '\nPolling with'
+        r = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
+        if ((count % 5) == 0):
+            verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r['response']))
+        if ((count % 6) == 0):
+            check_sandbox_for_errors()
+        if create_noise:
+            status = 'poll'
+        else:
+            status = r['response']['status']
+        if ((time.time() - start) > timeoutSecs):
+            emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
+            raise Exception(emsg)
+        count += 1
+        if noPoll:
+            return r
+        if benchmarkLogging:
+            cloudPerfH2O.get_log_save(benchmarkLogging)
+    return r

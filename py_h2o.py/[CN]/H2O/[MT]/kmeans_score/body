@@ -1,0 +1,12 @@
+def kmeans_score(self, key, model_key, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, **kwargs):
+    params_dict = {'key': key, 'model_key': model_key, }
+    browseAlso = kwargs.get('browseAlso', False)
+    params_dict.update(kwargs)
+    print '\nKMeansScore params list:', params_dict
+    a = self.__do_json_request('KMeansScore.json', timeout=timeoutSecs, params=params_dict)
+    verboseprint('\nKMeansScore result:', dump_json(a))
+    if (browseAlso | browse_json):
+        print 'Redoing the KMeansScore through the browser, no results saved though'
+        h2b.browseJsonHistoryAsUrlLastMatch('KMeansScore')
+        time.sleep(5)
+    return a
