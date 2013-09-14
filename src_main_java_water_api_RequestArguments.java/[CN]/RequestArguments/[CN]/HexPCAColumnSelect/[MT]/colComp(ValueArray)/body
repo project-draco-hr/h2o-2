@@ -1,0 +1,17 @@
+{
+  ValueArray va=_key.value();
+  final double ratio=1.0 / va._numrows;
+  return new Comparator<Integer>(){
+    @Override public int compare(    Integer x,    Integer y){
+      Column xc=ary._cols[x];
+      Column yc=ary._cols[y];
+      double xRatio=xc._n * ratio;
+      double yRatio=yc._n * ratio;
+      if (xRatio > 0.9 && yRatio > 0.9)       return 0;
+      if (xRatio <= 0.9 && yRatio <= 0.9)       return Double.compare(1 - xRatio,1 - yRatio);
+      if (xRatio <= 0.9)       return 1;
+      return -1;
+    }
+  }
+;
+}

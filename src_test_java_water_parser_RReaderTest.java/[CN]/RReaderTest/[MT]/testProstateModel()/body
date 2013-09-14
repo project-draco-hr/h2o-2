@@ -10,7 +10,7 @@
   map[map.length - 1]=classCol;
   double[] row=new double[map.length];
   int errs=0;
-  Model M=model.adapt(pro);
+  OldModel M=model.adapt(pro);
   for (int i=0; i < pro._numrows; i++) {
     for (int j=0; j < map.length; j++)     row[j]=pro.datad(i,j);
     double score=M.score(row);

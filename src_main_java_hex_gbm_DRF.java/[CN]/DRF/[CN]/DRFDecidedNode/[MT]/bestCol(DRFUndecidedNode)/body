@@ -1,15 +1,11 @@
 {
-  double bs=Double.MAX_VALUE;
-  int idx=-1;
-  if (u._hs == null)   return idx;
+  DTree.Split best=DTree.Split.make(-1,-1,false,0L,0L,Double.MAX_VALUE,Double.MAX_VALUE,(float[])null,null);
+  if (u._hs == null)   return best;
   for (int i=0; i < u._scoreCols.length; i++) {
     int col=u._scoreCols[i];
-    double s=u._hs[col].score();
-    if (s < bs) {
-      bs=s;
-      idx=col;
-    }
-    if (s <= 0)     break;
+    DTree.Split s=u._hs[col].scoreMSE(col,u._tree._names[col]);
+    if (s.mse() < best.mse())     best=s;
+    if (s.mse() <= 0)     break;
   }
-  return idx;
+  return best;
 }

@@ -3,6 +3,7 @@
   if (file == null)   return;
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make(hexname);
+  Key skey=null;
   DRF drf=null;
   try {
     drf=new DRF();
@@ -11,16 +12,23 @@
     drf.vresponse=prep.prep(drf.source);
     drf.ntrees=5;
     drf.max_depth=50;
+    drf.min_rows=1;
+    drf.nbins=10;
     drf.mtries=-1;
+    drf.sample_rate=0.66667f;
     drf.seed=(1L << 32) | 2;
     drf.serve();
+    drf.get();
+    Vec vec=drf.score(drf.source);
+    skey=vec._key;
   }
   finally {
     UKV.remove(dest);
     if (drf != null) {
-      drf.source.remove();
+      UKV.remove(drf.dest());
       UKV.remove(drf.vresponse._key);
       drf.remove();
+      if (skey != null)       UKV.remove(skey);
     }
   }
 }

@@ -16,7 +16,7 @@ def test_KMeans_allstate_s3n_thru_hdfs(self):
         print 'parse result:', parseResult['destination_key']
         kwargs = {'cols': None, 'initialization': 'Furthest', 'k': 12, }
         start = time.time()
-        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=120, **kwargs)
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=120, **kwargs)
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvFilename, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)

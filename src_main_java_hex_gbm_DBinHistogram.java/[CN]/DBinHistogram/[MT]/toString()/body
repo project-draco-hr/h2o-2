@@ -1,9 +1,11 @@
 {
   StringBuilder sb=new StringBuilder();
-  sb.append(_name).append(", ").append(_min).append("-").append(_max).append("\n");
-  if (_bins != null)   for (int b=0; b < _nbins; b++) {
-    sb.append(String.format("cnt=%d, min=%f, max=%f, mean/var=",_bins[b],_mins[b],_maxs[b]));
-    for (int c=0; c < _nclass; c++)     sb.append(String.format(" %d - %6.2f/%6.2f,",c,_Ms[b] == null ? Float.NaN : mean(b,c),_Ss[b] == null ? Float.NaN : var(b,c)));
+  sb.append(_name).append(":").append(_min).append("-").append(_max);
+  if (_bins != null) {
+    for (int b=0; b < _nbins; b++) {
+      sb.append(String.format("\ncnt=%d, min=%f, max=%f, mean/var=",_bins[b],_mins[b],_maxs[b]));
+      for (int c=0; c < _nclass; c++)       sb.append(String.format(" %d - %6.2f/%6.2f,",c,_Ms[b] == null ? Float.NaN : mean(b,c),_Ss[b] == null ? Float.NaN : var(b,c)));
+    }
     sb.append('\n');
   }
   return sb.toString();

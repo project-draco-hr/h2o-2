@@ -4,7 +4,7 @@ def test_KMeansGrid_basic(self):
     else:
         csvFilenameList = [('covtype.data', 800)]
     for (csvFilename, timeoutSecs) in csvFilenameList:
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path='standard/covtype.data', timeoutSecs=2000, pollTimeoutSecs=60)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path='standard/covtype.data', schema='local', timeoutSecs=2000, pollTimeoutSecs=60)
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print 'python_source:', parseResult['python_source']
         csvPathname = parseResult['python_source']
@@ -13,7 +13,7 @@ def test_KMeansGrid_basic(self):
         for trial in range(3):
             kwargs = params.copy()
             start = time.time()
-            kmeans = h2o_cmd.runKMeansGridOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+            kmeans = h2o_cmd.runKMeansGrid(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
             elapsed = (time.time() - start)
             print 'kmeans grid end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)

@@ -1,6 +1,7 @@
 def unit_main():
-    global python_test_name
+    global python_test_name, pythonCmdLineArgs
     python_test_name = inspect.stack()[1][1]
-    print '\nRunning: python', python_test_name
+    pythonCmdLineArgs = ''.join(sys.argv[1:])
+    print '\nRunning: python', python_test_name, pythonCmdLineArgs
     parse_our_args()
     unittest.main()

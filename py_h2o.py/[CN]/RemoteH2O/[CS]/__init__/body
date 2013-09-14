@@ -11,13 +11,12 @@ def __init__(self, host, *args, **kwargs):
         self.ice = (('/home/' + host.username) + ('/ice.%d.%s' % (self.port, time.time())))
     else:
         self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
-    if self.fake_cloud:
-        comment = ('Fake Remote on %s' % self.addr)
-        log(cmd, comment=comment)
-        return
     self.channel = host.open_channel()
     cmd = ' '.join(self.get_args())
-    self.channel.exec_command(((('cd /tmp; ls -ltr ' + self.jar) + '; ') + re.sub('/tmp/', '', cmd)))
+    cmdList = ['cd /tmp']
+    cmdList += [('ls -ltr ' + self.jar)]
+    cmdList += [re.sub('/tmp/', '', cmd)]
+    self.channel.exec_command('; '.join(cmdList))
     if self.capture_output:
         if (self.node_id is not None):
             logPrefix = ('remote-h2o-' + str(self.node_id))

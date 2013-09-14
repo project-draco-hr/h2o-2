@@ -1,7 +1,5 @@
 {
-  String n=" <= " + _tree._names[_col] + " < ";
-  String s=new String();
-  float f=_bmin;
-  for (int i=0; i < _nids.length; i++)   s+=f + n + (f+=_step)+ " = "+ Arrays.toString(_pred[i])+ "\n";
-  return s;
+  if (_col == -1)   return "Decided has col = -1";
+  if (_equal)   return _tree._names[_col] + " != " + _splat+ " = "+ Arrays.toString(_pred[0])+ "\n"+ _tree._names[_col]+ " == "+ _splat+ " = "+ Arrays.toString(_pred[1])+ "\n";
+  return _tree._names[_col] + " < " + _splat+ " = "+ Arrays.toString(_pred[0])+ "\n"+ _splat+ " <="+ _tree._names[_col]+ " = "+ Arrays.toString(_pred[1])+ "\n";
 }

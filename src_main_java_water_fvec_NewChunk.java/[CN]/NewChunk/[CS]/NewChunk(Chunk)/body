@@ -2,7 +2,7 @@
   _vec=C._vec;
   _cidx=_vec.elem2ChunkIdx(C._start);
   _len=C._len;
-  if (C.hasFloat()) {
+  if (C.hasFloat() || C instanceof C0DChunk) {
     _ds=MemoryManager.malloc8d(_len);
   }
  else {

@@ -3,23 +3,23 @@
   GramMatrixFunc gramF=new GramMatrixFunc(data,new GLMParams(Family.gaussian),null);
   Gram gram=gramF.apply(job,data);
   Matrix myGram=new Matrix(gram.getXX());
-  int nfeat=myGram.getRowDimension();
   SingularValueDecomposition mySVD=myGram.svd();
   double[] Sval=mySVD.getSingularValues();
-  int ncomp=getNumPC(Sval,params._tol);
-  double[] sdev=new double[ncomp];
+  double[][] eigVec=mySVD.getV().getArray();
+  double[] sdev=new double[Sval.length];
   double totVar=0;
-  for (int i=0; i < ncomp; i++) {
+  double dfcorr=data._ary._numrows / (data._ary._numrows - 1.0);
+  for (int i=0; i < Sval.length; i++) {
+    Sval[i]=dfcorr * Sval[i];
     sdev[i]=Math.sqrt(Sval[i]);
     totVar+=Sval[i];
   }
-  Matrix eigV=mySVD.getV();
-  double[][] eigVec=eigV.getMatrix(0,nfeat - 1,0,ncomp - 1).transpose().getArray();
-  double[] propVar=new double[ncomp];
-  for (int i=0; i < ncomp; i++) {
+  double[] propVar=new double[Sval.length];
+  for (int i=0; i < Sval.length; i++) {
     propVar[i]=Sval[i] / totVar;
   }
-  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,0,ncomp,params);
+  int ncomp=getNumPC(sdev,params._tol);
+  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,mySVD.rank(),0,ncomp,params);
   myModel.store();
   return myModel;
 }

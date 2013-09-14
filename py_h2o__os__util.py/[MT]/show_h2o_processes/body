@@ -1,0 +1,37 @@
+def show_h2o_processes():
+    import psutil
+    print 'total physical dram: %0.2f GB', ((psutil.TOTAL_PHYMEM + 0) / (1024 * 1024))
+    print 'max cpu threads:', psutil.NUM_CPUS
+    print '\nReporting on h2o'
+    users = set()
+    h2oUsers = set()
+    h2oFound = False
+    for p in psutil.process_iter():
+        h2oProcess = False
+        if ('java' in p.name):
+            users.add(p.username)
+            for c in p.cmdline:
+                if ('h2o' in c):
+                    h2oProcess = True
+                    h2oUsers.add(p.username)
+                    break
+        if h2oProcess:
+            h2oFound = True
+            print '\n#**********************************************'
+            print p
+            try:
+                print 'pid:', p.pid
+                print 'cmdline:', p.cmdline
+                print 'status:', p.status
+                print 'username:', p.username
+                print 'cpu_percent:', p.get_cpu_percent(interval=1.0)
+                print 'memory_percent:', p.get_memory_percent()
+                print p.get_memory_info()
+            except:
+                pass
+    if h2oFound:
+        print '\n#**********************************************'
+    else:
+        print 'No h2o processes found.'
+    print 'users running java:', list(users)
+    print 'users running h2o java:', list(h2oUsers)

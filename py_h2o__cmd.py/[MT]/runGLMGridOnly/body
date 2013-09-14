@@ -1,6 +1,0 @@
-def runGLMGridOnly(node=None, parseResult=None, timeoutSecs=60, retryDelaySecs=2, noise=None, **kwargs):
-    if (not parseResult):
-        raise Exception('No parsed key for GLMGrid specified')
-    if (not node):
-        node = h2o.nodes[0]
-    return node.GLMGrid(parseResult['destination_key'], timeoutSecs, **kwargs)

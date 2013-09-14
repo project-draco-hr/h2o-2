@@ -1,8 +1,8 @@
 def test_KMeans_covtype20x(self):
     if localhost:
-        csvFilenameList = [('covtype20x.data', 480, 'cA')]
+        csvFilenameList = [('covtype20x.data', 1200, 'cA')]
     else:
-        csvFilenameList = [('covtype20x.data', 480, 'cA')]
+        csvFilenameList = [('covtype20x.data', 1200, 'cA')]
     importFolderPath = 'standard'
     for (csvFilename, timeoutSecs, hex_key) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
@@ -14,7 +14,7 @@ def test_KMeans_covtype20x(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         kwargs = {'cols': None, 'initialization': 'Furthest', 'k': 2, 'seed': 265211114317615310, }
         start = time.time()
-        kmeans = h2o_cmd.runKMeansOnly(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)

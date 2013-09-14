@@ -1,0 +1,26 @@
+{
+  new TreeVisitor<RuntimeException>(this,ct){
+    int _depth;
+    @Override protected void pre(    int col,    float fcmp,    boolean equal){
+      for (int i=0; i < _depth; i++)       sb.append("  ");
+      sb.append(_names[col]).append(equal ? "==" : "< ").append(fcmp).append('\n');
+      _depth++;
+    }
+    @Override protected void post(    int col,    float fcmp,    boolean equal){
+      _depth--;
+    }
+    @Override protected void leaf(    int pclass){
+      for (int i=0; i < _depth; i++)       sb.append("  ");
+      sb.append("[").append(classNames()[pclass]).append("]\n");
+    }
+    @Override protected void leaf(    float preds[]){
+      for (int i=0; i < _depth; i++)       sb.append("  ");
+      String domain[]=classNames();
+      sb.append("[");
+      for (int c=_tm.ymin; c < preds.length; c++)       sb.append(domain[c]).append('=').append(preds[c]).append(',');
+      sb.append("]\n");
+    }
+  }
+.visit();
+  return sb;
+}

@@ -1,5 +1,5 @@
-def get_cloud(self):
-    a = self.__do_json_request('Cloud.json')
+def get_cloud(self, timeoutSecs=10):
+    a = self.__do_json_request('Cloud.json', timeout=timeoutSecs)
     consensus = a['consensus']
     locked = a['locked']
     cloud_size = a['cloud_size']

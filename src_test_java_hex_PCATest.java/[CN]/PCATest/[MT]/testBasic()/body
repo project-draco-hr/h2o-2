@@ -1,0 +1,12 @@
+{
+  Key kdata=Key.make("basicdata.hex");
+  ValueArray va=va_maker(kdata,new byte[]{0,1,2,3,4,5,6,7},new double[]{1.0,0.5,0.3333333,0.25,0.20,0.1666667,0.1428571,0.1250000},new float[]{-120.4f,89.3f,291.0f,-2.5f,412.9f,-123.4f,-0.1f,18.3f});
+  int[] cols={0,1};
+  boolean standardize=true;
+  DataFrame df=DataFrame.makePCAData(va,cols,standardize);
+  Key kpca=Key.make("basicdata.pca");
+  PCAParams params=new PCAParams(0.0,standardize);
+  DPCA.startPCAJob(kpca,df,params).get();
+  UKV.remove(kdata);
+  UKV.remove(kpca);
+}

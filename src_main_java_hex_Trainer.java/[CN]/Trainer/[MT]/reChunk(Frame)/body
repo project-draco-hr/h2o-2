@@ -1,6 +1,6 @@
 {
   final int splits=cores() * 3;
-  if (frame.firstReadable().nChunks() >= splits)   return frame;
+  if (frame.anyVec().nChunks() >= splits)   return frame;
   Vec[] vecs=new Vec[frame._vecs.length];
   for (int v=0; v < vecs.length; v++) {
     AppendableVec vec=new AppendableVec(UUID.randomUUID().toString());

@@ -1,11 +1,4 @@
 {
-  basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
-    Vec prep(    Frame fr){
-      UKV.remove(fr.remove("name")._key);
-      return fr.remove("cylinders");
-    }
-  }
-);
   basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
     Vec prep(    Frame fr){
       return fr.remove(1);
@@ -20,16 +13,16 @@
     }
   }
 );
-  basicGBM("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
+  basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
     Vec prep(    Frame fr){
-      return fr.remove("IsDepDelayed");
+      UKV.remove(fr.remove("name")._key);
+      return fr.remove("cylinders");
     }
   }
 );
-  basicGBM("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
+  basicGBM("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
     Vec prep(    Frame fr){
-      assertEquals(581012,fr.numRows());
-      return fr.remove(54);
+      return fr.remove("IsDepDelayed");
     }
   }
 );

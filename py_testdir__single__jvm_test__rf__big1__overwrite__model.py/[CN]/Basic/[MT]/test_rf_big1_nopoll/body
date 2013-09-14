@@ -20,7 +20,7 @@ def test_rf_big1_nopoll(self):
             kwargs['ntree'] = 7
             kwargs['seed'] = random.randint(0, sys.maxint)
         randomNode = h2o.nodes[random.randint(0, (len(h2o.nodes) - 1))]
-        h2o_cmd.runRFOnly(node=randomNode, parseResult=parseResult, model_key=model_key, timeoutSecs=300, noPoll=True, **kwargs)
+        h2o_cmd.runRF(node=randomNode, parseResult=parseResult, model_key=model_key, timeoutSecs=300, noPoll=True, **kwargs)
         rfView = {}
         rfView['data_key'] = hex_key
         rfView['model_key'] = model_key

@@ -1,0 +1,16 @@
+def setup_test_config(test_config_json='test_config.json'):
+    "\n        test_config.json is expected to be a list. \n        We'll return a list of test config objects\n        That list is created in h2o.testConfig[], and can be referenced like h2o.testConfig[0]['trees']\n    "
+    print '\nCreating state for testConfig from', test_config_json
+    if (not os.path.exists(test_config_json)):
+        print test_config_json, "doesn't exist, no test config imported to h2o_test.*"
+        return None
+    with open(test_config_json, 'rb') as f:
+        testConfigJson = json.load(f)
+    testConfigList = []
+    for testConfig in testConfigJson:
+        testConfigObj = TestConfig(testConfig)
+        testConfigList.append(testConfigObj)
+    print testConfigList
+    configs[:] = testConfigList
+    print len(testConfigList), 'total testConfigs ingested from', test_config_json, 'into h2o_test.configs'
+    return testConfigList

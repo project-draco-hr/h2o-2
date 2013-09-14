@@ -1,0 +1,6 @@
+def green_print(*args):
+    if (getpass.getuser() == 'jenkins'):
+        bcolors.disable(b)
+    for msg in args:
+        print ((b.GREEN + str(msg)) + b.ENDC),
+    print 

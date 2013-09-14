@@ -7,7 +7,7 @@ def test_GLM_tweedie(self):
     coefs = [7, 13, 20, 27, 21, 11]
     x = ','.join([str(x) for x in coefs])
     kwargs = {'family': 'tweedie', 'tweedie_power': 1.36, 'y': y, 'x': x, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
-    glm = h2o_cmd.runGLMOnly(parseResult=parseResult, timeoutSecs=15, **kwargs)
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
     (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
     coefficients.append(intercept)
     print ('coefficients: %s' % str(coefficients))

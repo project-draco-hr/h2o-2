@@ -7,5 +7,8 @@ def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None
     parseResult = parse_only(node, importPattern, hex_key, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, **kwargs)
     h2o.verboseprint('parseResult:', h2o.dump_json(parseResult))
     if doSummary:
+        h2o.check_sandbox_for_errors()
         node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs)
+    else:
+        h2o.check_sandbox_for_errors()
     return parseResult

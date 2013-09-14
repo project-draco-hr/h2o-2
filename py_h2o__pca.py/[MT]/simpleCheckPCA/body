@@ -1,0 +1,30 @@
+def simpleCheckPCA(self, pca, **kwargs):
+    warnings = None
+    if ('warnings' in pca):
+        warnings = pca['warnings']
+        x = re.compile('[Ff]ailed')
+        for w in warnings:
+            print '\nwarning:', w
+            if re.search(x, w):
+                raise Exception(w)
+    destination_key = pca['destination_key']
+    pcaResult = h2o_cmd.runInspect(key=destination_key, view=100)
+    h2o.verboseprint('pcaResult Inspect:', h2o.dump_json(pcaResult))
+    print 'Checking sdevs...'
+    sdevs = pcaResult['PCAModel']['stdDev']
+    for (PC, s) in sdevs.iteritems():
+        if math.isnan(s):
+            raise Exception('sdev', PC, 'is NaN:', s)
+    print 'Checking propVars...'
+    propVars = pcaResult['PCAModel']['propVar']
+    for (PC, propvar) in propVars.iteritems():
+        if math.isnan(propvar):
+            raise Exception('propVar', PC, 'is NaN:', propvar)
+    print 'Checking eigenvectors...'
+    pcs = pcaResult['PCAModel']['eigenvectors']
+    for (i, s) in enumerate(pcs):
+        for (r, e) in s.iteritems():
+            if math.isnan(e):
+                raise Exception('Component', i, 'has NaN:', e, 'eigenvector', s)
+    h2o.check_sandbox_for_errors()
+    return warnings
