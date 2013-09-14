@@ -13,4 +13,17 @@
     }
   }
 );
+  basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      UKV.remove(fr.remove("name")._key);
+      return fr.remove("cylinders");
+    }
+  }
+);
+  basicGBM("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      return fr.remove("IsDepDelayed");
+    }
+  }
+);
 }
