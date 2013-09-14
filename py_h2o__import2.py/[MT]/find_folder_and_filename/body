@@ -1,5 +1,6 @@
 def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=False):
     checkPath = True
+    giveUpAndSearchLocally = False
     if ((bucket is not None) and re.match('/', pathWithRegex)):
         h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
         pathWithRegex = pathWithRegex.lstrip('/')
@@ -7,14 +8,21 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=
         bucketPath = ''
     elif (bucket == '.'):
         bucketPath = os.getcwd()
-    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and os.environ.get('H2O_REMOTE_BUCKETS_ROOT')):
-        rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
-        bucketPath = os.path.join(rootPath, bucket)
-        checkPath = False
-    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and h2o.nodes[0].h2o_remote_buckets_root):
-        rootPath = h2o.nodes[0].h2o_remote_buckets_root
-        bucketPath = os.path.join(rootPath, bucket)
-        checkPath = False
+    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and os.environ.get(('H2O_REMOTE_BUCKETS_ROOT' or h2o.nodes[0].h2o_remote_buckets_root))):
+        if (((bucket == 'smalldata') or (bucket == 'datasets')) and (schema == 'local')):
+            msg1 = "\nWARNING: you're using remote nodes, and 'smalldata' or 'datasets' git buckets, with schema!=put"
+            msg2 = "\nThose aren't git pull'ed by the test. Since they are user-maintained, not globally-maintained-by-0xdata,"
+            msg3 = '\nthey may be out of date at those remote nodes?'
+            msg4 = '\nGoing to assume we find a path to them locally, and remote path will be the same'
+            h2p.red_print(msg1, msg2, msg3, msg4)
+            giveUpAndSearchLocally = True
+        else:
+            if os.environ.get('H2O_REMOTE_BUCKETS_ROOT'):
+                rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
+            else:
+                rootPath = h2o.nodes[0].h2o_remote_buckets_root
+            bucketPath = os.path.join(rootPath, bucket)
+            checkPath = False
     elif (((not h2o.nodes[0].remoteH2O) or (schema == 'put')) and os.environ.get('H2O_BUCKETS_ROOT')):
         rootPath = os.environ.get('H2O_BUCKETS_ROOT')
         print 'Using H2O_BUCKETS_ROOT environment variable:', rootPath
@@ -24,6 +32,8 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=
         if (not os.path.exists(bucketPath)):
             raise Exception(("H2O_BUCKETS_ROOT and path used to form %s which doesn't exist." % bucketPath))
     else:
+        giveUpAndSearchLocally = True
+    if giveUpAndSearchLocally:
         username = getpass.getuser()
         h2oUsername = h2o.nodes[0].username
         h2o.verboseprint('username:', username, 'h2oUsername:', h2oUsername)
