@@ -1,10 +1,10 @@
 {
-  localCloud(1,true,args);
-  File f=new File("lib/resources/datasets/gaussian.csv");
+  localCloud(2,true,args);
+  File f=new File("smalldata/covtype/covtype.20k.data");
   Key dest=Key.make("test.hex");
-  Key key=TestUtil.load_test_file(f,"test");
-  ParseDataset.parse(dest,new Key[]{key});
-  ValueArray va=(ValueArray)UKV.get(dest);
+  Key fkey=NFSFileVec.make(f);
+  Frame frame=ParseDataset2.parse(dest,new Key[]{fkey});
+  System.out.println(frame.firstReadable().nChunks());
   Utils.readConsole();
   System.out.println("Done!");
 }

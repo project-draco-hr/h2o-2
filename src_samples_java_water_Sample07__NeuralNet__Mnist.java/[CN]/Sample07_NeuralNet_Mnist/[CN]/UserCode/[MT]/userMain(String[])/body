@@ -1,7 +1,8 @@
 {
   H2O.main(args);
-  Frame train=TestUtil.parseFrame("smalldata/mnist/train.csv.gz");
+  Frame train=TestUtil.parseFrame("smalldata/mnist/train.csv");
   Frame test=TestUtil.parseFrame("smalldata/mnist/test.csv.gz");
+  System.out.println(train.firstReadable().nChunks());
   Layer[] ls=new Layer[3];
   ls[0]=new FrameInput(train);
   ls[0].init(null,PIXELS);
@@ -14,7 +15,7 @@
   ls[1].init(ls[0],500);
   ls[2].init(ls[1],10);
   for (int i=1; i < ls.length; i++)   ls[i].randomize();
-  final Trainer trainer=new ThreadedTrainers(ls);
+  final Trainer trainer=new Trainer.MR2(ls,0);
   Thread thread=new Thread(){
     @Override public void run(){
       trainer.run();
@@ -32,9 +33,9 @@
  catch (    InterruptedException e) {
       throw new RuntimeException(e);
     }
-    Layer[] clones1=NeuralNetScore.clone(ls,train);
+    Layer[] clones1=Layer.clone(ls,train);
     Error trainE=NeuralNetScore.eval(clones1,NeuralNet.EVAL_ROW_COUNT);
-    Layer[] clones2=NeuralNetScore.clone(ls,test);
+    Layer[] clones2=Layer.clone(ls,test);
     Error testE=NeuralNetScore.eval(clones2,NeuralNet.EVAL_ROW_COUNT);
     long time=System.nanoTime();
     double delta=(time - lastTime) / 1e9;
