@@ -10,7 +10,7 @@
     }
   }
   if (l4j == null) {
-    String s=e.toString();
+    e.toString();
 synchronized (startupLogEventsLock) {
       if (startupLogEvents != null) {
         startupLogEvents.add(e);
@@ -32,6 +32,6 @@ synchronized (startupLogEventsLock) {
     log0(l4j,e);
   }
   if (Paxos._cloudLocked)   logToKV(e.when.startAsString(),e.thread,e.kind,e.sys,e.body(0));
-  if (printOnOut || printAll)   unwrap(System.out,(H2O.DEBUG ? e.toString() : e.toShortString()));
+  if (printOnOut || printAll)   unwrap(System.out,e.toShortString());
   e.printMe=false;
 }

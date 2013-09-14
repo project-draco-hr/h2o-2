@@ -1,5 +1,5 @@
 {
-  Layer[] clones=clone(model._ls,model.source);
+  Layer[] clones=Layer.clone(model._ls,model.source);
   Weights weights=UKV.get(model.weights);
   weights.set(clones);
   Error error=eval(clones,max_rows);

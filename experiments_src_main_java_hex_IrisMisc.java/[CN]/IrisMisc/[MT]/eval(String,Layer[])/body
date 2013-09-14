@@ -1,0 +1,7 @@
+{
+  Layer[] clones1=Layer.clone(ls,_train);
+  Error trainE=NeuralNetScore.eval(clones1,NeuralNet.EVAL_ROW_COUNT);
+  Layer[] clones2=Layer.clone(ls,_test);
+  Error testE=NeuralNetScore.eval(clones2,NeuralNet.EVAL_ROW_COUNT);
+  Log.info(tag + ": train: " + trainE+ ", test: "+ testE);
+}

@@ -10,16 +10,18 @@
   double totVar=0;
   double dfcorr=data._ary._numrows / (data._ary._numrows - 1.0);
   for (int i=0; i < Sval.length; i++) {
-    if (params._standardized)     Sval[i]=dfcorr * Sval[i];
+    Sval[i]=dfcorr * Sval[i];
     sdev[i]=Math.sqrt(Sval[i]);
     totVar+=Sval[i];
   }
   double[] propVar=new double[Sval.length];
+  double[] cumVar=new double[Sval.length];
   for (int i=0; i < Sval.length; i++) {
     propVar[i]=Sval[i] / totVar;
+    cumVar[i]=i == 0 ? propVar[0] : cumVar[i - 1] + propVar[i];
   }
   int ncomp=getNumPC(sdev,params._tol);
-  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,eigVec,mySVD.rank(),0,ncomp,params);
+  PCAModel myModel=new PCAModel(Status.Done,0.0f,resKey,data,sdev,propVar,cumVar,eigVec,mySVD.rank(),0,ncomp,params);
   myModel.store();
   return myModel;
 }

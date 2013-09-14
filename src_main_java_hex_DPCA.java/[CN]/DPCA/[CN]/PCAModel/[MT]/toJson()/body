@@ -7,14 +7,17 @@
   res.add("PCAParams",_pcaParams.toJson());
   JsonObject sdev=new JsonObject();
   JsonObject prop=new JsonObject();
+  JsonObject cum=new JsonObject();
   if (_sdev != null) {
     for (int i=0; i < _sdev.length; i++) {
       sdev.addProperty("PC" + i,_sdev[i]);
       prop.addProperty("PC" + i,_propVar[i]);
+      cum.addProperty("PC" + i,_cumVar[i]);
     }
   }
   res.add("stdDev",sdev);
   res.add("propVar",prop);
+  res.add("cumVar",cum);
   JsonArray eigvec=new JsonArray();
   if (_eigVec != null) {
     for (int j=0; j < _eigVec[0].length; j++) {

@@ -1,9 +1,0 @@
-{
-  FrameInput input=new FrameInput(frame);
-  input.init(null,frame._vecs.length - 1);
-  Layer[] clones=new Layer[ls.length];
-  clones[0]=input;
-  for (int i=1; i < ls.length; i++)   clones[i]=Utils.deepClone(ls[i],"_w","_b","_in");
-  for (int i=1; i < ls.length; i++)   clones[i]._in=clones[i - 1];
-  return clones;
-}

@@ -1,0 +1,13 @@
+{
+  Key kdata=Key.make("depdata.hex");
+  ValueArray va=va_maker(kdata,new double[]{0,1,2,3,4,5},new double[]{0,2,4,6,8,10});
+  int[] cols={0,1};
+  DataFrame df=DataFrame.makePCAData(va,cols,true);
+  Key kpca=Key.make("depdata.pca");
+  PCAParams params=new PCAParams(0.0,true);
+  PCAModel model=DPCA.startPCAJob(kpca,df,params).get();
+  double[] sdev_R={1.414214,0};
+  for (int i=0; i < model._sdev.length; i++)   Assert.assertEquals(sdev_R[i],model._sdev[i],threshold);
+  UKV.remove(kdata);
+  UKV.remove(kpca);
+}
