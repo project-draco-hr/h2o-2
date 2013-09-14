@@ -39,4 +39,11 @@
     }
   }
 );
+  basicDRF("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      for (      int ign : IGNS)       UKV.remove(fr.remove(Integer.toString(ign))._key);
+      return fr.remove(fr.numCols() - 1);
+    }
+  }
+);
 }

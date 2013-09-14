@@ -1,9 +1,15 @@
 {
-  basicGBM("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
+  basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
     Vec prep(    Frame fr){
-      assertEquals(581012,fr.numRows());
-      for (      int ign : IGNS)       UKV.remove(fr.remove(Integer.toString(ign))._key);
-      return fr.remove(fr.numCols() - 1);
+      return fr.remove(1);
+    }
+  }
+);
+  basicGBM("./smalldata/logreg/prostate.csv","prostate.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      assertEquals(380,fr.numRows());
+      UKV.remove(fr.remove("ID")._key);
+      return fr.remove("CAPSULE");
     }
   }
 );
