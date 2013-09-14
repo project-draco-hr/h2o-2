@@ -13,9 +13,7 @@
     rows[i]=row;
   }
   int limit=(int)frame.numRows() * 80 / 100;
-  _train=new FrameInput(frame(rows,0,limit),false);
-  _train.init(null,4);
-  _test=new FrameInput(frame(rows,limit,(int)frame.numRows() - limit),false);
-  _test.init(null,4);
+  _train=frame(rows,0,limit);
+  _test=frame(rows,limit,(int)frame.numRows() - limit);
   UKV.remove(pars);
 }
