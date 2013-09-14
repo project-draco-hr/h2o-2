@@ -1,4 +1,5 @@
 def test_GBM_parseTrain_Yallyears2k(self):
+    h2o.beta_features = False
     bucket = 'home-0xdiag-datasets'
     (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) = ('standard', 'allyears2k.csv', 'allyears2k.hex', 1800, 'IsArrDelayed')
     start = time.time()

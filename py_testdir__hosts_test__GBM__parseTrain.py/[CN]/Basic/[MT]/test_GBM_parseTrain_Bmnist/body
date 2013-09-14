@@ -1,4 +1,6 @@
 def test_GBM_parseTrain_Bmnist(self):
+    h2o.beta_features = False
+    print 'Trying with mnist8m data'
     bucket = 'home-0xdiag-datasets'
     (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) = ('mnist', 'mnist8m.csv', 'mnist8m.hex', 1800, 0)
     start = time.time()
