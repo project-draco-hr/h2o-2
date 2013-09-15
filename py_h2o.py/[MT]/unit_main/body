@@ -1,7 +1,10 @@
 def unit_main():
-    global python_test_name, pythonCmdLineArgs
+    global python_test_name, python_cmd_args, python_cmd_ip
     python_test_name = inspect.stack()[1][1]
-    pythonCmdLineArgs = ' '.join(sys.argv[1:])
-    print '\nRunning: python', python_test_name, pythonCmdLineArgs
+    python_cmd_args = ' '.join(sys.argv[1:])
+    python_cmd_ip = get_ip_address()
+    pythonCmdLine = ('python %s %s' % (python_test_name, python_cmd_args))
+    print ('\nTest: %s    command line: %s' % (python_test_name, pythonCmdLine))
+    print ('Python runs on: %s' % python_cmd_ip)
     parse_our_args()
     unittest.main()
