@@ -1,4 +1,4 @@
-def random_forest(self, data_key, trees, timeoutSecs=300, print_params=True, **kwargs):
+def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, print_params=True, noPoll=False, rfView=True, **kwargs):
     params_dict = {'data_key': data_key, 'ntree': trees, 'model_key': None, 'out_of_bag_error_estimate': 1, 'response_variable': None, 'sample': None, }
     if beta_features:
         params_dict['class_vec'] = kwargs['response_variable']
@@ -11,6 +11,18 @@ def random_forest(self, data_key, trees, timeoutSecs=300, print_params=True, **k
     if print_params:
         print '\nrandom_forest parameters:', params_dict
         sys.stdout.flush()
-    a = self.__do_json_request(('DRF2.json' if beta_features else 'RF.json'), timeout=timeoutSecs, params=params_dict)
-    verboseprint('\nrandom_forest result:', dump_json(a))
-    return a
+    rf = self.__do_json_request(('DRF2.json' if beta_features else 'RF.json'), timeout=timeoutSecs, params=params_dict)
+    verboseprint('\nrandom_forest result:', dump_json(rf))
+    if (rf['response']['redirect_request'] != 'RFView'):
+        print dump_json(rf)
+        raise Exception('H2O RF redirect is not RFView. RF json response precedes.')
+    if ((noPoll or (not rfView)) or (beta_features and (rfView == False))):
+        return rf
+    data_key = rf['data_key']
+    model_key = rf['model_key']
+    rfCloud = rf['response']['h2o']
+    ntree = rf['ntree']
+    response_variable = rf['response_variable']
+    params_dict.update({'ntree': ntree, 'model_key': model_key, })
+    rfViewResult = self.random_forest_view(timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, print_params=print_params, noPoll=noPoll, useRFScore=False, **params_dict)
+    return rfViewResult
