@@ -1,47 +1,68 @@
 def test_rf_predict2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     timeoutSecs = 60
-    predictHexKey = 'predict.hex'
-    predictCsv = 'predict.csv'
+    predictHexKey = 'predict_0.hex'
+    predictCsv = 'predict_0.csv'
+    actualCsv = 'actual_0.csv'
     if (1 == 0):
+        y = 4
         skipSrcHeader = True
-        trees = 6
         bucket = 'smalldata'
         csvPathname = 'iris/iris2.csv'
         hexKey = 'iris2.csv.hex'
-        translate = {'setosa': 0.0, 'versicolor': 1.0, 'virginica': 2.0, }
+        translate = None
     elif (1 == 0):
+        y = 54
         skipSrcHeader = False
-        trees = 6
         bucket = 'home-0xdiag-datasets'
         csvPathname = 'standard/covtype.shuffled.10pct.data'
         hexKey = 'covtype.shuffled.10pct.data.hex'
         translate = {'1': 1.0, '2': 2.0, '3': 3.0, '4': 4.0, '5': 5.0, '6': 6.0, '7': 7.0, }
-    else:
+    elif (1 == 0):
+        y = 54
         skipSrcHeader = False
-        trees = 6
         bucket = 'home-0xdiag-datasets'
         csvPathname = 'standard/covtype.data'
         hexKey = 'covtype.data.hex'
         translate = {'1': 1.0, '2': 2.0, '3': 3.0, '4': 4.0, '5': 5.0, '6': 6.0, '7': 7.0, }
+    else:
+        y = 0
+        skipSrcHeader = False
+        bucket = 'home-0xdiag-datasets'
+        csvPathname = 'mnist/mnist_training.csv.gz'
+        hexKey = 'mnist_training.hex'
+        translate = {'0': 0.0, '1': 1.0, '2': 2.0, '3': 3.0, '4': 4.0, '5': 5.0, '6': 6.0, '7': 7.0, '8': 8.0, '9': 9.0, }
     csvPredictPathname = ((SYNDATASETS_DIR + '/') + predictCsv)
+    csvSrcOutputPathname = ((SYNDATASETS_DIR + '/') + actualCsv)
     csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
 
-    def predict_and_compare_csvs(model_key, translate=None):
+    def predict_and_compare_csvs(model_key, hex_key, translate=None, y=0):
+        dataKey = 'P.hex'
+        h2e.exec_expr(execExpr=((dataKey + '=') + hex_key), timeoutSecs=30)
+        if HAS_HEADER:
+            print 'Has header in dataset, so should be able to chop out col 0 for predict and get right answer'
+            print "hack for now, can't chop out col 0 in Exec currently"
+            dataKey = hex_key
+        else:
+            print "No header in dataset, can't chop out cols, since col numbers are used for names"
+            dataKey = hex_key
+        h2e.exec_expr(execExpr=(((('Z.hex=' + hex_key) + '[') + str(y)) + ']'), timeoutSecs=30)
         start = time.time()
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
         print 'generate_predictions end on ', hexKey, ' took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
         inspect = h2o_cmd.runInspect(key=predictHexKey)
         h2o_cmd.infoFromInspect(inspect, 'predict.hex')
+        h2o.nodes[0].csv_download(key='Z.hex', csvPathname=csvSrcOutputPathname)
         h2o.nodes[0].csv_download(key=predictHexKey, csvPathname=csvPredictPathname)
         h2o.check_sandbox_for_errors()
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
         print 'Do a check of the original output col against predicted output'
-        (rowNum1, originalOutput) = compare_csv_last_col(csvFullname, msg='Original', translate=translate, skipHeader=skipSrcHeader)
-        (rowNum2, predictOutput) = compare_csv_last_col(csvPredictPathname, msg='Predicted', skipHeader=True)
-        expHeaderMismatch = (0 if skipSrcHeader else 1)
-        if ((rowNum1 + expHeaderMismatch) != rowNum2):
-            raise Exception(('original rowNum1: %s + %s not same as downloaded predict rowNum2: %s' % (rowNum1, expHeaderMismatch, rowNum2)))
+        (rowNum1, originalOutput) = compare_csv_at_one_col(csvSrcOutputPathname, msg='Original', colIndex=0, translate=translate, skipHeader=skipSrcOutputHeader)
+        (rowNum2, predictOutput) = compare_csv_at_one_col(csvPredictPathname, msg='Predicted', colIndex=0, skipHeader=skipPredictHeader)
+        if ((rowNum1 - skipSrcOutputHeader) != (rowNum2 - skipPredictHeader)):
+            raise Exception(('original rowNum1: %s - %d not same as downloaded predict: rowNum2: %s - %d                     %s' % (rowNum1, skipSrcOutputHeader, rowNum2, skipPredictHeader)))
         wrong = 0
         for (rowNum, (o, p)) in enumerate(zip(originalOutput, predictOutput)):
             if (float(o) != float(p)):
@@ -56,12 +77,13 @@ def test_rf_predict2(self):
         pctWrong = ((100.0 * wrong) / len(originalOutput))
         print 'wrong/Total * 100 ', pctWrong
         if (pctWrong > 2.0):
-            raise Exception("pct wrong too high. Expect < 2% error because it's reusing training data")
+            raise Exception("pct w rongtoo high. Expect < 2% error because it's reusing training data")
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
-    kwargs = {'use_non_local_data': 1, }
-    rfResult = h2o_cmd.runRF(parseResult=parseResult, trees=trees, model_key='rf_model', timeoutSecs=timeoutSecs, **kwargs)
+    kwargs = {'use_non_local_data': 1, 'response_variable': y, 'ntree': 16, }
+    rfResult = h2o_cmd.runRF(parseResult=parseResult, model_key='rf_model', timeoutSecs=timeoutSecs, **kwargs)
     print 'Use H2O GeneratePredictionsPage with a H2O generated model and the same data key.'
     print "Does this work? (feeding in same data key)if you're predicting, "
     print "don't you need one less column (the last is output?)"
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
-    predict_and_compare_csvs(model_key=rfResult['model_key'], translate=translate)
+    print 'y=', y
+    predict_and_compare_csvs(model_key=rfResult['model_key'], hex_key=hexKey, translate=translate, y=y)

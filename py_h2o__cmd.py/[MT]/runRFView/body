@@ -1,32 +1,7 @@
 def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=15, retryDelaySecs=2, doSimpleCheck=True, noise=None, noPoll=False, noPrint=False, **kwargs):
     if (not node):
         node = h2o.nodes[0]
-
-    def test(n, tries=None):
-        rfView = n.random_forest_view(data_key, model_key, timeoutSecs, noise=noise, **kwargs)
-        status = rfView['response']['status']
-        numberBuilt = rfView['trees']['number_built']
-        if (status == 'done'):
-            if (numberBuilt != ntree):
-                raise Exception(('RFview done but number_built!=ntree: %s %s' % (numberBuilt, ntree)))
-            return True
-        if (status != 'poll'):
-            raise Exception(('Unexpected status: ' + status))
-        progress = rfView['response']['progress']
-        progressTotal = rfView['response']['progress_total']
-        errorInResponse = ((numberBuilt < 0) or (ntree < 0) or (numberBuilt > ntree) or (progress < 0) or (progressTotal < 0) or (progress > progressTotal) or (ntree != rfView['ntree']))
-        if errorInResponse:
-            raise Exception(('\nBad values in response during RFView polling.\n' + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))
-        if (status == 'poll'):
-            if (numberBuilt == 0):
-                h2o.verboseprint('.')
-            else:
-                h2o.verboseprint('\nRFView polling #', tries, ('Status: %s. %s trees done of %s desired' % (status, numberBuilt, ntree)))
-        return (status != 'poll')
-    if noPoll:
-        return None
-    node.stabilize(test, ('random forest reporting %d trees' % ntree), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
-    rfView = node.random_forest_view(data_key, model_key, timeoutSecs, noise=noise, **kwargs)
+    rfView = node.random_forest_view(data_key, model_key, ntree=ntree, timeoutSecs=timeoutSecs, noise=noise, **kwargs)
     if doSimpleCheck:
         h2f.simpleCheckRFView(node, rfView, noPrint=noPrint)
     return rfView

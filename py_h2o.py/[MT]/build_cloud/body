@@ -63,14 +63,14 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
         shutil.copy(config_json, ((LOG_DIR + '/') + os.path.basename(config_json)))
     cs_time = str(datetime.datetime.now())
     cs_cwd = os.getcwd()
-    cs_python_cmd_line = ('python %s %s' % (python_test_name, pythonCmdLineArgs))
+    cs_python_cmd_line = ('python %s %s' % (python_test_name, python_cmd_args))
     cs_python_test_name = python_test_name
     if config_json:
         cs_config_json = os.path.abspath(config_json)
     else:
         cs_config_json = None
     cs_username = getpass.getuser()
-    cs_ip = get_ip_address()
+    cs_ip = python_cmd_ip
     print 'Writing the test_rerun.sh in', LOG_DIR
     test_rerun_sh = ((LOG_DIR + '/') + 'test_rerun.sh')
     with open(test_rerun_sh, 'w') as f:
