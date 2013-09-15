@@ -31,6 +31,8 @@ def test_KMeans_sphere15_180GB(self):
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, fileMBS, elapsed)
         print ('\n' + l)
         h2o.cloudPerfH2O.message(l)
+        if (not DO_KMEANS):
+            continue
         print (('col 0 is enum in ' + csvFilename) + ' but KMeans should skip that automatically?? or no?')
         kwargs = {'k': 15, 'initialization': 'Furthest', 'epsilon': 1e-06, 'cols': None, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
         if ((trial % 3) == 0):
