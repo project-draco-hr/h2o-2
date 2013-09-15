@@ -1,5 +1,8 @@
-def runRF(node=None, csvPathname=None, trees=5, key=None, key2=None, timeoutSecs=20, retryDelaySecs=2, rfView=True, noise=None, **kwargs):
-    pto = max((timeoutSecs / 5), 30)
-    noise = kwargs.pop('noise', None)
-    parseKey = parseFile(node, csvPathname, key, key2=key2, timeoutSecs=pto, noise=noise)
-    return runRFOnly(node, parseKey, trees, timeoutSecs, retryDelaySecs, rfView=rfView, noise=noise, **kwargs)
+def runRF(node=None, parseResult=None, trees=5, timeoutSecs=20, retryDelaySecs=2, rfView=True, noise=None, noPrint=False, **kwargs):
+    if (not parseResult):
+        raise Exception('No parsed key for RF specified')
+    if (not node):
+        node = h2o.nodes[0]
+    h2o.verboseprint('runRF parseResult:', parseResult)
+    Key = parseResult['destination_key']
+    return node.random_forest(Key, trees, timeoutSecs, **kwargs)

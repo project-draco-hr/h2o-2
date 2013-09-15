@@ -10,7 +10,7 @@
     if (!p.matcher(ks).matches())     continue;
     if (exclude != null && exclude.matcher(ks).matches())     continue;
     Value v2=DKV.get(key);
-    if (v2.isHex())     continue;
+    if (!v2.isRawData())     continue;
     keys.add(key);
   }
   if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");

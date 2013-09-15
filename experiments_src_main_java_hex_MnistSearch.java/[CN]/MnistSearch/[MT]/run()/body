@@ -13,7 +13,7 @@
     for (int i=0; i < _ls.length; i++)     _ls[i].init(false);
     search.run(_ls[1],_ls[2]);
     for (int i=0; i < 10; i++) {
-      Trainer trainer=new ThreadedTrainers(_ls);
+      Trainer trainer=new Threaded(_ls);
       trainer._batch=10;
       trainer._batches=100;
       long start=System.nanoTime();

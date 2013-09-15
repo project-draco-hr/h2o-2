@@ -2,5 +2,6 @@ def test_badchars(self):
     print 'badchars.csv has some 0x0 (<NUL>) characters.'
     print 'They were created by a dd that filled out to buffer boundary with <NUL>'
     print 'They are visible using vim/vi'
-    csvPathname = h2o.find_file('smalldata/badchars.csv')
-    h2o_cmd.runRF(trees=50, timeoutSecs=10, csvPathname=csvPathname)
+    csvPathname = 'badchars.csv'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+    h2o_cmd.runRF(parseResult=parseResult, trees=50, timeoutSecs=10)

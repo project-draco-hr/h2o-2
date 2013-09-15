@@ -1,5 +1,6 @@
-def runGLM(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=20, retryDelaySecs=2, noise=None, **kwargs):
-    pto = max((timeoutSecs / 5), 10)
-    noise = kwargs.pop('noise', None)
-    parseKey = parseFile(node, csvPathname, key, key2=key2, timeoutSecs=pto, noise=noise)
-    return runGLMOnly(node, parseKey, timeoutSecs, retryDelaySecs, noise=noise, **kwargs)
+def runGLM(node=None, parseResult=None, timeoutSecs=20, retryDelaySecs=2, noise=None, **kwargs):
+    if (not parseResult):
+        raise Exception('No parsed key for GLM specified')
+    if (not node):
+        node = h2o.nodes[0]
+    return node.GLM(parseResult['destination_key'], timeoutSecs, retryDelaySecs, noise=noise, **kwargs)

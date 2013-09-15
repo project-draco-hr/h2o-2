@@ -1,17 +1,11 @@
-def parseFile(self, s3bucket, localbucket, pathname, timeoutSecs, header, **kwargs):
+def parseFile(self, bucket, pathname, timeoutSecs, header, **kwargs):
     if USE_LOCAL:
-        (importFolderPath, csvFilename) = os.path.split((('/' + localbucket) + pathname))
-        h2i.setupImportFolder(None, importFolderPath)
-        start = time.time()
-        parseKey = h2i.parseImportFolderFile(None, csvFilename, importFolderPath, timeoutSecs=180)
+        schema = None
     else:
-        schema = 's3n://'
-        bucket = s3bucket
-        URI = ((schema + bucket) + pathname)
-        importResult = h2o.nodes[0].import_hdfs(URI)
-        start = time.time()
-        parseKey = h2o.nodes[0].parse(('*' + pathname), timeoutSecs=timeoutSecs, header=header)
+        schema = 's3n'
+    start = time.time()
+    parseResult = h2i.import_parse(bucket=bucket, path=pathname, schema='put', timeoutSecs=180)
     parse_time = (time.time() - start)
-    h2o.verboseprint('py-S3 parse took {0} sec'.format(parse_time))
-    parseKey['python_call_timer'] = parse_time
-    return parseKey
+    h2o.verboseprint('parse took {0} sec'.format(parse_time))
+    parseResult['python_call_timer'] = parse_time
+    return parseResult

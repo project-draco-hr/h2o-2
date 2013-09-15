@@ -5,7 +5,7 @@ def test_parse_multi_header_single(self):
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON,output'
     tryList = [(57, 300, 9, 'cA', 60, 0), (57, 300, 9, 'cB', 60, 1), (57, 300, 9, 'cC', 60, 2), (57, 300, 9, 'cD', 60, 3)]
     trial = 0
-    for (fileNum, rowCount, colCount, key2, timeoutSecs, dataRowsWithHeader) in tryList:
+    for (fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader) in tryList:
         trial += 1
         print 'Wait while', fileNum, 'synthetic files are created in', SYNDATASETS_DIR
         rowxcol = ((str(rowCount) + 'x') + str(colCount))
@@ -22,16 +22,16 @@ def test_parse_multi_header_single(self):
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             dataRowsDone = write_syn_dataset(csvPathname, dataRowsWithHeader, headerData, rList)
             totalDataRows += dataRowsDone
-        key = ('syn_' + str(trial))
-        key2 = (('syn_' + str(trial)) + '.hex')
-        xs = h2o.nodes[0].import_files(SYNDATASETS_DIR)['keys']
-        header = [x for x in xs if ('header' in x)][0]
+        src_key = ('syn_' + str(trial))
+        hex_key = (('syn_' + str(trial)) + '.hex')
+        h2i.import_only(path=(SYNDATASETS_DIR + '/*'))
+        header = h2i.find_key('syn_header')
         print ('Header Key = ' + header)
         start = time.time()
-        parseKey = h2o.nodes[0].parse((('*' + rowxcol) + '*'), key2=key2, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
-        print ("parseKey['destination_key']: " + parseKey['destination_key'])
-        print 'parse time:', parseKey['response']['time']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2i.import_parse(path=(((SYNDATASETS_DIR + '/*') + rowxcol) + '*'), src_key=src_key, hex_key=hex_key, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
+        print ("parseResult['destination_key']: " + parseResult['destination_key'])
+        print 'parse time:', parseResult['response']['time']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         self.assertEqual(inspect['num_cols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], totalCols)))
@@ -41,7 +41,7 @@ def test_parse_multi_header_single(self):
         else:
             kwargs = {'sample': 75, 'depth': 25, 'ntree': 1, }
         start = time.time()
-        rfv = h2o_cmd.runRFOnly(parseKey=parseKey, timeoutSecs=timeoutSecs, **kwargs)
+        rfv = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         print 'trial #', trial, 'totalDataRows:', totalDataRows, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'

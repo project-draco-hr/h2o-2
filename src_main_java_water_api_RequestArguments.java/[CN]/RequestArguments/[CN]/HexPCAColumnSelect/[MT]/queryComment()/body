@@ -1,0 +1,9 @@
+{
+  TreeSet<String> nonNumCols=_nonNumColumns.get();
+  TreeSet<String> constCols=_constantColumns.get();
+  String msg="";
+  if (_badColumns.get() != null && _badColumns.get() > 0)   msg+="<b>There are " + _badColumns.get() + " columns with more than "+ _maxNAsRatio * 100 + "% of NAs.</b><br/>\n";
+  if (constCols != null && !constCols.isEmpty())   msg+="<b>Ignoring " + constCols.size() + " constant columns</b>: "+ constCols.toString()+ "<br/>\n";
+  if (nonNumCols != null && !nonNumCols.isEmpty())   msg+="<b>Ignoring " + nonNumCols.size() + " non-numeric columns</b>: "+ nonNumCols.toString();
+  return msg == "" ? msg : "<div class='alert'>" + msg + "</div>";
+}

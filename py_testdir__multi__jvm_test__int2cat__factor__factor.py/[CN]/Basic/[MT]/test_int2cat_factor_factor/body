@@ -2,19 +2,19 @@ def test_int2cat_factor_factor(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(10000, 10, 'cA.hex', 100), (10000, 20, 'cB.hex', 200), (10000, 30, 'cC.hex', 300), (10000, 40, 'cD.hex', 400), (10000, 50, 'cE.hex', 500)]
     exprList = ['<keyX>= colSwap(<keyX>,<col1>,factor(<keyX>[0]))']
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print '\nCreating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=90)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=90)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         print '\nNow running the int 2 enum exec command across all input cols'
-        colResultList = h2e.exec_expr_list_across_cols(None, exprList, key2, maxCol=colCount, timeoutSecs=90, incrementingResult=False)
+        colResultList = h2e.exec_expr_list_across_cols(None, exprList, hex_key, maxCol=colCount, timeoutSecs=90, incrementingResult=False)
         print '\nexec colResultList', colResultList
         if (not h2o.browse_disable):
             h2b.browseJsonHistoryAsUrlLastMatch('Inspect')

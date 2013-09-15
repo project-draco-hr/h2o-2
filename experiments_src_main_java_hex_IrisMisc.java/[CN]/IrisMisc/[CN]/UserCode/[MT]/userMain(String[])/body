@@ -1,0 +1,19 @@
+{
+  Sandbox.localCloud(1,true,args);
+  final IrisMisc test1=new IrisMisc();
+  final IrisMisc test2=new IrisMisc();
+  Thread t1=new Thread(){
+    public void run(){
+      test1.run();
+    }
+  }
+;
+  Thread t2=new Thread(){
+    public void run(){
+      test2.run();
+    }
+  }
+;
+  t1.start();
+  sync(test1,test2);
+}

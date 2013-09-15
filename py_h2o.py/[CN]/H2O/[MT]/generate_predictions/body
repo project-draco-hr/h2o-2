@@ -1,5 +1,5 @@
-def generate_predictions(self, data_key, model_key, timeoutSecs=300, print_params=True, **kwargs):
-    params_dict = {'data_key': data_key, 'model_key': model_key, }
+def generate_predictions(self, data_key, model_key, destination_key=None, timeoutSecs=300, print_params=True, **kwargs):
+    params_dict = {'data_key': data_key, 'model_key': model_key, 'destination_key': destination_key, }
     browseAlso = kwargs.pop('browseAlso', False)
     for k in kwargs:
         if (k in params_dict):

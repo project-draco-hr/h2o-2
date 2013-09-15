@@ -3,30 +3,30 @@ def test_parse_bounds_libsvm(self):
     h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 10000, 'cC', 300)]
-    for (rowCount, colCount, key2, timeoutSecs) in tryList:
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = ('syn_%s_%s_%s.csv' % (SEEDPERFILE, rowCount, colCount))
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         (colNumberMax, synColSumDict) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        parseKey = h2o_cmd.parseFile(None, csvPathname, key2=key2, timeoutSecs=timeoutSecs, doSummary=False)
-        print "Parse result['destination_key']:", parseKey['destination_key']
-        inspect = h2o_cmd.runInspect(None, parseKey['destination_key'], max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, doSummary=False)
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)
         num_cols = inspect['num_cols']
         num_rows = inspect['num_rows']
         self.assertEqual((colNumberMax + 1), num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), num_cols)))
         self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
         for x in range(num_cols):
             print ('Doing summary with x=%s' % x)
-            summaryResult = h2o_cmd.runSummary(key=key2, x=x, timeoutSecs=timeoutSecs)
+            summaryResult = h2o_cmd.runSummary(key=hex_key, x=x, timeoutSecs=timeoutSecs)
             if (x == 0):
                 colName = 'Target'
             else:
                 colName = ('V' + str(x))
             print ('Doing summary with col name x=%s' % colName)
-            summaryResult = h2o_cmd.runSummary(key=key2, x=x, timeoutSecs=timeoutSecs)
+            summaryResult = h2o_cmd.runSummary(key=hex_key, x=x, timeoutSecs=timeoutSecs)
         print ('Doing and checking summary with no x=%s' % x)
-        summaryResult = h2o_cmd.runSummary(key=key2, max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)
+        summaryResult = h2o_cmd.runSummary(key=hex_key, max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         summary = summaryResult['summary']
         columnsList = summary['columns']

@@ -1,6 +1,7 @@
-def runKMeans(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
-    pto = max((timeoutSecs / 5), 10)
-    noise = kwargs.pop('noise', None)
-    parseKey = parseFile(node, csvPathname, key, key2=key2, timeoutSecs=pto, noise=noise)
-    kmeans = runKMeansOnly(node, parseKey, timeoutSecs, retryDelaySecs, **kwargs)
-    return kmeans
+def runKMeans(node=None, parseResult=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
+    if (not parseResult):
+        raise Exception('No parsed key for KMeans specified')
+    if (not node):
+        node = h2o.nodes[0]
+    print parseResult['destination_key']
+    return node.kmeans(parseResult['destination_key'], None, timeoutSecs, retryDelaySecs, **kwargs)

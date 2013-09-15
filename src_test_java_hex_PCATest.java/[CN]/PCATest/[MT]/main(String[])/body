@@ -1,0 +1,12 @@
+{
+  System.out.println("Running PCATest");
+  final int nnodes=1;
+  for (int i=1; i < nnodes; i++) {
+    Node n=new NodeVM(args);
+    n.inheritIO();
+    n.start();
+  }
+  H2O.waitForCloudSize(nnodes);
+  System.out.println("Cloud formed");
+  runTests();
+}

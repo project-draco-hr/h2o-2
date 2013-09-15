@@ -1,4 +1,4 @@
-def check_sandbox_for_errors(sandbox_ignore_errors=False):
+def check_sandbox_for_errors(sandboxIgnoreErrors=False, cloudShutdownIsError=False):
     if (not os.path.exists(LOG_DIR)):
         return
     if (nodes and nodes[0].sandbox_error_report()):
@@ -7,18 +7,20 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
     for filename in os.listdir(LOG_DIR):
         if re.search('stdout|stderr', filename):
             sandFile = open(((LOG_DIR + '/') + filename), 'r')
-            regex1 = re.compile('found multiple|exception|error|ERRR|assert|killing|killed|required ports', re.IGNORECASE)
+            regex1String = 'found multiple|exception|error|ERRR|assert|killing|killed|required ports'
+            if cloudShutdownIsError:
+                regex1String += '|shutdown command'
+            regex1 = re.compile(regex1String, re.IGNORECASE)
             regex2 = re.compile('Caused', re.IGNORECASE)
-            regex3 = re.compile('warn|info|TCP', re.IGNORECASE)
+            regex3 = re.compile('warn|TCP', re.IGNORECASE)
             printing = 0
             lines = 0
             for line in sandFile:
                 printSingleWarning = False
                 foundBad = False
                 if (not (' bytes)' in line)):
-                    printSingleWarning = (regex3.search(line) and (not ('[Loaded ' in line)) and (not ('RestS3Service' in line)))
-                    printSingleWarning = False
-                    foundBad = (regex1.search(line) and (not (('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
+                    printSingleWarning = regex3.search(line)
+                    foundBad = (regex1.search(line) and (not (('out_of_bag_error_estimate' in line) or ('Training Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
                     lines = 1
@@ -32,7 +34,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
                     errLines.append(line)
                     sys.stdout.write(line)
                 if printSingleWarning:
-                    if (not re.search('Unable to load native-hadoop library for your platform', line)):
+                    if (not (re.search('Unable to load native-hadoop library', line) or ('Multiple local IPs detected' in line) or ('[Loaded ' in line) or ('RestS3Service' in line))):
                         sys.stdout.write(line)
             sandFile.close()
     sys.stdout.flush()
@@ -45,7 +47,7 @@ def check_sandbox_for_errors(sandbox_ignore_errors=False):
             emsg2 = ''.join(errLines)
             if nodes:
                 nodes[0].sandbox_error_report(True)
-            if (sandbox_ignore_errors or (nodes and nodes[0].sandbox_ignore_errors)):
+            if (sandboxIgnoreErrors or (nodes and nodes[0].sandbox_ignore_errors)):
                 pass
             else:
                 raise Exception(((python_test_name + emsg1) + emsg2))

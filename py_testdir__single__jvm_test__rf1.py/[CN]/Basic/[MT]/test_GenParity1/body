@@ -13,6 +13,7 @@ def test_GenParity1(self):
         sys.stdout.flush()
         csvFilename = (('parity_128_4_' + str(x)) + '_quad.data')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-        h2o_cmd.runRF(trees=trees, timeoutSecs=timeoutSecs, csvPathname=csvPathname)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put')
+        h2o_cmd.runRF(parseResult=parseResult, trees=trees, timeoutSecs=timeoutSecs)
         trees += 10
         timeoutSecs += 2

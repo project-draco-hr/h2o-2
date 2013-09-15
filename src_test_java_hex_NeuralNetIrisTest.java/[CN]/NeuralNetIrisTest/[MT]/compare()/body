@@ -1,16 +1,7 @@
 {
   float rate=0.01f;
-  float momentum=0;
   int epochs=1000;
-  Layer[] ls=new Layer[3];
-  ls[0]=_train;
-  ls[1]=new Layer.Tanh();
-  ls[1]._rate=rate;
-  ls[1].init(ls[0],7);
-  ls[2]=new Softmax();
-  ls[2]._rate=rate;
-  ls[2].init(ls[1],3);
-  for (int i=1; i < ls.length; i++)   ls[i].randomize();
+  Layer[] ls=create(rate);
   NeuralNetMLPReference ref=new NeuralNetMLPReference();
   ref.init();
   Layer l=ls[1];
@@ -23,9 +14,9 @@
     for (int i=0; i < l._in._a.length; i++)     ref._nn.hoWeights[i][o]=l._w[o * l._in._a.length + i];
     ref._nn.oBiases[o]=l._b[o];
   }
-  ref.train(epochs,rate,momentum);
+  ref.train(epochs,rate);
   Trainer.Direct trainer=new Trainer.Direct(ls);
-  trainer._batches=epochs * (int)_train._frame.numRows();
+  trainer._batches=epochs * (int)_train.numRows();
   trainer._batch=1;
   trainer.run();
   float epsilon=1e-4f;
@@ -43,8 +34,9 @@
     }
   }
   NeuralNet.Error train=NeuralNetScore.eval(ls,NeuralNet.EVAL_ROW_COUNT);
-  ls[0]=_test;
-  ls[1]._in=_test;
+  ls[0]=new FrameInput(_test,false);
+  ls[0].init(null,4);
+  ls[1]._in=ls[0];
   NeuralNet.Error test=NeuralNetScore.eval(ls,NeuralNet.EVAL_ROW_COUNT);
   float trainAcc=ref._nn.Accuracy(ref._trainData);
   Assert.assertEquals(trainAcc,train.Value,epsilon);

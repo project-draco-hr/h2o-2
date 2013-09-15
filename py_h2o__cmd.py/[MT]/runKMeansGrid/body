@@ -1,5 +1,6 @@
-def runKMeansGrid(node=None, csvPathname=None, key=None, key2=None, timeoutSecs=60, retryDelaySecs=2, noise=None, **kwargs):
-    pto = max((timeoutSecs / 5), 10)
-    noise = kwargs.pop('noise', None)
-    parseKey = parseFile(node, csvPathname, key, key=key2, timeoutSecs=pto, noise=noise)
-    return runKMeansGridOnly(node, parseKey, timeoutSecs, retryDelaySecs, noise=noise, **kwargs)
+def runKMeansGrid(node=None, parseResult=None, timeoutSecs=60, retryDelaySecs=2, noise=None, **kwargs):
+    if (not parseResult):
+        raise Exception('No parsed key for KMeansGrid specified')
+    if (not node):
+        node = h2o.nodes[0]
+    return node.kmeans_grid(parseResult['destination_key'], timeoutSecs, **kwargs)

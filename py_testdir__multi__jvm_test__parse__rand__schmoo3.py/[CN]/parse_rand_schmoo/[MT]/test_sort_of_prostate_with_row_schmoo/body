@@ -16,7 +16,7 @@ def test_sort_of_prostate_with_row_schmoo(self):
         totalRows += num
         start = time.time()
         key = ((csvFilename + '_') + str(trial))
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
-        key = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=150, pollTimeoutSecs=150)
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=150, pollTimeoutSecs=150)
         print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()

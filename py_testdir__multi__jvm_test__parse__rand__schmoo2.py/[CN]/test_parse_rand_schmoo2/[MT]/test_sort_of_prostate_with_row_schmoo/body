@@ -1,0 +1,21 @@
+def test_sort_of_prostate_with_row_schmoo(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_prostate.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON'
+    rowData = rand_rowData()
+    totalRows = 1
+    write_syn_dataset(csvPathname, totalRows, headerData, rowData)
+    print 'This is the same format/data file used by test_same_parse, but the non-gzed version'
+    print '\nSchmoo the # of rows'
+    for trial in range(100):
+        rowData = rand_rowData()
+        num = random.randint(1, 10096)
+        append_syn_dataset(csvPathname, rowData, num)
+        totalRows += num
+        start = time.time()
+        key = ((csvFilename + '_') + str(trial))
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=70, pollTimeoutSecs=150)
+        print 'trial #', trial, 'totalRows:', totalRows, 'last num:', num, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        h2o.check_sandbox_for_errors()

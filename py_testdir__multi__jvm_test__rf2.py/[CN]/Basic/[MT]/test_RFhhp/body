@@ -1,3 +1,4 @@
 def test_RFhhp(self):
-    csvPathnamegz = h2o.find_file('smalldata/hhp_9_17_12.predict.data.gz')
-    h2o_cmd.runRF(trees=6, timeoutSecs=30, csvPathname=csvPathnamegz)
+    csvPathname = 'hhp_9_17_12.predict.data.gz'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+    h2o_cmd.runRF(parseResult=parseResult, trees=6, timeoutSecs=30)

@@ -1,0 +1,9 @@
+{
+  Layer[] clones=new Layer[ls.length];
+  clones[0]=input;
+  for (int y=1; y < ls.length; y++) {
+    clones[y]=ls[y].clone();
+    clones[y].init(clones[y - 1],ls[y]._b.length,false);
+  }
+  return clones;
+}

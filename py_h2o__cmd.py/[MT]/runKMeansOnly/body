@@ -1,7 +1,0 @@
-def runKMeansOnly(node=None, parseKey=None, timeoutSecs=20, retryDelaySecs=2, **kwargs):
-    if (not parseKey):
-        raise Exception('No parsed key for KMeans specified')
-    if (not node):
-        node = h2o.nodes[0]
-    print parseKey['destination_key']
-    return node.kmeans(parseKey['destination_key'], None, timeoutSecs, retryDelaySecs, **kwargs)

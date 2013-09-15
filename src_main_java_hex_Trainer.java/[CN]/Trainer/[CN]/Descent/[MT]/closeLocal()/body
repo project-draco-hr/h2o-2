@@ -1,0 +1,16 @@
+{
+  super.closeLocal();
+  if (_dw == null) {
+    _dw=new float[_ws.length][];
+    _db=new float[_bs.length][];
+    for (int y=1; y < _ws.length; y++) {
+      _dw[y]=new float[_ws[y].length];
+      _db[y]=new float[_bs[y].length];
+    }
+  }
+  for (int y=1; y < _ws.length; y++) {
+    for (int i=0; i < _ws[y].length; i++)     _dw[y][i]+=_ls[y]._w[i] - _ws[y][i];
+    for (int i=0; i < _bs[y].length; i++)     _db[y][i]+=_ls[y]._b[i] - _bs[y][i];
+  }
+  _ws=_bs=null;
+}

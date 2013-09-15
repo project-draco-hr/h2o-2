@@ -6,14 +6,15 @@ def test_rf_big_rand_trees(self):
     colCount = 1000
     write_syn_dataset(csvPathname, rowCount, colCount)
     for trial in range(1):
-        key = ((csvFilename + '_') + str(trial))
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        src_key = ((csvFilename + '_') + str(trial))
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         seed = random.randint(0, sys.maxint)
         kwargs = {'ntree': 3, 'depth': 50, 'seed': seed, }
         start = time.time()
-        key = h2o_cmd.runRF(csvPathname=csvPathname, key=key, key2=key2, timeoutSecs=180, pollTimeoutSecs=5, **kwargs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key)
+        h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=180, pollTimeoutSecs=5, **kwargs)
         print 'trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
-        inspect = h2o_cmd.runInspect(key=key2)
+        inspect = h2o_cmd.runInspect(key=hex_key)
         cols = inspect['cols']
         num_cols = inspect['num_cols']
         for (i, c) in enumerate(cols):

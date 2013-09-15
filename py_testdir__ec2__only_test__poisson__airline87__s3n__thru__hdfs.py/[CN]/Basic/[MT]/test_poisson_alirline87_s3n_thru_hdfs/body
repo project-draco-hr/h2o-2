@@ -1,0 +1,39 @@
+def test_poisson_alirline87_s3n_thru_hdfs(self):
+    bucket = 'h2o-airlines-unpacked'
+    csvFilename = 'year1987.csv'
+    csvPathname = csvFilename
+    trialMax = 2
+    timeoutSecs = 500
+    for trial in range(trialMax):
+        trialStart = time.time()
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        start = time.time()
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='s3n', timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=1200)
+        elapsed = (time.time() - start)
+        print hex_key, 'h2o reported parse time:', parseResult['response']['time']
+        print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        kwargs = {'y': 'CRSArrTime', 'x': '1,2,3,4,8,9,16,17,18,30', 'family': 'poisson', 'link': 'familyDefault', 'n_folds': 1, 'max_iter': 8, 'beta_epsilon': 0.001, }
+        timeoutSecs = 500
+        kwargs.update({'alpha': 0, 'lambda': 0, })
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, **kwargs)
+        elapsed = (time.time() - start)
+        print 'glm (L2) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
+        h2o.check_sandbox_for_errors()
+        kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, **kwargs)
+        elapsed = (time.time() - start)
+        print 'glm (Elastic) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
+        h2o.check_sandbox_for_errors()
+        kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, **kwargs)
+        elapsed = (time.time() - start)
+        print 'glm (L1) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
+        h2o.check_sandbox_for_errors()
+        print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.',

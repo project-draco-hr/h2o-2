@@ -13,10 +13,16 @@
     }
   }
 );
-  basicGBM("../datasets/UCI/UCI-large/covtype/covtype.data","covtype.hex",new PrepData(){
+  basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
     Vec prep(    Frame fr){
-      assertEquals(581012,fr.numRows());
-      return fr.remove(54);
+      UKV.remove(fr.remove("name")._key);
+      return fr.remove("cylinders");
+    }
+  }
+);
+  basicGBM("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
+    Vec prep(    Frame fr){
+      return fr.remove("IsDepDelayed");
     }
   }
 );

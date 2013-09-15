@@ -1,3 +1,12 @@
 {
-  cloud4();
+  Cloud cloud=new Cloud();
+  for (int i=LOW; i < LOW + LEN; i++)   cloud._publicIPs.add("192.168.1." + (161 + i));
+  cloud._clientRSyncIncludes.add("../libs/jdk");
+  cloud._clientRSyncIncludes.add("smalldata");
+  cloud._clientRSyncIncludes.add("experiments/target");
+  cloud._fannedRSyncIncludes.add("jdk");
+  cloud._fannedRSyncIncludes.add("smalldata");
+  String java="-ea -Xmx12G -Dh2o.debug";
+  String node="-mainClass " + MnistDist16x.UserCode.class.getName();
+  cloud.start(java.split(" "),node.split(" "));
 }

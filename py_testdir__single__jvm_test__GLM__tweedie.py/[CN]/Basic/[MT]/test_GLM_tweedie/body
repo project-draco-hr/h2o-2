@@ -1,0 +1,19 @@
+def test_GLM_tweedie(self):
+    csvFilename = 'AutoClaim.csv'
+    csvPathname = ('tweedie/' + csvFilename)
+    print '\nStarting', csvPathname
+    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put')
+    y = '4'
+    coefs = [7, 13, 20, 27, 21, 11]
+    x = ','.join([str(x) for x in coefs])
+    kwargs = {'family': 'tweedie', 'tweedie_power': 1.36, 'y': y, 'x': x, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'weight': 1.0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+    (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+    coefficients.append(intercept)
+    print ('coefficients: %s' % str(coefficients))
+    coefTruth = [(-0.017), (-0.009), (-0.004), (-0.054), 0.013, (-0.006), 0.006, (-0.017), (-0.013), (-0.004), 0.144]
+    deltaCoeff = deltaIntcpt = 0.05
+    for (i, c) in enumerate(coefficients):
+        g = coefTruth[i]
+        print ('coefficient[%d]: %8.4f,    truth: %8.4f,    delta: %8.4f' % (i, c, g, abs((g - c))))
+        self.assertAlmostEqual(c, g, delta=deltaCoeff, msg=('not close enough. coefficient[%d]: %s,    generated %s' % (i, c, g)))

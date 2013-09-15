@@ -6,14 +6,11 @@ def test_B_hdfs_files(self):
         csvFilenameList = random.sample(csvFilenameAll, 8)
     else:
         csvFilenameList = csvFilenameAll
-    timeoutSecs = 200
-    firstglm = {}
-    h2i.setupImportHdfs(path='/datasets/standard', schema='maprfs')
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
-        parseKey = h2i.parseImportHdfsFile(csvFilename=csvFilename, path='/datasets/standard', schema='maprfs', timeoutSecs=1000)
-        print csvFilename, 'parse time:', parseKey['response']['time']
-        print 'parse result:', parseKey['destination_key']
+        parseResult = h2i.import_parse(path=('datasets/standard/' + csvFilename), schema='maprfs', timeoutSecs=1000)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print 'parse result:', parseResult['destination_key']
         print ('\n' + csvFilename)
         start = time.time()
-        RFview = h2o_cmd.runRFOnly(trees=1, parseKey=parseKey, timeoutSecs=2000)
+        RFview = h2o_cmd.runRF(trees=1, parseResult=parseResult, timeoutSecs=2000)

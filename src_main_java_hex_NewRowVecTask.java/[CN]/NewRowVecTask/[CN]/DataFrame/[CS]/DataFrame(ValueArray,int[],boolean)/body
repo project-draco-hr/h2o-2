@@ -1,0 +1,22 @@
+{
+  _ary=ary;
+  _s=null;
+  _response=-1;
+  _colCatMap=new int[colIds.length + 1];
+  for (int i=0; i < _colCatMap.length; ++i)   _colCatMap[i]=i;
+  _modelDataMap=colIds;
+  _dense=colIds.length;
+  _normSub=new double[colIds.length];
+  _normMul=new double[colIds.length];
+  Arrays.fill(_normMul,1);
+  if (standardize)   for (int i=0; i < colIds.length; ++i) {
+    Column col=ary._cols[colIds[i]];
+    if (col._domain == null) {
+      int ii=_colCatMap[i];
+      _normSub[ii]=col._mean;
+      _normMul[ii]=1.0 / col._sigma;
+    }
+  }
+  _standardized=standardize;
+  _nobs=ary._numrows;
+}

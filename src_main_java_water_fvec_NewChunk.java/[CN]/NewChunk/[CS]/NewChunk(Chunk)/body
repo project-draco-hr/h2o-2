@@ -1,0 +1,14 @@
+{
+  _vec=C._vec;
+  _cidx=_vec.elem2ChunkIdx(C._start);
+  _len=C._len;
+  if (C.hasFloat() || C instanceof C0DChunk) {
+    _ds=MemoryManager.malloc8d(_len);
+  }
+ else {
+    _ls=MemoryManager.malloc8(_len);
+    _xs=MemoryManager.malloc4(_len);
+  }
+  _min=Double.MAX_VALUE;
+  _max=-Double.MAX_VALUE;
+}

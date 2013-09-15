@@ -1,5 +1,6 @@
 def test_A_putfile_to_all_nodes(self):
-    csvfile = h2o.find_file(file_to_put())
+    csvfile = file_to_put()
+    print 'csvfile:', csvfile
     origSize = h2o.get_file_size(csvfile)
     for node in h2o.nodes:
         sys.stdout.write('.')

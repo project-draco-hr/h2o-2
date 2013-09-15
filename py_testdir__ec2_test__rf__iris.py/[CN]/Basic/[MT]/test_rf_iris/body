@@ -1,9 +1,9 @@
 def test_rf_iris(self):
-    trainParseKey = self.loadTrainData()
+    trainParseResult = h2i.import_parse(bucket='smalldata', path='iris/iris2.csv', hex_key='train_iris2.hex', schema='put')
     kwargs = paramsTrainRF.copy()
-    trainResult = h2o_rf.trainRF(trainParseKey, **kwargs)
-    scoreParseKey = self.loadScoreData()
+    trainResult = h2o_rf.trainRF(trainParseResult, **kwargs)
+    scoreParseResult = h2i.import_parse(bucket='smalldata', path='iris/iris2.csv', hex_key='score_iris2.hex', schema='put')
     kwargs = paramsTestRF.copy()
-    scoreResult = h2o_rf.scoreRF(scoreParseKey, trainResult, **kwargs)
+    scoreResult = h2o_rf.scoreRF(scoreParseResult, trainResult, **kwargs)
     print '\nTrain\n=========={0}'.format(h2o_rf.pp_rf_result(trainResult))
     print '\nScoring\n========={0}'.format(h2o_rf.pp_rf_result(scoreResult))

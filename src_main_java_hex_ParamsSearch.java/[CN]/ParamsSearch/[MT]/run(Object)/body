@@ -10,7 +10,7 @@
     for (int i=0; i < expanded.size(); i++) {
       Class c=expanded.get(i).getClass();
       ArrayList<Field> fields=new ArrayList<Field>();
-      Utils.getAllFields(fields,c);
+      getAllFields(fields,c);
       for (      Field f : fields) {
         f.setAccessible(true);
         if ((f.getModifiers() & Modifier.STATIC) == 0) {

@@ -3,18 +3,30 @@
   if (file == null)   return;
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make(hexname);
-  Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
-  UKV.remove(fkey);
-  Vec vresponse=null;
+  Key skey=null;
   GBM gbm=null;
   try {
-    vresponse=prep.prep(fr);
-    gbm=GBM.start(GBM.makeKey(),fr,vresponse,5);
+    gbm=new GBM();
+    gbm.source=ParseDataset2.parse(dest,new Key[]{fkey});
+    UKV.remove(fkey);
+    gbm.vresponse=prep.prep(gbm.source);
+    gbm.ntrees=5;
+    gbm.max_depth=8;
+    gbm.learn_rate=0.2f;
+    gbm.min_rows=10;
+    gbm.nbins=100;
+    gbm.serve();
     gbm.get();
+    Vec vec=gbm.score(gbm.source);
+    skey=vec._key;
   }
   finally {
     UKV.remove(dest);
-    UKV.remove(vresponse._key);
-    if (gbm != null)     gbm.remove();
+    if (gbm != null) {
+      UKV.remove(gbm.dest());
+      UKV.remove(gbm.vresponse._key);
+      gbm.remove();
+      if (skey != null)       UKV.remove(skey);
+    }
   }
 }

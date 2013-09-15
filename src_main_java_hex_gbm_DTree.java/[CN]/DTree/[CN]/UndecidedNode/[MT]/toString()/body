@@ -1,7 +1,7 @@
 {
   final int nclass=_tree._nclass;
   final String colPad="  ";
-  final int cntW=4, mmmW=4, menW=3, varW=4;
+  final int cntW=4, mmmW=4, menW=4, varW=4;
   final int colW=cntW + 1 + mmmW+ 1+ mmmW+ 1+ nclass * (menW + 1) + varW;
   StringBuilder sb=new StringBuilder();
   sb.append("Nid# ").append(_nid).append(", ");
@@ -18,7 +18,9 @@
     p(sb,"var",varW).append(colPad);
   }
   sb.append('\n');
-  for (int i=0; i < DHistogram.BINS; i++) {
+  int nbins=0;
+  for (int j=0; j < ncols; j++)   if (_hs[j] != null && _hs[j].nbins() > nbins)   nbins=_hs[j].nbins();
+  for (int i=0; i < nbins; i++) {
     for (int j=0; j < ncols; j++) {
       DHistogram h=_hs[j];
       if (h == null)       continue;

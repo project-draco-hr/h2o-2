@@ -1,3 +1,3 @@
 def test_poker_xlsx(self):
-    parseKey = h2o_cmd.parseFile(None, h2o.find_dataset('poker/poker-hand-testing.xlsx'), timeoutSecs=120, pollTimeoutSecs=60)
-    h2o_cmd.runRFOnly(None, parseKey=parseKey, timeoutSecs=120)
+    parseResult = h2i.import_parse(bucket='datasets', path='poker/poker-hand-testing.xlsx', schema='put', timeoutSecs=120, pollTimeoutSecs=60)
+    h2o_cmd.runRF(None, parseResult=parseResult, timeoutSecs=120)

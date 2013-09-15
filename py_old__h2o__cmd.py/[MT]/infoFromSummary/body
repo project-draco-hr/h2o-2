@@ -1,0 +1,54 @@
+def infoFromSummary(summaryResult, noPrint=False):
+    summary = summaryResult['summary']
+    columnsList = summary['columns']
+    for columns in columnsList:
+        N = columns['N']
+        name = columns['name']
+        stype = columns['type']
+        histogram = columns['histogram']
+        bin_size = histogram['bin_size']
+        bin_names = histogram['bin_names']
+        if (not noPrint):
+            for b in bin_names:
+                print 'bin_name:', b
+        bins = histogram['bins']
+        nbins = histogram['bins']
+        if (not noPrint):
+            print '\n\n************************'
+            print 'N:', N
+            print 'name:', name
+            print 'type:', stype
+            print 'bin_size:', bin_size
+            print 'len(bin_names):', len(bin_names), bin_names
+            print 'len(bins):', len(bins), bins
+            print 'len(nbins):', len(nbins), nbins
+        if (stype != 'enum'):
+            zeros = columns['zeros']
+            na = columns['na']
+            smax = columns['max']
+            smin = columns['min']
+            mean = columns['mean']
+            sigma = columns['sigma']
+            if (not noPrint):
+                print 'zeros:', zeros
+                print 'na:', na
+                print 'smax:', smax
+                print 'smin:', smin
+                print 'mean:', mean
+                print 'sigma:', sigma
+            if (len(bins) >= 2):
+                percentiles = columns['percentiles']
+                thresholds = percentiles['thresholds']
+                values = percentiles['values']
+                if (not noPrint):
+                    print 'len(max):', len(smax), smax
+                    print 'len(min):', len(smin), smin
+                    print 'len(thresholds):', len(thresholds), thresholds
+                    print 'len(values):', len(values), values
+                for v in values:
+                    if (not (v >= smin[0])):
+                        m = ('Percentile value %s should all be >= the min dataset value %s' % (v, smin[0]))
+                        raise Exception(m)
+                    if (not (v <= smax[0])):
+                        m = ('Percentile value %s should all be <= the max dataset value %s' % (v, smax[0]))
+                        raise Exception(m)

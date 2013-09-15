@@ -1,5 +1,5 @@
 def test_A_randomdata2(self):
-    print 'Using smalldata/datagen1.csv as is'
-    csvPathname = h2o.find_file('smalldata/datagen1.csv')
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, timeoutSecs=10, header=1, separator=44)
-    h2o_cmd.runRFOnly(parseKey=parseKey, trees=1, response_variable=2, timeoutSecs=20, csvPathname=csvPathname)
+    print 'Using datagen1.csv as-is'
+    csvPathname = 'datagen1.csv'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=10, header=1, separator=44)
+    h2o_cmd.runRF(parseResult=parseResult, trees=1, response_variable=2, timeoutSecs=20)

@@ -13,24 +13,24 @@ def test_parse_csv_download(self):
         num = random.randint(4096, 10096)
         append_syn_dataset(csvPathname, rowData, num)
         totalRows += num
-        key = ((csvFilename + '_') + str(trial))
-        key2 = (((csvFilename + '_') + str(trial)) + '.hex')
+        src_key = ((csvFilename + '_') + str(trial))
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseKeyA = h2o_cmd.parseFile(csvPathname=csvPathname, key=key, key2=key2)
+        parseResultA = h2i.import_parse(path=csvPathname, schema='put', src_key=src_key, hex_key=hex_key)
         print '\nA trial #', trial, 'totalRows:', totalRows, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
-        inspect = h2o_cmd.runInspect(key=key2)
+        inspect = h2o_cmd.runInspect(key=hex_key)
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
         num_colsA = inspect['num_cols']
         num_rowsA = inspect['num_rows']
         row_sizeA = inspect['row_size']
         value_size_bytesA = inspect['value_size_bytes']
         csvDownloadPathname = (SYNDATASETS_DIR + '/csvDownload.csv')
-        h2o.nodes[0].csv_download(key=key2, csvPathname=csvDownloadPathname)
-        h2o.nodes[0].remove_key(key2)
+        h2o.nodes[0].csv_download(key=hex_key, csvPathname=csvDownloadPathname)
+        h2o.nodes[0].remove_key(hex_key)
         start = time.time()
-        parseKeyB = h2o_cmd.parseFile(csvPathname=csvDownloadPathname, key=key, key2=key2)
+        parseResultB = h2i.import_parse(path=csvDownloadPathname, schema='put', src_key=src_key, hex_key=hex_key)
         print 'B trial #', trial, 'totalRows:', totalRows, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
-        inspect = h2o_cmd.runInspect(key=key2)
+        inspect = h2o_cmd.runInspect(key=hex_key)
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
         num_colsB = inspect['num_cols']
         num_rowsB = inspect['num_rows']

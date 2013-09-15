@@ -2,7 +2,7 @@
   Futures fs=new Futures();
   if (_espc == null)   throw H2O.unimpl();
   int nchunks=nChunks();
-  Vec v0=new Vec(group().addVecs(1)[0],_espc,true,0);
+  Vec v0=new Vec(group().addVecs(1)[0],_espc);
   long row=0;
   for (int i=0; i < nchunks; i++) {
     long nrow=chunk2StartElem(i + 1);

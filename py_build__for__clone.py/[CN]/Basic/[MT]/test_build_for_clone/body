@@ -1,0 +1,27 @@
+def test_build_for_clone(self):
+    elapsed = (time.time() - beginning)
+    print ('\n%0.2f seconds to get here from start' % elapsed)
+    maxTime = (4 * 3600)
+    totalTime = 0
+    incrTime = 60
+    h2p.purple_print('\nSleeping for total of', ((maxTime + 0.0) / 3600), 'hours.')
+    print 'Will check h2o logs every', incrTime, 'seconds'
+    print 'Should be able to run another test using h2o-nodes.json to clone cloud'
+    print 'i.e. h2o.build_cloud_with_json()'
+    print "Bad test if a running test shuts down the cloud. I'm supposed to!\n"
+    h2p.green_print('To watch cloud in browser follow address:')
+    h2p.green_print('   http://{0}:{1}/Cloud.html'.format(h2o.nodes[0].http_addr, h2o.nodes[0].port))
+    h2p.blue_print('You can start a test (or tests) now!')
+    h2p.blue_print(('Will spin looking at redirected stdout/stderr logs in sandbox for h2o errors every %s secs' % incrTime))
+    h2p.red_print('This is just for fun')
+    h2p.yellow_print('So is this')
+    while (totalTime < maxTime):
+        h2o.sleep(incrTime)
+        totalTime += incrTime
+        h2o.verify_cloud_size(timeoutSecs=120)
+        print 'Checking sandbox log files'
+        h2o.check_sandbox_for_errors(cloudShutdownIsError=True)
+    start = time.time()
+    h2i.delete_keys_at_all_nodes()
+    elapsed = (time.time() - start)
+    print 'delete_keys_at_all_nodes(): took', elapsed, 'secs'

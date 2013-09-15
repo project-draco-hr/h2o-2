@@ -1,8 +1,8 @@
 def test_B_benign(self):
     print '\nStarting benign.csv'
     csvFilename = 'benign.csv'
-    csvPathname = h2o.find_file((('smalldata/logreg' + '/') + csvFilename))
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname, key2=(csvFilename + '.hex'))
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     y = '3'
     for maxx in range(4, 14):
         x = range(maxx)
@@ -12,7 +12,7 @@ def test_B_benign(self):
         print 'y:', y
         kwargs = {'x': x, 'y': y, 'expert': 1, 'lsm_solver': 'GenGradient', 'standardize': 1, 'n_folds': 1, }
         print "Not doing n_folds with benign. Fails with 'unable to solve?'"
-        glm = h2o_cmd.runGLMOnly(parseKey=parseKey, timeoutSecs=30, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=30, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         h2o.check_sandbox_for_errors()
         sys.stdout.write('.')

@@ -1,0 +1,14 @@
+{
+  if (_ls != null) {
+    _ds=MemoryManager.malloc8d(_len);
+    for (int j=0; j < _len; j++) {
+      long l=at8_impl(j);
+      _ds[j]=l;
+      if (_ds[j] != l)       throw H2O.unimpl();
+    }
+    _ls=null;
+    _xs=null;
+  }
+  _ds[i]=d;
+  return true;
+}

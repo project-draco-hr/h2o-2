@@ -1,0 +1,25 @@
+{
+  try {
+    JsonObject j=new JsonObject();
+    Key dest=_dest.value();
+    ValueArray ary=_key.value();
+    PCAParams pcaParams=getPCAParams();
+    int[] cols=createColumns(ary);
+    if (cols.length > MAX_COL)     throw new RuntimeException("Cannot run PCA on more than " + MAX_COL + " columns");
+    DataFrame data=DataFrame.makePCAData(ary,cols,_standardize.value());
+    PCAJob job=DPCA.startPCAJob(dest,data,pcaParams);
+    j.addProperty(JOB,job.self().toString());
+    j.addProperty(DEST_KEY,job.dest().toString());
+    Response r=Progress.redirect(j,job.self(),job.dest());
+    r.setBuilder(DEST_KEY,new KeyElementBuilder());
+    return r;
+  }
+ catch (  RuntimeException e) {
+    Log.err(e);
+    return Response.error(e.getMessage());
+  }
+catch (  Throwable t) {
+    Log.err(t);
+    return Response.error(t.getMessage());
+  }
+}

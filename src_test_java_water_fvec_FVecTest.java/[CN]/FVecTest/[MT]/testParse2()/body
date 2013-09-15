@@ -3,6 +3,7 @@
   Key fkey=NFSFileVec.make(file);
   Key okey=Key.make("syn.hex");
   Frame fr=ParseDataset2.parse(okey,new Key[]{fkey});
+  Vec vz=null;
   UKV.remove(fkey);
   try {
     assertEquals(fr.numCols(),1050);
@@ -13,7 +14,7 @@
     assertEquals(3993,sums[2],EPSILON);
     Vec v0=fr._vecs[0];
     Vec v1=fr._vecs[1];
-    Vec vz=v0.makeZero();
+    vz=v0.makeZero();
     new PairSum().doAll(vz,v0,v1);
     fr.remove();
     fr.add("tmp",vz);
@@ -21,6 +22,7 @@
     assertEquals(3949 + 3986,sums[0],EPSILON);
   }
   finally {
+    if (vz != null)     UKV.remove(vz._key);
     fr.remove();
     UKV.remove(okey);
   }

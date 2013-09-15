@@ -1,8 +1,8 @@
 def test_GLM_binomial_goalies(self):
-    csvPathname = h2o.find_file('smalldata/poisson/Goalies.csv')
+    csvPathname = 'poisson/Goalies.csv'
     print '\nParsing', csvPathname
-    parseKey = h2o_cmd.parseFile(csvPathname=csvPathname)
-    inspect = h2o_cmd.runInspect(None, parseKey['destination_key'])
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     paramDict = define_params()
     for trial in range(20):
@@ -13,7 +13,7 @@ def test_GLM_binomial_goalies(self):
         timeoutSecs = max(timeoutSecs, (8 * (kwargs['max_iter'] + 1)))
         start = time.time()
         print 'May not solve. Expanded categorical columns causing a large # cols, small # of rows'
-        glm = h2o_cmd.runGLMOnly(timeoutSecs=timeoutSecs, parseKey=parseKey, **kwargs)
+        glm = h2o_cmd.runGLM(timeoutSecs=timeoutSecs, parseResult=parseResult, **kwargs)
         elapsed = (time.time() - start)
         print 'glm end on ', csvPathname, 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)

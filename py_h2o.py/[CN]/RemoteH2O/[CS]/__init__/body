@@ -1,5 +1,6 @@
 def __init__(self, host, *args, **kwargs):
     super(RemoteH2O, self).__init__(*args, **kwargs)
+    self.remoteH2O = True
     self.jar = host.upload_file('target/h2o.jar')
     self.flatfile = host.upload_file(flatfile_name())
     if self.aws_credentials:
@@ -12,7 +13,10 @@ def __init__(self, host, *args, **kwargs):
         self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
     self.channel = host.open_channel()
     cmd = ' '.join(self.get_args())
-    self.channel.exec_command(((('cd /tmp; ls -ltr ' + self.jar) + '; ') + re.sub('/tmp/', '', cmd)))
+    cmdList = ['cd /tmp']
+    cmdList += [('ls -ltr ' + self.jar)]
+    cmdList += [re.sub('/tmp/', '', cmd)]
+    self.channel.exec_command('; '.join(cmdList))
     if self.capture_output:
         if (self.node_id is not None):
             logPrefix = ('remote-h2o-' + str(self.node_id))
