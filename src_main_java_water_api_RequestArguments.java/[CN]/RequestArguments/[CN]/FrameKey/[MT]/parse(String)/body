@@ -23,8 +23,6 @@ synchronized (conversionLock) {
       return k2;
     }
   }
-  if (!v.isFrame()) {
-    throw new IllegalArgumentException(input + ":" + errors()[1]);
-  }
+  if (!v.isFrame())   throw new IllegalArgumentException(input + ":" + errors()[1]);
   return k;
 }
