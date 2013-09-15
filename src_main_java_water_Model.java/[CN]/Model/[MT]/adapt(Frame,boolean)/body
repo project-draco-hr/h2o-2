@@ -1,17 +1,16 @@
 {
-  Vec[] vecs=fr.getVecs(_names);
-  for (int i=0; i < _names.length - 1; ++i)   if (vecs[i] == null)   throw new IllegalArgumentException("missing column '" + _names[i] + "'!");
-  String[] names=_names.clone();
-  if (vecs[vecs.length - 1] == null) {
-    vecs=Arrays.copyOf(vecs,vecs.length - 1);
-    names=Arrays.copyOf(names,names.length - 1);
-  }
-  for (int i=0; i < vecs.length; ++i) {
-    if (_domains[i] != vecs[i]._domain) {
-      if (vecs[i]._domain == null)       vecs[i].asEnum();
- else       if (_domains[i] == null)       throw new IllegalArgumentException("incompatible column: '" + _names[i] + "', expected (trained on) numeric, got categorical");
-      if (!Arrays.deepEquals(vecs[i]._domain,_domains[i]))       throw H2O.unimpl();
+  int map[][]=adapt(fr.names(),fr.domains(),exact);
+  int cmap[]=map[_names.length - 1];
+  Vec vecs[]=new Vec[_names.length - 1];
+  for (int c=0; c < cmap.length; c++) {
+    int d=cmap[c];
+    if (d == -1)     throw H2O.unimpl();
+ else     if (map[c] == null) {
+      vecs[c]=fr._vecs[d];
+    }
+ else {
+      throw H2O.unimpl();
     }
   }
-  return new Frame(names,vecs);
+  return new Frame(Arrays.copyOf(_names,_names.length - 1),vecs);
 }
