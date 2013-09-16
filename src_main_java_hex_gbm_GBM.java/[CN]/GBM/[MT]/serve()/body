@@ -1,11 +1,13 @@
 {
   final Frame fr=new Frame(source);
+  fr.remove(ignored_cols);
   if (!vresponse.isEnum())   vresponse.asEnum();
   String vname="response";
   for (int i=0; i < fr.numCols(); i++)   if (fr._vecs[i] == vresponse) {
     vname=fr._names[i];
     fr.remove(i);
   }
+  System.out.println("selected predictors = " + Arrays.toString(fr._names));
   buildModel(fr,vname);
   return GBMProgressPage.redirect(this,self(),dest());
 }
