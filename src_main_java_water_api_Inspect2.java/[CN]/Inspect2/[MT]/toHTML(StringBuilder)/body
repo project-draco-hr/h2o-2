@@ -7,9 +7,7 @@
   DocGen.HTML.title(sb,skey.toString());
   DocGen.HTML.section(sb,"" + numCols + " columns, "+ numRows+ " rows, "+ PrettyPrint.bytes(byteSize)+ " bytes, "+ (naCnt == 0 ? "no" : PrettyPrint.bytes(naCnt))+ " missing elements");
   sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(src_key.value(),"Distributed Random Forest") + ", "+ GBM.link(src_key.value(),"Distributed GBM")+ ", "+ hex.LR2.link(src_key.value(),"Linear Regression")+ ",<br>"+ DownloadDataset.link(src_key.value(),"Download as CSV")+ "</div>");
-  sb.append("<div style='text-align:center;'>");
-  sb.append("<span class='pagination'><ul><li>" + "<a href='" + RequestStatics.encodeRedirectArgs(null,new String[]{"src_key",skey.toString(),"offset",off >= 0 ? "-1" : "0"}) + "'>"+ (off >= 0 ? "info" : "rows")+ "</a>"+ "</li></ul></span>&nbsp;&nbsp;");
-  sb.append("</div>");
+  sb.append(pagination(fr.numRows()));
   DocGen.HTML.arrayHead(sb);
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Row").append("</td>");
@@ -52,11 +50,11 @@
     }
   }
  else {
-    int N=(int)Math.min(100,numRows);
+    int N=(int)Math.min(100,numRows - off);
     for (int j=0; j < N; j++) {
       sb.append("<tr>");
-      sb.append("<td>").append(j).append("</td>");
-      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(fr._vecs[i],j)).append("</td>");
+      sb.append("<td>").append(off + j).append("</td>");
+      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(fr._vecs[i],off + j)).append("</td>");
       sb.append("</tr>");
     }
   }
