@@ -6,14 +6,18 @@ def test_from_import_fvec(self):
     timeoutSecs = 500
     csvFilenameAll = ['covtype.data', 'covtype20x.data']
     csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
     for csvFilename in csvFilenameList:
-        (importResult, importPattern) = h2i.import_only(path=((importFolderPath + '/') + csvFilename), timeoutSecs=50)
-        parseResult = h2i.import_parse(path=((importFolderPath + '/') + csvFilename), schema='put', timeoutSecs=500)
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=50)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=True, doSummary=False)
+        print '\nparseResult', h2o.dump_json(parseResult)
         if (not h2o.beta_features):
             print csvFilename, 'parse time:', parseResult['response']['time']
-        print "Parse result['destination_key']:", parseResult['destination_key']
-        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'], timeoutSecs=30)
+            print "Parse result['destination_key']:", parseResult['destination_key']
+            inspect = h2o_cmd.runInspect(key=parseResult['destination_key'], timeoutSecs=30)
+        h2o_jobs.pollWaitJobs(pattern='RF_model', timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+        inspect = h2o_cmd.runInspect(key='c.hex', timeoutSecs=30)
+        parseResult = {'destination_key': 'c.hex', }
         if (not h2o.beta_features):
             RFview = h2o_cmd.runRF(trees=1, depth=25, parseResult=parseResult, timeoutSecs=timeoutSecs)
         if (1 == 0):
