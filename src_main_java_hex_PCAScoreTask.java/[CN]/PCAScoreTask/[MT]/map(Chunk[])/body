@@ -8,7 +8,7 @@
   for (int r=0; r < rows; r++) {
     for (int c=0; c < _ncomp; c++) {
       double x=0;
-      for (int d=0; d < _nfeat; d++)       x+=inputs[d].at(r) * _smatrix[d][c];
+      for (int d=0; d < _nfeat; d++)       x+=inputs[d].at0(r) * _smatrix[d][c];
       outputs[c].addNum(x);
     }
   }
