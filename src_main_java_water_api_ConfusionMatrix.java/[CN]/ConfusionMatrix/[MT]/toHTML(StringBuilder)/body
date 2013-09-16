@@ -1,0 +1,49 @@
+{
+  DocGen.HTML.title(sb,"Confusion Matrix");
+  if (cm == null)   return true;
+  long acts[]=new long[cm.length];
+  long preds[]=new long[cm[0].length];
+  for (int a=0; a < cm.length; a++) {
+    long sum=0;
+    for (int p=0; p < cm[a].length; p++) {
+      sum+=cm[a][p];
+      preds[p]+=cm[a][p];
+    }
+    acts[a]=sum;
+  }
+  String adomain[]=show(acts,vactual.domain());
+  String pdomain[]=show(preds,vpredict.domain());
+  DocGen.HTML.arrayHead(sb);
+  sb.append("<tr class='warning'>");
+  sb.append("<th>Actual / Predicted</th>");
+  for (int p=0; p < pdomain.length; p++)   if (pdomain[p] != null)   sb.append("<th>").append(pdomain[p]).append("</th>");
+  sb.append("<th>Error</th>");
+  sb.append("</tr>");
+  long terr=0;
+  for (int a=0; a < cm.length; a++) {
+    if (adomain[a] == null)     continue;
+    sb.append("<tr>");
+    sb.append("<th>").append(adomain[a]).append("</th>");
+    long correct=-1;
+    for (int p=0; p < pdomain.length; p++) {
+      if (pdomain[p] == null)       continue;
+      boolean onDiag=adomain[a].equals(pdomain[p]);
+      if (onDiag)       correct=cm[a][p];
+      sb.append(onDiag ? "<td style='background-color:LightGreen'>" : "<td>").append(cm[a][p]).append("</td>");
+    }
+    long err=acts[a] - correct;
+    terr+=err;
+    sb.append(String.format("<th>%5.3f = %d / %d</th>",(double)err / acts[a],err,acts[a]));
+    sb.append("</tr>");
+  }
+  sb.append("<tr>");
+  sb.append("<th>Totals</th>");
+  for (int p=0; p < pdomain.length; p++) {
+    if (pdomain[p] == null)     continue;
+    sb.append("<td>").append(preds[p]).append("</td>");
+  }
+  sb.append(String.format("<th>%5.3f = %d / %d</th>",(double)terr / vactual.length(),terr,vactual.length()));
+  sb.append("</tr>");
+  DocGen.HTML.arrayTail(sb);
+  return true;
+}
