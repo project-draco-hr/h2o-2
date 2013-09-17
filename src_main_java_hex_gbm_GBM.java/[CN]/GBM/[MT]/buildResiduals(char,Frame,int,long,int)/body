@@ -1,4 +1,5 @@
 {
+  String[] domain=vresponse.domain();
   float preds[]=new float[nclass];
   if (nclass == 1) {
     fr.add("Residual",vresponse.makeCon(vresponse.mean()));
@@ -6,25 +7,23 @@
   }
  else {
     long cs[]=new ClassDist(nclass,ymin).doAll(vresponse)._cs;
-    String[] domain=vresponse.domain();
     for (int i=0; i < nclass; i++) {
       preds[i]=(float)cs[i] / nrows;
       fr.add("Residual-" + domain[i],vresponse.makeCon(-preds[i]));
     }
   }
-  fr.add("response",vresponse);
+  for (int i=0; i < nclass; i++)   fr.add("Pred-" + domain[i],vresponse.makeZero());
   new MRTask2(){
     @Override public void map(    Chunk chks[]){
-      Chunk cy=chks[chks.length - 1];
+      Chunk cy=DTree.chk_resp(chks,ncols,nclass);
       for (int i=0; i < cy._len; i++) {
         if (cy.isNA0(i))         continue;
         int cls=(int)cy.at80(i) - ymin;
-        Chunk res=chks[ncols + cls];
+        Chunk res=DTree.chk_work(chks,ncols,nclass,cls);
         res.set0(i,1.0f + (float)res.at0(i));
       }
     }
   }
 .doAll(fr);
-  fr.remove(ncols + nclass);
   return preds;
 }

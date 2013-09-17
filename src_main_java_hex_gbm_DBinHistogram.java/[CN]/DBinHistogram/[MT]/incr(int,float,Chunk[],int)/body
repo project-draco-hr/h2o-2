@@ -11,7 +11,7 @@
   if (d < _mins[b])   _mins[b]=d;
   if (d > _maxs[b])   _maxs[b]=d;
   for (int c=0; c < _nclass; c++) {
-    Chunk chk=chks[ychk + c];
+    Chunk chk=DTree.chk_work(chks,ncols,_nclass,c);
     float y;
     if (chk instanceof C4FChunk) {
       y=(float)((C4FChunk)chk).at0(row);
