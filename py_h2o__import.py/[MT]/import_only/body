@@ -42,10 +42,8 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
             head = head.lstrip('/')
         if (bucket and (head != '')):
             folderOffset = ((bucket + '/') + head)
-            print 1
         elif bucket:
             folderOffset = bucket
-            print 2
         else:
             folderOffset = head
         print '\nimport_only:', h2o.python_test_name, schema, 'uses', ((((schema + '://') + folderOffset) + '/') + pattern)
