@@ -10,8 +10,8 @@
     Frame data=standardize ? DPCA.StandardizeTask.standardize(orig) : orig.modelAsFrame();
     PCAScoreTask.score(data,m._eigVec,_numPC.value(),_destKey.value());
     JsonObject redir=new JsonObject();
-    redir.addProperty(KEY,_destKey.value().toString());
-    return Response.redirect(res,Inspect.class,redir);
+    redir.addProperty("src_key",_destKey.value().toString());
+    return Response.redirect(res,Inspect2.class,redir);
   }
  catch (  Error e) {
     return Response.error(e.getMessage());
