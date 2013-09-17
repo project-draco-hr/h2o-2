@@ -1,13 +1,8 @@
 {
-  sb.append('"');
-  sb.append(t.getName());
-  sb.append('"');
+  sb.append('"').append(t.getName()).append('"');
   if (t.isDaemon())   sb.append(" daemon");
-  sb.append(" prio=");
-  sb.append(t.getPriority());
-  sb.append(" tid=");
-  sb.append(t.getId());
-  sb.append("\n  java.lang.Thread.State: ");
-  sb.append(t.getState());
+  sb.append(" prio=").append(t.getPriority());
+  sb.append(" tid=").append(t.getId());
+  sb.append("\n  java.lang.Thread.State: ").append(t.getState());
   sb.append('\n');
 }
