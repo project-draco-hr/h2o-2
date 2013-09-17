@@ -1,24 +1,45 @@
 def test_jstack(self):
+    SLEEP_AFTER = False
+    JSTACK_ALL_NODES = False
     TRIALMAX = 25
     NODE = 1
+    PRINT_JSTACK = False
     eList = []
     xList = []
     sList = []
     for trial in range(TRIALMAX):
         print 'Starting Trial', trial
         print ('Just doing node[%s]' % NODE)
+        statsFirst = None
         for (i, n) in enumerate(h2o.nodes):
-            if (i == NODE):
+            if (JSTACK_ALL_NODES or (i == NODE)):
                 start = time.time()
-                stats = json.dumps(n.jstack())
+                stats = n.jstack()
                 elapsed = int((1000 * (time.time() - start)))
-                sList.append(len(stats))
-                xList.append(trial)
-                eList.append(elapsed)
-                h2o.verboseprint(json.dumps(stats, indent=2))
                 print 'Jstack completes to node', i, 'in', ('%s' % elapsed), 'millisecs'
-            print 'Sleeping for 1 sec'
-            time.sleep(1)
+                statsString = json.dumps(stats)
+                if PRINT_JSTACK:
+                    statsString = re.sub('\\\\n', '\n', statsString)
+                    statsString = re.sub('\\\\t', '\t', statsString)
+                    procs = statsString.split(' ')
+                    i = 0
+                    while (i < len(procs)):
+                        if ('JStack' in procs[i]):
+                            print ('\n' + procs[i])
+                            for j in range(10):
+                                print procs[(i + j)]
+                            i = (i + 10)
+                        else:
+                            i = (i + 1)
+                h2o.verboseprint(json.dumps(stats, indent=2))
+                if (i == NODE):
+                    sList.append(len(statsString))
+                    xList.append(trial)
+                    eList.append(elapsed)
+                if SLEEP_AFTER:
+                    delay = 1
+                    print 'Sleeping for', delay, 'sec'
+                    time.sleep(delay)
     if (h2o.python_username == 'kevin'):
         import pylab as plt
         if eList:

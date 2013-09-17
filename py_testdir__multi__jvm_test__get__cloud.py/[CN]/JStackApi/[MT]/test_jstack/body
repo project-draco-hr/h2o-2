@@ -1,0 +1,51 @@
+def test_jstack(self):
+    SLEEP_AFTER = False
+    GET_CLOUD_ALL_NODES = True
+    TRIALMAX = 25
+    NODE = 1
+    PRINT_GET_CLOUD = True
+    eList = []
+    xList = []
+    sList = []
+    for trial in range(TRIALMAX):
+        print 'Starting Trial', trial
+        print ('Just doing node[%s]' % NODE)
+        getCloudFirst = None
+        for (i, n) in enumerate(h2o.nodes):
+            if (GET_CLOUD_ALL_NODES or (i == NODE)):
+                start = time.time()
+                getCloud = n.get_cloud()
+                elapsed = int((1000 * (time.time() - start)))
+                print 'get_cloud completes to node', i, 'in', ('%s' % elapsed), 'millisecs'
+                getCloudString = json.dumps(getCloud)
+                if PRINT_GET_CLOUD:
+                    print h2o.dump_json(getCloud)
+                h2o.verboseprint(json.dumps(getCloud, indent=2))
+                if (i == NODE):
+                    sList.append(len(getCloudString))
+                    xList.append(trial)
+                    eList.append(elapsed)
+                if SLEEP_AFTER:
+                    delay = 1
+                    print 'Sleeping for', delay, 'sec'
+                    time.sleep(delay)
+    if (h2o.python_username == 'kevin'):
+        import pylab as plt
+        if eList:
+            print 'xList', xList
+            print 'eList', eList
+            print 'sList', sList
+            plt.figure()
+            plt.plot(xList, eList)
+            plt.xlabel('trial')
+            plt.ylabel('get_cloud completion latency (millisecs)')
+            plt.title((('Back to Back get_cloud requests to node[' + str(NODE)) + ']'))
+            plt.draw()
+            plt.figure()
+            plt.plot(xList, sList)
+            plt.xlabel('trial')
+            plt.ylabel((('node[' + str(NODE)) + '] get_cloud response string length'))
+            plt.title((('Back to Back get_cloud requests to node[' + str(NODE)) + ']'))
+            plt.title('Back to Back get_cloud')
+            plt.draw()
+            plt.show()
