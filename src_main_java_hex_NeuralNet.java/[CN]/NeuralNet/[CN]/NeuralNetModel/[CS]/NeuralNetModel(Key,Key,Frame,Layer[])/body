@@ -1,0 +1,11 @@
+{
+  super(selfKey,dataKey,fr);
+  FrameInput input=(FrameInput)ls[0];
+  layers=Layer.clone(ls,new ChunksInput(null,input._means,input._sigmas),0);
+  ws=new float[ls.length][];
+  bs=new float[ls.length][];
+  for (int y=1; y < layers.length; y++) {
+    ws[y]=layers[y]._w;
+    bs[y]=layers[y]._b;
+  }
+}

@@ -1,0 +1,10 @@
+{
+  Input input=(Input)ls[0];
+  Error error=new Error();
+  long len=input._len;
+  if (max_rows != 0)   len=Math.min(len,max_rows);
+  int correct=0;
+  for (input._row=0; input._row < len; input._row++)   if (correct(ls,error,confusion))   correct++;
+  error.Value=(len - (double)correct) / len;
+  return error;
+}

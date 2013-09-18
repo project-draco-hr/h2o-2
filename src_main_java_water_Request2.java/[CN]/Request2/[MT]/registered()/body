@@ -35,25 +35,25 @@
           Enum val=(Enum)defaultValue;
           arg=new EnumArgument(f.getName(),val);
         }
- else         if (f.getType() == Key.class)         arg=new H2OKey(f.getName(),(Key)defaultValue,api.required());
- else         if (Freezable.class.isAssignableFrom(f.getType()) && api.filter() == Default.class)         arg=new H2OKey(f.getName(),api.required());
+ else         if (f.getType() == Key.class) {
+          TypeaheadKey t=new TypeaheadKey();
+          t._defaultValue=(Key)defaultValue;
+          arg=t;
+        }
+ else         if (Freezable.class.isAssignableFrom(f.getType()) && api.filter() == Default.class)         arg=new TypeaheadKey(f.getType());
  else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
-          for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._key.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
+          for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._ref.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
           arg=new HexAllColumnSelect(f.getName(),key);
         }
- else         if (VecSelect.class.isAssignableFrom(api.filter())) {
-          VecSelect name=(VecSelect)newInstance(api);
-          FrameKey key=null;
-          for (          Argument a : _arguments)           if (a instanceof FrameKey && name._key.equals(((FrameKey)a)._name))           key=(FrameKey)a;
-          arg=new FrameKeyVec(f.getName(),key);
-        }
- else         if (VecClassSelect.class.isAssignableFrom(api.filter())) {
-          VecClassSelect name=(VecClassSelect)newInstance(api);
-          FrameKey key=null;
-          for (          Argument a : _arguments)           if (a instanceof FrameKey && name._key.equals(((FrameKey)a)._name))           key=(FrameKey)a;
-          arg=new FrameClassVec(f.getName(),key);
+ else         if (Dependent.class.isAssignableFrom(api.filter())) {
+          Dependent d=(Dependent)newInstance(api);
+          Argument ref=null;
+          for (          Argument a : _arguments)           if (d._ref.equals(a._name))           ref=a;
+          if (VecSelect.class.isAssignableFrom(api.filter()))           arg=new FrameKeyVec(f.getName(),(TypeaheadKey)ref);
+ else           if (VecClassSelect.class.isAssignableFrom(api.filter()))           arg=new FrameClassVec(f.getName(),(TypeaheadKey)ref);
+ else           if (VecsSelect.class.isAssignableFrom(api.filter()))           arg=new FrameVecSelect(f.getName(),(TypeaheadKey)ref);
         }
         if (arg != null) {
           arg._name=f.getName();

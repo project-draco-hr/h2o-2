@@ -1,10 +1,10 @@
 {
-  long offset=_n * PIXELS;
+  long offset=_row * PIXELS;
   int page=(int)(offset / PAGE_SIZE);
   int indx=(int)(offset % PAGE_SIZE);
   ByteBuffer buffer=_images[page];
   for (int i=0; i < _a.length; i++) {
-    double d=convert(buffer.get(indx + i));
+    double d=buffer.get(indx + i) & 0xff / 256;
     d-=Mnist8mNorm.MEANS[i];
     d=Mnist8mNorm.SIGMS[i] > 1e-4 ? d / Mnist8mNorm.SIGMS[i] : d;
     _a[i]=(float)d;

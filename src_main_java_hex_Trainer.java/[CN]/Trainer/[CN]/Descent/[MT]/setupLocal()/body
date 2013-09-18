@@ -1,7 +1,20 @@
 {
-  super.setupLocal();
-  for (int y=1; y < _ls.length; y++) {
-    _ls[y]._w=_ws[y].clone();
-    _ls[y]._b=_bs[y].clone();
+  _node=new NodeDescent(_job,_ls,_ws,_bs,_key);
+  final boolean home=_key.home();
+  Thread thread=new Thread(){
+    @Override public void run(){
+      while (_job == null || Job.running(_job)) {
+        if (!home)         _node.sync();
+ else         _node._total=_node._trainer.items();
+        try {
+          Thread.sleep(1);
+        }
+ catch (        InterruptedException ex) {
+        }
+      }
+    }
   }
+;
+  thread.setDaemon(true);
+  thread.start();
 }

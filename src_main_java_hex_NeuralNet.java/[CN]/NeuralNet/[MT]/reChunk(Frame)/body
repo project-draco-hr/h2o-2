@@ -1,0 +1,33 @@
+{
+  final int splits=cores() * 2;
+  if (frame.anyVec().nChunks() >= splits)   return frame;
+  Vec[] vecs=new Vec[frame._vecs.length];
+  for (int v=0; v < vecs.length; v++) {
+    AppendableVec vec=new AppendableVec(UUID.randomUUID().toString());
+    long rows=frame.numRows();
+    Chunk cache=null;
+    for (int split=0; split < splits; split++) {
+      long off=rows * (split + 0) / splits;
+      long lim=rows * (split + 1) / splits;
+      NewChunk chunk=new NewChunk(vec,split);
+      for (long r=off; r < lim; r++) {
+        if (cache == null || r < cache._start || r >= cache._start + cache._len)         cache=frame._vecs[v].chunk(r);
+        if (!cache.isNA(r)) {
+          if (frame._vecs[v]._domain != null)           chunk.addEnum((int)cache.at8(r));
+ else           if (frame._vecs[v].isInt())           chunk.addNum(cache.at8(r),0);
+ else           chunk.addNum(cache.at(r));
+        }
+ else {
+          if (frame._vecs[v].isInt())           chunk.addNA();
+ else {
+            chunk.addNum(Double.NaN);
+          }
+        }
+      }
+      chunk.close(split,null);
+    }
+    vecs[v]=vec.close(null);
+    vecs[v]._domain=frame._vecs[v]._domain;
+  }
+  return new Frame(frame.names(),vecs);
+}

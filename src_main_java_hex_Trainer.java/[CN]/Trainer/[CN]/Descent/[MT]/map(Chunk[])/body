@@ -1,15 +1,3 @@
 {
-  Layer[] clones=new Layer[_ls.length];
-  FrameInput stats=(FrameInput)_ls[0];
-  ChunksInput input=new ChunksInput(cs,stats._means,stats._sigmas);
-  input.init(null,cs.length - 1,false);
-  clones[0]=input;
-  for (int y=1; y < _ls.length; y++) {
-    clones[y]=_ls[y].clone();
-    clones[y].init(clones[y - 1],_bs[y].length,false);
-  }
-  Base base=new Base(clones);
-  int off=cs[0]._len * (_split + 0) / _splits;
-  int lim=cs[0]._len * (_split + 1) / _splits;
-  for (input._row=off; input._row < lim; input._row++)   base.step();
+  _node._chunks.add(cs);
 }

@@ -1,2 +1,48 @@
 {
+  boolean load=false;
+  boolean deep=false;
+{
+    if (deep) {
+      _ls=new Layer[5];
+      _ls[0]=new Train8mInput();
+      _ls[1]=new Layer.Rectifier(_ls[0],1000);
+      _ls[2]=new Layer.Rectifier(_ls[1],1000);
+      _ls[3]=new Layer.Rectifier(_ls[2],1000);
+      _ls[4]=new Layer.Rectifier(_ls[3],10);
+    }
+ else {
+      _ls=new Layer[3];
+      _ls[0]=new Train8mInput();
+      _ls[1]=new Layer.Tanh(_ls[0],1000);
+      _ls[1]._rate=0.001f;
+      _ls[2]=new Layer.Tanh(_ls[1],10);
+      _ls[2]._rate=0.00005f;
+    }
+  }
+  if (load) {
+    long time=System.nanoTime();
+    for (int i=0; i < _ls.length; i++) {
+      String json=Utils.readFile(new File("layer" + i + ".json"));
+      _ls[i]=Utils.json(json,Layer.class);
+    }
+    System.out.println("json: " + (int)((System.nanoTime() - time) / 1e6) + " ms");
+  }
+  if (deep) {
+    for (int i=0; i < _ls.length; i++) {
+      System.out.println("Training level " + i);
+      long time=System.nanoTime();
+      System.out.println((int)((System.nanoTime() - time) / 1e6) + " ms");
+    }
+  }
+  if (pretrain) {
+    for (int i=0; i < _ls.length; i++) {
+      System.out.println("Training level " + i);
+      long time=System.nanoTime();
+      preTrain(_trainer,i);
+      System.out.println((int)((System.nanoTime() - time) / 1e6) + " ms");
+    }
+  }
+  ParallelTrainers trainer=new ParallelTrainers(_ls);
+  trainer.start();
+  monitor(trainer);
 }
