@@ -1,5 +1,6 @@
 {
   File file1=TestUtil.find_test_file("..//classifcation1Train.txt");
+  if (file1 == null)   return;
   Key fkey1=NFSFileVec.make(file1);
   Key dest1=Key.make("train.hex");
   File file2=TestUtil.find_test_file("..//classification1Test.txt");
@@ -14,7 +15,7 @@
     UKV.remove(fr.remove("agentId")._key);
     gbm.vresponse=fr.remove("outcome");
     gbm.source=fr;
-    gbm.ntrees=50;
+    gbm.ntrees=5;
     gbm.max_depth=10;
     gbm.learn_rate=0.2f;
     gbm.min_rows=10;
