@@ -1,0 +1,10 @@
+{
+  _vecs=new AppendableVec[ncols];
+  _nvs=new NewChunk[ncols];
+  _enums=enums;
+  _nCols=ncols;
+  _cidx=cidx;
+  _vg=vg;
+  _vecIdStart=vecIdStart;
+  for (int i=0; i < ncols; ++i)   _nvs[i]=(NewChunk)(_vecs[i]=new AppendableVec(vg.vecKey(vecIdStart + i))).elem2BV(_cidx);
+}

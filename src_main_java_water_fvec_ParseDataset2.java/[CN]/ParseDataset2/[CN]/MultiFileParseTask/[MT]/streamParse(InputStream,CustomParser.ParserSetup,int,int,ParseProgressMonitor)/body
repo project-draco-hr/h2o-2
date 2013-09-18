@@ -1,0 +1,18 @@
+{
+  FVecDataOut dout=new FVecDataOut(_vg,chunkStartIdx,localSetup._ncols,vecIdStart,enums());
+  CustomParser p=localSetup.parser();
+  if (localSetup._pType.parallelParseSupported)   try {
+    p.streamParse(is,dout,pmon);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+ else   try {
+    p.streamParse(is,dout);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  dout.close(_fs);
+  return dout;
+}

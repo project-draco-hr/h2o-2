@@ -4,19 +4,24 @@
     job.cancel();
     return;
   }
-  MultiFileParseTask uzpt=new MultiFileParseTask(setup,job._progress).invoke(fkeys);
-  int[] ecols=uzpt.enumCols();
-  String[] names=new String[uzpt._vecs.length];
-  for (int i=0; i < names.length; i++)   names[i]=setup._header ? setup._columnNames[i] : ("" + i);
+  Vec v=getVec(fkeys[0]);
+  MultiFileParseTask uzpt=new MultiFileParseTask(v.group(),setup,job._progress).invoke(fkeys);
+  Frame fr=new Frame(setup._columnNames != null ? setup._columnNames : genericColumnNames(setup._ncols),uzpt._dout.closeVecs());
+  SVFTask t=new SVFTask(fr);
+  t.invokeOnAllNodes();
+  int[] ecols=new int[fr._vecs.length];
+  int n=0;
+  for (int i=0; i < ecols.length; ++i)   if (fr._vecs[i].isEnum())   ecols[n++]=i;
+  ecols=Arrays.copyOf(ecols,n);
   if (ecols != null && ecols.length > 0) {
     Enum[] enums=EnumFetchTask.fetchEnums(uzpt._eKey,ecols);
-    for (    int i : ecols)     uzpt._vecs[i]._domain=enums[i].computeColumnDomain();
+    for (    int i : ecols)     fr._vecs[i]._domain=enums[i].computeColumnDomain();
     String[][] ds=new String[ecols.length][];
-    for (int i=0; i < ecols.length; ++i)     ds[i]=uzpt._vecs[ecols[i]]._domain;
+    for (int i=0; i < ecols.length; ++i)     ds[i]=fr._vecs[ecols[i]]._domain;
     Vec[] evecs=new Vec[ecols.length];
-    for (int i=0; i < evecs.length; ++i)     evecs[i]=uzpt._vecs[ecols[i]];
+    for (int i=0; i < evecs.length; ++i)     evecs[i]=fr._vecs[ecols[i]];
     new EnumUpdateTask(ds,uzpt._eKey,ecols).doAll(evecs);
   }
-  UKV.put(job.dest(),new Frame(names,uzpt._vecs));
+  UKV.put(job.dest(),fr);
   job.remove();
 }

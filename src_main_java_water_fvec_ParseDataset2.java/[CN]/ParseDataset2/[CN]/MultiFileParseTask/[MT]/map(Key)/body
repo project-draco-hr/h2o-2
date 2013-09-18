@@ -1,6 +1,7 @@
 {
   ByteVec vec=(ByteVec)getVec(key);
   byte[] bits=vec.elem2BV(0)._mem;
+  final int chunkStartIdx=_fileChunkOffsets.get(key)._val;
   Compression cpr=Utils.guessCompressionMethod(bits);
   CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,false)._setup;
   if (!_setup.isCompatible(localSetup)) {
@@ -13,43 +14,31 @@
     if (!has_hdr)     localSetup=new CustomParser.ParserSetup(ParserType.CSV,localSetup._separator,false);
   }
   final int ncols=_setup._ncols;
-  _vecs=new Vec[ncols];
-  Key[] keys=vec.group().addVecs(ncols);
-  for (int i=0; i < ncols; i++)   _vecs[i]=new AppendableVec(keys[i]);
   try {
 switch (cpr) {
 case NONE:
-      if (!localSetup._pType.parallelParseSupported) {
-        streamParse(vec.openStream(_progress),localSetup);
-      }
- else       if (localSetup._pType == ParserType.CSV) {
-        Vec bvs[]=Arrays.copyOf(_vecs,_vecs.length + 1,Vec[].class);
-        bvs[bvs.length - 1]=vec;
-        DParse dp=new DParse(localSetup).doAll(bvs);
-        for (int i=0; i < _vecs.length; i++)         _vecs[i]=dp.vecs(i);
-      }
+      if (localSetup._pType.parallelParseSupported)       _dout=new DParse(_vg,localSetup,_vecIdStart,chunkStartIdx).doAll(vec)._dout;
  else {
-        SVMLightDParse sdp=new SVMLightDParse().doAll(vec);
-        Vec[] newVecs=sdp._dout.closeVecs(_fs);
-        new SVFTask(new Frame(null,newVecs)).invokeOnAllNodes();
-        _vecs=newVecs;
+        ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);
+        _dout=streamParse(vec.openStream(pmon),localSetup,_vecIdStart,chunkStartIdx,pmon);
       }
     break;
 case ZIP:
 {
-    ZipInputStream zis=new ZipInputStream(vec.openStream(_progress));
+    ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);
+    ZipInputStream zis=new ZipInputStream(vec.openStream(pmon));
     ZipEntry ze=zis.getNextEntry();
-    if (ze != null && !ze.isDirectory())     streamParse(zis,localSetup);
+    if (ze != null && !ze.isDirectory())     _dout=streamParse(zis,localSetup,_vecIdStart,chunkStartIdx,pmon);
  else     zis.close();
     break;
   }
 case GZIP:
-streamParse(new GZIPInputStream(vec.openStream(_progress)),localSetup);
+ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);
+_dout=streamParse(new GZIPInputStream(vec.openStream(pmon)),localSetup,_vecIdStart,chunkStartIdx,pmon);
 break;
 }
 }
  catch (IOException ioe) {
-_parserr=ioe.toString();
-return;
+throw new RuntimeException(ioe);
 }
 }
