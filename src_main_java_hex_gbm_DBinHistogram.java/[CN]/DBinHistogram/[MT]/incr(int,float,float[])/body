@@ -11,14 +11,7 @@
   if (d < _mins[b])   _mins[b]=d;
   if (d > _maxs[b])   _maxs[b]=d;
   for (int c=0; c < _nclass; c++) {
-    Chunk chk=DTree.chk_work(chks,ncols,_nclass,c);
-    float y;
-    if (chk instanceof C4FChunk) {
-      y=(float)((C4FChunk)chk).at0(row);
-    }
- else {
-      y=(float)chk.at0(row);
-    }
+    float y=work[c];
     float oldM=Ms[c];
     float newM=Ms[c]=oldM + (y - oldM) / k;
     Ss[c]+=(y - oldM) * (y - newM);

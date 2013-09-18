@@ -27,16 +27,18 @@
         }
       }
     }
-    for (int i=0; i < nids._len; i++) {
-      int nid=(int)nids.at80(i);
+    float work[]=new float[_nclass];
+    for (int row=0; row < nids._len; row++) {
+      int nid=(int)nids.at80(row);
       if (nid < leaf)       continue;
       DHistogram nhs[]=hcs[nid - leaf];
+      for (int c=0; c < _nclass; c++)       work[c]=(float)DTree.chk_work(chks,_ncols,_nclass,c).at0(row);
       for (int j=0; j < _ncols; j++) {
         DHistogram nh=nhs[j];
         if (nh == null)         continue;
-        float f=(float)chks[j].at0(i);
+        float f=(float)chks[j].at0(row);
         nh.incr(f);
-        if (nh instanceof DBinHistogram)         ((DBinHistogram)nh).incr(i,f,chks,_ncols);
+        if (nh instanceof DBinHistogram)         ((DBinHistogram)nh).incr(row,f,work);
       }
     }
   }
