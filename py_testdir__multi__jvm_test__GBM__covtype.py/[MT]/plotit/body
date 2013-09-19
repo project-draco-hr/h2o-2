@@ -1,0 +1,23 @@
+def plotit(xList, eList, sList):
+    if (h2o.python_username != 'kevin'):
+        return
+    import pylab as plt
+    if eList:
+        print 'xList', xList
+        print 'eList', eList
+        print 'sList', sList
+        label = '(errsLast) 1 jvm x 28GB Covtype GBM learn_rate=.2 nbins=1024 ntrees=10 max_depth=5 min_rows = 10'
+        plt.figure()
+        plt.plot(xList, eList)
+        plt.xlabel('trees')
+        plt.ylabel('error')
+        plt.title(label)
+        plt.draw()
+        label = '(time) 1 jvm x 28GB Covtype GBM learn_rate=.2 nbins=1024 ntrees=10 max_depth=5 min_rows = 10'
+        plt.figure()
+        plt.plot(xList, sList)
+        plt.xlabel('trees')
+        plt.ylabel('time')
+        plt.title(label)
+        plt.draw()
+        plt.show()

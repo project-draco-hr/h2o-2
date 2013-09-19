@@ -1,0 +1,40 @@
+def test_GBM_parseTrain(self):
+    h2o.beta_features = False
+    bucket = 'home-0xdiag-datasets'
+    files = [('standard', 'covtype.data', 'covtype.hex', 1800, 54)]
+    for (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) in files:
+        h2o.beta_features = False
+        start = time.time()
+        h2o.beta_features = True
+        print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
+        parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs, noPoll=True, doSummary=False)
+        if h2o.beta_features:
+            h2j.pollWaitJobs(pattern='GBMKEY', timeoutSecs=1800, pollTimeoutSecs=1800)
+            print "Filling in the parseResult['destination_key'] for h2o"
+            parseResult['destination_key'] = trainKey
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        xList = []
+        eList = []
+        sList = []
+        depth = 5
+        for ntrees in [10, 20, 40, 80, 160]:
+            params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': depth, 'min_rows': 10, 'vresponse': vresponse, }
+            print 'Using these parameters for GBM: ', params
+            kwargs = params.copy()
+            h2o_cmd.runInspect(key=parseResult['destination_key'])
+            start = time.time()
+            print 'Start time is: ', time.time()
+            GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=timeoutSecs, **kwargs)
+            if h2o.beta_features:
+                h2j.pollWaitJobs(pattern='GBMKEY', timeoutSecs=1800, pollTimeoutSecs=1800)
+            elapsed = (time.time() - start)
+            print 'GBM training completed in', elapsed, 'seconds. On dataset: ', csvFilename
+            GBMView = h2o_cmd.runGBMView(model_key='GBMKEY')
+            errsLast = GBMView['gbm_model']['errs'][(-1)]
+            print "GBM 'errsLast'", errsLast
+            xList.append(ntrees)
+            eList.append(errsLast)
+            sList.append(elapsed)
+        plotit(xList, eList, sList)
