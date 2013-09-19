@@ -1,13 +1,10 @@
 {
   localCloud(2,true,args);
   File f=new File("smalldata/mnist/train.csv.gz");
-  Key dest=Key.make("train.hex");
-  Key fkey=NFSFileVec.make(f);
-  ParseDataset2.parse(dest,new Key[]{fkey});
-  f=new File("smalldata/mnist/test.csv.gz");
-  dest=Key.make("test.hex");
-  fkey=NFSFileVec.make(f);
-  ParseDataset2.parse(dest,new Key[]{fkey});
+  Key key=TestUtil.load_test_file(f,"test");
+  Key dest=Key.make("test.hex");
+  ParseDataset.parse(dest,new Key[]{key});
+  ValueArray va=(ValueArray)UKV.get(dest);
   Utils.readConsole();
   System.out.println("Done!");
 }
