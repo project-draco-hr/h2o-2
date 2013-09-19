@@ -25,7 +25,6 @@ def test_GBM_parseTrain(self):
             kwargs = params.copy()
             h2o_cmd.runInspect(key=parseResult['destination_key'])
             start = time.time()
-            print 'Start time is: ', time.time()
             GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=timeoutSecs, **kwargs)
             if h2o.beta_features:
                 h2j.pollWaitJobs(pattern='GBMKEY', timeoutSecs=1800, pollTimeoutSecs=1800)
