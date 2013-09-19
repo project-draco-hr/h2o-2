@@ -1,2 +1,12 @@
 {
+  if (args.length == 1) {
+    Value val=DKV.get(args[0]);
+    if (val != null && val.isArray()) {
+      ValueArray ary=val.get();
+      Key[] keys=new Key[(int)ary.chunks()];
+      for (int i=0; i < keys.length; i++)       keys[i]=ary.getChunkKey(i);
+      return keys;
+    }
+  }
+  return args;
 }

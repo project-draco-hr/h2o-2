@@ -1,0 +1,7 @@
+def test_B_c1_rel_short(self):
+    print "Since the python is not necessarily run as user=0xcust..., can't use a  schema='put' here"
+    print 'Want to be able to run python as jenkins'
+    print "I guess for big 0xcust files, we don't need schema='put'"
+    print 'For files that we want to put (for testing put), we can get non-private files'
+    parseResult = h2i.import_parse(bucket='0xcustomer-datasets', path='c1/iris2.csv', schema='local')
+    h2o_cmd.runRF(parseResult=parseResult, trees=6, timeoutSecs=10)

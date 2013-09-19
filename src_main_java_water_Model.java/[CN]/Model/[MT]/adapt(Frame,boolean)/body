@@ -1,5 +1,16 @@
 {
-  int[][] map=adapt(fr.names(),fr.domains(),exact);
-  for (int i=0; i < map.length; i++)   if (map[i] != null)   throw H2O.unimpl();
-  return new Frame(fr);
+  int map[][]=adapt(fr.names(),fr.domains(),exact);
+  int cmap[]=map[_names.length - 1];
+  Vec vecs[]=new Vec[_names.length - 1];
+  for (int c=0; c < cmap.length; c++) {
+    int d=cmap[c];
+    if (d == -1)     throw H2O.unimpl();
+ else     if (map[c] == null) {
+      vecs[c]=fr._vecs[d];
+    }
+ else {
+      throw H2O.unimpl();
+    }
+  }
+  return new Frame(Arrays.copyOf(_names,_names.length - 1),vecs);
 }

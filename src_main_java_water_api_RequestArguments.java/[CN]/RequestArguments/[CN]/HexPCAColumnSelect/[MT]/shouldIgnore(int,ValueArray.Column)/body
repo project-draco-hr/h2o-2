@@ -1,0 +1,13 @@
+{
+  if (ca._min == ca._max) {
+    if (_constantColumns.get() == null)     _constantColumns.set(new TreeSet<String>());
+    _constantColumns.get().add(Objects.firstNonNull(ca._name,String.valueOf(i)));
+    return true;
+  }
+ else   if (ca._domain != null) {
+    if (_nonNumColumns.get() == null)     _nonNumColumns.set(new TreeSet<String>());
+    _nonNumColumns.get().add(Objects.firstNonNull(ca._name,String.valueOf(i)));
+    return true;
+  }
+  return super.shouldIgnore(i,ca);
+}

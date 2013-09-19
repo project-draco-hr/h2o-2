@@ -1,4 +1,5 @@
 def test_rand_inspect(self):
+    h2b.browseTheCloud()
     csvFilename = 'covtype.data'
     csvPathname = ('UCI/UCI-large/covtype/' + csvFilename)
     hex_key = (csvFilename + '.hex')
@@ -8,24 +9,77 @@ def test_rand_inspect(self):
     print csvFilename, 'parse time:', parseResult['response']['time']
     print "Parse result['destination_key']:", destination_key
 
-    def inspect_and_check(nodeX, destination_key, offset, view, inspect=None):
+    def inspect_and_check(nodeX, destination_key, offset, view, inspectOld=None):
         inspectNew = h2o_cmd.runInspect(h2o.nodes[nodeX], destination_key, offset=offset, view=view)
-        constantNames = ['num_cols', 'num_rows']
-        if (inspect is not None):
-            for i in constantNames:
-                self.assertEqual(inspect[i], inspectNew[i])
+        if h2o.beta_features:
+            pass
+        else:
+            pass
+        constantNames = [('num_cols', 'numCols'), ('num_rows', 'numRows'), ('value_size_bytes', 'byteSize'), ('cols', 'cols')]
+        colNames = [('num_missing_values', 'naCnt')]
+        for (i, j) in constantNames:
+            if h2o.beta_features:
+                if (not (j in inspectNew)):
+                    raise Exception(("Can't find %s, Inspect2 result should have it?" % j))
+                inspectNew[i] = inspectNew[j]
+            if (inspectOld and (i != 'cols')):
+                if (h2o.beta_features and (i == 'value_size_bytes')):
+                    self.assertGreater(inspectOld[i], inspectNew[i])
+                else:
+                    self.assertEqual(inspectOld[i], inspectNew[i])
+            if (i == 'cols'):
+                for (m, n) in colNames:
+                    if h2o.beta_features:
+                        if (not (n in inspectNew[i][0])):
+                            print h2o.dump_json(inspectNew[i][0])
+                            raise Exception(("Can't find %s, Inspect2 result['cols'][0] should have it?" % n))
+                        inspectNew[i][0][m] = inspectNew[i][0][n]
+                    if (inspectOld is not None):
+                        self.assertEqual(inspectOld[i][0][m], inspectNew[i][0][m])
         return inspectNew
-    origInspect = inspect_and_check(0, destination_key, 0, 1)
+    origInspect = inspect_and_check(0, destination_key, 0, 1, None)
     h2o.verboseprint(h2o.dump_json(origInspect))
+    origStoreViewResult = h2o_cmd.runStoreView(offset=0, view=1024, timeoutSecs=60)
     num_rows = origInspect['num_rows']
     num_cols = origInspect['num_cols']
     lenNodes = len(h2o.nodes)
-    for i in range(1000):
+    for trial in range(10):
+        h2p.green_print('\nTrial', trial)
         offset = good_choices(num_rows)
         view = good_choices(num_cols)
         nodeX = random.randint(0, (lenNodes - 1))
         print 'nodeX:', nodeX, 'offset:', offset, 'view:', view
+        h2o.beta_features = False
         inspect_and_check(nodeX, destination_key, offset, view, origInspect)
-        r = random.randint(0, 10)
-        if (r == 0):
-            inspect_and_check(nodeX, destination_key, offset, view, origInspect)
+        print 'trying Inspect2 by flipping h2o.nodes[0].beta_features'
+        h2o.beta_features = True
+        time.sleep(1)
+        inspect_and_check(nodeX, destination_key, offset, view, origInspect)
+        h2o.beta_features = False
+        time.sleep(1)
+        o = h2i.count_keys_at_all_nodes()
+        retry = 0
+        okay = False
+        while ((retry == 0) or (not okay)):
+            newStoreViewResult = h2o_cmd.runStoreView(offset=0, view=1024, timeoutSecs=60)
+            p = h2i.count_keys_at_all_nodes()
+            print 'number of keys in the two StoreViews, o:', o, 'p:', p
+            oOkay = {1, 2, 3, 4, 5}
+            pOkay = {1, 2, 3, 4, 5}
+            print o, pOkay, p, oOkay
+            if ((o in oOkay) and (p in pOkay)):
+                print 'Good'
+                okay = True
+            else:
+                print ('Unexpected o,p after autoframe, looking at total keys in system: %s %s' % (o, p))
+            if (retry == 10):
+                raise Exception(("StoreView didn't get autoframe, after %s retries" % retry))
+            deleted = h2i.delete_keys_at_all_nodes(pattern='autoframe')
+            if INVISIBLE_AUTOFRAME:
+                if (not ((deleted == 0) or (deleted == 1))):
+                    msg = ('Should have deleted a total of 0 or 1 keys, looking at all nodes. Did %s' % deleted)
+                    raise Exception(msg)
+            elif (not (deleted == 1)):
+                msg = ('Should have deleted a total of 1 keys, looking at all nodes. Did %s' % deleted)
+            time.sleep(1)
+            retry += 1

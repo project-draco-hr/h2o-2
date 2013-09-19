@@ -1,11 +1,11 @@
-def compare_csv_at_one_col(csvPathname, msg, colIndex=(-1), translate=None, skipHeader=False):
+def compare_csv_at_one_col(csvPathname, msg, colIndex=(-1), translate=None, skipHeader=0):
     predictOutput = []
     with open(csvPathname, 'rb') as f:
         reader = csv.reader(f)
         print 'csv read of', csvPathname
         rowNum = 0
         for row in reader:
-            if (skipHeader and (rowNum == 0)):
+            if ((skipHeader == 1) and (rowNum == 0)):
                 print 'Skipping header in this csv'
             else:
                 output = row[colIndex]

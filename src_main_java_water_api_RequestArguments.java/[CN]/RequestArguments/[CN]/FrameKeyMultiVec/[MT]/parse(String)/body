@@ -1,0 +1,20 @@
+{
+  Frame fr=fr();
+  ArrayList<Integer> al=new ArrayList();
+  for (  String col : input.split(",")) {
+    col=col.trim();
+    int idx=-1;
+    try {
+      idx=Integer.valueOf(col);
+    }
+ catch (    NumberFormatException e) {
+      for (int i=0; i < fr.numCols(); ++i)       if (fr._names[i].equals(col))       idx=i;
+    }
+    if (0 > idx || idx > fr.numCols())     throw new IllegalArgumentException("Column " + col + " not part of key "+ _key.value());
+    if (al.contains(idx))     throw new IllegalArgumentException("Column " + col + " is already ignored.");
+    checkLegality(fr._vecs[idx]);
+    al.add(idx);
+  }
+  if (al.size() == fr.numCols() - 1)   throw new IllegalArgumentException("Can not ignore all columns!");
+  return Ints.toArray(al);
+}

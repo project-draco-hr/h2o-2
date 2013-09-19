@@ -44,7 +44,8 @@ def get_args(self):
         args += [('-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=%s' % debuggerPort)]
     if self.use_flatfile:
         args += [('--flatfile=' + self.flatfile)]
-    args += [('--ice_root=%s' % self.get_ice_dir()), ('--name=' + cloud_name())]
+    args += [('--ice_root=%s' % self.get_ice_dir())]
+    args += [('--name=' + self.cloud_name)]
     if self.hdfs_config:
         args += [('-hdfs_config ' + self.hdfs_config)]
     if self.use_hdfs:
@@ -57,5 +58,4 @@ def get_args(self):
         args += ['--random_udp_drop']
     if self.disable_h2o_log:
         args += ['--nolog']
-    args += ['--no_requests_log']
     return args
