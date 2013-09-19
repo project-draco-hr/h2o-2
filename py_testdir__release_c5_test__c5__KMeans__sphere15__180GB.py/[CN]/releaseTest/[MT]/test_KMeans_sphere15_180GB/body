@@ -51,3 +51,4 @@ def test_KMeans_sphere15_180GB(self):
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         allowedDelta = (0.01, 0.01, 0.01)
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, allowError=True, trial=trial)
+        h2i.delete_keys_at_all_nodes()
