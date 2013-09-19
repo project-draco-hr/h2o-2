@@ -1,39 +1,55 @@
 {
-  _ls=new Layer[3];
-  _ls[0]=new FrameInput(source);
-  _ls[0].init(null,source.numCols() - 1);
-  for (int i=0; i < hidden.length; i++) {
-    if (activation == Activation.Rectifier)     _ls[i + 1]=new Layer.Rectifier();
- else     _ls[i + 1]=new Layer.Tanh();
-    _ls[i + 1]._rate=(float)rate;
-    _ls[i + 1]._l2=(float)l2;
-    _ls[i + 1].init(_ls[i],hidden[i]);
+  final Key sourceKey=Key.make(input("source"));
+  for (int i=cols.length - 1; i >= 0; i--)   if (source._vecs[cols[i]] == response)   cols=ArrayUtils.remove(cols,i);
+  String[] names=new String[cols.length + 1];
+  Vec[] vecs=new Vec[cols.length + 1];
+  for (int i=0; i < cols.length; i++) {
+    names[i]=source._names[cols[i]];
+    vecs[i]=source._vecs[cols[i]];
   }
-  _ls[_ls.length - 1]=new Layer.Softmax();
-  _ls[_ls.length - 1]._rate=(float)rate;
-  _ls[_ls.length - 1]._l2=(float)l2;
-  int classes=(int)(source._vecs[source._vecs.length - 1].max() + 1);
-  _ls[_ls.length - 1].init(_ls[_ls.length - 2],classes);
-  for (int i=1; i < _ls.length; i++)   _ls[i].randomize();
-  final Threaded trainer=new Threaded(_ls);
-  weights=Key.make(destination_key.toString() + "_weights");
-  UKV.put(destination_key,this);
+  names[names.length - 1]="response";
+  for (int i=0; i < source.numCols(); i++)   if (source._vecs[i] == response)   names[names.length - 1]=source._names[i];
+  vecs[vecs.length - 1]=response;
+  final Frame frame=reChunk(new Frame(names,vecs));
+  final Layer[] ls=new Layer[hidden.length + 2];
+  ls[0]=new FrameInput(frame);
+  ls[0].init(null,frame.numCols() - 1);
+  for (int i=0; i < hidden.length; i++) {
+    if (activation == Activation.Rectifier)     ls[i + 1]=new Layer.Rectifier();
+ else     ls[i + 1]=new Layer.Tanh();
+    ls[i + 1]._rate=(float)rate;
+    ls[i + 1]._l2=(float)l2;
+    ls[i + 1].init(ls[i],hidden[i]);
+  }
+  ls[ls.length - 1]=new Layer.Softmax();
+  ls[ls.length - 1]._rate=(float)rate;
+  ls[ls.length - 1]._l2=(float)l2;
+  int classes=(int)(response.max() + 1);
+  ls[ls.length - 1].init(ls[ls.length - 2],classes);
+  for (int i=1; i < ls.length; i++)   ls[i].randomize();
+  UKV.put(destination_key,new NeuralNetModel(destination_key,sourceKey,frame,ls));
+  final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
   trainer.start();
   Thread thread=new Thread(){
     @Override public void run(){
       long lastTime=System.nanoTime();
       long lastItems=0;
-      while (!cancelled()) {
-        Error train=NeuralNetScore.eval(_ls,EVAL_ROW_COUNT);
-        train_classification_error=train.Value;
-        train_sqr_error=train.SqrDist;
+      while (running()) {
         long time=System.nanoTime();
         double delta=(time - lastTime) / 1e9;
+        long items=trainer.items();
+        int ps=(int)((items - lastItems) / delta);
         lastTime=time;
-        long items=trainer.steps();
-        rows_per_second=(int)((items - lastItems) / delta);
-        UKV.put(destination_key,NeuralNet.this);
-        UKV.put(weights,Weights.get(_ls,false));
+        lastItems=items;
+        NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+        int[][] confusion=new int[model.classNames().length][model.classNames().length];
+        Error train=NeuralNetScore.eval(ls,EVAL_ROW_COUNT,confusion);
+        model.items=items;
+        model.items_per_second=ps;
+        model.train_classification_error=train.Value;
+        model.train_sqr_error=train.SqrDist;
+        model.confusionMatrix=confusion;
+        UKV.put(destination_key,model);
         try {
           Thread.sleep(2000);
         }
@@ -41,10 +57,9 @@
           throw new RuntimeException(e);
         }
       }
-      trainer.close();
-      ;
     }
   }
 ;
   thread.start();
+  trainer.join();
 }

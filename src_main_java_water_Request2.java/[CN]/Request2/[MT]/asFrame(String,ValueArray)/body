@@ -1,0 +1,20 @@
+{
+synchronized (conversionLock) {
+    String frameKeyString=DKV.calcConvertedFrameKeyString(input);
+    Key k2=Key.make(frameKeyString);
+    Value v2=DKV.get(k2);
+    if (v2 != null) {
+      if (!v2.isFrame()) {
+        throw new IllegalArgumentException(k2 + " is not a frame.");
+      }
+      Log.info("Using existing cached Frame conversion (" + frameKeyString + ").");
+      return v2.get();
+    }
+    int cn=conversionNumber.getAndIncrement();
+    Log.info("Converting ValueArray to Frame: node(" + H2O.SELF + ") convNum("+ cn+ ") key("+ frameKeyString+ ")...");
+    Frame frame=va.asFrame();
+    DKV.put(k2,frame);
+    Log.info("Conversion " + cn + " complete.");
+    return frame;
+  }
+}

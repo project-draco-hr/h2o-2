@@ -7,7 +7,7 @@
   sb.append(buildResponseHeader(response));
   Builder builder=response.getBuilderFor(ROOT_OBJECT);
   if (builder == null) {
-    sb.append("<h3>" + getClass().getSimpleName() + "</h3>");
+    sb.append("<h3>" + name() + "</h3>");
     builder=OBJECT_BUILDER;
   }
   for (  String h : response.getHeaders())   sb.append(h);
@@ -15,7 +15,8 @@
     boolean done=response._req.toHTML(sb);
     if (!done) {
       JsonParser parser=new JsonParser();
-      JsonObject o=(JsonObject)parser.parse(new String(response._req.writeJSON(new AutoBuffer()).buf()));
+      String json=new String(response._req.writeJSON(new AutoBuffer()).buf());
+      JsonObject o=(JsonObject)parser.parse(json);
       sb.append(builder.build(response,o,""));
     }
   }

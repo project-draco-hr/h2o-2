@@ -1,12 +1,18 @@
 {
-  if (_net != null) {
-    sb.append("<dl class='dl-horizontal'>");
-    sb.append("<dt>Train error</dt>");
-    sb.append("<dd>").append(String.format("%5.3f %%",100 * _net.train_classification_error)).append("</dd>");
-    sb.append("<dt>Validation error</dt>");
-    sb.append("<dd>").append(String.format("%5.3f %%",100 * _net.validation_classification_error)).append("</dd>");
-    ;
-    sb.append("</dl>");
+  NeuralNetModel model=UKV.get(Key.make(dst_key.value()));
+  if (model != null) {
+    String train=String.format("%5.2f %%",100 * model.train_classification_error);
+    String valid=String.format("%5.2f %%",100 * model.validation_classification_error);
+    DocGen.HTML.section(sb,"Training classification error: " + train);
+    DocGen.HTML.section(sb,"Training square error: " + model.train_sqr_error);
+    DocGen.HTML.section(sb,"Validation classification error: N/A");
+    DocGen.HTML.section(sb,"Validation square error: N/A");
+    DocGen.HTML.section(sb,"Items: " + model.items);
+    DocGen.HTML.section(sb,"Items per second: " + model.items_per_second);
+    if (model.confusionMatrix != null) {
+      String title="Confusion Matrix (Training Data)";
+      NeuralNetScore.confusion(sb,title,model.classNames(),model.confusionMatrix);
+    }
   }
   return true;
 }

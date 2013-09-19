@@ -1,13 +1,11 @@
 {
-  final Key skey=src_key.value();
-  final Frame fr=DKV.get(skey).get();
-  final long off=offset.value();
+  Key skey=Key.make(input("src_key"));
   long naCnt=0;
   for (int i=0; i < cols.length; i++)   naCnt+=cols[i].naCnt;
   DocGen.HTML.title(sb,skey.toString());
   DocGen.HTML.section(sb,"" + numCols + " columns, "+ numRows+ " rows, "+ PrettyPrint.bytes(byteSize)+ " bytes (compressed), "+ (naCnt == 0 ? "no" : PrettyPrint.bytes(naCnt))+ " missing elements");
-  sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(src_key.value(),"Distributed Random Forest") + ", "+ GBM.link(src_key.value(),"Distributed GBM")+ ", "+ hex.LR2.link(src_key.value(),"Linear Regression")+ ",<br>"+ DownloadDataset.link(src_key.value(),"Download as CSV")+ "</div>");
-  sb.append(pagination(fr.numRows()));
+  sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(skey,"Distributed Random Forest") + ", "+ GBM.link(skey,"Distributed GBM")+ ", "+ hex.LR2.link(skey,"Linear Regression")+ ",<br>"+ DownloadDataset.link(skey,"Download as CSV")+ "</div>");
+  sb.append(pagination(src_key.numRows(),skey));
   DocGen.HTML.arrayHead(sb);
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Row").append("</td>");
@@ -15,11 +13,11 @@
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Min").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(fr._vecs[i],-1,cols[i].min)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(src_key._vecs[i],-1,cols[i].min)).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Max").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(fr._vecs[i],-1,cols[i].max)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(src_key._vecs[i],-1,cols[i].max)).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Mean").append("</td>");
@@ -31,18 +29,18 @@
     for (int i=0; i < cols.length; i++)     sb.append("<td>").append(cols[i].naCnt > 0 ? Long.toString(cols[i].naCnt) : "").append("</td>");
     sb.append("</tr>");
   }
-  if (off == -1) {
+  if (offset == -1) {
     sb.append("<tr class='warning'>");
     sb.append("<td>").append("Size").append("</td>");
-    for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(fr._vecs[i].byteSize())).append("</td>");
+    for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(src_key._vecs[i].byteSize())).append("</td>");
     sb.append("</tr>");
-    Vec c0=fr.anyVec();
+    Vec c0=src_key.anyVec();
     int N=c0.nChunks();
     for (int j=0; j < N; j++) {
       sb.append("<tr>");
       sb.append("<td>").append(c0.chunkKey(j).home_node()).append(", ").append(c0.chunk2StartElem(j)).append("</td>");
       for (int i=0; i < cols.length; i++) {
-        String clazz=fr._vecs[i].elem2BV(j).getClass().getSimpleName();
+        String clazz=src_key._vecs[i].elem2BV(j).getClass().getSimpleName();
         String trim=clazz.replaceAll("Chunk","");
         sb.append("<td>").append(trim).append("</td>");
       }
@@ -50,11 +48,11 @@
     }
   }
  else {
-    int N=(int)Math.min(100,numRows - off);
+    int N=(int)Math.min(100,numRows - offset);
     for (int j=0; j < N; j++) {
       sb.append("<tr>");
-      sb.append("<td>").append(off + j).append("</td>");
-      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(fr._vecs[i],off + j)).append("</td>");
+      sb.append("<td>").append(offset + j).append("</td>");
+      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(src_key._vecs[i],offset + j)).append("</td>");
       sb.append("</tr>");
     }
   }

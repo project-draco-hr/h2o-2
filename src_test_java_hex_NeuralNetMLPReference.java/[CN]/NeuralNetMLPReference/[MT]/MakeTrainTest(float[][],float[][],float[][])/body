@@ -1,20 +1,20 @@
 {
   int numCols=allData[0].length;
-  int[] sequence=new int[allData.length];
-  for (int i=0; i < sequence.length; ++i)   sequence[i]=i;
-  NeuralNetwork.shuffle(sequence);
+  int[] shuffle=new int[allData.length];
+  for (int i=0; i < shuffle.length; ++i)   shuffle[i]=i;
+  NeuralNetwork.shuffle(shuffle);
   int si=0;
   int j=0;
   for (; si < trainData.length; ++si) {
     trainData[j]=new float[numCols];
-    int idx=sequence[si];
+    int idx=shuffle[si];
     System.arraycopy(allData[idx],0,trainData[j],0,numCols);
     ++j;
   }
   j=0;
   for (; si < allData.length; ++si) {
     testData[j]=new float[numCols];
-    int idx=sequence[si];
+    int idx=shuffle[si];
     System.arraycopy(allData[idx],0,testData[j],0,numCols);
     ++j;
   }
