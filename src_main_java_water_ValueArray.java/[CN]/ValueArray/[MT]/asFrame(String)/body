@@ -12,7 +12,7 @@ synchronized (conversionLock) {
     }
     int cn=conversionNumber.getAndIncrement();
     Log.info("Converting ValueArray to Frame: node(" + H2O.SELF + ") convNum("+ cn+ ") key("+ frameKeyString+ ")...");
-    Frame frame=va.asFrame();
+    Frame frame=convert();
     DKV.put(k2,frame);
     Log.info("Conversion " + cn + " complete.");
     return frame;
