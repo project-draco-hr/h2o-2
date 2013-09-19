@@ -18,9 +18,9 @@ def test_GBM_parseTrain(self):
         xList = []
         eList = []
         sList = []
-        depth = 5
-        for ntrees in [10, 20, 40, 80, 160]:
-            params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': depth, 'min_rows': 10, 'vresponse': vresponse, }
+        ntrees = 40
+        for max_depth in [5, 10, 20, 40]:
+            params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'vresponse': vresponse, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o_cmd.runInspect(key=parseResult['destination_key'])
@@ -33,7 +33,7 @@ def test_GBM_parseTrain(self):
             GBMView = h2o_cmd.runGBMView(model_key='GBMKEY')
             errsLast = GBMView['gbm_model']['errs'][(-1)]
             print "GBM 'errsLast'", errsLast
-            xList.append(ntrees)
+            xList.append(max_depth)
             eList.append(errsLast)
             sList.append(elapsed)
         plotit(xList, eList, sList)
