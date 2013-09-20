@@ -1,0 +1,104 @@
+def simpleCheckGBM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, doNormalized=False, **kwargs):
+    GBMModel = glm['GBMModel']
+    warnings = None
+    if ('warnings' in GBMModel):
+        warnings = GBMModel['warnings']
+        x = re.compile('failed', re.IGNORECASE)
+        c = re.compile('converge', re.IGNORECASE)
+        for w in warnings:
+            print '\nwarning:', w
+            if (re.search(x, w) and (not allowFailWarning)):
+                if re.search(c, w):
+                    pass
+                else:
+                    raise Exception(w)
+    GBMParams = GBMModel['GBMParams']
+    family = GBMParams['family']
+    iterations = GBMModel['iterations']
+    print 'GBMModel/iterations:', iterations
+    if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
+        raise Exception(('Convergence issue? GBM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
+    validationsList = GBMModel['validations']
+    validations = validationsList[0]
+    n_folds = kwargs.setdefault('n_folds', None)
+    if (not ('xval_models' in validations)):
+        if (n_folds > 1):
+            raise Exception(('No cross validation models returned. Asked for ' + n_folds))
+    else:
+        xval_models = validations['xval_models']
+        if (n_folds and (n_folds > 1)):
+            if (len(xval_models) != n_folds):
+                raise Exception(((len(xval_models) + ' cross validation models returned. Asked for ') + n_folds))
+        elif (len(xval_models) != 10):
+            raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
+    print 'GBMModel/validations'
+    print ('%15s %s' % ('err:\t', validations['err']))
+    print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
+    print ('%15s %s' % ('resDev:\t', validations['resDev']))
+    if (family == 'binomial'):
+        print ('%15s %s' % ('auc:\t', validations['auc']))
+        print ('%15s %s' % ('threshold:\t', validations['threshold']))
+    if ((family == 'poisson') or (family == 'gaussian')):
+        print ('%15s %s' % ('aic:\t', validations['aic']))
+    if math.isnan(validations['err']):
+        emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validations['err']))
+        raise Exception(emsg)
+    if math.isnan(validations['resDev']):
+        emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validations['resDev']))
+        raise Exception(emsg)
+    if math.isnan(validations['nullDev']):
+        emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validations['nullDev']))
+        raise Exception(emsg)
+    if doNormalized:
+        coefficients = GBMModel['normalized_coefficients'].copy()
+    else:
+        coefficients = GBMModel['coefficients'].copy()
+    column_names = GBMModel['column_names']
+    intercept = coefficients.pop('Intercept', None)
+    y = kwargs['y']
+
+    def add_to_coefficient_list_and_string(c, cList, cString):
+        if (c in coefficients):
+            cValue = coefficients[c]
+            cValueString = ('%s: %.5e   ' % (c, cValue))
+        else:
+            print (("Warning: didn't see '" + c) + "' in json coefficient response."), "Inserting 'None' with assumption it was dropped due to constant column)"
+            cValue = None
+            cValueString = ('%s: %s   ' % (c, cValue))
+        cList.append(cValue)
+        if prettyPrint:
+            cValueString = (('H2O coefficient ' + cValueString) + '\n')
+        return (cString + cValueString)
+    cString = ''
+    cList = []
+    for c in column_names:
+        cString = add_to_coefficient_list_and_string(c, cList, cString)
+    if prettyPrint:
+        print ('\nH2O intercept:\t\t%.5e' % intercept)
+        print cString
+    elif (not noPrint):
+        print '\nintercept:', intercept, cString
+    print '\nTotal # of coefficients:', len(column_names)
+    if ((not allowZeroCoeff) and (colX is not None)):
+        absXCoeff = abs(float(coefficients[str(colX)]))
+        self.assertGreater(absXCoeff, 1e-26, ((((("abs. value of GBM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)))
+    absIntercept = abs(float(intercept))
+    self.assertGreater(absIntercept, 1e-26, (("abs. value of GBM coefficients['Intercept'] is " + str(absIntercept)) + ', not >= 1e-26 for Intercept'))
+    if (len(coefficients) > 0):
+        maxKey = max([(abs(coefficients[x]), x) for x in coefficients])[1]
+        print 'H2O Largest abs. coefficient value:', maxKey, coefficients[maxKey]
+        minKey = min([(abs(coefficients[x]), x) for x in coefficients])[1]
+        print 'H2O Smallest abs. coefficient value:', minKey, coefficients[minKey]
+    else:
+        print 'Warning, no coefficients returned. Must be intercept only?'
+    if ((not allowZeroCoeff) and (len(coefficients) > 1)):
+        s = 0.0
+        for c in coefficients:
+            v = coefficients[c]
+            s += abs(float(v))
+        self.assertGreater(s, 1e-26, (('sum of abs. value of GBM coefficients/intercept is ' + str(s)) + ', not >= 1e-26'))
+    print 'GBMModel model time (milliseconds):', GBMModel['model_time']
+    print 'GBMModel validation time (milliseconds):', validations['val_time']
+    print 'GBMModel lsm time (milliseconds):', GBMModel['lsm_time']
+    h2o.check_sandbox_for_errors()
+    return (warnings, cList, intercept)
