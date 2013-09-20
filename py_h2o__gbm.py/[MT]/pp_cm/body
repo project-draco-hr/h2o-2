@@ -1,5 +1,5 @@
 def pp_cm(jcm, header=None):
-    header = [('%s' % i) for i in jcm[0]]
+    header = [('"%s"' % i) for i in range(len(jcm[0]))]
     cm = '{0:<8}'.format('')
     for h in header:
         cm = '{0}|{1:<8}'.format(cm, h)
