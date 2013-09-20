@@ -24,10 +24,10 @@
   ls[ls.length - 1]=new Layer.Softmax();
   ls[ls.length - 1]._rate=(float)rate;
   ls[ls.length - 1]._l2=(float)l2;
-  int classes=(int)(response.max() + 1);
-  ls[ls.length - 1].init(ls[ls.length - 2],classes);
+  ls[ls.length - 1].init(ls[ls.length - 2],Model.responseDomain(frame).length);
   for (int i=1; i < ls.length; i++)   ls[i].randomize();
-  UKV.put(destination_key,new NeuralNetModel(destination_key,sourceKey,frame,ls));
+  NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+  UKV.put(destination_key,model);
   final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
   trainer.start();
   Thread thread=new Thread(){

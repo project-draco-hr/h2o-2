@@ -1,9 +1,0 @@
-{
-  for (int i=0; i < _a.length; i++) {
-    Chunk chunk=chunk(i,_row);
-    double d=chunk.at(_row);
-    d-=_means[i];
-    d=_sigmas[i] > 1e-4 ? d / _sigmas[i] : d;
-    _a[i]=(float)d;
-  }
-}

@@ -3,7 +3,8 @@
   clones[0]=input;
   for (int y=1; y < ls.length; y++) {
     clones[y]=ls[y].clone();
-    clones[y].init(clones[y - 1],ls[y]._b.length,false,step);
+    clones[y]._a=new float[ls[y]._a.length];
+    clones[y].init(clones[y - 1],false,step);
   }
   return clones;
 }

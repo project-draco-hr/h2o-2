@@ -1,6 +1,9 @@
 {
+  int label=label();
   for (int o=0; o < _a.length; o++) {
-    float g=_e[o] * (1 - _a[o]) * _a[o];
+    float t=o == label ? 1 : 0;
+    float e=t - _a[o];
+    float g=e * (1 - _a[o]) * _a[o];
     float u=_r * g;
     for (int i=0; i < _in._a.length; i++) {
       int w=o * _in._a.length + i;
