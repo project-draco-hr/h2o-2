@@ -1,0 +1,15 @@
+{
+  if (_count < 0 || --_count > 0 && (_node._job == null || Job.running(_node._job))) {
+    for (    Chunk[] cs : _node._chunks) {
+      DescentChunk task=new DescentChunk();
+      task._node=_node;
+      task._cs=cs;
+      H2O.submitTask(task);
+    }
+    reinitialize();
+    H2O.submitTask(this);
+  }
+ else {
+    if (_node._key.home())     _node._trainer.done();
+  }
+}

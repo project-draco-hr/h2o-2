@@ -5,9 +5,9 @@
   _resume=new CyclicBarrier(_threads.length + 1);
   for (int t=0; t < _trainers.length; t++) {
     final Input input=(Input)ls[0].clone();
-    input.init(null,ls[0]._a.length,false);
+    input.init(null,ls[0]._a.length,false,0);
     input._row=input._len * t / _trainers.length;
-    Layer[] clones=Layer.clone(ls,input);
+    Layer[] clones=Layer.clone(ls,input,0);
     _trainers[t]=new Base(clones);
     final Base trainer=_trainers[t];
     _threads[t]=new Thread("H2O Trainer " + t){
@@ -26,7 +26,7 @@
           }
           trainer.step();
           input.move();
-          _steps.incrementAndGet();
+          _items.incrementAndGet();
         }
       }
     }

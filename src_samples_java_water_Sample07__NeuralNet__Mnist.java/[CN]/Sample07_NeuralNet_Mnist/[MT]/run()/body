@@ -1,0 +1,37 @@
+{
+  Frame trainFrame=TestUtil.parseFrame("smalldata/mnist/train.csv.gz");
+  Frame testFrame=TestUtil.parseFrame("smalldata/mnist/test.csv.gz");
+  trainFrame=NeuralNet.reChunk(trainFrame);
+  FrameInput train=new FrameInput(trainFrame);
+  FrameInput test=new FrameInput(testFrame,train._means,train._sigmas);
+  train.init(null,PIXELS);
+  test.init(null,PIXELS);
+  Layer[] ls=build(train);
+  final Trainer trainer=new Trainer.MapReduce(ls);
+  trainer.start();
+  long start=System.nanoTime();
+  long lastTime=start;
+  long lastItems=0;
+  for (; ; ) {
+    try {
+      Thread.sleep(2000);
+    }
+ catch (    InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    Layer[] clones1=Layer.clone(ls,train,0);
+    Error trainE=NeuralNetScore.eval(clones1,NeuralNet.EVAL_ROW_COUNT,null);
+    Layer[] clones2=Layer.clone(ls,test,0);
+    Error testE=NeuralNetScore.eval(clones2,NeuralNet.EVAL_ROW_COUNT,null);
+    long time=System.nanoTime();
+    double delta=(time - lastTime) / 1e9;
+    double total=(time - start) / 1e9;
+    lastTime=time;
+    long steps=trainer.items();
+    int ps=(int)((steps - lastItems) / delta);
+    lastItems=steps;
+    String m=(int)total + "s, " + steps+ " steps ("+ (ps)+ "/s) ";
+    m+="train: " + trainE + ", test: "+ testE;
+    System.out.println(m);
+  }
+}

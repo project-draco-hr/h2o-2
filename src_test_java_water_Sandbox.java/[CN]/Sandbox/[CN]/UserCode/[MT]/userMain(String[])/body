@@ -1,10 +1,10 @@
 {
   localCloud(2,true,args);
-  File f=new File("smalldata/covtype/covtype.20k.data");
+  File f=new File("smalldata/mnist/train.csv.gz");
+  Key key=TestUtil.load_test_file(f,"test");
   Key dest=Key.make("test.hex");
-  Key fkey=NFSFileVec.make(f);
-  Frame frame=ParseDataset2.parse(dest,new Key[]{fkey});
-  System.out.println(frame.anyVec().nChunks());
+  ParseDataset.parse(dest,new Key[]{key});
+  ValueArray va=(ValueArray)UKV.get(dest);
   Utils.readConsole();
   System.out.println("Done!");
 }

@@ -2,6 +2,12 @@
   H2O.main(args);
   Log.info("blah: " + System.getProperty("java.home"));
   TestUtil.stall_till_cloudsize(LEN);
-  MnistDist mnist=new MnistDist();
-  mnist.run();
+  File f=new File("smalldata/mnist/train.csv.gz");
+  Key dest=Key.make("train.hex");
+  Key fkey=NFSFileVec.make(f);
+  ParseDataset2.parse(dest,new Key[]{fkey});
+  f=new File("smalldata/mnist/test.csv.gz");
+  dest=Key.make("test.hex");
+  fkey=NFSFileVec.make(f);
+  ParseDataset2.parse(dest,new Key[]{fkey});
 }

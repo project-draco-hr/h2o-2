@@ -3,7 +3,10 @@
     dfork(keys).get();
   }
  catch (  ExecutionException eex) {
-    throw new DException(eex.getCause()).toEx();
+    Throwable tex=eex.getCause();
+    if (tex instanceof Error)     throw (Error)tex;
+    if (tex instanceof DistributedException)     throw (DistributedException)tex;
+    throw new RuntimeException(tex);
   }
 catch (  InterruptedException iex) {
     Log.errRTExcept(iex);

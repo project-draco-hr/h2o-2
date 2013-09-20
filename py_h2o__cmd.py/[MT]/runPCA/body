@@ -1,6 +1,6 @@
 def runPCA(node=None, parseResult=None, timeoutSecs=600, **kwargs):
     if (not parseResult):
-        raise Exception('No parsed key for PCA specified')
+        raise Exception('No parseResult for PCA')
     if (not node):
         node = h2o.nodes[0]
     data_key = parseResult['destination_key']

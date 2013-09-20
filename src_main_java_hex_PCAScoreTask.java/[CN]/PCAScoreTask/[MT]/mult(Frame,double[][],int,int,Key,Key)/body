@@ -1,0 +1,26 @@
+{
+  if (smatrix.length != lmatrix._vecs.length)   throw new RuntimeException("Mismatched dimensions! Left matrix has " + lmatrix._vecs.length + " columns, while right matrix has "+ smatrix.length+ " rows");
+  final int ncomp=Math.min(ncol,smatrix[0].length);
+  final int nfeat=Math.min(nrow,lmatrix._vecs.length);
+  final PCAScoreJob job=new PCAScoreJob(lmatrix,dataKey,destKey,false);
+  final H2OCountedCompleter fjtask=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      Vec[] vecs=Arrays.copyOf(lmatrix._vecs,nfeat + ncomp);
+      VectorGroup vg=lmatrix._vecs[0].group();
+      Key[] keys=vg.addVecs(ncomp);
+      for (int i=0; i < ncomp; i++) {
+        vecs[nfeat + i]=new AppendableVec(keys[i]);
+      }
+      ScoreTask tsk=new ScoreTask(job,nfeat,ncomp,smatrix).doAll(vecs);
+      Vec[] outputVecs=Arrays.copyOfRange(tsk._fr._vecs,nfeat,nfeat + ncomp);
+      String[] names=new String[ncomp];
+      for (int i=0; i < ncomp; i++)       names[i]="PC" + i;
+      Frame f=new Frame(names,outputVecs);
+      DKV.put(destKey,f);
+      job.remove();
+    }
+  }
+;
+  H2O.submitTask(job.start(fjtask));
+  return job;
+}

@@ -1,0 +1,8 @@
+{
+  Key k=Key.make(input);
+  if (_type != null) {
+    Value v=DKV.get(k);
+    if (v != null && !compatible(_type,v.get()))     throw new IllegalArgumentException(input + ":" + errors()[0]);
+  }
+  return k;
+}
