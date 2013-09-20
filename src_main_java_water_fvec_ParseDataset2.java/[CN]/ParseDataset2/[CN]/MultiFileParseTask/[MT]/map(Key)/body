@@ -43,14 +43,12 @@ case ZIP:
     if (ze != null && !ze.isDirectory())     _dout=streamParse(zis,localSetup,_vecIdStart,chunkStartIdx,pmon);
  else     zis.close();
     for (int i=0; i < vec.nChunks(); ++i)     _chunk2Enum[chunkStartIdx + i]=H2O.SELF.index();
-    System.out.println("Chunks");
     break;
   }
 case GZIP:
 ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);
 _dout=streamParse(new GZIPInputStream(vec.openStream(pmon)),localSetup,_vecIdStart,chunkStartIdx,pmon);
 for (int i=0; i < vec.nChunks(); ++i) _chunk2Enum[chunkStartIdx + i]=H2O.SELF.index();
-System.out.println("GZ Chunks " + chunkStartIdx + " to "+ (chunkStartIdx + vec.nChunks())+ ": "+ Arrays.toString(_chunk2Enum));
 break;
 }
 }

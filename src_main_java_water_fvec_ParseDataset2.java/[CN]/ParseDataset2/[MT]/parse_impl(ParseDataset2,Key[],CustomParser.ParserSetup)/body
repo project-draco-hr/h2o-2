@@ -6,7 +6,6 @@
   }
   Vec v=getVec(fkeys[0]);
   MultiFileParseTask uzpt=new MultiFileParseTask(v.group(),setup,job._progress).invoke(fkeys);
-  System.out.println(Arrays.toString(uzpt._chunk2Enum));
   Frame fr=new Frame(setup._columnNames != null ? setup._columnNames : genericColumnNames(setup._ncols),uzpt._dout.closeVecs());
   SVFTask t=new SVFTask(fr);
   t.invokeOnAllNodes();
