@@ -1,0 +1,22 @@
+{
+  FrameWithProgress frame=UKV.get(Key.make(dst_key.value()));
+  if (frame == null)   DocGen.HTML.section(sb,"Building a first model");
+ else   DocGen.HTML.section(sb,"Building model: " + frame.currentJob + " out of "+ frame.totalJobs);
+  GBMGrid grid=(GBMGrid)Job.findJob(Key.make(job.value()));
+  GBMModel model=null;
+  if (grid.currentModel != null)   model=UKV.get(grid.currentModel);
+  if (model != null)   DocGen.HTML.section(sb,"Building tree: " + model.treesBuiltSoFar + " out of "+ model.N+ " for current model");
+  if (frame != null) {
+    DocGen.HTML.arrayHead(sb);
+    sb.append("<tr class='warning'>");
+    for (int i=0; i < frame._vecs.length; i++)     sb.append("<td><b>").append(frame._names[i]).append("</b></td>");
+    sb.append("</tr>");
+    for (int j=0; j < frame.numRows(); j++) {
+      sb.append("<tr>");
+      for (int i=0; i < frame._vecs.length; i++)       sb.append("<td>").append(Inspect2.x0(frame._vecs[i],j)).append("</td>");
+      sb.append("</tr>");
+    }
+    DocGen.HTML.arrayTail(sb);
+  }
+  return true;
+}

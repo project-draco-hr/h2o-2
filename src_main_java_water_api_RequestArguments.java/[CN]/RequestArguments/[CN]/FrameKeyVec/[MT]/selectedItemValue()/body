@@ -1,6 +1,11 @@
 {
-  Vec defaultVec=defaultValue();
   Frame fr=fr();
-  if (defaultVec != null && fr != null)   for (int i=0; i < fr._vecs.length; i++)   if (fr._vecs[i] == defaultVec)   return fr._names[i];
-  return value() == null || fr == null ? "" : fr._names[_colIdx.get()];
+  if (value() == null || fr == null) {
+    if (!refreshOnChange()) {
+      Vec defaultVec=defaultValue();
+      if (defaultVec != null && fr != null)       for (int i=0; i < fr._vecs.length; i++)       if (fr._vecs[i] == defaultVec)       return fr._names[i];
+    }
+    return "";
+  }
+  return fr._names[_colIdx.get()];
 }

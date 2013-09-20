@@ -1,3 +1,5 @@
 {
-  return ValueArray.asFrame(_key.value());
+  Value v=DKV.get(_key.value());
+  if (v != null)   return ValueArray.asFrame(v);
+  return null;
 }

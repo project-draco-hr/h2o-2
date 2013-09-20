@@ -20,6 +20,7 @@
         Object defaultValue=f.get(this);
         Argument arg=null;
         if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
+ else         if (f.getType() == String.class)         arg=new Str(f.getName(),(String)defaultValue);
  else         if (f.getType() == float.class || f.getType() == double.class) {
           double val=((Number)defaultValue).doubleValue();
           arg=new Real(f.getName(),api.required(),val,api.dmin(),api.dmax(),api.help());
