@@ -27,7 +27,6 @@ def test_GBM_covtype_train_test(self):
         elapsed = (time.time() - start)
         print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'test parse result:', parseTestResult['destination_key']
-        ntrees = 40
         ntrees = 10
         for max_depth in [5, 10, 20, 40]:
             params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'vresponse': vresponse, }
