@@ -1,3 +1,5 @@
 {
-  return ValueArray.asFrame(_key.value());
+  Value v=DKV.get(_key.value());
+  if (v == null)   throw new IllegalArgumentException("Frame not found");
+  return ValueArray.asFrame(v);
 }
