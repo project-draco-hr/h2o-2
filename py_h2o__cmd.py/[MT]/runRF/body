@@ -1,6 +1,6 @@
 def runRF(node=None, parseResult=None, trees=5, timeoutSecs=20, retryDelaySecs=2, rfView=True, noise=None, noPrint=False, **kwargs):
     if (not parseResult):
-        raise Exception('No parsed key for RF specified')
+        raise Exception('No parseResult for RF')
     if (not node):
         node = h2o.nodes[0]
     h2o.verboseprint('runRF parseResult:', parseResult)

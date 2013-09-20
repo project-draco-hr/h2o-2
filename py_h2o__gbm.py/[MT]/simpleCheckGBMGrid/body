@@ -1,0 +1,16 @@
+def simpleCheckGBMGrid(self, glmGridResult, colX=None, allowFailWarning=False, **kwargs):
+    destination_key = glmGridResult['destination_key']
+    inspectGG = h2o_cmd.runInspect(None, destination_key)
+    h2o.verboseprint('Inspect of destination_key', destination_key, ':\n', h2o.dump_json(inspectGG))
+    response = inspectGG['response']
+    model0 = glmGridResult['models'][0]
+    alpha = model0['alpha']
+    area_under_curve = model0['area_under_curve']
+    error_0 = model0['error_0']
+    error_1 = model0['error_1']
+    model_key = model0['key']
+    print 'best GBM model key:', model_key
+    glm_lambda = model0['lambda']
+    inspectGBM = h2o_cmd.runInspect(None, model_key)
+    h2o.verboseprint('GBMGrid inspectGBM:', h2o.dump_json(inspectGBM))
+    simpleCheckGBM(self, inspectGBM, colX, allowFailWarning=allowFailWarning, **kwargs)

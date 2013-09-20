@@ -1,0 +1,86 @@
+{
+  try {
+    ArrayList<String> names=new ArrayList<String>();
+    ArrayList<List<String>> data=new ArrayList<List<String>>();
+    names.add("ntrees");
+    names.add("max_depth");
+    names.add("min_rows");
+    names.add("nbins");
+    names.add("learn_rate");
+    names.add("model build time (s)");
+    names.add("seconds per tree");
+    names.add("model key");
+    names.add("model number");
+    names.add("model quality score");
+    int count=ntrees.length * max_depth.length * min_rows.length* nbins.length* learn_rate.length;
+    int n=0;
+    for (int ntreesI=0; ntreesI < ntrees.length; ntreesI++) {
+      for (int max_depthI=0; max_depthI < max_depth.length; max_depthI++) {
+        for (int min_rowsI=0; min_rowsI < min_rows.length; min_rowsI++) {
+          for (int nbinsI=0; nbinsI < nbins.length; nbinsI++) {
+            for (int learn_rateI=0; learn_rateI < learn_rate.length; learn_rateI++) {
+              final GBM job=new GBM();
+              job.destination_key=currentModel;
+              job.source=source;
+              job.vresponse=vresponse;
+              job.ignored_cols=ignored_cols;
+              job.ntrees=ntrees[ntreesI];
+              job.max_depth=max_depth[max_depthI];
+              job.min_rows=min_rows[min_rowsI];
+              job.nbins=nbins[nbinsI];
+              job.learn_rate=learn_rate[learn_rateI];
+              job.run();
+              Thread t=new Thread("GBMGrid watchdog"){
+                public void run(){
+                  while (job.running()) {
+                    if (cancelled()) {
+                      job.cancel();
+                      break;
+                    }
+                    try {
+                      Thread.sleep(10);
+                    }
+ catch (                    InterruptedException e) {
+                      throw new RuntimeException(e);
+                    }
+                  }
+                }
+              }
+;
+              t.start();
+              job.get();
+              if (cancelled())               return;
+              ArrayList<String> values=new ArrayList<String>();
+              values.add("" + job.ntrees);
+              values.add("" + job.max_depth);
+              values.add("" + job.min_rows);
+              values.add("" + job.nbins);
+              values.add("" + job.learn_rate);
+              double model_build_time=(job.end_time - job.start_time) / 1000;
+              values.add("" + model_build_time);
+              double seconds_per_tree=model_build_time / job.ntrees;
+              values.add("" + seconds_per_tree);
+              values.add("" + job.self());
+              values.add("" + n++);
+              values.add("" + new Random().nextDouble());
+              data.add(values);
+              Collections.sort(data,new Comparator<List<String>>(){
+                @Override public int compare(                List<String> o1,                List<String> o2){
+                  return Double.compare(Double.parseDouble(o1.get(o1.size() - 1)),Double.parseDouble(o2.get(o2.size() - 1)));
+                }
+              }
+);
+              FrameWithProgress frame=new FrameWithProgress(names.toArray(new String[0]),vecs(names,data));
+              frame.currentJob=n;
+              frame.totalJobs=count;
+              UKV.put(destination_key,frame);
+            }
+          }
+        }
+      }
+    }
+  }
+  finally {
+    UKV.remove(currentModel);
+  }
+}

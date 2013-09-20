@@ -1,2 +1,9 @@
 {
+  if (colIdx < _nvs.length) {
+    if (!_enums[_col=colIdx].isKilled()) {
+      int id=_enums[colIdx].addKey(str);
+      _nvs[colIdx].addEnum(id);
+    }
+ else     _nvs[colIdx].addEnum(Integer.MAX_VALUE);
+  }
 }
