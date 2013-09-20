@@ -1,9 +1,11 @@
 {
+  _lEnums=new Enum[H2O.CLOUD.size()][];
   if (MultiFileParseTask._enums.containsKey(_k)) {
-    _enums=MultiFileParseTask._enums.get(_k);
+    _lEnums[H2O.SELF.index()]=_gEnums=MultiFileParseTask._enums.get(_k);
     if (H2O.SELF.index() == _homeNode) {
-      _enums=_enums.clone();
-      for (int i=0; i < _enums.length; ++i)       _enums[i]=_enums[i].clone();
+      _gEnums=_gEnums.clone();
+      for (int i=0; i < _gEnums.length; ++i)       _gEnums[i]=_gEnums[i].clone();
     }
+    MultiFileParseTask._enums.remove(_k);
   }
 }

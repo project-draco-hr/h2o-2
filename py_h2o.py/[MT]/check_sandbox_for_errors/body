@@ -34,7 +34,7 @@ def check_sandbox_for_errors(sandboxIgnoreErrors=False, cloudShutdownIsError=Fal
                     errLines.append(line)
                     sys.stdout.write(line)
                 if printSingleWarning:
-                    if (not (re.search('Unable to load native-hadoop library', line) or ('stack_traces' in line) or ('Multiple local IPs detected' in line) or ('[Loaded ' in line) or ('RestS3Service' in line))):
+                    if (not (('Unable to load native-hadoop library' in line) or ('stack_traces' in line) or ('Multiple local IPs detected' in line) or ('[Loaded ' in line) or ('RestS3Service' in line))):
                         sys.stdout.write(line)
             sandFile.close()
     sys.stdout.flush()

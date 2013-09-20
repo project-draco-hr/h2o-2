@@ -1,3 +1,5 @@
 {
-  return new Enum(_id.get(),_nElems,(NonBlockingHashMap<ValueString,Integer>)_map.clone());
+  NonBlockingHashMap<ValueString,Integer> map=_map;
+  if (map != null)   map=(NonBlockingHashMap<ValueString,Integer>)map.clone();
+  return new Enum(_id.get(),_nElems,map);
 }

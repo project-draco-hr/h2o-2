@@ -28,7 +28,7 @@ def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=N
     try:
         rjson = r.json()
     except:
-        verboseprint(r.text)
+        print r.text
         if (not isinstance(r, (list, dict))):
             raise Exception('h2o json responses should always be lists or dicts, see previous for text')
         if ('404' in r):
