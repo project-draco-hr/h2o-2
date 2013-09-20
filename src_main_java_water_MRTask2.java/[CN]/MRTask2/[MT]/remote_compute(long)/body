@@ -1,0 +1,7 @@
+{
+  int node=Long.numberOfTrailingZeros(ns);
+  T rpc=clone();
+  rpc._nodes=ns;
+  addToPendingCount(1);
+  return new RPC(H2O.CLOUD._memary[node],rpc).addCompleter(this).call();
+}
