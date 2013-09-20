@@ -6,6 +6,7 @@
   }
   Vec v=getVec(fkeys[0]);
   MultiFileParseTask uzpt=new MultiFileParseTask(v.group(),setup,job._progress).invoke(fkeys);
+  System.out.println(Arrays.toString(uzpt._chunk2Enum));
   Frame fr=new Frame(setup._columnNames != null ? setup._columnNames : genericColumnNames(setup._ncols),uzpt._dout.closeVecs());
   SVFTask t=new SVFTask(fr);
   t.invokeOnAllNodes();
@@ -14,13 +15,14 @@
   for (int i=0; i < ecols.length; ++i)   if (fr._vecs[i].isEnum())   ecols[n++]=i;
   ecols=Arrays.copyOf(ecols,n);
   if (ecols != null && ecols.length > 0) {
-    Enum[] enums=EnumFetchTask.fetchEnums(uzpt._eKey,ecols);
-    for (    int i : ecols)     fr._vecs[i]._domain=enums[i].computeColumnDomain();
+    EnumFetchTask eft=new EnumFetchTask(H2O.SELF.index(),uzpt._eKey,ecols).invokeOnAllNodes();
+    Enum[] enums=eft._gEnums;
     String[][] ds=new String[ecols.length][];
-    for (int i=0; i < ecols.length; ++i)     ds[i]=fr._vecs[ecols[i]]._domain;
+    int j=0;
+    for (    int i : ecols)     ds[j++]=fr._vecs[i]._domain=enums[i].computeColumnDomain();
     Vec[] evecs=new Vec[ecols.length];
     for (int i=0; i < evecs.length; ++i)     evecs[i]=fr._vecs[ecols[i]];
-    new EnumUpdateTask(ds,uzpt._eKey,ecols).doAll(evecs);
+    new EnumUpdateTask(ds,eft._lEnums,uzpt._chunk2Enum,uzpt._eKey,ecols).doAll(evecs);
   }
   UKV.put(job.dest(),fr);
   job.remove();
