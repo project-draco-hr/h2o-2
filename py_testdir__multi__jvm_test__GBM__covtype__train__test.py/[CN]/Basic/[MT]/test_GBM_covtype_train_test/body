@@ -29,7 +29,7 @@ def test_GBM_covtype_train_test(self):
         print 'test parse result:', parseTestResult['destination_key']
         ntrees = 40
         ntrees = 10
-        for max_depth in [5, 10, 20]:
+        for max_depth in [5, 10, 20, 40]:
             params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'vresponse': vresponse, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
@@ -43,9 +43,12 @@ def test_GBM_covtype_train_test(self):
             print 'GBM training completed in', trainElapsed, 'seconds. On dataset: ', trainFilename
             gbmTrainView = h2o_cmd.runGBMView(model_key=modelKey)
             errsLast = gbmTrainView['gbm_model']['errs'][(-1)]
-            cm = gbmTrainView['gbm_model']['cm']
-            print "GBM 'cm'", cm
             print "GBM 'errsLast'", errsLast
+            cm = gbmTrainView['gbm_model']['cm']
+            pctWrongTrain = h2o_gbm.pp_cm_summary(cm)
+            print 'Last line of this cm might be NAs, not CM'
+            print '\nTrain\n==========\n'
+            print h2o_gbm.pp_cm(cm)
             predictKey = 'Predict.hex'
             h2o_cmd.runInspect(key=parseTestResult['destination_key'])
             start = time.time()
@@ -56,42 +59,11 @@ def test_GBM_covtype_train_test(self):
             print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
             print 'This is crazy!'
             gbmPredictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseTestResult['destination_key'], vactual=vresponse, predict=predictKey, vpredict='predict')
-            gbmTestView = gbmPredictCMResult
             cm = gbmPredictCMResult['cm']
-            print "GBM 'errsLast'", errsLast
-            scoresList = cm
-            totalScores = 0
-            totalRight = 0
-            classErrorPctList = []
-            predictedClassDict = {}
-            for (classIndex, s) in enumerate(scoresList):
-                classSum = sum(s)
-                if (classSum == 0):
-                    print 'class:', classIndex, 'classSum', classSum, '<- why 0?'
-                else:
-                    classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
-                    totalRight += s[classIndex]
-                    classErrorPct = (100 - classRightPct)
-                    classErrorPctList.append(classErrorPct)
-                    print 'class:', classIndex, 'classSum', classSum, 'classErrorPct:', ('%4.2f' % classErrorPct)
-                    for (pIndex, p) in enumerate(s):
-                        if (pIndex not in predictedClassDict):
-                            predictedClassDict[pIndex] = p
-                        else:
-                            predictedClassDict[pIndex] += p
-                totalScores += classSum
-            print 'Predicted summary:'
-            for (predictedClass, p) in predictedClassDict.items():
-                print (str(predictedClass) + ':'), p
-            print 'totalScores:', totalScores
-            print 'totalRight:', totalRight
-            if (totalScores != 0):
-                pctRight = ((100.0 * totalRight) / totalScores)
-            else:
-                pctRight = 0.0
-            print 'pctRight:', ('%5.2f' % pctRight)
-            pctWrong = (100 - pctRight)
-            print 'pctWrong:', ('%5.2f' % pctWrong)
+            pctWrong = h2o_gbm.pp_cm_summary(cm)
+            print 'Last line of this cm is really NAs, not CM'
+            print '\nTest\n==========\n'
+            print h2o_gbm.pp_cm(cm)
             xList.append(max_depth)
             eList.append(pctWrong)
             sList.append(trainElapsed)
