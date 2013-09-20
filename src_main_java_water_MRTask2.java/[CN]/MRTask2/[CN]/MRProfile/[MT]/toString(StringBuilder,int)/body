@@ -7,6 +7,7 @@
     sb.append("Fast work ").append(_time1st).append("ms + wait ").append(_onCstart - _done1st).append("ms\n");
     _last.toString(sb,d + 1);
     for (int i=0; i < d; i++)     sb.append("  ");
+    sb.append("join-i/o ").append(_onCstart - _last._onCdone).append("ms, ");
   }
  else {
     sb.append("Map ").append(_mapdone - _mapstart).append("ms (prep ").append(_userstart - _mapstart);
@@ -18,7 +19,8 @@
   if (_remoteBlkDone != 0) {
     sb.append(", remBlk ").append(_remoteBlkDone - _reducedone).append("ms, locBlk ");
     sb.append(_localBlkDone - _remoteBlkDone).append("ms, close ");
-    sb.append(_onCdone - _localBlkDone).append("ms");
+    sb.append(_onCdone - _localBlkDone).append("ms, size ");
+    sb.append(PrettyPrint.bytes(_size_rez0)).append("+").append(PrettyPrint.bytes(_size_rez1));
   }
   sb.append(")\n");
   return sb;

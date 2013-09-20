@@ -4,12 +4,12 @@
   _profile._remoteBlkDone=System.currentTimeMillis();
   if (_fs != null)   _fs.blockForPending();
   _profile._localBlkDone=System.currentTimeMillis();
-  int nlo=_nlo, nhi=_nhi;
-  if (_res == null)   _nlo=-1;
+  long ns=_nodes | (1L << H2O.SELF.index());
+  if (_res == null)   _nodes=1L << 63;
  else   if (_res != this) {
     _res._profile=_profile;
     copyOver(_res);
   }
   closeLocal();
-  if (nlo == 0 && nhi == H2O.CLOUD.size())   _fr.closeAppendables();
+  if (ns == (1L << H2O.CLOUD.size()) - 1)   _fr.closeAppendables();
 }
