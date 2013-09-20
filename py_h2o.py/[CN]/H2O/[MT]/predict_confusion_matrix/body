@@ -1,13 +1,6 @@
-def predict_confusion_matrix(self, actual, vactual, predict, vpredict, timeoutSecs=300, print_params=False, **kwargs):
+def predict_confusion_matrix(self, timeoutSecs=300, print_params=True, **kwargs):
     params_dict = {'actual': None, 'vactual': None, 'predict': None, 'vpredict': None, }
-    for k in kwargs:
-        if (k in params_dict):
-            params_dict[k] = kwargs[k]
-        else:
-            raise Exception(('illegal parameter in predict_confusion_matrix %s' % k))
-    if print_params:
-        print '\npredict_confusion_matrix parameters:', params_dict
-        sys.stdout.flush()
+    check_params_update_kwargs(params_dict, kwargs, 'predict_confusion_matrix', print_params)
     a = self.__do_json_request('ConfusionMatrix.json', timeout=timeoutSecs, params=params_dict)
     verboseprint('\nprediction_confusion_matrix result:', dump_json(a))
     return a
