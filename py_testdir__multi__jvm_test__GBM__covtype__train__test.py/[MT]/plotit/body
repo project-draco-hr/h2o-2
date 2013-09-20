@@ -6,7 +6,9 @@ def plotit(xList, eList, sList):
         print 'xList', xList
         print 'eList', eList
         print 'sList', sList
-        label = '1jvmx28GB Covtype GBM learn_rate=.2 nbins=1024 ntrees=40 min_rows = 10'
+        font = {'family': 'normal', 'weight': 'bold', 'size': 22, }
+        plt.rc('font', **font)
+        label = '1jvmx28GB covtype train 90/test 10 GBM learn_rate=.2 nbins=1024 ntrees=40 min_rows = 10'
         plt.figure()
         plt.plot(xList, eList)
         plt.xlabel('max_depth')

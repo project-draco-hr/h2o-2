@@ -1,9 +1,9 @@
 def parseS3File(node=None, bucket=None, filename=None, keyForParseResult=None, timeoutSecs=20, retryDelaySecs=2, pollTimeoutSecs=30, noise=None, noPoll=None, **kwargs):
     ' Parse a file stored in S3 bucket'
     if (not bucket):
-        raise Exception('No S3 bucket specified')
+        raise Exception('No S3 bucket')
     if (not filename):
-        raise Exception('No filename in bucket specified')
+        raise Exception('No filename in bucket')
     if (not node):
         node = h2o.nodes[0]
     import_result = node.import_s3(bucket)
