@@ -8,7 +8,7 @@ def test_GBM_covtype_train_test(self):
         start = time.time()
         xList = []
         eList = []
-        sList = []
+        fList = []
         print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         parseTrainResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + trainFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
@@ -65,6 +65,11 @@ def test_GBM_covtype_train_test(self):
             print h2o_gbm.pp_cm(cm)
             xList.append(max_depth)
             eList.append(pctWrong)
-            sList.append(trainElapsed)
+            fList.append(trainElapsed)
         h2o.beta_features = False
-        plotit(xList, eList, sList)
+        xLabel = 'max_depth'
+        eLabel = 'pctWrong'
+        fLabel = 'trainElapsed'
+        eListTitle = '1jvmx28GB predict/CM learn_rate=.2 nbins=1024 ntrees=10 min_rows = 10'
+        fListTitle = '1jvmx28GB train time learn_rate=.2 nbins=1024 ntrees=10 min_rows = 10'
+        h2o_gbm.plotLists(xList, xLabel, eListTitle, eList, eLabel, fListTitle, fList, fLabel)

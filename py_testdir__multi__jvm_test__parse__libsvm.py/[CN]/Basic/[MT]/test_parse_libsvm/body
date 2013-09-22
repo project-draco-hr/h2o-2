@@ -32,7 +32,7 @@ def test_parse_libsvm(self):
             value_size_bytesA = inspectFirst['value_size_bytes']
             csvDownloadPathname = (((SYNDATASETS_DIR + '/') + csvFilename) + '_csvDownload.csv')
             print 'Trying csvDownload of', csvDownloadPathname
-            h2o.nodes[0].csv_download(key=hex_key, csvPathname=csvDownloadPathname)
+            h2o.nodes[0].csv_download(src_key=hex_key, csvPathname=csvDownloadPathname)
             start = time.time()
             hex_keyB = (hex_key + '_B')
             parseResultB = h2o_cmd.parseResult = h2i.import_parse(path=csvDownloadPathname, schema='put', hex_key=hex_keyB)
