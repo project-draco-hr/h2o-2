@@ -1,5 +1,4 @@
 {
-  if (s == null)   return put2((char)65535);
-  byte[] b=s.getBytes();
-  return put2((char)b.length).putA1(b,b.length);
+  if (s == null)   return putInt(-1);
+  return putA1(s.getBytes());
 }

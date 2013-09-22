@@ -1,8 +1,11 @@
 {
   _arys++;
-  int len=get4();
-  if (len == -1)   return null;
-  short[][] ary=new short[len][];
-  for (int i=0; i < len; i++)   ary[i]=getA2();
+  long xy=getZA();
+  if (xy == -1)   return null;
+  int x=(int)(xy >> 32);
+  int y=(int)xy;
+  int z=y == 0 ? 0 : getInt();
+  short[][] ary=new short[x + y + z][];
+  for (int i=x; i < x + y; i++)   ary[i]=getA2();
   return ary;
 }
