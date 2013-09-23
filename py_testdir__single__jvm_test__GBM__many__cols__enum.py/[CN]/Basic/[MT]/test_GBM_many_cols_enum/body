@@ -22,7 +22,7 @@ def test_GBM_many_cols_enum(self):
             print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         parseTrainResult = h2i.import_parse(bucket=None, path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
-            h2j.pollWaitJobs(timeoutSecs=1800, pollTimeoutSecs=1800)
+            h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             print "Filling in the parseTrainResult['destination_key'] for h2o"
             parseTrainResult['destination_key'] = trainKey
         elapsed = (time.time() - start)
@@ -46,10 +46,10 @@ def test_GBM_many_cols_enum(self):
             trainStart = time.time()
             gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, noPoll=h2o.beta_features, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
             if h2o.beta_features:
-                h2j.pollWaitJobs(timeoutSecs=1800, pollTimeoutSecs=1800)
+                h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             trainElapsed = (time.time() - trainStart)
             print 'GBM training completed in', trainElapsed, 'seconds. On dataset: ', csvPathname
-            algo = (('GBM ' + str(ntrees)) + ' ntrees')
+            algo = (((('GBM ' + ' ntrees=') + str(ntrees)) + ' max_depth=') + str(max_depth))
             l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, algo, csvFilename, trainElapsed)
             print l
             h2o.cloudPerfH2O.message(l)
