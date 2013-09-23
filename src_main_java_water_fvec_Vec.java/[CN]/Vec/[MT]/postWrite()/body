@@ -1,9 +1,9 @@
 {
-  if (_activeWrites) {
-    _activeWrites=false;
+  if (_naCnt == -2) {
+    _naCnt=-1;
     new TAtomic<Vec>(){
       @Override public Vec atomic(      Vec v){
-        v._activeWrites=false;
+        if (v != null && v._naCnt == -2)         v._naCnt=-1;
         return v;
       }
     }

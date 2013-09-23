@@ -1,10 +1,10 @@
 {
-  if (_activeWrites)   return;
+  if (_naCnt == -2)   return;
+  _naCnt=-2;
   if (!writable())   throw new IllegalArgumentException("Vector not writable");
-  setActiveWrites();
   new TAtomic<Vec>(){
     @Override public Vec atomic(    Vec v){
-      v.setActiveWrites();
+      if (v != null)       v._naCnt=-2;
       return v;
     }
   }
