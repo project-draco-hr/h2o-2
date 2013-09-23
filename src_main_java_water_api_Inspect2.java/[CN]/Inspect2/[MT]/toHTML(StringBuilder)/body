@@ -13,11 +13,11 @@
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Min").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(src_key._vecs[i],-1,cols[i].min)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(src_key.vecs()[i],-1,cols[i].min)).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Max").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(src_key._vecs[i],-1,cols[i].max)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(x1(src_key.vecs()[i],-1,cols[i].max)).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Mean").append("</td>");
@@ -32,7 +32,7 @@
   if (offset == -1) {
     sb.append("<tr class='warning'>");
     sb.append("<td>").append("Size").append("</td>");
-    for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(src_key._vecs[i].byteSize())).append("</td>");
+    for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(src_key.vecs()[i].byteSize())).append("</td>");
     sb.append("</tr>");
     Vec c0=src_key.anyVec();
     int N=c0.nChunks();
@@ -40,7 +40,7 @@
       sb.append("<tr>");
       sb.append("<td>").append(c0.chunkKey(j).home_node()).append(", ").append(c0.chunk2StartElem(j)).append("</td>");
       for (int i=0; i < cols.length; i++) {
-        String clazz=src_key._vecs[i].elem2BV(j).getClass().getSimpleName();
+        String clazz=src_key.vecs()[i].elem2BV(j).getClass().getSimpleName();
         String trim=clazz.replaceAll("Chunk","");
         sb.append("<td>").append(trim).append("</td>");
       }
@@ -52,7 +52,7 @@
     for (int j=0; j < N; j++) {
       sb.append("<tr>");
       sb.append("<td>").append(offset + j).append("</td>");
-      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(src_key._vecs[i],offset + j)).append("</td>");
+      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(src_key.vecs()[i],offset + j)).append("</td>");
       sb.append("</tr>");
     }
   }
