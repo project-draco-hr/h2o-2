@@ -9,14 +9,14 @@
   ParseDataset.parse(vkey,new Key[]{rkey});
   UKV.remove(rkey);
   ValueArray ary=UKV.get(vkey);
-  assertEquals(ary.numRows(),fr._vecs[0].length());
+  assertEquals(ary.numRows(),fr.vecs()[0].length());
   try {
     int errs=0;
     long rows=ary.numRows();
     for (long i=0; i < rows; i++) {
       if (errs > 1)       break;
       for (int j=0; j < ary._cols.length; j++) {
-        double d1=fr._vecs[j].at(i);
+        double d1=fr.vecs()[j].at(i);
         double d2=ary.datad(i,j);
         if (Math.abs((d1 - d2) / d1) > 0.0000001) {
           System.out.println("Row " + i);

@@ -7,11 +7,11 @@
     Key r=Key.make();
     ParseDataset2.parse(r,new Key[]{key});
     Frame fr=DKV.get(r).get();
-    String[] cd=fr._vecs[2]._domain;
+    String[] cd=fr.vecs()[2]._domain;
     Assert.assertEquals("one",cd[0]);
     Assert.assertEquals("three",cd[1]);
     Assert.assertEquals("two",cd[2]);
-    cd=fr._vecs[0]._domain;
+    cd=fr.vecs()[0]._domain;
     Assert.assertEquals("bar",cd[0]);
     Assert.assertEquals("foo",cd[1]);
     Assert.assertEquals("foobar",cd[2]);

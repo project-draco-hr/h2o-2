@@ -9,18 +9,18 @@
   Frame fr=new Frame(setup._columnNames != null ? setup._columnNames : genericColumnNames(setup._ncols),uzpt._dout.closeVecs());
   SVFTask t=new SVFTask(fr);
   t.invokeOnAllNodes();
-  int[] ecols=new int[fr._vecs.length];
+  int[] ecols=new int[fr.vecs().length];
   int n=0;
-  for (int i=0; i < ecols.length; ++i)   if (fr._vecs[i].isEnum())   ecols[n++]=i;
+  for (int i=0; i < ecols.length; ++i)   if (fr.vecs()[i].isEnum())   ecols[n++]=i;
   ecols=Arrays.copyOf(ecols,n);
   if (ecols != null && ecols.length > 0) {
     EnumFetchTask eft=new EnumFetchTask(H2O.SELF.index(),uzpt._eKey,ecols).invokeOnAllNodes();
     Enum[] enums=eft._gEnums;
     String[][] ds=new String[ecols.length][];
     int j=0;
-    for (    int i : ecols)     ds[j++]=fr._vecs[i]._domain=enums[i].computeColumnDomain();
+    for (    int i : ecols)     ds[j++]=fr.vecs()[i]._domain=enums[i].computeColumnDomain();
     Vec[] evecs=new Vec[ecols.length];
-    for (int i=0; i < evecs.length; ++i)     evecs[i]=fr._vecs[ecols[i]];
+    for (int i=0; i < evecs.length; ++i)     evecs[i]=fr.vecs()[ecols[i]];
     new EnumUpdateTask(ds,eft._lEnums,uzpt._chunk2Enum,uzpt._eKey,ecols).doAll(evecs);
   }
   UKV.put(job.dest(),fr);
