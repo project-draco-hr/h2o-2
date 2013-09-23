@@ -1,11 +1,11 @@
 def test_four_billion_rows(self):
     timeoutSecs = 1500
     importFolderPath = 'billions'
-    csvFilenameList = ['four_billion_rows.csv']
-    for csvFilename in csvFilenameList:
+    csvFilenameList = [('four_billion_rows.csv', 'a.hex'), ('four_billion_rows.csv', 'b.hex')]
+    for (csvFilename, hex_key) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=timeoutSecs, pollTimeoutSecs=60)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']

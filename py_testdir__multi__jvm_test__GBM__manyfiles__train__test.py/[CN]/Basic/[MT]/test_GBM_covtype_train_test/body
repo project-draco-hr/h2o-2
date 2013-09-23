@@ -1,8 +1,7 @@
 def test_GBM_covtype_train_test(self):
-    h2o.beta_features = False
     bucket = 'home-0xdiag-datasets'
     modelKey = 'GBMModelKey'
-    files = [('standard', 'covtype.shuffled.90pct.data', 'covtype.train.hex', 1800, 54, 'covtype.shuffled.10pct.data', 'covtype.test.hex')]
+    files = [('manyfiles-nflx-gz', 'file_1.dat.gz', 'file_1.hex', 1800, None, 'file_1.dat.gz', 'file_1_test.hex')]
     for (importFolderPath, trainFilename, trainKey, timeoutSecs, vresponse, testFilename, testKey) in files:
         h2o.beta_features = False
         start = time.time()
@@ -10,7 +9,8 @@ def test_GBM_covtype_train_test(self):
         eList = []
         fList = []
         print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
-        parseTrainResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + trainFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
+        csvPathname = ((importFolderPath + '/') + trainFilename)
+        parseTrainResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
             h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             print "Filling in the parseTrainResult['destination_key'] for h2o"
@@ -18,6 +18,10 @@ def test_GBM_covtype_train_test(self):
         elapsed = (time.time() - start)
         print 'train parse end on ', trainFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'train parse result:', parseTrainResult['destination_key']
+        inspect = h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        num_rows = inspect['num_rows']
+        num_cols = inspect['num_cols']
         print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
@@ -27,13 +31,15 @@ def test_GBM_covtype_train_test(self):
         elapsed = (time.time() - start)
         print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'test parse result:', parseTestResult['destination_key']
+        if (not vresponse):
+            vresponse = num_cols
+        print ('Using the same vresponse %s for train and test (which should have a output value too)' % vresponse)
         ntrees = 10
         for max_depth in [5, 10, 20, 40]:
             params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'vresponse': vresponse, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o.beta_features = True
-            h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
             trainStart = time.time()
             gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, noPoll=True, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
             if h2o.beta_features:
@@ -49,7 +55,6 @@ def test_GBM_covtype_train_test(self):
             print '\nTrain\n==========\n'
             print h2o_gbm.pp_cm(cm)
             predictKey = 'Predict.hex'
-            h2o_cmd.runInspect(key=parseTestResult['destination_key'])
             start = time.time()
             gbmTestResult = h2o_cmd.runPredict(data_key=parseTestResult['destination_key'], model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs, **kwargs)
             if h2o.beta_features:
