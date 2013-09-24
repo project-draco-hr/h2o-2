@@ -46,3 +46,5 @@ def test_GLM_enums_score_superset(self):
         print 'classErr:', classErr
         print 'err:', err
         print 'auc:', auc
+        self.assertAlmostEqual(err, 0.3, delta=0.15, msg=('actual err: %s not close enough to 0.3' % err))
+        self.assertAlmostEqual(auc, 0.5, delta=0.15, msg=('actual auc: %s not close enough to 0.5' % auc))

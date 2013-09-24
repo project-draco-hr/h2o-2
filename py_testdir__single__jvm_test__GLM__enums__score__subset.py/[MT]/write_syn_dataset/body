@@ -6,7 +6,7 @@ def write_syn_dataset(csvPathname, enumList, rowCount, colCount=1, SEED='1234567
         for col in range(colCount):
             ri = random.choice(enumList)
             rowData.append(ri)
-        ri = r1.randint(0, 1)
+        ri = round(r1.triangular(0, 1, 0.3), 0)
         rowData.append(ri)
         rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
         dsf.write(rowDataCsv)
