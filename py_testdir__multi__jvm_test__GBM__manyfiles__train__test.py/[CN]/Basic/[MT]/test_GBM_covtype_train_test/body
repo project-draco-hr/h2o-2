@@ -8,7 +8,8 @@ def test_GBM_covtype_train_test(self):
         xList = []
         eList = []
         fList = []
-        print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
+        if h2o.beta_features:
+            print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         csvPathname = ((importFolderPath + '/') + trainFilename)
         parseTrainResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
@@ -22,7 +23,8 @@ def test_GBM_covtype_train_test(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
-        print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
+        if h2o.beta_features:
+            print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
             h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
