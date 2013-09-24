@@ -14,7 +14,7 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
         raise Exception(('%s got no ntree: %s . Why? h2o needs?' % (algo, params_dict['ntree'])))
     ntree = params_dict['ntree']
     if print_params:
-        print '\n%s parameters:', (algo, params_dict)
+        print ('\n%s parameters:' % algo), params_dict
         sys.stdout.flush()
     if useRFScore:
         whichUsed = algoScore
