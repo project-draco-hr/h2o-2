@@ -1,0 +1,16 @@
+{
+  System.out.println("test2");
+  ArrayList<UserSpecifiedNetwork> l;
+  l=UserSpecifiedNetwork.calcArrayList(null);
+  check(l != null);
+  check(l.size() == 0);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/5");
+  check(l != null);
+  check(l.size() == 1);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/5,10.11.12.13/14");
+  check(l != null);
+  check(l.size() == 2);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/5,10.11.12.13/14,15.16.17.18/19");
+  check(l != null);
+  check(l.size() == 3);
+}

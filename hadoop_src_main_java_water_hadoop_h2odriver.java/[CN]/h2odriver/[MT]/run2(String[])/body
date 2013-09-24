@@ -58,6 +58,7 @@
   conf.set(h2omapper.H2O_JOBTRACKERNAME_KEY,jobtrackerName);
   conf.set(h2omapper.H2O_DRIVER_IP_KEY,driverCallbackIp);
   conf.set(h2omapper.H2O_DRIVER_PORT_KEY,Integer.toString(actualDriverCallbackPort));
+  conf.set(h2omapper.H2O_NETWORK_KEY,network);
   job=new Job(conf,jobtrackerName);
   job.setJarByClass(getClass());
   job.setInputFormatClass(H2OInputFormat.class);
