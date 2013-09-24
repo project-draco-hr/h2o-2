@@ -14,12 +14,12 @@ def parse_our_args():
     parser.add_argument('-ccj', '--clone_cloud_json', type=str, help='a h2o-nodes.json file can be passed (see build_cloud(create_json=True). This will create a cloned set of node objects, so any test that builds a cloud, can also be run on an existing cloud without changing the test')
     parser.add_argument('unittest_args', nargs='*')
     args = parser.parse_args()
-    global browse_disable, browse_json, verbose, ipaddr, config_json, debugger, random_udp_drop
+    global browse_disable, browse_json, verbose, ipaddr_from_cmd_line, config_json, debugger, random_udp_drop
     global random_seed, beta_features, sleep_at_tear_down, abort_after_import, clone_cloud_json
     browse_disable = (args.browse_disable or (getpass.getuser() == 'jenkins'))
     browse_json = args.browse_json
     verbose = args.verbose
-    ipaddr = args.ip
+    ipaddr_from_cmd_line = args.ip
     config_json = args.config_json
     debugger = args.debugger
     random_udp_drop = args.random_udp_drop
