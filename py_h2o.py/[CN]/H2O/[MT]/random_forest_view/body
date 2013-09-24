@@ -3,39 +3,41 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
         print 'random_forest_view not supported in H2O fvec yet. hacking done response'
         r = {'response': {'status': 'done', }, 'trees': {'number_built': 0, }, }
         return r
+    algo = ('DRFView2' if beta_features else 'RFView')
+    algoScore = ('DRFScore2' if beta_features else 'RFScore')
     params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'iterative_cm': 0, 'ntree': None, 'class_weights': None, 'response_variable': None, 'clear_confusion_matrix': None, }
     browseAlso = kwargs.pop('browseAlso', False)
     for k in kwargs:
         if (k in params_dict):
             params_dict[k] = kwargs[k]
     if (params_dict['ntree'] is None):
-        raise Exception('random_forest_view got no ntree: %s . Why? apparently need to pass a ntree to h2o')
+        raise Exception(('%s got no ntree: %s . Why? h2o needs?' % (algo, params_dict['ntree'])))
     ntree = params_dict['ntree']
     if print_params:
-        print '\nrandom_forest_view parameters:', params_dict
+        print ('\n%s parameters:' % algo), params_dict
         sys.stdout.flush()
     if useRFScore:
-        whichToUse = ('DRFScore2' if beta_features else 'RFScore')
+        whichUsed = algoScore
     else:
-        whichToUse = ('DRFView2' if beta_features else 'RFView')
-    a = self.__do_json_request((whichToUse + '.json'), timeout=timeoutSecs, params=params_dict)
-    verboseprint('\nrandom_forest_view result:', dump_json(a))
+        whichUsed = algo
+    a = self.__do_json_request((whichUsed + '.json'), timeout=timeoutSecs, params=params_dict)
+    verboseprint(('\n%s result:' % whichUsed), dump_json(a))
     if noPoll:
         return a
     response = a['response']
-    response['redirect_request'] = (whichToUse + '.json')
+    response['redirect_request'] = (whichUsed + '.json')
     response['redirect_request_args'] = params_dict
     rfView = self.poll_url(response, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
-    verboseprint('RFView done:', dump_json(rfView))
+    verboseprint(('%s done:' % whichUsed), dump_json(rfView))
     status = rfView['response']['status']
     if (status != 'done'):
         raise Exception(('Unexpected status: ' + status))
     numberBuilt = rfView['trees']['number_built']
     if (numberBuilt != ntree):
-        raise Exception(('RFview done but number_built!=ntree: %s %s' % (numberBuilt, ntree)))
+        raise Exception(('%s done but number_built!=ntree: %s %s' % (whichUsed, numberBuilt, ntree)))
     errorInResponse = ((numberBuilt < 0) or (ntree < 0) or (numberBuilt > ntree) or (ntree != rfView['ntree']))
     if errorInResponse:
-        raise Exception((('\nBad values in %s.json\n' % whichToUse) + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))
+        raise Exception((('\nBad values in %s.json\n' % whichUsed) + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))
     if (browseAlso | browse_json):
-        h2b.browseJsonHistoryAsUrlLastMatch(whichToUse)
+        h2b.browseJsonHistoryAsUrlLastMatch(whichUsed)
     return rfView

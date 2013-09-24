@@ -1,0 +1,53 @@
+def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is ???', cloudShutdownIsError=False, sandboxIgnoreErrors=False):
+    errorFound = False
+    if (not LOG_DIR):
+        LOG_DIR = './sandbox'
+    if (not os.path.exists(LOG_DIR)):
+        return
+    errLines = []
+    for filename in os.listdir(LOG_DIR):
+        if re.search('stdout|stderr', filename):
+            sandFile = open(((LOG_DIR + '/') + filename), 'r')
+            regex1String = 'found multiple|exception|error|ERRR|assert|killing|killed|required ports'
+            if cloudShutdownIsError:
+                regex1String += '|shutdown command'
+            regex1 = re.compile(regex1String, re.IGNORECASE)
+            regex2 = re.compile('Caused', re.IGNORECASE)
+            regex3 = re.compile('warn|TCP', re.IGNORECASE)
+            printing = 0
+            lines = 0
+            for line in sandFile:
+                printSingleWarning = False
+                foundBad = False
+                if (not (' bytes)' in line)):
+                    printSingleWarning = regex3.search(line)
+                    foundBad = (regex1.search(line) and (not (('stack_traces' in line) or ('out_of_bag_error_estimate' in line) or ('Training Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
+                if ((printing == 0) and foundBad):
+                    printing = 1
+                    lines = 1
+                elif (printing == 1):
+                    lines += 1
+                    foundCaused = regex2.search(line)
+                    foundAt = re.match('[\\t ]+at ', line)
+                    if (foundBad and (lines > 10) and (not (foundCaused or foundAt))):
+                        printing = 2
+                if (printing == 1):
+                    errLines.append(line)
+                    sys.stdout.write(line)
+                if printSingleWarning:
+                    if (not (('Unable to load native-hadoop library' in line) or ('stack_traces' in line) or ('Multiple local IPs detected' in line) or ('[Loaded ' in line) or ('RestS3Service' in line))):
+                        sys.stdout.write(line)
+            sandFile.close()
+    sys.stdout.flush()
+    if (len(errLines) != 0):
+        justInfo = True
+        for e in errLines:
+            justInfo &= (re.match('INFO:', e) or ('apache' in e))
+        if (not justInfo):
+            emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr (or R stdout/stderr).\n' + 'Could have occurred at any prior time\n\n')
+            emsg2 = ''.join(errLines)
+            errorFound = True
+            errorMessage = ((python_test_name + emsg1) + emsg2)
+            if (not sandboxIgnoreErrors):
+                raise Exception(errorMessage)
+    return errorFound

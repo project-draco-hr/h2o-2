@@ -1,16 +1,12 @@
 {
   String[] domain=vresponse.domain();
-  float preds[]=new float[nclass];
   if (nclass == 1) {
     fr.add("Residual",vresponse.makeCon(vresponse.mean()));
     throw H2O.unimpl();
   }
  else {
-    long cs[]=new ClassDist(nclass,ymin).doAll(vresponse)._cs;
-    for (int i=0; i < nclass; i++) {
-      preds[i]=(float)cs[i] / nrows;
-      fr.add("Residual-" + domain[i],vresponse.makeCon(-preds[i]));
-    }
+    float f=1.0f / nclass;
+    for (int i=0; i < nclass; i++)     fr.add("Residual-" + domain[i],vresponse.makeCon(-f));
   }
   for (int i=0; i < nclass; i++)   fr.add("Pred-" + domain[i],vresponse.makeZero());
   new MRTask2(){
@@ -25,5 +21,4 @@
     }
   }
 .doAll(fr);
-  return preds;
 }

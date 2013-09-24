@@ -5,6 +5,9 @@
   DocGen.HTML.title(sb,skey.toString());
   DocGen.HTML.section(sb,"" + numCols + " columns, "+ numRows+ " rows, "+ PrettyPrint.bytes(byteSize)+ " bytes (compressed), "+ (naCnt == 0 ? "no" : PrettyPrint.bytes(naCnt))+ " missing elements");
   sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(skey,"Distributed Random Forest") + ", "+ GBM.link(skey,"Distributed GBM")+ ", "+ hex.LR2.link(skey,"Linear Regression")+ ",<br>"+ DownloadDataset.link(skey,"Download as CSV")+ "</div>");
+  String _scrollto=String.valueOf(offset - 1);
+  sb.append(" <script>$(document).ready(function(){ " + " $('html, body').animate({ scrollTop: $('#row_" + _scrollto + "').offset().top"+ "}, 2000);"+ "return false;"+ "});</script>");
+  sb.append("<form class='well form-inline' action='Inspect2.html' id='inspect'>" + " <input type='hidden' name='src_key' value=" + skey.toString() + ">"+ " <input type='text' class='input-small span5' placeholder='filter' "+ "    name='offset' id='offset' value='"+ offset+ "' maxlength='512'>"+ " <button type='submit' class='btn btn-primary'>Jump to row!</button>"+ "</form>");
   sb.append(pagination(src_key.numRows(),skey));
   DocGen.HTML.arrayHead(sb);
   sb.append("<tr class='warning'>");
@@ -50,7 +53,7 @@
  else {
     int N=(int)Math.min(100,numRows - offset);
     for (int j=0; j < N; j++) {
-      sb.append("<tr>");
+      sb.append("<tr id='row_" + String.valueOf(offset + j) + "'>");
       sb.append("<td>").append(offset + j).append("</td>");
       for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(src_key.vecs()[i],offset + j)).append("</td>");
       sb.append("</tr>");

@@ -1,3 +1,6 @@
 {
-  return make(f,null);
+  Futures fs=new Futures();
+  Key key=make(f,fs);
+  fs.blockForPending();
+  return key;
 }
