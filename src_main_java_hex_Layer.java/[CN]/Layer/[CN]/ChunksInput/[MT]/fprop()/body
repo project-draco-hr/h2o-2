@@ -1,8 +1,8 @@
 {
   for (int i=0; i < _a.length; i++) {
-    double d=_chunks[i].at0((int)_row);
-    d-=_means[i];
-    d=_sigmas[i] > 1e-4 ? d / _sigmas[i] : d;
+    double d=_chunks[i].at0((int)_pos);
+    d-=_subs[i];
+    d=_muls[i] > 1e-4 ? d / _muls[i] : d;
     _a[i]=(float)d;
   }
 }

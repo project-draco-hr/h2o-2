@@ -1,4 +1,8 @@
 {
   _instances.remove(_key);
   UKV.remove(_key);
+  if (_job != null) {
+    Job job=Job.findJob(_job);
+    if (job != null)     job.remove();
+  }
 }

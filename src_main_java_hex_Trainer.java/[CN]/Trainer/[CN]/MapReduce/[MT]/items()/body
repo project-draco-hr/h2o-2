@@ -1,6 +1,6 @@
 {
-  Frame frame=((FrameInput)_ls[0])._frame;
+  Vec[] vecs=((VecsInput)_ls[0])._vecs;
   long n=0;
-  for (int i=0; i < _counts.length(); i++)   n+=_counts.get(i) * frame.vecs()[0].chunkLen(i);
+  for (int i=0; i < _counts.length(); i++)   n+=_counts.get(i) * vecs[0].chunkLen(i);
   return n;
 }

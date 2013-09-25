@@ -1,0 +1,10 @@
+{
+  String[] domain=vec._domain;
+  if (vec._domain == null) {
+    int min=(int)vec.min();
+    int max=(int)vec.max();
+    domain=new String[max - min + 1];
+    for (int i=0; i < domain.length; i++)     domain[i]="" + (min + i);
+  }
+  return domain;
+}
