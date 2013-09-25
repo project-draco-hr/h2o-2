@@ -1,0 +1,10 @@
+{
+  Chunk ys=DTree.chk_resp(chks,_ncols,_nclass);
+  for (int row=0; row < ys._len; row++) {
+    int y=(int)ys.at8(row) - _ymin;
+    for (int c=0; c < _nclass; c++) {
+      Chunk pc=work(chks,c);
+      pc.set0(row,(y == c ? 1 : 0) - pc.at0(row));
+    }
+  }
+}

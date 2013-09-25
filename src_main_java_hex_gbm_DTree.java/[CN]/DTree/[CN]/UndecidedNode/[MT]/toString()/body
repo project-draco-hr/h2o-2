@@ -14,7 +14,7 @@
     p(sb,"cnt",cntW).append('/');
     p(sb,"min",mmmW).append('/');
     p(sb,"max",mmmW).append('/');
-    for (int c=0; c < nclass; c++)     p(sb,Integer.toString(c),menW).append('/');
+    p(sb,"men",menW).append('/');
     p(sb,"var",varW).append(colPad);
   }
   sb.append('\n');
@@ -28,7 +28,7 @@
         p(sb,h.bins(i),cntW).append('/');
         p(sb,h.mins(i),mmmW).append('/');
         p(sb,h.maxs(i),mmmW).append('/');
-        for (int c=0; c < nclass; c++)         p(sb,h.mean(i,c),menW).append('/');
+        p(sb,h.mean(i),menW).append('/');
         p(sb,h.var(i),varW).append(colPad);
       }
  else {

@@ -1,0 +1,9 @@
+{
+  Chunk ys=DTree.chk_resp(chks,_ncols,_nclass);
+  double ds[]=new double[_nclass];
+  for (int row=0; row < ys._len; row++) {
+    double sum=0;
+    for (int c=0; c < _nclass; c++)     sum+=(ds[c]=Math.exp(tree(chks,c).at0(row)));
+    for (int c=0; c < _nclass; c++)     work(chks,c).set0(row,ds[c] / sum);
+  }
+}

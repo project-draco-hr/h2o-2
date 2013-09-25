@@ -4,7 +4,7 @@
   if (_bins != null) {
     for (int b=0; b < _nbins; b++) {
       sb.append(String.format("\ncnt=%d, min=%f, max=%f, mean/var=",_bins[b],_mins[b],_maxs[b]));
-      for (int c=0; c < _nclass; c++)       sb.append(String.format(" %d - %6.2f/%6.2f,",c,_Ms[b] == null ? Float.NaN : mean(b,c),_Ss[b] == null ? Float.NaN : var(b,c)));
+      sb.append(String.format("%6.2f/%6.2f,",mean(b),var(b)));
     }
     sb.append('\n');
   }

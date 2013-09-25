@@ -1,24 +1,16 @@
 {
-  gbm_model=new GBMModel(outputKey,dataKey,frm,ntrees,new DTree[0],null,ymin,null);
+  gbm_model=new GBMModel(outputKey,dataKey,frm,ntrees,new DTree[0][],null,ymin,null);
   DKV.put(outputKey,gbm_model);
   H2O.submitTask(start(new H2OCountedCompleter(){
     @Override public void compute2(){
-      buildResiduals(nclass,fr,ncols,nrows,ymin);
-      DTree forest[]=new DTree[]{};
-      BulkScore bs=new BulkScore(forest,0,ncols,nclass,ymin,1.0f).doAll(fr).report(Sys.GBM__,0);
-      _errs=new float[]{(float)bs._sum / nrows};
-      gbm_model=new GBMModel(outputKey,dataKey,frm,ntrees,forest,_errs,ymin,bs._cm);
-      DKV.put(outputKey,gbm_model);
+      DTree forest[][]=new DTree[0][];
       for (int tid=0; tid < ntrees; tid++) {
         if (cancelled())         break;
+        new ComputeProb(ncols,nclass).doAll(fr);
+        for (int i=0; i < nrows; i++)         System.out.println(fr.toString(i));
+        new ComputeRes(ncols,nclass,ymin).doAll(fr);
+        for (int i=0; i < nrows; i++)         System.out.println(fr.toString(i));
         forest=buildNextTree(fr,forest,ncols,nrows,nclass,ymin);
-        Timer t_score=new Timer();
-        BulkScore bs2=new BulkScore(forest,tid,ncols,nclass,ymin,1.0f).doAll(fr).report(Sys.GBM__,max_depth);
-        _errs=Arrays.copyOf(_errs,_errs.length + 1);
-        _errs[_errs.length - 1]=(float)bs2._sum / nrows;
-        gbm_model=new GBMModel(outputKey,dataKey,frm,ntrees,forest,_errs,ymin,bs2._cm);
-        DKV.put(outputKey,gbm_model);
-        Log.info(Sys.GBM__,"GBM final Scoring done in " + t_score);
       }
       cleanUp(fr,ncols,t_build);
       tryComplete();

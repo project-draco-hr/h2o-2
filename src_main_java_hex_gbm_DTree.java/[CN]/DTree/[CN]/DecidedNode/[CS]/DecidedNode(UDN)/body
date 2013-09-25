@@ -1,2 +1,13 @@
 {
+  super(n._tree,n._pid,n._nid);
+  _split=bestCol(n);
+  if (_split._col == -1 || _split._bin == 0) {
+    throw H2O.unimpl();
+  }
+  _splat=_split.splat(n._hs);
+  _nids=new int[2];
+  final char nclass=_tree._nclass;
+  final char nbins=_tree._nbins;
+  final int min_rows=_tree._min_rows;
+  throw H2O.unimpl();
 }
