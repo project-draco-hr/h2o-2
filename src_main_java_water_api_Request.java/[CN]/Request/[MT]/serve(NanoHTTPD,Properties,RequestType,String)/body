@@ -1,0 +1,30 @@
+{
+switch (type) {
+case help:
+    return wrap(server,HTMLHelp());
+case json:
+case www:
+case png:
+  if (log()) {
+    String log=getClass().getSimpleName();
+    for (    Object arg : args.keySet()) {
+      String value=args.getProperty((String)arg);
+      if (value != null && value.length() != 0)       log+=" " + arg + "="+ value;
+    }
+    Log.debug(Sys.HTTPD,log);
+  }
+if (query != null) return wrap(server,query,type);
+long time=System.currentTimeMillis();
+Response response=serve();
+response.setTimeStart(time);
+if (type == RequestType.json) return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()),RequestType.json);
+return wrap(server,build(response));
+case debug:
+response=serve_debug();
+return wrap(server,build(response));
+case query:
+return wrap(server,query);
+default :
+throw new RuntimeException("Invalid request type " + type.toString());
+}
+}

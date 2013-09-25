@@ -4,7 +4,7 @@
  else   DocGen.HTML.section(sb,"Building model: " + frame.currentJob + " of "+ frame.totalJobs);
   GBMGrid grid=(GBMGrid)Job.findJob(Key.make(job.value()));
   GBMModel model=null;
-  if (grid.currentModel != null) {
+  if (grid != null && grid.currentModel != null) {
     Key dest=UKV.get(grid.currentModel);
     if (dest != null)     model=UKV.get(dest);
   }

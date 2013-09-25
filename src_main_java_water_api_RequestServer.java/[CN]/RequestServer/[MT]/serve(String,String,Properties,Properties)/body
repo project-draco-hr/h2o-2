@@ -6,7 +6,7 @@
   try {
     Request request=_requests.get(requestName);
     if (request == null)     return getResource(uri);
-    request=request.create(parms);
+    if (request instanceof Score)     request=Score.create(parms);
     return request.serve(this,parms,type);
   }
  catch (  Exception e) {

@@ -1,0 +1,26 @@
+{
+  ArrayList<String>[] values=new ArrayList[_arguments.size()];
+  for (int i=0; i < values.length; i++) {
+    String value=args.getProperty(_arguments.get(i)._name);
+    int off=0;
+    int next=0;
+    while ((next=value.indexOf('|',off)) >= 0) {
+      if (next != off)       values[i].add(value.substring(off,next));
+      off=next + 1;
+    }
+    if (off < value.length())     values[i].add(value.substring(off));
+  }
+  int[] counters=new int[values.length];
+  for (; ; ) {
+    Request2 request;
+    try {
+      request=getClass().newInstance();
+      request._arguments=_arguments;
+      request._parms=args;
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+    return super.serve(server,args,type);
+  }
+}
