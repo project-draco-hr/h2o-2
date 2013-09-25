@@ -1,12 +1,13 @@
 def resultsCheckPCA(self, pca, **kwargs):
     destination_key = pca['destination_key']
     pcaResult = h2o_cmd.runInspect(key=destination_key, **{'view': 100, })
-    print 'Checking that propVars sum to 1'
+    print 'Checking that propVars sum to 1',
     propVars = pcaResult['PCAModel']['propVar']
     sum_ = 1.0
     for (PC, propVar) in propVars.iteritems():
         sum_ -= propVar
     self.assertAlmostEqual(sum_, 0, msg='PropVar does not sum to 1.')
+    print ' Good!'
     if ((pcaResult['PCAModel']['PCAParams']['tolerance'] != 0.0) or (pcaResult['PCAModel']['PCAParams']['standardized'] != True)):
         return
     print 'Checking that sdevs^2 sums to number of variables'
@@ -17,3 +18,5 @@ def resultsCheckPCA(self, pca, **kwargs):
     if (not ((sum_ - 0.5) < 0 < (sum_ + 0.5))):
         print 'sum(sdevs^2) are not within .5 of 0. sdevs incorrect?'
         h2o.dump_json(sdevs)
+        raise Exception('Standard Deviations are possibly incorrect!')
+    print ' Good!'
