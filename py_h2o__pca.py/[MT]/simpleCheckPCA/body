@@ -15,16 +15,18 @@ def simpleCheckPCA(self, pca, **kwargs):
     for (PC, s) in sdevs.iteritems():
         if math.isnan(s):
             raise Exception('sdev', PC, 'is NaN:', s)
-    print 'Checking propVars...'
+    print 'Checking propVars...',
     propVars = pcaResult['PCAModel']['propVar']
     for (PC, propvar) in propVars.iteritems():
         if math.isnan(propvar):
             raise Exception('propVar', PC, 'is NaN:', propvar)
-    print 'Checking eigenvectors...'
+    print ' Good!'
+    print 'Checking eigenvectors...',
     pcs = pcaResult['PCAModel']['eigenvectors']
     for (i, s) in enumerate(pcs):
         for (r, e) in s.iteritems():
             if math.isnan(e):
                 raise Exception('Component', i, 'has NaN:', e, 'eigenvector', s)
+    print ' Good!'
     h2o.check_sandbox_for_errors()
     return warnings
