@@ -1,4 +1,5 @@
 def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is ???', cloudShutdownIsError=False, sandboxIgnoreErrors=False):
+    print 'check_sandbox_for_errors:', locals()
     errorFound = False
     if (not LOG_DIR):
         LOG_DIR = './sandbox'
@@ -50,4 +51,7 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
             errorMessage = ((python_test_name + emsg1) + emsg2)
             if (not sandboxIgnoreErrors):
                 raise Exception(errorMessage)
-    return errorFound
+    if errorFound:
+        return errorMessage
+    else:
+        return
