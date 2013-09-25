@@ -1,0 +1,6 @@
+def rc_if_exists_and_done(ps):
+    try:
+        rc = ps.wait(0)
+    except psutil.TimeoutExpired:
+        rc = None
+    return rc
