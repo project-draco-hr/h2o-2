@@ -1,0 +1,6 @@
+def terminate_process_tree(pid, including_parent=True):
+    parent = psutil.Process(pid)
+    for child in parent.get_children(recursive=True):
+        child.terminate()
+    if including_parent:
+        parent.terminate()
