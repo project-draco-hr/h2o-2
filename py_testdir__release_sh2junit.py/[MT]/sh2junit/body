@@ -1,0 +1,34 @@
+def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, **kwargs):
+    print 'cmd_string:', cmd_string
+    cmdList = cmd_string.split()
+    (outfd, outpath) = sandbox_tmp_file(prefix=(name + '.stdout.'), suffix='.log')
+    (errfd, errpath) = sandbox_tmp_file(prefix=(name + '.stderr.'), suffix='.log')
+    print 'outpath:', outpath
+    print 'errpath:', errpath
+    start = time.time()
+    print 'psutil.Popen:', cmdList, outpath, errpath
+    ps = psutil.Popen(cmdList, stdin=None, stdout=outfd, stderr=errfd, **kwargs)
+    comment = ('PID %d, stdout %s, stderr %s' % (ps.pid, os.path.basename(outpath), os.path.basename(errpath)))
+    print 'spawn_cmd', cmd_string, comment
+    rc = ps.wait(timeout)
+    elapsed = (time.time() - start)
+    out = file(outpath).read()
+    err = file(errpath).read()
+    if rc:
+        print 'rc:', rc
+        errors = rc
+    else:
+        errors = 0
+    sandboxErrorMessage = h2o_sandbox.check_sandbox_for_errors(LOG_DIR='./sandbox', python_test_name=name, cloudShutdownIsError=True, sandboxIgnoreErrors=True)
+    if sandboxErrorMessage:
+        errors += 1
+    create_junit_xml(name, out, err, sandboxErrorMessage, errors=rc, elapsed=elapsed)
+    if (rc is None):
+        terminate_process_tree(ps.pid, including_parent=True)
+        raise Exception(('%s %s timed out after %d\nstdout:\n%s\n\nstderr:\n%s' % (name, cmd_string, (timeout or 0), out, err)))
+    elif (rc != 0):
+        raise Exception(('%s %s failed. errors: %s\nstdout:\n%s\n\nstderr:\n%s' % (name, cmd_string, errors, out, err)))
+    elif (errors != 0):
+        raise Exception(('%s %s has errors %s in ./sandbox log files?.\nstdout:\n%s\n\nstderr:\n%s' % (name, cmd_string, errors, out, err)))
+    else:
+        return (errors, outpath, errpath)
