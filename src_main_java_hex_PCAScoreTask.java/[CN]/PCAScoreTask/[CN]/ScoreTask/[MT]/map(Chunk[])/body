@@ -4,7 +4,7 @@
     for (int c=0; c < _ncomp; c++) {
       double x=0;
       for (int d=0; d < _nfeat; d++)       x+=chunks[d].at0(r) * _smatrix[d][c];
-      chunks[_nfeat + c].set(r,x);
+      chunks[_nfeat + c].set0(r,x);
     }
   }
   _job.updateProgress(1);
