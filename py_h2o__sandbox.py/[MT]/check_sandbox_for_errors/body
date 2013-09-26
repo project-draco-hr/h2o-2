@@ -6,7 +6,7 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
         return
     errLines = []
     for filename in os.listdir(LOG_DIR):
-        if re.search('stdout|stderr', filename):
+        if re.search('h2o.*stdout|h2o.*stderr', filename):
             sandFile = open(((LOG_DIR + '/') + filename), 'r')
             regex1String = 'found multiple|exception|error|ERRR|assert|killing|killed|required ports'
             if cloudShutdownIsError:
@@ -50,4 +50,7 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
             errorMessage = ((python_test_name + emsg1) + emsg2)
             if (not sandboxIgnoreErrors):
                 raise Exception(errorMessage)
-    return errorFound
+    if errorFound:
+        return errorMessage
+    else:
+        return
