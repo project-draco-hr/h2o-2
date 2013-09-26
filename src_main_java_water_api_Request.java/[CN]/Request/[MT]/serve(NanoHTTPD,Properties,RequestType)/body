@@ -1,5 +1,4 @@
 {
-  String query=checkArguments(parms,type);
 switch (type) {
 case help:
     return wrap(server,HTMLHelp());
@@ -13,14 +12,13 @@ case www:
     }
     Log.debug(Sys.HTTPD,log);
   }
-if (query != null) return wrap(server,query,type);
-long time=System.currentTimeMillis();
-Response response=serveGrid();
-response.setTimeStart(time);
-if (type == RequestType.json) return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()),RequestType.json);
-return wrap(server,build(response));
+return serveGrid(server,parms,type);
 case query:
+{
+for (Argument arg : _arguments) arg.reset();
+String query=buildQuery(parms,type);
 return wrap(server,query);
+}
 default :
 throw new RuntimeException("Invalid request type " + type.toString());
 }

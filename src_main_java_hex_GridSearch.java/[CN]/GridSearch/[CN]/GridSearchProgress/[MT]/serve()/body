@@ -1,0 +1,9 @@
+{
+  GridSearch grid=UKV.get(Key.make(dst_key.value()));
+  if (grid != null) {
+    boolean done=true;
+    for (int i=0; i < grid.jobs.length; i++)     if (grid.jobs[i].running())     done=false;
+    if (done)     grid.remove();
+  }
+  return super.serve();
+}
