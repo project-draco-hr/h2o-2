@@ -1,14 +1,14 @@
 {
-  String[] domain=vresponse.domain();
+  String[] domain=response.domain();
   if (nclass == 1) {
-    fr.add("Residual",vresponse.makeCon(vresponse.mean()));
+    fr.add("Residual",response.makeCon(response.mean()));
     throw H2O.unimpl();
   }
  else {
     float f=1.0f / nclass;
-    for (int i=0; i < nclass; i++)     fr.add("Residual-" + domain[i],vresponse.makeCon(-f));
+    for (int i=0; i < nclass; i++)     fr.add("Residual-" + domain[i],response.makeCon(-f));
   }
-  for (int i=0; i < nclass; i++)   fr.add("Pred-" + domain[i],vresponse.makeZero());
+  for (int i=0; i < nclass; i++)   fr.add("Pred-" + domain[i],response.makeZero());
   new MRTask2(){
     @Override public void map(    Chunk chks[]){
       Chunk cy=DTree.chk_resp(chks,ncols,nclass);

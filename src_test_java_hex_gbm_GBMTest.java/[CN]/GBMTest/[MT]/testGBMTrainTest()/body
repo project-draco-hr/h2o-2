@@ -13,7 +13,7 @@
     fr=ParseDataset2.parse(dest1,new Key[]{fkey1});
     UKV.remove(fkey1);
     UKV.remove(fr.remove("agentId")._key);
-    gbm.vresponse=fr.remove("outcome");
+    gbm.response=fr.remove("outcome");
     gbm.source=fr;
     gbm.ntrees=5;
     gbm.max_depth=10;
@@ -73,7 +73,7 @@
     UKV.remove(dest2);
     if (gbm != null) {
       UKV.remove(gbm.dest());
-      UKV.remove(gbm.vresponse._key);
+      UKV.remove(gbm.response._key);
       gbm.remove();
     }
     if (fr != null)     fr.remove();

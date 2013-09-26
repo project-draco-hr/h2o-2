@@ -9,7 +9,7 @@
     gbm=new GBM();
     gbm.source=ParseDataset2.parse(dest,new Key[]{fkey});
     UKV.remove(fkey);
-    gbm.vresponse=prep.prep(gbm.source);
+    gbm.response=prep.prep(gbm.source);
     gbm.ntrees=5;
     gbm.max_depth=8;
     gbm.learn_rate=0.2f;
@@ -23,7 +23,7 @@
     UKV.remove(dest);
     if (gbm != null) {
       UKV.remove(gbm.dest());
-      UKV.remove(gbm.vresponse._key);
+      UKV.remove(gbm.response._key);
       gbm.remove();
       if (fr != null)       fr.remove();
     }

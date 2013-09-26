@@ -1,7 +1,7 @@
 {
   super(selfKey,dataKey,fr);
-  VecsInput input=(VecsInput)ls[0];
-  layers=Layer.clone(ls,new ChunksInput(null,input),0);
+  layers=new Layer[ls.length];
+  for (int y=0; y < ls.length; y++)   layers[y]=ls[y].clone();
   ws=new float[ls.length][];
   bs=new float[ls.length][];
   for (int y=1; y < layers.length; y++) {

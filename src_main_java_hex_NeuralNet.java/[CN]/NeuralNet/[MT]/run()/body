@@ -1,10 +1,8 @@
 {
-  for (int i=cols.length - 1; i >= 0; i--)   if (source.vecs()[cols[i]] == response)   cols=ArrayUtils.remove(cols,i);
-  Vec[] vecs=new Vec[cols.length];
-  for (int i=0; i < cols.length; i++)   vecs[i]=source.vecs()[cols[i]];
-  vecs=reChunk(vecs);
+  selectCols();
+  _train=reChunk(_train);
   final Layer[] ls=new Layer[hidden.length + 2];
-  ls[0]=new VecsInput(vecs);
+  ls[0]=new VecsInput(_train);
   for (int i=0; i < hidden.length; i++) {
     if (activation == Activation.Rectifier)     ls[i + 1]=new Layer.Rectifier(hidden[i]);
  else     ls[i + 1]=new Layer.Tanh(hidden[i]);
@@ -16,12 +14,8 @@
   ls[ls.length - 1]._l2=(float)l2;
   for (int i=0; i < ls.length; i++)   ls[i].init(ls,i);
   final Key sourceKey=Key.make(input("source"));
-  String[] names=new String[cols.length];
-  for (int i=0; i < cols.length; i++)   names[i]=source._names[cols[i]];
-  String responseName="response";
-  for (int i=0; i < source.numCols(); i++)   if (source.vecs()[i] == response)   responseName=source._names[i];
-  final Frame frame=new Frame(names,vecs);
-  frame.add(responseName,response);
+  final Frame frame=new Frame(_names,_train);
+  frame.add(_responseName,response);
   NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
   UKV.put(destination_key,model);
   final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
@@ -38,13 +32,13 @@
         lastTime=time;
         lastItems=items;
         NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
-        int[][] confusion=new int[model.classNames().length][model.classNames().length];
-        Error train=NeuralNetScore.eval(ls,EVAL_ROW_COUNT,confusion);
+        long[][] cm=new long[model.classNames().length][model.classNames().length];
+        Error train=NeuralNetScore.run(ls,EVAL_ROW_COUNT,cm);
         model.items=items;
         model.items_per_second=ps;
         model.train_classification_error=train.Value;
         model.train_sqr_error=train.SqrDist;
-        model.confusionMatrix=confusion;
+        model.confusion_matrix=cm;
         UKV.put(destination_key,model);
         try {
           Thread.sleep(2000);
