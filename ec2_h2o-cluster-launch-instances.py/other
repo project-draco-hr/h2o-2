@@ -11,7 +11,7 @@ instanceNameRoot = 'H2ORStudioDemo'
 debug = 0
 dryRun = False
 regionName = 'us-east-1'
-amiId = 'ami-17c18b7e'
+amiId = 'ami-0ff1a466'
 if (not ('AWS_ACCESS_KEY_ID' in os.environ)):
     print 'ERROR: You must set AWS_ACCESS_KEY_ID in the environment.'
     sys.exit(1)
@@ -60,9 +60,17 @@ for i in range(numInstancesToLaunch):
     fprivate.write((instance.private_ip_address + '\n'))
 fpublic.close()
 fprivate.close()
+print 'Sleeping for 60 seconds for ssh to be available...'
+time.sleep(60)
+d = os.path.dirname(os.path.realpath(__file__))
+print 'Testing ssh access...'
+cmd = ((d + '/') + 'h2o-cluster-test-ssh.sh')
+rv = os.system(cmd)
+if (rv != 0):
+    print 'Failed.'
+    sys.exit(1)
 print 
 print 'Distributing flatfile...'
-d = os.path.dirname(os.path.realpath(__file__))
 cmd = ((d + '/') + 'h2o-cluster-distribute-flatfile.sh')
 rv = os.system(cmd)
 if (rv != 0):
