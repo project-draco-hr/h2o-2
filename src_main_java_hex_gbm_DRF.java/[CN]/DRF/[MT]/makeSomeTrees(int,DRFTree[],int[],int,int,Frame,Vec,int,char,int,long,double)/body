@@ -2,7 +2,7 @@
   int depth=0;
   for (; depth < max_depth; depth++) {
     Timer t_pass=new Timer();
-    ScoreBuildHistogram sbh=new ScoreBuildHistogram(trees,leafs,ncols,nclass,ymin,fr).doAll(fr);
+    ScoreBuildHistogram sbh=new ScoreBuildHistogram(trees,leafs,ncols,nclass,ymin).doAll(fr);
     for (int t=0; t < ntrees; t++) {
       final int tmax=trees[t]._len;
       final DTree tree=trees[t];
