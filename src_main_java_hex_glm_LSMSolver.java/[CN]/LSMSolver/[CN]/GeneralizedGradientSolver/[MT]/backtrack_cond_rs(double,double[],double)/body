@@ -1,0 +1,11 @@
+{
+  double norm=0;
+  double zg=0;
+  double t_inv=1.0 / t;
+  for (int i=0; i < _beta.length; ++i) {
+    double diff=_beta[i] - newBeta[i];
+    norm+=diff * diff;
+    zg+=_betaGradient[i] * diff;
+  }
+  return gbeta + (norm * 0.5 + zg) * t_inv;
+}

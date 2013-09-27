@@ -1,0 +1,14 @@
+{
+  null_deviance+=_fam._family.deviance(yreal,_ymu);
+  if (_fam._family == Family.binomial)   for (int i=0; i < DEFAULT_THRESHOLDS.length; ++i)   _cms[i].add((int)yreal,(ymodel >= DEFAULT_THRESHOLDS[i]) ? 1 : 0);
+  if (Double.isNaN(_fam._family.deviance(yreal,ymodel)))   System.out.println("NaN from yreal=" + yreal + ", ymodel="+ ymodel);
+  residual_deviance+=_fam._family.deviance(yreal,ymodel);
+  ++nobs;
+  avg_err+=(ymodel - yreal) * (ymodel - yreal);
+  if (_fam._family == Family.poisson) {
+    long y=Math.round(yreal);
+    double logfactorial=0;
+    for (long i=2; i <= y; ++i)     logfactorial+=Math.log(i);
+    _aic+=(yreal * Math.log(ymodel) - logfactorial - ymodel);
+  }
+}

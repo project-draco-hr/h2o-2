@@ -1,0 +1,16 @@
+{
+  _res=new GLMValidation(null,_model.ymu,_model.family,_model.rank());
+  final int nrows=chunks[0]._len;
+  double[] row=MemoryManager.malloc8d(_model._names.length);
+  float[] preds=MemoryManager.malloc4f(_model.family._family == Family.binomial ? 2 : 1);
+  OUTER:   for (int i=0; i < nrows; ++i) {
+    if (chunks[chunks.length - 1].isNA0(i))     continue;
+    for (int j=0; j < chunks.length - 1; ++j) {
+      if (chunks[j].isNA0(i))       continue OUTER;
+      row[j]=chunks[j].at0(i);
+    }
+    _model.score0(row,preds);
+    _res.add(chunks[chunks.length - 1].at80(i),_model.family._family == Family.binomial ? preds[1] : preds[0]);
+  }
+  if (_res.nobs > 0)   _res.avg_err/=_res.nobs;
+}

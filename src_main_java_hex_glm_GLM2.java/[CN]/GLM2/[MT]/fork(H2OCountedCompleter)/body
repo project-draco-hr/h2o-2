@@ -1,0 +1,22 @@
+{
+  System.out.println("removing cols: " + Arrays.toString(ignored_cols));
+  source.remove(ignored_cols);
+  final Vec[] vecs=source.vecs();
+  for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i] == vresponse) {
+    String name=source._names[i];
+    source.remove(i);
+    source.add(name,vresponse);
+    break;
+  }
+  final Frame fr=GLMTask.adaptFrame(source);
+  YMUTask ymut=new YMUTask(standardize,new FamilyIced(family,tweedie_variance_power),link,case_mode,case_val,fr.anyVec().length());
+  ymut.doAll(fr);
+  GLMIterationTask firstIter=new GLMIterationTask(standardize,1.0 / ymut.nobs(),new FamilyIced(family,tweedie_variance_power),link,case_mode,case_val,null);
+  firstIter._ymu=ymut.ymu();
+  final H2OEmptyCompleter fjt=start(new H2OEmptyCompleter());
+  if (completer != null)   fjt.setCompleter(completer);
+  final LSMSolver solver=new ADMMSolver(lambda,alpha);
+  firstIter.setCompleter(new Iteration(solver,fr,fjt));
+  firstIter.dfork(fr);
+  return fjt;
+}

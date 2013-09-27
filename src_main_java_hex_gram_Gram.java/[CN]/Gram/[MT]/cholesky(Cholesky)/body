@@ -1,0 +1,37 @@
+{
+  if (chol == null) {
+    double[][] xx=_xx.clone();
+    for (int i=0; i < xx.length; ++i)     xx[i]=xx[i].clone();
+    chol=new Cholesky(xx,_diag.clone());
+  }
+  final Cholesky fchol=chol;
+  final int sparseN=_diag.length;
+  final int denseN=_fullN - sparseN;
+  if (_diag != null)   for (int i=0; i < sparseN; ++i) {
+    double d=1.0 / (chol._diag[i]=Math.sqrt(_diag[i]));
+    for (int j=0; j < denseN; ++j)     chol._xx[j][i]=d * _xx[j][i];
+  }
+  Futures fs=new Futures();
+  for (int i=0; i < denseN; ++i) {
+    final int fi=i;
+    fs.add(new RecursiveAction(){
+      @Override protected void compute(){
+        for (int j=0; j <= fi; ++j) {
+          double s=0;
+          for (int k=0; k < sparseN; ++k)           s+=fchol._xx[fi][k] * fchol._xx[j][k];
+          fchol._xx[fi][j + sparseN]=_xx[fi][j + sparseN] - s;
+        }
+      }
+    }
+.fork());
+  }
+  fs.blockForPending();
+  double[][] arr=new double[denseN][];
+  for (int i=0; i < arr.length; ++i)   arr[i]=Arrays.copyOfRange(fchol._xx[i],sparseN,sparseN + denseN);
+  for (int i=0; i < arr.length; ++i)   for (int j=0; j < i; ++j)   arr[j][i]=arr[i][j];
+  CholeskyDecomposition c=new Matrix(arr).chol();
+  fchol.setSPD(c.isSPD());
+  arr=c.getL().getArray();
+  for (int i=0; i < arr.length; ++i)   System.arraycopy(arr[i],0,fchol._xx[i],sparseN,i + 1);
+  return chol;
+}

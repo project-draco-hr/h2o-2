@@ -1,0 +1,29 @@
+{
+  double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
+  solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
+  boolean done=false;
+  if (Utils.hasNaNsOrInfs(newBeta)) {
+    System.out.println("got NaNs in beta after " + glmt._iter + " iterations");
+    System.out.println(glmt._gram.pprint(glmt._gram.getXX()));
+    done=true;
+    newBeta=glmt._beta == null ? newBeta : glmt._beta;
+  }
+  done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_eps;
+  GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_eps,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time);
+  if (done) {
+    GLMValidationTask t=new GLMValidationTask(res);
+    t.doAll(fr);
+    Key valKey=GLMValidation.makeKey();
+    DKV.put(valKey,t._res);
+    res.validations=new Key[]{valKey};
+    DKV.put(dest(),res);
+    remove();
+    fjt.tryComplete();
+  }
+ else {
+    DKV.put(dest(),res);
+    GLMIterationTask nextIter=new GLMIterationTask(glmt,newBeta);
+    nextIter.setCompleter(clone());
+    nextIter.dfork(fr);
+  }
+}

@@ -1,0 +1,29 @@
+{
+  if (title != null && !title.isEmpty())   DocGen.HTML.title(sb,title);
+  DocGen.HTML.paragraph(sb,"Model Key: " + _selfKey);
+  if (beta != null)   DocGen.HTML.paragraph(sb,water.api.GeneratePredictions2.link(_selfKey,"Predict!"));
+  String succ=(warnings == null || warnings.length == 0) ? "alert-success" : "alert-warning";
+  System.out.println("succ = " + succ);
+  sb.append("<div class='alert " + succ + "'>");
+  sb.append(iteration + " iterations computed in ");
+  pprintTime(sb,run_time);
+  if (warnings != null && warnings.length > 0) {
+    sb.append("<b>Warnings:</b><ul>");
+    for (    String w : warnings)     sb.append("<li>" + w + "</li>");
+    sb.append("</ul>");
+  }
+  sb.append("</div>");
+  sb.append("<h4>Parameters</h4>");
+  parm(sb,"family",family._family);
+  parm(sb,"link",link);
+  parm(sb,"&epsilon;<sub>&beta;</sub>",beta_eps);
+  parm(sb,"&alpha;",alpha);
+  parm(sb,"&lambda;",lambda);
+  if (beta != null)   coefs2html(sb);
+  if (validations != null && validations.length > 0) {
+    for (    Key k : validations) {
+      GLMValidation v=DKV.get(k).get();
+      v.generateHTML("",sb);
+    }
+  }
+}

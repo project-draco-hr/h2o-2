@@ -1,0 +1,10 @@
+{
+  StringBuilder sb=new StringBuilder("GLM Model (key=" + _selfKey + " , trained on "+ _dataKey+ ", family = "+ family._family+ ", link = "+ link+ ", #iterations = "+ iteration+ "):\n");
+  final int cats=catOffsets.length - 1;
+  int k=0;
+  for (int i=0; i < cats; ++i)   for (int j=1; j < _domains[i].length; ++j)   sb.append(_names[i] + "." + _domains[i][j]+ ": "+ beta[k++]+ "\n");
+  final int nums=beta.length - k - 1;
+  for (int i=0; i < nums; ++i)   sb.append(_names[cats + i] + ": " + beta[k + i]+ "\n");
+  sb.append("Intercept: " + beta[beta.length - 1] + "\n");
+  return sb.toString();
+}
