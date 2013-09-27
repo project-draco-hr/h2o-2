@@ -1,7 +1,10 @@
-def test_GBM_covtype_train_test(self):
+def test_GBM_manyfiles_train_test(self):
     bucket = 'home-0xdiag-datasets'
     modelKey = 'GBMModelKey'
-    files = [('manyfiles-nflx-gz', 'file_1.dat.gz', 'file_1.hex', 1800, None, 'file_1.dat.gz', 'file_1_test.hex')]
+    if localhost:
+        files = [('manyfiles-nflx-gz', 'file_1.dat.gz', 'file_1.hex', 1800, None, 'file_11.dat.gz', 'file_1_test.hex')]
+    else:
+        files = [('manyfiles-nflx-gz', 'file_[0-9].dat.gz', 'file_10.hex', 1800, None, 'file_1[0-9].dat.gz', 'file_10_test.hex')]
     for (importFolderPath, trainFilename, trainKey, timeoutSecs, vresponse, testFilename, testKey) in files:
         h2o.beta_features = False
         start = time.time()
