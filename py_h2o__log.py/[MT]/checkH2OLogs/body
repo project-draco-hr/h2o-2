@@ -12,5 +12,5 @@ def checkH2OLogs(timeoutSecs=3, expectedMinLines=12):
     for (i, l) in enumerate(lineCountList):
         if (l < expectedMinLines):
             raise Exception(('node %d log is too small' % i))
-    h2o.check_sandbox_for_errrs()
+    h2o.check_sandbox_for_errors()
     return (logNameList, lineCountList)
