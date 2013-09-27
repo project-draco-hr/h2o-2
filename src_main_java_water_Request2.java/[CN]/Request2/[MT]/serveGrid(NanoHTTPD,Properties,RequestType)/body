@@ -15,6 +15,8 @@
     }
   }
   if (!gridSearch)   return superServeGrid(server,parms,type);
+  _parms.remove("destination_key");
+  for (int i=0; i < _arguments.size(); i++)   if (_arguments.get(i)._name.equals("destination_key"))   values[i]=null;
   int[] counters=new int[values.length];
   ArrayList<Job> jobs=new ArrayList<Job>();
   for (; ; ) {

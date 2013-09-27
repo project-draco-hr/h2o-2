@@ -1,7 +1,7 @@
 {
   UKV.remove(dest);
-  String desc="KMeans apply model: " + model._selfKey + " to "+ ary._key;
-  final ChunkProgressJob job=new ChunkProgressJob(desc,dest,ary.chunks());
+  final ChunkProgressJob job=new ChunkProgressJob(ary.chunks());
+  job.destination_key=dest;
   final H2OCountedCompleter fjtask=new H2OCountedCompleter(){
     @Override public void compute2(){
       KMeansApply kms=new KMeansApply();

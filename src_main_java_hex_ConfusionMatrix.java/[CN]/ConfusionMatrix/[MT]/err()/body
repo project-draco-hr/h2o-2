@@ -1,3 +1,7 @@
 {
-  return err(_arr);
+  long n=0;
+  for (int a=0; a < _arr.length; ++a)   for (int p=0; p < _arr[a].length; ++p)   n+=_arr[a][p];
+  long err=n;
+  for (int d=0; d < _arr.length; ++d)   err-=_arr[d][d];
+  return (double)err / n;
 }

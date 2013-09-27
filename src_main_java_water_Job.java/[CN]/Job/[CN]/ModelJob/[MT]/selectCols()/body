@@ -1,9 +1,4 @@
 {
-  super.selectCols();
-  _train=selectVecs(source);
-  if (validation != null)   _valid=selectVecs(validation);
-  _names=new String[cols.length];
-  for (int i=0; i < cols.length; i++)   _names[i]=source._names[cols[i]];
-  _responseName="response";
-  for (int i=0; i < source.numCols(); i++)   if (source.vecs()[i] == response)   _responseName=source._names[i];
+  if (!response.isEnum())   response.asEnum();
+  for (int i=cols.length - 1; i >= 0; i--)   if (source.vecs()[cols[i]] == response)   cols=ArrayUtils.remove(cols,i);
 }

@@ -1,6 +1,6 @@
 {
   localCloud(1,true,args);
-  File f=new File("smalldata/covtype/covtype.20k.data");
+  File f=new File("smalldata/mnist/train.csv.gz");
   Key dest=Key.make("train.hex");
   Key fkey=NFSFileVec.make(f);
   ParseDataset2.parse(dest,new Key[]{fkey});
