@@ -1,14 +1,14 @@
 {
-  if (_offset.value() > f._vecs[0].length())   return Response.error("Value only has " + f._vecs[0].length() + " rows");
+  if (_offset.value() > f.numRows())   return Response.error("Value only has " + f.numRows() + " rows");
   JsonObject result=new JsonObject();
   result.addProperty(VALUE_TYPE,"parsed");
   result.addProperty(KEY,key.toString());
-  result.addProperty(NUM_ROWS,f._vecs[0].length());
-  result.addProperty(NUM_COLS,f._vecs.length);
+  result.addProperty(NUM_ROWS,f.numRows());
+  result.addProperty(NUM_COLS,f.numCols());
   JsonArray cols=new JsonArray();
   JsonArray rows=new JsonArray();
-  for (int i=0; i < f._vecs.length; i++) {
-    Vec v=f._vecs[i];
+  for (int i=0; i < f.numCols(); i++) {
+    Vec v=f.vecs()[i];
     JsonObject json=new JsonObject();
     json.addProperty(NAME,f._names[i]);
     json.addProperty(MIN,v.min());
@@ -16,12 +16,12 @@
     cols.add(json);
   }
   if (_offset.value() != INFO_PAGE) {
-    long endRow=Math.min(_offset.value() + _view.value(),f._vecs[0].length());
-    long startRow=Math.min(_offset.value(),f._vecs[0].length() - _view.value());
+    long endRow=Math.min(_offset.value() + _view.value(),f.numRows());
+    long startRow=Math.min(_offset.value(),f.numRows() - _view.value());
     for (long row=Math.max(0,startRow); row < endRow; ++row) {
       JsonObject obj=new JsonObject();
       obj.addProperty(ROW,row);
-      for (int i=0; i < f._vecs.length; ++i)       format(obj,f,row,i);
+      for (int i=0; i < f.numCols(); ++i)       format(obj,f,row,i);
       rows.add(obj);
     }
   }
@@ -30,7 +30,7 @@
   Response r=Response.done(result);
   r.setBuilder(ROOT_OBJECT,new ObjectBuilder(){
     @Override public String build(    Response response,    JsonObject object,    String contextName){
-      String s=html(key,f._vecs[0].length(),f._vecs.length,0,0);
+      String s=html(key,f.numRows(),f.numCols(),0,0);
       Table2 t=new Table2(argumentsToJson(),_offset.value(),_view.value(),f);
       s+=t.build(response,object.get(ROWS),ROWS);
       return s;

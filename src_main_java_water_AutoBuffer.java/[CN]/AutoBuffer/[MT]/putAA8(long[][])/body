@@ -1,6 +1,9 @@
 {
-  if (ary == null)   return put4(-1);
-  put4(ary.length);
-  for (int i=0; i < ary.length; i++)   putA8(ary[i]);
+  _arys++;
+  long xy=putZA(ary);
+  if (xy == -1)   return this;
+  int x=(int)(xy >> 32);
+  int y=(int)xy;
+  for (int i=x; i < x + y; i++)   putA8(ary[i]);
   return this;
 }

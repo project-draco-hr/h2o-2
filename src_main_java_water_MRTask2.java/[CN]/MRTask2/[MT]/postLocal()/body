@@ -5,7 +5,7 @@
   if (_fs != null)   _fs.blockForPending();
   _profile._localBlkDone=System.currentTimeMillis();
   long ns=_nodes | (1L << H2O.SELF.index());
-  if (_res == null)   _nodes=1L << 63;
+  if (_res == null)   _nodes=-1L;
  else   if (_res != this) {
     _res._profile=_profile;
     copyOver(_res);

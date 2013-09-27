@@ -1,7 +1,11 @@
 {
-  int len=get4();
-  if (len == -1)   return null;
-  T[] ts=(T[])Array.newInstance(tc,len);
-  for (int i=0; i < len; ++i)   ts[i]=get();
+  _arys++;
+  long xy=getZA();
+  if (xy == -1)   return null;
+  int x=(int)(xy >> 32);
+  int y=(int)xy;
+  int z=y == 0 ? 0 : getInt();
+  T[] ts=(T[])Array.newInstance(tc,x + y + z);
+  for (int i=x; i < x + y; ++i)   ts[i]=get();
   return ts;
 }

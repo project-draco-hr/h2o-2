@@ -17,7 +17,7 @@ def test_GLM_many_cols_enum(self):
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         algo = 'Parse'
-        l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), tryHeap, algo, csvFilename, elapsed)
+        l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, algo, csvFilename, elapsed)
         print l
         h2o.cloudPerfH2O.message(l)
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
@@ -32,6 +32,6 @@ def test_GLM_many_cols_enum(self):
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         iterations = glm['GLMModel']['iterations']
         algo = (('GLM ' + str(iterations)) + ' iterations')
-        l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), tryHeap, algo, csvFilename, elapsed)
+        l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, algo, csvFilename, elapsed)
         print l
         h2o.cloudPerfH2O.message(l)

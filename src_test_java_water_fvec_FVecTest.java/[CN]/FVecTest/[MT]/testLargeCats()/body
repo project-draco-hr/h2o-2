@@ -6,8 +6,8 @@
   UKV.remove(fkey);
   Vec vz=null;
   try {
-    assertEquals(fr._vecs[0].length(),40000);
-    assertEquals(fr._vecs[0].domain().length,40000);
+    assertEquals(fr.numRows(),40000);
+    assertEquals(fr.vecs()[0].domain().length,40000);
   }
   finally {
     if (vz != null)     UKV.remove(vz._key);
