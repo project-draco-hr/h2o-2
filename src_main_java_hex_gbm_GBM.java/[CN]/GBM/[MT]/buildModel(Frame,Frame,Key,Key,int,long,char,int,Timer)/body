@@ -7,10 +7,10 @@
       for (int tid=0; tid < ntrees; tid++) {
         if (cancelled())         break;
         new ComputeProb(ncols,nclass).doAll(fr);
-        for (int i=0; i < nrows; i++)         System.out.println(fr.toString(i));
+        System.out.println(fr.toStringAll());
         new ComputeRes(ncols,nclass,ymin).doAll(fr);
-        for (int i=0; i < nrows; i++)         System.out.println(fr.toString(i));
-        forest=buildNextTree(fr,forest,ncols,nrows,nclass,ymin);
+        System.out.println(fr.toStringAll());
+        forest=buildNextKTrees(fr,forest,ncols,nrows,nclass,ymin);
       }
       cleanUp(fr,ncols,t_build);
       tryComplete();

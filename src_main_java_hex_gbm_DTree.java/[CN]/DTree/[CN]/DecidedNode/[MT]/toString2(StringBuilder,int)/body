@@ -5,9 +5,9 @@
  else {
       sb.append(_tree._names[_split._col]);
       sb.append(_split._equal ? (i == 0 ? " != " : " == ") : (i == 0 ? " <  " : " >= "));
-      sb.append(_splat).append(":").append(_split._preds[i]).append("\n");
+      sb.append(_splat).append("\n");
     }
-    if (_nids[i] >= 0)     _tree.node(_nids[i]).toString2(sb,depth + 1);
+    if (_nids[i] >= 0 && _nids[i] < _tree._len)     _tree.node(_nids[i]).toString2(sb,depth + 1);
   }
   return sb;
 }

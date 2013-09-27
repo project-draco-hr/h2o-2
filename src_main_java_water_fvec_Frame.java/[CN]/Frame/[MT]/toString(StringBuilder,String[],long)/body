@@ -1,0 +1,10 @@
+{
+  for (int c=0; c < fs.length; c++) {
+    if (_vecs[c].isNA(idx))     throw H2O.unimpl();
+ else     if (_vecs[c].isInt())     sb.append(String.format(fs[c],_vecs[c].at8(idx)));
+ else     sb.append(String.format(fs[c],_vecs[c].at(idx)));
+    sb.append(' ');
+  }
+  sb.append('\n');
+  return sb;
+}
