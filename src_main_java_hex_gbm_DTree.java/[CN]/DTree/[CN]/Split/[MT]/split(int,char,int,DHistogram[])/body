@@ -1,7 +1,8 @@
 {
   long n=splat == 0 ? _n0 : _n1;
   if (n < min_rows || n <= 1)   return null;
-  if (_se <= 1e-30)   return null;
+  double se=splat == 0 ? _se0 : _se1;
+  if (se <= 1e-30)   return null;
   int cnt=0;
   DBinHistogram nhists[]=new DBinHistogram[hs.length];
   for (int j=0; j < hs.length; j++) {

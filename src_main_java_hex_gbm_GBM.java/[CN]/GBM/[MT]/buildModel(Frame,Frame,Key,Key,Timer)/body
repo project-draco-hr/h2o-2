@@ -1,0 +1,28 @@
+{
+  GBMModel gbm_model=new GBMModel(outputKey,dataKey,frm,ntrees,new DTree[0][],null,_ymin,null);
+  DKV.put(outputKey,gbm_model);
+  H2O.submitTask(start(new H2OCountedCompleter(){
+    @Override public void compute2(){
+      DTree forest[][]=new DTree[0][];
+      for (int tid=0; tid < ntrees; tid++) {
+        new ComputeProb().doAll(fr);
+        new ComputeRes().doAll(fr);
+        forest=buildNextKTrees(fr,forest);
+        if (cancelled())         break;
+        Score sc=new Score().doAll(fr).report(Sys.GBM__,forest);
+        _errs=Arrays.copyOf(_errs,_errs.length + 1);
+        _errs[_errs.length - 1]=(float)sc._sum / _nrows;
+        GBMModel gbm_model=new GBMModel(outputKey,dataKey,frm,ntrees,forest,_errs,_ymin,sc._cm);
+        DKV.put(outputKey,gbm_model);
+      }
+      cleanUp(fr,t_build);
+      tryComplete();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      ex.printStackTrace();
+      GBM.this.cancel(ex.getMessage());
+      return true;
+    }
+  }
+));
+}

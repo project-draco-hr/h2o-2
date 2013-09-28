@@ -1,4 +1,5 @@
 {
-  Arrays.fill(preds,1.0f / nclasses());
-  throw H2O.unimpl();
+  Arrays.fill(preds,0);
+  for (  CompressedTree ts[] : treeBits)   for (int c=0; c < ts.length; c++)   preds[c]+=ts[c].score(data);
+  return preds;
 }
