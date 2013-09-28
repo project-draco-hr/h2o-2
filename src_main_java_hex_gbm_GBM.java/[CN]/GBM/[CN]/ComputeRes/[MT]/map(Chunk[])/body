@@ -3,8 +3,10 @@
   for (int row=0; row < ys._len; row++) {
     int y=(int)ys.at80(row) - _ymin;
     for (int k=0; k < _nclass; k++) {
-      Chunk wk=chk_work(chks,k);
-      wk.set0(row,(y == k ? 1f : 0f) - (float)wk.at0(row));
+      if (_distribution[k] != 0) {
+        Chunk wk=chk_work(chks,k);
+        wk.set0(row,(y == k ? 1f : 0f) - (float)wk.at0(row));
+      }
     }
   }
 }

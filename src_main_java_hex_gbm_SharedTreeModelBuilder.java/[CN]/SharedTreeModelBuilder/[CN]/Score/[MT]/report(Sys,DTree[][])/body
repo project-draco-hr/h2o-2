@@ -1,11 +1,2 @@
 {
-  int lcnt=0;
-  for (  DTree[] ts : trees)   for (  DTree t : ts)   lcnt+=t._len;
-  long err=_nrows;
-  for (int c=0; c < _nclass; c++)   err-=_cm[c][c];
-  Log.info(tag,"============================================================== ");
-  Log.info(tag,"Mean Squared Error for forest is " + (_sum / _nrows));
-  Log.info(tag,"Total of " + err + " errors on "+ _nrows+ " rows, with "+ trees.length+ "x"+ _nclass+ " trees (average of "+ ((float)lcnt / (trees.length * _nclass))+ " nodes)");
-  System.out.println("CM= " + Arrays.deepToString(_cm));
-  return this;
 }

@@ -1,9 +1,10 @@
 {
-  double m=_MSs[0];
+  double m=Double.NaN;
   for (int b=0; b < _nbins; b++) {
     if (_bins[b] == 0)     continue;
-    if (_MSs[2 * b + 0] != m)     return false;
     if (_MSs[2 * b + 1] != 0)     return false;
+    if (_MSs[2 * b + 0] != m)     if (Double.isNaN(m))     m=_MSs[2 * b + 0];
+ else     return false;
   }
   return true;
 }

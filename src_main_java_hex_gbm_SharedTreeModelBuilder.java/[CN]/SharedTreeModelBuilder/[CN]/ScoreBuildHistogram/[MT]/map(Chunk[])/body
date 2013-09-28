@@ -2,6 +2,7 @@
   _hcs=new DHistogram[_nclass][][];
   for (int k=0; k < _nclass; k++) {
     final DTree tree=_trees[k];
+    if (tree == null)     continue;
     final int leaf=_leafs[k];
     final DHistogram hcs[][]=_hcs[k]=new DHistogram[tree._len - leaf][];
     final Chunk nids=chk_nids(chks,k);
@@ -31,13 +32,13 @@
       int nid=(int)nids.at80(row);
       if (nid < leaf)       continue;
       DHistogram nhs[]=hcs[nid - leaf];
-      double y=wrks.at(row);
+      double y=wrks.at0(row);
       for (int j=0; j < _ncols; j++) {
         DHistogram nh=nhs[j];
         if (nh == null)         continue;
         float col_data=(float)chks[j].at0(row);
-        nh.incr(col_data);
         if (nh instanceof DBinHistogram)         ((DBinHistogram)nh).incr(row,col_data,y);
+ else         nh.incr(col_data);
       }
     }
   }
