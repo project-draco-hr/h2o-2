@@ -4,29 +4,29 @@
     array=new JsonArray();
     JsonObject fake=new JsonObject();
     fake.addProperty(ROW,0);
-    for (int i=0; i < _f._vecs.length; ++i)     format(fake,_f,0,i);
+    for (int i=0; i < _f.numCols(); ++i)     format(fake,_f,0,i);
     array.add(fake);
   }
   sb.append(header(array));
   JsonObject row=new JsonObject();
   row.addProperty(ROW,MIN);
-  for (int i=0; i < _f._vecs.length; i++)   row.addProperty(_f._names[i],_f._vecs[i].min());
+  for (int i=0; i < _f.numCols(); i++)   row.addProperty(_f._names[i],_f.vecs()[i].min());
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   row.addProperty(ROW,MAX);
-  for (int i=0; i < _f._vecs.length; i++)   row.addProperty(_f._names[i],_f._vecs[i].max());
+  for (int i=0; i < _f.numCols(); i++)   row.addProperty(_f._names[i],_f.vecs()[i].max());
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   row.addProperty(ROW,FIRST_CHUNK);
-  for (int i=0; i < _f._vecs.length; i++)   row.addProperty(_f._names[i],_f._vecs[i].chunk(0).getClass().getSimpleName());
+  for (int i=0; i < _f.numCols(); i++)   row.addProperty(_f._names[i],_f.vecs()[i].chunk(0).getClass().getSimpleName());
   sb.append(ARRAY_HEADER_ROW_BUILDER.build(response,row,contextName));
   if (_offset == INFO_PAGE) {
-    for (int ci=0; ci < _f._vecs[0].nChunks(); ci++) {
-      Chunk chunk=_f._vecs[ci].elem2BV(ci);
+    for (int ci=0; ci < _f.vecs()[0].nChunks(); ci++) {
+      Chunk chunk=_f.vecs()[ci].elem2BV(ci);
       String prefix=CHUNK + " " + ci+ " ";
       row.addProperty(ROW,prefix + TYPE);
-      for (int i=0; i < _f._vecs.length; i++)       row.addProperty(_f._names[i],chunk.getClass().getSimpleName());
+      for (int i=0; i < _f.numCols(); i++)       row.addProperty(_f._names[i],chunk.getClass().getSimpleName());
       sb.append(defaultBuilder(row).build(response,row,contextName));
       row.addProperty(ROW,prefix + SIZE);
-      for (int i=0; i < _f._vecs.length; i++)       row.addProperty(_f._names[i],chunk.byteSize());
+      for (int i=0; i < _f.numCols(); i++)       row.addProperty(_f._names[i],chunk.byteSize());
       sb.append(defaultBuilder(row).build(response,row,contextName));
     }
   }

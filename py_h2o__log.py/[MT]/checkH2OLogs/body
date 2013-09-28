@@ -1,7 +1,4 @@
-def checkH2OLogs(timeoutSecs=3):
-    for h in h2o.nodes:
-        h.log_view()
-        h.log_download(timeoutSecs=timeoutSecs)
+def checkH2OLogs(timeoutSecs=3, expectedMinLines=12):
     h2o.nodes[0].log_download(timeoutSecs=timeoutSecs)
     logNameList = [(((('h2o_' + str(n.http_addr)) + '_') + str(n.port)) + '.log') for n in h2o.nodes]
     lineCountList = []
@@ -10,4 +7,10 @@ def checkH2OLogs(timeoutSecs=3):
         print logName, 'lineCount:', lineCount
         lineCountList.append(lineCount)
     print logNameList
+    if (len(h2o.nodes) != len(logNameList)):
+        raise Exception(('Should be %d logs, are %d' % len(h2o.nodes)), len(logNameList))
+    for (i, l) in enumerate(lineCountList):
+        if (l < expectedMinLines):
+            raise Exception(('node %d log is too small' % i))
+    h2o.check_sandbox_for_errors()
     return (logNameList, lineCountList)

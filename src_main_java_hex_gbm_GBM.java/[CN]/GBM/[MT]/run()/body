@@ -3,7 +3,7 @@
   fr.remove(ignored_cols);
   if (!vresponse.isEnum())   vresponse.asEnum();
   String vname="response";
-  for (int i=0; i < fr.numCols(); i++)   if (fr._vecs[i] == vresponse) {
+  for (int i=0; i < fr.numCols(); i++)   if (fr.vecs()[i] == vresponse) {
     vname=fr._names[i];
     fr.remove(i);
   }

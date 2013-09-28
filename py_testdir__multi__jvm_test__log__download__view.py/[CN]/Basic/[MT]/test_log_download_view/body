@@ -1,4 +1,7 @@
 def test_log_download_view(self):
+    for h in h2o.nodes:
+        h.log_view()
+        h.log_download(timeoutSecs=5)
     (logNameList, lineCountList) = h2o_log.checkH2OLogs()
     self.assertEqual(len(logNameList), len(h2o.nodes), ('Should be %d logs' % len(h2o.nodes)))
     self.assertEqual(len(lineCountList), len(h2o.nodes), ('Should be %d logs' % len(h2o.nodes)))

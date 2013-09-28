@@ -1,14 +1,14 @@
 {
   final Key sourceKey=Key.make(input("source"));
-  for (int i=cols.length - 1; i >= 0; i--)   if (source._vecs[cols[i]] == response)   cols=ArrayUtils.remove(cols,i);
+  for (int i=cols.length - 1; i >= 0; i--)   if (source.vecs()[cols[i]] == response)   cols=ArrayUtils.remove(cols,i);
   String[] names=new String[cols.length + 1];
   Vec[] vecs=new Vec[cols.length + 1];
   for (int i=0; i < cols.length; i++) {
     names[i]=source._names[cols[i]];
-    vecs[i]=source._vecs[cols[i]];
+    vecs[i]=source.vecs()[cols[i]];
   }
   names[names.length - 1]="response";
-  for (int i=0; i < source.numCols(); i++)   if (source._vecs[i] == response)   names[names.length - 1]=source._names[i];
+  for (int i=0; i < source.numCols(); i++)   if (source.vecs()[i] == response)   names[names.length - 1]=source._names[i];
   vecs[vecs.length - 1]=response;
   final Frame frame=reChunk(new Frame(names,vecs));
   final Layer[] ls=new Layer[hidden.length + 2];

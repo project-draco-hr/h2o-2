@@ -1,5 +1,14 @@
 {
   if (SELF_ADDRESS == null) {
+    if ((OPT_ARGS.ip != null) && (OPT_ARGS.network != null)) {
+      Log.err("ip and network options must not be used together");
+      H2O.exit(-1);
+    }
+    ArrayList<UserSpecifiedNetwork> networkList=UserSpecifiedNetwork.calcArrayList(OPT_ARGS.network);
+    if (networkList == null) {
+      Log.err("Exiting.");
+      H2O.exit(-1);
+    }
     ArrayList<InetAddress> ips=new ArrayList<InetAddress>();
     try {
       Enumeration<NetworkInterface> nis=NetworkInterface.getNetworkInterfaces();
@@ -33,6 +42,23 @@
         H2O.exit(-1);
       }
       local=arg;
+    }
+ else     if (networkList.size() > 0) {
+      Log.info("Network list was specified by the user.  Searching for a match...");
+      ArrayList<InetAddress> validIps=new ArrayList();
+      for (      InetAddress ip : ips) {
+        Log.info("    Considering " + ip.getHostAddress() + " ...");
+        for (        UserSpecifiedNetwork n : networkList) {
+          if (n.inetAddressOnNetwork(ip)) {
+            Log.info("    Matched " + ip.getHostAddress());
+            local=ip;
+            SELF_ADDRESS=local;
+            return SELF_ADDRESS;
+          }
+        }
+      }
+      Log.err("No interface matches the network list from the -network option.  Exiting.");
+      H2O.exit(-1);
     }
  else {
       ArrayList<InetAddress> validIps=new ArrayList();

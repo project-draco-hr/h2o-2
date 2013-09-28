@@ -27,9 +27,9 @@
     fpreds=gbm.score(ftest);
     ConfusionMatrix CM=new ConfusionMatrix();
     CM.actual=ftest;
-    CM.vactual=ftest._vecs[ftest.find("outcome")];
+    CM.vactual=ftest.vecs()[ftest.find("outcome")];
     CM.predict=fpreds;
-    CM.vpredict=fpreds._vecs[fpreds.find("predict")];
+    CM.vpredict=fpreds.vecs()[fpreds.find("predict")];
     CM.serve();
     long cm[][]=CM.cm;
     long acts[]=new long[cm.length];

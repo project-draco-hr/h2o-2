@@ -19,8 +19,8 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, use_d
     self.redirect_import_folder_to_s3n_path = redirect_import_folder_to_s3n_path
     self.aws_credentials = aws_credentials
     self.port = port
-    if ipaddr:
-        self.addr = ipaddr
+    if ipaddr_from_cmd_line:
+        self.addr = ipaddr_from_cmd_line
     else:
         self.addr = use_this_ip_addr
     if (self.addr is not None):

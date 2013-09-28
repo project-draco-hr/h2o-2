@@ -1,15 +1,10 @@
 {
-  Chunk[] inputs=Arrays.copyOf(chunks,_nfeat);
-  NewChunk[] outputs=new NewChunk[_ncomp];
-  for (int i=_nfeat; i < chunks.length; ++i) {
-    outputs[i - _nfeat]=(NewChunk)chunks[i];
-  }
-  int rows=inputs[0]._len;
+  int rows=chunks[0]._len;
   for (int r=0; r < rows; r++) {
     for (int c=0; c < _ncomp; c++) {
       double x=0;
-      for (int d=0; d < _nfeat; d++)       x+=inputs[d].at0(r) * _smatrix[d][c];
-      outputs[c].addNum(x);
+      for (int d=0; d < _nfeat; d++)       x+=chunks[d].at0(r) * _smatrix[d][c];
+      chunks[_nfeat + c].set0(r,x);
     }
   }
   _job.updateProgress(1);
