@@ -10,11 +10,11 @@
     gbm.source=ParseDataset2.parse(dest,new Key[]{fkey});
     UKV.remove(fkey);
     gbm.vresponse=prep.prep(gbm.source);
-    gbm.ntrees=20;
-    gbm.max_depth=10;
-    gbm.learn_rate=0.2f;
-    gbm.min_rows=5;
-    gbm.nbins=100;
+    gbm.ntrees=2;
+    gbm.max_depth=6;
+    gbm.learn_rate=1.0f;
+    gbm.min_rows=1;
+    gbm.nbins=10;
     gbm.serve();
     gbm.get();
     fr=gbm.score(gbm.source);
