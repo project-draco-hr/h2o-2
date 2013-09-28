@@ -1,4 +1,7 @@
 def flatfile_name():
-    a = ('pytest_flatfile-%s' % getpass.getuser())
+    if args.flatfile:
+        a = args.flatfile
+    else:
+        a = ('pytest_flatfile-%s' % getpass.getuser())
     print 'Starting with contents of ', a
     return a

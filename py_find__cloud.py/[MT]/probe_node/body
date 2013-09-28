@@ -30,7 +30,8 @@ def probe_node(line, h2oNodes):
         if ((not ip) or (not port)):
             raise Exception(("bad ip or port parsing from h2o get_cloud nodes 'name' %s" % n['name']))
         probes.append(name)
-        node = {'http_addr': http_addr, 'base_port': port, 'java_heap_GB': java_heap_GB, }
+        node_id = len(h2oNodes)
+        node = {'http_addr': http_addr, 'port': int(port), 'java_heap_GB': java_heap_GB, 'node_id': node_id, 'remoteH2O': 'true', 'sandbox_error_was_reported': 'false', 'username': 'unknown', }
         if (name not in h2oNodes):
             h2oNodes[name] = node
             print ('Added node %s to probes' % name)
