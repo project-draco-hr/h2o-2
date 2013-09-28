@@ -6,11 +6,11 @@
     _sigmas=sigmas;
   }
  else {
-    _means=new float[frame._vecs.length - 1];
+    _means=new float[frame.numCols() - 1];
     _sigmas=new float[_means.length];
     for (int i=0; i < _means.length; i++) {
-      _means[i]=(float)frame._vecs[i].mean();
-      _sigmas[i]=(float)frame._vecs[i].sigma();
+      _means[i]=(float)frame.vecs()[i].mean();
+      _sigmas[i]=(float)frame.vecs()[i].sigma();
     }
   }
 }

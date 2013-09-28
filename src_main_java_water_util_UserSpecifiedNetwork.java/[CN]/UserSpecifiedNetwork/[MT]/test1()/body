@@ -1,0 +1,28 @@
+{
+  System.out.println("test1");
+  ArrayList<UserSpecifiedNetwork> l;
+  l=UserSpecifiedNetwork.calcArrayList("");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList(" 1.2.3.4/5");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4 /5");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/5 ");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/a");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("a.2.3.4/5");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.a.3.4/5");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.a.4/5");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.a/5");
+  check(l == null);
+  l=UserSpecifiedNetwork.calcArrayList("1.2.3.4/5,a.7.8.9/10");
+  check(l == null);
+}

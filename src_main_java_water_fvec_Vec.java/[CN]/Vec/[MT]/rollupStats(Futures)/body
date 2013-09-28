@@ -1,0 +1,13 @@
+{
+  if (_naCnt != -1)   return;
+  H2OCountedCompleter cc=new H2OCountedCompleter(){
+    final Vec _vec=Vec.this;
+    @Override public void compute2(){
+      _vec.rollupStats();
+      tryComplete();
+    }
+  }
+;
+  H2O.submitTask(cc);
+  fs.add(cc);
+}

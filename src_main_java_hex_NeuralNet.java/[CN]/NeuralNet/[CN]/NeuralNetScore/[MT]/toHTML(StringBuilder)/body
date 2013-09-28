@@ -1,7 +1,7 @@
 {
   DocGen.HTML.section(sb,"Classification error: " + String.format("%5.2f %%",100 * classification_error));
   DocGen.HTML.section(sb,"Square error: " + sqr_error);
-  String[] classes=source._vecs[source._vecs.length - 1].domain();
+  String[] classes=source.vecs()[source.numCols() - 1].domain();
   if (classes == null)   classes=Model.responseDomain(source);
   confusion(sb,"Confusion Matrix",classes,confusionMatrix);
   return true;

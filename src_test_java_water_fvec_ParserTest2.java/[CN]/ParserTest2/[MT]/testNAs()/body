@@ -3,13 +3,13 @@
   Key rkey=FVecTest.makeByteVec("na_test",data);
   Key okey=Key.make("na_test.hex");
   Frame fr=ParseDataset2.parse(okey,new Key[]{rkey});
-  int nlines=(int)fr._vecs[0].length();
+  int nlines=(int)fr.numRows();
   Class[] expectedTypes=new Class[]{C1Chunk.class,C1SChunk.class,C2Chunk.class,C2SChunk.class,C4Chunk.class,C4FChunk.class,C8Chunk.class,C8DChunk.class,C1Chunk.class};
-  assertTrue(fr._vecs.length == expectedTypes.length);
+  assertTrue(fr.numCols() == expectedTypes.length);
   assertEquals(9,nlines);
-  for (int i=0; i < nlines - 2; ++i)   for (  Vec v : fr._vecs)   assertTrue("error at line " + i + ", vec "+ v.elem2BV(0).getClass().getSimpleName(),!Double.isNaN(v.at(i)) && !v.isNA(i));
+  for (int i=0; i < nlines - 2; ++i)   for (  Vec v : fr.vecs())   assertTrue("error at line " + i + ", vec "+ v.elem2BV(0).getClass().getSimpleName(),!Double.isNaN(v.at(i)) && !v.isNA(i));
   int j=0;
-  for (  Vec v : fr._vecs) {
+  for (  Vec v : fr.vecs()) {
     for (int i=nlines - 2; i < nlines; ++i) {
       assertTrue(i + ", " + j+ ":"+ v.at(i)+ ", "+ v.isNA(i),Double.isNaN(v.at(i)) && v.isNA(i));
     }

@@ -1,6 +1,6 @@
 {
   FrameInput input=new FrameInput(source);
-  int classes=source._vecs.length - 1;
+  int classes=source.numCols() - 1;
   input.init(null,classes,false,0);
   Layer[] layers=Layer.clone(model.layers,input,0);
   for (int y=1; y < layers.length; y++) {
