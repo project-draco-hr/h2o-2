@@ -1,8 +1,0 @@
-{
-  Key k=NFSFileVec.make(f);
-  Key fk=Key.make(outputKey + "_data");
-  Frame fr=ParseDataset2.parse(fk,new Key[]{k});
-  for (  String c : ignores)   fr.remove(c);
-  fr.add(response,fr.remove(response));
-  new GLM2("glm",Key.make(outputKey + "_new"),fr,Family.binomial,Link.logit,0.5,1e-3).run();
-}
