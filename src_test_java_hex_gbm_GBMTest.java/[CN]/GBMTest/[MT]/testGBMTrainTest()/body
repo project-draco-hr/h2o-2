@@ -20,8 +20,7 @@
     gbm.learn_rate=0.2f;
     gbm.min_rows=10;
     gbm.nbins=100;
-    gbm.serve();
-    gbm.get();
+    gbm.run();
     Frame ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
     UKV.remove(fkey2);
     fpreds=gbm.score(ftest);

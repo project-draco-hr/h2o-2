@@ -1,2 +1,16 @@
 {
+  _task=new Descent();
+  _task._job=_job;
+  _task._ls=_ls;
+  _task._key=_key;
+  _task._epochs=_epochs;
+  _task._ws=new float[_ls.length][];
+  _task._bs=new float[_ls.length][];
+  for (int y=1; y < _ls.length; y++) {
+    _task._ws[y]=_ls[y]._w;
+    _task._bs[y]=_ls[y]._b;
+  }
+  Vec[] vecs=((VecsInput)_ls[0])._vecs;
+  Vec response=((VecSoftmax)_ls[_ls.length - 1])._vec;
+  _task.doAll(Utils.add(vecs,response));
 }

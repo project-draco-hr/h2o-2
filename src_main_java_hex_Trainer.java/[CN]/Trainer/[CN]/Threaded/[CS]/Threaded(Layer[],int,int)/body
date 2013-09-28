@@ -5,9 +5,9 @@
   _resume=new CyclicBarrier(_threads.length + 1);
   for (int t=0; t < _trainers.length; t++) {
     Layer[] clones=new Layer[ls.length];
-    for (int y=0; y < ls.length; y++)     clones[y]=ls[y].clone();
-    for (int y=0; y < ls.length; y++)     clones[y].init(clones,y,false,0);
-    final Input input=(Input)ls[0].clone();
+    for (int y=0; y < clones.length; y++)     clones[y]=ls[y].clone();
+    for (int y=0; y < clones.length; y++)     clones[y].init(clones,y,false,0);
+    final Input input=(Input)clones[0];
     input._pos=input._len * t / _trainers.length;
     _trainers[t]=new Base(clones);
     final Base trainer=_trainers[t];

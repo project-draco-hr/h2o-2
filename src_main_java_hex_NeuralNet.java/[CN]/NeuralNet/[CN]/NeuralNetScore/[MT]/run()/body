@@ -1,5 +1,5 @@
 {
-  selectCols();
+  initResponse();
   Layer[] clones=new Layer[model.layers.length];
   clones[0]=new VecsInput(selectVecs(source));
   for (int y=1; y < clones.length - 1; y++)   clones[y]=model.layers[y].clone();
@@ -9,7 +9,7 @@
     clones[y]._b=model.bs[y];
     clones[y].init(clones,y,false,0);
   }
-  int classes=Model.responseDomain(response).length;
+  int classes=response.domain().length;
   confusion_matrix=new long[classes][classes];
   Error error=run(clones,max_rows,confusion_matrix);
   classification_error=error.Value;
