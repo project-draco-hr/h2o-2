@@ -13,10 +13,13 @@ def __init__(self, host, *args, **kwargs):
         self.ice = ('/tmp/ice.%d.%s' % (self.port, time.time()))
     self.channel = host.open_channel()
     cmd = ' '.join(self.get_args())
-    cmdList = ['cd /tmp']
-    cmdList += [('ls -ltr ' + self.jar)]
-    cmdList += [re.sub('/tmp/', '', cmd)]
-    self.channel.exec_command('; '.join(cmdList))
+    if (1 == 0):
+        cmdList = ['cd /tmp']
+        cmdList += [('ls -ltr ' + self.jar)]
+        cmdList += [re.sub('/tmp/', '', cmd)]
+        self.channel.exec_command('; '.join(cmdList))
+    else:
+        self.channel.exec_command(cmd)
     if self.capture_output:
         if (self.node_id is not None):
             logPrefix = ('remote-h2o-' + str(self.node_id))

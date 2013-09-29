@@ -9,7 +9,6 @@ def test_parse_summary_airline_s3(self):
     for (csvFilename, timeoutSecs) in csvFilelist:
         trialStart = time.time()
         csvPathname = csvFilename
-        csvPathname = ((importFolderPath + '/') + testCsvFilename)
         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
         parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='s3', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120)
