@@ -1,7 +1,9 @@
 {
+  Log.info("1 " + destination_key);
   DKV.remove(job_key);
   new TAtomic<List>(){
     @Override public List atomic(    List old){
+      Log.info("2 " + destination_key);
       if (old == null)       return null;
       Job[] jobs=old._jobs;
       for (int i=0; i < jobs.length; i++) {
