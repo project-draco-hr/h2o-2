@@ -1,3 +1,5 @@
 {
-  super("PCAScore(" + dataKey.toString() + ")",destKey,standardize ? 2 * data.anyVec().nChunks() : data.anyVec().nChunks());
+  super(standardize ? 2 * data.anyVec().nChunks() : data.anyVec().nChunks());
+  description="PCAScore(" + dataKey.toString() + ")";
+  destination_key=destKey;
 }

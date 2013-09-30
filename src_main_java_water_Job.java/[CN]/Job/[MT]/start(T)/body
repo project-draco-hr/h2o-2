@@ -1,6 +1,7 @@
 {
   _fjtask=fjtask;
   DKV.put(job_key,new Value(job_key,new byte[0]));
+  start_time=System.currentTimeMillis();
   new TAtomic<List>(){
     @Override public List atomic(    List old){
       if (old == null)       old=new List();

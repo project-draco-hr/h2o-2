@@ -42,7 +42,6 @@
       for (int y=1; y < fprops.length; y++)       queue.put1DRangeKernel(fprops[y],0,_ls[y]._a.length,group);
       queue.putReadBuffer(a[_ls.length - 1],true);
       for (int y=1; y < fprops.length - 1; y++)       queue.put1DRangeKernel(resets[y],0,_ls[y]._a.length,group);
-      softmax(input,a[a.length - 1].getBuffer(),e[e.length - 1].getBuffer());
       queue.putWriteBuffer(a[_ls.length - 1],false);
       queue.putWriteBuffer(e[_ls.length - 1],false);
       for (int y=_ls.length - 1; y > 0; y--)       queue.put1DRangeKernel(bprops[y],0,_ls[y]._a.length,group);
