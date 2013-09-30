@@ -1,7 +1,8 @@
 {
   Key raw=Key.make("gaussian_test_data_raw");
   Key parsed=Key.make("gaussian_test_data_parsed");
-  Key model=Key.make("gaussian_test");
+  Key modelKey=Key.make("gaussian_test");
+  GLMModel model=null;
   try {
     FVecTest.makeByteVec(raw,"x,y\n0,0\n1,0.1\n2,0.2\n3,0.3\n4,0.4\n5,0.5\n6,0.6\n7,0.7\n8,0.8\n9,0.9\n0,0\n1,0\n2,0\n3,0\n4,0\n5,0\n6,0\n7,0\n8,0\n9,0");
     Frame fr=ParseDataset2.parse(parsed,new Key[]{raw});
@@ -9,16 +10,18 @@
     double[] intercepts=new double[]{3.643,1.318,9.154};
     double[] xs=new double[]{-0.260,-0.0284,-0.853};
     for (int i=0; i < powers.length; ++i) {
-      new GLM2("GLM test of gaussian(linear) regression.",model,fr,false,Family.tweedie,Family.tweedie.defaultLink,0,0).setTweedieVarPower(powers[i]).fork().get();
-      GLMModel m=DKV.get(model).get();
-      HashMap<String,Double> coefs=m.coefficients();
+      new GLM2("GLM test of gaussian(linear) regression.",modelKey,fr,false,Family.tweedie,Family.tweedie.defaultLink,0,0).setTweedieVarPower(powers[i]).fork().get();
+      model=DKV.get(modelKey).get();
+      HashMap<String,Double> coefs=model.coefficients();
       assertEquals(intercepts[i],coefs.get("Intercept"),1e-3);
       assertEquals(xs[i],coefs.get("x"),1e-3);
+      model.delete();
+      model=null;
     }
   }
   finally {
     UKV.remove(raw);
     UKV.remove(parsed);
-    UKV.remove(model);
+    if (model != null)     model.delete();
   }
 }
