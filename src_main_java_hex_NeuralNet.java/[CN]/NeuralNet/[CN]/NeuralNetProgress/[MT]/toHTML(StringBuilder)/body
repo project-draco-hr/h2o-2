@@ -9,9 +9,9 @@
     DocGen.HTML.section(sb,"Validation square error: N/A");
     DocGen.HTML.section(sb,"Items: " + model.items);
     DocGen.HTML.section(sb,"Items per second: " + model.items_per_second);
-    if (model.confusionMatrix != null) {
+    if (model.confusion_matrix != null) {
       String title="Confusion Matrix (Training Data)";
-      NeuralNetScore.confusion(sb,title,model.classNames(),model.confusionMatrix);
+      NeuralNetScore.confusion(sb,title,model.classNames(),model.confusion_matrix);
     }
   }
   return true;

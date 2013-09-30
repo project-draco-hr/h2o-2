@@ -5,7 +5,8 @@
   }
   int cols2[]=Arrays.copyOf(cols,cols.length + 1);
   cols2[cols.length]=-1;
-  final KMeans job=new KMeans(dest,k,cols);
+  final KMeans job=new KMeans();
+  job.destination_key=dest;
   final KMeansModel res=new KMeansModel(job.dest(),cols2,va._key);
   res._normalized=normalize;
   res._randSeed=randSeed;

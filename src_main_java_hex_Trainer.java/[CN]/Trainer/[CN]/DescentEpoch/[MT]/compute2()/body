@@ -1,15 +1,24 @@
 {
-  if (_count < 0 || --_count > 0 && (_node._job == null || Job.running(_node._job))) {
-    for (    Chunk[] cs : _node._chunks) {
-      DescentChunk task=new DescentChunk();
-      task._node=_node;
-      task._cs=cs;
-      H2O.submitTask(task);
-    }
-    reinitialize();
-    H2O.submitTask(this);
+  Chunk[][] cs=_node._chunks.toArray(new Chunk[0][]);
+  MersenneTwisterRNG rand=new MersenneTwisterRNG(MersenneTwisterRNG.SEEDS);
+  for (int n=cs.length - 1; n >= 0; n--) {
+    int shuffle=rand.nextInt(n + 1);
+    Chunk[] t=cs[shuffle];
+    cs[shuffle]=cs[n];
+    cs[n]=t;
   }
+  for (; ; ) {
+    if (_count < 0 || --_count > 0 && (_node._job == null || Job.running(_node._job))) {
+      for (      Chunk[] c : cs) {
+        DescentChunk task=new DescentChunk();
+        task._node=_node;
+        task._cs=c;
+        task.compute2();
+      }
+    }
  else {
-    if (_node._key.home())     _node._trainer.done();
+      tryComplete();
+      break;
+    }
   }
 }

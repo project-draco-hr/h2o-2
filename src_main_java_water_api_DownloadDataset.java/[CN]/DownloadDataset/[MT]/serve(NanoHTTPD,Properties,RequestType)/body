@@ -1,7 +1,8 @@
 {
   checkArguments(args,type);
-  Frame fr=DKV.get(src_key).get();
-  NanoHTTPD.Response res=server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_DEFAULT_BINARY,fr.toCSV(true));
+  Object value=DKV.get(src_key).get();
+  InputStream csv=value instanceof ValueArray ? new CsvVAStream((ValueArray)value,null) : ((Frame)value).toCSV(true);
+  NanoHTTPD.Response res=server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_DEFAULT_BINARY,csv);
   String s=src_key.toString();
   if (DKV.isConvertedFrameKeyString(s))   s=DKV.unconvertFrameKeyString(s);
   int x=s.length() - 1;

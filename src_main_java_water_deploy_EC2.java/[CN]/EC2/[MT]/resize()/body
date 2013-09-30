@@ -1,5 +1,16 @@
 {
-  AmazonEC2Client ec2=new AmazonEC2Client(H2O.getAWSCredentials());
+  PropertiesCredentials credentials;
+  try {
+    credentials=H2O.getAWSCredentials();
+  }
+ catch (  Exception ex) {
+    System.out.println("Please provide your AWS credentials in './AwsCredentials.properties'");
+    System.out.println("File format is:");
+    System.out.println("accessKey=XXXXXXXXXXXXXXXXXXXX");
+    System.out.println("secretKey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    throw ex;
+  }
+  AmazonEC2Client ec2=new AmazonEC2Client(credentials);
   ec2.setEndpoint("ec2." + region + ".amazonaws.com");
   DescribeInstancesResult describeInstancesResult=ec2.describeInstances();
   List<Reservation> reservations=describeInstancesResult.getReservations();
@@ -15,12 +26,12 @@
     }
   }
   System.out.println("Found " + instances.size() + " EC2 instances for user "+ USER);
-  if (instances.size() > boxCount) {
-    for (int i=0; i < instances.size() - boxCount; i++) {
+  if (instances.size() > boxes) {
+    for (int i=0; i < instances.size() - boxes; i++) {
     }
   }
- else   if (instances.size() < boxCount) {
-    int launchCount=boxCount - instances.size();
+ else   if (instances.size() < boxes) {
+    int launchCount=boxes - instances.size();
     System.out.println("Creating " + launchCount + " EC2 instances.");
     if (confirm) {
       System.out.println("Please confirm [y/n]");
