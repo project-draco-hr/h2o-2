@@ -2,9 +2,9 @@
   StringBuilder sb=new StringBuilder();
   sb.append("{" + _col + "/");
   UndecidedNode.p(sb,_bin,2);
-  ary2str(sb.append(" "),4,_nrows);
-  ary2str(sb.append(", mse="),4,_mses);
-  ary2str(sb.append(", p0="),4,_preds[0]);
-  ary2str(sb.append(", p1="),4,_preds[1]);
+  sb.append(", se0=").append(_se0);
+  sb.append(", se1=").append(_se1);
+  sb.append(", n0=").append(_n0);
+  sb.append(", n1=").append(_n1);
   return sb.append("}").toString();
 }

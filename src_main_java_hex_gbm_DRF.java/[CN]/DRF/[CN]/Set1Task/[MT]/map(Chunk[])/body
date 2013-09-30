@@ -1,8 +1,8 @@
 {
-  Chunk cy=DTree.chk_resp(chks,_ncols,_nclass);
+  Chunk cy=chk_resp(chks);
   for (int i=0; i < cy._len; i++) {
     if (cy.isNA0(i))     continue;
     int cls=(int)cy.at80(i) - _ymin;
-    DTree.chk_work(chks,_ncols,_nclass,cls).set0(i,1.0f);
+    chk_work(chks,cls).set0(i,1.0f);
   }
 }

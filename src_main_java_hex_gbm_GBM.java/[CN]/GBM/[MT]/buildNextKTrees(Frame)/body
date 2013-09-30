@@ -1,0 +1,72 @@
+{
+  String domain[]=fr.vecs()[_ncols].domain();
+  final DTree[] ktrees=new DTree[_nclass];
+  for (int k=0; k < _nclass; k++) {
+    if (_distribution[k] != 0) {
+      ktrees[k]=new DTree(fr._names,_ncols,(char)nbins,(char)_nclass,min_rows);
+      new GBMUndecidedNode(ktrees[k],-1,DBinHistogram.initialHist(fr,_ncols,(char)nbins));
+    }
+  }
+  int[] leafs=new int[_nclass];
+  int depth=0;
+  for (; depth < max_depth; depth++) {
+    if (cancelled())     return null;
+    ScoreBuildHistogram sbh=new ScoreBuildHistogram(ktrees,leafs).doAll(fr);
+    boolean did_split=false;
+    for (int k=0; k < _nclass; k++) {
+      DTree tree=ktrees[k];
+      if (tree == null)       continue;
+      int tmax=tree._len;
+      for (int leaf=leafs[k]; leaf < tmax; leaf++) {
+        UndecidedNode udn=tree.undecided(leaf);
+        udn._hs=sbh.getFinalHisto(k,leaf);
+        GBMDecidedNode dn=new GBMDecidedNode((GBMUndecidedNode)udn);
+        if (dn._split._col == -1)         udn.do_not_split();
+ else         did_split=true;
+      }
+      leafs[k]=tmax;
+    }
+    if (!did_split)     break;
+  }
+  for (int k=0; k < _nclass; k++) {
+    DTree tree=ktrees[k];
+    if (tree == null)     continue;
+    int leaf=leafs[k]=tree._len;
+    for (int nid=0; nid < leaf; nid++) {
+      if (tree.node(nid) instanceof DecidedNode) {
+        DecidedNode dn=tree.decided(nid);
+        for (int i=0; i < dn._nids.length; i++) {
+          int cnid=dn._nids[i];
+          if (cnid == -1 || tree.node(cnid) instanceof UndecidedNode || (tree.node(cnid) instanceof DecidedNode && ((DecidedNode)tree.node(cnid))._split._col == -1))           dn._nids[i]=new GBMLeafNode(tree,nid)._nid;
+        }
+      }
+    }
+  }
+  GammaPass gp=new GammaPass(ktrees,leafs).doAll(fr);
+  double m1class=(double)(_nclass - 1) / _nclass;
+  for (int k=0; k < _nclass; k++) {
+    final DTree tree=ktrees[k];
+    if (tree == null)     continue;
+    for (int i=0; i < tree._len - leafs[k]; i++) {
+      double g=gp._gss[k][i] == 0 ? 1000 : learn_rate * m1class * gp._rss[k][i] / gp._gss[k][i];
+      ((LeafNode)tree.node(leafs[k] + i))._pred=g;
+    }
+  }
+  new MRTask2(){
+    @Override public void map(    Chunk chks[]){
+      for (int k=0; k < _nclass; k++) {
+        final DTree tree=ktrees[k];
+        if (tree == null)         continue;
+        final Chunk nids=chk_nids(chks,k);
+        final Chunk ct=chk_tree(chks,k);
+        for (int row=0; row < nids._len; row++) {
+          int nid=(int)nids.at80(row);
+          ct.set0(row,(float)(ct.at0(row) + ((LeafNode)tree.node(nid))._pred));
+          nids.set0(row,0);
+        }
+      }
+    }
+  }
+.doAll(fr);
+  return ktrees;
+}

@@ -1,0 +1,9 @@
+{
+  Chunk ys=chk_resp(chks);
+  double ds[]=new double[_nclass];
+  for (int row=0; row < ys._len; row++) {
+    double sum=score0(chks,ds,row);
+    if (Double.isInfinite(sum))     for (int k=0; k < _nclass; k++)     chk_work(chks,k).set0(row,Double.isInfinite(ds[k]) ? 1.0f : 0.0f);
+ else     for (int k=0; k < _nclass; k++)     chk_work(chks,k).set0(row,(float)(ds[k] / sum));
+  }
+}

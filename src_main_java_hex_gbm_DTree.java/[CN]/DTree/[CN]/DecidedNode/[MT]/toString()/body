@@ -1,5 +1,6 @@
 {
-  if (_col == -1)   return "Decided has col = -1";
-  if (_equal)   return _tree._names[_col] + " != " + _splat+ " = "+ Arrays.toString(_pred[0])+ "\n"+ _tree._names[_col]+ " == "+ _splat+ " = "+ Arrays.toString(_pred[1])+ "\n";
-  return _tree._names[_col] + " < " + _splat+ " = "+ Arrays.toString(_pred[0])+ "\n"+ _splat+ " <="+ _tree._names[_col]+ " = "+ Arrays.toString(_pred[1])+ "\n";
+  if (_split._col == -1)   return "Decided has col = -1";
+  int col=_split._col;
+  if (_split._equal)   return _tree._names[col] + " != " + _splat+ "\n"+ _tree._names[col]+ " == "+ _splat+ "\n";
+  return _tree._names[col] + " < " + _splat+ "\n"+ _splat+ " <="+ _tree._names[col]+ "\n";
 }

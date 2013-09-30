@@ -1,0 +1,30 @@
+{
+  super(selfKey,dataKey,fr);
+  glm=glmt._glm;
+  this.threshold=threshold;
+  catOffsets=glmt._catOffsets;
+  if (glmt._standardize) {
+    this.norm_beta=beta;
+    this.beta=beta.clone();
+    double norm=0.0;
+    final int numoff=beta.length - glmt._nums - 1;
+    for (int i=numoff; i < this.beta.length - 1; i++) {
+      double b=this.beta[i] * glmt._normMul[i - numoff];
+      norm+=b * glmt._normSub[i - numoff];
+      this.beta[i]=b;
+    }
+    this.beta[beta.length - 1]-=norm;
+  }
+ else {
+    this.beta=beta;
+    norm_beta=null;
+  }
+  final Vec[] vecs=fr.vecs();
+  ymu=vecs[vecs.length - 1].mean();
+  this.iteration=iteration;
+  this.warnings=warnings;
+  this.alpha=alpha;
+  this.lambda=lambda;
+  this.beta_eps=beta_eps;
+  this.run_time=run_time;
+}

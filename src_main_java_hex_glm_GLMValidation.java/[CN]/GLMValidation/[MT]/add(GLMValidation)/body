@@ -1,0 +1,9 @@
+{
+  residual_deviance+=v.residual_deviance;
+  null_deviance+=v.null_deviance;
+  avg_err=((nobs / (nobs + v.nobs)) * avg_err + (v.nobs / (nobs + v.nobs)) * v.avg_err);
+  nobs+=v.nobs;
+  _aic+=v._aic;
+  if (_cms == null)   _cms=v._cms;
+ else   for (int i=0; i < _cms.length; ++i)   _cms[i].add(v._cms[i]);
+}

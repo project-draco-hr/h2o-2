@@ -1,12 +1,13 @@
 {
-  DTree.Split best=DTree.Split.make(-1,-1,false,0L,0L,Double.MAX_VALUE,Double.MAX_VALUE,(float[])null,null);
   DHistogram hs[]=u._hs;
+  DTree.Split best=new DTree.Split(-1,-1,false,Double.MAX_VALUE,Double.MAX_VALUE,0L,0L);
   if (hs == null)   return best;
   for (int i=0; i < hs.length; i++) {
     if (hs[i] == null || hs[i].nbins() <= 1)     continue;
-    DTree.Split s=hs[i].scoreMSE(i,u._tree._names[i]);
-    if (s.mse() < best.mse())     best=s;
-    if (s.mse() <= 0)     break;
+    DTree.Split s=hs[i].scoreMSE(i);
+    if (s == null)     continue;
+    if (best == null || s.se() < best.se())     best=s;
+    if (s.se() <= 0)     break;
   }
   return best;
 }

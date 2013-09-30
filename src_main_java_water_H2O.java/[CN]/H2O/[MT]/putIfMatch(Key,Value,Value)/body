@@ -1,2 +1,9 @@
 {
+  if (old != null)   key=old._key;
+  if (val != null)   val._key=key;
+  Value res=STORE.putIfMatchUnlocked(key,val,old);
+  if (res != old)   return res;
+  if (old != null && val == null)   old.removeIce();
+  if (val != null)   dirty_store();
+  return old;
 }

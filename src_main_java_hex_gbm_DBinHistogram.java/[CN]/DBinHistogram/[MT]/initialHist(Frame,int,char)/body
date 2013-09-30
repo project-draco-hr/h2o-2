@@ -1,0 +1,9 @@
+{
+  DBinHistogram hists[]=new DBinHistogram[ncols];
+  Vec[] vs=fr.vecs();
+  for (int j=0; j < ncols; j++) {
+    Vec v=vs[j];
+    hists[j]=(v.naCnt() == v.length() || v.min() == v.max()) ? null : new DBinHistogram(fr._names[j],nbins,(byte)(v.isEnum() ? 2 : (v.isInt() ? 1 : 0)),(float)v.min(),(float)v.max(),v.length());
+  }
+  return hists;
+}

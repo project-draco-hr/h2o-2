@@ -1,0 +1,23 @@
+{
+  Key parsed=Key.make("prostate_parsed");
+  Key modelKey=Key.make("prostate_model");
+  GLMModel model=null;
+  File f=TestUtil.find_test_file("smalldata/glm_test/prostate_cat_replaced.csv");
+  Frame fr=getFrameForFile(parsed,"smalldata/glm_test/prostate_cat_replaced.csv",new String[]{"ID"},"CAPSULE");
+  try {
+    String[] cfs1=new String[]{"Intercept","AGE","RACE.R2","RACE.R3","DPROS","DCAPS","PSA","VOL","GLEASON"};
+    double[] vals=new double[]{-8.14867,-0.01368,0.32337,-0.38028,0.55964,0.49548,0.02794,-0.01104,0.97704};
+    new GLM2("GLM test on prostate.",modelKey,fr,false,Family.binomial,Family.binomial.defaultLink,0,0).run();
+    model=DKV.get(modelKey).get();
+    HashMap<String,Double> coefs=model.coefficients();
+    for (int i=0; i < cfs1.length; ++i)     assertEquals(vals[i],coefs.get(cfs1[i]),1e-4);
+    GLMValidation val=model.validation();
+    assertEquals(512.3,val.nullDeviance(),1e-1);
+    assertEquals(378.3,val.residualDeviance(),1e-1);
+    assertEquals(396.3,val.aic(),1e-1);
+  }
+  finally {
+    UKV.remove(parsed);
+    if (model != null)     model.delete();
+  }
+}

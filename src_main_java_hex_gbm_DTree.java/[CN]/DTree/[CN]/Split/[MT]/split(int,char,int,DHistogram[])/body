@@ -1,8 +1,8 @@
 {
-  if (_nrows[splat] < min_rows)   return null;
-  if (_nrows[splat] <= 1)   return null;
-  if (_mses[splat] <= 1e-8)   return null;
-  final char nclass=(char)_preds[0].length;
+  long n=splat == 0 ? _n0 : _n1;
+  if (n < min_rows || n <= 1)   return null;
+  double se=splat == 0 ? _se0 : _se1;
+  if (se <= 1e-30)   return null;
   int cnt=0;
   DBinHistogram nhists[]=new DBinHistogram[hs.length];
   for (int j=0; j < hs.length; j++) {
@@ -20,7 +20,7 @@
     }
     if (min == max)     continue;
     if (min > max)     continue;
-    nhists[j]=new DBinHistogram(h._name,nbins,nclass,h._isInt,min,max,_nrows[splat]);
+    nhists[j]=new DBinHistogram(h._name,nbins,h._isInt,min,max,n);
     cnt++;
   }
   return cnt == 0 ? null : nhists;

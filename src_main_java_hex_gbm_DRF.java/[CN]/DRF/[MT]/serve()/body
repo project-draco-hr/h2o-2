@@ -1,11 +1,4 @@
 {
-  final Frame fr=new Frame(source);
-  if (!vresponse.isEnum())   vresponse.asEnum();
-  String vname="response";
-  for (int i=0; i < fr.numCols(); i++)   if (fr.vecs()[i] == vresponse) {
-    vname=fr._names[i];
-    fr.remove(i);
-  }
-  buildModel(fr,vname);
+  startBuildModel();
   return DRFProgressPage.redirect(this,self(),dest());
 }
