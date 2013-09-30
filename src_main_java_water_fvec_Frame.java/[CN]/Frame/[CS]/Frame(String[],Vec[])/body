@@ -1,6 +1,9 @@
 {
   _names=names;
   _vecs=vecs;
-  _keys=new Key[_vecs.length];
-  for (int i=0; i < _vecs.length; i++)   _keys[i]=_vecs[i]._key;
+  _keys=new Key[vecs.length];
+  for (int i=0; i < vecs.length; i++) {
+    Key k=_keys[i]=vecs[i]._key;
+    if (DKV.get(k) == null)     DKV.put(k,vecs[i]);
+  }
 }
