@@ -7,13 +7,10 @@
       new GBMUndecidedNode(ktrees[k],-1,DBinHistogram.initialHist(fr,_ncols,(char)nbins));
     }
   }
-  DTree[][] oldForest=forest;
-  forest=Arrays.copyOf(forest,forest.length + 1);
-  forest[forest.length - 1]=ktrees;
   int[] leafs=new int[_nclass];
   int depth=0;
   for (; depth < max_depth; depth++) {
-    if (cancelled())     return oldForest;
+    if (cancelled())     return null;
     ScoreBuildHistogram sbh=new ScoreBuildHistogram(ktrees,leafs).doAll(fr);
     boolean did_split=false;
     for (int k=0; k < _nclass; k++) {
@@ -71,5 +68,5 @@
     }
   }
 .doAll(fr);
-  return forest;
+  return ktrees;
 }
