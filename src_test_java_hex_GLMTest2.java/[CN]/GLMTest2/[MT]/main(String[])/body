@@ -1,0 +1,18 @@
+{
+  System.out.println("Running ParserTest2");
+  final int nnodes=1;
+  for (int i=1; i < nnodes; i++) {
+    Node n=new NodeVM(args);
+    n.inheritIO();
+    n.start();
+  }
+  H2O.waitForCloudSize(nnodes);
+  System.out.println("Running...");
+  new GLMTest2().testGaussianRegression();
+  new GLMTest2().testPoissonRegression();
+  new GLMTest2().testGammaRegression();
+  new GLMTest2().testTweedieRegression();
+  new GLMTest2().testProstate();
+  new GLMTest2().testCars();
+  System.out.println("DONE!");
+}

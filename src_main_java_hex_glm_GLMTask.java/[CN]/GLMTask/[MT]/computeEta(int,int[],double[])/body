@@ -1,0 +1,8 @@
+{
+  double res=0;
+  for (int i=0; i < ncats; ++i)   res+=_beta[cats[i]];
+  final int numStart=_catOffsets[_cats];
+  for (int i=0; i < nums.length; ++i)   res+=nums[i] * _beta[numStart + i];
+  res+=_beta[_beta.length - 1];
+  return res;
+}

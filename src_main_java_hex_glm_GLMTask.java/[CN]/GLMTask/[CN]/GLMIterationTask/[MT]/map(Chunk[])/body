@@ -1,0 +1,11 @@
+{
+  _gram=new Gram(fullN(),diagN(),_nums,_cats);
+  _xy=MemoryManager.malloc8d(fullN());
+  int rank=0;
+  if (_beta != null)   for (  double d : _beta)   if (d != 0)   ++rank;
+  _val=new GLMValidation(null,_ymu,_glm,rank);
+  super.map(chunks);
+  _gram.mul(_reg);
+  if (_val.nobs > 0)   _val.avg_err/=_val.nobs;
+  for (int i=0; i < _xy.length; ++i)   _xy[i]*=_reg;
+}

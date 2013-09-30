@@ -1,0 +1,24 @@
+def test_1ktrees_job_cancel(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    for x in [1000]:
+        shCmdString = (((('perl ' + h2o.find_file('syn_scripts/parity.pl')) + ' 128 4 ') + str(x)) + ' quad')
+        h2o.spawn_cmd_and_wait('parity.pl', shCmdString.split(), 4)
+        csvFilename = (('parity_128_4_' + str(x)) + '_quad.data')
+    for trial in range(1, 5):
+        sys.stdout.write('.')
+        sys.stdout.flush()
+        csvFilename = (('parity_128_4_' + str(1000)) + '_quad.data')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        parseResult = h2o_cmd.parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30)
+        h2o.verboseprint('Trial', trial)
+        start = time.time()
+        rfResult = h2o_cmd.runRF(parseResult=parseResult, trees=1000, depth=2, rfView=False, timeoutSecs=600, retryDelaySecs=3)
+        print 'RF #', trial, 'started on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        model_key = rfResult['model_key']
+        print 'model_key:', model_key
+        a = h2o.nodes[0].jobs_admin()
+        print 'jobs_admin():', h2o.dump_json(a)
+        print 'cancelling with a bad key'
+        b = h2o.nodes[0].jobs_cancel(key=model_key)
+        print 'jobs_cancel():', h2o.dump_json(b)

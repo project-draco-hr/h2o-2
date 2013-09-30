@@ -1,0 +1,51 @@
+{
+  StringBuilder names=new StringBuilder();
+  StringBuilder equation=new StringBuilder();
+  StringBuilder vals=new StringBuilder();
+  StringBuilder normVals=norm_beta == null ? null : new StringBuilder();
+  String[] cNames=coefNames();
+  for (int i=0; i < cNames.length; ++i) {
+    names.append("<th>" + cNames[i] + "</th>");
+    vals.append("<td>" + beta[i] + "</td>");
+    if (i != 0)     equation.append(beta[i] > 0 ? " + " : " - ");
+    equation.append(DFORMAT.format(Math.abs(beta[i])));
+    if (i < (cNames.length - 1))     equation.append("*x[" + cNames[i] + "]");
+    if (norm_beta != null)     normVals.append("<td>" + norm_beta[i] + "</td>");
+  }
+  sb.append("<h4>Equation</h4>");
+  RString eq=null;
+switch (glm.link) {
+case identity:
+    eq=new RString("y = %equation");
+  break;
+case logit:
+eq=new RString("y = 1/(1 + Math.exp(-(%equation)))");
+break;
+case log:
+eq=new RString("y = Math.exp((%equation)))");
+break;
+case inverse:
+eq=new RString("y = 1/(%equation)");
+break;
+case tweedie:
+eq=new RString("y = (%equation)^(1 -  )");
+break;
+default :
+eq=new RString("equation display not implemented");
+break;
+}
+eq.replace("equation",equation.toString());
+sb.append("<div style='width:100%;overflow:scroll;'>");
+sb.append("<div><code>" + eq + "</code></div>");
+sb.append("<h4>Coefficients</h4><table class='table table-bordered table-condensed'>");
+sb.append("<tr>" + names.toString() + "</tr>");
+sb.append("<tr>" + vals.toString() + "</tr>");
+sb.append("</table>");
+if (norm_beta != null) {
+sb.append("<h4>Normalized Coefficients</h4>" + "<table class='table table-bordered table-condensed'>");
+sb.append("<tr>" + names.toString() + "</tr>");
+sb.append("<tr>" + normVals.toString() + "</tr>");
+sb.append("</table>");
+}
+sb.append("</div>");
+}

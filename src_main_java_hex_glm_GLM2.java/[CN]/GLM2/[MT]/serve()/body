@@ -1,0 +1,8 @@
+{
+  link=family.defaultLink;
+  _startTime=System.currentTimeMillis();
+  GLMModel m=new GLMModel(dest(),source,new GLMParams(family,tweedie_variance_power,link,1 - tweedie_variance_power),beta_eps,alpha,lambda,System.currentTimeMillis() - _startTime);
+  DKV.put(dest(),m);
+  fork();
+  return GLMProgressPage2.redirect(this,self(),dest());
+}
