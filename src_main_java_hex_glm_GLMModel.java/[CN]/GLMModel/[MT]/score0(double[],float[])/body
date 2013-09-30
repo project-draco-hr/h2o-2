@@ -4,12 +4,12 @@
   final int noff=catOffsets[catOffsets.length - 1] - catOffsets.length + 1;
   for (int i=catOffsets.length - 1; i < data.length; ++i)   eta+=beta[noff + i] * data[i];
   eta+=beta[beta.length - 1];
-  double mu=link.linkInv(eta);
+  double mu=glm.linkInv(eta);
   if (Double.isNaN(mu)) {
     System.out.println("got NaN out of " + Arrays.toString(data));
   }
   preds[0]=(float)mu;
-  if (family._family == Family.binomial) {
+  if (glm.family == Family.binomial) {
     if (preds.length > 1)     preds[1]=preds[0];
     preds[0]=preds[0] >= threshold ? 1 : 0;
   }

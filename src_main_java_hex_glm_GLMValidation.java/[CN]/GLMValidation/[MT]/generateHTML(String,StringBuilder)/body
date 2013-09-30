@@ -7,9 +7,9 @@
   sb.append("<tr><th>Residual Deviance</th><td>" + residual_deviance + "</td></tr>");
   sb.append("<tr><th>AIC</th><td>" + aic() + "</td></tr>");
   sb.append("<tr><th>Training Error Rate Avg</th><td>" + avg_err + "</td></tr>");
-  if (_fam._family == Family.binomial)   sb.append("<tr><th>AUC</th><td>" + auc() + "</td></tr>");
+  if (_glm.family == Family.binomial)   sb.append("<tr><th>AUC</th><td>" + auc() + "</td></tr>");
   sb.append("</table>");
-  if (_fam._family == Family.binomial) {
+  if (_glm.family == Family.binomial) {
     int best=0;
     for (int i=1; i < _cms.length; ++i) {
       if (Math.max(_cms[i].classErr(0),_cms[i].classErr(1)) < Math.max(_cms[best].classErr(0),_cms[best].classErr(1)))       best=i;

@@ -1,7 +1,6 @@
 {
   super(selfKey,dataKey,fr);
-  family=glmt._family;
-  link=glmt._link;
+  glm=glmt._glm;
   this.threshold=threshold;
   catOffsets=glmt._catOffsets;
   if (glmt._standardize) {
@@ -17,7 +16,7 @@
     this.beta[beta.length - 1]-=norm;
   }
  else {
-    this.beta=glmt._beta;
+    this.beta=beta;
     norm_beta=null;
   }
   final Vec[] vecs=fr.vecs();

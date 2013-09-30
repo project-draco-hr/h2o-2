@@ -1,5 +1,5 @@
 {
-  StringBuilder sb=new StringBuilder("GLM Model (key=" + _selfKey + " , trained on "+ _dataKey+ ", family = "+ family._family+ ", link = "+ link+ ", #iterations = "+ iteration+ "):\n");
+  StringBuilder sb=new StringBuilder("GLM Model (key=" + _selfKey + " , trained on "+ _dataKey+ ", family = "+ glm.family+ ", link = "+ glm.link+ ", #iterations = "+ iteration+ "):\n");
   final int cats=catOffsets.length - 1;
   int k=0;
   for (int i=0; i < cats; ++i)   for (int j=1; j < _domains[i].length; ++j)   sb.append(_names[i] + "." + _domains[i][j]+ ": "+ beta[k++]+ "\n");

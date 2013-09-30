@@ -3,7 +3,7 @@
   _xy=MemoryManager.malloc8d(fullN());
   int rank=0;
   if (_beta != null)   for (  double d : _beta)   if (d != 0)   ++rank;
-  _val=new GLMValidation(null,_ymu,_family,rank);
+  _val=new GLMValidation(null,_ymu,_glm,rank);
   super.map(chunks);
   _gram.mul(_reg);
   if (_val.nobs > 0)   _val.avg_err/=_val.nobs;

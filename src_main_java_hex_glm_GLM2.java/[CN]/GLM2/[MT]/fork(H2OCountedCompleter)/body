@@ -1,5 +1,5 @@
 {
-  System.out.println("removing cols: " + Arrays.toString(ignored_cols));
+  tweedie_link_power=1 - tweedie_variance_power;
   source.remove(ignored_cols);
   final Vec[] vecs=source.vecs();
   for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i] == vresponse) {
@@ -9,9 +9,9 @@
     break;
   }
   final Frame fr=GLMTask.adaptFrame(source);
-  YMUTask ymut=new YMUTask(standardize,new FamilyIced(family,tweedie_variance_power),link,case_mode,case_val,fr.anyVec().length());
+  YMUTask ymut=new YMUTask(new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),standardize,case_mode,case_val,fr.anyVec().length());
   ymut.doAll(fr);
-  GLMIterationTask firstIter=new GLMIterationTask(standardize,1.0 / ymut.nobs(),new FamilyIced(family,tweedie_variance_power),link,case_mode,case_val,null);
+  GLMIterationTask firstIter=new GLMIterationTask(new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),null,standardize,1.0 / ymut.nobs(),case_mode,case_val);
   firstIter._ymu=ymut.ymu();
   final H2OEmptyCompleter fjt=start(new H2OEmptyCompleter());
   if (completer != null)   fjt.setCompleter(completer);
