@@ -5,9 +5,6 @@
   for (int i=catOffsets.length - 1; i < data.length; ++i)   eta+=beta[noff + i] * data[i];
   eta+=beta[beta.length - 1];
   double mu=glm.linkInv(eta);
-  if (Double.isNaN(mu)) {
-    System.out.println("got NaN out of " + Arrays.toString(data));
-  }
   preds[0]=(float)mu;
   if (glm.family == Family.binomial) {
     if (preds.length > 1)     preds[1]=preds[0];
