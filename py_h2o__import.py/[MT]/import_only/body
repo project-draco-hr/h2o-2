@@ -66,22 +66,19 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
             if (not n.use_maprfs):
                 print ('use_maprfs: %s' % n.use_maprfs)
                 print 'ERROR: Something was missing for maprfs on the java -jar cmd line when the cloud was built'
-            folderURI = ('maprfs:///' + folderOffset)
+            if n.hdfs_name_node:
+                folderURI = ((('maprfs://' + n.hdfs_name_node) + '/') + folderOffset)
+            else:
+                folderURI = ('maprfs:///' + folderOffset)
             importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
         elif (schema == 'hdfs'):
             if (not (n.use_hdfs and ((n.hdfs_version and n.hdfs_name_node) or n.hdfs_config))):
                 print ('use_hdfs: %s hdfs_version: %s hdfs_name_node: %s hdfs_config: %s' % (n.use_hdfs, n.hdfs_version, n.hdfs_name_node, n.hdfs_config))
                 print 'ERROR: Something was missing for hdfs on the java -jar cmd line when the cloud was built'
-            if bucket:
-                bucketAndOffset = ((bucket + '/') + folderOffset)
-            else:
-                bucketAndOffset = folderOffset
             if n.hdfs_name_node:
                 folderURI = ((('hdfs://' + n.hdfs_name_node) + '/') + folderOffset)
             else:
                 folderURI = ('hdfs://' + folderOffset)
-            h2o.verboseprint(h2o.nodes[0].hdfs_name_node)
-            h2o.verboseprint('folderOffset:', folderOffset)
             importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
         else:
             raise Exception(('schema not understood: %s' % schema))
