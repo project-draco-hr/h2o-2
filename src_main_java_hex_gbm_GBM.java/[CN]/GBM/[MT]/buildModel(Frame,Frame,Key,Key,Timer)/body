@@ -1,26 +1,14 @@
 {
-  final GBMModel gbm_model0=new GBMModel(outputKey,dataKey,frm,ntrees,_ymin);
-  DKV.put(outputKey,gbm_model0);
-  H2O.submitTask(start(new H2OCountedCompleter(){
-    @Override public void compute2(){
-      GBMModel gbm_model1=gbm_model0;
-      for (int tid=0; tid < ntrees; tid++) {
-        new ComputeProb().doAll(fr);
-        new ComputeRes().doAll(fr);
-        DTree[] ktrees=buildNextKTrees(fr);
-        if (cancelled())         break;
-        Score sc=new Score().doAll(fr).report(Sys.GBM__,tid,ktrees);
-        gbm_model1=new GBMModel(gbm_model1,ktrees,(float)sc._sum / _nrows,sc._cm);
-        DKV.put(outputKey,gbm_model1);
-      }
-      cleanUp(fr,t_build);
-      tryComplete();
-    }
-    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
-      ex.printStackTrace();
-      GBM.this.cancel(ex.getMessage());
-      return true;
-    }
+  GBMModel model=new GBMModel(outputKey,dataKey,frm,ntrees,_ymin);
+  DKV.put(outputKey,model);
+  for (int tid=0; tid < ntrees; tid++) {
+    new ComputeProb().doAll(fr);
+    new ComputeRes().doAll(fr);
+    DTree[] ktrees=buildNextKTrees(fr);
+    if (cancelled())     break;
+    Score sc=new Score().doAll(fr).report(Sys.GBM__,tid,ktrees);
+    model=new GBMModel(model,ktrees,(float)sc._sum / _nrows,sc._cm);
+    DKV.put(outputKey,model);
   }
-));
+  cleanUp(fr,t_build);
 }

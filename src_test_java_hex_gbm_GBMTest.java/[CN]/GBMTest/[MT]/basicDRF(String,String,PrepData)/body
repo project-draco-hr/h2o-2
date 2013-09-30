@@ -9,7 +9,7 @@
     drf=new DRF();
     drf.source=ParseDataset2.parse(dest,new Key[]{fkey});
     UKV.remove(fkey);
-    drf.vresponse=prep.prep(drf.source);
+    drf.response=prep.prep(drf.source);
     drf.ntrees=5;
     drf.max_depth=50;
     drf.min_rows=1;
@@ -17,15 +17,14 @@
     drf.mtries=-1;
     drf.sample_rate=0.66667f;
     drf.seed=(1L << 32) | 2;
-    drf.serve();
-    drf.get();
+    drf.run();
     fr=drf.score(drf.source);
   }
   finally {
     UKV.remove(dest);
     if (drf != null) {
       UKV.remove(drf.dest());
-      UKV.remove(drf.vresponse._key);
+      UKV.remove(drf.response._key);
       drf.remove();
       if (fr != null)       fr.remove();
     }

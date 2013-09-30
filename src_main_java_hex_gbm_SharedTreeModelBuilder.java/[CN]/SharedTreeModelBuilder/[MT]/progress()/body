@@ -1,4 +1,5 @@
 {
-  DTree.TreeModel m=DKV.get(dest()).get();
-  return (float)m.treeBits.length / (float)m.N;
+  Value value=DKV.get(dest());
+  DTree.TreeModel m=value != null ? (DTree.TreeModel)value.get() : null;
+  return m == null ? 0 : (float)m.treeBits.length / (float)m.N;
 }
