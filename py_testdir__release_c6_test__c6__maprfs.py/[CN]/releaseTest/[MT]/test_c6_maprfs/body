@@ -1,12 +1,15 @@
-def test_B_hdfs_files(self):
+def test_c6_maprfs(self):
     print '\nLoad a list of files from HDFS, parse and do 1 RF tree'
     print '\nYou can try running as hduser/hduser if fail'
     csvFilenameAll = ['TEST-poker1000.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'covtype.4x.shuffle.data', 'covtype.data', 'covtype4x.shuffle.data', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp2.os.noisy.0_1.data', 'hhp2.os.noisy.9_4.data', 'hhp_9_14_12.data', 'leads.csv', 'prostate_long_1G.csv']
-    if (1 == 1):
+    h2o.nodes[0].use_maprfs = True
+    h2o.nodes[0].use_hdfs = False
+    h2o.nodes[0].hdfs_version = ('mapr2.1.3',)
+    h2o.nodes[0].hdfs_name_node = 'mr-0x1.0xdata.loc:7222'
+    if DO_RANDOM_SAMPLE:
         csvFilenameList = random.sample(csvFilenameAll, 8)
     else:
         csvFilenameList = csvFilenameAll
-    importFolderPath = 'datasets'
     for csvFilename in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         print 'Loading', csvFilename, 'from maprfs'
