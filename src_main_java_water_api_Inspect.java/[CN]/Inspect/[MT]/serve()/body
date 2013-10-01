@@ -59,5 +59,6 @@
   }
   if (f instanceof hex.glm.GLMModel)   return GLMModelView.redirect(this,key);
   if (f instanceof GBMModel)   return GBMModelView.redirect(this,key);
+  if (f instanceof GridSearch)   return ((GridSearch)f).redirect();
   return Response.error("No idea how to display a " + f.getClass());
 }

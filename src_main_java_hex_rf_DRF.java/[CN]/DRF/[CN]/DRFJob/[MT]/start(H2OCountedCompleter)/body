@@ -4,7 +4,7 @@
       new TAtomic<RFModel>(){
         @Override public RFModel atomic(        RFModel old){
           if (old == null)           return null;
-          old._time=DRFJob.this.executionTime();
+          old._time=DRFJob.this.runTimeMs();
           return old;
         }
       }

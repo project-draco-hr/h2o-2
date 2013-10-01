@@ -7,15 +7,10 @@
   H2O.main(("  -ip 127.0.0.1 -port 54321 -flatfile " + flat).split(" "));
   new NodeCL(("-ip 127.0.0.1 -port 54323 -flatfile " + flat).split(" ")).start();
   new NodeCL(("-ip 127.0.0.1 -port 54325 -flatfile " + flat).split(" ")).start();
-  ArrayList<Class> tests=new ArrayList<Class>();
-  tests.add(NeuralNetIrisTest.class);
-  Result result=org.junit.runner.JUnitCore.runClasses(tests.toArray(new Class[0]));
-  if (result.getFailures().size() == 0)   System.out.println("Success!");
- else {
-    for (    Failure f : result.getFailures()) {
-      Log.info(f.getDescription());
-      f.getException().printStackTrace();
-      ;
-    }
-  }
+  List<Class> tests=new ArrayList<Class>();
+  tests.add(hex.rf.RFPredDomainTest.class);
+  JUnitCore junit=new JUnitCore();
+  junit.addListener(new LogListener());
+  Result result=junit.run(tests.toArray(new Class[0]));
+  if (result.getFailures().size() == 0)   Log.info("Success!");
 }

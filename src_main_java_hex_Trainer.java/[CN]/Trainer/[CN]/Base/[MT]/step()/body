@@ -1,12 +1,5 @@
 {
-  Input input=(Input)_ls[0];
   fprop();
   for (int i=1; i < _ls.length - 1; i++)   Arrays.fill(_ls[i]._e,0);
-  float[] err=_ls[_ls.length - 1]._e;
-  int label=input.label();
-  for (int i=0; i < err.length; i++) {
-    float t=i == label ? 1 : 0;
-    err[i]=t - _ls[_ls.length - 1]._a[i];
-  }
   bprop();
 }

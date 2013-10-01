@@ -1,6 +1,7 @@
 {
-  final DRFTask drfTask=create(modelKey,cols,ary,ntrees,depth,binLimit,stat,seed,parallelTrees,classWt,numSplitFeatures,samplingStrategy,sample,strataSamples,verbose,exclusiveSplitLimit,useNonLocalData);
-  final DRFJob drfJob=new DRFJob(jobName(drfTask),modelKey);
+  DRFTask drfTask=create(modelKey,cols,ary,ntrees,depth,binLimit,stat,seed,parallelTrees,classWt,numSplitFeatures,samplingStrategy,sample,strataSamples,verbose,exclusiveSplitLimit,useNonLocalData);
+  DRFJob drfJob=new DRFJob(drfTask);
+  drfJob.destination_key=modelKey;
   drfJob.start(drfTask);
   drfTask._job=drfJob;
   drfTask.dfork(drfTask._rfmodel._dataKey);

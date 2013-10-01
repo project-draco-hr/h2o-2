@@ -1,0 +1,17 @@
+{
+  initResponse();
+  Layer[] clones=new Layer[model.layers.length];
+  clones[0]=new VecsInput(selectVecs(source));
+  for (int y=1; y < clones.length - 1; y++)   clones[y]=model.layers[y].clone();
+  clones[clones.length - 1]=new VecSoftmax(response);
+  for (int y=0; y < clones.length; y++) {
+    clones[y]._w=model.ws[y];
+    clones[y]._b=model.bs[y];
+    clones[y].init(clones,y,false,0);
+  }
+  int classes=response.domain().length;
+  confusion_matrix=new long[classes][classes];
+  Error error=run(clones,max_rows,confusion_matrix);
+  classification_error=error.Value;
+  sqr_error=error.SqrDist;
+}

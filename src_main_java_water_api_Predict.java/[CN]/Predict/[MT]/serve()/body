@@ -1,0 +1,19 @@
+{
+  try {
+    if (model == null)     throw new IllegalArgumentException("Model is missing");
+    if (model instanceof Model) {
+      Frame fr=((Model)model).score(data,true);
+      UKV.put(prediction,fr);
+      return Inspect2.redirect(this,prediction.toString());
+    }
+ else {
+      ValueArray va=UKV.get(Key.make(input("data")));
+      OldModel m=(OldModel)model;
+      return Inspect.redirect(this,ScoreTask.score(m,va,prediction));
+    }
+  }
+ catch (  Throwable t) {
+    Log.err(t);
+    return Response.error(t.getMessage());
+  }
+}
