@@ -13,15 +13,14 @@
     fr=ParseDataset2.parse(dest1,new Key[]{fkey1});
     UKV.remove(fkey1);
     UKV.remove(fr.remove("agentId")._key);
-    gbm.vresponse=fr.remove("outcome");
+    gbm.response=fr.remove("outcome");
     gbm.source=fr;
     gbm.ntrees=5;
     gbm.max_depth=10;
     gbm.learn_rate=0.2f;
     gbm.min_rows=10;
     gbm.nbins=100;
-    gbm.serve();
-    gbm.get();
+    gbm.run();
     Frame ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
     UKV.remove(fkey2);
     fpreds=gbm.score(ftest);
@@ -73,7 +72,7 @@
     UKV.remove(dest2);
     if (gbm != null) {
       UKV.remove(gbm.dest());
-      UKV.remove(gbm.vresponse._key);
+      UKV.remove(gbm.response._key);
       gbm.remove();
     }
     if (fr != null)     fr.remove();

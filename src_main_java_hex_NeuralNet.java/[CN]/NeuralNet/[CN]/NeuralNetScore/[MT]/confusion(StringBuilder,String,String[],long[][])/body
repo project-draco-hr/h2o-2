@@ -1,0 +1,40 @@
+{
+  sb.append("<h3>" + title + "</h3>");
+  sb.append("<table class='table table-striped table-bordered table-condensed'>");
+  sb.append("<tr><th>Actual \\ Predicted</th>");
+  for (  String c : classes)   sb.append("<th>" + c + "</th>");
+  sb.append("<th>Error</th></tr>");
+  long[] totals=new long[classes.length];
+  long sumTotal=0;
+  long sumError=0;
+  for (int crow=0; crow < classes.length; ++crow) {
+    long total=0;
+    long error=0;
+    sb.append("<tr><th>" + classes[crow] + "</th>");
+    for (int ccol=0; ccol < classes.length; ++ccol) {
+      long num=confusionMatrix[crow][ccol];
+      total+=num;
+      totals[ccol]+=num;
+      if (ccol == crow) {
+        sb.append("<td style='background-color:LightGreen'>");
+      }
+ else {
+        sb.append("<td>");
+        error+=num;
+      }
+      sb.append(num);
+      sb.append("</td>");
+    }
+    sb.append("<td>");
+    sb.append(String.format("%5.3f = %d / %d",(double)error / total,error,total));
+    sb.append("</td></tr>");
+    sumTotal+=total;
+    sumError+=error;
+  }
+  sb.append("<tr><th>Totals</th>");
+  for (int i=0; i < totals.length; ++i)   sb.append("<td>" + totals[i] + "</td>");
+  sb.append("<td><b>");
+  sb.append(String.format("%5.3f = %d / %d",(double)sumError / sumTotal,sumError,sumTotal));
+  sb.append("</b></td></tr>");
+  sb.append("</table>");
+}

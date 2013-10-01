@@ -1,0 +1,18 @@
+{
+  List<String> names=Boot.getClasses();
+  names.remove("water.Boot");
+  names.remove("water.Weaver");
+  Collections.sort(names);
+  List<Class> tests=new ArrayList<Class>();
+  for (  String name : names) {
+    try {
+      Class c=Class.forName(name);
+      if (isTest(c))       tests.add(c);
+    }
+ catch (    Throwable _) {
+    }
+  }
+  if (tests.size() == 0)   throw new RuntimeException("Failed to find tests");
+  filter(tests);
+  return tests;
+}
