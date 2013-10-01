@@ -1,6 +1,7 @@
 {
   PSetup p=_source.value();
-  CustomParser.ParserSetup setup=p != null ? p._setup._setup : null;
+  CustomParser.ParserSetup setup=p != null ? p._setup._setup : new CustomParser.ParserSetup();
+  setup._singleQuotes=_sQuotes.value();
   Key d=Key.make(_dest.value());
   try {
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
