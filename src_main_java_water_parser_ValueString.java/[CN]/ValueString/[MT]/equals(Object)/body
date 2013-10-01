@@ -1,8 +1,8 @@
 {
   if (!(o instanceof ValueString))   return false;
   ValueString str=(ValueString)o;
-  if (str._length != _length)   return false;
   if (_skips.isEmpty() && str._skips.isEmpty()) {
+    if (str._length != _length)     return false;
     for (int i=0; i < _length; ++i)     if (_buf[_off + i] != str._buf[str._off + i])     return false;
   }
  else   if (str._skips.isEmpty()) {
