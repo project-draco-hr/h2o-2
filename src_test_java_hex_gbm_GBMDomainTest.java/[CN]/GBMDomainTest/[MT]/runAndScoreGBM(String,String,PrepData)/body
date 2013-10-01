@@ -1,0 +1,41 @@
+{
+  File file1=TestUtil.find_test_file(train);
+  Key fkey1=NFSFileVec.make(file1);
+  Key dest1=Key.make("train.hex");
+  File file2=TestUtil.find_test_file(test);
+  Key fkey2=NFSFileVec.make(file2);
+  Key dest2=Key.make("test.hex");
+  GBM gbm=null;
+  Frame preds=null;
+  try {
+    gbm=new GBM();
+    gbm.source=ParseDataset2.parse(dest1,new Key[]{fkey1});
+    gbm.response=prepData.prep(gbm.source);
+    gbm.ntrees=2;
+    gbm.max_depth=3;
+    gbm.learn_rate=0.2f;
+    gbm.min_rows=10;
+    gbm.nbins=1024;
+    gbm.cols=new int[]{0,1,2};
+    gbm.run();
+    Frame ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
+    preds=gbm.score(ftest);
+    ftest.remove();
+    System.err.println(preds);
+  }
+ catch (  Throwable t) {
+    t.printStackTrace();
+  }
+ finally {
+    UKV.remove(fkey1);
+    UKV.remove(dest1);
+    UKV.remove(fkey2);
+    UKV.remove(dest2);
+    if (gbm != null) {
+      UKV.remove(gbm.dest());
+      UKV.remove(gbm.response._key);
+      gbm.remove();
+      if (preds != null)       preds.remove();
+    }
+  }
+}

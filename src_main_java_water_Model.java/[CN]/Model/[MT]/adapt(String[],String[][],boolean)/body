@@ -1,2 +1,34 @@
 {
+  int map[][]=new int[_names.length][];
+  int cmap[]=map[_names.length - 1]=new int[_names.length - 1];
+  HashMap<String,Integer> m=new HashMap<String,Integer>();
+  for (int d=0; d < names.length; ++d)   m.put(names[d],d);
+  for (int c=0; c < _names.length - 1; ++c) {
+    Integer I=m.get(_names[c]);
+    cmap[c]=I == null ? -1 : I;
+  }
+  for (int c=0; c < cmap.length; c++) {
+    int d=cmap[c];
+    if (d == -1) {
+      if (exact)       throw new IllegalArgumentException("Model requires a column called " + _names[c]);
+      continue;
+    }
+    String ms[]=_domains[c];
+    String ds[]=domains[d];
+    if (ms == ds) {
+    }
+ else     if (ms == null && ds != null) {
+      throw new IllegalArgumentException("Incompatible column: '" + _names[c] + "', expected (trained on) numeric, was passed a categorical");
+    }
+ else     if (ms != null && ds == null) {
+      if (exact)       throw new IllegalArgumentException("Incompatible column: '" + _names[c] + "', expected (trained on) categorical, was passed a numeric");
+      throw H2O.unimpl();
+    }
+ else     if (!Arrays.deepEquals(ms,ds)) {
+      map[c]=getDomainMapping(_names[c],ms,ds,exact);
+    }
+ else {
+    }
+  }
+  return map;
 }

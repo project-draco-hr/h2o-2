@@ -9,7 +9,7 @@
       vecs[c]=fr.vecs()[d];
     }
  else {
-      throw H2O.unimpl();
+      vecs[c]=remapVecDomain(map[c],fr.vecs()[d]);
     }
   }
   return new Frame(Arrays.copyOf(_names,_names.length - 1),vecs);
