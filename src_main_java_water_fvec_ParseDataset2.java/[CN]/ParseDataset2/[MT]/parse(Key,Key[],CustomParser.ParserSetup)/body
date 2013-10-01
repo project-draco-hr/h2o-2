@@ -1,3 +1,8 @@
 {
+  Key k=keys[0];
+  ByteVec v=(ByteVec)getVec(k);
+  byte[] bits=v.elem2BV(0).getBytes();
+  Compression cpr=Utils.guessCompressionMethod(bits);
+  globalSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),globalSetup,true)._setup;
   return forkParseDataset(okey,keys,globalSetup).get();
 }

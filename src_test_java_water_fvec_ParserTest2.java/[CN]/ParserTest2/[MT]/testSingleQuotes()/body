@@ -1,0 +1,7 @@
+{
+  String[] data=new String[]{"Tomas's,test\n'Tomas''s,test2',test2\nlast,'line''","s, trailing, piece'"};
+  CustomParser.ParserSetup gSetup=new CustomParser.ParserSetup(ParserType.CSV,(byte)',',false);
+  Key k=FVecTest.makeByteVec(Key.make().toString(),data);
+  Key r1=Key.make("single_quotes_test");
+  ParseDataset2.parse(r1,new Key[]{k},gSetup);
+}
