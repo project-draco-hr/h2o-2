@@ -25,6 +25,7 @@
     for (int i=0; i < values.length; i++) {
       if (values[i] != null) {
         String value=values[i][counters[i]];
+        value=value.trim();
         combination.setProperty(_arguments.get(i)._name,value);
         _arguments.get(i).reset();
         _arguments.get(i).check(job,value);
