@@ -2,6 +2,7 @@
   PSetup p=_source.value();
   if (!p._setup.valid())   return Response.error("Given parser setup is not valid, I can not parse this file.");
   CustomParser.ParserSetup setup=p._setup._setup;
+  setup._singleQuotes=_sQuotes.value();
   Key dest=Key.make(_dest.value());
   try {
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
