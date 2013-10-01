@@ -5,10 +5,7 @@
     _valid=selectVecs(validation);
     _validResponse=validation.vecs()[rIndex];
   }
-  if (cols == null)   _names=source._names;
- else {
-    _names=new String[cols.length];
-    for (int i=0; i < cols.length; i++)     _names[i]=source._names[cols[i]];
-  }
+  _names=new String[cols.length];
+  for (int i=0; i < cols.length; i++)   _names[i]=source._names[cols[i]];
   _responseName=source._names != null ? source._names[rIndex] : "response";
 }
