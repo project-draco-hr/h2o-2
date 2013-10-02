@@ -2,6 +2,11 @@
   int map[][]=adapt(fr.names(),fr.domains(),exact);
   int cmap[]=map[_names.length - 1];
   Vec vecs[]=new Vec[_names.length - 1];
+  int avCnt=0;
+  for (int c=0; c < cmap.length; c++)   if (map[c] != null)   avCnt++;
+  Vec[] avecs=new Vec[avCnt];
+  String[] anames=new String[avCnt];
+  avCnt=0;
   for (int c=0; c < cmap.length; c++) {
     int d=cmap[c];
     if (d == -1)     throw H2O.unimpl();
@@ -9,8 +14,10 @@
       vecs[c]=fr.vecs()[d];
     }
  else {
-      vecs[c]=remapVecDomain(map[c],fr.vecs()[d]);
+      vecs[c]=avecs[avCnt]=remapVecDomain(map[c],fr.vecs()[d]);
+      anames[avCnt]=fr.names()[d];
+      avCnt++;
     }
   }
-  return new Frame(Arrays.copyOf(_names,_names.length - 1),vecs);
+  return new Frame[]{new Frame(Arrays.copyOf(_names,_names.length - 1),vecs),new Frame(anames,avecs)};
 }
