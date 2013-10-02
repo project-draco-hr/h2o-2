@@ -42,7 +42,7 @@
           t._defaultValue=(Key)defaultValue;
           arg=t;
         }
- else         if (Freezable.class.isAssignableFrom(f.getType()) && api.filter() == Default.class)         arg=new TypeaheadKey(f.getType());
+ else         if (Freezable.class.isAssignableFrom(f.getType()) && api.filter() == Default.class)         arg=new TypeaheadKey(f.getType(),api.required());
  else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
@@ -60,7 +60,7 @@
           }
  else           if (MultiVecSelect.class.isAssignableFrom(api.filter())) {
             FrameClassVec response=classVecs.get(d._ref);
-            arg=new FrameKeyMultiVec(f.getName(),(TypeaheadKey)ref,response);
+            arg=new FrameKeyMultiVec(f.getName(),(TypeaheadKey)ref,response,api.help());
           }
         }
         if (arg != null) {

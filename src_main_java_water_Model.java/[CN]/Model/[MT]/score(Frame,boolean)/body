@@ -1,9 +1,11 @@
 {
-  Frame fr2=adapt(fr,exact);
-  Vec v=fr2.anyVec().makeZero();
+  Frame[] adaptFrms=adapt(fr,exact);
+  Frame adaptFrm=adaptFrms[0];
+  Frame onlyAdaptFrm=adaptFrms[1];
+  Vec v=adaptFrm.anyVec().makeZero();
   v._domain=_domains[_domains.length - 1];
-  fr2.add("predict",v);
-  if (nclasses() > 1)   for (int c=0; c < nclasses(); c++)   fr2.add(classNames()[c],fr2.anyVec().makeZero());
+  adaptFrm.add("predict",v);
+  if (nclasses() > 1)   for (int c=0; c < nclasses(); c++)   adaptFrm.add(classNames()[c],adaptFrm.anyVec().makeZero());
   new MRTask2(){
     @Override public void map(    Chunk chks[]){
       double tmp[]=new double[_names.length];
@@ -16,8 +18,9 @@
       }
     }
   }
-.doAll(fr2);
-  int x=_names.length - 1, y=fr2.numCols();
-  Frame result=new Frame(Arrays.copyOfRange(fr2._names,x,y),Arrays.copyOfRange(fr2.vecs(),x,y));
-  return result;
+.doAll(adaptFrm);
+  int x=_names.length - 1, y=adaptFrm.numCols();
+  Frame output=adaptFrm.extractFrame(x,y);
+  onlyAdaptFrm.remove();
+  return output;
 }
