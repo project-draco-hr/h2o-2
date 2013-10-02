@@ -39,6 +39,7 @@
           int cnid=dn._nids[i];
           if (cnid == -1 || tree.node(cnid) instanceof UndecidedNode || (tree.node(cnid) instanceof DecidedNode && ((DecidedNode)tree.node(cnid))._split._col == -1))           dn._nids[i]=new GBMLeafNode(tree,nid)._nid;
         }
+        if (nid == 0 && dn._split._col == -1)         new GBMLeafNode(tree,-1,0);
       }
     }
   }
