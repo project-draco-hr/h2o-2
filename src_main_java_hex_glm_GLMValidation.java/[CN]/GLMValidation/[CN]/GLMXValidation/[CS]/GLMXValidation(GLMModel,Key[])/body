@@ -1,0 +1,8 @@
+{
+  super(mainModel._dataKey,mainModel.ymu,mainModel.glm,mainModel.rank());
+  for (  Key k : _xvalModels=xvalModels) {
+    GLMModel xm=DKV.get(k).get();
+    add(xm.validation());
+  }
+  finalize_AIC_AUC();
+}
