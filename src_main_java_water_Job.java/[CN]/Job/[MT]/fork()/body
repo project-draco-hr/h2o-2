@@ -1,7 +1,9 @@
 {
+  init();
   H2OCountedCompleter task=new H2OCountedCompleter(){
     @Override public void compute2(){
-      Job.this.invoke();
+      Job.this.exec();
+      Job.this.done();
       tryComplete();
     }
   }

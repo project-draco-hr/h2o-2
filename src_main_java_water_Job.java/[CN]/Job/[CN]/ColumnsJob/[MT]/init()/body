@@ -1,13 +1,15 @@
 {
   super.init();
+  if ((cols != null && cols.length > 0) && (ignored_cols_by_name != null && ignored_cols_by_name.length > 0))   throw new IllegalArgumentException("Arguments 'cols' and 'ignored_cols_by_name' are exclusive");
+  if ((cols != null && cols.length > 0) && (ignored_cols_by_name != null && ignored_cols_by_name.length > 0))   throw new IllegalArgumentException("Arguments 'cols' and 'ignored_cols_by_name' are exclusive");
   if (cols == null || cols.length == 0) {
     cols=new int[source.vecs().length];
     for (int i=0; i < cols.length; i++)     cols[i]=i;
   }
   int length=cols.length;
-  for (int g=0; ignored_cols != null && g < ignored_cols.length; g++) {
+  for (int g=0; ignored_cols_by_name != null && g < ignored_cols_by_name.length; g++) {
     for (int i=0; i < cols.length; i++) {
-      if (cols[i] == ignored_cols[g]) {
+      if (cols[i] == ignored_cols_by_name[g]) {
         length--;
         System.arraycopy(cols,i + 1,cols,i,length - i);
         break;
@@ -15,4 +17,5 @@
     }
   }
   if (length != cols.length)   cols=ArrayUtils.subarray(cols,0,length);
+  if (cols.length == 0)   throw new IllegalArgumentException("No column selected");
 }

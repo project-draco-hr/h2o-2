@@ -3,9 +3,9 @@
   for (int c=0; c < vecs.length; c++) {
     AppendableVec vec=new AppendableVec(UUID.randomUUID().toString());
     NewChunk chunk=new NewChunk(vec,0);
-    for (int r=0; r < len; r++)     chunk.addNum(rows[r + off][c]);
+    for (int r=0; r < rows.length; r++)     chunk.addNum(rows[r][c]);
     chunk.close(0,null);
     vecs[c]=vec.close(null);
   }
-  return new Frame(null,vecs);
+  return new Frame(names,vecs);
 }
