@@ -1,5 +1,5 @@
 {
-  GBMModel model=new GBMModel(outputKey,dataKey,frm,ntrees,_ymin);
+  GBMModel model=new GBMModel(outputKey,dataKey,names,domains,ntrees,_ymin);
   DKV.put(outputKey,model);
   for (int tid=0; tid < ntrees; tid++) {
     new ComputeProb().doAll(fr);
