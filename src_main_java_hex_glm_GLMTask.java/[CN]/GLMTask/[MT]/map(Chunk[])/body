@@ -2,7 +2,10 @@
   final int nrows=chunks[0]._len;
   double[] nums=MemoryManager.malloc8d(_nums);
   int[] cats=MemoryManager.malloc4(_cats);
-  OUTER:   for (int r=0; r < nrows; ++r) {
+  final int step=_complement ? _step : 1;
+  final int start=_complement ? _offset : 0;
+  OUTER:   for (int r=start; r < nrows; r+=step) {
+    if (_step > step && (r % _step) == _offset)     continue;
     for (    Chunk c : chunks)     if (c.isNA0(r))     continue OUTER;
     int i=0, ncats=0;
     for (; i < _cats; ++i) {

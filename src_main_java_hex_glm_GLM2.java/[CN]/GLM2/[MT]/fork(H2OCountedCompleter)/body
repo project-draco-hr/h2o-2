@@ -1,4 +1,7 @@
 {
+  final H2OCountedCompleter fjt=new H2OEmptyCompleter();
+  if (completer != null)   fjt.setCompleter(completer);
+  start(fjt);
   tweedie_link_power=1 - tweedie_variance_power;
   source.remove(ignored_cols);
   final Vec[] vecs=source.vecs();
@@ -16,10 +19,8 @@
   final Frame fr=GLMTask.adaptFrame(source);
   YMUTask ymut=new YMUTask(new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),standardize,case_mode,case_val,fr.anyVec().length());
   ymut.doAll(fr);
-  GLMIterationTask firstIter=new GLMIterationTask(new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),null,standardize,1.0 / ymut.nobs(),case_mode,case_val);
+  GLMIterationTask firstIter=new GLMIterationTask(new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),_beta,standardize,1.0 / ymut.nobs(),case_mode,case_val,_step,_offset,_complement);
   firstIter._ymu=ymut.ymu();
-  final H2OEmptyCompleter fjt=start(new H2OEmptyCompleter());
-  if (completer != null)   fjt.setCompleter(completer);
   final LSMSolver solver=new ADMMSolver(lambda,alpha);
   firstIter.setCompleter(new Iteration(solver,fr,fjt));
   firstIter.dfork(fr);
