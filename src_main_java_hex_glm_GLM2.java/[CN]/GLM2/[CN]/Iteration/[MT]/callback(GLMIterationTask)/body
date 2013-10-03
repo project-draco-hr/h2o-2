@@ -11,14 +11,18 @@
   done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_eps;
   GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_eps,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time);
   if (done) {
-    GLMValidationTask t=new GLMValidationTask(res);
-    t.doAll(fr);
-    Key valKey=GLMValidation.makeKey();
-    DKV.put(valKey,t._res);
-    res.validations=new Key[]{valKey};
-    DKV.put(dest(),res);
-    remove();
-    fjt.tryComplete();
+    if (GLM2.this.nfold < 2) {
+      GLMValidationTask t=new GLMValidationTask(res,_step,_offset,true);
+      t.doAll(fr);
+      Key valKey=GLMValidation.makeKey();
+      DKV.put(valKey,t._res);
+      t._res.finalize_AIC_AUC();
+      res.setValidation(valKey);
+      DKV.put(dest(),res);
+      remove();
+      fjt.tryComplete();
+    }
+ else     xvalidate(res,fjt);
   }
  else {
     DKV.put(dest(),res);
