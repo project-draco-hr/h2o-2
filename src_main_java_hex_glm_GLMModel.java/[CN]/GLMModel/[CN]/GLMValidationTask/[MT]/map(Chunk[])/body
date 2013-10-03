@@ -3,7 +3,10 @@
   final int nrows=chunks[0]._len;
   double[] row=MemoryManager.malloc8d(_model._names.length);
   float[] preds=MemoryManager.malloc4f(_model.glm.family == Family.binomial ? 2 : 1);
-  OUTER:   for (int i=0; i < nrows; ++i) {
+  final int step=_complement ? _step : 1;
+  final int start=_complement ? _offset : 0;
+  OUTER:   for (int i=start; i < nrows; i+=step) {
+    if (_step > step && (i % _step) == _offset)     continue;
     if (chunks[chunks.length - 1].isNA0(i))     continue;
     for (int j=0; j < chunks.length - 1; ++j) {
       if (chunks[j].isNA0(i))       continue OUTER;

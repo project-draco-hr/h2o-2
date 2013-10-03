@@ -1,0 +1,17 @@
+{
+  final Key[] keys=new Key[n_folds];
+  H2OCallback callback=new H2OCallback(){
+    @Override public void callback(    H2OCountedCompleter t){
+      GLMXValidation xval=new GLMXValidation(model,keys);
+      Key xvalKey=Key.make();
+      DKV.put(xvalKey,xval);
+      model.setValidation(xvalKey);
+      DKV.put(model._selfKey,model);
+      GLM2.this.remove();
+    }
+  }
+;
+  callback.addToPendingCount(n_folds - 1);
+  callback.setCompleter(cmp);
+  for (int i=0; i < n_folds; ++i)   new GLM2(this.description + "xval " + i,keys[i]=Key.make(),source,standardize,family,link,alpha,lambda,n_folds,i,false,model.norm_beta).fork(callback);
+}
