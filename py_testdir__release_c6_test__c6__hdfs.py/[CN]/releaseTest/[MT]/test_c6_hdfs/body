@@ -1,4 +1,4 @@
-def test_c6_maprfs(self):
+def test_c6_hdfs(self):
     print '\nLoad a list of files from HDFS, parse and do 1 RF tree'
     print '\nYou can try running as hduser/hduser if fail'
     csvFilenameAll = ['TEST-poker1000.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'covtype.4x.shuffle.data', 'covtype.data', 'covtype4x.shuffle.data', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp2.os.noisy.0_1.data', 'hhp2.os.noisy.9_4.data', 'hhp_9_14_12.data', 'leads.csv', 'prostate_long_1G.csv']
@@ -13,7 +13,7 @@ def test_c6_maprfs(self):
     for csvFilename in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         timeoutSecs = 1000
-        (importResult, importPattern) = h2i.import_only(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs)
+        (importResult, importPattern) = h2i.import_only(path=csvPathname, schema='hdfs', timeoutSecs=timeoutSecs)
         succeeded = importResult['succeeded']
         if (len(succeeded) < 1):
             raise Exception(('Should have imported at least 1 key for' % csvPathname))
@@ -27,9 +27,9 @@ def test_c6_maprfs(self):
         else:
             raise Exception(('Should have found %s in the imported keys for %s' % (importPattern, csvPathname)))
         totalBytes = value_size_bytes
-        print 'Loading', csvFilename, 'from maprfs'
+        print 'Loading', csvFilename, 'from hdfs'
         start = time.time()
-        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, doSummary=False, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', timeoutSecs=timeoutSecs, doSummary=False, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
         if h2o.beta_features:
             h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
         print csvFilename, 'parse time:', parseResult['response']['time']
