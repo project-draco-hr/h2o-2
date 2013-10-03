@@ -1,5 +1,5 @@
 {
-  final Key[] keys=new Key[nfold];
+  final Key[] keys=new Key[n_folds];
   H2OCallback callback=new H2OCallback(){
     @Override public void callback(    H2OCountedCompleter t){
       GLMXValidation xval=new GLMXValidation(model,keys);
@@ -11,7 +11,7 @@
     }
   }
 ;
-  callback.addToPendingCount(nfold - 1);
+  callback.addToPendingCount(n_folds - 1);
   callback.setCompleter(cmp);
-  for (int i=0; i < nfold; ++i)   new GLM2(this.description + "xval " + i,keys[i]=Key.make(),source,standardize,family,link,alpha,lambda,nfold,i,false,model.norm_beta).fork(callback);
+  for (int i=0; i < n_folds; ++i)   new GLM2(this.description + "xval " + i,keys[i]=Key.make(),source,standardize,family,link,alpha,lambda,n_folds,i,false,model.norm_beta).fork(callback);
 }

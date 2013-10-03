@@ -8,10 +8,10 @@
     done=true;
     newBeta=glmt._beta == null ? newBeta : glmt._beta;
   }
-  done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_eps;
-  GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_eps,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time);
+  done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon;
+  GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_epsilon,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time);
   if (done) {
-    if (GLM2.this.nfold < 2) {
+    if (GLM2.this.n_folds < 2) {
       GLMValidationTask t=new GLMValidationTask(res,_step,_offset,true);
       t.doAll(fr);
       Key valKey=GLMValidation.makeKey();
