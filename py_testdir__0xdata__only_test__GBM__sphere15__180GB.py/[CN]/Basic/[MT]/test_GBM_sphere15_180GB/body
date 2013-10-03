@@ -32,7 +32,7 @@ def test_GBM_sphere15_180GB(self):
         col = 2
         execExpr = ('%s=colSwap(%s,%s,(%s[%s]>-7 ? 1 : 0))' % (hex_key, hex_key, col, hex_key, col))
         resultExec = h2o_cmd.runExec(expression=execExpr)
-        params = {'destination_key': 'GBMKEY', 'ignored_cols': 0, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'vresponse': col, }
+        params = {'destination_key': 'GBMKEY', 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': col, }
         kwargs = params.copy()
         h2o.beta_features = True
         timeoutSecs = 1800

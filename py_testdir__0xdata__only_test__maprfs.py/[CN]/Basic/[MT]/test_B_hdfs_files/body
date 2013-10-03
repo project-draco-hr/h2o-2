@@ -10,7 +10,7 @@ def test_B_hdfs_files(self):
     for csvFilename in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         print 'Loading', csvFilename, 'from maprfs'
-        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=1000)
+        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=1000, doSummary=False)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print 'parse result:', parseResult['destination_key']
         print ('\n' + csvFilename)
