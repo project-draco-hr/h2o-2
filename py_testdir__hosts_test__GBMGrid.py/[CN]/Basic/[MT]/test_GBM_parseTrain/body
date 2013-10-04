@@ -3,7 +3,7 @@ def test_GBM_parseTrain(self):
     files = [('mnist', 'mnist_training.csv.gz', 'mnistsmalltrain.hex', 1800, 0)]
     grid = [[1, 10, 100, 1000], [0.0, 0.01, 0.001, 0.0001, 1], [1, 2], [1, 10, 100]]
     grid = list(itertools.product(*grid))
-    for (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) in files:
+    for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
         start = time.time()
         parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
@@ -18,7 +18,7 @@ def test_GBM_parseTrain(self):
                 output = open('gbm_grid.csv', 'a')
             csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
             java_heap_GB = h2o.nodes[0].java_heap_GB
-            params = {'destination_key': 'GBMKEY', 'learn_rate': learn_rate, 'ntrees': ntree, 'max_depth': max_depth, 'min_rows': min_rows, 'vresponse': vresponse, }
+            params = {'destination_key': 'GBMKEY', 'learn_rate': learn_rate, 'ntrees': ntree, 'max_depth': max_depth, 'min_rows': min_rows, 'response': response, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o.beta_features = True

@@ -2,7 +2,7 @@ def test_GBM_parseTrain(self):
     h2o.beta_features = False
     bucket = 'h2o-airlines-unpacked'
     files = [('', 'allyears.csv', 'allyears.hex', 1800, 'IsDepDelayed')]
-    for (importFolderPath, csvFilename, trainKey, timeoutSecs, vresponse) in files:
+    for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
         h2o.beta_features = False
         start = time.time()
         parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
@@ -10,7 +10,7 @@ def test_GBM_parseTrain(self):
         print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
         for depth in [5, 15]:
-            params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': 10, 'max_depth': depth, 'min_rows': 10, 'vresponse': vresponse, 'ignored_cols': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', }
+            params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': 10, 'max_depth': depth, 'min_rows': 10, 'response': response, 'ignored_cols': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o.beta_features = True
