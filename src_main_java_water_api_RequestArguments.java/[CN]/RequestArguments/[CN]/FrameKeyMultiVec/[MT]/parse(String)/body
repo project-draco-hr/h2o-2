@@ -3,7 +3,7 @@
   ArrayList<Integer> al=new ArrayList();
   for (  String col : input.split(",")) {
     col=col.trim();
-    int idx=index(col);
+    int idx=frameColumnNameToIndex(fr(),col,_namesOnly);
     if (0 > idx || idx > fr.numCols())     throw new IllegalArgumentException("Column " + col + " not part of key "+ _key.value());
     if (al.contains(idx))     throw new IllegalArgumentException("Column " + col + " is specified twice.");
     checkLegality(fr.vecs()[idx]);

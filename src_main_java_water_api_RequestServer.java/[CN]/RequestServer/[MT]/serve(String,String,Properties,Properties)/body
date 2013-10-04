@@ -10,7 +10,7 @@
     return request.serve(this,parms,type);
   }
  catch (  Exception e) {
-    e.printStackTrace();
+    if (!(e instanceof ExpectedExceptionForDebug))     e.printStackTrace();
     parms.setProperty(Request.ERROR,e.getClass().getSimpleName() + ": " + e.getMessage());
     return _http500.serve(this,parms,type);
   }
