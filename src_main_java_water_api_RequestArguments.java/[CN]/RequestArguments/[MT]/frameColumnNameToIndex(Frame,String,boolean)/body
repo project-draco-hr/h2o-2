@@ -1,0 +1,17 @@
+{
+  for (int i=0; fr._names != null && i < fr._names.length; ++i) {
+    String colName=fr._names[i];
+    if (colName == null)     colName=String.valueOf(i);
+    if (colName.equals(input))     return i;
+  }
+  try {
+    if (!namesOnly) {
+      int i=Integer.parseInt(input);
+      if ((i < 0) || (i >= fr.vecs().length))       return -1;
+      return i;
+    }
+  }
+ catch (  NumberFormatException e) {
+  }
+  return -1;
+}
