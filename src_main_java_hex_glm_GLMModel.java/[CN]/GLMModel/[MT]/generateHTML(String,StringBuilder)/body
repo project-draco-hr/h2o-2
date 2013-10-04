@@ -19,10 +19,6 @@
   parm(sb,"&alpha;",alpha);
   parm(sb,"&lambda;",lambda);
   if (beta != null)   coefs2html(sb);
-  if (validations != null && validations.length > 0) {
-    for (    Key k : validations) {
-      GLMValidation v=DKV.get(k).get();
-      v.generateHTML("",sb);
-    }
-  }
+  GLMValidation val=validation();
+  if (val != null)   val.generateHTML("Training Set Validation",sb);
 }

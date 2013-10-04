@@ -13,6 +13,8 @@
       if (c != 0)       cats[ncats++]=c + _catOffsets[i] - 1;
     }
     for (; i < chunks.length - 1; ++i)     nums[i - _cats]=(chunks[i].at0(r) - _normSub[i - _cats]) * _normMul[i - _cats];
-    processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r));
+    double y=chunks[chunks.length - 1].at0(r);
+    if (_caseMode != CaseMode.none)     y=(_caseMode.isCase(y,_caseVal)) ? 1 : 0;
+    processRow(nums,ncats,cats,y);
   }
 }

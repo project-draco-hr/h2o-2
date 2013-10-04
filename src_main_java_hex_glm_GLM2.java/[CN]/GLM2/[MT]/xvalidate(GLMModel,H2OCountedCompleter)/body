@@ -2,10 +2,7 @@
   final Key[] keys=new Key[n_folds];
   H2OCallback callback=new H2OCallback(){
     @Override public void callback(    H2OCountedCompleter t){
-      GLMXValidation xval=new GLMXValidation(model,keys);
-      Key xvalKey=Key.make();
-      DKV.put(xvalKey,xval);
-      model.setValidation(xvalKey);
+      model.setValidation(new GLMXValidation(model,keys));
       DKV.put(model._selfKey,model);
       GLM2.this.remove();
     }
