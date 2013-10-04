@@ -30,7 +30,7 @@ def test_GBM_poker_1m(self):
         h2o.beta_features = True
         ntrees = 100
         for max_depth in [5, 10, 15, 20]:
-            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'vresponse': (num_cols - 1), }
+            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': (num_cols - 1), }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o.beta_features = True
