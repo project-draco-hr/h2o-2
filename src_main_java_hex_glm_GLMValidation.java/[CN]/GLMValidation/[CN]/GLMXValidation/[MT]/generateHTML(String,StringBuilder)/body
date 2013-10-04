@@ -1,0 +1,12 @@
+{
+  super.generateHTML(title,sb);
+  sb.append("<h4>Cross Validation Models</h4>");
+  sb.append("<table class='table table-bordered table-condensed'>");
+  int i=0;
+  for (  Key k : _xvalModels) {
+    sb.append("<tr>");
+    sb.append("<td>" + "<a href='Inspect.html?key=" + k + "'>"+ "Model "+ ++i+ "</a></td>");
+    sb.append("</tr>");
+  }
+  sb.append("</table>");
+}

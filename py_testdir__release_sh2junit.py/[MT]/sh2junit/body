@@ -40,7 +40,8 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, **kwargs):
         if (timeout and (elapsed > timeout)):
             timeoutError = True
             errors += 1
-            raise Exception(('sh2junit: elapsed: %0.2f timeout: %s (secs) while echoing subprocess stdout' % (elapsed, timeout)))
+            print ('ERROR: sh2junit: elapsed: %0.2f timeout: %s (secs) while echoing subprocess stdout' % (elapsed, timeout))
+            break
         time.sleep(0.25)
     (lastrc, error) = rc_if_exists_and_done(ps)
     errors += error
