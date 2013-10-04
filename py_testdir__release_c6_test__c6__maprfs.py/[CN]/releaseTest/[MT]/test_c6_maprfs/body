@@ -52,7 +52,7 @@ def test_c6_maprfs(self):
                 h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             print 'rf end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-            l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:s} for {:.2f} secs {:s}'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'KMeans', ('trial ' + str(trial)), csvFilename, elapsed, paramsString)
+            l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:s} for {:.2f} secs {:s}'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'RF', ('trial ' + str(trial)), csvFilename, elapsed, paramsString)
             print l
             h2o.cloudPerfH2O.message(l)
         print "Deleting all keys, to make sure our parse times don't include spills"
