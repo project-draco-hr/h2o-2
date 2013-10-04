@@ -1,0 +1,26 @@
+{
+  String[] names=new String[]{"5","2","1","8","4"};
+  double[][] items=new double[10][names.length];
+  for (int r=0; r < items.length; r++)   for (int c=0; c < items[r].length; c++)   items[r][c]=r;
+  Key key=Key.make("test");
+  Key dst=Key.make("dest");
+  Frame frame=frame(names,items);
+  UKV.put(key,frame);
+  try {
+    RequestServer.registerRequest(new JobArgsTestJob());
+    HttpClient client=new HttpClient();
+    String args="" + "destination_key=" + dst + "&"+ "source="+ key+ "&"+ "response=2&"+ "cols=2,4";
+    GetMethod get=new GetMethod("http://127.0.0.1:54321/JobArgsTestJob.html?" + args);
+    Assert.assertEquals(200,client.executeMethod(get));
+    for (; ; ) {
+      get=new GetMethod("http://127.0.0.1:54321/Jobs.json");
+      Assert.assertEquals(200,client.executeMethod(get));
+      Res jobs=readJson(get.getResponseBodyAsString(),Res.class);
+      for (      Job job : jobs.jobs)       if (job.destination_key.equals(dst.toString()))       if (job.end_time.length() > 0)       break;
+    }
+  }
+  finally {
+    RequestServer.unregisterRequest(new JobArgsTestJob());
+    UKV.remove(key);
+  }
+}
