@@ -4,7 +4,7 @@
   for (int tid=0; tid < ntrees; tid++) {
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
-    DTree[] ktrees=buildNextKTrees(fr);
+    DTree[] ktrees=buildNextKTrees(fr,domains);
     if (cancelled())     break;
     Score sc=new Score().doAll(fr).report(Sys.GBM__,tid + 1,ktrees);
     model=new GBMModel(model,ktrees,(float)sc._sum / _nrows,sc._cm);
