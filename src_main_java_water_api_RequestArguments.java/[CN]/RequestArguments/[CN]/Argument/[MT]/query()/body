@@ -1,7 +1,7 @@
 {
   RString result=new RString(_queryHtml);
   result.replace("ID",_name);
-  result.replace("NAME",JSON2HTML(_name));
+  result.replace("NAME",_displayName != null ? _displayName : JSON2HTML(_name));
   if (disabled())   result.replace("ELEMENT","<div class='alert alert-info' style='padding-top:4px;padding-bottom:4px;margin-bottom:5px'>" + record()._disabledReason + "</div>");
  else   result.replace("ELEMENT",queryElement());
   result.replace("TOOLTIP_DESCRIPTION",queryDescription());

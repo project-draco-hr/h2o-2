@@ -1,0 +1,69 @@
+{
+  Vec[] vecs=Utils.add(_train,response);
+  reChunk(vecs);
+  System.arraycopy(vecs,0,_train,0,_train.length);
+  response=vecs[vecs.length - 1];
+  final Layer[] ls=new Layer[hidden.length + 2];
+  ls[0]=new VecsInput(_train);
+  for (int i=0; i < hidden.length; i++) {
+    if (activation == Activation.Rectifier)     ls[i + 1]=new Layer.Rectifier(hidden[i]);
+ else     ls[i + 1]=new Layer.Tanh(hidden[i]);
+    ls[i + 1]._rate=(float)rate;
+    ls[i + 1]._l2=(float)l2;
+  }
+  ls[ls.length - 1]=new VecSoftmax(response);
+  ls[ls.length - 1]._rate=(float)rate;
+  ls[ls.length - 1]._l2=(float)l2;
+  for (int i=0; i < ls.length; i++)   ls[i].init(ls,i);
+  final Key sourceKey=Key.make(input("source"));
+  final Frame frame=new Frame(_names,_train);
+  frame.add(_responseName,response);
+  NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+  UKV.put(destination_key,model);
+  final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
+  Thread thread=new Thread(){
+    @Override public void run(){
+      long lastTime=System.nanoTime();
+      long lastItems=0;
+      while (running()) {
+        long time=System.nanoTime();
+        double delta=(time - lastTime) / 1e9;
+        long items=trainer.items();
+        int ps=(int)((items - lastItems) / delta);
+        lastTime=time;
+        lastItems=items;
+        NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+        long[][] cm=new long[model.classNames().length][model.classNames().length];
+        VecsInput stats=(VecsInput)ls[0];
+        Layer[] clones=new Layer[ls.length];
+        if (_valid != null) {
+          clones[0]=new VecsInput(_valid,stats);
+          clones[clones.length - 1]=new VecSoftmax(_validResponse);
+        }
+ else {
+          clones[0]=new VecsInput(_train,stats);
+          clones[clones.length - 1]=new VecSoftmax(response);
+        }
+        for (int y=1; y < clones.length - 1; y++)         clones[y]=ls[y].clone();
+        for (int y=0; y < clones.length; y++)         clones[y].init(clones,y,false,0);
+        Layer.copyWeights(ls,clones);
+        Error train=NeuralNetScore.run(ls,EVAL_ROW_COUNT,cm);
+        model.items=items;
+        model.items_per_second=ps;
+        model.train_classification_error=train.Value;
+        model.train_sqr_error=train.SqrDist;
+        model.confusion_matrix=cm;
+        UKV.put(destination_key,model);
+        try {
+          Thread.sleep(2000);
+        }
+ catch (        InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+  }
+;
+  thread.start();
+  trainer.start();
+}

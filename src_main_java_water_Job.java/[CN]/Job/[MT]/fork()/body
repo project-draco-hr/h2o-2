@@ -1,0 +1,13 @@
+{
+  init();
+  H2OCountedCompleter task=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      Job.this.exec();
+      Job.this.done();
+      tryComplete();
+    }
+  }
+;
+  H2O.submitTask(start(task));
+  return task;
+}

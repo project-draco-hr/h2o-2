@@ -1,0 +1,12 @@
+{
+  GetMethod get=new GetMethod("http://127.0.0.1:54321/" + uri);
+  Get res=new Get();
+  try {
+    res._status=_client.executeMethod(get);
+    res._res=readJson(get.getResponseBodyAsString(),c);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  return res;
+}

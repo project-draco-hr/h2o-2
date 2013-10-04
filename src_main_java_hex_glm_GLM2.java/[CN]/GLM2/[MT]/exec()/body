@@ -1,0 +1,15 @@
+{
+  link=family.defaultLink;
+  _startTime=System.currentTimeMillis();
+  GLMModel m=new GLMModel(dest(),source,new GLMParams(family,tweedie_variance_power,link,1 - tweedie_variance_power),beta_epsilon,alpha,lambda,System.currentTimeMillis() - _startTime);
+  DKV.put(dest(),m);
+  try {
+    fork(null).get();
+  }
+ catch (  InterruptedException e) {
+    throw new RuntimeException(e);
+  }
+catch (  ExecutionException e) {
+    throw new RuntimeException(e);
+  }
+}
