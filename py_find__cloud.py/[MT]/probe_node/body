@@ -12,9 +12,11 @@ def probe_node(line, h2oNodes):
     consensus = gc['consensus']
     locked = gc['locked']
     cloud_size = gc['cloud_size']
-    cloud_name = gc['cloud_name']
     node_name = gc['node_name']
+    cloud_name = gc['cloud_name']
     nodes = gc['nodes']
+    if (args.expected_size and (cloud_size != args.expected_size)):
+        raise Exception(('cloud_size %s at %s disagrees with -expected_size %s' % (cloud_size, node_name, args.expected_size)))
     for n in nodes:
         java_heap_GB = ((n['tot_mem_bytes'] + 0.0) / ((1024 * 1024) * 1024))
         java_heap_GB = int(round(java_heap_GB, 0))
@@ -24,7 +26,9 @@ def probe_node(line, h2oNodes):
             raise Exception(("bad ip or port parsing from h2o get_cloud nodes 'name' %s" % n['name']))
         probes.append(name)
         node_id = len(h2oNodes)
-        node = {'http_addr': ip, 'port': int(port), 'java_heap_GB': java_heap_GB, 'node_id': node_id, 'remoteH2O': 'true', 'sandbox_error_was_reported': 'false', 'sandbox_ignore_errors': 'false', 'username': '0xcustomer', 'redirect_import_folder_to_s3_path': 'false', 'redirect_import_folder_to_s3n_path': 'false', 'delete_keys_at_teardown': 'true', 'use_hdfs': 'true', 'use_maprfs': 'false', 'hdfs_version': 'cdh3', 'hdfs_name_node': '192.168.1.176', }
+        use_maprfs = ('mapr' in args.hdfs_version)
+        use_hdfs = (not use_maprfs)
+        node = {'http_addr': ip, 'port': int(port), 'java_heap_GB': java_heap_GB, 'node_id': node_id, 'remoteH2O': 'true', 'sandbox_error_was_reported': 'false', 'sandbox_ignore_errors': 'false', 'username': '0xcustomer', 'redirect_import_folder_to_s3_path': 'false', 'redirect_import_folder_to_s3n_path': 'false', 'delete_keys_at_teardown': 'true', 'use_hdfs': use_hdfs, 'use_maprfs': use_maprfs, 'hdfs_version': args.hdfs_version, 'hdfs_name_node': args.hdfs_name_node, }
         if (name not in h2oNodes):
             h2oNodes[name] = node
             print ('Added node %s to probes' % name)
