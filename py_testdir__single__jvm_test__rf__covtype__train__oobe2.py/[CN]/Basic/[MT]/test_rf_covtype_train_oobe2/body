@@ -32,7 +32,7 @@ def test_rf_covtype_train_oobe2(self):
     for trial in range(1, 10):
         rowsToUse = rowsForPct[(trial % 10)]
         resultKey = ('r' + str(trial))
-        execExpr = (((((resultKey + '=slice(') + dataKeyTrain) + ',1,') + str(rowsToUse)) + ')')
+        execExpr = (((((resultKey + '=slice(') + dataKeyTrain) + ',0,') + str(rowsToUse)) + ')')
         h2o_exec.exec_expr(None, execExpr, resultKey=resultKey, timeoutSecs=10)
         parseResult['destination_key'] = resultKey
         kwargs = paramDict.copy()
