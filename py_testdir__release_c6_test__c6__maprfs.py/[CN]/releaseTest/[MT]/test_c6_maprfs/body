@@ -19,7 +19,7 @@ def test_c6_maprfs(self):
         (importResult, importPattern) = h2i.import_only(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs)
         succeeded = importResult['succeeded']
         if (len(succeeded) < 1):
-            raise Exception(('Should have imported at least 1 key for' % csvPathname))
+            raise Exception(('Should have imported at least 1 key for %s' % csvPathname))
         foundIt = None
         for f in succeeded:
             if (csvPathname in f['key']):
