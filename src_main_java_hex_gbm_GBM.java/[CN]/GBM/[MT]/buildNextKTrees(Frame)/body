@@ -2,7 +2,7 @@
   String domain[]=fr.vecs()[_ncols].domain();
   final DTree[] ktrees=new DTree[_nclass];
   for (int k=0; k < _nclass; k++) {
-    if (_distribution[k] != 0) {
+    if (_distribution == null || _distribution[k] != 0) {
       ktrees[k]=new DTree(fr._names,_ncols,(char)nbins,(char)_nclass,min_rows);
       new GBMUndecidedNode(ktrees[k],-1,DBinHistogram.initialHist(fr,_ncols,(char)nbins));
     }

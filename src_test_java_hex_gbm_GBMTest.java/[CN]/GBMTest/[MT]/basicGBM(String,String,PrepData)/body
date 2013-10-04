@@ -9,11 +9,13 @@
     gbm=new GBM();
     gbm.source=fr=ParseDataset2.parse(dest,new Key[]{fkey});
     UKV.remove(fkey);
-    gbm.classification=true;
     int idx=prep.prep(fr);
+    if (idx < 0) {
+      gbm.classification=false;
+      idx=~idx;
+    }
     String rname=fr._names[idx];
     gbm.response=fr.vecs()[idx];
-    System.out.println("i=" + idx + " "+ gbm.response);
     fr.remove(idx);
     fr.add(rname,gbm.response);
     gbm.ntrees=5;
