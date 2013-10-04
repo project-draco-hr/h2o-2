@@ -1,0 +1,32 @@
+def test_slice_fail_1161(self):
+    print '\nUse randomBitVector and filter to separate the dataset randomly'
+    importFolderPath = 'standard'
+    csvFilename = 'covtype.data'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    hex_key = (csvFilename + '.hex')
+    print '\nUsing header=0 on the normal covtype.data'
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, header=0, timeoutSecs=100)
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+    num_rows = inspect['num_rows']
+    pct10 = int((num_rows * 0.1))
+    rowsForPct = [(i * pct10) for i in range(0, 11)]
+    last10 = (num_rows - rowsForPct[9])
+    rowsForPct[10] = last10
+    rowsForPct[0] = rowsForPct[10]
+    print 'Creating the key of the last 10% data, for scoring'
+    dataKeyTest = 'rTest'
+    dataKeyTrain = 'rTrain'
+    for trial in range(1, 10):
+        execExpr = (((('rbv=randomBitVector(' + str(num_rows)) + ',') + str(last10)) + ',12345)')
+        h2o_exec.exec_expr(None, execExpr, resultKey='rbv', timeoutSecs=10)
+        execExpr = 'not_rbv=colSwap(rbv,0,rbv[0]==0?1:0)'
+        h2o_exec.exec_expr(None, execExpr, resultKey='not_rbv', timeoutSecs=10)
+        execExpr = (((dataKeyTest + '=filter(') + hex_key) + ',rbv)')
+        h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTest, timeoutSecs=10)
+        execExpr = (((dataKeyTrain + '=filter(') + hex_key) + ',not_rbv)')
+        h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTrain, timeoutSecs=10)
+        rowsToUse = rowsForPct[(trial % 10)]
+        resultKey = ('r' + str(trial))
+        execExpr = (((((resultKey + '=slice(') + dataKeyTrain) + ',0,') + str(rowsToUse)) + ')')
+        h2o_exec.exec_expr(None, execExpr, resultKey=resultKey, timeoutSecs=10)
