@@ -18,10 +18,17 @@
     Enum[] enums=eft._gEnums;
     String[][] ds=new String[ecols.length][];
     int j=0;
-    for (    int i : ecols)     ds[j++]=fr.vecs()[i]._domain=enums[i].computeColumnDomain();
+    final Vec[] vecs=fr.vecs();
+    for (    int i : ecols)     ds[j++]=vecs[i]._domain=enums[i].computeColumnDomain();
     Vec[] evecs=new Vec[ecols.length];
     for (int i=0; i < evecs.length; ++i)     evecs[i]=fr.vecs()[ecols[i]];
     new EnumUpdateTask(ds,eft._lEnums,uzpt._chunk2Enum,uzpt._eKey,ecols).doAll(evecs);
+    Futures fs=new Futures();
+    for (    Vec v2 : evecs) {
+      v2.postWrite();
+      DKV.put(v2._key,v2,fs);
+    }
+    fs.blockForPending();
   }
   UKV.put(job.dest(),fr);
   job.remove();
