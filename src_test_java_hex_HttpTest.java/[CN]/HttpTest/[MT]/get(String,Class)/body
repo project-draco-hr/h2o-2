@@ -3,7 +3,10 @@
   Get res=new Get();
   try {
     res._status=_client.executeMethod(get);
-    res._res=readJson(get.getResponseBodyAsString(),c);
+    if (res._status == 200) {
+      Gson gson=new Gson();
+      res._res=gson.fromJson(new InputStreamReader(get.getResponseBodyAsStream()),c);
+    }
   }
  catch (  Exception e) {
     throw new RuntimeException(e);
