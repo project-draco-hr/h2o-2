@@ -1,34 +1,34 @@
 {
   basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
-    Vec prep(    Frame fr){
-      return fr.remove(1);
+    int prep(    Frame fr){
+      return 1;
     }
   }
 );
   basicGBM("./smalldata/test/test_tree_minmax.csv","tree_minmax.hex",new PrepData(){
-    Vec prep(    Frame fr){
-      return fr.remove("response");
+    int prep(    Frame fr){
+      return fr.find("response");
     }
   }
 );
   basicGBM("./smalldata/logreg/prostate.csv","prostate.hex",new PrepData(){
-    Vec prep(    Frame fr){
+    int prep(    Frame fr){
       assertEquals(380,fr.numRows());
       UKV.remove(fr.remove("ID")._key);
-      return fr.remove("CAPSULE");
+      return fr.find("CAPSULE");
     }
   }
 );
   basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
-    Vec prep(    Frame fr){
+    int prep(    Frame fr){
       UKV.remove(fr.remove("name")._key);
-      return fr.remove("cylinders");
+      return fr.find("cylinders");
     }
   }
 );
   basicGBM("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
-    Vec prep(    Frame fr){
-      return fr.remove("IsDepDelayed");
+    int prep(    Frame fr){
+      return fr.find("IsDepDelayed");
     }
   }
 );
