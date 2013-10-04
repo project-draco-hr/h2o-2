@@ -1,5 +1,5 @@
 {
   if (_len > Vec.CHUNK_SZ)   throw new ArrayIndexOutOfBoundsException(_len);
-  _ls=Arrays.copyOf(_ls,_len << 1);
-  _xs=Arrays.copyOf(_xs,_len << 1);
+  _ls=MemoryManager.arrayCopyOf(_ls,_len << 1);
+  _xs=MemoryManager.arrayCopyOf(_xs,_len << 1);
 }

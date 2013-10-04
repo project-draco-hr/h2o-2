@@ -19,14 +19,18 @@ case 4:
     return new int[elems];
 case 8:
   return new long[elems];
-case -4:
+case 5:
 return new float[elems];
-case -8:
+case 9:
 return new double[elems];
 case 0:
 return new boolean[elems];
 case -1:
-return Arrays.copyOfRange(orig,from,elems);
+return Arrays.copyOfRange((byte[])orig,from,elems);
+case -4:
+return Arrays.copyOfRange((int[])orig,from,elems);
+case -8:
+return Arrays.copyOfRange((long[])orig,from,elems);
 default :
 throw H2O.unimpl();
 }
