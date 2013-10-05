@@ -1,4 +1,11 @@
 {
+  basicGBM("./smalldata/cars.csv","cars.hex",new PrepData(){
+    int prep(    Frame fr){
+      UKV.remove(fr.remove("name")._key);
+      return ~fr.find("economy (mpg)");
+    }
+  }
+);
   basicGBM("./smalldata/test/test_tree.csv","tree.hex",new PrepData(){
     int prep(    Frame fr){
       return 1;
