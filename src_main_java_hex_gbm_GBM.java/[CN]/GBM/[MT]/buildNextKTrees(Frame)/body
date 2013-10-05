@@ -1,5 +1,4 @@
 {
-  String domain[]=fr.vecs()[_ncols].domain();
   final DTree[] ktrees=new DTree[_nclass];
   for (int k=0; k < _nclass; k++) {
     if (_distribution == null || _distribution[k] != 0) {
@@ -44,7 +43,7 @@
     }
   }
   GammaPass gp=new GammaPass(ktrees,leafs).doAll(fr);
-  double m1class=(double)(_nclass - 1) / _nclass;
+  double m1class=_nclass > 1 ? (double)(_nclass - 1) / _nclass : 1.0;
   for (int k=0; k < _nclass; k++) {
     final DTree tree=ktrees[k];
     if (tree == null)     continue;

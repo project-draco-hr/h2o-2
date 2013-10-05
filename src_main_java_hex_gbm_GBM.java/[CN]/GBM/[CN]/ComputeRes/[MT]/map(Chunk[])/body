@@ -1,6 +1,6 @@
 {
+  Chunk ys=chk_resp(chks);
   if (_nclass > 1) {
-    Chunk ys=chk_resp(chks);
     for (int row=0; row < ys._len; row++) {
       if (ys.isNA0(row))       continue;
       int y=(int)ys.at80(row) - _ymin;
@@ -13,7 +13,6 @@
     }
   }
  else {
-    Chunk ys=chk_tree(chks,0);
     Chunk wk=chk_work(chks,0);
     for (int row=0; row < ys._len; row++)     if (!ys.isNA0(row))     wk.set0(row,(float)(ys.at0(row) - wk.at0(row)));
   }
