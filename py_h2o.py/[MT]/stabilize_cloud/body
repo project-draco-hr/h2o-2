@@ -1,8 +1,8 @@
-def stabilize_cloud(node, node_count, timeoutSecs=14.0, retryDelaySecs=0.25):
-    node.wait_for_node_to_accept_connections(timeoutSecs)
+def stabilize_cloud(node, node_count, timeoutSecs=14.0, retryDelaySecs=0.25, ignoreConnectionError=False):
+    node.wait_for_node_to_accept_connections(timeoutSecs, ignoreConnectionError=ignoreConnectionError)
 
     def test(n, tries=None):
-        c = n.get_cloud()
+        c = n.get_cloud(ignoreConnectionError=True)
         consensus = c['consensus']
         locked = c['locked']
         cloud_size = c['cloud_size']
