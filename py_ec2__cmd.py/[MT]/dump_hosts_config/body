@@ -1,4 +1,4 @@
-def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME, save=True):
+def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME, save=True, h2o_per_host=1):
     if (not filename):
         filename = DEFAULT_HOSTS_FILENAME
     cfg = {}
@@ -19,7 +19,7 @@ def dump_hosts_config(ec2_config, reservation, filename=DEFAULT_HOSTS_FILENAME, 
         warn_file_miss(ec2_config['hdfs_config'])
     cfg['username'] = ec2_config['username']
     cfg['use_flatfile'] = True
-    cfg['h2o_per_host'] = 1
+    cfg['h2o_per_host'] = h2o_per_host
     cfg['java_heap_GB'] = MEMORY_MAPPING[ec2_config['instance_type']]['xmx']
     cfg['java_extra_args'] = ''
     cfg['base_port'] = 54321
