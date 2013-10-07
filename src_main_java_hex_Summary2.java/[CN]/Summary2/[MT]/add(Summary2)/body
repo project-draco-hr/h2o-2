@@ -1,16 +1,12 @@
 {
-  _n+=other._n;
-  _nzero+=other._nzero;
-  _n_na+=other._n_na;
+  _zeros+=other._zeros;
   Utils.add(_bins,other._bins);
-  if (_enum)   return this;
-  double[] min=_min.clone();
-  double[] max=_max.clone();
+  double[] ds=MemoryManager.malloc8d(_min.length);
   int i=0, j=0;
-  for (int k=0; k < min.length; k++)   min[k++]=_min[i] < other._min[j] ? _min[i++] : _min[j++];
+  for (int k=0; k < ds.length; k++)   ds[k]=_min[i] < other._min[j] ? _min[i++] : other._min[j++];
+  System.arraycopy(ds,0,_min,0,ds.length);
   i=j=_max.length - 1;
-  for (int k=max.length - 1; k >= 0; k--)   max[k--]=_max[i] > other._max[j] ? _max[i--] : _max[j--];
-  _min=min;
-  _max=max;
+  for (int k=ds.length - 1; k >= 0; k--)   ds[k]=_max[i] > other._max[j] ? _max[i--] : other._max[j--];
+  System.arraycopy(ds,0,_max,0,ds.length);
   return this;
 }

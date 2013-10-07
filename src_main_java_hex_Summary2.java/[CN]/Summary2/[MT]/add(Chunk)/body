@@ -1,32 +1,21 @@
 {
-  long start=chk._start;
-  if (_enum) {
-    for (int i=0; i < chk._len; i++)     if (chk.isNA(start + i))     _n_na++;
-  }
- else {
-    int maxmin=0;
-    int minmax=0;
-    for (int i=0; i < chk._len; i++) {
-      double val;
-      if (chk.isNA(start + i))       _n_na++;
- else {
-        val=chk.at(start + i);
-        if (val == 0.)         _nzero++;
-        if (val < _min[maxmin]) {
-          _min[maxmin]=val;
-          for (int k=0; k < _min.length; k++)           if (_min[k] > _min[maxmin])           maxmin=k;
-        }
-        if (val > _max[minmax]) {
-          _max[minmax]=val;
-          for (int k=0; k < _max.length; k++)           if (_max[k] < _max[minmax])           minmax=k;
-        }
-        int binIdx=(_binsz == 1) ? Math.min((int)(val - _start),_bins.length - 1) : Math.min(_bins.length - 1,(int)((val - _start) * _binszInv));
-        ++_bins[binIdx];
-      }
+  int maxmin=0;
+  int minmax=0;
+  for (int i=0; i < chk._len; i++) {
+    if (chk.isNA0(i))     continue;
+    double val=chk.at0(i);
+    if (val == 0.)     _zeros++;
+    if (val < _min[maxmin]) {
+      _min[maxmin]=val;
+      for (int k=0; k < _min.length; k++)       if (_min[k] > _min[maxmin])       maxmin=k;
     }
-    Arrays.sort(_min);
-    Arrays.sort(_max);
+    if (val > _max[minmax]) {
+      _max[minmax]=val;
+      for (int k=0; k < _max.length; k++)       if (_max[k] < _max[minmax])       minmax=k;
+    }
+    int binIdx=Math.min(_bins.length - 1,(int)((val - _start) / _binsz));
+    ++_bins[binIdx];
   }
-  _n+=chk._len;
-  return this;
+  Arrays.sort(_min);
+  Arrays.sort(_max);
 }

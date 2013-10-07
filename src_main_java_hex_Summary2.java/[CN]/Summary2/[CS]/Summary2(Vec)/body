@@ -1,0 +1,28 @@
+{
+  _enum=vec.isEnum();
+  long len=vec.length();
+  _avail_rows=len - vec.naCnt();
+  _min=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+  _max=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+  Arrays.fill(_min,Double.POSITIVE_INFINITY);
+  Arrays.fill(_max,Double.NEGATIVE_INFINITY);
+  double span=vec.max() - vec.min();
+  if (vec.isEnum() && (span + 1) < MAX_HIST_SZ) {
+    _start=vec.min();
+    _binsz=1;
+    _bins=new long[(int)span + 1];
+  }
+ else {
+    if (vec.isInt())     span++;
+    double a=span / len;
+    double b=Math.pow(10,Math.floor(Math.log10(a)));
+    if (a > 20 * b / 3)     b*=10;
+ else     if (a > 5 * b / 3)     b*=5;
+    _start=b * Math.floor(vec.min() / b);
+    double binsz=Math.max(1e-4,3.5 * vec.sigma() / Math.cbrt(len));
+    if (vec.isInt())     binsz=Math.max(1,Math.floor(binsz));
+    _binsz=binsz;
+    int nbin=Math.max(Math.min(MAX_HIST_SZ,(int)(span / _binsz)),1);
+    _bins=new long[nbin];
+  }
+}
