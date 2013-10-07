@@ -1,34 +1,37 @@
 {
-  double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
-  solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
-  boolean done=false;
-  if (Utils.hasNaNsOrInfs(newBeta)) {
-    System.out.println("got NaNs in beta after " + glmt._iter + " iterations");
-    System.out.println(glmt._gram.pprint(glmt._gram.getXX()));
-    done=true;
-    newBeta=glmt._beta == null ? newBeta : glmt._beta;
-  }
-  done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon;
-  GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_epsilon,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time,GLM2.this.case_mode,GLM2.this.case_val);
-  if (done) {
-    GLMValidationTask t=new GLMValidationTask(res,_step,_offset,true);
-    t.doAll(fr);
-    t._res.finalize_AIC_AUC();
-    res.setValidation(t._res);
-    DKV.put(dest(),res);
-    if (GLM2.this.n_folds < 2) {
-      remove();
-      fjt.tryComplete();
+  if (!cancelled()) {
+    double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
+    solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
+    boolean done=false;
+    if (Utils.hasNaNsOrInfs(newBeta)) {
+      System.out.println("got NaNs in beta after " + glmt._iter + " iterations");
+      System.out.println(glmt._gram.pprint(glmt._gram.getXX()));
+      done=true;
+      newBeta=glmt._beta == null ? newBeta : glmt._beta;
     }
- else     xvalidate(res,fjt);
-  }
+    done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || cancelled();
+    GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_epsilon,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time,GLM2.this.case_mode,GLM2.this.case_val);
+    if (done) {
+      GLMValidationTask t=new GLMValidationTask(res,_step,_offset,true);
+      t.doAll(fr);
+      t._res.finalize_AIC_AUC();
+      res.setValidation(t._res);
+      DKV.put(dest(),res);
+      if (GLM2.this.n_folds < 2) {
+        remove();
+        fjt.tryComplete();
+      }
+ else       xvalidate(res,fjt);
+    }
  else {
-    glmt._val.finalize_AIC_AUC();
-    _oldModel.setValidation(glmt._val);
-    DKV.put(dest(),_oldModel);
-    _oldModel=res;
-    GLMIterationTask nextIter=new GLMIterationTask(glmt,newBeta);
-    nextIter.setCompleter(clone());
-    nextIter.dfork(fr);
+      glmt._val.finalize_AIC_AUC();
+      _oldModel.setValidation(glmt._val);
+      DKV.put(dest(),_oldModel);
+      _oldModel=res;
+      GLMIterationTask nextIter=new GLMIterationTask(glmt,newBeta);
+      nextIter.setCompleter(clone());
+      nextIter.dfork(fr);
+    }
   }
+ else   fjt.onExceptionalCompletion(new RuntimeException("Cancelled!"),null);
 }
