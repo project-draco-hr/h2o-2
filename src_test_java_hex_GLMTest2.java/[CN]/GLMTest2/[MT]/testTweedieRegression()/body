@@ -10,7 +10,7 @@
     double[] intercepts=new double[]{3.643,1.318,9.154};
     double[] xs=new double[]{-0.260,-0.0284,-0.853};
     for (int i=0; i < powers.length; ++i) {
-      new GLM2("GLM test of gaussian(linear) regression.",modelKey,fr,false,Family.tweedie,Family.tweedie.defaultLink,0,0).setTweedieVarPower(powers[i]).invoke();
+      new GLM2("GLM test of gaussian(linear) regression.",modelKey,fr,false,Family.tweedie,Family.tweedie.defaultLink,0,0).setTweedieVarPower(powers[i]).run(null).get();
       model=DKV.get(modelKey).get();
       HashMap<String,Double> coefs=model.coefficients();
       assertEquals(intercepts[i],coefs.get("Intercept"),1e-3);
