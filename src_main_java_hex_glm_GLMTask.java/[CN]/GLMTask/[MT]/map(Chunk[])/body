@@ -1,4 +1,5 @@
 {
+  if (_job.cancelled())   throw new RuntimeException("Cancelled");
   final int nrows=chunks[0]._len;
   double[] nums=MemoryManager.malloc8d(_nums);
   int[] cats=MemoryManager.malloc4(_cats);

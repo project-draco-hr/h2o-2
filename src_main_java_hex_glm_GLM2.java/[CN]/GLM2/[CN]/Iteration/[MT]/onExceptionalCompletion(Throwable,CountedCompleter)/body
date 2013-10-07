@@ -1,6 +1,5 @@
 {
-  ex.printStackTrace();
-  GLM2.this.cancel("Got exception '" + ex.getClass() + "', with msg '"+ ex.getMessage()+ "'");
+  if (!ex.getMessage().equals("Cancelled"))   GLM2.this.cancel("Got exception '" + ex.getClass() + "', with msg '"+ ex.getMessage()+ "'");
   fjt.onExceptionalCompletion(ex,caller);
   return true;
 }
