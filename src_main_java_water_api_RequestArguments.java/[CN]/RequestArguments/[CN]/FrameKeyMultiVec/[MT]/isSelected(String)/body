@@ -1,7 +1,4 @@
 {
-  Frame fr=fr();
   int[] val=value();
-  if (val == null)   return false;
-  for (int i=0; i < fr.numCols(); ++i)   if (fr._names[i].equals(value))   Ints.contains(val,i);
-  return false;
+  return val != null && Ints.contains(val,frameColumnNameToIndex(fr(),value,_namesOnly));
 }

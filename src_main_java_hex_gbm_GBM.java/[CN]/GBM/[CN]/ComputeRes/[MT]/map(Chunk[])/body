@@ -1,13 +1,19 @@
 {
   Chunk ys=chk_resp(chks);
-  for (int row=0; row < ys._len; row++) {
-    if (ys.isNA0(row))     continue;
-    int y=(int)ys.at80(row) - _ymin;
-    for (int k=0; k < _nclass; k++) {
-      if (_distribution[k] != 0) {
-        Chunk wk=chk_work(chks,k);
-        wk.set0(row,(y == k ? 1f : 0f) - (float)wk.at0(row));
+  if (_nclass > 1) {
+    for (int row=0; row < ys._len; row++) {
+      if (ys.isNA0(row))       continue;
+      int y=(int)ys.at80(row) - _ymin;
+      for (int k=0; k < _nclass; k++) {
+        if (_distribution[k] != 0) {
+          Chunk wk=chk_work(chks,k);
+          wk.set0(row,(y == k ? 1f : 0f) - (float)wk.at0(row));
+        }
       }
     }
+  }
+ else {
+    Chunk wk=chk_work(chks,0);
+    for (int row=0; row < ys._len; row++)     if (!ys.isNA0(row))     wk.set0(row,(float)(ys.at0(row) - wk.at0(row)));
   }
 }

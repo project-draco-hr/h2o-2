@@ -39,6 +39,7 @@ def pollWaitJobs(pattern=None, timeoutSecs=30, pollTimeoutSecs=30, retryDelaySec
         waitTime += retryDelaySecs
         if benchmarkLogging:
             h2o.cloudPerfH2O.get_log_save(benchmarkLogging)
+        h2o.check_sandbox_for_errors()
     patternKeys = []
     for j in jobs:
         if (pattern and (pattern in j['destination_key'])):
