@@ -27,6 +27,12 @@ if (not dryRun):
     fpublic = open(publicFileName, 'w')
     fprivate = open(privateFileName, 'w')
 print 'Using boto version', boto.Version
+if True:
+    botoVersionArr = boto.Version.split('.')
+    if (botoVersionArr[0] != 2):
+        botoVersionMismatch
+    if (botoVersionArr[1] < 13):
+        botoVersionMismatch
 if debug:
     boto.set_stream_logger('h2o-ec2')
 ec2 = boto.ec2.connect_to_region(regionName, debug=debug)
