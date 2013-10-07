@@ -36,6 +36,7 @@
     for (int row=0; row < nids._len; row++) {
       int nid=(int)nids.at80(row);
       if (nid < leaf)       continue;
+      if (wrks.isNA0(row))       continue;
       DHistogram nhs[]=hcs[nid - leaf];
       double y=wrks.at0(row);
       for (int j=0; j < _ncols; j++) {

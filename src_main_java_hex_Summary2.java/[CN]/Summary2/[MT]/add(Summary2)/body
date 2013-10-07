@@ -1,0 +1,16 @@
+{
+  _n+=other._n;
+  _nzero+=other._nzero;
+  _n_na+=other._n_na;
+  Utils.add(_bins,other._bins);
+  if (_enum)   return this;
+  double[] min=_min.clone();
+  double[] max=_max.clone();
+  int i=0, j=0;
+  for (int k=0; k < min.length; k++)   min[k++]=_min[i] < other._min[j] ? _min[i++] : _min[j++];
+  i=j=_max.length - 1;
+  for (int k=max.length - 1; k >= 0; k--)   max[k--]=_max[i] > other._max[j] ? _max[i--] : _max[j--];
+  _min=min;
+  _max=max;
+  return this;
+}
