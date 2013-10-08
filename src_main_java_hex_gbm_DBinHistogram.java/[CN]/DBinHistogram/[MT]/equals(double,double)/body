@@ -1,0 +1,7 @@
+{
+  if (d1 == d2)   return true;
+  double abs_err=Math.abs(d1 - d2);
+  double max=Math.max(Math.abs(d1),Math.abs(d2));
+  double rel_err=abs_err / max;
+  return abs_err < 1e-19 || rel_err < 1e-9;
+}

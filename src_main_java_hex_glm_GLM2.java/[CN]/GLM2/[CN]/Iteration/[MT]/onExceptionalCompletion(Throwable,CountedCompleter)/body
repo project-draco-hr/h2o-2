@@ -1,5 +1,6 @@
 {
-  if (!ex.getMessage().equals("Cancelled"))   GLM2.this.cancel("Got exception '" + ex.getClass() + "', with msg '"+ ex.getMessage()+ "'");
-  fjt.onExceptionalCompletion(ex,caller);
-  return true;
+  final String msg=ex.getMessage();
+  if (msg == null || !msg.equals("Cancelled"))   GLM2.this.cancel("Got exception '" + ex.getClass() + "', with msg '"+ ex.getMessage()+ "'");
+  fjt.completeExceptionally(ex);
+  return false;
 }

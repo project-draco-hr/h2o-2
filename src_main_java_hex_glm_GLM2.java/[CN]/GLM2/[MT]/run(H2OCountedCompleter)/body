@@ -5,25 +5,25 @@
   UKV.remove(dest());
   _oldModel=new GLMModel(dest(),source,new GLMParams(family,tweedie_variance_power,link,1 - tweedie_variance_power),beta_epsilon,alpha,lambda,System.currentTimeMillis() - _startTime,GLM2.this.case_mode,GLM2.this.case_val);
   tweedie_link_power=1 - tweedie_variance_power;
-  source.remove(ignored_cols);
-  final Vec[] vecs=source.vecs();
+  Frame fr=(Frame)source.clone();
+  fr.remove(ignored_cols);
+  final Vec[] vecs=fr.vecs();
   ArrayList<Integer> constantOrNAs=new ArrayList<Integer>();
   for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i] == vresponse) {
-    source.add(source._names[i],source.remove(i));
+    fr.add(fr._names[i],fr.remove(i));
     break;
   }
   for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i].min() == vecs[i].max() || vecs[i].naCnt() > vecs[i].length() * 0.2)   constantOrNAs.add(i);
   if (!constantOrNAs.isEmpty()) {
     int[] cols=new int[constantOrNAs.size()];
     for (int i=0; i < cols.length; ++i)     cols[i]=constantOrNAs.get(i);
-    source.remove(cols);
+    fr.remove(cols);
   }
-  final Frame fr=GLMTask.adaptFrame(source);
+  fr=GLMTask.adaptFrame(fr);
   YMUTask ymut=new YMUTask(this,new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),standardize,case_mode,case_val,fr.anyVec().length());
   ymut.doAll(fr);
   GLMIterationTask firstIter=new GLMIterationTask(this,new GLMParams(family,tweedie_variance_power,link,tweedie_link_power),_beta,standardize,1.0 / ymut.nobs(),case_mode,case_val,_step,_offset,_complement);
   firstIter._ymu=ymut.ymu();
-  System.out.println("nobs = " + ymut.nobs() + ", ymu = "+ firstIter._ymu);
   if (completer != null)   fjt.setCompleter(completer);
   final LSMSolver solver=new ADMMSolver(lambda,alpha);
   firstIter.setCompleter(new Iteration(solver,fr,fjt));

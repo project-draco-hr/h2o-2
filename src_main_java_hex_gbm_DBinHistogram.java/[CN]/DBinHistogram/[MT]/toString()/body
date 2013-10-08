@@ -1,6 +1,6 @@
 {
   StringBuilder sb=new StringBuilder();
-  sb.append(_name).append(":").append(_min).append("-").append(_max + ", bmin=" + _bmin+ " step="+ _step+ " nbins="+ (int)_nbins);
+  sb.append(_name).append(":").append(_min).append("-").append(_max + ", bmin=" + _bmin+ " step="+ (1 / _step)+ " nbins="+ (int)_nbins);
   if (_bins != null) {
     for (int b=0; b < _nbins; b++) {
       sb.append(String.format("\ncnt=%d, min=%f, max=%f, mean/var=",_bins[b],_mins[b],_maxs[b]));
