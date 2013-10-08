@@ -1,0 +1,12 @@
+{
+  for (int b=0; b < _nbins; b++) {
+    long N=_bins[b];
+    if (N > 0) {
+      double sum=_MSs[2 * b + 0];
+      double ss2=_MSs[2 * b + 1];
+      double mean=sum / N;
+      _MSs[2 * b + 0]=mean;
+      _MSs[2 * b + 1]=ss2 - mean * sum;
+    }
+  }
+}
