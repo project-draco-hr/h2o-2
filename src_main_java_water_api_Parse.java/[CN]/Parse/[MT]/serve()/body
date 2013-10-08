@@ -7,6 +7,9 @@
   try {
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
     Job job=ParseDataset.forkParseDataset(dest,keys,setup);
+    if (_blocking.value()) {
+      Job.waitUntilJobEnded(job.self());
+    }
     JsonObject response=new JsonObject();
     response.addProperty(RequestStatics.JOB,job.self().toString());
     response.addProperty(RequestStatics.DEST_KEY,dest.toString());
