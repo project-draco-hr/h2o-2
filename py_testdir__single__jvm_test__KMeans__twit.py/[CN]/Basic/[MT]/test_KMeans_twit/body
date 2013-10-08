@@ -6,7 +6,7 @@ def test_KMeans_twit(self):
     expected2 = [([351104.74065255735, 15421.749823633158], 11340, 5021682274541967.0), ([7292636.589090909, 7575.630909090909], 550, 6373072701775582.0), ([34406781.071428575, 244878.0], 14, 123310713697348.92)]
     allowedDelta = (0.0001, 0.0001, 0.0001)
     for trial in range(2):
-        kwargs = {'k': 3, 'max_iter': 50, 'epsilon': 0.0001, 'normalize': 0, 'cols': '0,1', 'initialization': 'Furthest', 'destination_key': 'kmeans_dest_key', 'seed': 265211114317615310, }
+        kwargs = {'k': 3, 'max_iter': 50, 'normalize': 0, 'cols': '0,1', 'initialization': 'Furthest', 'destination_key': 'kmeans_dest_key', 'seed': 265211114317615310, }
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvFilename, parseResult, 'd', **kwargs)
         if (1 == 0):

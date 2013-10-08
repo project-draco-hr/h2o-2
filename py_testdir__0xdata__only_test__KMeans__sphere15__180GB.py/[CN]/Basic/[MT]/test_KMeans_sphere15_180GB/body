@@ -30,7 +30,7 @@ def test_KMeans_sphere15_180GB(self):
         if (not DO_KMEANS):
             continue
         print (('col 0 is enum in ' + csvFilename) + ' but KMeans should skip that automatically?? or no?')
-        kwargs = {'k': 15, 'initialization': 'Furthest', 'epsilon': 1e-06, 'cols': None, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
+        kwargs = {'k': 15, 'initialization': 'Furthest', 'cols': None, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
         if ((trial % 3) == 0):
             kwargs['initialization'] = 'PlusPlus'
         elif ((trial % 3) == 1):

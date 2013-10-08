@@ -33,7 +33,7 @@ def test_PCA_many_cols_enum(self):
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
         for tolerance in [(i / 10.0) for i in range(11)]:
-            params = {'destination_key': modelKey, 'ignore': 0, 'tolerance': tolerance, 'standardize': 1, }
+            params = {'destination_key': modelKey, 'tolerance': tolerance, 'standardize': 1, }
             print 'Using these parameters for PCA: ', params
             kwargs = params.copy()
             pcaResult = h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
