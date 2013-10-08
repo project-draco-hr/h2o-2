@@ -6,6 +6,6 @@
   _val=new GLMValidation(null,_ymu,_glm,rank);
   super.map(chunks);
   _gram.mul(_reg);
-  if (_val.nobs > 0)   _val.avg_err/=_val.nobs;
+  _val.regularize(_reg);
   for (int i=0; i < _xy.length; ++i)   _xy[i]*=_reg;
 }

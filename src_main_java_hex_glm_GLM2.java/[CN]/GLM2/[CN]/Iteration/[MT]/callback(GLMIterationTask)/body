@@ -4,8 +4,6 @@
     solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
     boolean done=false;
     if (Utils.hasNaNsOrInfs(newBeta)) {
-      System.out.println("got NaNs in beta after " + glmt._iter + " iterations");
-      System.out.println(glmt._gram.pprint(glmt._gram.getXX()));
       done=true;
       newBeta=glmt._beta == null ? newBeta : glmt._beta;
     }
