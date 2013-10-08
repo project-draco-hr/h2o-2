@@ -1,12 +1,12 @@
 {
-  _percentileValues=new double[_percentiles.length];
+  _percentileValues=new double[DEFAULT_PERCENTILES.length];
   if (_bins.length == 0)   return;
   int k=0;
   long s=0;
-  for (int j=0; j < _percentiles.length; ++j) {
-    final double s1=_percentiles[j] * _n_na;
+  for (int j=0; j < DEFAULT_PERCENTILES.length; ++j) {
+    final double s1=DEFAULT_PERCENTILES[j] * _avail_rows;
     long bc=0;
-    while (s1 > s + (bc=binCount(k))) {
+    while (s1 > s + (bc=_bins[k])) {
       s+=bc;
       k++;
     }
