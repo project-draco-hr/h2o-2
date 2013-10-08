@@ -1,12 +1,11 @@
-def doPCA(fs, folderPath):
+def doKMeans(fs, folderPath):
     for f in fs['train']:
-        print 'Doing PCA on ', f
         overallWallStart = time.time()
-        if (not os.path.exists('pcabench.csv')):
-            output = open('pcabench.csv', 'w')
+        if (not os.path.exists('kmeansbench.csv')):
+            output = open('kmeansbench.csv', 'w')
             output.write((','.join(csv_header) + '\n'))
         else:
-            output = open('pcabench.csv', 'a')
+            output = open('kmeansbench.csv', 'a')
         csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
         try:
             java_heap_GB = h2o.nodes[0].java_heap_GB
@@ -22,12 +21,12 @@ def doPCA(fs, folderPath):
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect = h2o.nodes[0].inspect(parseResult['destination_key'])
             row = {'java_heap_GB': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
-            params = {'destination_key': 'python_PCA_key', 'ignore': 0, 'tolerance': 0.0, 'standardize': 1, }
+            params = {'source_key': hex_key, 'k': 6, 'initialization': 'Furthest', 'max_iter': 100, 'seed': 1234567, 'normalize': 0, 'destination_key': (('KMeans(' + f) + ')'), }
             kwargs = params.copy()
-            pcaStart = time.time()
-            pcaResult = h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=3600, **kwargs)
-            pcaTime = (time.time() - pcaStart)
-            row.update({'pcaBuildTime': pcaTime, })
+            kmeansStart = time.time()
+            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=3600, **kwargs)
+            kmeansTime = (time.time() - kmeansStart)
+            row.update({'kmeansBuildTime': kmeansTime, })
             csvWrt.writerow(row)
         finally:
             output.close()
