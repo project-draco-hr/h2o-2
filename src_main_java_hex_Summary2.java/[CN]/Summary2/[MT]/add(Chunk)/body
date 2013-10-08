@@ -13,7 +13,7 @@
       _max[minmax]=val;
       for (int k=0; k < _max.length; k++)       if (_max[k] < _max[minmax])       minmax=k;
     }
-    int binIdx=Math.min(_bins.length - 1,(int)((val - _start) / _binsz));
+    int binIdx=_isInt ? (int)Math.round((val - _start) * _binszInv) : (int)Math.floor((val - _start) * _binszInv);
     ++_bins[binIdx];
   }
   Arrays.sort(_min);
