@@ -1,0 +1,11 @@
+{
+  Assert.assertTrue("The test should instantiat only Request API not Request2 API",!Request2.class.isAssignableFrom(api));
+  try {
+    return api.newInstance();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    Assert.assertTrue("Test should be able to instantiate " + api + " via default ctor!",false);
+  }
+  return null;
+}
