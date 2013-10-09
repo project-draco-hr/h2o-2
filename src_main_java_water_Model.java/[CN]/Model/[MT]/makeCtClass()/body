@@ -1,0 +1,12 @@
+{
+  CtClass clz=ClassPool.getDefault().makeClass(_selfKey.toString());
+  clz.addField(CtField.make(toJavaNAMES(new SB()).toString(),clz));
+  clz.addField(CtField.make(toJavaNCLASSES(new SB()).toString(),clz));
+  toJavaInit(clz);
+  clz.addMethod(CtMethod.make(toJavaPredict(new SB()).toString(),clz));
+  clz.addMethod(CtMethod.make(TOJAVA_MAP,clz));
+  clz.addMethod(CtMethod.make(TOJAVA_PREDICT_MAP,clz));
+  clz.addMethod(CtMethod.make(TOJAVA_PREDICT_MAP_ALLOC1,clz));
+  clz.addMethod(CtMethod.make(TOJAVA_PREDICT_MAP_ALLOC2,clz));
+  return clz;
+}
