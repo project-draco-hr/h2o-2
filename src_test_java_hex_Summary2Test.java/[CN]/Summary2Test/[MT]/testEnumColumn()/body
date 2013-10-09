@@ -1,0 +1,15 @@
+{
+  Key key=Key.make("cars.hex");
+  Frame fr=parseFrame(key,"./smalldata/cars.csv");
+  Vec vec=fr.vecs()[fr.find("name")];
+  Summary2 s=new Summary2(vec);
+  s.add(vec.chunk(0));
+  for (int i=1; i < vec.nChunks(); i++) {
+    Summary2 s1=new Summary2(vec);
+    s1.add(vec.chunk(i));
+    s.add(s1);
+  }
+  s.toString();
+  assertEquals(306,s._bins.length);
+  UKV.remove(key);
+}

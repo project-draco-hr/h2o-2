@@ -1,0 +1,9 @@
+{
+  if (apis.containsKey(api)) {
+    String[] regParams=apis.get(api);
+    String[] pars=Arrays.copyOf(regParams,regParams.length + params.length);
+    System.arraycopy(params,0,pars,regParams.length,params.length);
+    apis.put(api,pars);
+  }
+ else   apis.put(api,params);
+}

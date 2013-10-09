@@ -11,7 +11,7 @@ def test_C_prostate(self):
         x = ','.join(map(str, x))
         print '\nx:', x
         print 'y:', y
-        kwargs = {'x': x, 'y': y, 'n_folds': 5, 'expert': 1, 'lsm_solver': 'GenGradient', 'standardize': 1, }
+        kwargs = {'x': x, 'y': y, 'n_folds': 5, 'expert_settings': 1, 'lsm_solver': 'GenGradient', 'standardize': 1, }
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=30, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
         h2o.check_sandbox_for_errors()

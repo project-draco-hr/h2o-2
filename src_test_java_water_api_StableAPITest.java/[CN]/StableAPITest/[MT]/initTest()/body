@@ -1,0 +1,7 @@
+{
+  H2O.NAME="Test cloud";
+  Field fMap=TypeMap.class.getDeclaredField("MAP");
+  fMap.setAccessible(true);
+  Map<String,Integer> map=(Map<String,Integer>)fMap.get(null);
+  map.put(PCAModel.class.getName(),1000);
+}

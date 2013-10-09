@@ -10,20 +10,18 @@
   double span=vec.max() - vec.min();
   if (vec.isEnum() && (span + 1) < MAX_HIST_SZ) {
     _start=vec.min();
-    _binszInv=_binsz=1;
+    _binsz=1;
     _bins=new long[(int)span + 1];
   }
  else {
-    double b=2 * vec.sigma() / Math.sqrt(len);
+    double b=Math.max(1e-4,3.5 * vec.sigma() / Math.cbrt(len));
     double d=Math.pow(10,Math.floor(Math.log10(b)));
     if (b > 20 * d / 3)     d*=10;
  else     if (b > 5 * d / 3)     d*=5;
-    d=Math.max(1e-4,d);
     if (d < 1. && _isInt)     d=1.;
     _binsz=d;
-    _binszInv=1. / d;
-    _start=_binsz * Math.floor(vec.min() * _binszInv);
-    int nbin=(int)Math.ceil((vec.max() + (_isInt ? 1 : 0) - _start) * _binszInv);
-    _bins=new long[nbin > 0 ? nbin : 1];
+    _start=_binsz * Math.floor(vec.min() / _binsz);
+    int nbin=(int)Math.floor((vec.max() + (_isInt ? .5 : 0) - _start) / _binsz) + 1;
+    _bins=new long[nbin];
   }
 }
