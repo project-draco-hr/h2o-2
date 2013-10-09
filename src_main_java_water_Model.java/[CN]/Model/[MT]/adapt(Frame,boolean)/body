@@ -1,5 +1,7 @@
 {
-  int map[][]=adapt(fr.names(),fr.domains(),exact);
+  String frnames[]=fr.names();
+  Vec frvecs[]=fr.vecs();
+  int map[][]=adapt(frnames,fr.domains(),exact);
   int cmap[]=map[_names.length - 1];
   Vec vecs[]=new Vec[_names.length - 1];
   int avCnt=0;
@@ -11,11 +13,11 @@
     int d=cmap[c];
     if (d == -1)     throw H2O.unimpl();
  else     if (map[c] == null) {
-      vecs[c]=fr.vecs()[d];
+      vecs[c]=frvecs[d];
     }
  else {
-      vecs[c]=avecs[avCnt]=remapVecDomain(map[c],fr.vecs()[d]);
-      anames[avCnt]=fr.names()[d];
+      vecs[c]=avecs[avCnt]=frvecs[d].makeTransf(map[c]);
+      anames[avCnt]=frnames[d];
       avCnt++;
     }
   }

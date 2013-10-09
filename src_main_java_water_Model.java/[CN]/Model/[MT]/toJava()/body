@@ -1,0 +1,16 @@
+{
+  SB sb=new SB();
+  sb.p("\n");
+  sb.p("class ").p(_selfKey.toString()).p(" {\n");
+  toJavaNAMES(sb);
+  toJavaNCLASSES(sb);
+  toJavaInit(sb);
+  sb.p("\n");
+  toJavaPredict(sb);
+  sb.p(TOJAVA_MAP);
+  sb.p(TOJAVA_PREDICT_MAP);
+  sb.p(TOJAVA_PREDICT_MAP_ALLOC1);
+  sb.p(TOJAVA_PREDICT_MAP_ALLOC2);
+  sb.p("}\n");
+  return sb.toString();
+}
