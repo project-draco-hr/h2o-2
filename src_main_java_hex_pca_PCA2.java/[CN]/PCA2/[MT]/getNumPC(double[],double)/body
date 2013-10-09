@@ -1,0 +1,6 @@
+{
+  if (sdev == null)   return 0;
+  double cutoff=tol * sdev[0];
+  int ind=Arrays.binarySearch(ArrayUtils.toObject(sdev),cutoff,new reverseDouble());
+  return Math.abs(ind + 1);
+}

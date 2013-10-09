@@ -1,0 +1,10 @@
+{
+  int rows=chunks[0]._len;
+  for (int r=0; r < rows; r++) {
+    for (int c=0; c < _ncomp; c++) {
+      double x=0;
+      for (int d=0; d < _nfeat; d++)       x+=(chunks[d].at0(r) - _normSub[d]) * _normMul[d] * _smatrix[d][c];
+      chunks[_nfeat + c].set0(r,x);
+    }
+  }
+}
