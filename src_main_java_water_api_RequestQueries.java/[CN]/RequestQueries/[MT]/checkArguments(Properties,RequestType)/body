@@ -1,6 +1,22 @@
 {
   for (  Argument arg : _arguments)   arg.reset();
   if (type == RequestType.query)   return buildQuery(args,type);
+  if (H2O.OPT_ARGS.check_rest_params) {
+    Enumeration en=args.propertyNames();
+    while (en.hasMoreElements()) {
+      boolean found=false;
+      String key=(String)en.nextElement();
+      for (      Argument arg : _arguments) {
+        if (arg._name.equals(key)) {
+          found=true;
+          break;
+        }
+      }
+      if (!found) {
+        return jsonError("Request specifies the argument '" + key + "' but it is not a valid parameter for this query "+ this.getClass().getName()).toString();
+      }
+    }
+  }
   for (  Argument arg : _arguments) {
     if (!arg.disabled()) {
       try {
