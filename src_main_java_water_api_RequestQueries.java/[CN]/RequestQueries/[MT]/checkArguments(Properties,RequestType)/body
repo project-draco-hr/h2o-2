@@ -2,7 +2,6 @@
   for (  Argument arg : _arguments)   arg.reset();
   if (type == RequestType.query)   return buildQuery(args,type);
   if (H2O.OPT_ARGS.check_rest_params) {
-    System.out.println("RequestQueries.checkArguments(): checking unused arguments");
     Enumeration en=args.propertyNames();
     while (en.hasMoreElements()) {
       boolean found=false;
