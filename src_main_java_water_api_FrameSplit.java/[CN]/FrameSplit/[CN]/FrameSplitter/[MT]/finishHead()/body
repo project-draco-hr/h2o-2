@@ -1,0 +1,12 @@
+{
+  Frame[] frames=new Frame[_splits.length];
+  String[] names=new String[_num_columns];
+  System.arraycopy(_fr.names(),0,names,0,_num_columns);
+  for (int f=0; f < _splits.length; f++) {
+    Vec[] vecs=new Vec[_num_columns];
+    System.arraycopy(_fr.vecs(),(f + 1) * _num_columns,vecs,0,_num_columns);
+    for (int column=0; column < _num_columns; column++)     if (_fr.vecs()[column].isEnum())     vecs[column]._domain=_fr.vecs()[column]._domain;
+    frames[f]=new Frame(names,vecs);
+  }
+  return frames;
+}
