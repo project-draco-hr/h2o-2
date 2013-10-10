@@ -6,7 +6,7 @@
     new ComputeRes().doAll(fr);
     DTree[] ktrees=buildNextKTrees(fr);
     if (cancelled())     break;
-    Score sc=new Score().doAll(fr).report(Sys.GBM__,tid + 1,ktrees);
+    Score sc=new Score().doIt(model,fr,validation,_validResponse).report(Sys.GBM__,tid + 1,ktrees);
     model=new GBMModel(model,ktrees,(float)sc._sum / _nrows,sc._cm);
     DKV.put(outputKey,model);
   }
