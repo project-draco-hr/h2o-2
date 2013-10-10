@@ -1,4 +1,6 @@
 {
-  String href=req.href();
-  _requests.remove(href);
+  for (  API_VERSION ver : req.supportedVersions()) {
+    String href=req.href(ver);
+    _requests.remove(href);
+  }
 }
