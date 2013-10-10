@@ -1,0 +1,14 @@
+{
+  double[] splits=new double[fractions.length];
+  double cumsum=0.;
+  for (int i=0; i < fractions.length; i++) {
+    cumsum+=fractions[i];
+    splits[i]=cumsum;
+  }
+  splits[splits.length - 1]=1.01;
+  FrameSplitter task=new FrameSplitter();
+  Frame f=task.initHead(frame,splits);
+  task._fr=f;
+  task.doAll(f);
+  return task.finishHead();
+}
