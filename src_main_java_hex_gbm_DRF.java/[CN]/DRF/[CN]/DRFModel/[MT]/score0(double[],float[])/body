@@ -1,4 +1,9 @@
 {
   Arrays.fill(preds,0);
-  throw H2O.unimpl();
+  float[] p=super.score0(data,preds);
+  float sum=0;
+  for (  float f : preds)   sum+=f;
+  int votes=Math.round(sum);
+  for (int i=0; i < preds.length; i++)   preds[i]/=votes;
+  return p;
 }
