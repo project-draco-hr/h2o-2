@@ -1,12 +1,12 @@
 {
-  _zeros+=other._zeros;
-  Utils.add(_bins,other._bins);
-  double[] ds=MemoryManager.malloc8d(_min.length);
+  zeros+=other.zeros;
+  Utils.add(bins,other.bins);
+  double[] ds=MemoryManager.malloc8d(mins.length);
   int i=0, j=0;
-  for (int k=0; k < ds.length; k++)   ds[k]=_min[i] < other._min[j] ? _min[i++] : other._min[j++];
-  System.arraycopy(ds,0,_min,0,ds.length);
-  i=j=_max.length - 1;
-  for (int k=ds.length - 1; k >= 0; k--)   ds[k]=_max[i] > other._max[j] ? _max[i--] : other._max[j--];
-  System.arraycopy(ds,0,_max,0,ds.length);
+  for (int k=0; k < ds.length; k++)   ds[k]=mins[i] < other.mins[j] ? mins[i++] : other.mins[j++];
+  System.arraycopy(ds,0,mins,0,ds.length);
+  i=j=maxs.length - 1;
+  for (int k=ds.length - 1; k >= 0; k--)   ds[k]=maxs[i] > other.maxs[j] ? maxs[i--] : other.maxs[j--];
+  System.arraycopy(ds,0,maxs,0,ds.length);
   return this;
 }

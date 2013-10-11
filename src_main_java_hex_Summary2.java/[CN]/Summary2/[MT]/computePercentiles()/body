@@ -1,15 +1,15 @@
 {
-  _percentileValues=new double[DEFAULT_PERCENTILES.length];
-  if (_bins.length == 0)   return;
+  percentileValues=new double[DEFAULT_PERCENTILES.length];
+  if (bins.length == 0)   return;
   int k=0;
   long s=0;
   for (int j=0; j < DEFAULT_PERCENTILES.length; ++j) {
     final double s1=DEFAULT_PERCENTILES[j] * _avail_rows;
     long bc=0;
-    while (s1 > s + (bc=_bins[k])) {
+    while (s1 > s + (bc=bins[k])) {
       s+=bc;
       k++;
     }
-    _percentileValues[j]=_min[0] + k * _binsz + ((_binsz > 1) ? 0.5 * _binsz : 0);
+    percentileValues[j]=mins[0] + k * binsz + ((binsz > 1) ? 0.5 * binsz : 0);
   }
 }
