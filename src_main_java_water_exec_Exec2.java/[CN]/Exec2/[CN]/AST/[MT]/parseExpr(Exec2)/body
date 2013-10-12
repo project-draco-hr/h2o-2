@@ -7,5 +7,8 @@
     throw H2O.unimpl();
   }
   if (ast == null)   ast=ASTNum.parse(E);
-  return ASTInfix.parse(E,ast);
+  ast=ASTOp2.parseInfix(E,ast);
+  E.skipWS();
+  if (E._x < E._buf.length)   E.throwErr("Junk at end of line",E._buf.length - 1);
+  return ast;
 }

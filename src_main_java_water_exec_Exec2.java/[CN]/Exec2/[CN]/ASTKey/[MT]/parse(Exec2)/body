@@ -1,3 +1,13 @@
 {
-  throw H2O.unimpl();
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  Key key=Key.make(id);
+  Iced ice=UKV.get(key);
+  if (ice == null || !(ice instanceof Frame)) {
+    E._x=x;
+    return null;
+  }
+  Frame fr=(Frame)ice;
+  return new ASTKey(fr.numCols(),fr.numRows(),key);
 }
