@@ -1,0 +1,11 @@
+{
+  if (E.peek('(')) {
+    throw H2O.unimpl();
+  }
+  AST ast=ASTKey.parse(E);
+  if (ast != null && E.peek('=')) {
+    throw H2O.unimpl();
+  }
+  if (ast == null)   ast=ASTNum.parse(E);
+  return ASTInfix.parse(E,ast);
+}
