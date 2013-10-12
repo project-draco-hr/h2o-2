@@ -1,9 +1,9 @@
 @classmethod
 def setUpClass(cls):
-    sys.stdout = h2o.OutWrapper(sys.stdout)
     global localhost
     localhost = h2o.decide_if_localhost()
     if localhost:
-        h2o.build_cloud(node_count=cls.nodes, java_heap_GB=cls.java_xmx)
+        params = collectConf(cls)
+        h2o.build_cloud(**params)
     else:
         h2o_hosts.build_cloud_with_hosts()
