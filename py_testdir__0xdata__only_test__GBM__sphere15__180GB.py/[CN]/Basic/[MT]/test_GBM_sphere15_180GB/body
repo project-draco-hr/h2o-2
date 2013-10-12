@@ -19,9 +19,9 @@ def test_GBM_sphere15_180GB(self):
         timeoutSecs = (2 * 3600)
         kwargs = {}
         if FROM_HDFS:
-            parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
+            parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
         else:
-            parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
+            parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, retryDelaySecs=2, benchmarkLogging=benchmarkLogging, **kwargs)
         elapsed = (time.time() - start)
         fileMBS = ((totalBytes / 1000000.0) / elapsed)
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, fileMBS, elapsed)
