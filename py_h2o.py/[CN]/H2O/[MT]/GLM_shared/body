@@ -1,6 +1,6 @@
 def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, parentName=None, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
-    params_dict = {'parallel': 1, 'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', 'destination_key': 'GLM_model_$python_0_default_0', }
+    params_dict = {'parallel': 1, 'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', }
     params_dict.update(kwargs)
     print ('\n' + parentName), 'params list:', params_dict
     a = self.__do_json_request((parentName + '.json'), timeout=timeoutSecs, params=params_dict)
