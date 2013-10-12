@@ -23,7 +23,7 @@ def test_c7_rel(self):
     kwargs = {'x': x, 'y': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 4, 'thresholds': 0.5, 'n_folds': 1, 'weight': 100, 'beta_epsilon': 0.0001, }
     timeoutSecs = 1800
     start = time.time()
-    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, **kwargs)
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, **kwargs)
     elapsed = (time.time() - start)
     print 'glm completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
     h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
