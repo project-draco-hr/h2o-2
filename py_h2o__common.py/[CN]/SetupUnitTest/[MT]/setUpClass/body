@@ -1,5 +1,6 @@
 @classmethod
 def setUpClass(cls):
+    sys.stdout = h2o.OutWrapper(sys.stdout)
     global localhost
     localhost = h2o.decide_if_localhost()
     if localhost:
