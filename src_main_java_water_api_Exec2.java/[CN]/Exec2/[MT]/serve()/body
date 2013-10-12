@@ -13,7 +13,7 @@
     if (num_rows == 1 && num_cols == 1)     scalar=fr.vecs()[0].at(0);
     return new Response(Response.Status.done,this,-1,-1,null);
   }
- catch (  PositionedException pe) {
+ catch (  IllegalArgumentException pe) {
     e=pe;
   }
 catch (  Exception e2) {
