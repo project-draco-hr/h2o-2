@@ -1,5 +1,6 @@
 {
   AST ast=parseExpr(E);
+  if (ast == null)   return null;
   AST ast2=ASTOp2.parseInfix(E,ast);
   if (ast2 != null)   return ast2;
   if (ast instanceof ASTKey && E.peek('=')) {
