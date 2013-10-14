@@ -37,7 +37,7 @@ def test_GBM_many_cols_enum(self):
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
         h2o.beta_features = True
-        ntrees = 100
+        ntrees = 10
         for max_depth in [5, 10, 20, 40]:
             params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': (num_cols - 1), }
             print 'Using these parameters for GBM: ', params
