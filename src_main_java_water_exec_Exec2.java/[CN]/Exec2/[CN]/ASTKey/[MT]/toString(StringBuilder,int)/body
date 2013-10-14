@@ -1,4 +1,11 @@
 {
-  indent(sb,d);
-  return sb.append(this);
+  indent(sb,d).append(this);
+  if (_colsel != null || _rowsel != null) {
+    sb.append("[,]\n");
+    if (_rowsel == null)     indent(sb,d + 1).append("all rows\n");
+ else     _rowsel.toString(sb,d + 1).append('\n');
+    if (_colsel == null)     indent(sb,d + 1).append("all cols");
+ else     _colsel.toString(sb,d + 1);
+  }
+  return sb;
 }
