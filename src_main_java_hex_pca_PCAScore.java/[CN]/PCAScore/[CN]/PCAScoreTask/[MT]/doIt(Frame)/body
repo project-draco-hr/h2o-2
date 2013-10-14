@@ -1,0 +1,14 @@
+{
+  final Vec[] vecs=fr.vecs();
+  _normSub=MemoryManager.malloc8d(_nfeat);
+  _normMul=MemoryManager.malloc8d(_nfeat);
+  Arrays.fill(_normMul,1);
+  if (_standardize) {
+    for (int i=0; i < _nfeat; ++i) {
+      _normSub[i]=vecs[i].mean();
+      _normMul[i]=1.0 / vecs[i].sigma();
+    }
+  }
+  dfork(fr);
+  return getResult();
+}
