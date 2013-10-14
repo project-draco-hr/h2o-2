@@ -1,14 +1,14 @@
 {
+  AST ast;
   if (E.peek('(')) {
-    throw H2O.unimpl();
+    int x=E._x;
+    ast=parseCXExpr(E);
+    if (!E.peek(')'))     E.throwErr("Missing close-paren",x);
+    return ast;
   }
-  AST ast=ASTKey.parse(E);
-  if (ast != null && E.peek('=')) {
-    throw H2O.unimpl();
-  }
-  if (ast == null)   ast=ASTNum.parse(E);
-  ast=ASTOp2.parseInfix(E,ast);
-  E.skipWS();
-  if (E._x < E._buf.length)   E.throwErr("Junk at end of line",E._buf.length - 1);
-  return ast;
+  ast=ASTKey.parse(E);
+  if (ast != null)   return ast;
+  ast=ASTNum.parse(E);
+  if (ast != null)   return ast;
+  return null;
 }
