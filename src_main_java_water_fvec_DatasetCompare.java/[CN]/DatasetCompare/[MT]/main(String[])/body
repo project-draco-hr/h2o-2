@@ -1,0 +1,15 @@
+{
+  System.out.println("Running Parser Cmp Test with args=" + Arrays.toString(args));
+  final int nnodes=3;
+  for (int i=1; i < nnodes; i++) {
+    Node n=new NodeVM(args);
+    n.inheritIO();
+    n.start();
+  }
+  H2O.waitForCloudSize(nnodes);
+  String root=(args.length > 0) ? args[0] : "smalldata";
+  System.out.println("ROOT = " + root);
+  System.out.println("Running...");
+  do_file(TestUtil.find_test_file(root));
+  System.out.println("DONE!!!");
+}
