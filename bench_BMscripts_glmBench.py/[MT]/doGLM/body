@@ -2,7 +2,7 @@ def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehe
     for f in fs['train']:
         overallWallStart = time.time()
         date = '-'.join([str(x) for x in list(time.localtime())][0:3])
-        glmbenchcsv = (((('benchmarks/' + build) + '/') + date) + 'glmbench.csv')
+        glmbenchcsv = (((('benchmarks/' + build) + '/') + date) + '/glmbench.csv')
         if (not os.path.exists(glmbenchcsv)):
             output = open(glmbenchcsv, 'w')
             output.write((','.join(csv_header) + '\n'))
