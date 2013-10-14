@@ -1,13 +1,11 @@
 {
   int x=E._x;
   String id=E.isID();
-  if (id == null)   return ast;
+  if (id == null)   return null;
   ASTOp2 op2=OP2S.get(id);
   if (op2 == null) {
     E._x=x;
-    return ast;
+    return null;
   }
-  AST rite=parseExpr(E);
-  E.throwIfNotCompat(ast,rite,x);
-  return op2.make(ast,rite);
+  return op2.parseRite(ast,E);
 }

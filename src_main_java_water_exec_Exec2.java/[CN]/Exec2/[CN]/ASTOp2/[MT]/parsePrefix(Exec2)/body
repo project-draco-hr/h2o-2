@@ -1,0 +1,13 @@
+{
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  ASTOp2 op2=OP2S.get(id);
+  if (op2 == null) {
+    E._x=x;
+    return null;
+  }
+  E.xpeek('(',x,null);
+  AST left=E.xpeek(',',E._x,parseCXExpr(E));
+  return E.xpeek(')',E._x,op2.parseRite(left,E));
+}
