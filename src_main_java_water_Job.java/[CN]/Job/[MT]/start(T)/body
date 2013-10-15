@@ -1,6 +1,7 @@
 {
-  _fjtask=fjtask;
-  DKV.put(job_key,new Value(job_key,new byte[0]));
+  fjtask.setCompleter(_fjtask=new H2OEmptyCompleter());
+  Futures fs=new Futures();
+  DKV.put(job_key,new Value(job_key,new byte[0]),fs);
   start_time=System.currentTimeMillis();
   new TAtomic<List>(){
     @Override public List atomic(    List old){
@@ -12,5 +13,6 @@
     }
   }
 .invoke(LIST);
+  fs.blockForPending();
   return fjtask;
 }
