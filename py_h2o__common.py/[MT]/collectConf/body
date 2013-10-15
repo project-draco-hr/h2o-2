@@ -1,0 +1,7 @@
+def collectConf(cls):
+    result = {}
+    if hasattr(cls, 'nodes'):
+        result['node_count'] = cls.nodes
+    if hasattr(cls, 'java_xmx'):
+        result['java_heap_GB'] = cls.java_xmx
+    return result

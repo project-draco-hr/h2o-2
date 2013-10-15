@@ -1,0 +1,22 @@
+{
+  int x=E._x;
+  ASTOp op=parse(E);
+  if (op == null)   return null;
+  if (op._args != null) {
+    AST args[]=new AST[op._args.length];
+    E.xpeek('(',x,null);
+    for (int i=0; i < args.length - 1; i++)     args[i]=E.xpeek(',',E._x,parseCXExpr(E));
+    args[args.length - 1]=parseCXExpr(E);
+    return E.xpeek(')',E._x,op.make_rows(args,E,x));
+  }
+  E.xpeek('(',x,null);
+  AST args[]=new AST[2];
+  int i=0;
+  while (true) {
+    args[i++]=parseCXExpr(E);
+    if (E.peek(')'))     break;
+    E.xpeek(',',E._x,null);
+    if (i == args.length)     args=Arrays.copyOf(args,args.length << 1);
+  }
+  return op.make(Arrays.copyOf(args,i),1,i);
+}

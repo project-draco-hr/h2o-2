@@ -1,4 +1,5 @@
 def build_cloud_with_hosts(node_count=None, **kwargs):
+    sys.stdout = h2o.OutWrapper(sys.stdout)
     if (node_count is not None):
         kwargs['h2o_per_host'] = node_count
         node_count = None

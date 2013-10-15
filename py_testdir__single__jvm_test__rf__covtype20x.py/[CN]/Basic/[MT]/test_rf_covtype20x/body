@@ -21,7 +21,7 @@ def test_rf_covtype20x(self):
     execExpr = ((dataKeyTest2 + '=') + dataKeyTest)
     resultExec = h2o_cmd.runExec(expression=execExpr, timeoutSecs=15)
     print "RF with no_confusion_matrix=1, so we can 'time' the RFView separately after job completion?"
-    params = {'ntree': 6, 'parallel': 1, 'out_of_bag_error_estimate': 0, 'no_confusion_matrix': 1, 'model_key': 'RF_model', }
+    params = {'ntree': 6, 'parallel': 1, 'out_of_bag_error_estimate': 0, 'model_key': 'RF_model', }
     colX = h2o_rf.pickRandRfParams(paramDict, params)
     kwargs = params.copy()
     timeoutSecs = (30 + ((kwargs['ntree'] * 60) * ((kwargs['parallel'] and 1) or 5)))

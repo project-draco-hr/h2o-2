@@ -1,0 +1,15 @@
+{
+  String[] fnames=new String[model._va._cols.length];
+  for (int i=0; i < fnames.length; i++)   fnames[i]=model._va._cols[i]._name;
+  Frame fr=subset(source,fnames);
+  int nfeat=model._eigVec.length;
+  Vec[] vecs=Arrays.copyOf(fr.vecs(),nfeat + num_pc);
+  for (int i=0; i < num_pc; i++)   vecs[nfeat + i]=vecs[0].makeZero();
+  PCAScoreTask tsk=new PCAScoreTask(this,nfeat,num_pc,model._eigVec,model._pcaParams._standardized);
+  tsk.doIt(new Frame(vecs));
+  Vec[] outputVecs=Arrays.copyOfRange(tsk._fr.vecs(),nfeat,nfeat + num_pc);
+  String[] names=new String[num_pc];
+  for (int i=0; i < num_pc; i++)   names[i]="PC" + i;
+  Frame f=new Frame(names,outputVecs);
+  DKV.put(destination_key,f);
+}
