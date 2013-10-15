@@ -1,5 +1,8 @@
 {
   AST ast=new Exec2(str).parse();
   System.out.println(ast.toString(new StringBuilder(),0).toString());
-  return null;
+  Vec.VectorGroup vg=new Vec.VectorGroup();
+  Exec2 res=ast.exec(vg);
+  if (res._fr != null)   return res._fr;
+  return new Frame(new String[]{"result"},new Vec[]{new Vec(vg.addVecs(1)[0],res._d)});
 }
