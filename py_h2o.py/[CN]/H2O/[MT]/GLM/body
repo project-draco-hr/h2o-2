@@ -1,5 +1,5 @@
-def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, **kwargs):
-    a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName='GLM', **kwargs)
+def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, destination_key='GLM_model_$python_0_default_0', **kwargs):
+    a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName='GLM', destination_key=destination_key, **kwargs)
     if (a['response']['redirect_request'] != 'GLMProgressPage'):
         print dump_json(a)
         raise Exception('H2O GLM redirect is not GLMProgressPage. GLM json response precedes.')

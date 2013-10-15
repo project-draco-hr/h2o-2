@@ -1,6 +1,13 @@
 {
   final String msg=ex.getMessage();
-  if (msg == null || !msg.equals("Cancelled"))   GLM2.this.cancel("Got exception '" + ex.getClass() + "', with msg '"+ ex.getMessage()+ "'");
+  if (msg == null || !msg.equals("Cancelled")) {
+    StringWriter sw=new StringWriter();
+    PrintWriter pw=new PrintWriter(sw);
+    ex.printStackTrace(pw);
+    String stackTrace=sw.toString();
+    GLM2.this.cancel("Got exception '" + ex.getClass() + "', with msg '"+ ex.getMessage()+ "'\n"+ stackTrace);
+    System.out.println(stackTrace);
+  }
   fjt.completeExceptionally(ex);
   return false;
 }

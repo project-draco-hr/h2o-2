@@ -1,0 +1,10 @@
+{
+  AST ast2, ast=parseExpr(E);
+  if (ast == null)   return null;
+  if ((ast2=ASTOp.parseInfix(E,ast)) != null)   return ast2;
+  if ((ast2=ASTAssign.parse(E,ast)) != null)   return ast2;
+  if (ast.isScalar() && E.peek('?')) {
+    throw H2O.unimpl();
+  }
+  return ast;
+}
