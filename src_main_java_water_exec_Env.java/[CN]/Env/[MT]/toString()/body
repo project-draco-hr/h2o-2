@@ -1,0 +1,10 @@
+{
+  String s="{";
+  for (int i=0; i < _sp; i++) {
+    if (_fr[i] != null)     s+=AST.dimStr(_fr[i].numCols(),_fr[i].numRows());
+ else     if (_fun[i] != null)     s+=_fun[i];
+ else     s+=_d[i];
+    s+=',';
+  }
+  return s + "}";
+}
