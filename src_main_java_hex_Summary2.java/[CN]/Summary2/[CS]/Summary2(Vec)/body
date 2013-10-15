@@ -1,19 +1,25 @@
 {
   _enum=vec.isEnum();
+  _isInt=vec.isInt();
   if (_enum)   domains=vec.domain();
  else   domains=null;
-  _isInt=vec.isInt();
   long len=vec.length();
   _avail_rows=len - vec.naCnt();
-  mins=MemoryManager.malloc8d((int)Math.min(len,NMAX));
-  maxs=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+  if (_enum) {
+    mins=MemoryManager.malloc8d(Math.min(domains.length,NMAX));
+    maxs=MemoryManager.malloc8d(Math.min(domains.length,NMAX));
+  }
+ else {
+    mins=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+    maxs=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+  }
   Arrays.fill(mins,Double.POSITIVE_INFINITY);
   Arrays.fill(maxs,Double.NEGATIVE_INFINITY);
-  double span=vec.max() - vec.min();
-  if (vec.isEnum() && (span + 1) < MAX_HIST_SZ) {
+  double span=vec.max() - vec.min() + 1;
+  if (vec.isEnum() && span < MAX_HIST_SZ) {
     start=vec.min();
     binsz=1;
-    bins=new long[(int)span + 1];
+    bins=new long[(int)span];
   }
  else {
     double b=Math.max(1e-4,3.5 * vec.sigma() / Math.cbrt(len));
