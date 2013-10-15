@@ -1,0 +1,8 @@
+{
+  ASTOp op=parse(E);
+  if (op == null)   return null;
+  if (op._args == null || op._args.length != 2)   return null;
+  int x=E._x;
+  AST rite=parseCXExpr(E);
+  return op.make_rows(new AST[]{ast,rite},E,x);
+}

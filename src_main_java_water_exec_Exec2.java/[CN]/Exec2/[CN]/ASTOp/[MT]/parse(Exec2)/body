@@ -1,0 +1,9 @@
+{
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  ASTOp op=OPS.get(id);
+  if (op != null)   return op;
+  E._x=x;
+  return null;
+}
