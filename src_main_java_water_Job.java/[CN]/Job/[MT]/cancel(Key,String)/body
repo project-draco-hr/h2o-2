@@ -18,7 +18,6 @@
     }
     @Override public void onSuccess(){
       if (_job != null) {
-        System.out.println("updated job " + _job.job_key);
         final Job job=_job;
         H2O.submitTask(new H2OCountedCompleter(){
           @Override public void compute2(){
