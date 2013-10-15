@@ -22,7 +22,7 @@ def doKMeans(fs, folderPath):
             h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
             headerKey = h2i.find_key(hK)
             trainParseWallStart = time.time()
-            parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=4800, retryDelaySecs=5, pollTimeoutSecs=4800)
+            parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=5, pollTimeoutSecs=7200)
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect = h2o.nodes[0].inspect(parseResult['destination_key'])
@@ -30,7 +30,7 @@ def doKMeans(fs, folderPath):
             params = {'source_key': hex_key, 'k': 6, 'initialization': 'Furthest', 'max_iter': 100, 'seed': 1234567, 'normalize': 0, 'destination_key': (('KMeans(' + f) + ')'), }
             kwargs = params.copy()
             kmeansStart = time.time()
-            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=4800, **kwargs)
+            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=7200, **kwargs)
             kmeansTime = (time.time() - kmeansStart)
             row.update({'kmeansBuildTime': kmeansTime, })
             csvWrt.writerow(row)
