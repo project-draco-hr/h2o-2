@@ -1,3 +1,6 @@
 {
-  return opStr();
+  String s=opStr() + "(";
+  for (int i=0; i < _vars.length; i++)   s+=dimStr(_vcols[i],_vrows[i]) + " " + _vars[i]+ ",";
+  s+=')';
+  return s;
 }
