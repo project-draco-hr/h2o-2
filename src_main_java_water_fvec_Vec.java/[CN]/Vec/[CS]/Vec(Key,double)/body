@@ -1,0 +1,8 @@
+{
+  _key=key;
+  _espc=new long[]{0,1};
+  Futures fs=new Futures();
+  DKV.put(chunkKey(0),new C0DChunk(d,1),fs);
+  DKV.put(_key,this,fs);
+  fs.blockForPending();
+}
