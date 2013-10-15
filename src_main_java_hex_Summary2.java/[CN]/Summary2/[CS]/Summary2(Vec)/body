@@ -1,17 +1,25 @@
 {
   _enum=vec.isEnum();
   _isInt=vec.isInt();
+  if (_enum)   domains=vec.domain();
+ else   domains=null;
   long len=vec.length();
   _avail_rows=len - vec.naCnt();
-  _min=MemoryManager.malloc8d((int)Math.min(len,NMAX));
-  _max=MemoryManager.malloc8d((int)Math.min(len,NMAX));
-  Arrays.fill(_min,Double.POSITIVE_INFINITY);
-  Arrays.fill(_max,Double.NEGATIVE_INFINITY);
-  double span=vec.max() - vec.min();
-  if (vec.isEnum() && (span + 1) < MAX_HIST_SZ) {
-    _start=vec.min();
-    _binsz=1;
-    _bins=new long[(int)span + 1];
+  if (_enum) {
+    mins=MemoryManager.malloc8d(Math.min(domains.length,NMAX));
+    maxs=MemoryManager.malloc8d(Math.min(domains.length,NMAX));
+  }
+ else {
+    mins=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+    maxs=MemoryManager.malloc8d((int)Math.min(len,NMAX));
+  }
+  Arrays.fill(mins,Double.POSITIVE_INFINITY);
+  Arrays.fill(maxs,Double.NEGATIVE_INFINITY);
+  double span=vec.max() - vec.min() + 1;
+  if (vec.isEnum() && span < MAX_HIST_SZ) {
+    start=vec.min();
+    binsz=1;
+    bins=new long[(int)span];
   }
  else {
     double b=Math.max(1e-4,3.5 * vec.sigma() / Math.cbrt(len));
@@ -19,9 +27,9 @@
     if (b > 20 * d / 3)     d*=10;
  else     if (b > 5 * d / 3)     d*=5;
     if (d < 1. && _isInt)     d=1.;
-    _binsz=d;
-    _start=_binsz * Math.floor(vec.min() / _binsz);
-    int nbin=(int)Math.floor((vec.max() + (_isInt ? .5 : 0) - _start) / _binsz) + 1;
-    _bins=new long[nbin];
+    binsz=d;
+    start=binsz * Math.floor(vec.min() / binsz);
+    int nbin=(int)Math.floor((vec.max() + (_isInt ? .5 : 0) - start) / binsz) + 1;
+    bins=new long[nbin];
   }
 }

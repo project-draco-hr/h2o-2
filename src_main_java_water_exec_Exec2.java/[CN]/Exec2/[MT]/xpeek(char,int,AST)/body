@@ -1,4 +1,3 @@
 {
-  if (!peek(c))   throwErr("Missing close-paren",x);
-  return ast;
+  return peek(c) ? ast : throwErr("Missing '" + c + "'",x);
 }

@@ -23,7 +23,7 @@ def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=N
     except Exception as e:
         exc_info = sys.exc_info()
         if (not ignoreConnectionError):
-            h2p.red_print('ERROR: got exception on json request to h2o. Going to check sandbox, then rethrow..')
+            h2p.red_print((('ERROR: got exception on %s to h2o. \nGoing to check sandbox, then rethrow..' % url) + paramStr))
             time.sleep(2)
             check_sandbox_for_errors()
         raise exc_info[1], None, exc_info[2]

@@ -1,0 +1,8 @@
+{
+  if (!(ast instanceof ASTKey))   return null;
+  if (!E.peek('='))   return null;
+  int x=E._x;
+  AST eval=parseCXExpr(E);
+  E.throwIfNotCompat(ast,eval,x);
+  return new ASTAssign((ASTKey)ast,eval);
+}
