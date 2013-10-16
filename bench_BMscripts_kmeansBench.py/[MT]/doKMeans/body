@@ -26,7 +26,8 @@ def doKMeans(fs, folderPath):
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect = h2o.nodes[0].inspect(parseResult['destination_key'])
-            row = {'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
+            nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
+            row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
             params = {'source_key': hex_key, 'k': 6, 'initialization': 'Furthest', 'max_iter': 100, 'seed': 1234567, 'normalize': 0, 'destination_key': (('KMeans(' + f) + ')'), }
             kwargs = params.copy()
             kmeansStart = time.time()

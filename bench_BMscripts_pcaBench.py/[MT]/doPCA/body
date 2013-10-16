@@ -27,7 +27,8 @@ def doPCA(fs, folderPath):
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect = h2o.nodes[0].inspect(parseResult['destination_key'])
-            row = {'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
+            nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
+            row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
             params = {'destination_key': 'python_PCA_key', 'tolerance': 0.0, 'standardize': 1, }
             kwargs = params.copy()
             pcaStart = time.time()

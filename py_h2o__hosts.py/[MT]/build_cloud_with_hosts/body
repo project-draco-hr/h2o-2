@@ -24,6 +24,7 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
         paramsToUse['h2o_remote_buckets_root'] = ('/home/' + paramsToUse['username'])
     h2o.verboseprint('All build_cloud_with_hosts params:', paramsToUse)
     global hosts
+    hosts = []
     if (paramsToUse['ip'] == ['127.0.0.1']):
         hosts = None
     else:
