@@ -2,19 +2,19 @@
   if (!(o instanceof ValueString))   return false;
   ValueString str=(ValueString)o;
   if (_skips.isEmpty() && str._skips.isEmpty()) {
-    if (str._length != _length)     return false;
-    for (int i=0; i < _length; ++i)     if (_buf[_off + i] != str._buf[str._off + i])     return false;
+    if (str.get_length() != get_length())     return false;
+    for (int i=0; i < get_length(); ++i)     if (get_buf()[get_off() + i] != str.get_buf()[str.get_off() + i])     return false;
   }
  else   if (str._skips.isEmpty()) {
-    if (_length - _skips.size() != str._length)     return false;
+    if (get_length() - _skips.size() != str.get_length())     return false;
     int j=0;
-    int i=_off;
+    int i=get_off();
     for (    int n : _skips) {
-      for (; i < _off + n; ++i)       if (_buf[i] != str._buf[j++])       return false;
+      for (; i < get_off() + n; ++i)       if (get_buf()[i] != str.get_buf()[j++])       return false;
       ++i;
     }
-    int n=_off + _length;
-    for (; i < n; ++i)     if (_buf[i] != str._buf[j++])     return false;
+    int n=get_off() + get_length();
+    for (; i < n; ++i)     if (get_buf()[i] != str.get_buf()[j++])     return false;
   }
  else   return toString().equals(str.toString());
   return true;
