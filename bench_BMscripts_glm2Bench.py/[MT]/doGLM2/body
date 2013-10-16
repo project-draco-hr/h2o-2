@@ -1,13 +1,15 @@
-def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehex, row):
+def doGLM2(fs, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, row, case_mode, case_val):
     for f in fs['train']:
+        if (f != 'AirlinesTrain1x'):
+            continue
         overallWallStart = time.time()
         date = '-'.join([str(z) for z in list(time.localtime())][0:3])
-        glmbenchcsv = (((('benchmarks/' + build) + '/') + date) + '/glmbench.csv')
-        if (not os.path.exists(glmbenchcsv)):
-            output = open(glmbenchcsv, 'w')
+        glm2benchcsv = (((('benchmarks/' + build) + '/') + date) + '/glm2bench.csv')
+        if (not os.path.exists(glm2benchcsv)):
+            output = open(glm2benchcsv, 'w')
             output.write((','.join(csv_header) + '\n'))
         else:
-            output = open(glmbenchcsv, 'a')
+            output = open(glm2benchcsv, 'a')
         csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
         try:
             java_heap_GB = h2o.nodes[0].java_heap_GB
@@ -28,12 +30,13 @@ def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehe
             inspect_train = h2o.nodes[0].inspect(parseResult['destination_key'])
             inspect_test = h2o.nodes[0].inspect(testFilehex)
             row.update({'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['num_rows'], 'nTestRows': inspect_test['num_rows'], 'nCols': inspect_train['num_cols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, })
-            params = {'y': y, 'x': x, 'family': family, 'link': link, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'case_mode': 'n/a', 'destination_key': (('GLM(' + f) + ')'), 'expert_settings': 0, }
+            params = {'vresponse': y, 'ignored_cols': x, 'family': family, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'case_mode': case_mode, 'case_val': case_val, 'destination_key': (('GLM(' + f) + ')'), 'expert_settings': 0, }
+            h2o.beta_features = True
             kwargs = params.copy()
             glmStart = time.time()
             glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=7200, **kwargs)
             glmTime = (time.time() - glmStart)
-            row.update({'glmBuildTime': glmTime, 'AverageAccuracy': glm['GLMModel']['validations'][0]['err'], })
+            row.update({'glmBuildTime': glmTime, 'AverageAccuracy': glm['glm_model']['validations'][0]['err'], })
             glmScoreStart = time.time()
             glmScore = h2o_cmd.runGLMScore(key=testFilehex, model_key=params['destination_key'])
             scoreTime = (time.time() - glmScoreStart)
