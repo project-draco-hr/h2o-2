@@ -27,7 +27,8 @@ def doGBM(fs, folderPath, ignored_cols, classification, testFilehex, ntrees, dep
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect_train = h2o.nodes[0].inspect(parseResult['destination_key'])
             inspect_test = h2o.nodes[0].inspect(testFilehex)
-            row.update({'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['num_rows'], 'nTestRows': inspect_test['num_rows'], 'nCols': inspect_train['num_cols'], 'trainParseWallTime': parseWallTime, 'classification': classification, })
+            nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
+            row.update({'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['num_rows'], 'nTestRows': inspect_test['num_rows'], 'nCols': inspect_train['num_cols'], 'trainParseWallTime': parseWallTime, 'classification': classification, })
             params = {'destination_key': (('GBM(' + f) + ')'), 'response': response, 'ignored_cols_by_name': ignored_cols, 'classification': classification, 'validation': testFilehex, 'ntrees': ntrees, 'max_depth': depth, 'min_rows': minrows, 'nbins': nbins, 'learn_rate': learnRate, }
             kwargs = params.copy()
             gbmStart = time.time()

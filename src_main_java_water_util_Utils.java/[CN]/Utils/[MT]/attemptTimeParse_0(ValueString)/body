@@ -1,7 +1,7 @@
 {
-  final byte[] buf=str._buf;
-  int i=str._off;
-  final int end=i + str._length;
+  final byte[] buf=str.get_buf();
+  int i=str.get_off();
+  final int end=i + str.get_length();
   while (i < end && buf[i] == ' ')   i++;
   if (i < end && buf[i] == '"')   i++;
   if ((end - i) < 19)   return Long.MIN_VALUE;
