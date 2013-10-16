@@ -64,7 +64,7 @@ def test_GBM_manyfiles_train_test(self):
             print h2o_gbm.pp_cm(cm)
             predictKey = 'Predict.hex'
             start = time.time()
-            gbmTestResult = h2o_cmd.runPredict(data_key=parseTestResult['destination_key'], model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs, **kwargs)
+            gbmTestResult = h2o_cmd.runPredict(data_key=parseTestResult['destination_key'], model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
             if h2o.beta_features:
                 h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
