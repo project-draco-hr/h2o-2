@@ -55,7 +55,7 @@ def test_PCA_many_cols(self):
             print 
             print 
             if DO_PCA_SCORE:
-                score_params = {'destination_key': scoreKey, 'model_key': modelKey, 'num_pc': 2, 'key': hex_key, }
+                score_params = {'destination_key': scoreKey, 'model': modelKey, 'num_pc': 2, 'source': hex_key, }
                 kwargs = score_params.copy()
                 pcaScoreResult = h2o.nodes[0].pca_score(timeoutSecs=timeoutSecs, **kwargs)
                 print 'PCAScore completed in', pcaResult['python_elapsed'], 'seconds. On dataset: ', csvPathname
