@@ -1,0 +1,9 @@
+{
+  indent(sb,d).append(this).append('\n');
+  _ast.toString(sb,d + 1).append("\n");
+  if (_colsel == null)   indent(sb,d + 1).append("all\n");
+ else   _colsel.toString(sb,d + 1).append("\n");
+  if (_rowsel == null)   indent(sb,d + 1).append("all");
+ else   _rowsel.toString(sb,d + 1);
+  return sb;
+}

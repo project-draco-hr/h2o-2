@@ -1,3 +1,14 @@
 {
+  int x=E._x;
+  ASTOp op=parse(E);
+  if (op == null)   return null;
+  if (op._vars != null) {
+    AST args[]=new AST[op._vars.length + 1];
+    E.xpeek('(',x,null);
+    args[0]=op;
+    for (int i=1; i < args.length - 1; i++)     args[i]=E.xpeek(',',E._x,parseCXExpr(E));
+    args[args.length - 1]=parseCXExpr(E);
+    return E.xpeek(')',E._x,ASTApply.make(args,E,x));
+  }
   throw H2O.unimpl();
 }

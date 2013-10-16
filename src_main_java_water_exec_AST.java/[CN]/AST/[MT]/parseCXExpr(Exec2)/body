@@ -1,9 +1,9 @@
 {
-  AST ast2, ast=parseExpr(E);
+  AST ast2, ast=ASTSlice.parse(E);
   if (ast == null)   return null;
-  if ((ast2=ASTOp.parseInfix(E,ast)) != null)   return ast2;
   if ((ast2=ASTAssign.parse(E,ast)) != null)   return ast2;
-  if (ast.isScalar() && E.peek('?')) {
+  if ((ast2=ASTOp.parseInfix(E,ast)) != null)   return ast2;
+  if (E.peek('?')) {
     throw H2O.unimpl();
   }
   return ast;

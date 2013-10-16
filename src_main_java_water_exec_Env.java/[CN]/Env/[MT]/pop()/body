@@ -1,9 +1,9 @@
 {
-  _fun=null;
+  _fun[--_sp]=null;
   Frame fr=_fr[_sp];
   if (fr != null) {
-    System.out.println("missing lifetime checking");
+    Vec[] vecs=fr.vecs();
+    for (    Vec vec : vecs)     if (vec instanceof TmpVec)     throw H2O.unimpl();
     _fr[_sp]=null;
   }
-  _sp--;
 }

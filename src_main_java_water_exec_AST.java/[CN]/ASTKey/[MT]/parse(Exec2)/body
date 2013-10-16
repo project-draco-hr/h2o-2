@@ -9,12 +9,5 @@
     return null;
   }
   Frame fr=(Frame)ice;
-  AST rows=null, cols=null;
-  if (E.peek('[')) {
-    rows=E.xpeek(',',(x=E._x),parseCXExpr(E));
-    if (rows != null && rows._cols != 1)     E.throwErr("Row select only a single column only",x);
-    cols=E.xpeek(']',(x=E._x),parseCXExpr(E));
-    if (cols != null && cols._cols != 1)     E.throwErr("Col select only a single column only",x);
-  }
-  return new ASTKey(cols == null ? fr.numCols() : (int)cols._rows,rows == null ? fr.numRows() : rows._rows,key,cols,rows);
+  return new ASTKey(fr.numCols(),fr.numRows(),key);
 }
