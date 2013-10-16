@@ -1,4 +1,4 @@
-import os, sys, time, csv
+import os, sys, time, csv, socket
 sys.path.append('../py/')
 sys.path.extend(['.', '..'])
 import h2o_cmd, h2o, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_rf, h2o_jobs
@@ -8,7 +8,7 @@ header = ''
 if (__name__ == '__main__'):
     build = sys.argv.pop((-1))
     h2o.parse_our_args()
-    h2o_hosts.build_cloud_with_hosts()
+    h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True)
     airlinesTestParseStart = time.time()
     hK = 'AirlinesHeader.csv'
     headerPathname = (('bench/Airlines' + '/') + hK)
