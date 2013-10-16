@@ -1,5 +1,5 @@
 def gbm(self, data_key, timeoutSecs=600, retryDelaySecs=1, initialDelaySecs=5, pollTimeoutSecs=30, noPoll=False, print_params=True, **kwargs):
-    params_dict = {'destination_key': None, 'validation': data_key, 'response': None, 'source': data_key, 'learn_rate': None, 'ntrees': None, 'max_depth': None, 'min_rows': None, 'cols': None, 'nbins': None, 'classification': None, }
+    params_dict = {'destination_key': None, 'validation': data_key, 'response': None, 'ignored_cols_by_name': None, 'source': data_key, 'learn_rate': None, 'ntrees': None, 'max_depth': None, 'min_rows': None, 'cols': None, 'nbins': None, 'classification': None, }
     check_params_update_kwargs(params_dict, kwargs, 'gbm', print_params)
     start = time.time()
     a = self.__do_json_request('2/GBM.json', timeout=timeoutSecs, params=params_dict)
