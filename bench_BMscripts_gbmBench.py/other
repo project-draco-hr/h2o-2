@@ -1,7 +1,7 @@
 import os, sys, time, csv
 sys.path.append('../py/')
 sys.path.extend(['.', '..'])
-import h2o_cmd, h2o, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_rf
+import h2o_cmd, h2o, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_rf, h2o_jobs
 csv_header = ('h2o_build', 'java_heap_GB', 'dataset', 'nTrainRows', 'nTestRows', 'nCols', 'trainParseWallTime', 'classification', 'gbmBuildTime')
 files = {'Airlines': {'train': ('AirlinesTrain1x', 'AirlinesTrain10x', 'AirlinesTrain100x'), 'test': 'AirlinesTest', }, 'AllBedrooms': {'train': ('AllBedroomsTrain1x', 'AllBedroomsTrain10x', 'AllBedroomsTrain100x'), 'test': 'AllBedroomsTest', }, 'Covtype': {'train': ('CovTypeTrain1x', 'CovTypeTrain10x', 'CovTypeTrain100x'), 'test': 'CovTypeTest', }, }
 header = ''
@@ -19,7 +19,7 @@ if (__name__ == '__main__'):
     row = {'testParseWallTime': elapsedAirlinesTestParse, }
     response = 'IsDepDelayed'
     ignored = None
-    doGBM(files['Airlines'], folderPath='Airlines', ignored_cols=ignored, classificiation=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01)
+    doGBM(files['Airlines'], folderPath='Airlines', ignored_cols=ignored, classification=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response, row=row)
     covTypeTestParseStart = time.time()
     hK = 'CovTypeHeader.csv'
     headerPathname = (('bench/CovType' + '/') + hK)
@@ -30,7 +30,7 @@ if (__name__ == '__main__'):
     row = {'testParseWallTime': elapsedCovTypeTestParse, }
     response = 'C55'
     ignored = None
-    doGBM(files['Covtype'], folderPath='CovType', ignored_cols=ignored, classificiation=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response)
+    doGBM(files['Covtype'], folderPath='CovType', ignored_cols=ignored, classification=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response, row=row)
     allBedroomsTestParseStart = time.time()
     hK = 'AllBedroomsHeader.csv'
     headerPathname = (('bench/AllBedrooms' + '/') + hK)
@@ -41,5 +41,5 @@ if (__name__ == '__main__'):
     row = {'testParseWallTime': elapsedAllBedroomsTestParse, }
     response = 'medrent'
     ignored = None
-    doGBM(files['AllBedroom'], folderPath='AllBedrooms', ignored_cols=ignored, classificiation=0, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response)
+    doGBM(files['AllBedroom'], folderPath='AllBedrooms', ignored_cols=ignored, classification=0, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response, row=row)
     h2o.tear_down_cloud()
