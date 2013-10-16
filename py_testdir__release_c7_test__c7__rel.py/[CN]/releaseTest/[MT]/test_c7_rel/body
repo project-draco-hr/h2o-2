@@ -7,7 +7,7 @@ def test_c7_rel(self):
     importFolderPath = '/mnt/0xcustomer-datasets/c2'
     csvPathname = ((importFolderPath + '/') + csvFilename)
     start = time.time()
-    parseResult = h2i.import_parse(path=csvPathname, schema='local', timeoutSecs=500, separator=9)
+    parseResult = h2i.import_parse(path=csvPathname, schema='local', timeoutSecs=500, separator=9, doSummary=False)
     print 'Parse of', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
     print csvFilename, 'parse time:', parseResult['response']['time']
     print "Parse result['destination_key']:", parseResult['destination_key']
@@ -27,3 +27,5 @@ def test_c7_rel(self):
     elapsed = (time.time() - start)
     print 'glm completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
     h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+    summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'])
+    h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
