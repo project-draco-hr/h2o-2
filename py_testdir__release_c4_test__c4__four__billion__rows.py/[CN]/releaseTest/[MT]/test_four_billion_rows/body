@@ -24,7 +24,7 @@ def test_four_billion_rows(self):
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         self.assertEqual(2, num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % (2, num_cols)))
         self.assertEqual((4 * 1000000000), num_rows, msg=('generated %s rows, parsed to %s rows' % ((4 * 1000000000), num_rows)))
-        kwargs = {'k': 3, 'initialization': 'Furthest', 'epsilon': 1e-06, 'max_iter': 4, 'cols': None, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
+        kwargs = {'k': 3, 'initialization': 'Furthest', 'max_iter': 4, 'cols': None, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
         timeoutSecs = 900
         start = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
