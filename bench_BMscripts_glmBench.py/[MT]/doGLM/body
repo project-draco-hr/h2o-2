@@ -27,7 +27,8 @@ def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehe
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect_train = h2o.nodes[0].inspect(parseResult['destination_key'])
             inspect_test = h2o.nodes[0].inspect(testFilehex)
-            row.update({'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['num_rows'], 'nTestRows': inspect_test['num_rows'], 'nCols': inspect_train['num_cols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, })
+            nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
+            row.update({'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['num_rows'], 'nTestRows': inspect_test['num_rows'], 'nCols': inspect_train['num_cols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, })
             params = {'y': y, 'x': x, 'family': family, 'link': link, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'case_mode': 'n/a', 'destination_key': (('GLM(' + f) + ')'), 'expert_settings': 0, }
             kwargs = params.copy()
             glmStart = time.time()
