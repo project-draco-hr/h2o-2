@@ -36,7 +36,7 @@ def build_cloud_with_json(h2o_nodes_json='h2o-nodes.json'):
         nodeStateList = cloneJson['h2o_nodes']
     nodeList = []
     for nodeState in nodeStateList:
-        print '\nCloning state for node', nodeState['node_id'], 'from', h2o_nodes_json
+        print 'Cloning state for node', nodeState['node_id'], 'from', h2o_nodes_json
         newNode = ExternalH2O(nodeState)
         nodeList.append(newNode)
     print ''

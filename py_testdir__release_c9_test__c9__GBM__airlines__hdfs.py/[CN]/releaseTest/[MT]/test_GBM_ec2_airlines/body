@@ -1,0 +1,23 @@
+def test_GBM_ec2_airlines(self):
+    h2o.beta_features = False
+    files = [('datasets', 'airlines_all.csv', 'airlines_all.hex', 1800, 'IsDepDelayed')]
+    for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
+        h2o.beta_features = False
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        start = time.time()
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=trainKey, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        for depth in [5, 15]:
+            params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': 10, 'max_depth': depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', }
+            print 'Using these parameters for GBM: ', params
+            kwargs = params.copy()
+            h2o.beta_features = True
+            start = time.time()
+            print 'Start time is: ', time.time()
+            GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=timeoutSecs, **kwargs)
+            h2j.pollWaitJobs(pattern='GBMKEY', timeoutSecs=1800, pollTimeoutSecs=1800)
+            print 'Finished time is: ', time.time()
+            elapsed = (time.time() - start)
+            print 'GBM training completed in', elapsed, 'seconds. On dataset: ', csvFilename
