@@ -1,0 +1,41 @@
+{
+  if (f.isDirectory()) {
+    for (    File f2 : f.listFiles())     do_file(f2,diffs,ex);
+  }
+ else {
+    System.out.print("parsing file " + f.getPath() + "...");
+    Key vaHex=Key.make("va.hex");
+    Key vaRaw=null;
+    Key frHex=Key.make("fr.hex");
+    Key frRaw=null;
+    try {
+      vaRaw=TestUtil.load_test_file(f,"va.bin");
+      try {
+        ParseDataset.parse(vaHex,new Key[]{vaRaw});
+      }
+ catch (      Throwable t) {
+        System.err.println("Skipping file " + f.getPath() + " as parse1 failed, got exception '"+ t.getClass()+ "', with msg '"+ t.getMessage()+ "'");
+        if (vaRaw != null)         UKV.remove(vaRaw);
+        UKV.remove(vaHex);
+        return;
+      }
+      frRaw=NFSFileVec.make(f);
+      ParseDataset2.parse(frHex,new Key[]{frRaw});
+      ValueArray ary=DKV.get(vaHex).get();
+      if (ary.length() > 0) {
+        Frame fr=DKV.get(frHex).get();
+        double d=compareDatasets(ary,fr);
+        if (d > 0)         diffs.put(f.getPath(),d);
+      }
+    }
+ catch (    Exception e) {
+      ex.put(f.getPath(),e);
+    }
+ finally {
+      if (vaRaw != null)       UKV.remove(vaRaw);
+      UKV.remove(vaHex);
+      UKV.remove(frHex);
+      if (frRaw != null)       UKV.remove(frRaw);
+    }
+  }
+}
