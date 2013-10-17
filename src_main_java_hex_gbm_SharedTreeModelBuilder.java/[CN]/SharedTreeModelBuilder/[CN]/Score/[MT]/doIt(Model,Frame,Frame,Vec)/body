@@ -2,10 +2,16 @@
   if (validation == null)   return doAll(fr);
   Frame res=model.score(validation,true);
   Frame frs[]=model.adapt(validation,true);
-  Frame fr2=frs[0];
-  fr2.add("response",vresponse);
-  for (int i=0; i < _nclass; i++)   fr2.add("Work" + i,res.vecs()[i + 1]);
-  doAll(fr2);
+  Frame adapValidation=frs[0];
+  vresponse=_nclass > 1 ? vresponse.adaptTo(response,true) : vresponse;
+  adapValidation.add("response",vresponse);
+  if (_nclass > 1) {
+    for (int i=0; i < _nclass; i++)     adapValidation.add("Work" + i,res.vecs()[i + 1]);
+  }
+ else {
+    adapValidation.add("Work" + 0,res.vecs()[0]);
+  }
+  doAll(adapValidation);
   frs[1].remove();
   return this;
 }

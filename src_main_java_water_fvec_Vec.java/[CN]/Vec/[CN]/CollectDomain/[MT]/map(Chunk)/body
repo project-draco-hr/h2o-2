@@ -1,0 +1,9 @@
+{
+  _dom=new byte[_nclass];
+  int ycls=0;
+  for (int row=0; row < ys._len; row++) {
+    if (ys.isNA0(row))     continue;
+    ycls=(int)ys.at80(row) - _ymin;
+    _dom[ycls]=1;
+  }
+}
