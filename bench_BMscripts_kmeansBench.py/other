@@ -8,7 +8,7 @@ build = ''
 if (__name__ == '__main__'):
     build = sys.argv.pop((-1))
     h2o.parse_our_args()
-    h2o_hosts.build_cloud_with_hosts()
+    h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True)
     doKMeans(files['Airlines'], 'Airlines')
     doKMeans(files['AllBedrooms'], 'AllBedrooms')
     h2o.tear_down_cloud()
