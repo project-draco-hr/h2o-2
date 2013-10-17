@@ -1,8 +1,9 @@
-def doGLM(fs, folderPath, ignored_cols, classification, testFilehex, ntrees, depth, minrows, nbins, learnRate, response):
+def doGBM(fs, folderPath, ignored_cols, classification, testFilehex, ntrees, depth, minrows, nbins, learnRate, response):
+    benchmarkLogging = ['cpu', 'disk', 'network', 'iostats']
+    date = '-'.join([str(x) for x in list(time.localtime())][0:3])
     for f in fs['train']:
         overallWallStart = time.time()
-        date = '-'.join([str(x) for x in list(time.localtime())][0:3])
-        gbmbenchcsv = (((('benchmarks/' + build) + '/') + date) + '/gbmbench.csv')
+        gbmbenchcsv = (((('benchmarks/' + build) + '/') + date) + '/gbmgridbench.csv')
         if (not os.path.exists(gbmbenchcsv)):
             output = open(gbmbenchcsv, 'w')
             output.write((','.join(csv_header) + '\n'))
@@ -34,5 +35,6 @@ def doGLM(fs, folderPath, ignored_cols, classification, testFilehex, ntrees, dep
             gbm = h2o_cmd.runGBM(parseResult=parseResult, timeoutSecs=4800, **kwargs)
             gbmTime = (time.time() - gbmStart)
             row.update({'gbmBuildTime': gbmTime, })
+            csvWrt.writerow(row)
         finally:
             output.close()
