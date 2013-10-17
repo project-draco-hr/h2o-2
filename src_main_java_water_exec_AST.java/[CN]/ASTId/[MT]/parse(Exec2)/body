@@ -1,0 +1,12 @@
+{
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  for (int d=E._env.size() - 1; d >= 0; d--) {
+    HashMap<String,Type> vars=E._env.get(d);
+    if (!vars.containsKey(id))     continue;
+    return new ASTId(vars.get(id),id,d);
+  }
+  E._x=x;
+  return null;
+}

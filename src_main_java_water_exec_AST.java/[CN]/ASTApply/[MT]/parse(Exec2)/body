@@ -3,13 +3,6 @@
   ASTOp op=ASTOp.parse(E);
   if (op == null)   return null;
   if (!E.peek('('))   return null;
-  if (op._vars != null) {
-    AST args[]=new AST[op._vars.length];
-    args[0]=op;
-    for (int i=1; i < args.length - 1; i++)     args[i]=E.xpeek(',',E._x,parseCXExpr(E));
-    args[args.length - 1]=parseCXExpr(E);
-    return E.xpeek(')',E._x,ASTApply.make(args,E,x));
-  }
   AST args[]=new AST[]{op,null};
   int i=1;
   if (!E.peek(')')) {
@@ -20,5 +13,10 @@
       if (i == args.length)       args=Arrays.copyOf(args,args.length << 1);
     }
   }
-  return make(op.set_varargs_types(Arrays.copyOf(args,i)),E,x);
+  args=Arrays.copyOf(args,i);
+  if (op._vars != null) {
+    if (i != op._vars.length)     E.throwErr("Expected " + op._vars.length + " args but found "+ i,x);
+  }
+ else   op.set_varargs_types(args);
+  return make(args,E,x);
 }

@@ -1,9 +1,9 @@
 {
+  int x=E._x;
   if (!E.peek('='))   return null;
   AST ast2=ast;
   if ((ast instanceof ASTSlice))   ast2=((ASTSlice)ast)._ast;
-  if (!(ast2 instanceof ASTKey))   return null;
-  int x=E._x;
+  if (!(ast2 instanceof ASTId))   E.throwErr("Can only assign to ID (or slice)",x);
   AST eval=parseCXExpr(E);
   return new ASTAssign(ast,eval);
 }

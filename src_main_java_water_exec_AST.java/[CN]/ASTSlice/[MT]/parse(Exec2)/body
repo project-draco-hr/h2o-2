@@ -1,11 +1,12 @@
 {
+  int x=E._x;
   AST ast=parseExpr(E);
   if (ast == null)   return null;
-  if (ast._t != Type.ary)   return ast;
   if (!E.peek('['))   return ast;
+  if (ast._t == null)   ast=((ASTId)ast).setOnUse(E,Type.ary);
+  if (ast._t != Type.ary)   E.throwErr("Not an ary",x);
   if (E.peek(']'))   return ast;
-  int x;
-  AST rows=E.xpeek(',',(x=E._x),parseCXExpr(E));
-  AST cols=E.xpeek(']',(x=E._x),parseCXExpr(E));
+  AST rows=E.xpeek(',',E._x,parseCXExpr(E));
+  AST cols=E.xpeek(']',E._x,parseCXExpr(E));
   return new ASTSlice(ast,cols,rows);
 }

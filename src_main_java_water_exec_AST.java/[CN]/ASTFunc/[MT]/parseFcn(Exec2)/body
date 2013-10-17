@@ -1,0 +1,38 @@
+{
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  if (!"function".equals(id)) {
+    E._x=x;
+    return null;
+  }
+  E.xpeek('(',E._x,null);
+  LinkedHashMap<String,Type> vars=new LinkedHashMap<String,Type>();
+  if (!E.peek(')')) {
+    while (true) {
+      x=E._x;
+      id=E.isID();
+      if (id == null)       E.throwErr("Invalid id",x);
+      if (vars.containsKey(id))       E.throwErr("Repeated argument",x);
+      vars.put(id,null);
+      if (E.peek(')'))       break;
+      E.xpeek(',',E._x,null);
+    }
+  }
+  E.xpeek('{',E._x,null);
+  E._env.push(vars);
+  AST body=E.xpeek('}',E._x,parseCXExpr(E));
+  E._env.pop();
+  String xvars[]=new String[vars.size() + 1];
+  Type types[]=new Type[vars.size() + 1];
+  xvars[0]="fun";
+  types[0]=body._t;
+  int i=1;
+  for (  String id2 : vars.keySet()) {
+    xvars[i]=id2;
+    types[i]=vars.get(id2);
+    if (types[i] == null)     System.out.println("Warning: var " + id2 + " failed to get typed.");
+    i++;
+  }
+  return new ASTFunc(xvars,types,body);
+}
