@@ -33,6 +33,7 @@ case NONE:
  else {
         ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);
         _dout=streamParse(vec.openStream(pmon),localSetup,_vecIdStart,chunkStartIdx,pmon);
+        for (int i=0; i < vec.nChunks(); ++i)         _chunk2Enum[chunkStartIdx + i]=H2O.SELF.index();
       }
     break;
 case ZIP:
