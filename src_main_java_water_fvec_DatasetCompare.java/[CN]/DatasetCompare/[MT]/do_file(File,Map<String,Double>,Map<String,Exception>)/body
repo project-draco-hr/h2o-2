@@ -1,9 +1,8 @@
 {
   if (f.isDirectory()) {
-    for (    File f2 : f.listFiles())     do_file(f2);
+    for (    File f2 : f.listFiles())     do_file(f2,diffs,ex);
   }
  else {
-    TestUtil.checkLeakedKeys();
     System.out.print("parsing file " + f.getPath() + "...");
     Key vaHex=Key.make("va.hex");
     Key vaRaw=null;
@@ -23,10 +22,16 @@
       frRaw=NFSFileVec.make(f);
       ParseDataset2.parse(frHex,new Key[]{frRaw});
       ValueArray ary=DKV.get(vaHex).get();
-      Frame fr=DKV.get(frHex).get();
-      assertEquals(true,compareDatasets(ary,fr));
+      if (ary.length() > 0) {
+        Frame fr=DKV.get(frHex).get();
+        double d=compareDatasets(ary,fr);
+        if (d > 0)         diffs.put(f.getPath(),d);
+      }
     }
-  finally {
+ catch (    Exception e) {
+      ex.put(f.getPath(),e);
+    }
+ finally {
       if (vaRaw != null)       UKV.remove(vaRaw);
       UKV.remove(vaHex);
       UKV.remove(frHex);
