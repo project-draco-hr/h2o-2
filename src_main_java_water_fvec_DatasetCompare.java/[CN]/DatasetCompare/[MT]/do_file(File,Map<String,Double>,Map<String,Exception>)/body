@@ -3,6 +3,7 @@
     for (    File f2 : f.listFiles())     do_file(f2,diffs,ex);
   }
  else {
+    TestUtil.checkLeakedKeys();
     System.out.print("parsing file " + f.getPath() + "...");
     Key vaHex=Key.make("va.hex");
     Key vaRaw=null;
@@ -33,6 +34,7 @@
     }
  finally {
       if (vaRaw != null)       UKV.remove(vaRaw);
+      for (      Key k : H2O.keySet())       UKV.remove(k);
       UKV.remove(vaHex);
       UKV.remove(frHex);
       if (frRaw != null)       UKV.remove(frRaw);
