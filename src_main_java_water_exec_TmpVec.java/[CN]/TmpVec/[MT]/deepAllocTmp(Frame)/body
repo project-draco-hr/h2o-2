@@ -1,0 +1,8 @@
+{
+  Futures fs=new Futures();
+  Vec vecs[]=fr.vecs();
+  Vec nvecs[]=new Vec[fr._names.length];
+  for (int i=0; i < vecs.length; i++)   nvecs[i]=makeZero(vecs[i],fs);
+  fs.blockForPending();
+  return new Frame(fr._names,nvecs);
+}

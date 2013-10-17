@@ -3,7 +3,7 @@
   ASTOp op=parse(E);
   if (op == null)   return null;
   if (op._vars != null) {
-    AST args[]=new AST[op._vars.length + 1];
+    AST args[]=new AST[op._vars.length];
     E.xpeek('(',x,null);
     args[0]=op;
     for (int i=1; i < args.length - 1; i++)     args[i]=E.xpeek(',',E._x,parseCXExpr(E));

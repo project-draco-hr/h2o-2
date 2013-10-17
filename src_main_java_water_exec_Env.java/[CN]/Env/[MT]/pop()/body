@@ -1,9 +1,5 @@
 {
   _fun[--_sp]=null;
-  Frame fr=_fr[_sp];
-  if (fr != null) {
-    Vec[] vecs=fr.vecs();
-    for (    Vec vec : vecs)     if (vec instanceof TmpVec)     throw H2O.unimpl();
-    _fr[_sp]=null;
-  }
+  removeRef(_fr[_sp]);
+  _fr[_sp]=null;
 }

@@ -1,6 +1,6 @@
 {
-  String s=opStr() + "(";
-  for (int i=0; i < _vars.length; i++)   s+=dimStr(_vcols[i],_vrows[i]) + " " + _vars[i]+ ",";
+  String s=_vtypes[0] + " " + opStr()+ "(";
+  for (int i=1; i < _vars.length; i++)   s+=_vtypes[i] + " " + _vars[i]+ ",";
   s+=')';
   return s;
 }

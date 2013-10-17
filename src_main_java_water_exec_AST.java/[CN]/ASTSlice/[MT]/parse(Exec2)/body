@@ -1,12 +1,11 @@
 {
   AST ast=parseExpr(E);
   if (ast == null)   return null;
+  if (ast._t != Type.ary)   return ast;
   if (!E.peek('['))   return ast;
   if (E.peek(']'))   return ast;
   int x;
   AST rows=E.xpeek(',',(x=E._x),parseExpr(E));
-  long nrows=rows == null ? ast._rows : peek(rows,ast._rows,E,x);
   AST cols=E.xpeek(']',(x=E._x),parseExpr(E));
-  int ncols=cols == null ? ast._cols : (int)peek(cols,ast._cols,E,x);
-  return new ASTSlice(ncols,nrows,ast,cols,rows);
+  return new ASTSlice(ast,cols,rows);
 }
