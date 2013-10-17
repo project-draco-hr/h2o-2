@@ -22,6 +22,8 @@ def get_args(self):
         args += ['-classpath', os.pathsep.join(entries), 'water.Boot']
     else:
         args += ['-jar', self.get_h2o_jar()]
+    if beta_features:
+        args += ['-beta']
     if ((self.addr is not None) and (not self.remoteH2O)):
         args += [('--ip=%s' % self.addr)]
     if (self.port is not None):
