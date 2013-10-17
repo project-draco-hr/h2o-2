@@ -41,10 +41,13 @@ def test_GBM_manyfiles_train_test(self):
         execExpr = ('%s=colSwap(%s,378,(%s[378]>15 ? 1 : 0))' % (testKey, testKey, testKey))
         resultExec = h2o_cmd.runExec(expression=execExpr)
         response = 378
+        x = range(num_cols)
+        del x[response]
+        ignored_cols_by_name = random.sample(x, 300)
         print ('Using the same response %s for train and test (which should have a output value too)' % response)
         ntrees = 10
-        for max_depth in [5, 10, 20, 40]:
-            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': None, }
+        for max_depth in [5, 40]:
+            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': ignored_cols_by_name, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o.beta_features = True
