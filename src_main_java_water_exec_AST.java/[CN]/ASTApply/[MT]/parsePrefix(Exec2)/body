@@ -1,0 +1,24 @@
+{
+  int x=E._x;
+  ASTOp op=ASTOp.parse(E);
+  if (op == null)   return null;
+  if (!E.peek('('))   return null;
+  if (op._vars != null) {
+    AST args[]=new AST[op._vars.length];
+    args[0]=op;
+    for (int i=1; i < args.length - 1; i++)     args[i]=E.xpeek(',',E._x,parseCXExpr(E));
+    args[args.length - 1]=parseCXExpr(E);
+    return E.xpeek(')',E._x,ASTApply.make(args,E,x));
+  }
+  AST args[]=new AST[]{op,null};
+  int i=1;
+  if (!E.peek(')')) {
+    while (true) {
+      args[i++]=parseCXExpr(E);
+      if (E.peek(')'))       break;
+      E.xpeek(',',E._x,null);
+      if (i == args.length)       args=Arrays.copyOf(args,args.length << 1);
+    }
+  }
+  return make(op.set_varargs_types(Arrays.copyOf(args,i)),E,x);
+}

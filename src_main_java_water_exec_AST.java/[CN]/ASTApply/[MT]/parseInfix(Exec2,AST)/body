@@ -1,8 +1,8 @@
 {
-  ASTOp op=parse(E);
+  ASTOp op=ASTOp.parse(E);
   if (op == null)   return null;
   if (op._vars.length != 3)   return null;
   int x=E._x;
   AST rite=parseCXExpr(E);
-  return ASTApply.make(new AST[]{op,ast,rite},E,x);
+  return make(new AST[]{op,ast,rite},E,x);
 }

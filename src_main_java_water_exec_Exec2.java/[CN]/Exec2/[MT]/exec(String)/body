@@ -1,9 +1,9 @@
 {
+  System.out.println(str);
   AST ast=new Exec2(str).parse();
   System.out.println(ast.toString(new StringBuilder(),0).toString());
   Env env=new Env();
   try {
-    ast.exec(env);
   }
  catch (  RuntimeException t) {
     env.remove();

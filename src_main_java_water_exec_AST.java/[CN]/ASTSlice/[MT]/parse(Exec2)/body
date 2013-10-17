@@ -5,7 +5,7 @@
   if (!E.peek('['))   return ast;
   if (E.peek(']'))   return ast;
   int x;
-  AST rows=E.xpeek(',',(x=E._x),parseExpr(E));
-  AST cols=E.xpeek(']',(x=E._x),parseExpr(E));
+  AST rows=E.xpeek(',',(x=E._x),parseCXExpr(E));
+  AST cols=E.xpeek(']',(x=E._x),parseCXExpr(E));
   return new ASTSlice(ast,cols,rows);
 }
