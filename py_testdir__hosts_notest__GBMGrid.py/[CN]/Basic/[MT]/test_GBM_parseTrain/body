@@ -3,9 +3,10 @@ def test_GBM_parseTrain(self):
     files = [('mnist', 'mnist_training.csv.gz', 'mnistsmalltrain.hex', 1800, 0)]
     grid = [[1, 10, 100, 1000], [0.0, 0.01, 0.001, 0.0001, 1], [1, 2], [1, 10, 100]]
     grid = list(itertools.product(*grid))
+    grid = random.sample(grid, 10)
     for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
         start = time.time()
-        parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']

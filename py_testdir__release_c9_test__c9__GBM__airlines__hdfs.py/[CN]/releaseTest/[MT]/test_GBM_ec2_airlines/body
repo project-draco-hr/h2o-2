@@ -1,11 +1,11 @@
-def test_GBM_parseTrain(self):
+def test_GBM_ec2_airlines(self):
     h2o.beta_features = False
-    bucket = 'h2o-airlines-unpacked'
-    files = [('', 'allyears.csv', 'allyears.hex', 1800, 'IsDepDelayed')]
+    files = [('datasets', 'airlines_all.csv', 'airlines_all.hex', 1800, 'IsDepDelayed')]
     for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
         h2o.beta_features = False
+        csvPathname = ((importFolderPath + '/') + csvFilename)
         start = time.time()
-        parseResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + csvFilename), hex_key=trainKey, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=trainKey, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
