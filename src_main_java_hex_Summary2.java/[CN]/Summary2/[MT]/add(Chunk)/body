@@ -13,8 +13,8 @@
       maxs[minmax]=val;
       for (int k=0; k < maxs.length; k++)       if (maxs[k] < maxs[minmax])       minmax=k;
     }
-    int binIdx=_isInt ? (int)(((long)val - (long)start) / (long)binsz) : (int)Math.floor((val - start) / binsz);
-    ++bins[binIdx];
+    long binIdx=Math.round((val - start) * 1000000.0 / binsz) / 1000000;
+    ++bins[(int)binIdx];
   }
   Arrays.sort(mins);
   Arrays.sort(maxs);

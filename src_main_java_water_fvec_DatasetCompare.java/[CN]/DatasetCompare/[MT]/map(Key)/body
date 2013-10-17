@@ -1,20 +1,2 @@
 {
-  int cidx=(int)ValueArray.getChunkIndex(key);
-  final Key vaKey=ValueArray.getArrayKey(key);
-  final Vec[] vecs=_fr.vecs();
-  ValueArray va=DKV.get(vaKey).get();
-  AutoBuffer bits=va.getChunk(key);
-  final int rows=va.rpc(cidx);
-  long off=0;
-  for (int i=0; i < cidx; ++i)   off+=va.rpc(i);
-  for (int i=0; i < rows; ++i) {
-    for (int j=0; j < va._cols.length; ++j) {
-      if (va.isNA(bits,i,j) && vecs[j].isNA(i + off))       continue;
-      double diff=Math.abs(va.datad(bits,i,j) - vecs[j].at(i + off));
-      if (diff > _diff)       _diff=diff;
-      if (diff >= 1e-1) {
-        _eq=false;
-      }
-    }
-  }
 }
