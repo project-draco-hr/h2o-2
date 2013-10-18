@@ -3,7 +3,6 @@ def doPCA(fs, folderPath):
     date = '-'.join([str(x) for x in list(time.localtime())][0:3])
     for f in fs['train']:
         retryDelaySecs = (5 if (f == 'AirlinesTrain1x') else 30)
-        h2o.cloudPerfH2O.switch_logfile(location=((('./BMLogs/' + build) + '/') + date), log=(('PCA' + f) + '.csv'))
         print 'Doing PCA on ', f
         overallWallStart = time.time()
         pcabenchcsv = (((('benchmarks/' + build) + '/') + date) + '/pcabench.csv')
@@ -26,9 +25,7 @@ def doPCA(fs, folderPath):
             headerPathname = ((importFolderPath + '/') + hK)
             h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
             headerKey = h2i.find_key(hK)
-            h2o.cloudPerfH2O.message('=========PARSE TRAIN========')
             parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=7200, benchmarkLogging=benchmarkLogging)
-            h2o.cloudPerfH2O.message('=========END PARSE TRAIN========')
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect = h2o.nodes[0].inspect(parseResult['destination_key'])
@@ -37,11 +34,9 @@ def doPCA(fs, folderPath):
             params = {'destination_key': 'python_PCA_key', 'tolerance': 0.0, 'standardize': 1, }
             kwargs = params.copy()
             pcaStart = time.time()
-            h2o.cloudPerfH2O.message('========PCA BUILD========')
             pcaResult = h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=7200, benchmarkLogging=benchmarkLogging, **kwargs)
             pcaTime = (time.time() - pcaStart)
             row.update({'pcaBuildTime': pcaTime, })
-            h2o.cloudPerfH2O.message('======END PCA BUILD======')
             csvWrt.writerow(row)
         finally:
             output.close()
