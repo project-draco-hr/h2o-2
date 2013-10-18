@@ -1,0 +1,7 @@
+{
+  if (a._vtypes.length != b._vtypes.length)   E.throwErr("Mismatched function argument count: " + a + " vs "+ b,E._x);
+  for (int i=0; i < a._vtypes.length; i++) {
+    if (a._vtypes[i] != b._vtypes[i])     E.throwErr("Mismatched " + (i == 0 ? "return type" : "function arg#" + i) + ": "+ a._vtypes[i]+ " vs "+ b._vtypes[i],E._x);
+    if (a._vtypes[i] == Type.fun)     throw H2O.unimpl();
+  }
+}

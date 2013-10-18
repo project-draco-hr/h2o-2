@@ -32,7 +32,6 @@
   types[0]=body._t;
   for (int j=1; j < xvars.length; j++) {
     types[j]=vars.get(xvars[j]);
-    if (types[j] == null)     System.out.println("Warning: var " + xvars[j] + " failed to get typed.");
   }
   return new ASTFunc(xvars,types,body);
 }
