@@ -1,12 +1,12 @@
 {
-  Job nn=job != null ? (Job)UKV.get(job) : null;
+  Job nn=Job.findJob(job);
   NeuralNetModel model=UKV.get(dst_key);
   if (model != null) {
     String cmTitle="Confusion Matrix";
     String trainC=String.format("%5.2f %%",100 * model.train_classification_error);
-    String trainS=String.format("%.3f",model.train_sqr_error);
+    String trainS="" + model.train_sqr_error;
     String validC=String.format("%5.2f %%",100 * model.validation_classification_error);
-    String validS=String.format("%.3f",model.validation_sqr_error);
+    String validS="" + model.validation_sqr_error;
     if (Double.isNaN(model.validation_classification_error)) {
       validC=validS="N/A";
       cmTitle+=" (Training Data)";
@@ -19,10 +19,6 @@
     if (nn != null)     DocGen.HTML.section(sb,"Items per second: " + (model.items * 1000 / nn.runTimeMs()));
     if (model.confusion_matrix != null) {
       String[] classes=model.classNames();
-      if (classes == null) {
-        classes=new String[model.confusion_matrix.length];
-        for (int i=0; i < model.confusion_matrix.length; i++)         classes[i]="" + i;
-      }
       NeuralNetScore.confusion(sb,cmTitle,classes,model.confusion_matrix);
     }
   }

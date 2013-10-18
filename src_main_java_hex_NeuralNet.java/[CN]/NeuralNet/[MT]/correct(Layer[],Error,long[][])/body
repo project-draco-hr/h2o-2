@@ -2,7 +2,6 @@
   Softmax output=(Softmax)ls[ls.length - 1];
   for (int i=0; i < ls.length; i++)   ls[i].fprop();
   float[] out=ls[ls.length - 1]._a;
-  error.SqrDist=0;
   for (int i=0; i < out.length; i++) {
     float t=i == output.label() ? 1 : 0;
     float d=t - out[i];
