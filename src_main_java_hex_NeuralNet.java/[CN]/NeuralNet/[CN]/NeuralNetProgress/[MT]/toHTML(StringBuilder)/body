@@ -1,17 +1,29 @@
 {
+  Job nn=job != null ? (Job)UKV.get(job) : null;
   NeuralNetModel model=UKV.get(dst_key);
   if (model != null) {
-    String train=String.format("%5.2f %%",100 * model.train_classification_error);
-    String valid=String.format("%5.2f %%",100 * model.validation_classification_error);
-    DocGen.HTML.section(sb,"Training classification error: " + train);
-    DocGen.HTML.section(sb,"Training square error: " + model.train_sqr_error);
-    DocGen.HTML.section(sb,"Validation classification error: N/A");
-    DocGen.HTML.section(sb,"Validation square error: N/A");
+    String cmTitle="Confusion Matrix";
+    String trainC=String.format("%5.2f %%",100 * model.train_classification_error);
+    String trainS=String.format("%.3f",model.train_sqr_error);
+    String validC=String.format("%5.2f %%",100 * model.validation_classification_error);
+    String validS=String.format("%.3f",model.validation_sqr_error);
+    if (Double.isNaN(model.validation_classification_error)) {
+      validC=validS="N/A";
+      cmTitle+=" (Training Data)";
+    }
+    DocGen.HTML.section(sb,"Training classification error: " + trainC);
+    DocGen.HTML.section(sb,"Training square error: " + trainS);
+    DocGen.HTML.section(sb,"Validation classification error: " + validC);
+    DocGen.HTML.section(sb,"Validation square error: " + validS);
     DocGen.HTML.section(sb,"Items: " + model.items);
-    DocGen.HTML.section(sb,"Items per second: " + model.items_per_second);
+    if (nn != null)     DocGen.HTML.section(sb,"Items per second: " + (model.items * 1000 / nn.runTimeMs()));
     if (model.confusion_matrix != null) {
-      String title="Confusion Matrix (Training Data)";
-      NeuralNetScore.confusion(sb,title,model.classNames(),model.confusion_matrix);
+      String[] classes=model.classNames();
+      if (classes == null) {
+        classes=new String[model.confusion_matrix.length];
+        for (int i=0; i < model.confusion_matrix.length; i++)         classes[i]="" + i;
+      }
+      NeuralNetScore.confusion(sb,cmTitle,classes,model.confusion_matrix);
     }
   }
   return true;

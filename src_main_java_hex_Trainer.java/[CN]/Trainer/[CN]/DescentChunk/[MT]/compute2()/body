@@ -1,10 +1,9 @@
 {
   Layer[] clones=new Layer[_node._ls.length];
-  VecsInput stats=(VecsInput)_node._ls[0];
-  ChunksInput input=new ChunksInput(Utils.remove(_cs,_cs.length - 1),stats);
+  ChunksInput input=new ChunksInput(Utils.remove(_cs,_cs.length - 1),(VecsInput)_node._ls[0]);
   clones[0]=input;
   for (int y=1; y < _node._ls.length - 1; y++)   clones[y]=_node._ls[y].clone();
-  clones[clones.length - 1]=new ChunkSoftmax(_cs[_cs.length - 1]);
+  clones[clones.length - 1]=new ChunkSoftmax(_cs[_cs.length - 1],(VecSoftmax)_node._ls[_node._ls.length - 1]);
   for (int y=0; y < clones.length; y++) {
     clones[y].init(clones,y,false,_node._total);
     clones[y]._w=_node._ws[y];

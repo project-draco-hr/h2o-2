@@ -1,0 +1,15 @@
+{
+  if (normalized && _normClust == null) {
+    _normClust=normalize(clusters,chunks);
+    _subs=new double[chunks.length];
+    _muls=new double[chunks.length];
+    for (int i=0; i < chunks.length; i++) {
+      _subs[i]=(float)chunks[i]._vec.mean();
+      double sigma=chunks[i]._vec.sigma();
+      _muls[i]=normalize(sigma) ? 1 / sigma : 1;
+    }
+  }
+  data(tmp,chunks,rowInChunk,_subs,_muls);
+  preds[closest(_normClust,tmp,new ClusterDist())._cluster]=1;
+  return preds;
+}
