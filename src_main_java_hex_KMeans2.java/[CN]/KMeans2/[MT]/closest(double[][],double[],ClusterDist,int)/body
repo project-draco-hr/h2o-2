@@ -1,0 +1,26 @@
+{
+  int min=-1;
+  double minSqr=Double.MAX_VALUE;
+  for (int cluster=0; cluster < count; cluster++) {
+    double sqr=0;
+    int pts=point.length;
+    for (int column=0; column < clusters[cluster].length; column++) {
+      double d=point[column];
+      if (Double.isNaN(d)) {
+        pts--;
+      }
+ else {
+        double delta=d - clusters[cluster][column];
+        sqr+=delta * delta;
+      }
+    }
+    if (pts < point.length)     sqr*=point.length / pts;
+    if (sqr < minSqr) {
+      min=cluster;
+      minSqr=sqr;
+    }
+  }
+  cd._cluster=min;
+  cd._dist=minSqr;
+  return cd;
+}

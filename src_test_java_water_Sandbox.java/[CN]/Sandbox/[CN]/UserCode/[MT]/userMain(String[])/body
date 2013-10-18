@@ -1,13 +1,8 @@
 {
-  localCloud(1,true,args);
-  File f=new File("smalldata/categoricals/TwoBedrooms_Rent_Neighborhoods.csv.gz");
+  localCloud(2,true,args);
+  File f=new File("smalldata/covtype/covtype.20k.data");
+  Key key=TestUtil.load_test_file(f,"train");
   Key dest=Key.make("train.hex");
-  Key fkey=NFSFileVec.make(f);
-  ParseDataset2.parse(dest,new Key[]{fkey});
-  f=new File("smalldata/mnist/test.csv.gz");
-  dest=Key.make("test.hex");
-  fkey=NFSFileVec.make(f);
-  ParseDataset2.parse(dest,new Key[]{fkey});
-  Utils.readConsole();
-  System.out.println("Done!");
+  ParseDataset.parse(dest,new Key[]{key});
+  System.out.println("Ready");
 }

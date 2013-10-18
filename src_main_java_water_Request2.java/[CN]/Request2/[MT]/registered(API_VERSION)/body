@@ -20,29 +20,6 @@
         Object defaultValue=f.get(this);
         Argument arg=null;
         if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
- else         if (f.getType() == String.class)         arg=new Str(f.getName(),(String)defaultValue);
- else         if (f.getType() == float.class || f.getType() == double.class) {
-          double val=((Number)defaultValue).doubleValue();
-          arg=new Real(f.getName(),api.required(),val,api.dmin(),api.dmax(),api.help());
-        }
- else         if (f.getType() == int.class || f.getType() == long.class) {
-          long val=((Number)defaultValue).longValue();
-          arg=new LongInt(f.getName(),api.required(),val,api.lmin(),api.lmax(),api.help());
-        }
- else         if (f.getType() == boolean.class && api.filter() == Default.class) {
-          boolean val=(Boolean)defaultValue;
-          arg=new Bool(f.getName(),val,api.help());
-        }
- else         if (Enum.class.isAssignableFrom(f.getType())) {
-          Enum val=(Enum)defaultValue;
-          arg=new EnumArgument(f.getName(),val);
-        }
- else         if (f.getType() == Key.class) {
-          TypeaheadKey t=new TypeaheadKey();
-          t._defaultValue=(Key)defaultValue;
-          arg=t;
-        }
- else         if (Freezable.class.isAssignableFrom(f.getType()) && api.filter() == Default.class)         arg=new TypeaheadKey(f.getType(),api.required());
  else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
@@ -62,11 +39,47 @@
             boolean names=((MultiVecSelect)d)._namesOnly;
             arg=new FrameKeyMultiVec(f.getName(),(TypeaheadKey)ref,response,api.help(),names);
           }
- else           if (DoClassBoolean.class.isAssignableFrom(api.filter())) {
+ else           if (d instanceof DoClassBoolean) {
             FrameClassVec response=classVecs.get(d._ref);
             arg=new ClassifyBool(f.getName(),response);
           }
         }
+ else         if (f.getType() == String.class)         arg=new Str(f.getName(),(String)defaultValue);
+ else         if (f.getType() == float.class || f.getType() == double.class) {
+          double val=((Number)defaultValue).doubleValue();
+          arg=new Real(f.getName(),api.required(),val,api.dmin(),api.dmax(),api.help());
+        }
+ else         if (f.getType() == int.class || f.getType() == long.class) {
+          long val=((Number)defaultValue).longValue();
+          arg=new LongInt(f.getName(),api.required(),val,api.lmin(),api.lmax(),api.help());
+        }
+ else         if (f.getType() == int[].class) {
+          int[] val=(int[])defaultValue;
+          double[] ds=null;
+          if (val != null) {
+            ds=new double[val.length];
+            for (int i=0; i < ds.length; i++)             ds[i]=val[i];
+          }
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(ds,null),false);
+        }
+ else         if (f.getType() == double[].class) {
+          double[] val=(double[])defaultValue;
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null),false);
+        }
+ else         if (f.getType() == boolean.class && api.filter() == Default.class) {
+          boolean val=(Boolean)defaultValue;
+          arg=new Bool(f.getName(),val,api.help());
+        }
+ else         if (Enum.class.isAssignableFrom(f.getType())) {
+          Enum val=(Enum)defaultValue;
+          arg=new EnumArgument(f.getName(),val);
+        }
+ else         if (f.getType() == Key.class) {
+          TypeaheadKey t=new TypeaheadKey();
+          t._defaultValue=(Key)defaultValue;
+          arg=t;
+        }
+ else         if (Freezable.class.isAssignableFrom(f.getType()))         arg=new TypeaheadKey(f.getType(),api.required());
         if (arg != null) {
           arg._name=f.getName();
           arg._displayName=api.displayName().length() > 0 ? api.displayName() : null;
