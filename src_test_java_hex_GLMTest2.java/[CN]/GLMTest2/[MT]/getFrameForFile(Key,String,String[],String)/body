@@ -5,7 +5,7 @@
     Frame fr=ParseDataset2.parse(outputKey,new Key[]{k});
     if (ignores != null)     for (    String s : ignores)     UKV.remove(fr.remove(s)._key);
     fr.add(response,fr.remove(response));
-    return GLMTask.adaptFrame(fr);
+    return fr;
   }
   finally {
     UKV.remove(k);
