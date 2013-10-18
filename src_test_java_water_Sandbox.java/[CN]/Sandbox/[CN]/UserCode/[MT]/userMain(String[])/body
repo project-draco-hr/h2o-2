@@ -1,5 +1,8 @@
 {
   localCloud(2,true,args);
-  ecology();
+  File f=new File("smalldata/covtype/covtype.20k.data");
+  Key key=TestUtil.load_test_file(f,"train");
+  Key dest=Key.make("train.hex");
+  ParseDataset.parse(dest,new Key[]{key});
   System.out.println("Ready");
 }

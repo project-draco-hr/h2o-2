@@ -1,6 +1,7 @@
 {
+  double[][] cs=clusters;
   if (normalized && _normClust == null) {
-    _normClust=normalize(clusters,chunks);
+    cs=_normClust=normalize(clusters,chunks);
     _subs=new double[chunks.length];
     _muls=new double[chunks.length];
     for (int i=0; i < chunks.length; i++) {
@@ -10,6 +11,6 @@
     }
   }
   data(tmp,chunks,rowInChunk,_subs,_muls);
-  preds[closest(_normClust,tmp,new ClusterDist())._cluster]=1;
+  preds[closest(cs,tmp,new ClusterDist())._cluster]=1;
   return preds;
 }

@@ -1,0 +1,10 @@
+{
+  File f=new File("smalldata/gbm_test/ecology_model.csv");
+  Key key=TestUtil.load_test_file(f,"train");
+  Key dest=Key.make("train.hex");
+  ParseDataset.parse(dest,new Key[]{key});
+  f=new File("smalldata/gbm_test/ecology_eval.csv");
+  key=TestUtil.load_test_file(f,"test");
+  dest=Key.make("test.hex");
+  ParseDataset.parse(dest,new Key[]{key});
+}

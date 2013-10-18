@@ -6,6 +6,10 @@
   for (int i=0; i < cols.length; i++)   names[i]=source._names[cols[i]];
   Vec[] vecs=selectVecs(source);
   Frame frame=new Frame(names,vecs);
+  Vec response=frame.anyVec().makeZero();
+  response._domain=new String[k];
+  for (int i=0; i < response._domain.length; i++)   response._domain[i]="Cluster " + i;
+  frame.add("response",response);
   KMeans2Model model=new KMeans2Model(destination_key,sourceKey,frame);
   double[] subs=null, muls=null;
   if (normalize) {
@@ -43,7 +47,7 @@
       sampler.doAll(vecs);
       clusters=DRemoteTask.merge(clusters,sampler._sampled);
       if (cancelled())       return;
-      clusters=normalize ? denormalize(clusters,vecs) : clusters;
+      model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
       model.error=sqr._sqr;
       model.iterations++;
       UKV.put(destination_key,model);
@@ -64,7 +68,7 @@
         }
       }
     }
-    clusters=normalize ? denormalize(clusters,vecs) : clusters;
+    model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
     model.error=task._sqr;
     model.iterations++;
     UKV.put(destination_key,model);
