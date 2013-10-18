@@ -1,6 +1,7 @@
 def test_parse_summary_airline_s3(self):
     csvFilelist = [('allyears2k.csv', 300), ('year1987.csv', 600), ('allyears.csv', 900)]
-    (importHDFSResult, importPattern) = h2i.import_only(bucket='h2o-airlines-unpacked', path='*', schema='s3')
+    bucket = 'h2o-airlines-unpacked'
+    (importHDFSResult, importPattern) = h2i.import_only(bucket=bucket, path='*', schema='s3')
     s3nFullList = importHDFSResult['succeeded']
     self.assertGreater(len(s3nFullList), 1, 'Should see more than 1 files in s3n?')
     print '\nTrying StoreView after the import s3'
@@ -11,7 +12,7 @@ def test_parse_summary_airline_s3(self):
         csvPathname = csvFilename
         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='s3', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120)
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='s3', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120)
         elapsed = (time.time() - start)
         print 'parse end on ', parseResult['destination_key'], 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         start = time.time()
