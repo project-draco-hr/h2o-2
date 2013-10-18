@@ -36,7 +36,7 @@ def doGBM(fs, folderPath, ignored_cols, classification, testFilehex, ntrees, dep
             kwargs = params.copy()
             gbmStart = time.time()
             h2o.beta_features = True
-            gbm = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=4800, benchmarkLogging=benchmarkLogging, **kwargs)
+            gbm = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=4800, **kwargs)
             h2o_jobs.pollWaitJobs(timeoutSecs=7200, pollTimeoutSecs=120, retryDelaySecs=5)
             h2o.beta_features = False
             gbmTime = (time.time() - gbmStart)

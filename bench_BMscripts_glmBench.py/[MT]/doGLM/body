@@ -1,5 +1,6 @@
 def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehex, row):
     benchmarkLogging = ['cpu', 'disk', 'network', 'iostats']
+    benchmarkLogging = None
     date = '-'.join([str(z) for z in list(time.localtime())][0:3])
     for f in fs['train']:
         overallWallStart = time.time()
@@ -35,7 +36,7 @@ def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehe
             glmStart = time.time()
             glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=7200, benchmarkLogging=benchmarkLogging, **kwargs)
             glmTime = (time.time() - glmStart)
-            row.update({'glmBuildTime': glmTime, 'AverageAccuracy': glm['GLMModel']['validations'][0]['err'], })
+            row.update({'glmBuildTime': glmTime, 'AverageErrorOver10Folds': glm['GLMModel']['validations'][0]['err'], })
             glmScoreStart = time.time()
             glmScore = h2o_cmd.runGLMScore(key=testFilehex, model_key=params['destination_key'])
             scoreTime = (time.time() - glmScoreStart)
