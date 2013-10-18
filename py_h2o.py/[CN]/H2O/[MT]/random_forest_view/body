@@ -24,10 +24,11 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
     verboseprint(('\n%s result:' % whichUsed), dump_json(a))
     if noPoll:
         return a
-    response = a['response']
-    response['redirect_request'] = (whichUsed + '.json')
-    response['redirect_request_args'] = params_dict
-    rfView = self.poll_url(response, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+    fake_a = {}
+    fake_a['response'] = a['response']
+    fake_a['response']['redirect_request'] = (whichUsed + '.json')
+    fake_a['response']['redirect_request_args'] = params_dict
+    rfView = self.poll_url(fake_a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     verboseprint(('%s done:' % whichUsed), dump_json(rfView))
     status = rfView['response']['status']
     if (status != 'done'):

@@ -6,7 +6,7 @@ def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, p
         raise Exception('H2O GLM redirect is not GLMProgressPage. GLM json response precedes.')
     if noPoll:
         return a
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     verboseprint('GLM done:', dump_json(a))
     browseAlso = kwargs.get('browseAlso', False)
     if (browseAlso | browse_json):

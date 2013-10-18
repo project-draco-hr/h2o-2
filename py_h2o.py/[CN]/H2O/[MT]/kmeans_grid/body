@@ -7,7 +7,7 @@ def kmeans_grid(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initi
     if (a['response']['redirect_request'] != 'Progress'):
         print dump_json(a)
         raise Exception('H2O kmeans_grid redirect is not Progress. KMeans json response precedes.')
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
+    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
     verboseprint('\nKMeansGrid result:', dump_json(a))
     if (browseAlso | browse_json):
         print 'Redoing the KMeansGrid through the browser, no results saved though'
