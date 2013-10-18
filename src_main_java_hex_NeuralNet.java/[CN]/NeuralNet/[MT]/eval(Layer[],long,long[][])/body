@@ -1,0 +1,16 @@
+{
+  Error error=new Error();
+  Input input=(Input)ls[0];
+  long len=input._len;
+  if (n != 0)   len=Math.min(len,n);
+  if (ls[ls.length - 1] instanceof Softmax) {
+    int correct=0;
+    for (input._pos=0; input._pos < len; input._pos++)     if (correct(ls,error,cm))     correct++;
+    error.Value=(len - (double)correct) / len;
+  }
+ else {
+    for (input._pos=0; input._pos < len; input._pos++)     error(ls,error);
+    error.Value=Double.NaN;
+  }
+  return error;
+}

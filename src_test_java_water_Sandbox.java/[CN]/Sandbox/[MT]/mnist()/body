@@ -1,0 +1,10 @@
+{
+  File train=new File("smalldata/mnist/train.csv.gz");
+  Key dest=Key.make("train.hex");
+  Key fkey=water.fvec.NFSFileVec.make(train);
+  water.fvec.ParseDataset2.parse(dest,new Key[]{fkey});
+  File test=new File("smalldata/mnist/test.csv.gz");
+  dest=Key.make("test.hex");
+  fkey=water.fvec.NFSFileVec.make(test);
+  water.fvec.ParseDataset2.parse(dest,new Key[]{fkey});
+}

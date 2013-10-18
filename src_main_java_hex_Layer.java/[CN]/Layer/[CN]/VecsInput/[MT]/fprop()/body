@@ -1,9 +1,8 @@
 {
-  for (int i=0; i < _a.length; i++) {
-    Chunk chunk=chunk(i,_pos);
-    double d=chunk.at(_pos);
-    d-=_subs[i];
-    d*=_muls[i];
-    _a[i]=(float)d;
+  if (_chunks == null)   _chunks=new Chunk[_vecs.length];
+  for (int i=0; i < _vecs.length; i++) {
+    Chunk c=_chunks[i];
+    if (c == null || c._vec != _vecs[i] || _pos < c._start || _pos >= c._start + c._len)     _chunks[i]=_vecs[i].chunk(_pos);
   }
+  ChunksInput.set(_chunks,_a,(int)(_pos - _chunks[0]._start),_subs,_muls,_categoricals);
 }
