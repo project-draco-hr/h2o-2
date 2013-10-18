@@ -1,6 +1,6 @@
 {
   if (_job != null && _job.cancelled())   throw new RuntimeException("Cancelled");
-  mapInit();
+  chunkInit();
   final int nrows=chunks[0]._len;
   double[] nums=MemoryManager.malloc8d(_nums);
   int[] cats=MemoryManager.malloc4(_cats);
@@ -19,4 +19,5 @@
     if (!_hasResponse)     processRow(nums,ncats,cats);
  else     processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r));
   }
+  chunkDone();
 }
