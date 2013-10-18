@@ -1,6 +1,6 @@
 {
   int x=E._x;
-  AST ast=parseExpr(E);
+  AST ast=parseVal(E);
   if (ast == null)   return null;
   if (!E.peek('['))   return ast;
   if (ast._t == null)   ast=((ASTId)ast).setOnUse(E,Type.ary);

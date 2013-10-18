@@ -19,20 +19,20 @@
       E.xpeek(',',E._x,null);
     }
   }
-  E.xpeek('{',E._x,null);
-  E._env.push(vars);
-  AST body=E.xpeek('}',E._x,parseCXExpr(E));
-  E._env.pop();
   String xvars[]=new String[vars.size() + 1];
-  Type types[]=new Type[vars.size() + 1];
-  xvars[0]="fun";
+  int i=0;
+  xvars[i++]="fun";
+  for (  String id2 : vars.keySet())   xvars[i++]=id2;
+  E.xpeek('{',(x=E._x),null);
+  E._env.push(vars);
+  AST body=E.xpeek('}',E._x,ASTStatement.parse(E));
+  if (body == null)   E.throwErr("Missing function body",x);
+  E._env.pop();
+  Type types[]=new Type[xvars.length];
   types[0]=body._t;
-  int i=1;
-  for (  String id2 : vars.keySet()) {
-    xvars[i]=id2;
-    types[i]=vars.get(id2);
-    if (types[i] == null)     System.out.println("Warning: var " + id2 + " failed to get typed.");
-    i++;
+  for (int j=1; j < xvars.length; j++) {
+    types[j]=vars.get(xvars[j]);
+    if (types[j] == null)     System.out.println("Warning: var " + xvars[j] + " failed to get typed.");
   }
   return new ASTFunc(xvars,types,body);
 }

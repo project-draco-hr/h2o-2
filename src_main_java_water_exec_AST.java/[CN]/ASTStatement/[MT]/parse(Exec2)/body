@@ -1,0 +1,11 @@
+{
+  ArrayList<AST> asts=new ArrayList<AST>();
+  while (true) {
+    AST ast=parseCXExpr(E);
+    if (ast == null)     break;
+    asts.add(ast);
+    if (!E.peek(';'))     break;
+  }
+  if (asts.size() == 0)   return null;
+  return new ASTStatement(asts.toArray(new AST[asts.size()]));
+}

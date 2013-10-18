@@ -3,6 +3,6 @@
   if (E.peek('('))   return E.xpeek(')',E._x,parseCXExpr(E));
   if ((ast=ASTId.parse(E)) != null)   return ast;
   if ((ast=ASTNum.parse(E)) != null)   return ast;
-  if ((ast=ASTApply.parse(E)) != null)   return ast;
+  if ((ast=ASTOp.parse(E)) != null)   return ast;
   return null;
 }

@@ -4,5 +4,6 @@
   if (op._vars.length != 3)   return null;
   int x=E._x;
   AST rite=parseCXExpr(E);
+  if (rite == null)   E.throwErr("Missing expr or unknown ID",x);
   return make(new AST[]{op,ast,rite},E,x);
 }

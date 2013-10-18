@@ -2,6 +2,10 @@
   int x=E._x;
   String id=E.isID();
   if (id == null)   return null;
+  if (ASTOp.OPS.containsKey(id)) {
+    E._x=x;
+    return null;
+  }
   for (int d=E._env.size() - 1; d >= 0; d--) {
     HashMap<String,Type> vars=E._env.get(d);
     if (!vars.containsKey(id))     continue;

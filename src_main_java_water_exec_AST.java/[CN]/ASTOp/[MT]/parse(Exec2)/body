@@ -5,6 +5,5 @@
   ASTOp op=OPS.get(id);
   if (op != null)   return op;
   E._x=x;
-  if ((op=ASTFunc.parseFcn(E)) != null)   return op;
-  return null;
+  return ASTFunc.parseFcn(E);
 }

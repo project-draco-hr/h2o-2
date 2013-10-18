@@ -1,0 +1,10 @@
+{
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  if (ASTOp.OPS.containsKey(id)) {
+    E._x=x;
+    return null;
+  }
+  return new ASTId(null,id,E.lexical_depth() - 1);
+}
