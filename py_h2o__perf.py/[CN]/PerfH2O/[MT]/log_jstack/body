@@ -3,7 +3,7 @@ def log_jstack(self, initOnly=False):
         return
     jstackResult = h2o.nodes[0].jstack()
     node0 = jstackResult['nodes'][0]
-    stack_traces = node0['stack_traces']
+    stack_traces = node0['traces']
     stackLines = stack_traces.split('\n')
 
     def init_cache(self):

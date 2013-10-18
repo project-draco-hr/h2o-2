@@ -1,0 +1,11 @@
+{
+  sb.p("  // Pass in data in a double[], pre-aligned to the Model's requirements.\n");
+  sb.p("  // Jam predictions into the preds[] array; preds[0] is reserved for the\n");
+  sb.p("  // main prediction (class for classifiers or value for regression),\n");
+  sb.p("  // and remaining columns hold a probability distribution for classifiers.\n");
+  sb.p("  float[] predict( double data[], float preds[] ) {\n");
+  toJavaPredictBody(sb);
+  sb.p("    return preds;\n");
+  sb.p("  }\n");
+  return sb;
+}

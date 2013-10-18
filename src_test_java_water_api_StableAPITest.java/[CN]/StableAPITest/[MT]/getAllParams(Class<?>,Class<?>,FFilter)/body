@@ -1,0 +1,13 @@
+{
+  List<Field> params=new ArrayList<Field>(10);
+  Class<?> cls=startClass;
+  while (cls != null && cls != parentClass) {
+    Field[] fields=cls.getDeclaredFields();
+    for (    Field f : fields)     if (ffilter == null || ffilter.involve(f)) {
+      f.setAccessible(true);
+      params.add(f);
+    }
+    cls=cls.getSuperclass();
+  }
+  return params;
+}

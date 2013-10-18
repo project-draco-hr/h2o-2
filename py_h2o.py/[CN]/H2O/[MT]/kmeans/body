@@ -1,17 +1,20 @@
 def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, **kwargs):
-    params_dict = {'initialization': 'Furthest', 'k': 1, 'source_key': key, 'destination_key': None, }
+    if beta_features:
+        params_dict = {'initialization': 'Furthest', 'k': 1, 'source': key, 'destination_key': key2, 'seed': None, 'ignored_cols_by_name': None, 'max_iter': None, 'normalize': None, }
+    else:
+        params_dict = {'initialization': 'Furthest', 'k': 1, 'source_key': key, 'destination_key': key2, 'seed': None, 'cols': None, 'max_iter': None, 'normalize': None, }
     if (key2 is not None):
         params_dict['destination_key'] = key2
     browseAlso = kwargs.get('browseAlso', False)
-    params_dict.update(kwargs)
-    algo = ('KMeans2' if beta_features else 'KMeans')
+    check_params_update_kwargs(params_dict, kwargs, 'kmeans', print_params=True)
+    algo = ('2/KMeans2' if beta_features else 'KMeans')
     print ('\n%s params list:' % algo), params_dict
     a = self.__do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
-    if (a['response']['redirect_request'] != 'Progress'):
-        print dump_json(a)
-        raise Exception(('H2O %s redirect is not Progress. %s json response precedes.' % (algo, algo)))
     if noPoll:
         return a
+    if (('response' not in a) or (a['response']['redirect_request'] != 'Progress')):
+        print dump_json(a)
+        raise Exception(('H2O %s redirect is not Progress. %s json response precedes.' % (algo, algo)))
     a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     verboseprint(('\n%s result:' % algo), dump_json(a))
     if (browseAlso | browse_json):

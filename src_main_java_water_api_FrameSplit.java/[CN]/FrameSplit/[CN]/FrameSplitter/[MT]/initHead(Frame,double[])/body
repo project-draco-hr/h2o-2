@@ -1,0 +1,12 @@
+{
+  _num_columns=frame.vecs().length;
+  _splits=splits;
+  for (int i=0; i < _num_columns; i++)   frame.vecs()[i].isInt();
+  Vec[] v=new Vec[_num_columns * (1 + _splits.length)];
+  for (int i=0; i < _num_columns; i++)   v[i]=frame.vecs()[i];
+  Key keys[]=frame.anyVec().group().addVecs(_num_columns * _splits.length);
+  for (int i=_num_columns; i < v.length; i++)   v[i]=new AppendableVec(keys[i - _num_columns]);
+  String[] names=new String[_num_columns * (1 + _splits.length)];
+  for (int copy=0; copy < 1 + _splits.length; copy++)   System.arraycopy(frame._names,0,names,copy * _num_columns,_num_columns);
+  return new Frame(names,v);
+}

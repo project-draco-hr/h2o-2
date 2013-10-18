@@ -1,0 +1,36 @@
+{
+  if (source == null || source.equals(""))   return Response.error("source is required");
+  Key[] keys=new Key[fractions.length];
+  if (this.destination_keys == null || "".equals(this.destination_keys)) {
+    for (int i=0; i < keys.length; i++)     keys[i]=makeKey();
+  }
+ else {
+    String[] skeys=this.destination_keys.split(",");
+    if (skeys.length != fractions.length)     return Response.error("set as many keys as fractions");
+    for (int i=0; i < keys.length; i++)     keys[i]=Key.make(skeys[i]);
+  }
+  StringBuilder sb=new StringBuilder();
+  sb.append(String.format("framesplit: %s [%d,%d] to ",input("source"),source.numRows(),source.numCols()));
+  for (int i=0; i < fractions.length; i++) {
+    sb.append(fractions[i] + " -> ");
+    sb.append(keys[i]);
+    sb.append(";");
+  }
+  Log.info(sb.toString());
+  Frame[] frames=splitFrame(source,fractions);
+  for (int f=0; f < frames.length; f++)   DKV.put(keys[f],frames[f]);
+  Results r=new Results();
+  r.fractions=fractions;
+  String[] ks=new String[keys.length];
+  long[] rows=new long[keys.length];
+  for (int i=0; i < ks.length; i++) {
+    ks[i]=keys[i].toString();
+    rows[i]=frames[i].numRows();
+  }
+  r.keys=ks;
+  r.numRows=rows;
+  Gson gson=new Gson();
+  JsonParser parser=new JsonParser();
+  JsonObject o=parser.parse(gson.toJson(r)).getAsJsonObject();
+  return Response.done(o);
+}

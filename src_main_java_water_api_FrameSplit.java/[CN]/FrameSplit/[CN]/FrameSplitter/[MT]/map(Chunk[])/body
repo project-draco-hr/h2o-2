@@ -1,0 +1,26 @@
+{
+  Random random=new Random();
+  NewChunk[] new_chunks=new NewChunk[_num_columns * _splits.length];
+  for (int i=0; i < _num_columns * _splits.length; i++)   new_chunks[i]=(NewChunk)cs[_num_columns + i];
+  Vec[] vecs=_fr.vecs();
+  for (int chunk_row=0; chunk_row < cs[0]._len; chunk_row++) {
+    double draw=random.nextDouble();
+    int split=0;
+    while (draw > _splits[split]) {
+      split++;
+    }
+    for (int col=0; col < _num_columns; col++) {
+      if (vecs[col].isEnum()) {
+        if (!cs[col].isNA0(chunk_row))         new_chunks[split * _num_columns + col].addEnum((int)cs[col].at80(chunk_row));
+ else         new_chunks[split * _num_columns + col].addNA();
+      }
+ else       if (vecs[col].isInt()) {
+        if (!cs[col].isNA0(chunk_row))         new_chunks[split * _num_columns + col].addNum(cs[col].at80(chunk_row),0);
+ else         new_chunks[split * _num_columns + col].addNA();
+      }
+ else {
+        new_chunks[split * _num_columns + col].addNum(cs[col].at0(chunk_row));
+      }
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  int ncol=normSub.length;
-  Vec[] vecs=Arrays.copyOf(data.vecs(),2 * ncol);
-  for (int i=0; i < ncol; i++)   vecs[ncol + i]=vecs[0].makeZero();
-  StandardizeTask tsk=new StandardizeTask(null,normSub,normMul).doAll(vecs);
-  Vec[] outputVecs=Arrays.copyOfRange(tsk._fr.vecs(),ncol,2 * ncol);
-  return new Frame(data.names(),outputVecs);
-}

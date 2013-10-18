@@ -1,4 +1,5 @@
 {
-  if (old == null)   return new VectorGroup(_key,++_finalN);
-  return new VectorGroup(_key,_finalN=(_addN + old._len + 1));
+  int n=_n;
+  _n=old == null ? 1 : old._len;
+  return new VectorGroup(_key,n + _n);
 }

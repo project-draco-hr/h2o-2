@@ -1,4 +1,9 @@
 {
   UKV.put(destination_key,this);
-  for (  Job job : jobs)   job.fork().join();
+  for (  Job job : jobs)   try {
+    job.fork().get();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
 }

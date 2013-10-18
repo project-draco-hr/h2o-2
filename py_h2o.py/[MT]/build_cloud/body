@@ -1,4 +1,5 @@
 def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, **kwargs):
+    sys.stdout = OutWrapper(sys.stdout)
     if (clone_cloud_json or clone_cloud):
         nodeList = build_cloud_with_json(h2o_nodes_json=(clone_cloud_json if clone_cloud_json else clone_cloud))
         return nodeList
@@ -39,12 +40,12 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
-        stabilize_cloud(nodeList[0], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, ignoreConnectionError=True)
+        stabilize_cloud(nodeList[0], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, noExtraErrorCheck=True)
         verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
         if conservative:
             for n in nodeList:
-                stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs, ignoreConnectionError=True)
+                stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
         else:
             pass
         check_sandbox_for_errors()

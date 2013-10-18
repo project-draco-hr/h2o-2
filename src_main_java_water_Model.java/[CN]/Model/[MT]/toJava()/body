@@ -1,5 +1,16 @@
 {
-  String m=toJava_impl();
-  String j=String.format("\n" + "class %s {\n" + "  public static final String NAMES[] = %s;\n"+ "  public static final int NCLASSES=%d;\n"+ "  // Pass in data in a double[], pre-aligned to the Model's requirements.\n"+ "  // Jam predictions into the preds[] array; preds[0] is reserved for the\n"+ "  // main prediction (class for classifiers or value for regression),\n"+ "  // and remaining columns hold a probability distribution for classifiers.\n"+ "  float[] predict( double data[], float preds[] ) {\n"+ "    %s\n"+ "    return preds;\n"+ "  }\n"+ "  double[] map( java.util.HashMap<String,Double> row, double data[] ) {\n"+ "    for( int i=0; i<NAMES.length-1; i++ ) {\n"+ "      Double d = row.get(NAMES[i]);\n"+ "      data[i] = d==null ? Double.NaN : d;\n"+ "    }\n"+ "    return data;\n"+ "  }\n"+ "  // Does the mapping lookup for every row, no allocation\n"+ "  float[] predict( java.util.HashMap<String,Double> row, double data[], float preds[] ) {\n"+ "    return predict(map(row,data),preds);\n"+ "  }\n"+ "  // Allocates a double[] for every row\n"+ "  float[] predict( java.util.HashMap<String,Double> row, float preds[] ) {\n"+ "    return predict(map(row,new double[NAMES.length]),preds);\n"+ "  }\n"+ "  // Allocates a double[] and a float[] for every row\n"+ "  float[] predict( java.util.HashMap<String,Double> row ) {\n"+ "    return predict(map(row,new double[NAMES.length]),new float[NCLASSES+1]);\n"+ "  }\n"+ "}\n",_selfKey.toString(),toString(_names),nclasses(),m);
-  return j;
+  SB sb=new SB();
+  sb.p("\n");
+  sb.p("class ").p(_selfKey.toString()).p(" {\n");
+  toJavaNAMES(sb);
+  toJavaNCLASSES(sb);
+  toJavaInit(sb);
+  sb.p("\n");
+  toJavaPredict(sb);
+  sb.p(TOJAVA_MAP);
+  sb.p(TOJAVA_PREDICT_MAP);
+  sb.p(TOJAVA_PREDICT_MAP_ALLOC1);
+  sb.p(TOJAVA_PREDICT_MAP_ALLOC2);
+  sb.p("}\n");
+  return sb.toString();
 }

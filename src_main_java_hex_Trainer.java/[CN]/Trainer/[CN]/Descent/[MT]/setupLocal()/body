@@ -5,11 +5,13 @@
     @Override public void run(){
       while (_job == null || Job.running(_job)) {
         if (!home)         _node.sync();
- else         _node._total=_node._trainer.items();
-        try {
-          Thread.sleep(1);
-        }
- catch (        InterruptedException ex) {
+ else {
+          _node._total=_node._trainer.items();
+          try {
+            Thread.sleep(1);
+          }
+ catch (          InterruptedException ex) {
+          }
         }
       }
     }

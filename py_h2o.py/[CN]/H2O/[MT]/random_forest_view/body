@@ -3,9 +3,9 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
         print 'random_forest_view not supported in H2O fvec yet. hacking done response'
         r = {'response': {'status': 'done', }, 'trees': {'number_built': 0, }, }
         return r
-    algo = ('DRFView2' if beta_features else 'RFView')
-    algoScore = ('DRFScore2' if beta_features else 'RFScore')
-    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'iterative_cm': 0, 'ntree': None, 'class_weights': None, 'response_variable': None, 'clear_confusion_matrix': None, }
+    algo = ('2/DRFView2' if beta_features else 'RFView')
+    algoScore = ('2/DRFScore2' if beta_features else 'RFScore')
+    params_dict = {'data_key': data_key, 'model_key': model_key, 'out_of_bag_error_estimate': 1, 'iterative_cm': 0, 'ntree': None, 'class_weights': None, 'response_variable': None, }
     browseAlso = kwargs.pop('browseAlso', False)
     for k in kwargs:
         if (k in params_dict):

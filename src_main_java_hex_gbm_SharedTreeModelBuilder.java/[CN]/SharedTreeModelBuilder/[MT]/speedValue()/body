@@ -1,0 +1,7 @@
+{
+  Value value=DKV.get(dest());
+  DTree.TreeModel m=value != null ? (DTree.TreeModel)value.get() : null;
+  long numTreesBuiltSoFar=m == null ? 0 : m.treeBits.length;
+  long sv=(numTreesBuiltSoFar <= 0) ? 0 : (runTimeMs() / numTreesBuiltSoFar);
+  return sv;
+}

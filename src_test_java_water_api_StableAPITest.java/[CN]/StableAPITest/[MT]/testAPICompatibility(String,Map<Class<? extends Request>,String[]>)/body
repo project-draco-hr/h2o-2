@@ -1,0 +1,8 @@
+{
+  Map<Class<? extends Request>,String[]> unsupportedParams=new HashMap<Class<? extends Request>,String[]>();
+  for (  Map.Entry<Class<? extends Request>,String[]> apiCall : api.entrySet()) {
+    String[] unsParams=verifyAPICall(client,apiCall.getKey(),apiCall.getValue());
+    if (unsParams != null && unsParams.length > 0)     unsupportedParams.put(apiCall.getKey(),unsParams);
+  }
+  Assert.assertTrue(f(client,unsupportedParams),unsupportedParams.isEmpty());
+}

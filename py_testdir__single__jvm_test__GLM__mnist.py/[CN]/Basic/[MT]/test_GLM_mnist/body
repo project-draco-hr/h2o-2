@@ -29,7 +29,7 @@ def test_GLM_mnist(self):
             kwargs['case'] = c
             timeoutSecs = 1800
             start = time.time()
-            glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutsecs=60, noise=('StoreView', None), **kwargs)
+            glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, noise=('StoreView', None), **kwargs)
             elapsed = (time.time() - start)
             print 'GLM completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)

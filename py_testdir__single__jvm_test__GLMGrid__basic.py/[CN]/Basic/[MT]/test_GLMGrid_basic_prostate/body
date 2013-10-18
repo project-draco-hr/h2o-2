@@ -10,7 +10,7 @@ def test_GLMGrid_basic_prostate(self):
     x = ','.join(map(str, x))
     print '\nx:', x
     print 'y:', y
-    kwargs = {'x': x, 'y': y, 'n_folds': 2, 'beta_epsilon': 0.0001, 'lambda': '1e-8:1e3:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
+    kwargs = {'x': x, 'y': y, 'n_folds': 2, 'beta_eps': 0.0001, 'lambda': '1e-8:1e3:100', 'alpha': '0,0.5,1', 'thresholds': '0:1:0.01', }
     gg = h2o_cmd.runGLMGrid(parseResult=parseResult, timeoutSecs=120, **kwargs)
     colNames = ['D', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
     h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)

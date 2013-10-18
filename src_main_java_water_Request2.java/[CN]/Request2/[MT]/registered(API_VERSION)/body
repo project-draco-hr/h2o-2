@@ -1,0 +1,96 @@
+{
+  try {
+    ArrayList<Class> classes=new ArrayList<Class>();
+{
+      Class c=getClass();
+      while (c != null) {
+        classes.add(c);
+        c=c.getSuperclass();
+      }
+    }
+    Collections.reverse(classes);
+    ArrayList<Field> fields=new ArrayList<Field>();
+    for (    Class c : classes)     for (    Field field : c.getDeclaredFields())     if (!Modifier.isStatic(field.getModifiers()))     fields.add(field);
+    HashMap<String,FrameClassVec> classVecs=new HashMap<String,FrameClassVec>();
+    for (    Field f : fields) {
+      Annotation[] as=f.getAnnotations();
+      API api=find(as,API.class);
+      if (api != null && Helper.isInput(api)) {
+        f.setAccessible(true);
+        Object defaultValue=f.get(this);
+        Argument arg=null;
+        if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
+ else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
+          ColumnSelect name=(ColumnSelect)newInstance(api);
+          H2OHexKey key=null;
+          for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._ref.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
+          arg=new HexAllColumnSelect(f.getName(),key);
+        }
+ else         if (Dependent.class.isAssignableFrom(api.filter())) {
+          Dependent d=(Dependent)newInstance(api);
+          Argument ref=find(d._ref);
+          if (d instanceof VecSelect)           arg=new FrameKeyVec(f.getName(),(TypeaheadKey)ref);
+ else           if (d instanceof VecClassSelect) {
+            arg=new FrameClassVec(f.getName(),(TypeaheadKey)ref);
+            classVecs.put(d._ref,(FrameClassVec)arg);
+          }
+ else           if (d instanceof MultiVecSelect) {
+            FrameClassVec response=classVecs.get(d._ref);
+            boolean names=((MultiVecSelect)d)._namesOnly;
+            arg=new FrameKeyMultiVec(f.getName(),(TypeaheadKey)ref,response,api.help(),names);
+          }
+ else           if (d instanceof DoClassBoolean) {
+            FrameClassVec response=classVecs.get(d._ref);
+            arg=new ClassifyBool(f.getName(),response);
+          }
+        }
+ else         if (f.getType() == String.class)         arg=new Str(f.getName(),(String)defaultValue);
+ else         if (f.getType() == float.class || f.getType() == double.class) {
+          double val=((Number)defaultValue).doubleValue();
+          arg=new Real(f.getName(),api.required(),val,api.dmin(),api.dmax(),api.help());
+        }
+ else         if (f.getType() == int.class || f.getType() == long.class) {
+          long val=((Number)defaultValue).longValue();
+          arg=new LongInt(f.getName(),api.required(),val,api.lmin(),api.lmax(),api.help());
+        }
+ else         if (f.getType() == int[].class) {
+          int[] val=(int[])defaultValue;
+          double[] ds=null;
+          if (val != null) {
+            ds=new double[val.length];
+            for (int i=0; i < ds.length; i++)             ds[i]=val[i];
+          }
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(ds,null),false);
+        }
+ else         if (f.getType() == double[].class) {
+          double[] val=(double[])defaultValue;
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null),false);
+        }
+ else         if (f.getType() == boolean.class && api.filter() == Default.class) {
+          boolean val=(Boolean)defaultValue;
+          arg=new Bool(f.getName(),val,api.help());
+        }
+ else         if (Enum.class.isAssignableFrom(f.getType())) {
+          Enum val=(Enum)defaultValue;
+          arg=new EnumArgument(f.getName(),val);
+        }
+ else         if (f.getType() == Key.class) {
+          TypeaheadKey t=new TypeaheadKey();
+          t._defaultValue=(Key)defaultValue;
+          arg=t;
+        }
+ else         if (Freezable.class.isAssignableFrom(f.getType()))         arg=new TypeaheadKey(f.getType(),api.required());
+        if (arg != null) {
+          arg._name=f.getName();
+          arg._displayName=api.displayName().length() > 0 ? api.displayName() : null;
+          arg._required=api.required();
+          arg._field=f;
+          arg._hideInQuery=api.hide();
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}
