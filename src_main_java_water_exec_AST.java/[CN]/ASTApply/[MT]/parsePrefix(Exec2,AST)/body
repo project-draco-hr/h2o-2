@@ -14,9 +14,7 @@
     }
   }
   args=Arrays.copyOf(args,i);
-  if (op._vars != null) {
-    if (i != op._vars.length)     E.throwErr("Expected " + (op._vars.length - 1) + " args but found "+ (i - 1),x);
-  }
- else   op.set_varargs_types(args);
+  if (op._vars == null)   args[0]=op=op.set_varargs_types(args);
+  if (i != op._vars.length)   E.throwErr("Expected " + (op._vars.length - 1) + " args but found "+ (i - 1),x);
   return make(args,E,x);
 }

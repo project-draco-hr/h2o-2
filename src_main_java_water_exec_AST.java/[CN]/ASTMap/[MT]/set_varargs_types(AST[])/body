@@ -1,0 +1,19 @@
+{
+  if (args.length <= 1 || !(args[1] instanceof ASTOp))   return new ASTMap(new String[]{"","fun"},new Type[]{null,Type.fun},new ASTOp[]{null,new ASTPlus()});
+  ASTOp fun=(ASTOp)args[1];
+  if (fun._vtypes[0] != Type.dbl)   throw H2O.unimpl();
+  String[] vars=new String[fun._vars.length + 1];
+  Type[] vtypes=new Type[fun._vars.length + 1];
+  ASTOp[] ftypes=new ASTOp[fun._vars.length + 1];
+  vars[0]=opStr();
+  vars[1]="fun";
+  System.arraycopy(fun._vars,1,vars,2,fun._vars.length - 1);
+  vtypes[0]=Type.dbl;
+  vtypes[1]=Type.fun;
+  System.arraycopy(fun._vtypes,1,vtypes,2,fun._vars.length - 1);
+  ftypes[0]=null;
+  ftypes[1]=fun;
+  if (fun._ftypes != null)   System.arraycopy(fun._ftypes,1,ftypes,2,fun._vars.length - 1);
+  for (int i=1; i < fun._vtypes.length; i++)   if (fun._vtypes[i] == Type.dbl && args[i + 1]._t == Type.ary)   vtypes[0]=vtypes[i + 1]=Type.ary;
+  return new ASTMap(vars,vtypes,ftypes);
+}
