@@ -4,6 +4,14 @@
   AST ast2=ast;
   if ((ast instanceof ASTSlice))   ast2=((ASTSlice)ast)._ast;
   if (!(ast2 instanceof ASTId))   E.throwErr("Can only assign to ID (or slice)",x);
+  ASTId id=(ASTId)ast2;
+  if (id._depth < E.lexical_depth() - 1) {
+    id=new ASTId(null,id._id,E.lexical_depth() - 1);
+    E._env.get(id._depth).put(id._id,null);
+  }
+  x=E._x;
   AST eval=parseCXExpr(E);
+  if (id._t == null && eval._t != null)   ast=id=id.setOnUse(E,eval._t);
+  if (id._t != eval._t)   E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);
   return new ASTAssign(ast,eval);
 }

@@ -1,5 +1,5 @@
 {
-  AST ast=AST.parseCXExpr(this);
+  AST ast=ASTStatement.parse(this);
   skipWS();
   return _x == _buf.length ? ast : throwErr("Junk at end of line",_buf.length - 1);
 }
