@@ -8,9 +8,8 @@ def test_from_import_fvec(self):
     csvFilenameList = csvFilenameAll
     for (importFolderPath, csvFilename, response) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
-        h2o.beta_features = False
         (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=50)
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=True, doSummary=False)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=False, doSummary=False)
         h2o.check_sandbox_for_errors()
         print '\nparseResult', h2o.dump_json(parseResult)
         time.sleep(2)
