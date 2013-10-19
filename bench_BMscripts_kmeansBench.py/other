@@ -5,7 +5,9 @@ import h2o_cmd, h2o, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_rf, h2
 csv_header = ('h2o_build', 'nMachines', 'nJVMs', 'Xmx/JVM', 'dataset', 'nRows', 'nCols', 'parseWallTime', 'kmeansBuildTime')
 files = {'Airlines': {'train': ('AirlinesTrain1x', 'AirlinesTrain10x', 'AirlinesTrain100x'), 'test': 'AirlinesTest', }, 'AllBedrooms': {'train': ('AllBedroomsTrain1x', 'AllBedroomsTrain10x', 'AllBedroomsTrain100x'), 'test': 'AllBedroomsTest', }, }
 build = ''
+debug = False
 if (__name__ == '__main__'):
+    debug = sys.argv.pop((-1))
     build = sys.argv.pop((-1))
     h2o.parse_our_args()
     h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=False)
