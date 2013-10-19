@@ -1,18 +1,5 @@
 {
   if (source == null || source.equals(""))   return Response.error("source is required");
-  if (fractions == null || fractions.length() == 0)   return Response.error("fractions must be set");
-  final Frame fr=new Frame(source);
-  ArrayList<Double> fs=new ArrayList<Double>();
-  for (  String s : fractions.split(",")) {
-    try {
-      fs.add(Double.parseDouble(s));
-    }
- catch (    NumberFormatException nfe) {
-      Response.error("invalid number format: " + s);
-    }
-  }
-  double[] fractions=new double[fs.size()];
-  for (int i=0; i < fractions.length; i++)   fractions[i]=fs.get(i);
   Key[] keys=new Key[fractions.length];
   if (this.destination_keys == null || "".equals(this.destination_keys)) {
     for (int i=0; i < keys.length; i++)     keys[i]=makeKey();

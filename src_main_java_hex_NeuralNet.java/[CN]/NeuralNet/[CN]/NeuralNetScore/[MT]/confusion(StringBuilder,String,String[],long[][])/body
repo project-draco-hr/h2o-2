@@ -2,6 +2,10 @@
   sb.append("<h3>" + title + "</h3>");
   sb.append("<table class='table table-striped table-bordered table-condensed'>");
   sb.append("<tr><th>Actual \\ Predicted</th>");
+  if (classes == null) {
+    classes=new String[confusionMatrix.length];
+    for (int i=0; i < classes.length; i++)     classes[i]="" + i;
+  }
   for (  String c : classes)   sb.append("<th>" + c + "</th>");
   sb.append("<th>Error</th></tr>");
   long[] totals=new long[classes.length];

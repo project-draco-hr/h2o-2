@@ -1,6 +1,7 @@
 {
   regR(Cloud.class);
   regR(DataManip.class,"source","source2","destination_key","cols","destination_key","operation");
+  regPy(DownloadDataset.class,"src_key");
   regR(Exec.class,"expression","destination_key");
   regR(GeneratePredictionsPage.class,"model_key","data_key");
   regR(GBM.class,"destination_key","source","response","cols","ntrees","max_depth","learn_rate","min_rows","classification");
@@ -24,7 +25,7 @@
   regR(KMeansScore.class,"model_key","key");
   regR(Parse.class,"source_key","destination_key","header","header_from_file","separator");
   regR(PCA.class,"key","x","destination_key","max_pc","tolerance","standardize");
-  regR(PCAScore.class,"model_key","key","destination_key","num_pc");
+  regR(PCAScore.class,"source","model","destination_key","num_pc");
   regR(Predict.class,"model","data","prediction");
   regR(PutVector.class);
   regR(Remove.class,"key");

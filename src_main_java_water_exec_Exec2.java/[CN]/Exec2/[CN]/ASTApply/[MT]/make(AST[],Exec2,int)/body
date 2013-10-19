@@ -1,0 +1,8 @@
+{
+  if (args.length == 2) {
+    E.throwIfNotCompat(args[1],args[2],x);
+  }
+  ASTOp op=(ASTOp)args[0];
+  for (int i=0; i < op._vcols.length; i++)   if (op._vcols[i] != args[i + 1]._cols || op._vrows[i] != args[i + 1]._rows)   E.throwErr("Actual argument to '" + op._vars[i] + "' expected to be "+ dimStr(op._vcols[i],op._vrows[i])+ " but was "+ args[i + 1].dimStr(),x);
+  return new ASTApply(args,args[0]._cols,args[0]._rows);
+}

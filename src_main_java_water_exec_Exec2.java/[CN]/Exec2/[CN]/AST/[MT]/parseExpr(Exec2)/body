@@ -1,14 +1,8 @@
 {
   AST ast;
-  if (E.peek('(')) {
-    int x=E._x;
-    ast=parseCXExpr(E);
-    if (!E.peek(')'))     E.throwErr("Missing close-paren",x);
-    return ast;
-  }
-  ast=ASTKey.parse(E);
-  if (ast != null)   return ast;
-  ast=ASTNum.parse(E);
-  if (ast != null)   return ast;
+  if (E.peek('('))   return E.xpeek(')',E._x,parseCXExpr(E));
+  if ((ast=ASTKey.parse(E)) != null)   return ast;
+  if ((ast=ASTNum.parse(E)) != null)   return ast;
+  if ((ast=ASTOp.parsePrefix(E)) != null)   return ast;
   return null;
 }

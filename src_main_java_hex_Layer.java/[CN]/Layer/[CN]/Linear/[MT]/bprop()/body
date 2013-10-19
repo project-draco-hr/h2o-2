@@ -1,0 +1,12 @@
+{
+  float v=value();
+  for (int o=0; o < _a.length; o++) {
+    float g=v - _a[o];
+    for (int i=0; i < _in._a.length; i++) {
+      int w=o * _in._a.length + i;
+      _in._e[i]+=g * _w[w];
+      _w[w]+=_r * (g - _w[w] * _l2) * _in._a[i];
+    }
+    _b[o]+=_r * g;
+  }
+}

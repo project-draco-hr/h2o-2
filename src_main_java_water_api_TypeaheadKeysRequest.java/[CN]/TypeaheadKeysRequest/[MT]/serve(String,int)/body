@@ -7,7 +7,7 @@
     if (!key.user_allowed())     continue;
     Value val=DKV.get(key);
     if (val == null)     continue;
-    if (_typeid != 0 && val.type() != _typeid)     continue;
+    if (!matchesType(val))     continue;
     if (!shouldIncludeKey(key))     continue;
     keys[len++]=key;
     if (len == keys.length)     break;

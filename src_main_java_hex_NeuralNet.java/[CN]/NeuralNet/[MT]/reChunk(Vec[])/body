@@ -1,8 +1,9 @@
 {
   final int splits=cores() * 2;
   if (vecs[0].nChunks() < splits) {
+    Key keys[]=new Vec.VectorGroup().addVecs(vecs.length);
     for (int v=0; v < vecs.length; v++) {
-      AppendableVec vec=new AppendableVec(UUID.randomUUID().toString());
+      AppendableVec vec=new AppendableVec(keys[v]);
       long rows=vecs[0].length();
       Chunk cache=null;
       for (int split=0; split < splits; split++) {

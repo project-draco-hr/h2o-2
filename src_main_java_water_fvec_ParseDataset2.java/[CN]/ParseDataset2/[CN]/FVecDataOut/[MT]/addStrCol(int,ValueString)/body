@@ -1,7 +1,18 @@
 {
   if (colIdx < _nvs.length) {
-    if (!_enums[_col=colIdx].isKilled()) {
+    if (_ctypes[colIdx] == NCOL) {
+      addInvalidCol(colIdx);
+      return;
+    }
+    if (_ctypes[colIdx] == UCOL && Utils.attemptTimeParse(str) > 0)     _ctypes[colIdx]=TCOL;
+    if (_ctypes[colIdx] == TCOL) {
+      long l=Utils.attemptTimeParse(str);
+      if (l > 0)       addNumCol(colIdx,l,0);
+ else       addInvalidCol(colIdx);
+    }
+ else     if (!_enums[_col=colIdx].isKilled()) {
       int id=_enums[colIdx].addKey(str);
+      if (_ctypes[colIdx] == UCOL && id > 1)       _ctypes[colIdx]=ECOL;
       _nvs[colIdx].addEnum(id);
     }
  else     _nvs[colIdx].addEnum(Integer.MAX_VALUE);

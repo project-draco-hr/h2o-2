@@ -4,18 +4,18 @@
   for (int i=0; i < chk._len; i++) {
     if (chk.isNA0(i))     continue;
     double val=chk.at0(i);
-    if (val == 0.)     _zeros++;
-    if (val < _min[maxmin]) {
-      _min[maxmin]=val;
-      for (int k=0; k < _min.length; k++)       if (_min[k] > _min[maxmin])       maxmin=k;
+    if (val == 0.)     zeros++;
+    if (val < mins[maxmin]) {
+      mins[maxmin]=val;
+      for (int k=0; k < mins.length; k++)       if (mins[k] > mins[maxmin])       maxmin=k;
     }
-    if (val > _max[minmax]) {
-      _max[minmax]=val;
-      for (int k=0; k < _max.length; k++)       if (_max[k] < _max[minmax])       minmax=k;
+    if (val > maxs[minmax]) {
+      maxs[minmax]=val;
+      for (int k=0; k < maxs.length; k++)       if (maxs[k] < maxs[minmax])       minmax=k;
     }
-    int binIdx=_isInt ? (int)(((long)val - (long)_start) / (long)_binsz) : (int)Math.floor((val - _start) / _binsz);
-    ++_bins[binIdx];
+    long binIdx=Math.round((val - start) * 1000000.0 / binsz) / 1000000;
+    ++bins[(int)binIdx];
   }
-  Arrays.sort(_min);
-  Arrays.sort(_max);
+  Arrays.sort(mins);
+  Arrays.sort(maxs);
 }
