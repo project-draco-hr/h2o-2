@@ -4,9 +4,11 @@ sys.path.extend(['.', '..'])
 import h2o_cmd, h2o, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_rf, h2o_jobs
 csv_header = ('h2o_build', 'nMachines', 'nJVMs', 'Xmx/JVM', 'dataset', 'nTrainRows', 'nTestRows', 'nCols', 'trainParseWallTime', 'classification', 'gbmBuildTime')
 files = {'Airlines': {'train': ('AirlinesTrain1x', 'AirlinesTrain10x', 'AirlinesTrain100x'), 'test': 'AirlinesTest', }, 'AllBedrooms': {'train': ('AllBedroomsTrain1x', 'AllBedroomsTrain10x', 'AllBedroomsTrain100x'), 'test': 'AllBedroomsTest', }, 'Covtype': {'train': ('CovTypeTrain1x', 'CovTypeTrain10x', 'CovTypeTrain100x'), 'test': 'CovTypeTest', }, }
-header = ''
+build = ''
+debug = False
 if (__name__ == '__main__'):
     build = sys.argv.pop((-1))
+    debug = sys.argv.pop((-1))
     h2o.parse_our_args()
     h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=False)
     airlinesTestParseStart = time.time()
@@ -20,17 +22,6 @@ if (__name__ == '__main__'):
     response = 'IsDepDelayed'
     ignored = None
     doGBM(files['Airlines'], folderPath='Airlines', ignored_cols=ignored, classification=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response, row=row)
-    covTypeTestParseStart = time.time()
-    hK = 'CovTypeHeader.csv'
-    headerPathname = (('bench/CovType' + '/') + hK)
-    h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
-    headerKey = h2i.find_key(hK)
-    testFile = h2i.import_parse(bucket='home-0xdiag-datasets', path='bench/CovType/CovTypeTest.csv', schema='local', hex_key='covTtest.hex', header=1, header_from_file=headerKey, separator=44, timeoutSecs=4800, retryDelaySecs=5, pollTimeoutSecs=4800)
-    elapsedCovTypeTestParse = (time.time() - covTypeTestParseStart)
-    row = {'testParseWallTime': elapsedCovTypeTestParse, }
-    response = 'C55'
-    ignored = None
-    doGBM(files['Covtype'], folderPath='CovType', ignored_cols=ignored, classification=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response, row=row)
     allBedroomsTestParseStart = time.time()
     hK = 'AllBedroomsHeader.csv'
     headerPathname = (('bench/AllBedrooms' + '/') + hK)
