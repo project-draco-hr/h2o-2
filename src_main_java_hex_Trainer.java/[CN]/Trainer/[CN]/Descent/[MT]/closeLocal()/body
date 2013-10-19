@@ -1,27 +1,8 @@
 {
-  ArrayList<DescentEpoch> list=new ArrayList<DescentEpoch>();
-  for (int i=0; i < 8; i++) {
-    DescentEpoch epoch=new DescentEpoch();
-    epoch._node=_node;
-    epoch._count=_epochs == 0 ? -1 : _epochs;
-    list.add(epoch);
-    epoch.fork();
-  }
-  for (  DescentEpoch epoch : list)   epoch.join();
-  for (int i=0; _epochs == 0 || i < _epochs; i++) {
-    if (_node._job != null && !Job.running(_node._job))     break;
-    ArrayList<DescentChunk> tasks=new ArrayList<DescentChunk>();
-    for (    Chunk[] cs : _node._chunks) {
-      DescentChunk task=new DescentChunk();
-      task._node=_node;
-      task._cs=cs;
-      tasks.add(task);
-    }
-    for (    DescentChunk task : tasks) {
-      task.join();
-    }
-  }
-  if (_node._key.home())   _node._trainer.done();
+  DescentEpoch epoch=new DescentEpoch();
+  epoch._node=_node;
+  epoch._count=_epochs == 0 ? -1 : _epochs;
+  H2O.submitTask(epoch);
   _ls=null;
   _ws=_bs=null;
   _key=null;

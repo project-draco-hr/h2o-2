@@ -1,0 +1,6 @@
+{
+  Output output=(Output)ls[ls.length - 1];
+  if (output instanceof VecSoftmax)   output=new VecSoftmax(resp,(VecSoftmax)output);
+ else   output=new VecLinear(resp,(VecLinear)output);
+  return eval(ls,new VecsInput(vecs,(VecsInput)ls[0]),output,n,cm);
+}

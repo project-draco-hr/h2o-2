@@ -1,12 +1,14 @@
 {
-  Host master=new Host(_publicIPs.get(0));
+  Host master=new Host(publicIPs.get(0));
   Set<String> incls=Host.defaultIncludes();
   Set<String> excls=Host.defaultExcludes();
-  incls.addAll(_clientRSyncIncludes);
-  excls.addAll(_clientRSyncExcludes);
+  incls.addAll(clientRSyncIncludes);
+  excls.addAll(clientRSyncExcludes);
+  if (!new File(jdk + "/jre/bin/java").exists())   throw new IllegalArgumentException("Please specify the JDK to rsync and run on");
+  incls.add(jdk);
   File flatfile;
-  if (_privateIPs.size() > 0)   flatfile=Utils.writeFile(Utils.join('\n',_privateIPs));
- else   flatfile=Utils.writeFile(Utils.join('\n',_publicIPs));
+  if (privateIPs.size() > 0)   flatfile=Utils.writeFile(Utils.join('\n',privateIPs));
+ else   flatfile=Utils.writeFile(Utils.join('\n',publicIPs));
   incls.add(flatfile.getAbsolutePath());
   master.rsync(incls,excls,false);
   ArrayList<String> list=new ArrayList<String>();
@@ -15,9 +17,11 @@
   CloudParams p=new CloudParams();
   p._incls=Host.defaultIncludes();
   p._excls=Host.defaultExcludes();
-  p._incls.addAll(_fannedRSyncIncludes);
-  p._excls.add(flatfile.getName());
+  p._incls.addAll(fannedRSyncIncludes);
+  p._excls.addAll(fannedRSyncExcludes);
+  p._incls.add(flatfile.getName());
   p._flatfile=flatfile.getName();
+  p._incls.add(new File(jdk).getName());
   list.add(VM.write(p));
   list.addAll(Arrays.asList(args));
   String[] java=Utils.add(java_args,NodeVM.class.getName());

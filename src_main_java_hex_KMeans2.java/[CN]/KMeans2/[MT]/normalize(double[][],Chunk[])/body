@@ -1,0 +1,13 @@
+{
+  double[][] value=new double[clusters.length][clusters[0].length];
+  for (int row=0; row < value.length; row++) {
+    for (int col=0; col < clusters[row].length; col++) {
+      double d=clusters[row][col];
+      Vec vec=chks[col]._vec;
+      d-=vec.mean();
+      d/=normalize(vec.sigma()) ? vec.sigma() : 1;
+      value[row][col]=d;
+    }
+  }
+  return value;
+}

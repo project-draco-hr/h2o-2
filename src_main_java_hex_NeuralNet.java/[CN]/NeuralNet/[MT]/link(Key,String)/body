@@ -1,5 +1,6 @@
 {
-  RString rs=new RString("<a href='NeuralNet.query?%key_param=%$key'>%content</a>");
+  NeuralNet req=new NeuralNet();
+  RString rs=new RString("<a href='" + req.href() + ".query?%key_param=%$key'>%content</a>");
   rs.replace("key_param","source");
   rs.replace("key",k.toString());
   rs.replace("content",content);

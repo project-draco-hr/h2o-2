@@ -1,0 +1,17 @@
+{
+  init();
+  H2OCountedCompleter start=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      startTrain();
+      tryComplete();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      Job.cancel(job_key,Utils.getStackAsString(ex));
+      return super.onExceptionalCompletion(ex,caller);
+    }
+  }
+;
+  start(new H2OEmptyCompleter());
+  H2O.submitTask(start);
+  return this;
+}

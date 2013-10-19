@@ -15,7 +15,7 @@ def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDel
     if (('response' not in a) or (a['response']['redirect_request'] != 'Progress')):
         print dump_json(a)
         raise Exception(('H2O %s redirect is not Progress. %s json response precedes.' % (algo, algo)))
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     verboseprint(('\n%s result:' % algo), dump_json(a))
     if (browseAlso | browse_json):
         print ('Redoing the %s through the browser, no results saved though' % algo)
