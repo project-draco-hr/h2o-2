@@ -14,7 +14,7 @@
       id=E.isID();
       if (id == null)       E.throwErr("Invalid id",x);
       if (vars.containsKey(id))       E.throwErr("Repeated argument",x);
-      vars.put(id,null);
+      vars.put(id,Type.unbound(x));
       if (E.peek(')'))       break;
       E.xpeek(',',E._x,null);
     }
@@ -30,8 +30,6 @@
   E._env.pop();
   Type types[]=new Type[xvars.length];
   types[0]=body._t;
-  for (int j=1; j < xvars.length; j++) {
-    types[j]=vars.get(xvars[j]);
-  }
+  for (int j=1; j < xvars.length; j++)   types[j]=vars.get(xvars[j]);
   return new ASTFunc(xvars,types,body);
 }

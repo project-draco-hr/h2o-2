@@ -1,20 +1,29 @@
 {
-switch (_t) {
-case 0:
-    return "@" + _x;
-case 1:
-  return "dbl";
-case 2:
-return "ary";
-case 3:
+  String s=null;
+switch (_t & (VARARGS - 1)) {
+case UNBOUND:
+    s="@" + _x;
+  break;
+case BOUND:
+s=_ts[0].toString();
+break;
+case DBL0:
+s="dbl";
+break;
+case ARY0:
+s="ary";
+break;
+case FCN0:
 {
-String s=_ts[0] + "(";
+s=_ts[0] + "(";
 for (int i=1; i < _ts.length - 1; i++) s+=_ts[i] + ",";
 if (_ts.length > 1) s+=_ts[_ts.length - 1];
-return s + ")";
+s+=")";
+break;
 }
-case 4:
-return _ts[0].toString();
+default :
+throw water.H2O.unimpl();
 }
-throw water.H2O.fail();
+if ((_t & VARARGS) != 0) s+="...";
+return s;
 }

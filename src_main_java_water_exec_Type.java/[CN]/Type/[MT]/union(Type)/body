@@ -1,18 +1,30 @@
 {
   Type ta=find();
   Type tb=t.find();
+  int tta=ta._t & (VARARGS - 1);
+  int ttb=tb._t & (VARARGS - 1);
   if (ta == tb)   return true;
- else   if (ta._t == 3 && tb._t == 3 && ta._ts.length == tb._ts.length) {
-    for (int i=0; i < ta._ts.length; i++)     if (!ta._ts[i].union(tb._ts[i]))     return false;
+ else   if (tta == FCN0 && ttb == FCN0) {
+    Type t0=ta, t1=tb;
+    if (ta._ts.length > tb._ts.length) {
+      t0=tb;
+      t1=ta;
+    }
+    for (int i=0; i < t0._ts.length; i++)     if (!t0._ts[i].union(t1._ts[i]))     return false;
+    if (t0._ts.length == t1._ts.length)     return true;
+    Type varargs=t0._ts[t0._ts.length - 1];
+    if ((varargs._t & VARARGS) == 0)     return false;
+    for (int i=t0._ts.length; i < t1._ts.length; i++)     if (!varargs.union(t1._ts[i]))     return false;
   }
- else   if (ta._t == 0) {
-    ta._t=4;
+ else   if (tta == UNBOUND) {
+    ta._t=BOUND;
     ta._ts[0]=tb;
   }
- else   if (tb._t == 0) {
-    tb._t=4;
+ else   if (ttb == UNBOUND) {
+    tb._t=BOUND;
     tb._ts[0]=ta;
   }
+ else   if (tta == ttb)   return true;
  else   return false;
   return true;
 }
