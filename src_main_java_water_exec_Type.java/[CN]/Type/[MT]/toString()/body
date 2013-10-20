@@ -1,0 +1,20 @@
+{
+switch (_t) {
+case 0:
+    return "@" + _x;
+case 1:
+  return "dbl";
+case 2:
+return "ary";
+case 3:
+{
+String s=_ts[0] + "(";
+for (int i=1; i < _ts.length - 1; i++) s+=_ts[i] + ",";
+if (_ts.length > 1) s+=_ts[_ts.length - 1];
+return s + ")";
+}
+case 4:
+return _ts[0].toString();
+}
+throw water.H2O.fail();
+}

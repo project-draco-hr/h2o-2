@@ -1,9 +1,11 @@
 {
-  ASTOp op=ASTOp.parse(E);
-  if (op == null)   return null;
-  if (op._vars.length != 3)   return null;
-  int x=E._x;
-  AST rite=parseCXExpr(E);
-  if (rite == null)   E.throwErr("Missing expr or unknown ID",x);
-  return make(new AST[]{op,ast,rite},E,x);
+  AST inf=null;
+  while (true) {
+    ASTOp op=ASTOp.parse(E);
+    if (op == null || op._vars.length != 3)     return inf;
+    int x=E._x;
+    AST rite=ASTSlice.parse(E);
+    if (rite == null)     E.throwErr("Missing expr or unknown ID",x);
+    ast=inf=make(new AST[]{op,ast,rite},E,x);
+  }
 }

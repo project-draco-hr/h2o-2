@@ -1,10 +1,9 @@
 {
   int x=E._x;
-  AST ast=parseVal(E);
+  AST ast=ASTApply.parsePrefix(E);
   if (ast == null)   return null;
   if (!E.peek('['))   return ast;
-  if (ast._t == null)   ast=((ASTId)ast).setOnUse(E,Type.ary);
-  if (ast._t != Type.ary)   E.throwErr("Not an ary",x);
+  if (!Type.ARY.union(ast._t))   E.throwErr("Not an ary",x);
   if (E.peek(']'))   return ast;
   AST rows=E.xpeek(',',E._x,parseCXExpr(E));
   AST cols=E.xpeek(']',E._x,parseCXExpr(E));

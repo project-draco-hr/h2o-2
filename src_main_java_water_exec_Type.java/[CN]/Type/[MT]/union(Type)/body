@@ -1,0 +1,18 @@
+{
+  Type ta=find();
+  Type tb=t.find();
+  if (ta == tb)   return true;
+ else   if (ta._t == 3 && tb._t == 3 && ta._ts.length == tb._ts.length) {
+    for (int i=0; i < ta._ts.length; i++)     if (!ta._ts[i].union(tb._ts[i]))     return false;
+  }
+ else   if (ta._t == 0) {
+    ta._t=4;
+    ta._ts[0]=tb;
+  }
+ else   if (tb._t == 0) {
+    tb._t=4;
+    tb._ts[0]=ta;
+  }
+ else   return false;
+  return true;
+}
