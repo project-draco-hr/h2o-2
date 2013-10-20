@@ -11,12 +11,17 @@ if (__name__ == '__main__'):
     build = sys.argv.pop((-1))
     h2o.parse_our_args()
     h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=False)
+    bench = 'bench'
+    h2o.beta_features = True
+    if debug:
+        bench = 'bench/debug'
     airlinesTestParseStart = time.time()
     hK = 'AirlinesHeader.csv'
-    headerPathname = (('bench/Airlines' + '/') + hK)
+    headerPathname = (((bench + '/Airlines') + '/') + hK)
     h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
     headerKey = h2i.find_key(hK)
-    testFile = h2i.import_parse(bucket='home-0xdiag-datasets', path='bench/Airlines/AirlinesTest.csv', schema='local', hex_key='atest.hex', header=1, header_from_file=headerKey, separator=44, timeoutSecs=4800, retryDelaySecs=5, pollTimeoutSecs=4800)
+    testFile = h2i.import_parse(bucket='home-0xdiag-datasets', path=(bench + '/Airlines/AirlinesTest.csv'), schema='local', hex_key='atest.hex', header=1, header_from_file=headerKey, separator=44, noPoll=True, doSummary=False)
+    h2o_jobs.pollWaitJobs(timeoutSecs=7200, pollTimeoutSecs=7200, retryDelaySecs=5)
     elapsedAirlinesTestParse = (time.time() - airlinesTestParseStart)
     row = {'testParseWallTime': elapsedAirlinesTestParse, }
     response = 'IsDepDelayed'
@@ -24,10 +29,11 @@ if (__name__ == '__main__'):
     doGBM(files['Airlines'], folderPath='Airlines', ignored_cols=ignored, classification=1, testFilehex=testFile['destination_key'], ntrees=100, depth=5, minrows=10, nbins=100, learnRate=0.01, response=response, row=row)
     allBedroomsTestParseStart = time.time()
     hK = 'AllBedroomsHeader.csv'
-    headerPathname = (('bench/AllBedrooms' + '/') + hK)
+    headerPathname = (((bench + '/AllBedrooms') + '/') + hK)
     h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
     headerKey = h2i.find_key(hK)
-    testFile = h2i.import_parse(bucket='home-0xdiag-datasets', path='bench/AllBedrooms/AllBedroomsTest.csv', schema='local', hex_key='allBTest.hex', header=1, header_from_file=headerKey, separator=44, timeoutSecs=4800, retryDelaySecs=5, pollTimeoutSecs=4800)
+    testFile = h2i.import_parse(bucket='home-0xdiag-datasets', path=(bench + '/AllBedrooms/AllBedroomsTest.csv'), schema='local', hex_key='allBTest.hex', header=1, header_from_file=headerKey, separator=44, noPoll=True, doSummary=False)
+    h2o_jobs.pollWaitJobs(timeoutSecs=7200, pollTimeoutSecs=7200, retryDelaySecs=5)
     elapsedAllBedroomsParse = (time.time() - allBedroomsTestParseStart)
     row = {'testParseWallTime': elapsedAllBedroomsTestParse, }
     response = 'medrent'

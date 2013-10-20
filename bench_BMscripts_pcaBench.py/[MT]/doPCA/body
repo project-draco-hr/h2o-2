@@ -5,7 +5,7 @@ def doPCA(fs, folderPath):
         bench = 'bench/debug'
     date = '-'.join([str(x) for x in list(time.localtime())][0:3])
     for f in fs['train']:
-        retryDelaySecs = (5 if (f == 'AirlinesTrain1x') else 30)
+        retryDelaySecs = 5
         overallWallStart = time.time()
         pre = ''
         if debug:
@@ -30,7 +30,7 @@ def doPCA(fs, folderPath):
             headerPathname = ((importFolderPath + '/') + hK)
             h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
             headerKey = h2i.find_key(hK)
-            parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=7200)
+            parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=7200, doSummary=False)
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             inspect = h2o.nodes[0].inspect(parseResult['destination_key'])
