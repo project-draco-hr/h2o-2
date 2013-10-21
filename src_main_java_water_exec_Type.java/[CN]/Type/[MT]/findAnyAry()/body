@@ -1,0 +1,25 @@
+{
+  Type unb=null;
+  int unbound=0;
+  for (int i=0; i < _ts.length; i++) {
+    Type t2=_ts[i]=_ts[i].find();
+    if (t2._t == ARY0) {
+      _t=BOUND;
+      return (_ts[0]=ARY);
+    }
+    if (t2._t == UNBOUND || t2._t == DBLARY0) {
+      unb=t2;
+      unbound++;
+    }
+ else     if (t2._t != DBL0)     return this;
+  }
+  if (unbound == 0) {
+    _t=BOUND;
+    return (_ts[0]=DBL);
+  }
+  if (unbound == 1) {
+    _t=BOUND;
+    return (_ts[0]=unb);
+  }
+  return this;
+}

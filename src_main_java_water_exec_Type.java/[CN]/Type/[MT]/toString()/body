@@ -13,6 +13,16 @@ break;
 case ARY0:
 s="ary";
 break;
+case DBLARY0:
+s="dblary";
+break;
+case ANYARY0:
+{
+s="anyary{";
+for (Type t : _ts) s+=t + ",";
+s+="}";
+break;
+}
 case FCN0:
 {
 s=_ts[0] + "(";

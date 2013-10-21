@@ -5,7 +5,7 @@
   Type ft1=Type.fcn(x,ts);
   AST fast=args[0];
   Type ft2=fast._t;
-  if (ft1.union(ft2))   return new ASTApply(args);
+  if (ft1.union(ft2))   return new ASTApply(args,x);
   if (ft2.isNotFun())   E.throwErr("Function-parens following a " + ft2,x);
   if (ft2._ts.length != ts.length)   E.throwErr("Passed " + (ts.length - 1) + " args but expected "+ (ft2._ts.length - 1),x);
   String vars[]=(fast instanceof ASTOp) ? ((ASTOp)fast)._vars : null;
