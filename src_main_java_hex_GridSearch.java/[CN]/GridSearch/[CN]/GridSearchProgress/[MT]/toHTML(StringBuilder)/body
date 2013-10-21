@@ -1,5 +1,5 @@
 {
-  GridSearch grid=UKV.get(dst_key);
+  GridSearch grid=UKV.get(destination_key);
   if (grid != null) {
     DocGen.HTML.arrayHead(sb);
     sb.append("<tr class='warning'>");
@@ -55,6 +55,7 @@
       if (info._job.start_time != 0) {
         if (info._model instanceof GBMModel)         link=GBMModelView.link(link,info._job.destination_key);
  else         if (info._model instanceof NeuralNetModel)         link=NeuralNetProgress.link(info._job.self(),info._job.destination_key,link);
+        if (info._model instanceof KMeans2Model)         link=KMeans2ModelView.link(link,info._job.destination_key);
  else         link=Inspect.link(link,info._job.destination_key);
       }
       sb.append("<td>").append(link).append("</td>");

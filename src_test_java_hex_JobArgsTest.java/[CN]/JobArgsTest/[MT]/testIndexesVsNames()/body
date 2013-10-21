@@ -1,5 +1,5 @@
 {
-  String[] names=new String[]{"5","2","1","8","4"};
+  String[] names=new String[]{"5","2","1","8","4","100"};
   double[][] items=new double[10][names.length];
   for (int r=0; r < items.length; r++)   for (int c=0; c < items[r].length; c++)   items[r][c]=r;
   Key key=Key.make("test");
@@ -10,7 +10,7 @@
     RequestServer.registerRequest(new FailTestJob());
     RequestServer.registerRequest(new FailTestJobAsync());
     RequestServer.registerRequest(new ArgsTestJob());
-    String args="" + "destination_key=" + dst + "&"+ "source="+ key+ "&"+ "response=2&"+ "cols=2,4";
+    String args="" + "destination_key=" + dst + "&"+ "source="+ key+ "&"+ "response=8&"+ "cols=2,100";
     Get get;
     get=get("NotRegisteredJob.json?" + args,Res.class);
     Assert.assertEquals(404,get._status);
@@ -28,7 +28,7 @@
   }
   finally {
     RequestServer.unregisterRequest(new FailTestJob());
-    RequestServer.registerRequest(new FailTestJobAsync());
+    RequestServer.unregisterRequest(new FailTestJobAsync());
     RequestServer.unregisterRequest(new ArgsTestJob());
     UKV.remove(key);
   }

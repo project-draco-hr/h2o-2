@@ -2,14 +2,13 @@
   PSetup p=_source.value();
   CustomParser.ParserSetup setup=p != null ? p._setup._setup : new CustomParser.ParserSetup();
   setup._singleQuotes=_sQuotes.value();
-  Key d=Key.make(_dest.value());
+  destination_key=Key.make(_dest.value());
   try {
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
-    Key jobkey=ParseDataset2.forkParseDataset(d,keys,setup).job_key;
-    if (_blocking.value()) {
-      Job.waitUntilJobEnded(jobkey);
-    }
-    return Progress2.redirect(this,jobkey,d);
+    job_key=ParseDataset2.forkParseDataset(destination_key,keys,setup).job_key;
+    redirect_url=Progress2.jsonUrl(job_key,destination_key);
+    if (_blocking.value())     Job.waitUntilJobEnded(job_key);
+    return Progress2.redirect(this,job_key,destination_key);
   }
  catch (  IllegalArgumentException e) {
     return Response.error(e.getMessage());

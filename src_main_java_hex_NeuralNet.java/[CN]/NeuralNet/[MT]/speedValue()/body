@@ -1,4 +1,7 @@
 {
-  NeuralNetModel model=UKV.get(destination_key);
-  return (long)(1000.0 / model.items_per_second);
+  Value value=DKV.get(dest());
+  NeuralNetModel m=value != null ? (NeuralNetModel)value.get() : null;
+  double epochsSoFar=m == null ? 0 : m.items / (double)source.numRows();
+  long sv=(epochsSoFar <= 0) ? 0 : (long)(runTimeMs() / epochsSoFar);
+  return sv;
 }

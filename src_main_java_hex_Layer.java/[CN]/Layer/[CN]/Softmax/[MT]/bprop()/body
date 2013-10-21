@@ -4,12 +4,11 @@
     float t=o == label ? 1 : 0;
     float e=t - _a[o];
     float g=e * (1 - _a[o]) * _a[o];
-    float u=_r * g;
     for (int i=0; i < _in._a.length; i++) {
       int w=o * _in._a.length + i;
       _in._e[i]+=g * _w[w];
-      _w[w]+=u * _in._a[i];
+      _w[w]+=_r * (g - _w[w] * _l2) * _in._a[i];
     }
-    _b[o]+=u;
+    _b[o]+=_r * g;
   }
 }

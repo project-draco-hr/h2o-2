@@ -9,7 +9,7 @@ def pca_score(self, timeoutSecs=600, retryDelaySecs=1, initialDelaySecs=5, pollT
         return a
     if ('response' not in a):
         raise Exception(("Can't tell where to go..No 'response' key in this polled json response: %s" % a))
-    a = self.poll_url(a['response'], timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
+    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
     verboseprint('\nPCAScore result:', dump_json(a))
     a['python_elapsed'] = (time.time() - start)
     a['python_%timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)

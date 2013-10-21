@@ -117,7 +117,7 @@ def test_parse_multi_header_rand(self):
         else:
             pattern = (((((SYNDATASETS_DIR + '/syn_data_*') + str(trial)) + '_') + rowxcol) + '*')
         kwargs.pop('hdr_separator', None)
-        parseResult = h2i.import_parse(path=pattern, hex_key=hex_key, timeoutSecs=timeoutSecs, **kwargs)
+        parseResult = h2i.import_parse(path=pattern, hex_key=hex_key, schema='put', timeoutSecs=timeoutSecs, **kwargs)
         print ("parseResult['destination_key']: " + parseResult['destination_key'])
         print 'parse time:', parseResult['response']['time']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

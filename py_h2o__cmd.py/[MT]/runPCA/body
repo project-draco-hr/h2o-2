@@ -4,4 +4,4 @@ def runPCA(node=None, parseResult=None, timeoutSecs=600, **kwargs):
     if (not node):
         node = h2o.nodes[0]
     data_key = parseResult['destination_key']
-    return node.pca(data_key=data_key, **kwargs)
+    return node.pca(data_key=data_key, timeoutSecs=timeoutSecs, **kwargs)
