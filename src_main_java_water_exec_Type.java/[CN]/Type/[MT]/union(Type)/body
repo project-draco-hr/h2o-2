@@ -4,7 +4,7 @@
   int tta=ta._t & (VARARGS - 1);
   int ttb=tb._t & (VARARGS - 1);
   if (ta == tb)   return true;
- else   if (tta == FCN0 && ttb == FCN0) {
+ else   if ((tta == FCN0 && ttb == FCN0) || (tta == ANYARY0 && ttb == ANYARY0)) {
     Type t0=ta, t1=tb;
     if (ta._ts.length > tb._ts.length) {
       t0=tb;
@@ -30,7 +30,6 @@
     ta._t=BOUND;
     ta._ts[0]=tb;
   }
- else   if (tta == ANYARY0 && ttb == ANYARY0)   throw water.H2O.unimpl();
  else   if (tta == ANYARY0 && ttb == DBLARY0)   throw water.H2O.unimpl();
  else   if (tta == ANYARY0 && ttb == ARY0)   throw water.H2O.unimpl();
  else   if (tta == ANYARY0 && ttb == DBL0) {
