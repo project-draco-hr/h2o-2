@@ -15,11 +15,13 @@ def test_GLM_prostate(self):
     alpha = '0.5'
     lambda_ = '1E-4'
     nfolds = '5'
+    nfolds = '0'
     case_mode = '='
     case_val = '1'
     f = 'prostate'
     kwargs = {'vresponse': y, 'ignored_cols': x, 'family': family, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'destination_key': (('GLM(' + f) + ')'), }
+    BUG1 = True
     timeoutSecs = 60
     start = time.time()
-    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, noPoll=True, **kwargs)
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=0.25, pollTimeoutSecs=180, noPoll=BUG1, **kwargs)
     h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)

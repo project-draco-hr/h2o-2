@@ -39,7 +39,7 @@ def test_GLM_enums_score_superset(self):
         parseResult = h2i.import_parse(path=csvScorePathname, schema='put', hex_key=('score_' + hex_key), timeoutSecs=30, separator=colSepInt)
         start = time.time()
         glmScore = h2o_cmd.runGLMScore(key=parseResult['destination_key'], model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)
-        print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+        print 'glmScore end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         classErr = glmScore['validation']['classErr']
         auc = glmScore['validation']['auc']
         err = glmScore['validation']['err']
