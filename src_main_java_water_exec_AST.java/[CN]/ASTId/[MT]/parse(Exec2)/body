@@ -1,16 +1,12 @@
 {
   int x=E._x;
-  String id=E.isID();
-  if (id == null)   return null;
-  if (ASTOp.OPS.containsKey(id)) {
+  String var=E.isID();
+  if (var == null)   return null;
+  if (ASTOp.OPS.containsKey(var)) {
     E._x=x;
     return null;
   }
-  for (int d=E._env.size() - 1; d >= 0; d--) {
-    HashMap<String,Type> vars=E._env.get(d);
-    if (!vars.containsKey(id))     continue;
-    return new ASTId(vars.get(id),id,d);
-  }
+  for (int d=E.lexical_depth(); d >= 0; d--)   for (  ASTId id : E._env.get(d))   if (var.equals(id._id))   return new ASTId(id._t,id._id,E.lexical_depth() - d,id._num);
   E._x=x;
   return null;
 }

@@ -1,35 +1,38 @@
 {
   int x=E._x;
-  String id=E.isID();
-  if (id == null)   return null;
-  if (!"function".equals(id)) {
+  String var=E.isID();
+  if (var == null)   return null;
+  if (!"function".equals(var)) {
     E._x=x;
     return null;
   }
   E.xpeek('(',E._x,null);
-  LinkedHashMap<String,Type> vars=new LinkedHashMap<String,Type>();
+  ArrayList<ASTId> vars=new ArrayList<ASTId>();
   if (!E.peek(')')) {
     while (true) {
       x=E._x;
-      id=E.isID();
-      if (id == null)       E.throwErr("Invalid id",x);
-      if (vars.containsKey(id))       E.throwErr("Repeated argument",x);
-      vars.put(id,Type.unbound(x));
+      var=E.isID();
+      if (var == null)       E.throwErr("Invalid var",x);
+      for (      ASTId id : vars)       if (var.equals(id._id))       E.throwErr("Repeated argument",x);
+      vars.add(new ASTId(Type.unbound(x),var,0,vars.size()));
       if (E.peek(')'))       break;
       E.xpeek(',',E._x,null);
     }
   }
-  String xvars[]=new String[vars.size() + 1];
-  int i=0;
-  xvars[i++]="fun";
-  for (  String id2 : vars.keySet())   xvars[i++]=id2;
+  int argcnt=vars.size();
   E.xpeek('{',(x=E._x),null);
   E._env.push(vars);
   AST body=E.xpeek('}',E._x,ASTStatement.parse(E));
   if (body == null)   E.throwErr("Missing function body",x);
   E._env.pop();
-  Type types[]=new Type[xvars.length];
+  String xvars[]=new String[argcnt + 1];
+  Type types[]=new Type[argcnt + 1];
+  xvars[0]="fun";
   types[0]=body._t;
-  for (int j=1; j < xvars.length; j++)   types[j]=vars.get(xvars[j]);
+  for (int i=0; i < argcnt; i++) {
+    ASTId id=vars.get(i);
+    xvars[i + 1]=id._id;
+    types[i + 1]=id._t;
+  }
   return new ASTFunc(xvars,types,body);
 }

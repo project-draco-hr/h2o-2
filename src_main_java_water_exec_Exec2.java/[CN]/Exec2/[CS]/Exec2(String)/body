@@ -1,8 +1,0 @@
-{
-  _str=str;
-  _buf=str.toCharArray();
-  _env=new Stack();
-  LinkedHashMap<String,Type> global=new LinkedHashMap();
-  for (  Value v : H2O.values())   if (v.type() == TypeMap.FRAME)   global.put(v._key.toString(),Type.ARY);
-  _env.push(global);
-}
