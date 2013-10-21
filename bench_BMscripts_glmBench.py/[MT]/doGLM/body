@@ -1,4 +1,5 @@
 def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehex, row):
+    debug = False
     bench = 'bench'
     if debug:
         print 'DOING GLM DEBUG'
@@ -32,8 +33,8 @@ def doGLM(fs, folderPath, family, link, lambda_, alpha, nfolds, y, x, testFilehe
             parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=5, pollTimeoutSecs=7200, doSummary=False)
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
-            inspect_train = h2o.nodes[0].inspect(parseResult['destination_key'])
-            inspect_test = h2o.nodes[0].inspect(testFilehex)
+            inspect_train = h2o.nodes[0].inspect(parseResult['destination_key'], timeoutSecs=7200)
+            inspect_test = h2o.nodes[0].inspect(testFilehex, timeoutSecs=7200)
             nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
             row.update({'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['num_rows'], 'nTestRows': inspect_test['num_rows'], 'nCols': inspect_train['num_cols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, })
             params = {'y': y, 'x': x, 'family': family, 'link': link, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'case_mode': 'n/a', 'destination_key': (('GLM(' + f) + ')'), 'expert_settings': 0, }

@@ -1,4 +1,5 @@
 def doGLM2(fs, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, row, case_mode, case_val):
+    debug = False
     bench = 'bench'
     if debug:
         print 'DOING GLM2 DEBUG'
@@ -37,8 +38,8 @@ def doGLM2(fs, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, ro
             parseWallTime = (time.time() - trainParseWallStart)
             print 'Parsing training file took ', parseWallTime, ' seconds.'
             h2o.beta_features = True
-            inspect_train = h2o.nodes[0].inspect(hex_key)
-            inspect_test = h2o.nodes[0].inspect(testFilehex)
+            inspect_train = h2o.nodes[0].inspect(hex_key, timeoutSecs=7200)
+            inspect_test = h2o.nodes[0].inspect(testFilehex, timeoutSecs=7200)
             row.update({'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['numRows'], 'nTestRows': inspect_test['numRows'], 'nCols': inspect_train['numCols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, })
             params = {'vresponse': y, 'ignored_cols': x, 'family': family, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'destination_key': (('GLM(' + f) + ')'), }
             h2o.beta_features = True
