@@ -9,7 +9,7 @@ def test_GBM_ec2_airlines(self):
         elapsed = (time.time() - start)
         print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
-        for depth in [5, 15, 25, 40]:
+        for depth in [5, 5, 5, 5, 5]:
             params = {'destination_key': 'GBMKEY', 'learn_rate': 0.2, 'nbins': 1024, 'ntrees': 10, 'max_depth': depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()

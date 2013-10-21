@@ -28,7 +28,7 @@ def test_parse_multi_header_single(self):
         header = h2i.find_key('syn_header')
         print ('Header Key = ' + header)
         start = time.time()
-        parseResult = h2i.import_parse(path=(((SYNDATASETS_DIR + '/*') + rowxcol) + '*'), src_key=src_key, hex_key=hex_key, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
+        parseResult = h2i.import_parse(path=(((SYNDATASETS_DIR + '/*') + rowxcol) + '*'), schema='put', src_key=src_key, hex_key=hex_key, timeoutSecs=timeoutSecs, header='1', header_from_file=header)
         print ("parseResult['destination_key']: " + parseResult['destination_key'])
         print 'parse time:', parseResult['response']['time']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
