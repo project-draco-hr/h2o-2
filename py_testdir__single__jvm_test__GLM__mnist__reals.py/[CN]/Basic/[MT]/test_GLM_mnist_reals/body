@@ -6,7 +6,7 @@ def test_GLM_mnist_reals(self):
         trialStart = time.time()
         testKey2 = (((testCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=('mnist/' + testCsvFilename), hex_key=testKey2, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=('mnist/' + testCsvFilename), schema='put', hex_key=testKey2, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', testCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
@@ -16,7 +16,7 @@ def test_GLM_mnist_reals(self):
         x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
         trainKey2 = (((trainCsvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=('mnist/' + trainCsvFilename), hex_key=trainKey2, timeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=('mnist/' + trainCsvFilename), schema='put', hex_key=trainKey2, timeoutSecs=timeoutSecs)
         elapsed = (time.time() - start)
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
