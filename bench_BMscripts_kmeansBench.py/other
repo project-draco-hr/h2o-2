@@ -7,10 +7,25 @@ files = {'Airlines': {'train': ('AirlinesTrain1x', 'AirlinesTrain10x', 'Airlines
 build = ''
 debug = False
 if (__name__ == '__main__'):
+    dat = sys.argv.pop((-1))
     debug = sys.argv.pop((-1))
     build = sys.argv.pop((-1))
     h2o.parse_our_args()
     h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=False)
-    doKMeans(files['Airlines'], 'Airlines')
-    doKMeans(files['AllBedrooms'], 'AllBedrooms')
+    fp = ('Airlines' if ('Air' in dat) else 'AllBedrooms')
+    h2o.parse_our_args()
+    h2o_hosts.build_cloud_with_hosts()
+    if (dat == 'Air1x'):
+        fs = files['Airlines']['train'][0]
+    if (dat == 'Air10x'):
+        fs = files['Airlines']['train'][1]
+    if (dat == 'Air100x'):
+        fs = files['Airlines']['train'][2]
+    if (dat == 'AllB1x'):
+        fs = files['AllBedrooms']['train'][0]
+    if (dat == 'AllB10x'):
+        fs = files['AllBedrooms']['train'][1]
+    if (dat == 'AllB100x'):
+        fs = files['AllBedrooms']['train'][2]
+    doKMeans(fs, fp)
     h2o.tear_down_cloud()
