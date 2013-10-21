@@ -67,6 +67,8 @@
     checkStr("a=h.hex;function(x){x=a;a=3;nrow(x)*a}(a)");
     checkStr("function(fun){function(x){fun(x)*fun(x)}}(sgn)(-2)");
     checkStr("ifelse(0,+,*)(1,2)");
+    checkStr("(0?+:*)(1,2)");
+    checkStr("(1? h.hex : (h.hex+1))[1,2]");
   }
   finally {
     UKV.remove(dest);

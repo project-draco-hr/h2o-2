@@ -3,8 +3,6 @@
   if (ast == null)   return ASTAssign.parseNew(E);
   if ((ast2=ASTApply.parseInfix(E,ast)) != null)   return ast2;
   if ((ast2=ASTAssign.parse(E,ast)) != null)   return ast2;
-  if (E.peek('?')) {
-    throw H2O.unimpl();
-  }
+  if ((ast2=ASTIfElse.parse(E,ast)) != null)   return ast2;
   return ast;
 }
