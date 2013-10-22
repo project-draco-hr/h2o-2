@@ -1,10 +1,10 @@
 def test_from_import_fvec(self):
-    print 'Sets h2o.beat_features like -bf at command line'
+    print 'Sets h2o.beta_features like -bf at command line'
     print 'this will redirect import and parse to the 2 variants'
     h2o.beta_features = True
     importFolderPath = 'standard'
     timeoutSecs = 500
-    csvFilenameAll = [('manyfiles-nflx-gz', 'file_1.dat.gz', 378)]
+    csvFilenameAll = [('manyfiles-nflx-gz', 'file_1.dat.gz', 'C378')]
     csvFilenameList = csvFilenameAll
     for (importFolderPath, csvFilename, response) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
@@ -17,23 +17,27 @@ def test_from_import_fvec(self):
         print "Parse result['destination_key']:", parseResult['destination_key']
         h2o.check_sandbox_for_errors()
         if (importFolderPath == 'manyfiles-nflx-gz'):
-            execExpr = 'c.hex=colSwap(c.hex,378,(c.hex[378]>15 ? 1 : 0))'
-            resultExec = h2o_cmd.runExec(expression=execExpr)
+            if EXEC_FVEC:
+                execExpr = 'c.hex=colSwap(c.hex,378,(c.hex[378]>15 ? 1 : 0))'
+                resultExec = h2o_cmd.runExec(expression=execExpr)
             x = range(542)
             xIgnore = []
             for i in [4, 3, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, 378]:
                 x.remove(i)
                 xIgnore.append(i)
             x = ','.join(map(str, x))
-            xIgnore = ','.join(map(str, xIgnore))
+
+            def colIt(x):
+                return ('C' + str(x))
+            xIgnore = ','.join(map(colIt, xIgnore))
         else:
             xIgnore = 0
-        params = {'destination_key': 'GBMKEY', 'ignored_cols_by_name': xIgnore, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': response, }
+        params = {'destination_key': 'GBMKEY', 'ignored_cols_by_name': xIgnore, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': response, 'classification': 0, }
         kwargs = params.copy()
         h2o.beta_features = True
         timeoutSecs = 1800
         start = time.time()
-        GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+        GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=False, **kwargs)
         time.sleep(2)
         h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
         elapsed = (time.time() - start)
