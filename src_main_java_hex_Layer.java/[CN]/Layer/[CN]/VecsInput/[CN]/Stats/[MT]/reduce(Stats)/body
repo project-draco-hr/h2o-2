@@ -1,8 +1,0 @@
-{
-  for (int c=0; c < _means.length; c++) {
-    double delta=_means[c] - rs._means[c];
-    _means[c]=(_means[c] * _rows + rs._means[c] * rs._rows) / (_rows + rs._rows);
-    _sigms[c]=_sigms[c] + rs._sigms[c] + delta * delta * _rows* rs._rows / (_rows + rs._rows);
-  }
-  _rows+=rs._rows;
-}
