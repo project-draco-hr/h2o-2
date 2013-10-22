@@ -2,9 +2,8 @@ def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDela
     browseAlso = kwargs.pop('browseAlso', False)
     algo = ('2/Parse2' if beta_features else 'Parse')
     verboseprint(('\n %s key: %s to key2: %s (if None, means default)' % (algo, key, key2)))
-    params_dict = {'source_key': key, 'destination_key': key2, }
-    params_dict.update(kwargs)
-    print ('\n%s params list:' % algo), params_dict
+    params_dict = {'source_key': key, 'destination_key': key2, 'parser_type': None, 'separator': None, 'header': None, 'single_quotes': None, 'header_from_file': None, 'exclude': None, 'preview': None, }
+    check_params_update_kwargs(params_dict, kwargs, 'parse', print_params=True)
     if kwargs.get('header_from_file'):
         kwargs['header'] = 1
     if benchmarkLogging:
