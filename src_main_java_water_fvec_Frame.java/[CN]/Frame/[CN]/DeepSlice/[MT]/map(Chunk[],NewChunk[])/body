@@ -1,0 +1,37 @@
+{
+  long rstart=chks[0]._start;
+  int rlen=chks[0]._len;
+  int rx=0;
+  int rlo=0;
+  int rhi=rlen;
+  while (rlo < rlen) {
+    if (_rows != null) {
+      if (rx >= _rows.length)       break;
+      long r=_rows[rx++];
+      if (r < 0) {
+        throw H2O.unimpl();
+      }
+ else {
+        if (r < rstart)         continue;
+        rlo=(int)(r - rstart);
+        rhi=rlo + 1;
+        while (rx < _rows.length && (_rows[rx] - rstart) == rhi && rhi < rlen) {
+          rx++;
+          rhi++;
+        }
+      }
+    }
+    for (int i=0; i < _cols.length; i++) {
+      Chunk oc=chks[_cols[i]];
+      NewChunk nc=nchks[i];
+      if (oc._vec.isInt()) {
+        for (int j=rlo; j < rhi; j++)         if (oc.isNA0(j))         nc.addNA();
+ else         nc.addNum(oc.at80(j),0);
+      }
+ else {
+        for (int j=rlo; j < rhi; j++)         nc.addNum(oc.at0(j));
+      }
+    }
+    rlo=rhi;
+  }
+}
