@@ -20,17 +20,5 @@
     }
   }
   Frame fr2=new DeepSlice(rows,c2).doAll(c2.length,this)._outputFrame;
-  Futures fs=new Futures();
-  Vec[] vec2=fr2.vecs();
-  String domains[][]=domains();
-  String ns[]=new String[c2.length];
-  for (int i=0; i < c2.length; i++) {
-    ns[i]=_names[c2[i]];
-    vec2[i]._domain=domains[c2[i]];
-    DKV.put(vec2[i]._key,vec2[i],fs);
-  }
-  fr2._names=ns;
-  fs.blockForPending();
-  System.out.println(fr2.toStringAll());
-  return fr2;
+  return copyHeaders(fr2,c2);
 }

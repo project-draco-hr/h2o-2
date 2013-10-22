@@ -2,7 +2,14 @@
   Env env=null;
   try {
     env=Exec2.exec(s);
-    System.out.println(env.resultString());
+    if (env.isFrame()) {
+      Frame res=env.popFrame();
+      System.out.println(res.toStringAll());
+      env.subRef(res);
+    }
+ else {
+      System.out.println(env.resultString());
+    }
   }
  catch (  IllegalArgumentException iae) {
     System.out.println(iae.getMessage());
