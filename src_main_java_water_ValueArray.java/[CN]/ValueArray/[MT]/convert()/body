@@ -1,16 +1,12 @@
 {
   String[] names=new String[_cols.length];
-  AppendableVec[] avs=new AppendableVec[_cols.length];
   Key keys[]=new Vec.VectorGroup().addVecs(_cols.length);
-  for (int i=0; i < _cols.length; ++i) {
-    names[i]=_cols[i]._name;
-    avs[i]=new AppendableVec(keys[i]);
-  }
-  avs=new Converter(_key,avs).invoke(_key)._vecs;
+  for (int i=0; i < _cols.length; ++i)   names[i]=_cols[i]._name;
+  AppendableVec[] avs=new Converter(_key,keys).invoke(_key)._vecs;
   Vec[] vecs=new Vec[avs.length];
   for (int i=0; i < avs.length; ++i) {
+    avs[i]._domain=_cols[i]._domain;
     vecs[i]=avs[i].close(null);
-    vecs[i]._domain=_cols[i]._domain;
   }
   return new Frame(names,vecs);
 }
