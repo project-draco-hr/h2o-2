@@ -3,5 +3,5 @@ def test_RFhhp(self):
     print 'RF start on ', csvPathname, 'this will probably take 1 minute..'
     start = time.time()
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
-    h2o_cmd.runRF(parseResult=parseResult, trees=200, timeoutSecs=400, retryDelaySecs=15)
+    h2o_cmd.runRF(parseResult=parseResult, trees=10, timeoutSecs=400, retryDelaySecs=15)
     print 'RF end on ', csvPathname, 'took', (time.time() - start), 'seconds'

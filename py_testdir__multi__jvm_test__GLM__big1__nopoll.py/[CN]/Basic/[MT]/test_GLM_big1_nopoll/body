@@ -18,5 +18,5 @@ def test_GLM_big1_nopoll(self):
     print ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
     for glm in glmInitial:
         print 'Checking completed job, with no polling:', glm
-        a = h2o.nodes[0].poll_url(glm['response'], noPoll=True)
+        a = h2o.nodes[0].poll_url(glm, noPoll=True)
         h2o_glm.simpleCheckGLM(self, a, 57, **kwargs)
