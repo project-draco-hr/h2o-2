@@ -1,0 +1,21 @@
+{
+  File f2=find_test_file("smalldata/glm_test/prostate_cat_replaced.csv");
+  Key ikey2=NFSFileVec.make(f2);
+  Key okey2=Key.make("glm_model2");
+  try {
+    ParseDataset2.parse(okey2,new Key[]{ikey2});
+    Frame fr2=DKV.get(okey2).get();
+    GramTask gt=new GramTask(null,false,true);
+    gt.doIt(gt.adaptFrame(fr2));
+    double[][] res=gt._gram.getXX();
+    System.out.println(Utils.pprint(gt._gram.getXX()));
+    for (int i=0; i < exp_result.length; ++i)     for (int j=0; j < exp_result.length; ++j)     assertEquals(exp_result[i][j],gt._nobs * res[i][j],1e-5);
+    gt=new GramTask(null,false,false);
+    gt.doIt(gt.adaptFrame(fr2));
+    for (int i=0; i < exp_result.length - 1; ++i)     for (int j=0; j < exp_result.length - 1; ++j)     assertEquals(exp_result[i][j],gt._nobs * res[i][j],1e-5);
+  }
+  finally {
+    UKV.remove(ikey2);
+    UKV.remove(okey2);
+  }
+}

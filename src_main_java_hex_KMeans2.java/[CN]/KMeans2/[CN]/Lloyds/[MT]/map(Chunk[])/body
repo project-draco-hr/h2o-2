@@ -1,0 +1,29 @@
+{
+  _means=new double[_clusters.length][_clusters[0].length];
+  _sigms=new double[_clusters.length][_clusters[0].length];
+  _rows=new long[_clusters.length];
+  double[] values=new double[_clusters[0].length];
+  ClusterDist cd=new ClusterDist();
+  int[] clusters=new int[cs[0]._len];
+  for (int row=0; row < cs[0]._len; row++) {
+    data(values,cs,row,_subs,_muls);
+    closest(_clusters,values,cd);
+    int clu=clusters[row]=cd._cluster;
+    _sqr+=cd._dist;
+    if (clu == -1)     continue;
+    for (int col=0; col < values.length; col++)     _means[clu][col]+=values[col];
+    _rows[clu]++;
+  }
+  for (int clu=0; clu < _means.length; clu++)   for (int col=0; col < _means[clu].length; col++)   _means[clu][col]/=_rows[clu];
+  for (int row=0; row < cs[0]._len; row++) {
+    int clu=clusters[row];
+    if (clu == -1)     continue;
+    data(values,cs,row,_subs,_muls);
+    for (int col=0; col < values.length; col++) {
+      double delta=values[col] - _means[clu][col];
+      _sigms[clu][col]+=delta * delta;
+    }
+  }
+  _clusters=null;
+  _subs=_muls=null;
+}

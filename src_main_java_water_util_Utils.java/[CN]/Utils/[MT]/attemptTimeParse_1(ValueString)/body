@@ -1,0 +1,33 @@
+{
+  final byte[] buf=str.get_buf();
+  int i=str.get_off();
+  final int end=i + str.get_length();
+  while (i < end && buf[i] == ' ')   i++;
+  if (i < end && buf[i] == '"')   i++;
+  if ((end - i) < 8)   return Long.MIN_VALUE;
+  int yy=0, MM=0, dd=0;
+  dd=digit(dd,buf[i++]);
+  if (buf[i] != '-')   dd=digit(dd,buf[i++]);
+  if (dd < 1 || dd > 31)   return Long.MIN_VALUE;
+  if (buf[i++] != '-')   return Long.MIN_VALUE;
+  byte[] mm=null;
+  OUTER:   for (; MM < MMS.length; MM++) {
+    byte[][] mms=MMS[MM];
+    INNER:     for (int k=0; k < mms.length; k++) {
+      mm=mms[k];
+      if (mm == null)       continue;
+      for (int j=0; j < mm.length; j++)       if (mm[j] != Character.toLowerCase(buf[i + j]))       continue INNER;
+      break OUTER;
+    }
+  }
+  if (MM == MMS.length)   return Long.MIN_VALUE;
+  i+=mm.length;
+  MM++;
+  if (buf[i++] != '-')   return Long.MIN_VALUE;
+  yy=digit(yy,buf[i++]);
+  yy=digit(yy,buf[i++]);
+  yy+=2000;
+  if (i < end && buf[i] == '"')   i++;
+  if (i < end)   return Long.MIN_VALUE;
+  return new GregorianCalendar(yy,MM,dd).getTimeInMillis();
+}

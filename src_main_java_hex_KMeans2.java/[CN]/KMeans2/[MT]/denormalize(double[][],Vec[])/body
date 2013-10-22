@@ -1,0 +1,12 @@
+{
+  double[][] value=new double[clusters.length][clusters[0].length];
+  for (int row=0; row < value.length; row++) {
+    for (int col=0; col < clusters[row].length; col++) {
+      double d=clusters[row][col];
+      d*=vecs[col].sigma();
+      d+=vecs[col].mean();
+      value[row][col]=d;
+    }
+  }
+  return value;
+}

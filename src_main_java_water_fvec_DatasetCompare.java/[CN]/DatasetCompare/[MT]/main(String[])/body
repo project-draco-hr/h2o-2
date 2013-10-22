@@ -1,6 +1,6 @@
 {
   System.out.println("Running Parser Cmp Test with args=" + Arrays.toString(args));
-  final int nnodes=3;
+  final int nnodes=1;
   for (int i=1; i < nnodes; i++) {
     Node n=new NodeVM(args);
     n.inheritIO();
@@ -10,7 +10,16 @@
   String root=(args.length > 0) ? args[0] : "smalldata";
   System.out.println("ROOT = " + root);
   System.out.println("Running...");
-  do_file(TestUtil.find_test_file(root));
+  new NewVectorTest().testCompression();
+  Map<String,Double> diffs=new TreeMap<String,Double>();
+  Map<String,Exception> exs=new TreeMap<String,Exception>();
+  do_file(TestUtil.find_test_file(root),diffs,exs);
   System.out.println("DONE!!!");
-  System.exit(0);
+  for (  Map.Entry<String,Exception> e : exs.entrySet()) {
+    System.err.println("Exception occured while processing " + e.getKey());
+    e.getValue().printStackTrace();
+  }
+  for (  Map.Entry<String,Double> e : diffs.entrySet())   if (e.getValue() > 1e-5)   System.err.println(e.getKey() + ", DIFF = " + e.getValue());
+  System.err.flush();
+  for (  Map.Entry<String,Double> e : diffs.entrySet())   System.out.println(e.getKey() + ", diff = " + e.getValue());
 }

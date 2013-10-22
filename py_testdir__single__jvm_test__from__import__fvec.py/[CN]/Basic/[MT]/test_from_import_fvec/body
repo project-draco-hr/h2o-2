@@ -4,25 +4,17 @@ def test_from_import_fvec(self):
     h2o.beta_features = True
     importFolderPath = 'standard'
     timeoutSecs = 500
-    csvFilenameAll = [('manyfiles-nflx-gz', 'file_[1-9].dat.gz', 378), ('standard', 'covtype.data', 54), ('standard', 'covtype20x.data', 54)]
+    csvFilenameAll = [('manyfiles-nflx-gz', 'file_1.dat.gz', 378)]
     csvFilenameList = csvFilenameAll
     for (importFolderPath, csvFilename, response) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
-        h2o.beta_features = False
         (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=50)
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=True, doSummary=False)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=False, doSummary=False)
         h2o.check_sandbox_for_errors()
-        print '\nparseResult', h2o.dump_json(parseResult)
-        time.sleep(2)
-        h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
         if h2o.beta_features:
             parseResult = {'destination_key': 'c.hex', }
-        else:
-            print csvFilename, 'parse time:', parseResult['response']['time']
-            print "Parse result['destination_key']:", parseResult['destination_key']
-            inspect = h2o_cmd.runInspect(key=parseResult['destination_key'], timeoutSecs=30)
-        h2o.beta_features = True
-        inspect = h2o_cmd.runInspect(key='c.hex', timeoutSecs=30)
+        print '\nparseResult', h2o.dump_json(parseResult)
+        print "Parse result['destination_key']:", parseResult['destination_key']
         h2o.check_sandbox_for_errors()
         if (importFolderPath == 'manyfiles-nflx-gz'):
             execExpr = 'c.hex=colSwap(c.hex,378,(c.hex[378]>15 ? 1 : 0))'
@@ -36,7 +28,7 @@ def test_from_import_fvec(self):
             xIgnore = ','.join(map(str, xIgnore))
         else:
             xIgnore = 0
-        params = {'destination_key': 'GBMKEY', 'ignored_cols': xIgnore, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': response, }
+        params = {'destination_key': 'GBMKEY', 'ignored_cols_by_name': xIgnore, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': response, }
         kwargs = params.copy()
         h2o.beta_features = True
         timeoutSecs = 1800

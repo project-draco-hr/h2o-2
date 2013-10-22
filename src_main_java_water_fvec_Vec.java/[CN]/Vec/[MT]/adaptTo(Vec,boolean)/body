@@ -1,0 +1,9 @@
+{
+  int[] domain=null;
+  String[] sdomain=_domain == null ? Utils.toStringMap(domain=new CollectDomain(this).doAll(this).domain()) : domain();
+  int[] domMap=Model.getDomainMapping(null,v._domain,sdomain,exact);
+  if (domain != null) {
+    domMap=Utils.compose(Utils.mapping(domain),domMap);
+  }
+  return this.makeTransf(domMap,sdomain);
+}

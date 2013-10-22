@@ -1,0 +1,13 @@
+{
+  File train=new File("smalldata/gbm_test/ecology_model.csv");
+  Key dest=Key.make("train.hex");
+  Key fkey=water.fvec.NFSFileVec.make(train);
+  water.fvec.ParseDataset2.parse(dest,new Key[]{fkey});
+  Frame f=UKV.get(dest);
+  f.remove(0);
+  UKV.put(dest,f);
+  File test=new File("smalldata/gbm_test/ecology_eval.csv");
+  dest=Key.make("test.hex");
+  fkey=water.fvec.NFSFileVec.make(test);
+  water.fvec.ParseDataset2.parse(dest,new Key[]{fkey});
+}

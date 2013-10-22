@@ -1,6 +1,9 @@
-def runInspect(node=None, key=None, timeoutSecs=30, **kwargs):
+def runInspect(node=None, key=None, timeoutSecs=30, verbose=False, **kwargs):
     if (not key):
         raise Exception('No key for Inspect')
     if (not node):
         node = h2o.nodes[0]
-    return node.inspect(key, timeoutSecs=timeoutSecs, **kwargs)
+    a = node.inspect(key, timeoutSecs=timeoutSecs, **kwargs)
+    if verbose:
+        print ('inspect of %s:' % key), h2o.dump_json(a)
+    return a

@@ -1,8 +1,10 @@
 def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, parentName=None, **kwargs):
     browseAlso = kwargs.pop('browseAlso', False)
-    params_dict = {'family': 'binomial', 'key': key, 'y': 1, 'link': 'familyDefault', }
-    params_dict.update(kwargs)
-    print ('\n' + parentName), 'params list:', params_dict
+    if beta_features:
+        params_dict = {'source': key, 'destination_key': None, 'response': None, 'ignored_cols': None, 'max_iter': None, 'standardize': None, 'family': None, 'link': None, 'alpha': None, 'lambda': None, 'beta_epsilon': None, 'tweedie_variance_power': None, 'n_folds': None, 'case_mode': None, 'case_val': None, 'weight': None, 'thresholds': None, 'parallel': None, }
+    else:
+        params_dict = {'key': key, 'destination_key': None, 'x': None, 'y': None, 'max_iter': None, 'standardize': None, 'family': None, 'link': None, 'alpha': None, 'lambda': None, 'beta_epsilon': None, 'tweedie_power': None, 'n_folds': None, 'case_mode': None, 'case': None, 'weight': None, 'lsm_solver': None, 'expert_settings': None, 'thresholds': None, 'parallel': None, }
+    check_params_update_kwargs(params_dict, kwargs, parentName, print_params=True)
     a = self.__do_json_request((parentName + '.json'), timeout=timeoutSecs, params=params_dict)
     verboseprint(parentName, dump_json(a))
     return a

@@ -1,0 +1,10 @@
+{
+  double[] values=new double[cs.length];
+  ClusterDist cd=new ClusterDist();
+  for (int row=0; row < cs[0]._len; row++) {
+    data(values,cs,row,_subs,_muls);
+    _sqr+=minSqr(_clusters,values,cd);
+  }
+  _subs=_muls=null;
+  _clusters=null;
+}

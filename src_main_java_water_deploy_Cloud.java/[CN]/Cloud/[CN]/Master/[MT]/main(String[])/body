@@ -1,7 +1,7 @@
 {
   VM.exitWithParent();
   CloudParams params=VM.read(args[0]);
-  String[] workerArgs=new String[]{"-flatfile",params._flatfile};
+  String[] workerArgs=new String[]{"-flatfile",params._flatfile,"-port","" + PORT};
   List<FlatFileEntry> flatfile=H2O.parseFlatFile(new File(params._flatfile));
   HashMap<String,Host> hosts=new HashMap<String,Host>();
   ArrayList<Node> workers=new ArrayList<Node>();
@@ -15,10 +15,19 @@
     w.inheritIO();
     w.start();
   }
-  Boot.main(Utils.remove(args,0));
-  TestUtil.stall_till_cloudsize(1 + workers.size());
-  Thread.sleep(1000);
-  Log.unwrap(System.out,"");
-  Log.unwrap(System.out,"The cloud is running, with a port forwarded to:");
-  Log.unwrap(System.out,"http://127.0.0.1:54321");
+  ArrayList<String> list=new ArrayList<String>(Arrays.asList(args));
+  list.remove(0);
+  list.addAll(Arrays.asList(workerArgs));
+  args=list.toArray(new String[0]);
+  H2O.main(args);
+  if (list.indexOf("-mainClass") >= 0) {
+    TestUtil.stall_till_cloudsize(1 + workers.size());
+    Boot.run(args);
+  }
+ else {
+    Thread.sleep(1000);
+    Log.unwrap(System.out,"");
+    Log.unwrap(System.out,"The cloud is running, with a port forwarded to:");
+    Log.unwrap(System.out,"http://127.0.0.1:" + PORT);
+  }
 }

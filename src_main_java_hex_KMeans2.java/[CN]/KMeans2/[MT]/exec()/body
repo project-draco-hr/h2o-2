@@ -1,4 +1,71 @@
 {
-  Log.info(DOC_GET + source);
-  UKV.put(destination_key,source);
+  String sourceArg=input("source");
+  Key sourceKey=null;
+  if (sourceArg != null)   sourceKey=Key.make(sourceArg);
+  String[] names=new String[cols.length];
+  for (int i=0; i < cols.length; i++)   names[i]=source._names[cols[i]];
+  Vec[] vecs=selectVecs(source);
+  String[] domain=new String[k];
+  for (int i=0; i < domain.length; i++)   domain[i]="Cluster " + i;
+  String[] namesResp=Utils.append(names,"response");
+  String[][] domaiResp=(String[][])Utils.append(source.domains(),(Object)domain);
+  KMeans2Model model=new KMeans2Model(destination_key,sourceKey,namesResp,domaiResp);
+  double[] subs=null, muls=null;
+  if (normalize) {
+    subs=new double[vecs.length];
+    muls=new double[vecs.length];
+    for (int i=0; i < vecs.length; i++) {
+      subs[i]=(float)vecs[i].mean();
+      double sigma=vecs[i].sigma();
+      muls[i]=normalize(sigma) ? 1 / sigma : 1;
+    }
+  }
+  Random rand=Utils.getRNG(seed - 1);
+  double[][] clusters;
+  if (initialization == Initialization.None) {
+    clusters=new double[k][vecs.length];
+    for (int i=0; i < clusters.length; i++)     randomRow(vecs,rand,clusters[i],subs,muls);
+  }
+ else {
+    clusters=new double[1][];
+    clusters[0]=new double[vecs.length];
+    randomRow(vecs,rand,clusters[0],subs,muls);
+    while (model.iterations < 5) {
+      SumSqr sqr=new SumSqr();
+      sqr._clusters=clusters;
+      sqr._subs=subs;
+      sqr._muls=muls;
+      sqr.doAll(vecs);
+      Sampler sampler=new Sampler();
+      sampler._clusters=clusters;
+      sampler._sqr=sqr._sqr;
+      sampler._probability=k * 3;
+      sampler._seed=seed;
+      sampler._subs=subs;
+      sampler._muls=muls;
+      sampler.doAll(vecs);
+      clusters=Utils.append(clusters,sampler._sampled);
+      if (cancelled())       return;
+      model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
+      model.error=sqr._sqr;
+      model.iterations++;
+      UKV.put(destination_key,model);
+    }
+    clusters=recluster(clusters,k,rand,initialization);
+  }
+  for (; ; ) {
+    Lloyds task=new Lloyds();
+    task._clusters=clusters;
+    task._subs=subs;
+    task._muls=muls;
+    task.doAll(vecs);
+    model.clusters=normalize ? denormalize(task._means,vecs) : task._means;
+    for (int clu=0; clu < task._sigms.length; clu++)     for (int col=0; col < task._sigms[clu].length; col++)     task._sigms[clu][col]=task._sigms[clu][col] / (task._rows[clu] - 1);
+    model.variances=task._sigms;
+    model.error=task._sqr;
+    model.iterations++;
+    UKV.put(destination_key,model);
+    if (model.iterations >= max_iter)     break;
+    if (cancelled())     break;
+  }
 }

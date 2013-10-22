@@ -1,0 +1,27 @@
+def test_GLM_prostate(self):
+    h2o.beta_features = True
+    importFolderPath = 'logreg'
+    csvFilename = 'prostate.csv'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    hex_key = (csvFilename + '.hex')
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=180, noPoll=True, doSummary=False)
+    h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+    print inspect
+    print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    x = 'ID'
+    y = 'CAPSULE'
+    family = 'binomial'
+    alpha = '0.5'
+    lambda_ = '1E-4'
+    nfolds = '5'
+    nfolds = '0'
+    case_mode = '='
+    case_val = '1'
+    f = 'prostate'
+    kwargs = {'response': y, 'ignored_cols': x, 'family': family, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'destination_key': (('GLM(' + f) + ')'), }
+    BUG1 = True
+    timeoutSecs = 60
+    start = time.time()
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=0.25, pollTimeoutSecs=180, noPoll=BUG1, **kwargs)
+    h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)

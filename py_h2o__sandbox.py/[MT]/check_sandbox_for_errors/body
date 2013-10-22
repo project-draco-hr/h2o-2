@@ -6,8 +6,13 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
         return
     errLines = []
     for filename in os.listdir(LOG_DIR):
-        if re.search('h2o.*stdout|h2o.*stderr', filename):
+        if (re.search('h2o.*stdout|h2o.*stderr', filename) and (not re.search('doneToLine', filename))):
             sandFile = open(((LOG_DIR + '/') + filename), 'r')
+            try:
+                with open((((LOG_DIR + '/') + 'doneToLine.') + filename)) as f:
+                    doneToLine = int(f.readline().rstrip())
+            except IOError:
+                doneToLine = 0
             regex1String = 'found multiple|exception|error|ERRR|assert|killing|killed|required ports'
             if cloudShutdownIsError:
                 regex1String += '|shutdown command'
@@ -16,12 +21,16 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
             regex3 = re.compile('warn|TCP', re.IGNORECASE)
             printing = 0
             lines = 0
+            currentLine = 0
             for line in sandFile:
+                currentLine += 1
+                if (currentLine <= doneToLine):
+                    continue
                 printSingleWarning = False
                 foundBad = False
                 if (not (' bytes)' in line)):
                     printSingleWarning = regex3.search(line)
-                    foundBad = (regex1.search(line) and (not (('stack_traces' in line) or ('out_of_bag_error_estimate' in line) or ('Training Error' in line) or ('Mean Squared Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
+                    foundBad = (regex1.search(line) and (not (('WARN SCORM' in line) or ('stack_traces' in line) or ('out_of_bag_error_estimate' in line) or ('Training Error' in line) or ('Mean Squared Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
                 if ((printing == 0) and foundBad):
                     printing = 1
                     lines = 1
@@ -38,6 +47,8 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
                     if (not (('Unable to load native-hadoop library' in line) or ('stack_traces' in line) or ('Multiple local IPs detected' in line) or ('[Loaded ' in line) or ('RestS3Service' in line))):
                         sys.stdout.write(line)
             sandFile.close()
+            with open((((LOG_DIR + '/') + 'doneToLine.') + filename), 'w') as f:
+                f.write((str(currentLine) + '\n'))
     sys.stdout.flush()
     if (len(errLines) != 0):
         justInfo = True
