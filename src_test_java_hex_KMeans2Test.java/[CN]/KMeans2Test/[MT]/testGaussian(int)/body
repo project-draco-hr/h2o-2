@@ -1,0 +1,36 @@
+{
+  final int columns=100;
+  double[][] goals=new double[8][columns];
+  double[][] array=gauss(columns,rows,goals);
+  String[] names=new String[columns];
+  for (int i=0; i < names.length; i++)   names[i]="C" + i;
+  Frame frame=frame(names,array);
+  KMeans2 algo=null;
+  try {
+    algo=new KMeans2();
+    algo.source=frame;
+    algo.k=goals.length;
+    algo.initialization=Initialization.Furthest;
+    algo.max_iter=100;
+    algo.seed=SEED;
+    Timer t=new Timer();
+    algo.invoke();
+    KMeans2Model res=UKV.get(algo.destination_key);
+    Log.debug(Sys.KMEAN," testGaussian rows:" + rows + ", ms:"+ t);
+    double[][] clusters=res.clusters;
+    for (    double[] goal : goals) {
+      boolean found=false;
+      for (      double[] cluster : clusters) {
+        if (match(cluster,goal)) {
+          found=true;
+          break;
+        }
+      }
+      Assert.assertTrue(found);
+    }
+  }
+  finally {
+    frame.remove();
+    if (algo != null && algo.destination_key != null)     UKV.remove(algo.destination_key);
+  }
+}

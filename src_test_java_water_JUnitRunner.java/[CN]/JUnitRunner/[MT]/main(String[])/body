@@ -17,9 +17,9 @@
   H2O.OPT_ARGS.ip="127.0.0.1";
   args=(String[])ArrayUtils.addAll(a,args);
   ArrayList<Node> nodes=new ArrayList<Node>();
-  for (int i=1; i < ports.length; i++)   nodes.add(new NodeVM(Utils.add(args,"-port","" + ports[i])));
-  args=Utils.add(new String[]{"-mainClass",Master.class.getName()},args);
-  Node master=new NodeVM(Utils.add(args,"-port","" + ports[0]));
+  for (int i=1; i < ports.length; i++)   nodes.add(new NodeVM(Utils.append(args,"-port","" + ports[i])));
+  args=Utils.append(new String[]{"-mainClass",Master.class.getName()},args);
+  Node master=new NodeVM(Utils.append(args,"-port","" + ports[0]));
   nodes.add(master);
   File out=null, err=null, sandbox=new File("sandbox");
   sandbox.mkdirs();
