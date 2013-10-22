@@ -1,0 +1,7 @@
+{
+  for (int c=0; c < ma.length; c++) {
+    double delta=ma[c] - mb[c];
+    ma[c]=(ma[c] * ra + mb[c] * rb) / (ra + rb);
+    sa[c]=sa[c] + sb[c] + delta * delta * ra* rb / (ra + rb);
+  }
+}
