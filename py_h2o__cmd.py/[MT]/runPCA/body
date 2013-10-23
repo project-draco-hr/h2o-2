@@ -1,7 +1,7 @@
-def runPCA(node=None, parseResult=None, timeoutSecs=600, **kwargs):
+def runPCA(node=None, parseResult=None, timeoutSecs=600, noPoll=False, returnFast=False, **kwargs):
     if (not parseResult):
         raise Exception('No parseResult for PCA')
     if (not node):
         node = h2o.nodes[0]
     data_key = parseResult['destination_key']
-    return node.pca(data_key=data_key, timeoutSecs=timeoutSecs, **kwargs)
+    return node.pca(data_key=data_key, timeoutSecs=timeoutSecs, noPoll=noPoll, returnFast=returnFast, **kwargs)

@@ -1,13 +1,18 @@
 {
+  Vec va=null, vp=null;
   try {
     if (vactual == null || vpredict == null)     throw new IllegalArgumentException("Missing actual or predict?");
-    if (!vactual.isEnum())     vactual.asEnum();
-    if (!vpredict.isEnum())     vpredict.asEnum();
-    cm=new CM(vactual.domain().length,vpredict.domain().length).doAll(vactual,vpredict)._cm;
+    va=vactual.toEnum();
+    vp=vpredict.toEnum();
+    cm=new CM(va.domain().length,vp.domain().length).doAll(vactual,vpredict)._cm;
     return new Response(Response.Status.done,this,-1,-1,null);
   }
  catch (  Throwable t) {
     Log.err(t);
     return Response.error(t.getMessage());
+  }
+ finally {
+    if (va != null)     UKV.remove(va._key);
+    if (vp != null)     UKV.remove(vp._key);
   }
 }

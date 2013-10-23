@@ -60,8 +60,9 @@
     task._muls=muls;
     task.doAll(vecs);
     model.clusters=normalize ? denormalize(task._means,vecs) : task._means;
-    for (int clu=0; clu < task._sigms.length; clu++)     for (int col=0; col < task._sigms[clu].length; col++)     task._sigms[clu][col]=task._sigms[clu][col] / (task._rows[clu] - 1);
-    model.variances=task._sigms;
+    double[] variances=new double[task._sqrs.length];
+    for (int clu=0; clu < task._sqrs.length; clu++)     for (int col=0; col < task._sqrs[clu].length; col++)     variances[clu]+=task._sqrs[clu][col];
+    model.cluster_variances=variances;
     model.error=task._sqr;
     model.iterations++;
     UKV.put(destination_key,model);
