@@ -7,7 +7,7 @@
     FVecTest.makeByteVec(raw,"x,y\n0,1\n1,0.5\n2,0.3333333\n3,0.25\n4,0.2\n5,0.1666667\n6,0.1428571\n7,0.125");
     Frame fr=ParseDataset2.parse(parsed,new Key[]{raw});
     double[] vals=new double[]{1.0,1.0};
-    new GLM2("GLM test of gamma regression.",modelKey,fr,false,Family.gamma,Family.gamma.defaultLink,0,0).run(null).get();
+    new GLM2("GLM test of gamma regression.",modelKey,fr,null,false,Family.gamma,Family.gamma.defaultLink,0,0).run(null).get();
     model=DKV.get(modelKey).get();
     for (    double c : model.beta())     assertEquals(1.0,c,1e-4);
   }

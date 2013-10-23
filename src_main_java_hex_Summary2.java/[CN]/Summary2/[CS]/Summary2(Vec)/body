@@ -4,7 +4,7 @@
   if (_enum)   domains=vec.domain();
  else   domains=null;
   long len=vec.length();
-  _avail_rows=len - vec.naCnt();
+  rows=len - vec.naCnt();
   if (_enum) {
     mins=MemoryManager.malloc8d(Math.min(domains.length,NMAX));
     maxs=MemoryManager.malloc8d(Math.min(domains.length,NMAX));
@@ -22,7 +22,9 @@
     bins=new long[(int)span];
   }
  else {
-    double b=Math.max(1e-4,3.5 * vec.sigma() / Math.cbrt(len));
+    double sigma=vec.sigma();
+    if (Double.isNaN(sigma))     sigma=0;
+    double b=Math.max(1e-4,3.5 * sigma / Math.cbrt(len));
     double d=Math.pow(10,Math.floor(Math.log10(b)));
     if (b > 20 * d / 3)     d*=10;
  else     if (b > 5 * d / 3)     d*=5;

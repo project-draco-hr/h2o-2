@@ -44,16 +44,23 @@ def doGLM2(f, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, row
         h2o.beta_features = True
         kwargs = params.copy()
         glmStart = time.time()
-        glm = h2o_cmd.runGLM(parseResult=parseResult, noPoll=True, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=1800, noPoll=True, **kwargs)
         h2o_jobs.pollWaitJobs(timeoutSecs=7200, pollTimeoutSecs=7200, retryDelaySecs=5)
         glmTime = (time.time() - glmStart)
         row.update({'glmBuildTime': glmTime, })
         glmView = h2o_cmd.runGLMView(modelKey=(('GLM(' + f) + ')'), timeoutSecs=380)
-        row.update({'AIC': glmView['glm_model']['validation']['aic'], 'nIterations': glmView['glm_model']['iteration'], 'nPredictors': len(glmView['glm_model']['beta']), 'AverageError': glmView['glm_model']['validation']['avg_err'], })
+        row.update({'AIC': glmView['glm_model']['validation']['aic'], 'nIterations': glmView['glm_model']['iteration'], 'nPredictors': len(glmView['glm_model']['beta']), })
         if (family == 'binomial'):
-            row.update({'AUC': glmView['glm_model']['validation']['auc'], })
+            url = ('http://%s:%d/2/GLMModelView.html?_modelKey=%s' % (h2o.nodes[0].http_addr, 55555, (('GLM(' + f) + ')')))
+            r = requests.get(url).text
+            p1 = re.compile('threshold[:<>/a-z]*[0-9]\\.[0-9]*')
+            p2 = re.compile('[0-9]\\.[0-9]*')
+            best = int((float(p2.search(p1.search(text).group()).group()) * 100))
+            best_cm = glmView['glm_model']['validation']['_cms'][best]['_arr']
+            avg_err = ((best_cm[0][1] + best_cm[1][0]) / sum([i for sublist in best_cm for i in sublist]))
+            row.update({'AUC': glmView['glm_model']['validation']['auc'], 'AverageError': avg_err, })
         else:
-            row.update({'AUC': 'NA', })
+            row.update({'AUC': 'NA', 'AverageError': glmView['glm_model']['validation']['avg_err'], })
         csvWrt.writerow(row)
     finally:
         output.close()

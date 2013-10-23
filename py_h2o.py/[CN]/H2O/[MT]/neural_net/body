@@ -1,5 +1,5 @@
 def neural_net(self, data_key, timeoutSecs=600, retryDelaySecs=1, initialDelaySecs=5, pollTimeoutSecs=30, noPoll=False, print_params=True, **kwargs):
-    params_dict = {'destination_key': None, 'source': data_key, 'cols': None, 'response': None, 'activation': None, 'hidden': None, 'rate': None, 'l2': None, 'epochs': None, }
+    params_dict = {'destination_key': None, 'source': data_key, 'cols': None, 'ignored_cols': None, 'validation': None, 'response': None, 'activation': None, 'hidden': None, 'rate': None, 'l2': None, 'epochs': None, }
     check_params_update_kwargs(params_dict, kwargs, 'neural_net', print_params)
     start = time.time()
     a = self.__do_json_request('NeuralNet.json', timeout=timeoutSecs, params=params_dict)

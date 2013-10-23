@@ -1,8 +1,11 @@
 def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False):
     verboseprint('poll_url input: response:', dump_json(response))
-    if ('redirect_url' in response):
-        url = self.__url(response['redirect_url'])
-        params = None
+    if beta_features:
+        if ('redirect_url' in response):
+            url = self.__url(response['redirect_url'])
+            params = None
+        else:
+            raise Exception(("The response during polling should have 'redirect_url'. Don't see it: \n%s" % dump_json(response)))
     else:
         url = self.__url(response['response']['redirect_request'])
         params = response['response']['redirect_request_args']
