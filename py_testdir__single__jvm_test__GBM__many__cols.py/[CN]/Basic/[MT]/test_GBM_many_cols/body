@@ -50,7 +50,7 @@ def test_GBM_many_cols(self):
             trainElapsed = (time.time() - trainStart)
             print 'GBM training completed in', trainElapsed, 'seconds. On dataset: ', csvPathname
             algo = (((('GBM ' + ' ntrees=') + str(ntrees)) + ' max_depth=') + str(max_depth))
-            l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, algo, csvFilename, trainElapsed)
+            l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_MB, algo, csvFilename, trainElapsed)
             print l
             h2o.cloudPerfH2O.message(l)
             gbmTrainView = h2o_cmd.runGBMView(model_key=modelKey)
