@@ -2,6 +2,6 @@
   Random rand=new Random(SEED);
   for (int r=0; r < array.length; r++) {
     final int goal=rand.nextInt(goals.length);
-    for (int c=0; c < array[r].length; c++)     array[r][c]=goals[goal][c] + rand.nextGaussian();
+    for (int c=0; c < array[r].length; c++)     array[r][c]=goals[goal][c] + rand.nextGaussian() * SIGMA;
   }
 }
