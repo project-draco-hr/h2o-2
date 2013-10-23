@@ -1,0 +1,9 @@
+{
+  if (_domain != null)   return this.makeTransf(seq(0,_domain.length),_domain);
+ else {
+    int[] domain;
+    String[] sdomain=Utils.toStringMap(domain=new CollectDomain(this).doAll(this).domain());
+    int[] domMap=Utils.mapping(domain);
+    return this.makeTransf(domMap,sdomain);
+  }
+}
