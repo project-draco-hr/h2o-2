@@ -1,19 +1,10 @@
 {
   if (model != null) {
     DocGen.HTML.section(sb,"Error: " + model.error);
-    sb.append("<span style='display: inline-block;'>");
-    sb.append("<table class='table table-striped table-bordered'>");
-    sb.append("<tr>");
-    sb.append("<th>Clusters</th>");
-    for (int i=0; i < model.clusters[0].length; i++)     sb.append("<th>").append(model._names[i]).append("</th>");
-    sb.append("</tr>");
-    for (int r=0; r < model.clusters.length; r++) {
-      sb.append("<tr>");
-      sb.append("<td>").append(r).append("</td>");
-      for (int c=0; c < model.clusters[r].length; c++)       sb.append("<td>").append(ElementBuilder.format(model.clusters[r][c])).append("</td>");
-      sb.append("</tr>");
-    }
-    sb.append("</table></span>");
+    table(sb,"Clusters",model._names,model.clusters);
+    double[][] rows=new double[model.cluster_variances.length][1];
+    for (int i=0; i < rows.length; i++)     rows[i][0]=model.cluster_variances[i];
+    table(sb,"In-cluster variances",model._names,rows);
     return true;
   }
   return false;
