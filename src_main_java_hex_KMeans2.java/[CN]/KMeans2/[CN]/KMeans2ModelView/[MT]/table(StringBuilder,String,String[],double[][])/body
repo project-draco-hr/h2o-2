@@ -1,0 +1,15 @@
+{
+  sb.append("<span style='display: inline-block;'>");
+  sb.append("<table class='table table-striped table-bordered'>");
+  sb.append("<tr>");
+  sb.append("<th>" + title + "</th>");
+  for (int i=0; names != null && i < rows[0].length; i++)   sb.append("<th>").append(names[i]).append("</th>");
+  sb.append("</tr>");
+  for (int r=0; r < rows.length; r++) {
+    sb.append("<tr>");
+    sb.append("<td>").append(r).append("</td>");
+    for (int c=0; c < rows[r].length; c++)     sb.append("<td>").append(ElementBuilder.format(rows[r][c])).append("</td>");
+    sb.append("</tr>");
+  }
+  sb.append("</table></span>");
+}

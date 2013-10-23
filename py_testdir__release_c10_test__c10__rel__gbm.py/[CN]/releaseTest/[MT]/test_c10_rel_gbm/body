@@ -7,13 +7,13 @@ def test_c10_rel_gbm(self):
     testFilename = 'classification1Test.txt'
     testPathname = ((importFolderPath + '/') + testFilename)
     start = time.time()
-    parseTestResult = h2i.import_parse(path=testPathname, schema='local', timeoutSecs=500, doSummary=False)
+    parseTestResult = h2i.import_parse(path=testPathname, schema='local', timeoutSecs=500, doSummary=True)
     print 'Parse of', parseTestResult['destination_key'], 'took', (time.time() - start), 'seconds'
     importFolderPath = '/mnt/0xcustomer-datasets/c3'
     trainFilename = 'classification1Train.txt'
     trainPathname = ((importFolderPath + '/') + trainFilename)
     start = time.time()
-    parseTrainResult = h2i.import_parse(path=trainPathname, schema='local', timeoutSecs=500, doSummary=False)
+    parseTrainResult = h2i.import_parse(path=trainPathname, schema='local', timeoutSecs=500, doSummary=True)
     print 'Parse of', parseTrainResult['destination_key'], 'took', (time.time() - start), 'seconds'
     start = time.time()
     inspect = h2o_cmd.runInspect(None, parseTrainResult['destination_key'], timeoutSecs=500)
