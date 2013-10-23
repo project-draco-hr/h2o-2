@@ -1,13 +1,11 @@
 {
-  int ca_len=ca._vec.domain().length;
-  int cp_len=cp._vec.domain().length;
-  _cm=new long[ca_len + 1][cp_len + 1];
+  _cm=new long[_ca_len + 1][_cp_len + 1];
   int len=Math.min(ca._len,cp._len);
   for (int i=0; i < len; i++) {
-    int a=ca.isNA0(i) ? ca_len : (int)ca.at80(i);
-    int p=cp.isNA0(i) ? cp_len : (int)cp.at80(i);
+    int a=ca.isNA0(i) ? _ca_len : (int)ca.at80(i);
+    int p=cp.isNA0(i) ? _cp_len : (int)cp.at80(i);
     _cm[a][p]++;
   }
-  if (len < ca._len)   for (int i=len; i < ca._len; i++)   _cm[ca.isNA0(i) ? ca_len : (int)ca.at80(i)][cp_len]++;
-  if (len < cp._len)   for (int i=len; i < cp._len; i++)   _cm[ca_len][cp.isNA0(i) ? cp_len : (int)cp.at80(i)]++;
+  if (len < ca._len)   for (int i=len; i < ca._len; i++)   _cm[ca.isNA0(i) ? _ca_len : (int)ca.at80(i)][_cp_len]++;
+  if (len < cp._len)   for (int i=len; i < cp._len; i++)   _cm[_ca_len][cp.isNA0(i) ? _cp_len : (int)cp.at80(i)]++;
 }
