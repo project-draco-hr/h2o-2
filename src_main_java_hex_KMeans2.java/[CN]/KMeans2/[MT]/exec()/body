@@ -5,12 +5,11 @@
   String[] names=new String[cols.length];
   for (int i=0; i < cols.length; i++)   names[i]=source._names[cols[i]];
   Vec[] vecs=selectVecs(source);
-  Frame frame=new Frame(names,vecs);
-  Vec response=frame.anyVec().makeZero();
-  response._domain=new String[k];
-  for (int i=0; i < response._domain.length; i++)   response._domain[i]="Cluster " + i;
-  frame.add("response",response);
-  KMeans2Model model=new KMeans2Model(destination_key,sourceKey,frame);
+  String[] domain=new String[k];
+  for (int i=0; i < domain.length; i++)   domain[i]="Cluster " + i;
+  String[] namesResp=Utils.append(names,"response");
+  String[][] domaiResp=(String[][])Utils.append(source.domains(),(Object)domain);
+  KMeans2Model model=new KMeans2Model(destination_key,sourceKey,namesResp,domaiResp);
   double[] subs=null, muls=null;
   if (normalize) {
     subs=new double[vecs.length];
@@ -45,7 +44,7 @@
       sampler._subs=subs;
       sampler._muls=muls;
       sampler.doAll(vecs);
-      clusters=DRemoteTask.merge(clusters,sampler._sampled);
+      clusters=Utils.append(clusters,sampler._sampled);
       if (cancelled())       return;
       model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
       model.error=sqr._sqr;
@@ -60,15 +59,10 @@
     task._subs=subs;
     task._muls=muls;
     task.doAll(vecs);
-    for (int cluster=0; cluster < clusters.length; cluster++) {
-      if (task._counts[cluster] > 0) {
-        for (int vec=0; vec < vecs.length; vec++) {
-          double value=task._sums[cluster][vec] / task._counts[cluster];
-          clusters[cluster][vec]=value;
-        }
-      }
-    }
-    model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
+    model.clusters=normalize ? denormalize(task._means,vecs) : task._means;
+    double[] variances=new double[task._sqrs.length];
+    for (int clu=0; clu < task._sqrs.length; clu++)     for (int col=0; col < task._sqrs[clu].length; col++)     variances[clu]+=task._sqrs[clu][col];
+    model.cluster_variances=variances;
     model.error=task._sqr;
     model.iterations++;
     UKV.put(destination_key,model);

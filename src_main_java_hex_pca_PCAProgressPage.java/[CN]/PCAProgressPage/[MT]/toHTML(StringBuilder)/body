@@ -1,0 +1,10 @@
+{
+  Job jjob=Job.findJob(job_key);
+  Value v=DKV.get(jjob.dest());
+  if (v != null) {
+    PCAModel m=v.get();
+    m.generateHTML("PCA Model",sb);
+  }
+ else   sb.append("<b>No model yet.</b>");
+  return true;
+}

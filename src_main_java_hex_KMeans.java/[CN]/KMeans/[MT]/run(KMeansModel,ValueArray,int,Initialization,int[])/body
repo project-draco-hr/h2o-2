@@ -28,7 +28,7 @@
       sampler._probability=k * 3;
       sampler._seed=res._randSeed;
       sampler.invoke(va._key);
-      clusters=DRemoteTask.merge(clusters,sampler._clust2);
+      clusters=Utils.append(clusters,sampler._clust2);
       if (cancelled()) {
         remove();
         return;

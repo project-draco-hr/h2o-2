@@ -1,5 +1,0 @@
-def runRF(node=None, csvPathname=None, trees=5, key=None, key2=None, timeoutSecs=20, retryDelaySecs=2, rfView=True, noise=None, **kwargs):
-    pto = max((timeoutSecs / 5), 30)
-    noise = kwargs.pop('noise', None)
-    parseResult = parseFile(node, csvPathname, key, key2=key2, timeoutSecs=pto, noise=noise)
-    return runRFOnly(node, parseResult, trees, timeoutSecs, retryDelaySecs, rfView=rfView, noise=noise, **kwargs)
