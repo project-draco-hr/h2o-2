@@ -4,7 +4,7 @@
   Host host=new Host(p._host[0],p._host[1],p._host[2]);
   String key=host.key() != null ? host.key() : "";
   String s="ssh-agent sh -c \"ssh-add " + key + "; ssh -l "+ host.user()+ " -A"+ Host.SSH_OPTS;
-  s+=" -L 54321:127.0.0.1:54321";
+  s+=" -L " + PORT + ":127.0.0.1:"+ PORT;
   s+=" " + host.address() + " '"+ SSH.command(p._java,p._node)+ "'\"";
   s=s.replace("\\","\\\\").replace("$","\\$");
   ArrayList<String> list=new ArrayList<String>();

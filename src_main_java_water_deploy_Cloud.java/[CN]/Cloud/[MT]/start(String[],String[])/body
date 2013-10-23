@@ -7,8 +7,10 @@
   if (!new File(jdk + "/jre/bin/java").exists())   throw new IllegalArgumentException("Please specify the JDK to rsync and run on");
   incls.add(jdk);
   File flatfile;
-  if (privateIPs.size() > 0)   flatfile=Utils.writeFile(Utils.join('\n',privateIPs));
- else   flatfile=Utils.writeFile(Utils.join('\n',publicIPs));
+  List<String> ips=privateIPs.size() > 0 ? privateIPs : publicIPs;
+  String s="";
+  for (  Object o : ips)   s+=(s.length() == 0 ? "" : '\n') + o.toString() + ":"+ PORT;
+  flatfile=Utils.writeFile(s);
   incls.add(flatfile.getAbsolutePath());
   master.rsync(incls,excls,false);
   ArrayList<String> list=new ArrayList<String>();
@@ -24,7 +26,7 @@
   p._incls.add(new File(jdk).getName());
   list.add(VM.write(p));
   list.addAll(Arrays.asList(args));
-  String[] java=Utils.add(java_args,NodeVM.class.getName());
+  String[] java=Utils.append(java_args,NodeVM.class.getName());
   SSHWatchdog r=new SSHWatchdog(master,java,list.toArray(new String[0]));
   r.inheritIO();
   r.start();
