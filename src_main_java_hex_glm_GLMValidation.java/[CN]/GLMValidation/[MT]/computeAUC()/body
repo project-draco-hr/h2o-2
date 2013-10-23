@@ -12,4 +12,11 @@
   }
   auc+=trapeziod_area(FPR_pre,0,TPR_pre,0);
   this.auc=auc;
+  if (_glm.family == Family.binomial) {
+    int best=0;
+    for (int i=1; i < _cms.length; ++i) {
+      if (Math.max(_cms[i].classErr(0),_cms[i].classErr(1)) < Math.max(_cms[best].classErr(0),_cms[best].classErr(1)))       best=i;
+    }
+    best_threshold=best * 0.01f;
+  }
 }
