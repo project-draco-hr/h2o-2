@@ -5,7 +5,7 @@
   Frame fr=ParseDataset2.parse(kdata,new Key[]{kraw});
   boolean standardize=true;
   Key kpca=Key.make("basicdata.pca");
-  new PCA("PCA on basic small dataset",kpca,fr,0.0,standardize);
+  new PCA("PCA on basic small dataset",kpca,fr,0.0,standardize).invoke();
   PCAModel model=DKV.get(kpca).get();
   UKV.remove(kdata);
   UKV.remove(kpca);
