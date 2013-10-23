@@ -1,5 +1,5 @@
 {
-  Matrix myGram=new Matrix(gram);
+  Matrix myGram=new Matrix(tsk._gram.getXX());
   SingularValueDecomposition mySVD=myGram.svd();
   double[] Sval=mySVD.getSingularValues();
   double[][] eigVec=mySVD.getV().getArray();
@@ -20,5 +20,5 @@
   Key dataKey=Key.make(input("source"));
   int ncomp=Math.min(getNumPC(sdev,tolerance),max_pc);
   PCAParams params=new PCAParams(max_pc,tolerance,standardize);
-  return new PCAModel(destination_key,dataKey,data,sdev,propVar,cumVar,eigVec,mySVD.rank(),ncomp,params);
+  return new PCAModel(destination_key,dataKey,data,tsk,sdev,propVar,cumVar,eigVec,mySVD.rank(),ncomp,params);
 }
