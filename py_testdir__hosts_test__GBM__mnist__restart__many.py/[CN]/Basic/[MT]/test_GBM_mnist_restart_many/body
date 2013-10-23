@@ -1,0 +1,24 @@
+def test_GBM_mnist_restart_many(self):
+    importFolderPath = 'mnist'
+    csvFilename = 'train.csv.gz'
+    timeoutSecs = 1800
+    trialStart = time.time()
+    for trial in range(10):
+        trainKey = (((csvFilename + '_') + str(trial)) + '.hex')
+        start = time.time()
+        parseResult = h2i.import_parse(bucket='smalldata', path=((importFolderPath + '/') + csvFilename), schema='put', hex_key=trainKey, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        params = {'destination_key': 'GBMKEY', 'learn_rate': 0.1, 'ntrees': 10, 'max_depth': 8, 'min_rows': 1, 'response': 784, }
+        kwargs = params.copy()
+        h2o.beta_features = True
+        timeoutSecs = 1800
+        GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+        h2o.beta_features = False
+        time.sleep(8)
+        h2j.cancelAllJobs()
+        h2o.check_sandbox_for_errors()
+        print ("Trial %s: GBM start didn't have any errors after 8 seconds. cancelled. Will delete all keys now." % trial)
+        if DO_DELETE_KEYS_AND_CAUSE_PROBLEM:
+            h2i.delete_keys_at_all_nodes()
