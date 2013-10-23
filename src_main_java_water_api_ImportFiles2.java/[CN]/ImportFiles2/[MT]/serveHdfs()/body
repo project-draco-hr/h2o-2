@@ -1,0 +1,18 @@
+{
+  if (isBareS3NBucketWithoutTrailingSlash(path)) {
+    path+="/";
+  }
+  Log.info("ImportHDFS processing (" + path + ")");
+  try {
+    PersistHdfs.addFolder(new Path(path),succ,fail);
+  }
+ catch (  IOException e) {
+    StringBuilder sb=new StringBuilder();
+    PrintWriter pw=new PrintWriter(Streams.writerForAppendable(sb));
+    e.printStackTrace(pw);
+    pw.flush();
+    Log.err(e);
+    return Response.error(sb.toString());
+  }
+  DKV.write_barrier();
+}
