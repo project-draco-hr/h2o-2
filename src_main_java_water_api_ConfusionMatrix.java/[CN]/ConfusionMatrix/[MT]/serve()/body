@@ -3,7 +3,10 @@
   try {
     if (vactual == null || vpredict == null)     throw new IllegalArgumentException("Missing actual or predict?");
     va=vactual.toEnum();
+    response_domain=va._domain;
     vp=vpredict.toEnum();
+    predicted_domain=vp._domain;
+    System.out.println("vp domain = " + Arrays.toString(predicted_domain));
     cm=new CM(va.domain().length,vp.domain().length).doAll(vactual,vpredict)._cm;
     return new Response(Response.Status.done,this,-1,-1,null);
   }
