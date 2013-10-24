@@ -14,6 +14,7 @@
   System.out.println(ast.toString(new StringBuilder(),0).toString());
   try {
     ast.exec(env);
+    env.postWrite();
   }
  catch (  RuntimeException t) {
     env.remove();

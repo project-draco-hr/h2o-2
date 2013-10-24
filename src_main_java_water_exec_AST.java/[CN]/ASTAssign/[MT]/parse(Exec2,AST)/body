@@ -10,6 +10,6 @@
   if (id._depth < E.lexical_depth()) {
     id=extend_local(E,eval._t,id._id);
   }
- else   if (!id._t.union(eval._t))   E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);
-  return new ASTAssign(id,eval);
+ else   if (!ast._t.union(eval._t))   E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);
+  return new ASTAssign(ast,eval);
 }

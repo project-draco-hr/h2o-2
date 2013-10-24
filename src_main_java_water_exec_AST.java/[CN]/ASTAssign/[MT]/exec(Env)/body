@@ -1,3 +1,19 @@
 {
+  _eval.exec(env);
+  if (_lhs instanceof ASTId) {
+    ASTId id=(ASTId)_lhs;
+    env.tos_into_slot(id._depth,id._num);
+    return;
+  }
+  ASTSlice slice=(ASTSlice)_lhs;
+  ASTId id=(ASTId)slice._ast;
+  if (slice._t == Type.DBL) {
+    double d=env.popDbl();
+    long row=(long)((ASTNum)slice._rows)._d;
+    int col=(int)((ASTNum)slice._cols)._d;
+    env.frId(id._depth,id._num).vecs()[col].set(row,d);
+    env.push(d);
+    return;
+  }
   throw H2O.unimpl();
 }
