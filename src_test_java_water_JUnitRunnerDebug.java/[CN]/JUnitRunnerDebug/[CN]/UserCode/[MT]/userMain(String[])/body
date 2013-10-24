@@ -11,9 +11,10 @@
   if (multi) {
     new NodeCL(("-ip 127.0.0.1 -port 54323 -flatfile " + flat).split(" ")).start();
     new NodeCL(("-ip 127.0.0.1 -port 54325 -flatfile " + flat).split(" ")).start();
+    TestUtil.stall_till_cloudsize(3);
   }
   List<Class> tests=new ArrayList<Class>();
-  tests.add(KMeans2Test.class);
+  tests=JUnitRunner.all();
   JUnitCore junit=new JUnitCore();
   junit.addListener(new LogListener());
   Result result=junit.run(tests.toArray(new Class[0]));

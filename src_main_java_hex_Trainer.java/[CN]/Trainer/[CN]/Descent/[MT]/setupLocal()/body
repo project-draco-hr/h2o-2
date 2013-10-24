@@ -3,7 +3,7 @@
   final boolean home=_key.home();
   Thread thread=new Thread(){
     @Override public void run(){
-      while (_job == null || Job.running(_job)) {
+      while (_job == null || !Job.cancelled(_job)) {
         if (!home)         _node.sync();
  else {
           _node._total=_node._trainer.items();

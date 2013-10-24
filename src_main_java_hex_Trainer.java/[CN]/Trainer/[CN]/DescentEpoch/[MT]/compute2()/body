@@ -1,5 +1,5 @@
 {
-  if ((_count < 0 || --_count > 0) && (_node._job == null || Job.running(_node._job))) {
+  if ((_count < 0 || --_count > 0) && (_node._job == null || !Job.cancelled(_node._job))) {
     for (    Chunk[] cs : _node._chunks) {
       DescentChunk task=new DescentChunk();
       task._node=_node;

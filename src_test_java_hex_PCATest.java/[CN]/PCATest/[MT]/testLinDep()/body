@@ -12,6 +12,7 @@
     for (int i=0; i < model.sdev().length; i++)     Assert.assertEquals(sdev_R[i],model.sdev()[i],threshold);
   }
   finally {
+    UKV.remove(kraw);
     UKV.remove(kdata);
     UKV.remove(kpca);
     if (model != null)     model.delete();
