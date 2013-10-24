@@ -7,8 +7,10 @@
   AST eval=parseCXExpr(E);
   if (eval == null)   E.throwErr("Missing RHS",x);
   ASTId id=(ASTId)ast2;
-  if (id._depth < E.lexical_depth()) {
+  if (id._depth > 0) {
     id=extend_local(E,eval._t,id._id);
+    if (ast2 != ast)     throw H2O.unimpl();
+ else     ast=id;
   }
  else   if (!ast._t.union(eval._t))   E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);
   return new ASTAssign(ast,eval);
