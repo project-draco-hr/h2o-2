@@ -1,12 +1,18 @@
 {
+  boolean standardize=true;
   Key kraw=Key.make("basicdata.raw");
   Key kdata=Key.make("basicdata.hex");
-  FVecTest.makeByteVec(kraw,"x1,x2,x3\n0,1.0,-120.4\n1,0.5,89.3\n2,0.3333333,291.0\n3,0.25,-2.5\n4,0.20,-2.5\n5,0.1666667,-123.4\n6,0.1428571,-0.1\n7,0.1250000,18.3");
-  Frame fr=ParseDataset2.parse(kdata,new Key[]{kraw});
-  boolean standardize=true;
   Key kpca=Key.make("basicdata.pca");
-  new PCA("PCA on basic small dataset",kpca,fr,0.0,standardize).invoke();
-  PCAModel model=DKV.get(kpca).get();
-  UKV.remove(kdata);
-  UKV.remove(kpca);
+  PCAModel model=null;
+  try {
+    FVecTest.makeByteVec(kraw,"x1,x2,x3\n0,1.0,-120.4\n1,0.5,89.3\n2,0.3333333,291.0\n3,0.25,-2.5\n4,0.20,-2.5\n5,0.1666667,-123.4\n6,0.1428571,-0.1\n7,0.1250000,18.3");
+    Frame fr=ParseDataset2.parse(kdata,new Key[]{kraw});
+    new PCA("PCA on basic small dataset",kpca,fr,0.0,standardize).invoke();
+    model=DKV.get(kpca).get();
+  }
+  finally {
+    UKV.remove(kdata);
+    UKV.remove(kpca);
+    if (model != null)     model.delete();
+  }
 }

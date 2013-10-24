@@ -1,13 +1,19 @@
 {
   Key kraw=Key.make("depdata.raw");
   Key kdata=Key.make("depdata.hex");
-  FVecTest.makeByteVec(kraw,"x1,x2\n0,0\n1,2\n2,4\n3,6\n4,8\n5,10");
-  Frame fr=ParseDataset2.parse(kdata,new Key[]{kraw});
   Key kpca=Key.make("depdata.pca");
-  new PCA("PCA on data with dependent cols",kpca,fr,0.0,true).invoke();
-  PCAModel model=DKV.get(kpca).get();
+  PCAModel model=null;
   double[] sdev_R={1.414214,0};
-  for (int i=0; i < model.sdev().length; i++)   Assert.assertEquals(sdev_R[i],model.sdev()[i],threshold);
-  UKV.remove(kdata);
-  UKV.remove(kpca);
+  try {
+    FVecTest.makeByteVec(kraw,"x1,x2\n0,0\n1,2\n2,4\n3,6\n4,8\n5,10");
+    Frame fr=ParseDataset2.parse(kdata,new Key[]{kraw});
+    new PCA("PCA on data with dependent cols",kpca,fr,0.0,true).invoke();
+    model=DKV.get(kpca).get();
+    for (int i=0; i < model.sdev().length; i++)     Assert.assertEquals(sdev_R[i],model.sdev()[i],threshold);
+  }
+  finally {
+    UKV.remove(kdata);
+    UKV.remove(kpca);
+    if (model != null)     model.delete();
+  }
 }
