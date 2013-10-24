@@ -18,9 +18,8 @@ def test_B_kmeans_benign(self):
         if h2o.beta_features:
             h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
             kmeans['destination_key'] = 'benign_k.hex'
-        h2o.verboseprint('kmeans result:', h2o.dump_json(kmeans))
         modelView = h2o.nodes[0].kmeans_model_view(model='benign_k.hex')
-        print 'KMeans2ModelView:', h2o.dump_json(modelView)
+        h2o.verboseprint('KMeans2ModelView:', h2o.dump_json(modelView))
         model = modelView['model']
         clusters = model['clusters']
         cluster_variances = model['cluster_variances']
