@@ -1,0 +1,12 @@
+{
+  ASTOp op=(ASTOp)env.popFun();
+  double d=env.popDbl();
+  Frame fr=env.popFrame();
+  if (d == 2 || d == -1) {
+    throw H2O.unimpl();
+  }
+ else   if (d == 1 || d == -2) {
+    throw H2O.unimpl();
+  }
+ else   throw new IllegalArgumentException("MARGIN limited to 1 (rows) or 2 (cols)");
+}
