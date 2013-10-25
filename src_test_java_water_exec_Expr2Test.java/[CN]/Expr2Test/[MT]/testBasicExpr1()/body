@@ -56,9 +56,6 @@
     checkStr("a=1;a=2;function(x){x=a;a=3}");
     checkStr("a=h.hex;function(x){x=a;a=3;nrow(x)*a}(a)");
     checkStr("function(fun){function(x){fun(x)*fun(x)}}(sgn)(-2)");
-    checkStr("ifelse(0,+,*)(1,2)");
-    checkStr("(0?+:*)(1,2)");
-    checkStr("(1? h.hex : (h.hex+1))[1,2]");
     checkStr("map()");
     checkStr("map(1)");
     checkStr("map(+,h.hex,1)");
@@ -72,6 +69,9 @@
     checkStr("h.hex[c(1,3,5),]");
     checkStr("h.hex[c(1,3,5),1] = h.hex[c(2,4,6),2]");
     checkStr("h.hex[c(1,3,5),1] = h.hex[c(2,4),2]");
+    checkStr("ifelse(0,+,*)(1,2)");
+    checkStr("(0?+:*)(1,2)");
+    checkStr("(1? h.hex : (h.hex+1))[1,2]");
   }
   finally {
     UKV.remove(dest);

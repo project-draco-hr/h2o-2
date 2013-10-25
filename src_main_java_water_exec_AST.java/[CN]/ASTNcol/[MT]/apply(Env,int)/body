@@ -1,3 +1,6 @@
 {
-  env.poppush(env.popFrame().numCols());
+  Frame fr=env.popFrame();
+  double d=fr.numCols();
+  env.subRef(fr);
+  env.poppush(d);
 }

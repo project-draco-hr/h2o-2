@@ -1,0 +1,8 @@
+{
+  if (op == null)   return null;
+  if (!(op instanceof ASTFunc))   return null;
+  ASTFunc fun=(ASTFunc)op;
+  if (fun._env != null)   fun._env.subRef(this);
+ else   System.out.println("Popping fcn object, never executed no environ capture");
+  return null;
+}
