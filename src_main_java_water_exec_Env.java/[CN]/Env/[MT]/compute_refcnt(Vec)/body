@@ -1,5 +1,6 @@
 {
-  int cnt=compute_refcnt0(vec);
-  for (int i=0; _fr[i] != null; i++)   if (_fr[i].find(vec) != -1)   cnt++;
+  int cnt=0;
+  for (int i=0; i < _sp; i++)   if (_fr[i] != null && _fr[i].find(vec) != -1)   cnt++;
+ else   if (_fun[i] != null && (_fun[i] instanceof ASTFunc))   cnt+=((ASTFunc)_fun[i])._env.compute_refcnt(vec);
   return cnt;
 }
