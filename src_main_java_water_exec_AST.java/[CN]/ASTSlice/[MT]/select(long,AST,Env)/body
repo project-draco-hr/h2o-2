@@ -1,2 +1,20 @@
 {
+  if (ast == null)   return null;
+  ast.exec(env);
+  long cols[];
+  if (!env.isFrame()) {
+    int col=(int)env.popDbl();
+    if (col > 0 && col > len)     throw new IllegalArgumentException("Trying to select column " + col + " but only "+ len+ " present.");
+    if (col < 0 && col < -len)     col=0;
+    if (col == 0)     return new long[0];
+    return new long[]{col};
+  }
+  Frame fr=env.popFrame();
+  try {
+    if (fr.numCols() > 1)     throw new IllegalArgumentException("Selector must be a single column: " + fr);
+    throw H2O.unimpl();
+  }
+  finally {
+    env.subRef(fr);
+  }
 }

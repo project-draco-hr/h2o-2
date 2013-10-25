@@ -4,7 +4,6 @@
     return;
   }
   Frame fr=env.popFrame();
-  env.pop();
   final ASTUniOp uni=this;
   Frame fr2=new MRTask2(){
     @Override public void map(    Chunk chks[],    NewChunk nchks[]){
@@ -17,5 +16,7 @@
     }
   }
 .doAll(fr.numCols(),fr)._outputFrame;
+  env.subRef(fr);
+  env.pop();
   env.push(fr.copyHeaders(fr2,null));
 }

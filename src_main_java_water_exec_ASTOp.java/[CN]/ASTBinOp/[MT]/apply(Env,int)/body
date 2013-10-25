@@ -9,7 +9,6 @@
     env.poppush(op(d0,d1));
     return;
   }
-  env.pop();
   final boolean lf=fr0 != null;
   final boolean rf=fr1 != null;
   final double fd0=d0;
@@ -43,5 +42,8 @@
     }
   }
 .doAll(ncols,fr)._outputFrame;
+  if (fr0 != null)   env.subRef(fr0);
+  if (fr1 != null)   env.subRef(fr1);
+  env.pop();
   env.push(fr.copyHeaders(fr2,null));
 }

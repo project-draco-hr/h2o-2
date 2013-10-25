@@ -1,5 +1,4 @@
 {
-  System.out.println(str);
   Env env=new Env();
   ArrayList<ASTId> global=new ArrayList<ASTId>();
   for (  Value v : H2O.values())   if (v.type() == TypeMap.FRAME) {
@@ -14,7 +13,6 @@
   env.push(0.0);
   int argcnt=global.size();
   AST ast=new Exec2(str,global).parse();
-  System.out.println(ast.toString(new StringBuilder(),0).toString());
   try {
     env.push(global.size() - argcnt);
     ast.exec(env);

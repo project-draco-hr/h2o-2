@@ -1,0 +1,8 @@
+{
+  Integer I=_refcnt.get(vec);
+  int cnt0=I == null ? 0 : I;
+  int cnt1=compute_refcnt(vec);
+  if (cnt0 == cnt1)   return true;
+  System.out.println("Refcnt is " + cnt0 + " but computed as "+ cnt1);
+  return false;
+}
