@@ -11,11 +11,20 @@
       t1=ta;
     }
     boolean ok=true;
-    for (int i=0; i < t0._ts.length; i++)     if (!t0._ts[i].union(t1._ts[i]))     ok=false;
-    if (t0._ts.length == t1._ts.length)     return ok;
-    Type varargs=t0._ts[t0._ts.length - 1];
-    if ((varargs._t & VARARGS) == 0)     return false;
-    for (int i=t0._ts.length; i < t1._ts.length; i++)     if (!varargs.union(t1._ts[i]))     ok=false;
+    int len=t0._ts.length;
+    Type varargs=null;
+    if (len < t1._ts.length) {
+      varargs=t0._ts[len - 1].find();
+      if ((varargs._t & VARARGS) != 0)       len--;
+ else       varargs=null;
+    }
+    for (int i=0; i < len; i++)     if (!t0._ts[i].union(t1._ts[i]))     ok=false;
+    if (len == t1._ts.length)     return ok;
+    if (varargs == null)     return false;
+    for (int i=len; i < t1._ts.length; i++) {
+      Type var=(varargs._t & (VARARGS - 1)) == DBLARY0 ? dblary() : varargs;
+      if (!var.union(t1._ts[i]))       ok=false;
+    }
     return ok;
   }
  else   if (tta == UNBOUND || (tta == DBLARY0 && tb.isDblAry())) {
