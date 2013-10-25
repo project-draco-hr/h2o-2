@@ -17,7 +17,7 @@
     propVar[i]=Sval[i] / totVar;
     cumVar[i]=i == 0 ? propVar[0] : cumVar[i - 1] + propVar[i];
   }
-  Key dataKey=Key.make(input("source"));
+  Key dataKey=input("source") == null ? null : Key.make(input("source"));
   int ncomp=Math.min(getNumPC(sdev,tolerance),max_pc);
   PCAParams params=new PCAParams(max_pc,tolerance,standardize);
   return new PCAModel(destination_key,dataKey,data,tsk,sdev,propVar,cumVar,eigVec,mySVD.rank(),ncomp,params);
