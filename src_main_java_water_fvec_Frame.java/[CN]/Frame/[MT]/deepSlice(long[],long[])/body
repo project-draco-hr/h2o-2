@@ -19,6 +19,5 @@
  else       j++;
     }
   }
-  Frame fr2=new DeepSlice(rows,c2).doAll(c2.length,this)._outputFrame;
-  return copyHeaders(fr2,c2);
+  return new DeepSlice(rows,c2).doAll(c2.length,this).outputFrame(names(c2),domains(c2));
 }
