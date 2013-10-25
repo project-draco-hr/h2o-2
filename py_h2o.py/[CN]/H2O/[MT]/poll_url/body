@@ -7,6 +7,8 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         else:
             raise Exception(("The response during polling should have 'redirect_url'. Don't see it: \n%s" % dump_json(response)))
     else:
+        if ('response' not in response):
+            raise Exception("'response' not in response. Maybe h2o.beta_features=True is needed?")
         url = self.__url(response['response']['redirect_request'])
         params = response['response']['redirect_request_args']
     if params:
