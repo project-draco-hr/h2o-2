@@ -9,7 +9,7 @@
  else   findClasses(new File(CLASSES),names);
   for (int i=0; i < names.size(); i++) {
     String n=names.get(i);
-    names.set(i,n.replace('\\','/').replace('/','.').substring(0,n.length() - 6));
+    names.set(i,Utils.className(n));
   }
   return names;
 }
