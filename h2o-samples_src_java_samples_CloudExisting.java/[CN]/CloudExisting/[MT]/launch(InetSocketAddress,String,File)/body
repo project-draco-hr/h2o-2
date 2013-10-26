@@ -1,0 +1,14 @@
+{
+  HttpClient client=new HttpClient();
+  String args="job_class=" + job + "&jars=";
+  for (  File f : jars) {
+    PostMethod post=new PostMethod("http://127.0.0.1:54321/Upload.json?key=" + f.getName());
+    Part[] parts={new FilePart(f.getName(),f)};
+    post.setRequestEntity(new MultipartRequestEntity(parts,post.getParams()));
+    if (200 != client.executeMethod(post))     throw new RuntimeException("Request failed: " + post.getStatusLine());
+    args+=f.getName() + ",";
+  }
+  String href=new LaunchJar().href();
+  GetMethod get=new GetMethod("http://127.0.0.1:54321" + href + ".json?"+ args);
+  if (200 != client.executeMethod(get))   throw new RuntimeException("Request failed: " + get.getStatusLine());
+}

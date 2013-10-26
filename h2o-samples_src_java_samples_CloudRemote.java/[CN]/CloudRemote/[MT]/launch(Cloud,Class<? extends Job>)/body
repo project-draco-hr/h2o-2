@@ -1,0 +1,9 @@
+{
+  cloud.clientRSyncIncludes.add("../smalldata");
+  cloud.clientRSyncIncludes.add("h2o-samples/target");
+  cloud.fannedRSyncIncludes.add("smalldata");
+  cloud.jdk="../libs/jdk";
+  String java="-ea -Xmx120G -Dh2o.debug";
+  String node="-mainClass " + UserCode.class.getName() + " "+ (job != null ? job.getName() : null);
+  cloud.start(java.split(" "),node.split(" "));
+}
