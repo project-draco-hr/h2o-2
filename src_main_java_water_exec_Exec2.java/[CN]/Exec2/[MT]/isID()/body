@@ -12,7 +12,13 @@
   }
   if (_x >= _buf.length)   return _str.substring(_x - 1,_x);
   char c2=_buf[_x];
-  if (isDigit(c2) || isLetter(c2) || isWS(c2)|| isReserved(c2))   return _str.substring(_x - 1,_x);
+  if (isDigit(c2) || isLetter(c2) || isWS(c2)|| isReserved(c2)) {
+    if (c == '=') {
+      _x--;
+      return null;
+    }
+    return _str.substring(_x - 1,_x);
+  }
   _x++;
   return _str.substring(_x - 2,_x);
 }
