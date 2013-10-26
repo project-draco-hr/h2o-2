@@ -9,6 +9,8 @@
   env.push(1.0);
   global.add(new ASTId(Type.DBL,"F",0,global.size()));
   env.push(0.0);
+  global.add(new ASTId(Type.DBL,"NA",0,global.size()));
+  env.push(Double.NaN);
   int argcnt=global.size();
   AST ast=new Exec2(str,global).parse();
   try {
