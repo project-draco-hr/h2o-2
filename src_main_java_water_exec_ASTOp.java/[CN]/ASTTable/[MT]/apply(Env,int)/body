@@ -1,0 +1,18 @@
+{
+  Frame fr=env.popFrame();
+  if (fr.vecs().length > 1)   throw new IllegalArgumentException("table does not apply to multiple cols.");
+  if (!fr.vecs()[0].isInt())   throw new IllegalArgumentException("table only applies to integer vector.");
+  int[] domain=new Vec.CollectDomain(fr.vecs()[0]).doAll(fr).domain();
+  long[] counts=new Tabularize(domain).doAll(fr)._counts;
+  AppendableVec v0=new AppendableVec(Vec.newKey());
+  NewChunk c0=new NewChunk(v0,0);
+  for (int i=0; i < domain.length; i++)   c0.addNum((double)domain[i]);
+  c0.close(0,null);
+  AppendableVec v1=new AppendableVec(Vec.newKey());
+  NewChunk c1=new NewChunk(v1,0);
+  for (int i=0; i < domain.length; i++)   c1.addNum((double)counts[i]);
+  c1.close(0,null);
+  env.subRef(fr);
+  env.pop();
+  env.push(new Frame(new String[]{"factor","count"},new Vec[]{v0.close(null),v1.close(null)}));
+}
