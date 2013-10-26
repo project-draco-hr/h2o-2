@@ -13,7 +13,10 @@
   try {
     if (fr.numCols() != 1)     throw new IllegalArgumentException("Selector must be a single column: " + fr);
     Vec vec=fr.anyVec();
-    if (fr.numRows() == len && vec.min() == 0 && vec.max() == 1 && vec.isInt())     return vec;
+    if (fr.numRows() == len && vec.min() == 0 && vec.max() == 1 && vec.isInt()) {
+      fr=null;
+      return vec;
+    }
     if (fr.numRows() > 10000)     throw H2O.unimpl();
     cols=MemoryManager.malloc8((int)fr.numRows());
     for (int i=0; i < cols.length; ++i) {

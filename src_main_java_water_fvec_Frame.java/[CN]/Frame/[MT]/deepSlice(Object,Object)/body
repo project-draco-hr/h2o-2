@@ -26,7 +26,13 @@
     return new DeepSlice(rows,c2).doAll(c2.length,this).outputFrame(names(c2),domains(c2));
   }
   Vec vrows=(Vec)orows;
-  Frame fr2=new Frame(this);
-  fr2.add("predicate",vrows);
-  return new DeepSelect(c2).doAll(c2.length,fr2).outputFrame(names(c2),domains(c2));
+  Vec[] vecs=new Vec[c2.length + 1];
+  String[] names=new String[c2.length + 1];
+  for (int i=0; i < c2.length; ++i) {
+    vecs[i]=_vecs[c2[i]];
+    names[i]=_names[c2[i]];
+  }
+  vecs[c2.length]=vrows;
+  names[c2.length]="predicate";
+  return new DeepSelect().doAll(c2.length,new Frame(names,vecs)).outputFrame(names(c2),domains(c2));
 }
