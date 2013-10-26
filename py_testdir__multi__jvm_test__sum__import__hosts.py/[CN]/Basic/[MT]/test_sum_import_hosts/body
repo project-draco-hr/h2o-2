@@ -5,7 +5,6 @@ def test_sum_import_hosts(self):
     else:
         csvFilenameAll = [('covtype20x.data', 'cA', 50, 20), ('covtype20x.data', 'cB', 50, 20)]
     csvFilenameList = csvFilenameAll
-    h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
     firstDone = False
     for (csvFilename, hex_key, timeoutSecs, resultMult) in csvFilenameList:
@@ -27,5 +26,5 @@ def test_sum_import_hosts(self):
         else:
             print '\n', colResultList0, '\n', colResultList
             compare = [(float(x) / resultMult) for x in colResultList]
-            print '\n', good, '\n', compare
-            self.assertEqual(good, compare, 'compare is not equal to good (first try * resultMult)')
+            for (i, (g, c)) in enumerate(zip(good, compare)):
+                self.assertEqual(g, c, ('i: %s compare: %s is not equal to good: %s (first try * resultMult). resultMult %s' % (i, c, g, resultMult)))
