@@ -11,13 +11,5 @@
     copyOver(_res);
   }
   closeLocal();
-  if (ns == (1L << H2O.CLOUD.size()) - 1) {
-    if (_noutputs > 0) {
-      Futures fs=new Futures();
-      Vec[] vecs=new Vec[_noutputs];
-      for (int i=0; i < _noutputs; ++i)       vecs[i]=_appendables[i].close(fs);
-      fs.blockForPending();
-    }
-    postGlobal();
-  }
+  if (ns == (1L << H2O.CLOUD.size()) - 1)   postGlobal();
 }
