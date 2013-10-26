@@ -7,7 +7,7 @@
   AST eval=parseCXExpr(E);
   if (eval == null)   E.throwErr("Missing RHS",x);
   ASTId id=(ASTId)ast2;
-  if (id._depth > 0) {
+  if (id._depth > 0 || (E.lexical_depth() == 0 && !ast._t.union(eval._t))) {
     id=extend_local(E,eval._t,id._id);
     if (ast2 != ast)     throw H2O.unimpl();
  else     ast=id;
