@@ -1,4 +1,6 @@
 {
+  if (ocols != null && !(ocols instanceof long[]))   throw H2O.unimpl();
+  long[] cols=(long[])ocols;
   int c2[]=null;
   if (cols == null) {
     c2=new int[numCols()];
@@ -19,5 +21,12 @@
  else       j++;
     }
   }
-  return new DeepSlice(rows,c2).doAll(c2.length,this).outputFrame(names(c2),domains(c2));
+  if (orows == null || orows instanceof long[]) {
+    long rows[]=(long[])orows;
+    return new DeepSlice(rows,c2).doAll(c2.length,this).outputFrame(names(c2),domains(c2));
+  }
+  Vec vrows=(Vec)orows;
+  Frame fr2=new Frame(this);
+  fr2.add("predicate",vrows);
+  return new DeepSelect(c2).doAll(c2.length,fr2).outputFrame(names(c2),domains(c2));
 }

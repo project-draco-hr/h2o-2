@@ -1,0 +1,15 @@
+{
+  Chunk pred=chks[0];
+  for (int i=0; i < _cols.length; i++) {
+    Chunk oc=chks[_cols[i]];
+    NewChunk nc=nchks[i];
+    int len=oc._len;
+    if (oc._vec.isInt()) {
+      for (int j=0; j < len; j++)       if (!pred.isNA0(j) && pred.at80(j) == 1)       if (oc.isNA0(j))       nc.addNA();
+ else       nc.addNum(oc.at80(j),0);
+    }
+ else {
+      for (int j=0; j < len; j++)       if (!pred.isNA0(j) && pred.at80(j) == 1)       nc.addNum(oc.at0(j));
+    }
+  }
+}
