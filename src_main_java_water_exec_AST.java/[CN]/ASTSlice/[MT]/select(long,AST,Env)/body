@@ -3,29 +3,21 @@
   ast.exec(env);
   long cols[];
   if (!env.isFrame()) {
-    int col=(int)env.popDbl();
+    int col=(int)env._d[env._sp - 1];
     if (col > 0 && col > len)     throw new IllegalArgumentException("Trying to select column " + col + " but only "+ len+ " present.");
     if (col < 0 && col < -len)     col=0;
     if (col == 0)     return new long[0];
     return new long[]{col};
   }
-  Frame fr=env.popFrame();
-  try {
-    if (fr.numCols() != 1)     throw new IllegalArgumentException("Selector must be a single column: " + fr);
-    Vec vec=fr.anyVec();
-    if (fr.numRows() == len && vec.min() == 0 && vec.max() == 1 && vec.isInt()) {
-      fr=null;
-      return vec;
-    }
-    if (fr.numRows() > 10000)     throw H2O.unimpl();
-    cols=MemoryManager.malloc8((int)fr.numRows());
-    for (int i=0; i < cols.length; ++i) {
-      if (vec.isNA(i))       throw new IllegalArgumentException("Can not use NA as index!");
-      cols[i]=vec.at8(i);
-    }
-    return cols;
+  Frame fr=env._fr[env._sp - 1];
+  if (fr.numCols() != 1)   throw new IllegalArgumentException("Selector must be a single column: " + fr);
+  Vec vec=fr.anyVec();
+  if (fr.numRows() == len && vec.min() >= 0 && vec.max() <= 1 && vec.isInt())   return fr;
+  if (fr.numRows() > 100000)   throw H2O.unimpl();
+  cols=MemoryManager.malloc8((int)fr.numRows());
+  for (int i=0; i < cols.length; ++i) {
+    if (vec.isNA(i))     throw new IllegalArgumentException("Can not use NA as index!");
+    cols[i]=vec.at8(i);
   }
-  finally {
-    env.subRef(fr);
-  }
+  return cols;
 }
