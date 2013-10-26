@@ -1,6 +1,11 @@
 {
   int x=E._x;
-  if (!E.peek('='))   return null;
+  if (!E.peek('=')) {
+    if (!(E.peek('<') && E.peek('-'))) {
+      E._x=x;
+      return null;
+    }
+  }
   AST ast2=ast;
   if ((ast instanceof ASTSlice))   ast2=((ASTSlice)ast)._ast;
   if (!(ast2 instanceof ASTId))   E.throwErr("Can only assign to ID (or slice)",x);
