@@ -34,7 +34,7 @@ def test_GBM_params_rand2(self):
         for trial in range(3):
             h2o.beta_features = True
             h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
-            params = {'response': 54, 'ignored_cols_by_name': '0,1,2,3,4', 'ntrees': 2, }
+            params = {'response': 54, 'ignored_cols_by_name': '0,1,2,3,4', 'ntrees': 2, 'validation': parseTestResult['destination_key'], }
             h2o_gbm.pickRandGbmParams(paramsDict, params)
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
@@ -60,20 +60,20 @@ def test_GBM_params_rand2(self):
                 h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
-            print 'This is crazy!'
-            gbmPredictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseTestResult['destination_key'], vactual=response, predict=predictKey, vpredict='predict')
-            cm = gbmPredictCMResult['cm']
-            pctWrong = h2o_gbm.pp_cm_summary(cm)
-            print 'Last line of this cm is really NAs, not CM'
-            print '\nTest\n==========\n'
-            print h2o_gbm.pp_cm(cm)
+            if DO_PREDICT_CM:
+                gbmPredictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseTestResult['destination_key'], vactual='predict', predict=predictKey, vpredict='predict')
+                cm = gbmPredictCMResult['cm']
+                pctWrong = h2o_gbm.pp_cm_summary(cm)
+                print 'Last line of this cm is really NAs, not CM'
+                print '\nTest\n==========\n'
+                print h2o_gbm.pp_cm(cm)
             if (('max_depth' in params) and params['max_depth']):
                 xList.append(params['max_depth'])
-                eList.append(pctWrong)
+                eList.append(pctWrongTrain)
                 fList.append(trainElapsed)
         h2o.beta_features = False
         xLabel = 'max_depth'
-        eLabel = 'pctWrong'
+        eLabel = 'pctWrongTrain'
         fLabel = 'trainElapsed'
         eListTitle = ''
         fListTitle = ''
