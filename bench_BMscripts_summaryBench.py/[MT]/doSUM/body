@@ -1,20 +1,21 @@
-def doKMeans(f, folderPath):
+def doSUM(f, folderPath):
     debug = False
     bench = 'bench'
     if debug:
-        print 'Debugging KMEANS'
+        print 'Doing SUM DEBUG'
         bench = 'bench/debug'
     date = '-'.join([str(x) for x in list(time.localtime())][0:3])
+    retryDelaySecs = 5
     overallWallStart = time.time()
     pre = ''
     if debug:
         pre = 'DEBUG'
-    kmeansbenchcsv = (((((('benchmarks/' + build) + '/') + date) + '/') + pre) + 'kmeansbench.csv')
-    if (not os.path.exists(kmeansbenchcsv)):
-        output = open(kmeansbenchcsv, 'w')
+    sumbenchcsv = (((((('benchmarks/' + build) + '/') + date) + '/') + pre) + 'summarybench.csv')
+    if (not os.path.exists(sumbenchcsv)):
+        output = open(sumbenchcsv, 'w')
         output.write((','.join(csv_header) + '\n'))
     else:
-        output = open(kmeansbenchcsv, 'a')
+        output = open(sumbenchcsv, 'a')
     csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
     try:
         java_heap_GB = h2o.nodes[0].java_heap_GB
@@ -24,23 +25,21 @@ def doKMeans(f, folderPath):
         else:
             csvPathname = (((importFolderPath + '/') + f) + '/*linked*')
         hex_key = (f + '.hex')
+        trainParseWallStart = time.time()
         hK = (folderPath + 'Header.csv')
         headerPathname = ((importFolderPath + '/') + hK)
         h2i.import_only(bucket='home-0xdiag-datasets', path=headerPathname)
         headerKey = h2i.find_key(hK)
-        trainParseWallStart = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=5, pollTimeoutSecs=7200, doSummary=False)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, header=1, header_from_file=headerKey, separator=44, timeoutSecs=7200, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=7200, doSummary=False)
         parseWallTime = (time.time() - trainParseWallStart)
         print 'Parsing training file took ', parseWallTime, ' seconds.'
         inspect = h2o.nodes[0].inspect(parseResult['destination_key'], timeoutSecs=7200)
         nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
-        row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, 'k': 6, 'max_iter': 100, 'init': 'Furthest', }
-        params = {'source_key': hex_key, 'k': 6, 'initialization': 'Furthest', 'max_iter': 100, 'seed': 1234567, 'normalize': 0, 'destination_key': (('KMeans(' + f) + ')'), }
-        kwargs = params.copy()
-        kmeansStart = time.time()
-        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=7200, **kwargs)
-        kmeansTime = (time.time() - kmeansStart)
-        row.update({'kmeansBuildTime': kmeansTime, })
+        row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
+        sumStart = time.time()
+        sumResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=7200)
+        sumTime = (time.time() - sumStart)
+        row.update({'summaryBuildTime': sumTime, })
         csvWrt.writerow(row)
     finally:
         output.close()
