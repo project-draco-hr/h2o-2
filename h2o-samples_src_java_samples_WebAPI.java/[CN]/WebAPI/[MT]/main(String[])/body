@@ -7,4 +7,5 @@
   JobsRes res=gson.fromJson(new InputStreamReader(get.getResponseBodyAsStream()),JobsRes.class);
   System.out.println("Running jobs:");
   for (  Job job : res.jobs)   System.out.println(job.description + " " + job.destination_key);
+  get.releaseConnection();
 }
