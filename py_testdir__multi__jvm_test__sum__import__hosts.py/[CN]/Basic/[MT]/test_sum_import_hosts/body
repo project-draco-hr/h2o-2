@@ -3,7 +3,7 @@ def test_sum_import_hosts(self):
     if localhost:
         csvFilenameAll = [('covtype.data', 'cA', 5, 1), ('covtype.data', 'cB', 5, 1), ('covtype.data', 'cC', 5, 1)]
     else:
-        csvFilenameAll = [('covtype20x.data', 'cA', 50, 20), ('covtype20x.data', 'cB', 50, 20)]
+        csvFilenameAll = [('covtype.data', 'cA', 50, 1), ('covtype20x.data', 'cB', 50, 20), ('covtype20x.data', 'cC', 50, 20)]
     csvFilenameList = csvFilenameAll
     lenNodes = len(h2o.nodes)
     firstDone = False
@@ -27,4 +27,4 @@ def test_sum_import_hosts(self):
             print '\n', colResultList0, '\n', colResultList
             compare = [(float(x) / resultMult) for x in colResultList]
             for (i, (g, c)) in enumerate(zip(good, compare)):
-                self.assertEqual(g, c, ('i: %s compare: %s is not equal to good: %s (first try * resultMult). resultMult %s' % (i, c, g, resultMult)))
+                self.assertEqual(g, c, ('i: %s compare: %s is not equal to good: %s . resultMult %s' % (i, c, g, resultMult)))
