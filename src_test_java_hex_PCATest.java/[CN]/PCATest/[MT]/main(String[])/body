@@ -8,5 +8,11 @@
   }
   H2O.waitForCloudSize(nnodes);
   System.out.println("Cloud formed");
-  runTests();
+  System.out.println("Running testBasic...");
+  new PCATest().testBasic();
+  System.out.println("Running testLinDep...");
+  new PCATest().testLinDep();
+  System.out.println("Running testArrests...");
+  new PCATest().testArrests();
+  System.out.println("DONE!!!");
 }

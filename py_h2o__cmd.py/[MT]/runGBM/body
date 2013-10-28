@@ -1,7 +1,7 @@
-def runGBM(node=None, parseResult=None, timeoutSecs=500, **kwargs):
+def runGBM(node=None, parseResult=None, timeoutSecs=500, noPoll=True, **kwargs):
     if (not parseResult):
         raise Exception('No parseResult for GBM')
     if (not node):
         node = h2o.nodes[0]
     data_key = parseResult['destination_key']
-    return node.gbm(data_key=data_key, timeoutSecs=timeoutSecs, **kwargs)
+    return node.gbm(data_key=data_key, timeoutSecs=timeoutSecs, noPoll=noPoll, **kwargs)

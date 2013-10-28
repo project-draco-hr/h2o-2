@@ -1,16 +1,19 @@
 {
   double[][] cs=clusters;
-  if (normalized && _normClust == null) {
-    cs=_normClust=normalize(clusters,chunks);
-    _subs=new double[chunks.length];
-    _muls=new double[chunks.length];
+  if (normalized && _normClust == null)   cs=_normClust=normalize(clusters,chunks);
+  if (_means == null) {
+    _means=new double[chunks.length];
+    for (int i=0; i < chunks.length; i++)     _means[i]=chunks[i]._vec.mean();
+  }
+  if (normalized && _mults == null) {
+    _mults=new double[chunks.length];
     for (int i=0; i < chunks.length; i++) {
-      _subs[i]=(float)chunks[i]._vec.mean();
       double sigma=chunks[i]._vec.sigma();
-      _muls[i]=normalize(sigma) ? 1 / sigma : 1;
+      _mults[i]=normalize(sigma) ? 1 / sigma : 1;
     }
   }
-  data(tmp,chunks,rowInChunk,_subs,_muls);
+  data(tmp,chunks,rowInChunk,_means,_mults);
+  Arrays.fill(preds,0);
   preds[closest(cs,tmp,new ClusterDist())._cluster]=1;
   return preds;
 }
