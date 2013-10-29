@@ -3,16 +3,11 @@
     path+="/";
   }
   Log.info("ImportHDFS processing (" + path + ")");
-  try {
-    PersistHdfs.addFolder(new Path(path),succ,fail);
-  }
- catch (  IOException e) {
-    StringBuilder sb=new StringBuilder();
-    PrintWriter pw=new PrintWriter(Streams.writerForAppendable(sb));
-    e.printStackTrace(pw);
-    pw.flush();
-    Log.err(e);
-    return Response.error(sb.toString());
-  }
+  ArrayList<String> succ=new ArrayList<String>();
+  ArrayList<String> fail=new ArrayList<String>();
+  PersistHdfs.addFolder2(new Path(path),succ,fail);
+  keys=succ.toArray(new String[succ.size()]);
+  files=keys;
+  fails=fail.toArray(new String[fail.size()]);
   DKV.write_barrier();
 }
