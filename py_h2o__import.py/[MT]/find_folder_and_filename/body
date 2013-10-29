@@ -1,4 +1,4 @@
-def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=False):
+def find_folder_and_filename(bucket, pathWithRegex, schema='put', returnFullPath=False):
     checkPath = True
     giveUpAndSearchLocally = False
     if ((bucket is not None) and re.match('/', pathWithRegex)):
@@ -19,11 +19,13 @@ def find_folder_and_filename(bucket, pathWithRegex, schema=None, returnFullPath=
         else:
             if os.environ.get('H2O_REMOTE_BUCKETS_ROOT'):
                 rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
+                print 'Found H2O_REMOTE_BUCKETS_ROOT:', rootPath
             else:
                 rootPath = h2o.nodes[0].h2o_remote_buckets_root
+                print 'Found h2o_nodes[0].h2o_remote_buckets_root:', rootPath
             bucketPath = os.path.join(rootPath, bucket)
             checkPath = False
-    elif (((not h2o.nodes[0].remoteH2O) or (schema == 'put')) and os.environ.get('H2O_BUCKETS_ROOT')):
+    elif os.environ.get('H2O_BUCKETS_ROOT'):
         rootPath = os.environ.get('H2O_BUCKETS_ROOT')
         print 'Using H2O_BUCKETS_ROOT environment variable:', rootPath
         if (not os.path.exists(rootPath)):
