@@ -37,6 +37,7 @@
       c.replaceClassName(renames);
       updated.add(c);
     }
+    HashSet<String> packages=new HashSet();
     ByteArrayOutputStream mem=new ByteArrayOutputStream();
     JarOutputStream jar=new JarOutputStream(mem);
     DataOutputStream bc=new DataOutputStream(jar);
@@ -44,8 +45,10 @@
       jar.putNextEntry(new JarEntry(c.getName().replace('.','/') + ".class"));
       c.toBytecode(bc);
       bc.flush();
+      packages.add(c.getPackageName());
     }
     jar.close();
+    weavePackages(packages.toArray(new String[0]));
     AddJar task=new AddJar();
     task._data=mem.toByteArray();
     task.invokeOnAllNodes();
