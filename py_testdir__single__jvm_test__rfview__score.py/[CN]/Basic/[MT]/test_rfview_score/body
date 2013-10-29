@@ -21,9 +21,12 @@ def test_rfview_score(self):
         kwargs.pop('ntree', None)
         rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
-        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
-        start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        if (('sampling_strategy' in kwargs) and (kwargs['sampling_strategy'] != 'STRATIFIED_LOCAL')):
+            check_err = True
+        else:
+            check_err = False
+        if check_err:
+            self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
         start = time.time()
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
@@ -31,9 +34,8 @@ def test_rfview_score(self):
         kwargs['iterative_cm'] = 0
         rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
-        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
-        start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        if check_err:
+            self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
         start = time.time()
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
@@ -41,9 +43,8 @@ def test_rfview_score(self):
         kwargs['iterative_cm'] = 1
         rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
-        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
-        start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        if check_err:
+            self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
         start = time.time()
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
@@ -52,9 +53,8 @@ def test_rfview_score(self):
         kwargs['class_weights'] = '1=1,2=2,3=3,4=4,5=5,6=6,7=7'
         rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
-        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
-        start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        if check_err:
+            self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
         start = time.time()
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         elapsed = (time.time() - start)
