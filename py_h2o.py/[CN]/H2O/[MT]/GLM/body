@@ -3,9 +3,12 @@ def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, p
     a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName=parentName, destination_key=destination_key, **kwargs)
     if noPoll:
         return a
-    if (a['response']['redirect_request'] != 'GLMProgressPage'):
+    if (not beta_features):
+        if (a['response']['redirect_request'] != 'GLMProgressPage'):
+            print dump_json(a)
+            raise Exception('H2O GLM redirect is not GLMProgressPage. GLM json response precedes.')
+    else:
         print dump_json(a)
-        raise Exception('H2O GLM redirect is not GLMProgressPage. GLM json response precedes.')
     if noPoll:
         return a
     a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)

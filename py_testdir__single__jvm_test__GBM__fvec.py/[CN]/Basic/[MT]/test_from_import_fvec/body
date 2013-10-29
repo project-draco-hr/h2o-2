@@ -1,0 +1,50 @@
+def test_from_import_fvec(self):
+    print 'Sets h2o.beta_features like -bf at command line'
+    print 'this will redirect import and parse to the 2 variants'
+    h2o.beta_features = True
+    importFolderPath = 'standard'
+    timeoutSecs = 500
+    csvFilenameAll = [('manyfiles-nflx-gz', 'file_1.dat.gz', 'C378')]
+    csvFilenameList = csvFilenameAll
+    for (importFolderPath, csvFilename, response) in csvFilenameList:
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=50)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=False, doSummary=False)
+        h2o.check_sandbox_for_errors()
+        if h2o.beta_features:
+            parseResult = {'destination_key': 'c.hex', }
+        print '\nparseResult', h2o.dump_json(parseResult)
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        h2o.check_sandbox_for_errors()
+        if (importFolderPath == 'manyfiles-nflx-gz'):
+            if EXEC_FVEC:
+                execExpr = 'c.hex=colSwap(c.hex,378,(c.hex[378]>15 ? 1 : 0))'
+                resultExec = h2o_cmd.runExec(expression=execExpr)
+            x = range(542)
+            xIgnore = []
+            for i in [4, 3, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, 378]:
+                x.remove(i)
+                xIgnore.append(i)
+            x = ','.join(map(str, x))
+
+            def colIt(x):
+                return ('C' + str(x))
+            xIgnore = ','.join(map(colIt, xIgnore))
+        else:
+            xIgnore = 0
+        params = {'destination_key': 'GBMKEY', 'ignored_cols_by_name': xIgnore, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': response, 'classification': 0, }
+        kwargs = params.copy()
+        h2o.beta_features = True
+        timeoutSecs = 1800
+        start = time.time()
+        GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=False, **kwargs)
+        time.sleep(2)
+        h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+        elapsed = (time.time() - start)
+        print 'GBM training completed in', elapsed, 'seconds.', ('%f pct. of timeout' % GBMResult['python_%timeout'])
+        print '\nGBMResult:', GBMResult
+        h2o.check_sandbox_for_errors()
+        if DELETE_KEYS:
+            h2i.delete_keys_from_import_result(pattern=csvFilename, importResult=importResult)
+        sys.stdout.write('.')
+        sys.stdout.flush()

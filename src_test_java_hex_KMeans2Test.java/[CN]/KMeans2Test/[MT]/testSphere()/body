@@ -1,0 +1,17 @@
+{
+  Key dest=Key.make("dest");
+  Frame frame=parseFrame(dest,"smalldata/syn_sphere3.csv");
+  KMeans2 algo=new KMeans2();
+  algo.source=frame;
+  algo.k=3;
+  algo.initialization=Initialization.Furthest;
+  algo.max_iter=100;
+  algo.seed=SEED;
+  Timer t=new Timer();
+  algo.invoke();
+  Log.debug(Sys.KMEAN,"ms= " + t);
+  KMeans2Model res=UKV.get(algo.destination_key);
+  Assert.assertEquals(algo.k,res.clusters.length);
+  UKV.remove(dest);
+  if (algo != null && algo.destination_key != null)   UKV.remove(algo.destination_key);
+}

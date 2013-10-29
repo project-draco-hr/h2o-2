@@ -1,0 +1,10 @@
+{
+  if (_domain != null)   return this.makeTransf(seq(0,_domain.length),_domain);
+ else {
+    int[] domain;
+    String[] sdomain=Utils.toStringMap(domain=new CollectDomain(this).doAll(this).domain());
+    int[] domMap=Utils.mapping(domain);
+    if (domain.length > MAX_ENUM_SIZE)     throw H2O.unimpl();
+    return this.makeTransf(domMap,sdomain);
+  }
+}

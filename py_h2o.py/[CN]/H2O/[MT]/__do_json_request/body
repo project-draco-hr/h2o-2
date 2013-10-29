@@ -1,4 +1,4 @@
-def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=None, cmd='get', extraComment=None, ignoreH2oError=False, noExtraErrorCheck=False, **kwargs):
+def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=None, returnFast=False, cmd='get', extraComment=None, ignoreH2oError=False, noExtraErrorCheck=False, **kwargs):
     if fullUrl:
         url = fullUrl
     else:
@@ -33,6 +33,8 @@ def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=N
     if ((not beta_features) and (not r.json())):
         raise Exception(('Maybe bad url? no r.json in __do_json_request in %s:' % inspect.stack()[1][3]))
     rjson = None
+    if returnFast:
+        return
     try:
         rjson = r.json()
     except:

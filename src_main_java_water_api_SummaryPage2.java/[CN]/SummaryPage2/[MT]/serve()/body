@@ -1,7 +1,9 @@
 {
   if (source == null)   return RequestServer._http404.serve();
-  if (cols == null)   cols=new int[Math.min(source.vecs().length,max_ncols)];
-  for (int i=0; i < cols.length; i++)   cols[i]=i;
+  if (cols == null) {
+    cols=new int[Math.min(source.vecs().length,max_ncols)];
+    for (int i=0; i < cols.length; i++)     cols[i]=i;
+  }
   names=new String[cols.length];
   means=new double[cols.length];
   Vec[] vecs=new Vec[cols.length];
@@ -12,9 +14,11 @@
   }
   Frame fr=new Frame(names,vecs);
   summaries=new SummaryTask2().doAll(fr)._summaries;
-  for (  Summary2 s2 : summaries) {
-    s2.percentileValue(0);
-    s2.computeMajorities();
+  if (summaries != null) {
+    for (    Summary2 s2 : summaries) {
+      s2.percentileValue(0);
+      s2.computeMajorities();
+    }
   }
   return new Response(Response.Status.done,this,-1,-1,null);
 }

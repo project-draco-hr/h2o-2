@@ -1,0 +1,24 @@
+{
+  double[] data=new double[]{1.2,5.6,3.7,0.6,0.1,2.6};
+  double[][] rows=new double[data.length][1];
+  for (int i=0; i < rows.length; i++)   rows[i][0]=data[i];
+  Frame frame=frame(new String[]{"C0"},rows);
+  KMeans2 algo=null;
+  try {
+    algo=new KMeans2();
+    algo.source=frame;
+    algo.k=2;
+    algo.initialization=Initialization.Furthest;
+    algo.max_iter=100;
+    algo.seed=SEED;
+    algo.invoke();
+    KMeans2Model res=UKV.get(algo.destination_key);
+    double[][] clusters=res.clusters;
+    Assert.assertEquals(1.125,clusters[0][0],0.000001);
+    Assert.assertEquals(4.65,clusters[1][0],0.000001);
+  }
+  finally {
+    frame.remove();
+    if (algo != null && algo.destination_key != null)     UKV.remove(algo.destination_key);
+  }
+}

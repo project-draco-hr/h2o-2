@@ -3,8 +3,12 @@
   AutoBuffer bits=va.getChunk(key);
   int cidx=(int)ValueArray.getChunkIndex(key);
   int rows=va.rpc(cidx);
-  NewChunk[] chunks=new NewChunk[_vecs.length];
-  for (int i=0; i < _vecs.length; ++i)   chunks[i]=new NewChunk(_vecs[i],cidx);
+  NewChunk[] chunks=new NewChunk[_keys.length];
+  _vecs=new AppendableVec[_keys.length];
+  for (int i=0; i < _keys.length; ++i) {
+    _vecs[i]=new AppendableVec(_keys[i]);
+    chunks[i]=new NewChunk(_vecs[i],cidx);
+  }
   for (int row=0; row < rows; row++) {
     for (int i=0; i < _vecs.length; i++) {
       ValueArray.Column c=va._cols[i];
@@ -21,5 +25,5 @@
       }
     }
   }
-  for (int i=0; i < _vecs.length; ++i)   chunks[i].close(cidx,null);
+  for (int i=0; i < chunks.length; ++i)   chunks[i].close(cidx,null);
 }
