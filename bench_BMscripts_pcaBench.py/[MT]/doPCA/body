@@ -41,6 +41,8 @@ def doPCA(f, folderPath):
         pcaStart = time.time()
         pcaResult = h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=7200, **kwargs)
         pcaTime = (time.time() - pcaStart)
+        cmd = (('cd ..; bash startloggers.sh ' + json) + ' stop_')
+        os.system(cmd)
         row.update({'pcaBuildTime': pcaTime, })
         csvWrt.writerow(row)
     finally:
