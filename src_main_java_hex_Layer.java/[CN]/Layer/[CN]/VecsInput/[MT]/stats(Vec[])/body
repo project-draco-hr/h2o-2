@@ -1,8 +1,8 @@
 {
   Stats stats=new Stats();
-  stats._units=_units;
+  stats._units=units;
   stats._categoricals=_categoricals;
-  stats.doAll(_vecs);
+  stats.doAll(vecs);
   for (int i=0; i < vecs.length; i++) {
     _subs[i]=(float)stats._means[i];
     double sigma=Math.sqrt(stats._sigms[i] / (stats._rows - 1));

@@ -3,7 +3,7 @@
   boolean multi=Boolean.parseBoolean(args[6]);
   if (multi)   TestUtil.stall_till_cloudsize(3);
   List<Class> tests=new ArrayList<Class>();
-  tests=JUnitRunner.all();
+  tests.add(hex.NeuralNetIrisTest.class);
   JUnitCore junit=new JUnitCore();
   junit.addListener(new LogListener());
   Result result=junit.run(tests.toArray(new Class[0]));

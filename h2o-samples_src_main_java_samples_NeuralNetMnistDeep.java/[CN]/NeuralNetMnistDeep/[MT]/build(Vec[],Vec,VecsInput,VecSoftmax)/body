@@ -1,0 +1,16 @@
+{
+  Layer[] ls=new Layer[5];
+  ls[0]=new VecsInput(data,inputStats);
+  for (int i=1; i < ls.length - 1; i++) {
+    ls[i]=new Tanh(500);
+    ls[i].rate=.05f;
+  }
+  ls[ls.length - 1]=new VecSoftmax(labels,outputStats);
+  ls[ls.length - 1].rate=.02f;
+  for (int i=0; i < ls.length; i++) {
+    ls[i].l2=.0001f;
+    ls[i].rateAnnealing=1 / 2e6f;
+    ls[i].init(ls,i);
+  }
+  return ls;
+}

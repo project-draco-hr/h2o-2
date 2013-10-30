@@ -1,0 +1,11 @@
+{
+  Trainer trainer=new Trainer.MapReduce(ls);
+  for (int i=0; i < ls.length; i++) {
+    System.out.println("Pre-training level " + i);
+    long time=System.nanoTime();
+    preTrain(ls,i,trainer);
+    System.out.println((int)((System.nanoTime() - time) / 1e6) + " ms");
+  }
+  trainer.start();
+  return trainer;
+}
