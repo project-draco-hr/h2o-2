@@ -1,0 +1,21 @@
+{
+  String name=source.getPath().substring(root.getPath().length()).replace("\\","/");
+  if (name.startsWith("/"))   name=name.substring(1);
+  if (source.isDirectory()) {
+    if (!name.isEmpty()) {
+      if (!name.endsWith("/"))       name+="/";
+      JarEntry entry=new JarEntry(name);
+      entry.setTime(source.lastModified());
+      target.putNextEntry(entry);
+      target.closeEntry();
+    }
+    for (    File child : source.listFiles())     add(root,child,target);
+  }
+ else {
+    JarEntry entry=new JarEntry(name);
+    entry.setTime(source.lastModified());
+    target.putNextEntry(entry);
+    Utils.readFile(source,target);
+    target.closeEntry();
+  }
+}
