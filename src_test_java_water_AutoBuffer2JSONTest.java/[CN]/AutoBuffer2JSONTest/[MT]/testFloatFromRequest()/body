@@ -1,0 +1,9 @@
+{
+  JsonObject o=new JsonObject();
+  o.addProperty("f1",Float.NaN);
+  o.addProperty("f2",Float.POSITIVE_INFINITY);
+  o.addProperty("f3",Float.NEGATIVE_INFINITY);
+  o.addProperty("f4",3.141527f);
+  o=JsonUtil.escape(o);
+  Assert.assertEquals("{\"f1\":\"NaN\",\"f2\":\"Infinity\",\"f3\":\"-Infinity\",\"f4\":3.141527}",o.toString());
+}

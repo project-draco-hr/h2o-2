@@ -5,11 +5,11 @@
     try {
       String[] t1=determineTokens(l1,separators[i]);
       String[] t2=determineTokens(l2,separators[i]);
-      if (t1.length != t2.length)       continue;
+      if (t1.length == 0 || t1.length != t2.length)       continue;
       return separators[i];
     }
  catch (    Exception e) {
     }
   }
-  return (byte)' ';
+  return AUTO_SEP;
 }

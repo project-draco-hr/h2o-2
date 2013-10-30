@@ -1,0 +1,29 @@
+{
+  Vec vthis=DKV.get(_key).get();
+  if (vthis._naCnt == -2)   throw new IllegalArgumentException("Cannot ask for roll-up stats while the vector is being actively written.");
+  if (vthis._naCnt >= 0) {
+    _min=vthis._min;
+    _max=vthis._max;
+    _mean=vthis._mean;
+    _sigma=vthis._sigma;
+    _size=vthis._size;
+    _isInt=vthis._isInt;
+    _naCnt=vthis._naCnt;
+    if (cc != null)     H2O.submitTask(new H2OCountedCompleter(){
+      @Override public byte priority(){
+        return cc.priority();
+      }
+      @Override public void compute2(){
+        cc.tryComplete();
+      }
+    }
+);
+    return;
+  }
+  RollupStats rs=new RollupStats();
+  if (cc != null) {
+    rs.setCompleter(cc);
+    rs.dfork(this);
+  }
+ else   rs.doAll(this);
+}

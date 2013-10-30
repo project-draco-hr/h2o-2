@@ -15,7 +15,6 @@ def upload_file(self, f, progress=None):
             except IOError as e:
                 if (e.errno == errno.ENOENT):
                     sftp.put(f, dest, callback=progress)
-                    print '\n{0:.3f} seconds'.format((time.time() - start))
         finally:
             sftp.close()
         self.uploaded[f] = dest

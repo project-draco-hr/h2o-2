@@ -7,36 +7,35 @@ def simpleCheckPCA(self, pca, **kwargs):
             print '\nwarning:', w
             if re.search(x, w):
                 raise Exception(w)
-    destination_key = pca['destination_key']
-    pcaResult = h2o_cmd.runInspect(key=destination_key, view=100)
+    pcaResult = pca
     h2o.verboseprint('pcaResult Inspect:', h2o.dump_json(pcaResult))
     print 'Checking sdevs...'
-    sdevs = pcaResult['PCAModel']['stdDev']
+    sdevs = pcaResult['pca_model']['sdev']
     h2o.verboseprint('pca sdevs:', h2o.dump_json(sdevs))
-    for (PC, s) in sdevs.iteritems():
+    for (PC, s) in enumerate(sdevs):
         if math.isnan(s):
             raise Exception(('sdev %s is NaN: %s' % (PC, s)))
     print 'Checking propVars...',
-    propVars = pcaResult['PCAModel']['propVar']
+    propVars = pcaResult['pca_model']['propVar']
     h2o.verboseprint('pca propVars:', h2o.dump_json(propVars))
-    for (PC, propvar) in propVars.iteritems():
+    for (PC, propvar) in enumerate(propVars):
         if math.isnan(propvar):
             raise Exception('propVar %s is NaN: %s', (PC, propvar))
     print ' Good!'
-    print 'Checking eigenvectors...',
-    pcs = pcaResult['PCAModel']['eigenvectors']
-    h2o.verboseprint('pca eigenvectors:', h2o.dump_json(pcs))
+    print 'Checking eigVec...',
+    pcs = pcaResult['pca_model']['eigVec']
+    h2o.verboseprint('pca eigVec:', h2o.dump_json(pcs))
     for (i, s) in enumerate(pcs):
-        for (r, e) in s.iteritems():
+        for (r, e) in enumerate(s):
             if math.isnan(e):
                 raise Exception('Component %s has NaN: %s eigenvector %s', (i, e, s))
     print ' Good!'
     print 'How many components did we get? (after enum col dropping): %s', len(pcs)
     import operator
-    print 'Just look at the sort for the first row in pca eigenvectors'
+    print 'Just look at the sort for the first row in pca eigVec'
     i = 0
     s = pcs[i]
-    sorted_s = sorted(s.iteritems(), key=(lambda t: abs(t[1])))
+    sorted_s = sorted(enumerate(s), key=(lambda t: abs(t[1])))
     num = min(10, len(s))
     print ('\n%s First (smallest) %d. sorted_pcs[0:9]: %s\n' % (i, num, sorted_s[0:(num - 1)]))
     print "The first entry from the eigenvector, should have the largest std dev, because it's sorted"

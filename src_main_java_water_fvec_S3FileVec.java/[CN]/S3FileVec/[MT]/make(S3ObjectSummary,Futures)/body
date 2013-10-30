@@ -1,0 +1,9 @@
+{
+  Key k=Key.make("s3://" + obj.getBucketName() + "/"+ obj.getKey());
+  long size=obj.getSize();
+  Key k2=Vec.newKey(k);
+  Vec v=new S3FileVec(k2,size);
+  DKV.put(k2,v,fs);
+  UKV.put(k,new Frame(new String[]{"0"},new Vec[]{v}));
+  return k;
+}

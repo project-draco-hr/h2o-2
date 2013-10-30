@@ -10,12 +10,13 @@ def test_KMeans_params_rand2(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         paramDict = define_params(SEED)
+        h2o.beta_features = True
         for trial in range(3):
-            params = {'k': 1, }
+            params = {'k': 'c(1,2,3)', }
             h2o_kmeans.pickRandKMeansParams(paramDict, params)
             kwargs = params.copy()
             start = time.time()
-            kmeans = h2o_cmd.runKMeansGrid(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
             elapsed = (time.time() - start)
             print 'kmeans grid end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)

@@ -7,7 +7,7 @@
     String s, current="";
     while ((s=getNextToken(st)) != null) {
       if (",".equals(s)) {
-        values=Utils.add(values,current);
+        values=Utils.append(values,current);
         current="";
       }
  else       if ("'".equals(s)) {
@@ -18,7 +18,7 @@
       }
  else       current+=s;
     }
-    if (current.length() > 0)     values=Utils.add(values,current);
+    if (current.length() > 0)     values=Utils.append(values,current);
   }
  else   values=new String[]{value};
   return values;

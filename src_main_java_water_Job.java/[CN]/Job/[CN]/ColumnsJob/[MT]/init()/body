@@ -1,21 +1,29 @@
 {
   super.init();
-  if ((cols != null && cols.length > 0) && (ignored_cols_by_name != null && ignored_cols_by_name.length > 0))   throw new IllegalArgumentException("Arguments 'cols' and 'ignored_cols_by_name' are exclusive");
-  if ((cols != null && cols.length > 0) && (ignored_cols_by_name != null && ignored_cols_by_name.length > 0))   throw new IllegalArgumentException("Arguments 'cols' and 'ignored_cols_by_name' are exclusive");
-  if (cols == null || cols.length == 0) {
+  int specified=0;
+  if (!isEmpty(cols)) {
+    specified++;
+  }
+  if (!isEmpty(ignored_cols)) {
+    specified++;
+  }
+  if (!isEmpty(ignored_cols_by_name)) {
+    specified++;
+  }
+  if (specified > 1)   throw new IllegalArgumentException("Arguments 'cols', 'ignored_cols_by_name', and 'ignored_cols' are exclusive");
+  if (isEmpty(cols)) {
     cols=new int[source.vecs().length];
     for (int i=0; i < cols.length; i++)     cols[i]=i;
   }
-  int length=cols.length;
-  for (int g=0; ignored_cols_by_name != null && g < ignored_cols_by_name.length; g++) {
-    for (int i=0; i < cols.length; i++) {
-      if (cols[i] == ignored_cols_by_name[g]) {
-        length--;
-        System.arraycopy(cols,i + 1,cols,i,length - i);
-        break;
-      }
-    }
+ else {
+    if (!checkIdx(source,cols))     throw new IllegalArgumentException("Argument 'cols' specified invalid column!");
   }
-  if (length != cols.length)   cols=ArrayUtils.subarray(cols,0,length);
+  if (!isEmpty(ignored_cols) || !isEmpty(ignored_cols_by_name)) {
+    int[] icols=!isEmpty(ignored_cols) ? ignored_cols : ignored_cols_by_name;
+    if (!checkIdx(source,icols))     throw new IllegalArgumentException("Argument '" + (!isEmpty(ignored_cols) ? "ignored_cols" : "ignored_cols_by_name") + "' specified invalid column!");
+    cols=difference(cols,icols);
+    ignored_cols=icols;
+    ignored_cols_by_name=icols;
+  }
   if (cols.length == 0)   throw new IllegalArgumentException("No column selected");
 }

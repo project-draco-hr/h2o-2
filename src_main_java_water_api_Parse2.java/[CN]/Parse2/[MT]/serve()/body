@@ -6,6 +6,7 @@
   try {
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
     job_key=ParseDataset2.forkParseDataset(destination_key,keys,setup).job_key;
+    redirect_url=Progress2.jsonUrl(job_key,destination_key);
     if (_blocking.value())     Job.waitUntilJobEnded(job_key);
     return Progress2.redirect(this,job_key,destination_key);
   }

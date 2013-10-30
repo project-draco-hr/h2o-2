@@ -1,0 +1,13 @@
+{
+  if (isBareS3NBucketWithoutTrailingSlash(path)) {
+    path+="/";
+  }
+  Log.info("ImportHDFS processing (" + path + ")");
+  ArrayList<String> succ=new ArrayList<String>();
+  ArrayList<String> fail=new ArrayList<String>();
+  PersistHdfs.addFolder2(new Path(path),succ,fail);
+  keys=succ.toArray(new String[succ.size()]);
+  files=keys;
+  fails=fail.toArray(new String[fail.size()]);
+  DKV.write_barrier();
+}

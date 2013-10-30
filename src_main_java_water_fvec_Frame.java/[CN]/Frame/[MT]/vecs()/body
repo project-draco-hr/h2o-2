@@ -7,6 +7,9 @@
     final Key k=_keys[i];
     H2OCountedCompleter t;
     H2O.submitTask(t=new H2OCountedCompleter(){
+      @Override public byte priority(){
+        return H2O.MIN_HI_PRIORITY;
+      }
       @Override public void compute2(){
         vecs[ii]=DKV.get(k).get();
         tryComplete();
