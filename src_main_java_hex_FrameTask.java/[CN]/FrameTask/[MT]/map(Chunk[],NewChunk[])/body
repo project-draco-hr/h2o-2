@@ -16,8 +16,14 @@
     }
     final int n=_hasResponse ? chunks.length - 1 : chunks.length;
     for (; i < n; ++i)     nums[i - _cats]=(chunks[i].at0(r) - _normSub[i - _cats]) * _normMul[i - _cats];
-    if (!_hasResponse)     processRow(nums,ncats,cats);
- else     processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r));
+    if (outputs != null && outputs.length > 0) {
+      if (!_hasResponse)       processRow(nums,ncats,cats,outputs);
+ else       processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r),outputs);
+    }
+ else {
+      if (!_hasResponse)       processRow(nums,ncats,cats);
+ else       processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r));
+    }
   }
   chunkDone();
 }

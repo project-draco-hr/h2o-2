@@ -27,7 +27,7 @@ def test_GBM_manyfiles_train_test(self):
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
         execExpr = ('%s=colSwap(%s,378,(%s[378]>15 ? 1 : 0))' % (trainKey, trainKey, trainKey))
-        resultExec = h2o_cmd.runExec(expression=execExpr)
+        resultExec = h2o_cmd.runExec(expression=execExpr, timeoutSecs=60)
         if h2o.beta_features:
             print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
