@@ -4,7 +4,12 @@
   }
  else {
     try {
-      return new FileInputStream(new File("lib/resources" + uri));
+      File resources=new File("lib/resources");
+      if (!resources.exists()) {
+        String h2oClasses=getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        resources=new File(h2oClasses + "/../../lib/resources");
+      }
+      return new FileInputStream(new File(resources,uri));
     }
  catch (    FileNotFoundException e) {
       Log.err(e);
