@@ -40,6 +40,8 @@ def doKMeans(f, folderPath):
         kmeansStart = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=7200, **kwargs)
         kmeansTime = (time.time() - kmeansStart)
+        cmd = (('cd ..; bash startloggers.sh ' + json) + ' stop_')
+        os.system(cmd)
         row.update({'kmeansBuildTime': kmeansTime, })
         csvWrt.writerow(row)
     finally:
