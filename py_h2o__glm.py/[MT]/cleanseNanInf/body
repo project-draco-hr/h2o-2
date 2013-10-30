@@ -1,0 +1,5 @@
+def cleanseNanInf(value):
+    translate = {'-Infinity': (- float('Inf')), 'Infinity': float('Inf'), 'NaN': float('NaN'), }
+    if (str(value) in translate):
+        value = translate[str(value)]
+    return value
