@@ -1,16 +1,18 @@
-import os, sys, time, csv, re, requests
+import os, sys, time, csv, re, requests, string
 sys.path.append('../py/')
 sys.path.extend(['.', '..'])
 import h2o_cmd, h2o, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_rf, h2o_jobs
 from pprint import pprint
-csv_header = ('h2o_build', 'java_heap_GB', 'dataset', 'nTrainRows', 'nTestRows', 'nCols', 'nPredictors', 'trainParseWallTime', 'nfolds', 'glm2BuildTime', 'testParseWallTime', 'nIterations', 'AUC', 'AIC', 'AverageError')
+csv_header = ('h2o_build', 'nMachines', 'nJVMs', 'Xmx/JVM', 'dataset', 'nTrainRows', 'nTestRows', 'nCols', 'nPredictors', 'trainParseWallTime', 'nfolds', 'family', 'glm2BuildTime', 'testParseWallTime', 'nIterations', 'AUC', 'AIC', 'AverageError')
 files = {'Airlines': {'train': ('AirlinesTrain1x', 'AirlinesTrain10x', 'AirlinesTrain100x'), 'test': 'AirlinesTest', }, 'AllBedrooms': {'train': ('AllBedroomsTrain1x', 'AllBedroomsTrain10x', 'AllBedroomsTrain100x'), 'test': 'AllBedroomsTest', }, }
 build = ''
 debug = False
+json = ''
 if (__name__ == '__main__'):
     dat = sys.argv.pop((-1))
     debug = sys.argv.pop((-1))
     build = sys.argv.pop((-1))
+    json = sys.argv[(-1)].split('/')[(-1)]
     h2o.parse_our_args()
     h2o_hosts.build_cloud_with_hosts()
     fp = ('Airlines' if ('Air' in dat) else 'AllBedrooms')
@@ -27,6 +29,7 @@ if (__name__ == '__main__'):
         fs = files['AllBedrooms']['train'][1]
     if (dat == 'AllB100x'):
         fs = files['AllBedrooms']['train'][2]
+    debug = False
     bench = 'bench'
     if debug:
         bench = 'bench/debug'

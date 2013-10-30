@@ -39,7 +39,8 @@ def doGLM2(f, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, row
         h2o.beta_features = True
         inspect_train = h2o.nodes[0].inspect(hex_key, timeoutSecs=7200)
         inspect_test = h2o.nodes[0].inspect(testFilehex, timeoutSecs=7200)
-        row.update({'h2o_build': build, 'java_heap_GB': java_heap_GB, 'dataset': f, 'nTrainRows': inspect_train['numRows'], 'nTestRows': inspect_test['numRows'], 'nCols': inspect_train['numCols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, })
+        nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
+        row.update({'h2o_build': build, 'nMachines': nMachines, 'Xmx/JVM': java_heap_GB, 'nJVMs': len(h2o.nodes), 'dataset': f, 'nTrainRows': inspect_train['numRows'], 'nTestRows': inspect_test['numRows'], 'nCols': inspect_train['numCols'], 'trainParseWallTime': parseWallTime, 'nfolds': nfolds, 'family': family, })
         params = {'vresponse': y, 'ignored_cols': x, 'family': family, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'destination_key': (('GLM(' + f) + ')'), }
         h2o.beta_features = True
         kwargs = params.copy()
@@ -47,7 +48,9 @@ def doGLM2(f, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, row
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=1800, noPoll=True, **kwargs)
         h2o_jobs.pollWaitJobs(timeoutSecs=7200, pollTimeoutSecs=7200, retryDelaySecs=5)
         glmTime = (time.time() - glmStart)
-        row.update({'glmBuildTime': glmTime, })
+        cmd = (('cd ..; bash startloggers.sh ' + json) + ' stop_')
+        os.system(cmd)
+        row.update({'glm2BuildTime': glmTime, })
         glmView = h2o_cmd.runGLMView(modelKey=(('GLM(' + f) + ')'), timeoutSecs=380)
         row.update({'AIC': glmView['glm_model']['validation']['aic'], 'nIterations': glmView['glm_model']['iteration'], 'nPredictors': len(glmView['glm_model']['beta']), })
         if (family == 'binomial'):
@@ -55,9 +58,9 @@ def doGLM2(f, folderPath, family, lambda_, alpha, nfolds, y, x, testFilehex, row
             r = requests.get(url).text
             p1 = re.compile('threshold[:<>/a-z]*[0-9]\\.[0-9]*')
             p2 = re.compile('[0-9]\\.[0-9]*')
-            best = int((float(p2.search(p1.search(text).group()).group()) * 100))
+            best = int((float(p2.search(p1.search(r).group()).group()) * 100))
             best_cm = glmView['glm_model']['validation']['_cms'][best]['_arr']
-            avg_err = ((best_cm[0][1] + best_cm[1][0]) / sum([i for sublist in best_cm for i in sublist]))
+            avg_err = ((1.0 * ((best_cm[0][1] + best_cm[1][0]) + 0.0)) / sum([i for sublist in best_cm for i in sublist]))
             row.update({'AUC': glmView['glm_model']['validation']['auc'], 'AverageError': avg_err, })
         else:
             row.update({'AUC': 'NA', 'AverageError': glmView['glm_model']['validation']['avg_err'], })

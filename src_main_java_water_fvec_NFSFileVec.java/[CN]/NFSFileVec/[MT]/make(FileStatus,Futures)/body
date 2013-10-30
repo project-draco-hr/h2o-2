@@ -1,0 +1,6 @@
+{
+  long size=f.getLen();
+  Key k=Vec.newKey(Key.make(f.getPath().toString()));
+  DKV.put(k,new NFSFileVec(k,size),fs);
+  return k;
+}
