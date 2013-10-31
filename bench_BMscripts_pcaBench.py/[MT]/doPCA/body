@@ -1,20 +1,20 @@
-def doSUM(f, folderPath):
+def doPCA(f, folderPath):
     debug = False
     bench = 'bench'
     if debug:
-        print 'Doing SUM DEBUG'
+        print 'Doing PCA DEBUG'
         bench = 'bench/debug'
     retryDelaySecs = 5
     overallWallStart = time.time()
     pre = ''
     if debug:
         pre = 'DEBUG'
-    sumbenchcsv = (((('benchmarks/' + build) + '/') + pre) + 'summarybench.csv')
-    if (not os.path.exists(sumbenchcsv)):
-        output = open(sumbenchcsv, 'w')
+    pcabenchcsv = (((('benchmarks/' + build) + '/') + pre) + 'pcabench.csv')
+    if (not os.path.exists(pcabenchcsv)):
+        output = open(pcabenchcsv, 'w')
         output.write((','.join(csv_header) + '\n'))
     else:
-        output = open(sumbenchcsv, 'a')
+        output = open(pcabenchcsv, 'a')
     csvWrt = csv.DictWriter(output, fieldnames=csv_header, restval=None, dialect='excel', extrasaction='ignore', delimiter=',')
     try:
         java_heap_GB = h2o.nodes[0].java_heap_GB
@@ -35,12 +35,15 @@ def doSUM(f, folderPath):
         inspect = h2o.nodes[0].inspect(parseResult['destination_key'], timeoutSecs=7200)
         nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
         row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
-        sumStart = time.time()
-        sumResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=7200)
-        sumTime = (time.time() - sumStart)
+        params = {'destination_key': 'python_PCA_key', 'tolerance': 0.0, 'standardize': 1, }
+        kwargs = params.copy()
+        pcaStart = time.time()
+        pcaResult = h2o_cmd.runPCA(parseResult=parseResult, noPoll=True, timeoutSecs=7200, **kwargs)
+        h2j.pollWaitJobs(timeoutSecs=4800, pollTimeoutSecs=4800, retryDelaySecs=2)
+        pcaTime = (time.time() - pcaStart)
         cmd = (('bash startloggers.sh ' + json) + ' stop_')
         os.system(cmd)
-        row.update({'summaryBuildTime': sumTime, })
+        row.update({'pcaBuildTime': pcaTime, })
         csvWrt.writerow(row)
     finally:
         output.close()
