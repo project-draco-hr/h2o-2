@@ -12,6 +12,9 @@ def simpleCheckGBMScore(self, glmScore, family='gaussian', allowFailWarning=Fals
                 else:
                     raise Exception(w)
     validation = glmScore['validation']
+    validation['err'] = h2o_util.cleanseInfNan(validation['err'])
+    validation['nullDev'] = h2o_util.cleanseInfNan(validation['nullDev'])
+    validation['resDev'] = h2o_util.cleanseInfNan(validation['resDev'])
     print ('%15s %s' % ('err:\t', validation['err']))
     print ('%15s %s' % ('nullDev:\t', validation['nullDev']))
     print ('%15s %s' % ('resDev:\t', validation['resDev']))
