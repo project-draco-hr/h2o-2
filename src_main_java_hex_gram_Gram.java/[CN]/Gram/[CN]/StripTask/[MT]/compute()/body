@@ -1,0 +1,16 @@
+{
+  final int sparseN=_diag.length;
+  if ((_i1 - _i0) * (_j1 - _j0) > Gram.MIN_TSKSZ) {
+    int mid=(_i0 + _i1) >>> 1;
+    setPendingCount(1);
+    new StripTask(this,_xx,mid,_i1,_j0,_j1).fork();
+    new StripTask(this,_xx,_i0,mid,_j0,_j1).compute();
+  }
+ else {
+    for (int j=_j0; j < _j1; j++) {
+      int k=j - sparseN;
+      for (int i=_i0; i < _i1; i++)       for (int s=_j0; s < j; s++)       _xx[i][j]-=_xx[k][s] * _xx[i][s];
+    }
+    tryComplete();
+  }
+}

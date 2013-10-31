@@ -1,0 +1,15 @@
+{
+  int N=_xx.length;
+  if (_j1 > (_j0 + 1) && ((_j1 - _j0) * (N - (_j0 + _j1) >>> 1) > Gram.MIN_TSKSZ)) {
+    int mid=(_j0 + _j1) >>> 1;
+    setPendingCount(0);
+    new TriangleTask2(this,_xx,_s0,_s1,mid,_j1).compute();
+    new TriangleTask2(this,_xx,_s0,_s1,_j0,mid).compute();
+  }
+ else {
+    for (int j=_j0; j < _j1; j++) {
+      for (int i=j; i < N; i++)       for (int s=_s0; s < _s1; s++)       _xx[i][j]-=_xx[j][s] * _xx[i][s];
+    }
+    tryComplete();
+  }
+}
