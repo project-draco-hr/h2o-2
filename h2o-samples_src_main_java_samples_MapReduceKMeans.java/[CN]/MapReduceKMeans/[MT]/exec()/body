@@ -14,17 +14,17 @@
   }
   for (int i=0; i < 10; i++) {
     KMeans task=new KMeans();
-    task._clusters=clusters;
+    task.clusters=clusters;
     task.doAll(frame);
     for (int c=0; c < clusters.length; c++) {
-      if (task._counts[c] > 0) {
+      if (task.counts[c] > 0) {
         for (int v=0; v < frame.vecs().length; v++) {
-          double value=task._sums[c][v] / task._counts[c];
+          double value=task.sums[c][v] / task.counts[c];
           clusters[c][v]=value;
         }
       }
     }
-    System.out.println("Error is " + task._error);
+    System.out.println("Error is " + task.error);
   }
   System.out.println("Clusters:");
   DecimalFormat df=new DecimalFormat("#.00");
