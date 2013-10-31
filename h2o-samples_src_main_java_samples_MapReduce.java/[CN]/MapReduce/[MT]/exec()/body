@@ -1,0 +1,9 @@
+{
+  File file=new File(TestUtil.smalldata,"/iris/iris.csv");
+  Key fkey=NFSFileVec.make(file);
+  Frame frame=ParseDataset2.parse(Key.make(file.getName()),new Key[]{fkey});
+  Sum sum=new Sum();
+  sum.myInput="blah";
+  sum.doAll(frame.vecs()[1]);
+  System.out.println("Sum is " + sum._value);
+}
