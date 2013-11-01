@@ -4,12 +4,11 @@ def doKMeans(f, folderPath):
     if debug:
         print 'Debugging KMEANS'
         bench = 'bench/debug'
-    date = '-'.join([str(x) for x in list(time.localtime())][0:3])
     overallWallStart = time.time()
     pre = ''
     if debug:
         pre = 'DEBUG'
-    kmeansbenchcsv = (((((('benchmarks/' + build) + '/') + date) + '/') + pre) + 'kmeansbench.csv')
+    kmeansbenchcsv = (((('benchmarks/' + build) + '/') + pre) + 'kmeansbench.csv')
     if (not os.path.exists(kmeansbenchcsv)):
         output = open(kmeansbenchcsv, 'w')
         output.write((','.join(csv_header) + '\n'))
@@ -34,12 +33,14 @@ def doKMeans(f, folderPath):
         print 'Parsing training file took ', parseWallTime, ' seconds.'
         inspect = h2o.nodes[0].inspect(parseResult['destination_key'], timeoutSecs=7200)
         nMachines = (1 if (len(h2o_hosts.hosts) is 0) else len(h2o_hosts.hosts))
-        row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, }
+        row = {'h2o_build': build, 'nMachines': nMachines, 'nJVMs': len(h2o.nodes), 'Xmx/JVM': java_heap_GB, 'dataset': f, 'nRows': inspect['num_rows'], 'nCols': inspect['num_cols'], 'parseWallTime': parseWallTime, 'k': 6, 'max_iter': 100, 'init': 'Furthest', }
         params = {'source_key': hex_key, 'k': 6, 'initialization': 'Furthest', 'max_iter': 100, 'seed': 1234567, 'normalize': 0, 'destination_key': (('KMeans(' + f) + ')'), }
         kwargs = params.copy()
         kmeansStart = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=7200, **kwargs)
         kmeansTime = (time.time() - kmeansStart)
+        cmd = (('bash startloggers.sh ' + json) + ' stop_')
+        os.system(cmd)
         row.update({'kmeansBuildTime': kmeansTime, })
         csvWrt.writerow(row)
     finally:

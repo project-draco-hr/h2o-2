@@ -1,2 +1,24 @@
 {
+  final int n=_names.length;
+  int[] nums=MemoryManager.malloc4(n);
+  int[] cats=MemoryManager.malloc4(n);
+  int nnums=0, ncats=0;
+  for (int i=0; i < n; ++i) {
+    if (_domains[i] != null)     cats[ncats++]=i;
+ else     nums[nnums++]=i;
+  }
+  for (int i=0; i < ncats; ++i)   for (int j=i + 1; j < ncats; ++j)   if (_domains[cats[i]].length < _domains[cats[j]].length) {
+    int x=cats[i];
+    cats[i]=cats[j];
+    cats[j]=x;
+  }
+  int k=0;
+  String[] names=new String[sdev.length];
+  for (int i=0; i < ncats; ++i) {
+    for (int j=1; j < _domains[cats[i]].length; ++j)     names[k++]=_names[cats[i]] + "." + _domains[cats[i]][j];
+  }
+  for (int i=0; i < nnums; ++i) {
+    names[k++]=_names[nums[i]];
+  }
+  return names;
 }

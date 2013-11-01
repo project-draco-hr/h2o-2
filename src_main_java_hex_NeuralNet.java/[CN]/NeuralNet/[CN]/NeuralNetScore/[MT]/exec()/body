@@ -1,6 +1,6 @@
 {
   Frame[] frs=model.adapt(source,false);
-  int classes=model.layers[model.layers.length - 1]._units;
+  int classes=model.layers[model.layers.length - 1].units;
   confusion_matrix=new long[classes][classes];
   Error error=eval(model.layers,frs[0].vecs(),response,max_rows,confusion_matrix);
   classification_error=error.Value;

@@ -8,8 +8,8 @@ def test_parse_multi_header_rand(self):
         l = random.randint(1, 64)
         headerName = ''.join([random.choice(allowedLetters) for _ in range(l)])
         headerChoices.append(headerName)
-    tryList = [(1, 5, 9, 'cA', 60, 0), (1, 5, 25, 'cA', 60, 0), (10, 100, 500, 'cA', 60, 0)]
-    for trial in range(10):
+    tryList = [(3, 5, 9, 'cA', 60, 0), (3, 5, 25, 'cA', 60, 0), (10, 100, 500, 'cA', 60, 0)]
+    for trial in range(20):
         (fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader) = random.choice(tryList)
         print fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader
         print 'Wait while', fileNum, 'synthetic files are created in', SYNDATASETS_DIR
@@ -17,7 +17,7 @@ def test_parse_multi_header_rand(self):
         totalCols = (colCount + 1)
         totalDataRows = 0
         totalHeaderRows = 0
-        HEADER_HAS_HDR_ROW = random.randint(0, 1)
+        HEADER_HAS_HDR_ROW = 1
         DATA_HAS_HDR_ROW = random.randint(0, 1)
         PARSE_PATTERN_INCLUDES_HEADER = random.randint(0, 1)
         DATA_FIRST_IS_COMMENT = 0
