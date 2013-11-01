@@ -7,7 +7,7 @@
   Layer[] ls=build(train,trainLabels,null,null);
   Trainer trainer=startTraining(ls);
   long start=System.nanoTime();
-  for (; ; ) {
+  while (!cancelled()) {
     try {
       Thread.sleep(2000);
     }
