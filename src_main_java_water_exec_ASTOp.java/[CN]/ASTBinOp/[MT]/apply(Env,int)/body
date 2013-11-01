@@ -1,9 +1,9 @@
 {
   Frame fr0=null, fr1=null;
   double d0=0, d1=0;
-  if (env.isFrame())   fr1=env.popFrame();
+  if (env.isAry())   fr1=env.popAry();
  else   d1=env.popDbl();
-  if (env.isFrame())   fr0=env.popFrame();
+  if (env.isAry())   fr0=env.popAry();
  else   d0=env.popDbl();
   if (fr0 == null && fr1 == null) {
     env.poppush(op(d0,d1));

@@ -1,5 +1,5 @@
 {
-  Frame fr=env.popFrame();
+  Frame fr=env.popAry();
   if (fr.vecs().length > 1)   throw new IllegalArgumentException("table does not apply to multiple cols.");
   if (!fr.vecs()[0].isInt())   throw new IllegalArgumentException("table only applies to integer vector.");
   int[] domain=new Vec.CollectDomain(fr.vecs()[0]).doAll(fr).domain();

@@ -1,2 +1,25 @@
 {
+  int len=0;
+  Type fun=null;
+  for (int i=0; i < _ts.length; i++) {
+    Type t=_ts[i].find();
+    if (t._t == FCN0 && fun != null) {
+      t.union(fun);
+      t=fun=t.find();
+    }
+ else {
+      if (t._t == FCN0)       fun=t;
+      if (t._t != DBL0 && !dupType(len,t))       _ts[len++]=t;
+    }
+  }
+  if (len == 0) {
+    _t=BOUND;
+    return (_ts[0]=DBL);
+  }
+  if (len == 1) {
+    _t=BOUND;
+    return _ts[0];
+  }
+  if (len < _ts.length)   _ts=Arrays.copyOf(_ts,len);
+  return this;
 }

@@ -3,6 +3,6 @@
     env.push_slot(_depth,_num);
     return;
   }
-  ASTFunc fun=env.funScope(_depth);
-  fun._env.push_slot(_depth - 1,_num,env);
+  ASTFunc fcn=env.fcnScope(_depth);
+  fcn._env.push_slot(_depth - 1,_num,env);
 }

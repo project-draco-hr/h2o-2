@@ -2,7 +2,7 @@
   double sum=0;
   for (int i=0; i < argcnt - 1; i++)   if (env.isDbl())   sum+=env.popDbl();
  else {
-    Frame fr=env.popFrame();
+    Frame fr=env.popAry();
     sum+=new Sum().doAll(fr)._d;
     env.subRef(fr);
   }

@@ -1,9 +1,9 @@
 {
-  if (!env.isFrame()) {
+  if (!env.isAry()) {
     env.poppush(op(env.popDbl()));
     return;
   }
-  Frame fr=env.popFrame();
+  Frame fr=env.popAry();
   final ASTUniOp uni=this;
   Frame fr2=new MRTask2(){
     @Override public void map(    Chunk chks[],    NewChunk nchks[]){

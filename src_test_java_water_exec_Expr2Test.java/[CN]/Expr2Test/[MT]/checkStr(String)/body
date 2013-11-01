@@ -3,8 +3,8 @@
   try {
     System.out.println(s);
     env=Exec2.exec(s);
-    if (env.isFrame()) {
-      Frame res=env.popFrame();
+    if (env.isAry()) {
+      Frame res=env.popAry();
       System.out.println(res.toStringAll());
       env.subRef(res);
     }
