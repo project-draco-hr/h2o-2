@@ -1,5 +1,5 @@
 {
-  Frame fr=subset(source,model._names);
+  Frame fr=model.adapt(source,true,false)[0];
   int nfeat=model._names.length;
   Vec[] vecs=Arrays.copyOf(fr.vecs(),nfeat + num_pc);
   for (int i=0; i < num_pc; i++)   vecs[nfeat + i]=vecs[0].makeZero();

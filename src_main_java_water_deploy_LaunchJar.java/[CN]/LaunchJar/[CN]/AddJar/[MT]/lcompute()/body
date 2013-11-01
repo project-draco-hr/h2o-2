@@ -1,0 +1,11 @@
+{
+  try {
+    File file=File.createTempFile("h2o",".jar");
+    Utils.writeFileAndClose(file,new ByteArrayInputStream(_data));
+    Boot._init.addExternalJars(file);
+    tryComplete();
+  }
+ catch (  Exception ex) {
+    throw new RuntimeException(ex);
+  }
+}

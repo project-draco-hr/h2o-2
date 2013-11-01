@@ -3,6 +3,6 @@ sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i, h2o_browse as h2b, h2o_util
 print 'Data rows in header_from_file are ignored unless that file was part of the parse pattern'
 print 'Tab in header is not auto-detected separator. comma and space are'
-paramsDict = {'separator': ['\t', ',', ' '], 'hdr_separator': [' ', ',', 'same'], 'header': [None, 0, 1], 'header_from_file': ['header'], }
+paramsDict = {'separator': ['\t', ',', ' ', str(unichr(1))], 'preview': [1], 'hdr_separator': [' ', ',', 'same'], 'header': [None, 0, 1], 'header_from_file': ['header'], }
 if (__name__ == '__main__'):
     h2o.unit_main()

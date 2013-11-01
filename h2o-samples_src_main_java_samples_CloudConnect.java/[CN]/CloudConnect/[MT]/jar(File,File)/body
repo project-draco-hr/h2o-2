@@ -1,0 +1,10 @@
+{
+  try {
+    JarOutputStream stream=new JarOutputStream(new FileOutputStream(jar));
+    for (    File folder : folders)     add(folder,folder,stream);
+    stream.close();
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+}
