@@ -1,9 +1,9 @@
 {
-  String samples=Utils.folder(CloudRemote.class).getPath() + "/../../../";
-  cloud.clientRSyncIncludes.add(samples + "target");
-  cloud.clientRSyncIncludes.add(samples + "../target");
-  cloud.clientRSyncIncludes.add(samples + "../lib");
-  cloud.clientRSyncIncludes.add(samples + "../smalldata");
+  String h2o=VM.h2oFolder().getPath();
+  cloud.clientRSyncIncludes.add(h2o + "/target");
+  cloud.clientRSyncIncludes.add(h2o + "/h2o-samples/target");
+  cloud.clientRSyncIncludes.add(h2o + "/lib");
+  cloud.clientRSyncIncludes.add(h2o + "/smalldata");
   cloud.fannedRSyncIncludes.add("target");
   cloud.fannedRSyncIncludes.add("lib");
   cloud.fannedRSyncIncludes.add("smalldata");
