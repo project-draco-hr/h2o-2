@@ -3,7 +3,7 @@
   reChunk(vecs);
   final Vec[] train=new Vec[vecs.length - 1];
   System.arraycopy(vecs,0,train,0,train.length);
-  final Vec trainResp=vecs[vecs.length - 1];
+  final Vec trainResp=classification ? vecs[vecs.length - 1].toEnum() : vecs[vecs.length - 1];
   final Layer[] ls=new Layer[hidden.length + 2];
   ls[0]=new VecsInput(train,null);
   for (int i=0; i < hidden.length; i++) {

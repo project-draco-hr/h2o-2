@@ -1,11 +1,10 @@
 {
   super(selfKey,dataKey,fr);
-  layers=new Layer[ls.length];
-  for (int y=0; y < ls.length; y++)   layers[y]=ls[y].clone();
-  ws=new float[ls.length][];
-  bs=new float[ls.length][];
+  layers=ls;
+  weights=new float[ls.length][];
+  biases=new float[ls.length][];
   for (int y=1; y < layers.length; y++) {
-    ws[y]=layers[y]._w;
-    bs[y]=layers[y]._b;
+    weights[y]=layers[y]._w;
+    biases[y]=layers[y]._b;
   }
 }
