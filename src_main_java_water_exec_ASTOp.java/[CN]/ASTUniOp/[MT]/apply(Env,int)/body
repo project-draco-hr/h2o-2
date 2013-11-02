@@ -4,6 +4,7 @@
     return;
   }
   Frame fr=env.popAry();
+  String skey=env.key();
   final ASTUniOp uni=this;
   Frame fr2=new MRTask2(){
     @Override public void map(    Chunk chks[],    NewChunk nchks[]){
@@ -16,7 +17,7 @@
     }
   }
 .doAll(fr.numCols(),fr).outputFrame(fr._names,fr.domains());
-  env.subRef(fr);
+  env.subRef(fr,skey);
   env.pop();
   env.push(fr2);
 }

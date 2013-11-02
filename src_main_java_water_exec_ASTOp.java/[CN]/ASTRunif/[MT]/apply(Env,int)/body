@@ -1,5 +1,6 @@
 {
   Frame fr=env.popAry();
+  String skey=env.key();
   long[] espc=fr.anyVec().espc();
   long rem=fr.numRows();
   if (rem > espc[espc.length - 1])   throw H2O.unimpl();
@@ -23,7 +24,7 @@
     }
   }
 .doAll(randVec);
-  env.subRef(fr);
+  env.subRef(fr,skey);
   env.pop();
   env.push(new Frame(new String[]{"rnd"},new Vec[]{randVec}));
 }

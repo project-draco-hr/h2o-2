@@ -3,8 +3,10 @@
   double d0=0, d1=0;
   if (env.isAry())   fr1=env.popAry();
  else   d1=env.popDbl();
+  String k0=env.key();
   if (env.isAry())   fr0=env.popAry();
  else   d0=env.popDbl();
+  String k1=env.key();
   if (fr0 == null && fr1 == null) {
     env.poppush(op(d0,d1));
     return;
@@ -42,8 +44,8 @@
     }
   }
 .doAll(ncols,fr).outputFrame(fr._names,fr.domains());
-  if (fr0 != null)   env.subRef(fr0);
-  if (fr1 != null)   env.subRef(fr1);
+  if (fr0 != null)   env.subRef(fr0,k0);
+  if (fr1 != null)   env.subRef(fr1,k1);
   env.pop();
   env.push(fr2);
 }

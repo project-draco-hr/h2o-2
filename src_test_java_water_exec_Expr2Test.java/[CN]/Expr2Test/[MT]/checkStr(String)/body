@@ -5,8 +5,9 @@
     env=Exec2.exec(s);
     if (env.isAry()) {
       Frame res=env.popAry();
+      String skey=env.key();
       System.out.println(res.toStringAll());
-      env.subRef(res);
+      env.subRef(res,skey);
     }
  else {
       System.out.println(env.resultString());

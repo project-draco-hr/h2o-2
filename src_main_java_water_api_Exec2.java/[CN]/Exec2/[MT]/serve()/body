@@ -8,6 +8,7 @@
     }
  else     if (env.isAry()) {
       Frame fr=env.popAry();
+      String skey=env.key();
       num_rows=fr.numRows();
       num_cols=fr.numCols();
       cols=new Inspect2.ColSummary[num_cols];
@@ -16,7 +17,7 @@
       String[] fs=fr.toStringHdr(sb);
       for (int i=0; i < Math.min(6,fr.numRows()); i++)       fr.toString(sb,fs,i);
       result=sb.toString();
-      env.subRef(fr);
+      env.subRef(fr,skey);
     }
  else     if (env.isFcn()) {
       ASTOp op=env.popFcn();

@@ -3,8 +3,9 @@
   for (int i=0; i < argcnt - 1; i++)   if (env.isDbl())   sum+=env.popDbl();
  else {
     Frame fr=env.popAry();
+    String skey=env.key();
     sum+=new Sum().doAll(fr)._d;
-    env.subRef(fr);
+    env.subRef(fr,skey);
   }
   env.poppush(sum);
 }

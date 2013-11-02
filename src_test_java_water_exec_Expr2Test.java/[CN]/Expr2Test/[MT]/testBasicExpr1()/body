@@ -1,7 +1,7 @@
 {
   Key dest=Key.make("h.hex");
   try {
-    File file=TestUtil.find_test_file("smalldata/cars.csv");
+    File file=TestUtil.find_test_file("smalldata/iris/iris_wheader.csv");
     Key fkey=NFSFileVec.make(file);
     ParseDataset2.parse(dest,new Key[]{fkey});
     UKV.remove(fkey);
@@ -83,6 +83,7 @@
     checkStr("(0 ? + : *)(1,2)");
     checkStr("(1? h.hex : (h.hex+1))[1,2]");
     checkStr("apply(h.hex,2,function(x){total=sum(ifelse(is.na(x),0,x)); rcnt=nrow(x)-sum(is.na(x)); mean=total / rcnt; ifelse(is.na(x),mean,x)})");
+    checkStr("a=0;x=0");
   }
   finally {
     UKV.remove(dest);
