@@ -1,25 +1,3 @@
 {
-  String frnames[]=fr.names();
-  Vec frvecs[]=fr.vecs();
-  int map[][]=adapt(frnames,fr.domains(),exact);
-  int cmap[]=map[_names.length - 1];
-  Vec vecs[]=new Vec[_names.length - 1];
-  int avCnt=0;
-  for (int c=0; c < cmap.length; c++)   if (map[c] != null)   avCnt++;
-  Vec[] avecs=new Vec[avCnt];
-  String[] anames=new String[avCnt];
-  avCnt=0;
-  for (int c=0; c < cmap.length; c++) {
-    int d=cmap[c];
-    if (d == -1)     throw H2O.unimpl();
- else     if (map[c] == null) {
-      vecs[c]=frvecs[d];
-    }
- else {
-      vecs[c]=avecs[avCnt]=frvecs[d].makeTransf(map[c]);
-      anames[avCnt]=frnames[d];
-      avCnt++;
-    }
-  }
-  return new Frame[]{new Frame(Arrays.copyOf(_names,_names.length - 1),vecs),new Frame(anames,avecs)};
+  return adapt(fr,exact,true);
 }

@@ -1,0 +1,9 @@
+{
+  H2O.main(args);
+  Log.info("java: " + System.getProperty("java.home"));
+  TestUtil.stall_till_cloudsize(H2O.STATIC_H2OS.size());
+  System.out.println("Cloud is up, local port 54321 forwarded");
+  System.out.println("Go to http://127.0.0.1:54321");
+  Class<Job> job=args[2].equals("null") ? null : (Class)Class.forName(args[2]);
+  if (job != null)   job.newInstance().fork();
+}

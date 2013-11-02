@@ -32,9 +32,6 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         elif (len(xval_models) != 10):
             raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
     print 'GLMModel/validations'
-    validations['err'] = cleanseNanInf(validations['err'])
-    validations['nullDev'] = cleanseNanInf(validations['nullDev'])
-    validations['resDev'] = cleanseNanInf(validations['resDev'])
     print ('%15s %s' % ('err:\t', validations['err']))
     print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
     print ('%15s %s' % ('resDev:\t', validations['resDev']))

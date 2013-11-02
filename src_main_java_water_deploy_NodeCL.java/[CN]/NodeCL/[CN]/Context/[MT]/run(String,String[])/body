@@ -1,0 +1,6 @@
+{
+  Field parent=ClassLoader.class.getDeclaredField("parent");
+  parent.setAccessible(true);
+  parent.set(Boot._init,Thread.currentThread().getContextClassLoader());
+  Boot.main(Class.forName(main),args);
+}
