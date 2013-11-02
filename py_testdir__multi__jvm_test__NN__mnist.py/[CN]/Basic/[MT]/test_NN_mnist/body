@@ -32,7 +32,9 @@ def test_NN_mnist(self):
         print 'neural net end on ', trainCsvFilename, 'took', (time.time() - start), 'seconds'
         print 'nnFirstResult:', h2o.dump_json(nnFirstResult)
         job_key = nnFirstResult['job_key']
-        params = {'job_id': job_key, 'destination_key': modelKey, }
+        params = {'job_key': job_key, 'destination_key': modelKey, }
+        a = h2o.nodes[0].completion_redirect(jsonRequest='2/NeuralNetProgress.json', params=params)
+        print 'NeuralNetProgress:', h2o.dump_json(a)
         if DO_SCORE:
             kwargs = {'max_rows': 0, 'response': 0, 'ignored_cols': None, 'cols': None, 'classification': 1, 'destination_key': 'b.hex', 'model': modelKey, }
             nnScoreFirstResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
