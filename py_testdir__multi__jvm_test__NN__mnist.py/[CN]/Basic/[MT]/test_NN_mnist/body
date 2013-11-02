@@ -1,5 +1,5 @@
-def test_GLM_mnist(self):
-    csvFilelist = [('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600)]
+def test_NN_mnist(self):
+    csvFilelist = [('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600), ('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600), ('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600), ('mnist_training.csv.gz', 'mnist_testing.csv.gz', 600)]
     trial = 0
     for (trainCsvFilename, testCsvFilename, timeoutSecs) in csvFilelist:
         trialStart = time.time()
@@ -34,7 +34,6 @@ def test_GLM_mnist(self):
         job_key = nnFirstResult['job_key']
         params = {'job_id': job_key, 'destination_key': modelKey, }
         if DO_SCORE:
-            time.sleep(3600)
             kwargs = {'max_rows': 0, 'response': 0, 'ignored_cols': None, 'cols': None, 'classification': 1, 'destination_key': 'b.hex', 'model': modelKey, }
             nnScoreFirstResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
             h2o.beta_features = False
