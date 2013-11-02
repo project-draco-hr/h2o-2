@@ -41,14 +41,14 @@
   for (  CtClass c : classes) {
     for (    CtField ctf : c.getDeclaredFields()) {
       int mods=ctf.getModifiers();
-      if (javassist.Modifier.isTransient(mods) || javassist.Modifier.isStatic(mods)) {
+      if (javassist.Modifier.isStatic(mods)) {
         if (c == cc) {
           if (ctf.getName().equals("DOC_FIELDS"))           fielddoc=ctf;
           if (ctf.getName().equals("DOC_GET"))           getdoc=ctf;
         }
         continue;
       }
-      first=addFieldWeave(sb,ctf,cc,first);
+      first=addDocIfAPI(sb,ctf,cc,first);
     }
   }
   sb.append("}");

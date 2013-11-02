@@ -17,7 +17,7 @@
     DocGen.HTML.section(sb,"Validation square error: " + validS);
     DocGen.HTML.section(sb,"Items: " + model.items);
     if (nn != null)     DocGen.HTML.section(sb,"Items per second: " + (model.items * 1000 / nn.runTimeMs()));
-    if (model.confusion_matrix != null) {
+    if (model.confusion_matrix != null && model.confusion_matrix.length < 100) {
       String[] classes=model.classNames();
       NeuralNetScore.confusion(sb,cmTitle,classes,model.confusion_matrix);
     }

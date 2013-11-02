@@ -1,21 +1,17 @@
 {
-  if (Boot._init.fromJar())   cloud.clientRSyncIncludes.add("target/h2o.jar");
- else {
-    cloud.clientRSyncIncludes.add("target");
-    cloud.clientRSyncIncludes.add("lib");
-  }
-  cloud.fannedRSyncIncludes.addAll(cloud.clientRSyncIncludes);
-  cloud.clientRSyncIncludes.add("h2o-samples/target");
-  cloud.clientRSyncIncludes.add("../smalldata");
+  String samples=Utils.folder(CloudRemote.class).getPath() + "/../../../";
+  cloud.clientRSyncIncludes.add(samples + "target");
+  cloud.clientRSyncIncludes.add(samples + "../target");
+  cloud.clientRSyncIncludes.add(samples + "../lib");
+  cloud.clientRSyncIncludes.add(samples + "../smalldata");
+  cloud.fannedRSyncIncludes.add("target");
+  cloud.fannedRSyncIncludes.add("lib");
   cloud.fannedRSyncIncludes.add("smalldata");
-  if (!Boot._init.fromJar()) {
-    cloud.clientRSyncExcludes.add("target/*.jar");
-    cloud.clientRSyncExcludes.add("target/javadoc/**");
-    cloud.clientRSyncExcludes.add("lib/javassist");
-    cloud.clientRSyncExcludes.add("**/*-sources.jar");
-  }
-  cloud.jdk="../libs/jdk";
-  String java="-ea -Xmx120G -Dh2o.debug";
+  cloud.clientRSyncExcludes.add("**/h2o.jar");
+  cloud.clientRSyncExcludes.add("**/javadoc");
+  cloud.clientRSyncExcludes.add("lib/javassist");
+  cloud.clientRSyncExcludes.add("**/*-sources.jar");
+  String java="-ea -Xmx8G -Dh2o.debug";
   String node="-mainClass " + UserCode.class.getName() + " "+ (job != null ? job.getName() : null);
   cloud.start(java.split(" "),node.split(" "));
 }
