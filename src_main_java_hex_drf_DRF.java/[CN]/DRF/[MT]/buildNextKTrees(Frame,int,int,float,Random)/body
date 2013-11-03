@@ -1,8 +1,9 @@
 {
   final DTree[] ktrees=new DTree[_nclass];
+  long rseed=rand.nextLong();
   for (int k=0; k < _nclass; k++) {
     if (_distribution[k] != 0) {
-      ktrees[k]=new DRFTree(fr,_ncols,(char)nbins,(char)_nclass,min_rows,mtrys,rand.nextLong());
+      ktrees[k]=new DRFTree(fr,_ncols,(char)nbins,(char)_nclass,min_rows,mtrys,rseed);
       new DRFUndecidedNode(ktrees[k],-1,DBinHistogram.initialHist(fr,_ncols,(char)nbins));
     }
   }
@@ -75,6 +76,5 @@
     }
   }
 .doAll(fr);
-  printGenerateTrees(ktrees);
   return ktrees;
 }

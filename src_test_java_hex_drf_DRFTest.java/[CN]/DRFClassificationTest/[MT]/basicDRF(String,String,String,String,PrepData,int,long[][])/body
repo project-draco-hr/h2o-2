@@ -18,7 +18,7 @@
     drf.seed=(1L << 32) | 2;
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
-    for (int i=0; i < model.cm.length; i++)     System.err.println(Arrays.toString(model.cm[i]));
+    assertCM(expCM,model.cm);
     frTest=fnametest != null ? parseDs(fnametest,destTest) : null;
     pred=drf.score(frTest != null ? frTest : drf.source);
   }
