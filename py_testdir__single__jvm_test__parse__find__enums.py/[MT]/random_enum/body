@@ -1,4 +1,4 @@
-def random_enum(enumSize, randChars=('abeE01' + '$%+-.;|\t '), quoteChars='\'"'):
+def random_enum(enumSize, randChars=(('abeE01' + '') if DO_SIMPLE_CHARS_ONLY else '$%+-.;|\t '), quoteChars='\'"'):
     choiceStr = (randChars + quoteChars)
     mightBeNumberOrWhite = True
     while mightBeNumberOrWhite:
