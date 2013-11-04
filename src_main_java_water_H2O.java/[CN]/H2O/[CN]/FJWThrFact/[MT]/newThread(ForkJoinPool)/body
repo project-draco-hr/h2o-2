@@ -1,3 +1,4 @@
 {
-  return pool.getPoolSize() <= _cap ? new FJWThr(pool) : null;
+  int cap=_cap == -1 ? OPT_ARGS.nthreads : _cap;
+  return pool.getPoolSize() <= cap ? new FJWThr(pool) : null;
 }
