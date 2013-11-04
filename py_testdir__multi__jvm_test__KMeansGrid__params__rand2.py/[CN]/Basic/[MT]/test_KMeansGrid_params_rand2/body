@@ -12,14 +12,15 @@ def test_KMeansGrid_params_rand2(self):
         paramDict = define_params(SEED)
         h2o.beta_features = True
         for trial in range(3):
-            params = {'k': 'c(1,2,3)', }
+            params = {'k': 'c(2,3)', 'destination_key': (((csvFilename + '_') + str(trial)) + '.hex'), }
             h2o_kmeans.pickRandKMeansParams(paramDict, params)
             kwargs = params.copy()
             start = time.time()
-            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, **kwargs)
+            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, noPoll=True, **kwargs)
+            h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
+            print 'FIX! how do we get results..need redirect_url'
             print 'kmeans grid end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-            h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
             inspect = h2o_cmd.runInspect(None, key=kmeans['destination_key'])
             print h2o.dump_json(inspect)
             print 'Trial #', trial, 'completed\n'
