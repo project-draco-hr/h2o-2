@@ -18,11 +18,11 @@
     for (; i < n; ++i)     nums[i - _cats]=(chunks[i].at0(r) - _normSub[i - _cats]) * _normMul[i - _cats];
     if (outputs != null && outputs.length > 0) {
       if (!_hasResponse)       processRow(nums,ncats,cats,outputs);
- else       processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r),outputs);
+ else       processRow(nums,ncats,cats,response(chunks[chunks.length - 1].at0(r)),outputs);
     }
  else {
       if (!_hasResponse)       processRow(nums,ncats,cats);
- else       processRow(nums,ncats,cats,chunks[chunks.length - 1].at0(r));
+ else       processRow(nums,ncats,cats,response(chunks[chunks.length - 1].at0(r)));
     }
   }
   chunkDone();
