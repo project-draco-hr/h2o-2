@@ -6,6 +6,8 @@
     Vec v=getVec(keys[i]);
     len+=v.nChunks();
   }
+  for (  Entry e : _fileChunkOffsets.entrySet())   System.out.println(e.getKey() + " -> " + e.getValue());
+  System.out.println(_fileChunkOffsets);
   _chunk2Enum=MemoryManager.malloc4(len);
   Arrays.fill(_chunk2Enum,-1);
   return super.dfork(keys);

@@ -9,20 +9,7 @@
       Log.err("Exiting.");
       H2O.exit(-1);
     }
-    ArrayList<InetAddress> ips=new ArrayList<InetAddress>();
-    try {
-      Enumeration<NetworkInterface> nis=NetworkInterface.getNetworkInterfaces();
-      while (nis.hasMoreElements()) {
-        NetworkInterface ni=nis.nextElement();
-        Enumeration<InetAddress> ias=ni.getInetAddresses();
-        while (ias.hasMoreElements()) {
-          ips.add(ias.nextElement());
-        }
-      }
-    }
- catch (    SocketException e) {
-      Log.err(e);
-    }
+    ArrayList<InetAddress> ips=calcPrioritizedInetAddressList();
     InetAddress local=null;
     InetAddress arg=null;
     if (OPT_ARGS.ip != null) {
