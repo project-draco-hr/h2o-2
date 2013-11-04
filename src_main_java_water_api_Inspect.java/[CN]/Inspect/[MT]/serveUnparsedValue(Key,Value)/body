@@ -20,7 +20,7 @@
   Response r=Response.done(result);
   r.addHeader("<div class='alert'>" + Parse.link(key,"Parse into hex format") + "</div>");
   r.setBuilder(ROWS,new ArrayBuilder(){
-    public String caption(    JsonArray array,    String name){
+    @Override public String caption(    JsonArray array,    String name){
       return "<h4>First few sample rows</h4>";
     }
   }

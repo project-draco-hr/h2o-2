@@ -1,13 +1,12 @@
 {
   Host master=new Host(publicIPs.get(0));
   Set<String> incls=new HashSet<String>(clientRSyncIncludes);
-  if (!new File(jdk + "/jre/bin/java").exists())   throw new IllegalArgumentException("Please specify the JDK to rsync and run on");
-  incls.add(jdk);
-  File flatfile;
+  if (JRE != null && !new File(JRE + "/bin/java").exists())   throw new IllegalArgumentException("Invalid JRE");
+  if (JRE != null)   incls.add(JRE);
   List<String> ips=privateIPs.size() > 0 ? privateIPs : publicIPs;
   String s="";
   for (  Object o : ips)   s+=(s.length() == 0 ? "" : '\n') + o.toString() + ":"+ PORT;
-  flatfile=Utils.writeFile(s);
+  File flatfile=Utils.writeFile(new File(Utils.tmp(),FLATFILE),s);
   incls.add(flatfile.getAbsolutePath());
   master.rsync(incls,clientRSyncExcludes,false);
   ArrayList<String> list=new ArrayList<String>();
@@ -16,13 +15,23 @@
   CloudParams p=new CloudParams();
   p._incls=new HashSet<String>(fannedRSyncIncludes);
   p._excls=fannedRSyncExcludes;
-  p._incls.add(flatfile.getName());
-  p._flatfile=flatfile.getName();
-  p._incls.add(new File(jdk).getName());
+  p._incls.add(FLATFILE);
+  if (JRE != null)   p._incls.add(new File(JRE).getName());
   list.add(VM.write(p));
   list.addAll(Arrays.asList(args));
   String[] java=Utils.append(java_args,NodeVM.class.getName());
-  SSHWatchdog r=new SSHWatchdog(master,java,list.toArray(new String[0]));
-  r.inheritIO();
-  r.start();
+  Params params=new Params(master,java,list.toArray(new String[0]));
+  if (WATCHDOGS) {
+    SSHWatchdog r=new SSHWatchdog(params);
+    r.inheritIO();
+    r.start();
+  }
+ else {
+    try {
+      SSHWatchdog.run(params);
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

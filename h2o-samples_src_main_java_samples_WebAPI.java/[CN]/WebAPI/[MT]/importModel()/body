@@ -1,0 +1,11 @@
+{
+  HttpClient client=new HttpClient();
+  PostMethod post=new PostMethod(URL + "/Upload.json?key=" + JSON_FILE.getName());
+  Part[] parts={new FilePart(JSON_FILE.getName(),JSON_FILE)};
+  post.setRequestEntity(new MultipartRequestEntity(parts,post.getParams()));
+  if (200 != client.executeMethod(post))   throw new RuntimeException("Request failed: " + post.getStatusLine());
+  post.releaseConnection();
+  GetMethod get=new GetMethod(URL + "/2/ImportModel.json?" + "destination_key=MyImportedNeuralNet&"+ "type=NeuralNetModel&"+ "json="+ JSON_FILE.getName());
+  if (200 != client.executeMethod(get))   throw new RuntimeException("Request failed: " + get.getStatusLine());
+  get.releaseConnection();
+}

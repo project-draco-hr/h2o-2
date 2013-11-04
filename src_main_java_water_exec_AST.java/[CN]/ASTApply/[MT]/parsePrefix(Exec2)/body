@@ -1,0 +1,21 @@
+{
+  AST pre=parseVal(E);
+  if (pre == null)   return null;
+  while (true) {
+    if (pre._t.isNotFun())     return pre;
+    int x=E._x;
+    if (!E.peek('('))     return pre;
+    AST args[]=new AST[]{pre,null};
+    int i=1;
+    if (!E.peek(')')) {
+      while (true) {
+        args[i++]=parseCXExpr(E);
+        if (E.peek(')'))         break;
+        E.xpeek(',',E._x,null);
+        if (i == args.length)         args=Arrays.copyOf(args,args.length << 1);
+      }
+    }
+    args=Arrays.copyOf(args,i);
+    pre=make(args,E,x);
+  }
+}
