@@ -61,10 +61,10 @@
       Error validE=null;
       if (valid != null)       validE=NeuralNet.eval(ls,valid,validResp,EVAL_ROW_COUNT,cm);
       model.processed_samples=trainer.samples();
-      model.train_classification_error=trainE.Value;
-      model.train_sqr_error=trainE.SqrDist;
-      model.validation_classification_error=validE != null ? validE.Value : Double.NaN;
-      model.validation_sqr_error=validE != null ? validE.SqrDist : Double.NaN;
+      model.train_classification_error=trainE.classification;
+      model.train_mse=trainE.mse;
+      model.validation_classification_error=validE != null ? validE.classification : Double.NaN;
+      model.validation_mse=validE != null ? validE.mse : Double.NaN;
       model.confusion_matrix=cm;
       UKV.put(model._selfKey,model);
     }
