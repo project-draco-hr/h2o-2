@@ -1,5 +1,5 @@
 {
-  Job nn=Job.findJob(job_key);
+  Job nn=job_key == null ? null : Job.findJob(job_key);
   NeuralNetModel model=UKV.get(destination_key);
   if (model != null) {
     String cmTitle="Confusion Matrix";
@@ -15,8 +15,9 @@
     DocGen.HTML.section(sb,"Training square error: " + trainS);
     DocGen.HTML.section(sb,"Validation classification error: " + validC);
     DocGen.HTML.section(sb,"Validation square error: " + validS);
-    DocGen.HTML.section(sb,"Items: " + model.items);
-    if (nn != null)     DocGen.HTML.section(sb,"Items per second: " + (model.items * 1000 / nn.runTimeMs()));
+    String ps="";
+    if (nn != null)     ps=" (" + (model.processed_samples * 1000 / nn.runTimeMs()) + "/s)";
+    DocGen.HTML.section(sb,"Processed samples: " + model.processed_samples + ps);
     if (model.confusion_matrix != null && model.confusion_matrix.length < 100) {
       String[] classes=model.classNames();
       NeuralNetScore.confusion(sb,cmTitle,classes,model.confusion_matrix);

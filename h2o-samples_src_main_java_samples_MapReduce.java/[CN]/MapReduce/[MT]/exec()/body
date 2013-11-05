@@ -1,5 +1,5 @@
 {
-  File file=new File(TestUtil.smalldata,"/iris/iris.csv");
+  File file=new File(VM.h2oFolder(),"smalldata/iris/iris.csv");
   Key fkey=NFSFileVec.make(file);
   Frame frame=ParseDataset2.parse(Key.make(file.getName()),new Key[]{fkey});
   Sum sum=new Sum();

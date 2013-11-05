@@ -15,7 +15,7 @@
       throw new RuntimeException(e);
     }
     double time=(System.nanoTime() - start) / 1e9;
-    long samples=trainer.items();
+    long samples=trainer.samples();
     int ps=(int)(samples / time);
     String text=(int)time + "s, " + samples+ " samples ("+ (ps)+ "/s) ";
     Layer[] temp=build(train,trainLabels,(VecsInput)ls[0],(VecSoftmax)ls[ls.length - 1]);
