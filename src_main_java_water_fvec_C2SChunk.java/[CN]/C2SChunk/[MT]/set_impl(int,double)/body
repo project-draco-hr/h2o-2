@@ -1,3 +1,8 @@
 {
-  throw H2O.unimpl();
+  short s=(short)((d / _scale) - _bias);
+  if (s == _NA)   return false;
+  double d2=(s + _bias) * _scale;
+  if (d != d2)   return false;
+  UDP.set2(_mem,(i << 1) + OFF,s);
+  return true;
 }

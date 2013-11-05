@@ -81,6 +81,13 @@
       }
       clusterReadyFileName=args[i];
     }
+ else     if (s.equals("-nthreads")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      nthreads=Integer.parseInt(args[i]);
+    }
  else     if (s.equals("-beta")) {
       beta=true;
     }
@@ -143,5 +150,8 @@
   }
   if (network == null) {
     error("Internal error, network should not be null at this point");
+  }
+  if ((nthreads >= 0) && (nthreads < 4)) {
+    error("nthreads invalid (must be >= 4): " + nthreads);
   }
 }

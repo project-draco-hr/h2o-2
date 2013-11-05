@@ -1,4 +1,4 @@
 {
-  for (int i=0; i < _fr.vecs().length; i++)   if (_fr.vecs()[i] instanceof AppendableVec)   ((AppendableVec)_fr.vecs()[i]).reduce((AppendableVec)mrt._fr.vecs()[i]);
+  if (_noutputs > 0)   for (int i=0; i < _appendables.length; i++)   _appendables[i].reduce(mrt._appendables[i]);
   reduce(mrt);
 }

@@ -1,0 +1,23 @@
+{
+  if (ast == null)   return null;
+  ast.exec(env);
+  long cols[];
+  if (!env.isAry()) {
+    int col=(int)env._d[env._sp - 1];
+    if (col > 0 && col > len)     throw new IllegalArgumentException("Trying to select column " + col + " but only "+ len+ " present.");
+    if (col < 0 && col < -len)     col=0;
+    if (col == 0)     return new long[0];
+    return new long[]{col};
+  }
+  Frame ary=env._ary[env._sp - 1];
+  if (ary.numCols() != 1)   throw new IllegalArgumentException("Selector must be a single column: " + ary);
+  Vec vec=ary.anyVec();
+  if (ary.numRows() == len && vec.min() >= 0 && vec.max() <= 1 && vec.isInt())   return ary;
+  if (ary.numRows() > 100000)   throw H2O.unimpl();
+  cols=MemoryManager.malloc8((int)ary.numRows());
+  for (int i=0; i < cols.length; ++i) {
+    if (vec.isNA(i))     throw new IllegalArgumentException("Can not use NA as index!");
+    cols[i]=vec.at8(i);
+  }
+  return cols;
+}

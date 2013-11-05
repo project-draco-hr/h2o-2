@@ -1,0 +1,8 @@
+{
+  Log.info("Java location: " + System.getProperty("java.home"));
+  String job=args[0].equals("null") ? null : args[0];
+  if (job != null) {
+    Class<Job> c=CloudLocal.weaveClass(job);
+    c.newInstance().fork();
+  }
+}

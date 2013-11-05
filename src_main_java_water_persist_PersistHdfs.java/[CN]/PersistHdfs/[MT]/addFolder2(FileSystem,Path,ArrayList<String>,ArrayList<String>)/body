@@ -1,0 +1,31 @@
+{
+  try {
+    if (fs == null)     return;
+    Futures futures=new Futures();
+    for (    FileStatus file : fs.listStatus(p)) {
+      Path pfs=file.getPath();
+      if (file.isDir()) {
+        addFolder2(fs,pfs,keys,failed);
+      }
+ else {
+        long size=file.getLen();
+        Key res;
+        if (pfs.getName().endsWith(Extensions.JSON)) {
+          throw H2O.unimpl();
+        }
+ else         if (pfs.getName().endsWith(Extensions.HEX)) {
+          throw H2O.unimpl();
+        }
+ else {
+          Key k=null;
+          keys.add((k=HdfsFileVec.make(file,futures)).toString());
+          Log.info("PersistHdfs: DKV.put(" + k + ")");
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    Log.err(e);
+    failed.add(p.toString());
+  }
+}

@@ -1,0 +1,7 @@
+def write_syn_dataset(csvPathname, rowCount, rowDataTrue, rowDataFalse, outputTrue, outputFalse):
+    dsf = open(csvPathname, 'w+')
+    for i in range(int((rowCount / 2))):
+        dsf.write((((rowDataTrue + ',') + outputTrue) + '\n'))
+    for i in range(int((rowCount / 2))):
+        dsf.write((((rowDataFalse + ',') + outputFalse) + '\n'))
+    dsf.close()

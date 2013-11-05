@@ -1,8 +1,26 @@
 {
-  AST ast=new Exec2(str).parse();
-  System.out.println(ast.toString(new StringBuilder(),0).toString());
-  Vec.VectorGroup vg=new Vec.VectorGroup();
-  Exec2 res=ast.exec(vg);
-  if (res._fr != null)   return res._fr;
-  return new Frame(new String[]{"result"},new Vec[]{new Vec(vg.addVecs(1)[0],res._d)});
+  Env env=new Env();
+  ArrayList<ASTId> global=new ArrayList<ASTId>();
+  for (  Value v : H2O.values())   if (v.type() == TypeMap.FRAME) {
+    global.add(new ASTId(Type.ARY,v._key.toString(),0,global.size()));
+    env.push((Frame)v.get(),v._key.toString());
+  }
+  global.add(new ASTId(Type.DBL,"T",0,global.size()));
+  env.push(1.0);
+  global.add(new ASTId(Type.DBL,"F",0,global.size()));
+  env.push(0.0);
+  global.add(new ASTId(Type.DBL,"NA",0,global.size()));
+  env.push(Double.NaN);
+  int argcnt=global.size();
+  AST ast=new Exec2(str,global).parse();
+  try {
+    env.push(global.size() - argcnt);
+    ast.exec(env);
+    env.postWrite();
+  }
+ catch (  RuntimeException t) {
+    env.remove();
+    throw t;
+  }
+  return env;
 }

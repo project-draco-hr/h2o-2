@@ -6,7 +6,7 @@
  catch (  NotFoundException nfe) {
     field=cc.getField("ENUM$VALUES");
   }
-  String body="static " + cc.getName() + " raw_enum(int i) { return i==255?null:"+ field.getName()+ "[i]; } ";
+  String body="public static " + cc.getName() + " raw_enum(int i) { return i==255?null:"+ field.getName()+ "[i]; } ";
   try {
     cc.addMethod(CtNewMethod.make(body,cc));
   }

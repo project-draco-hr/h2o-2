@@ -1,17 +1,19 @@
 {
   String cp="";
   try {
-    int shared=new File(".").getCanonicalPath().length() + 1;
+    String h2o=h2oFolder().getCanonicalPath();
     for (    String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
       cp+=cp.length() != 0 ? ":" : "";
-      if (Boot._init.fromJar())       cp+=new File(s).getName();
- else       cp+=new File(s).getCanonicalPath().substring(shared).replace('\\','/');
+      String path=new File(s).getCanonicalPath();
+      if (path.startsWith(h2o))       path=path.substring(h2o.length() + 1);
+      cp+=path.replace('\\','/');
     }
   }
  catch (  IOException e) {
     throw Log.errRTExcept(e);
   }
-  String command="cd " + Host.FOLDER + ";jdk/jre/bin/java -cp "+ cp;
+  String java=Cloud.JRE != null ? new File(Cloud.JRE).getName() + "/bin/java" : "java";
+  String command="cd " + Host.FOLDER + ";"+ java+ " -cp "+ cp;
   for (  String s : javaArgs)   command+=" " + s;
   for (  String s : nodeArgs)   command+=" " + s;
   return command.replace("$","\\$");

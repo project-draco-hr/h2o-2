@@ -1,0 +1,4 @@
+def runNNetScore(node=None, key=None, model=None, timeoutSecs=600, noPoll=False, **kwargs):
+    if (not node):
+        node = h2o.nodes[0]
+    return node.neural_net_score(key, model, timeoutSecs=timeoutSecs, noPoll=noPoll, **kwargs)

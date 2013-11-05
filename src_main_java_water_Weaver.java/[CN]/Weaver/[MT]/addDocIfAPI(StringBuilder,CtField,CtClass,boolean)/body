@@ -1,0 +1,24 @@
+{
+  String name=ctf.getName();
+  Object[] as;
+  try {
+    as=ctf.getAnnotations();
+  }
+ catch (  ClassNotFoundException ex) {
+    throw new NotFoundException("getAnnotations throws ",ex);
+  }
+  API api=null;
+  for (  Object o : as)   if (o instanceof API)   api=(API)o;
+  if (api != null) {
+    String help=api.help();
+    int min=api.since();
+    int max=api.until();
+    if (min < 1 || min > 1000000)     throw new CannotCompileException("Found field '" + name + "' but 'since' < 1 or 'since' > 1000000");
+    if (max < min || (max > 1000000 && max != Integer.MAX_VALUE))     throw new CannotCompileException("Found field '" + name + "' but 'until' < "+ min+ " or 'until' > 1000000");
+    if (first)     first=false;
+ else     sb.append(",");
+    boolean input=isInput(ctf.getType(),api);
+    sb.append("new water.api.DocGen$FieldDoc(\"" + name + "\",\""+ help+ "\","+ min+ ","+ max+ ","+ ctf.getType().getName()+ ".class,"+ input+ ","+ api.required()+ ")");
+  }
+  return first;
+}
