@@ -1,4 +1,4 @@
-def test_summary_percentile(self):
+def test_summary_percentile2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100000, 1, 'cD', 300), (100000, 2, 'cE', 300)]
     timeoutSecs = 10
@@ -23,6 +23,8 @@ def test_summary_percentile(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         summaryResult = h2o_cmd.runSummary(key=hex_key)
+        if h2o.verbose:
+            print 'summaryResult:', h2o.dump_json(summaryResult)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
         summary = summaryResult['summary']
         columnsList = summary['columns']
