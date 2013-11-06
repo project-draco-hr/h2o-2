@@ -7,7 +7,7 @@ def gbm(self, data_key, timeoutSecs=600, retryDelaySecs=1, initialDelaySecs=5, p
     a = self.__do_json_request('2/GBM.json', timeout=timeoutSecs, params=params_dict)
     if noPoll:
         a['python_elapsed'] = (time.time() - start)
-        a['python_timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)
+        a['python_%timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)
         return a
     verboseprint('\nGBM first result:', dump_json(a))
     a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
