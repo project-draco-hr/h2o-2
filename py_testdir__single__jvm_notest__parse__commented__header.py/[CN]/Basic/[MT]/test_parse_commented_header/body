@@ -4,7 +4,7 @@ def test_parse_commented_header(self):
     csvFilename = 'syn_ints.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON,output'
-    tryList = [(2, 300, 9, 'cA', 60, '#'), (2, 300, 9, 'cA', 60, '# '), (2, 300, 9, 'cA', 60, ' #'), (2, 300, 9, 'cA', 60, ' # '), (2, 300, 9, 'cA', 60, '#  ')]
+    tryList = [(2, 3, 9, 'cA', 60, '#'), (2, 3, 9, 'cA', 60, '# '), (2, 3, 9, 'cA', 60, ' #'), (2, 3, 9, 'cA', 60, ' # '), (2, 3, 9, 'cA', 60, '#  ')]
     trial = 0
     for (fileNum, rowCount, colCount, hex_key, timeoutSecs, headerPrefix) in tryList:
         trial += 1
