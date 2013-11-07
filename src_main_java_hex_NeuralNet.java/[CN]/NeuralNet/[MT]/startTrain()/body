@@ -57,9 +57,9 @@
         int classes=ls[ls.length - 1].units;
         cm=new long[classes][classes];
       }
-      Error trainE=NeuralNet.eval(ls,train,trainResp,EVAL_ROW_COUNT,valid == null ? cm : null);
+      Error trainE=NeuralNet.eval(ls,train,trainResp,EVAL_ROW_COUNT,valid == null ? cm : null,false);
       Error validE=null;
-      if (valid != null)       validE=NeuralNet.eval(ls,valid,validResp,EVAL_ROW_COUNT,cm);
+      if (valid != null)       validE=NeuralNet.eval(ls,valid,validResp,EVAL_ROW_COUNT,cm,false);
       model.processed_samples=trainer.samples();
       model.train_classification_error=trainE.classification;
       model.train_mse=trainE.mse;
