@@ -5,7 +5,7 @@
   if (n != 0)   len=Math.min(len,n);
   if (ls[ls.length - 1] instanceof Softmax) {
     int correct=0;
-    for (input._pos=0; input._pos < len; input._pos++)     if (correct(ls,error,cm))     correct++;
+    for (input._pos=0; input._pos < len; input._pos++)     if (correct(ls,error,cm,dropout))     correct++;
     error.classification=(len - (double)correct) / len;
     error.mse/=len;
   }
