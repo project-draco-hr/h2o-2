@@ -1,0 +1,39 @@
+{
+  String s=null;
+switch (_t & (VARARGS - 1)) {
+case UNBOUND:
+    s="@" + _x;
+  break;
+case BOUND:
+s=_ts[0].toString();
+break;
+case DBL0:
+s="dbl";
+break;
+case ARY0:
+s="ary";
+break;
+case DBLARY0:
+s="dblary";
+break;
+case ANYARY0:
+{
+s="anyary{";
+for (Type t : _ts) s+=t + ",";
+s+="}";
+break;
+}
+case FCN0:
+{
+s=_ts[0] + "(";
+for (int i=1; i < _ts.length - 1; i++) s+=_ts[i] + ",";
+if (_ts.length > 1) s+=_ts[_ts.length - 1];
+s+=")";
+break;
+}
+default :
+throw water.H2O.unimpl();
+}
+if ((_t & VARARGS) != 0) s+="...";
+return s;
+}

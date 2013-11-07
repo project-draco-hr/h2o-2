@@ -1,0 +1,8 @@
+{
+  if (_depth == 0) {
+    env.push_slot(_depth,_num);
+    return;
+  }
+  ASTFunc fcn=env.fcnScope(_depth);
+  fcn._env.push_slot(_depth - 1,_num,env);
+}

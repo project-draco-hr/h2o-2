@@ -1,12 +1,11 @@
 {
-  Job jjob=Job.findJob(job_key);
+  Job jjob=null;
+  if (job_key != null)   jjob=Job.findJob(job_key);
   if (jjob != null && jjob.exception != null) {
     status="error";
     return Response.error(jjob.exception);
   }
-  if (jjob == null || jjob.end_time > 0 || jjob.cancelled()) {
-    return jobDone(jjob,destination_key);
-  }
+  if (jjob == null || jjob.end_time > 0 || jjob.cancelled())   return jobDone(jjob,destination_key);
   status="poll";
   return jobInProgress(jjob,destination_key);
 }

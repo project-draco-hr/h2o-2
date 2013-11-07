@@ -1,0 +1,43 @@
+{
+  DRF drf=null;
+  Frame frTrain=null, frTest=null;
+  Key destTrain=Key.make(hexnametrain);
+  Key destTest=hexnametest != null ? Key.make(hexnametest) : null;
+  Frame pred=null;
+  try {
+    drf=new DRF();
+    frTrain=drf.source=parseDs(fnametrain,destTrain);
+    unifyFrame(drf,frTrain,prep);
+    drf.classification=true;
+    drf.ntrees=ntree;
+    drf.max_depth=50;
+    drf.min_rows=1;
+    drf.nbins=1024;
+    drf.mtries=-1;
+    drf.sample_rate=0.66667f;
+    drf.seed=(1L << 32) | 2;
+    drf.invoke();
+    DRFModel model=UKV.get(drf.dest());
+    assertCM(expCM,model.cm);
+    frTest=fnametest != null ? parseDs(fnametest,destTest) : null;
+    pred=drf.score(frTest != null ? frTest : drf.source);
+  }
+ catch (  Throwable t) {
+    t.printStackTrace();
+    throw t;
+  }
+ finally {
+    frTrain.remove();
+    UKV.remove(destTrain);
+    if (frTest != null) {
+      frTest.remove();
+      UKV.remove(destTest);
+    }
+    if (drf != null) {
+      UKV.remove(drf.dest());
+      UKV.remove(drf.response._key);
+      drf.remove();
+      if (pred != null)       pred.remove();
+    }
+  }
+}

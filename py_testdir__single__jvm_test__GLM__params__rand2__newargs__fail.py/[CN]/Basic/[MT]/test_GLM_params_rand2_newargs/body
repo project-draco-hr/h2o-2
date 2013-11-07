@@ -1,0 +1,22 @@
+def test_GLM_params_rand2_newargs(self):
+    csvPathname = 'covtype/covtype.20k.data'
+    hex_key = 'covtype.20k.hex'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hex_key, schema='put')
+    paramDict = define_params()
+    y = 54
+    print 'Want to see if there are constant columns'
+    goodX = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
+    print 'goodX:', goodX
+    for trial in range((10 if DO_FAIL_ONLY else 20)):
+        if DO_FAIL_ONLY:
+            params = define_params_fail()
+        else:
+            params = {'y': y, 'case': 1, 'lambda': 0, 'alpha': 0, 'n_folds': 1, }
+            h2o_glm.pickRandGlmParams(paramDict, params)
+        kwargs = params.copy()
+        start = time.time()
+        glm = h2o_cmd.runGLM(timeoutSecs=70, parseResult=parseResult, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        h2o.check_sandbox_for_errors()
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'Trial #', trial, 'completed\n'

@@ -1,11 +1,12 @@
 {
   Stats stats=new Stats();
-  stats._units=_units;
-  stats._categoricals=_categoricals;
-  stats.doAll(_vecs);
+  stats._units=units;
+  stats._categoricals_lens=categoricals_lens;
+  stats._categoricals_mins=categoricals_mins;
+  stats.doAll(vecs);
   for (int i=0; i < vecs.length; i++) {
-    _subs[i]=(float)stats._means[i];
+    subs[i]=(float)stats._means[i];
     double sigma=Math.sqrt(stats._sigms[i] / (stats._rows - 1));
-    _muls[i]=(float)(sigma > 1e-6 ? 1 / sigma : 1);
+    muls[i]=(float)(sigma > 1e-6 ? 1 / sigma : 1);
   }
 }

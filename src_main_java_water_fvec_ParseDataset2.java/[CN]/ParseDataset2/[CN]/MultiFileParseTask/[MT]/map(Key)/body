@@ -28,7 +28,7 @@ case NONE:
         }
 );
         dp.dfork(new Frame(vec));
-        for (int i=chunkStartIdx; i < vec.nChunks(); ++i)         _chunk2Enum[i]=vec.chunkKey(i - chunkStartIdx).home_node().index();
+        for (int i=0; i < vec.nChunks(); ++i)         _chunk2Enum[chunkStartIdx + i]=vec.chunkKey(i).home_node().index();
       }
  else {
         ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);

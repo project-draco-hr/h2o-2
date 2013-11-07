@@ -5,9 +5,9 @@
   for (int i=0; i < out.length; i++) {
     float t=i == output.label() ? 1 : 0;
     float d=t - out[i];
-    error.SqrDist+=d * d;
+    error.mse+=d * d;
   }
-  float max=Float.MIN_VALUE;
+  float max=Float.NEGATIVE_INFINITY;
   int idx=-1;
   for (int i=0; i < out.length; i++) {
     if (out[i] > max) {

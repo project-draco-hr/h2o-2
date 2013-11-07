@@ -1,0 +1,18 @@
+{
+  int x=E._x;
+  String var=E.isID();
+  if (var == null)   return null;
+  if (ASTOp.OPS.containsKey(var)) {
+    E._x=x;
+    return null;
+  }
+  for (int d=E.lexical_depth(); d >= 0; d--) {
+    ArrayList<ASTId> asts=E._env.get(d);
+    for (int i=asts.size() - 1; i >= 0; i--) {
+      ASTId id=asts.get(i);
+      if (var.equals(id._id))       return new ASTId(id._t,id._id,E.lexical_depth() - d,id._num);
+    }
+  }
+  E._x=x;
+  return null;
+}

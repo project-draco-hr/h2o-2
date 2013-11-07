@@ -6,7 +6,15 @@
         int len=C.pformat_len0();
         for (int i=0; i < len; i++)         sb.append('-');
       }
- else       sb.append(String.format(fs[c],_vecs[c].at8(idx)));
+ else {
+        try {
+          sb.append(String.format(fs[c],_vecs[c].at8(idx)));
+        }
+ catch (        IllegalFormatException ife) {
+          System.out.println("Format: " + fs[c] + " col="+ c+ " not for ints");
+          ife.printStackTrace();
+        }
+      }
     }
  else {
       sb.append(String.format(fs[c],_vecs[c].at(idx)));

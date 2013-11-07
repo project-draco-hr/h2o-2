@@ -1,0 +1,12 @@
+{
+  int idx=prep.prep(fr);
+  if (idx < 0) {
+    drf.classification=false;
+    idx=~idx;
+  }
+  String rname=fr._names[idx];
+  drf.response=fr.vecs()[idx];
+  fr.remove(idx);
+  fr.add(rname,drf.response);
+  return drf.response;
+}

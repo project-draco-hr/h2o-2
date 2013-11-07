@@ -1,0 +1,7 @@
+{
+  File file=TestUtil.find_test_file(fname);
+  Key fkey=NFSFileVec.make(file);
+  Frame fr=ParseDataset2.parse(destKey,new Key[]{fkey});
+  UKV.remove(fkey);
+  return fr;
+}

@@ -1,9 +1,0 @@
-{
-  Frame[] frs=model.adapt(source,false);
-  int classes=model.layers[model.layers.length - 1]._units;
-  confusion_matrix=new long[classes][classes];
-  Error error=eval(model.layers,frs[0].vecs(),response,max_rows,confusion_matrix);
-  classification_error=error.Value;
-  sqr_error=error.SqrDist;
-  if (frs[1] != null)   frs[1].remove();
-}

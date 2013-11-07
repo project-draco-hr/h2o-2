@@ -1,0 +1,8 @@
+{
+  bb.put1('{');
+  bb.putJSONStr("type").put1(':').putJSONStr(getClass().getName());
+  bb.put1(',');
+  writeJSONFields(bb);
+  bb.put1('}');
+  return bb;
+}

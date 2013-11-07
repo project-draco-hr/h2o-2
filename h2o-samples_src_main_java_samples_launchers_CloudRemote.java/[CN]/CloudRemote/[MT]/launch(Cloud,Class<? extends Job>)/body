@@ -1,0 +1,17 @@
+{
+  String h2o=VM.h2oFolder().getPath();
+  cloud.clientRSyncIncludes.add(h2o + "/target");
+  cloud.clientRSyncIncludes.add(h2o + "/h2o-samples/target");
+  cloud.clientRSyncIncludes.add(h2o + "/lib");
+  cloud.clientRSyncIncludes.add(h2o + "/smalldata");
+  cloud.fannedRSyncIncludes.add("target");
+  cloud.fannedRSyncIncludes.add("lib");
+  cloud.fannedRSyncIncludes.add("smalldata");
+  cloud.clientRSyncExcludes.add("**/h2o.jar");
+  cloud.clientRSyncExcludes.add("**/javadoc");
+  cloud.clientRSyncExcludes.add("lib/javassist");
+  cloud.clientRSyncExcludes.add("**/*-sources.jar");
+  String java="-ea -Xmx8G -Dh2o.debug";
+  String node="-mainClass " + UserCode.class.getName() + " "+ (job != null ? job.getName() : null)+ " -beta";
+  cloud.start(java.split(" "),node.split(" "));
+}
