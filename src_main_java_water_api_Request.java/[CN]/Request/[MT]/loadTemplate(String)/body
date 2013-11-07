@@ -1,0 +1,20 @@
+{
+  InputStream resource=Boot._init.getResource2(name);
+  try {
+    if (H2O.NAME != null)     return new String(ByteStreams.toByteArray(resource)).replace("%cloud_name",H2O.NAME);
+  }
+ catch (  NullPointerException e) {
+    if (!Log._dontDie) {
+      Log.err(e);
+      Log.die(name + " not found in resources.");
+    }
+  }
+catch (  Exception e) {
+    Log.err(e);
+    Log.die(e.getMessage());
+  }
+ finally {
+    Closeables.closeQuietly(resource);
+  }
+  return null;
+}
