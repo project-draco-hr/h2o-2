@@ -3,5 +3,6 @@
   for (long i=0; samples == 0 || i < samples; i++) {
     step();
     input.move();
+    if (_job != null && _job.cancelled())     break;
   }
 }
