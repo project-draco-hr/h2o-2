@@ -1,0 +1,17 @@
+{
+  this.type=_vec.isEnum() ? "Enum" : _vec.isInt() ? "Int" : "Real";
+  this.naCnt=_vec.naCnt();
+  computePercentiles();
+  computeMajorities();
+  for (int i=0; i < _maxs.length >>> 1; i++) {
+    double t=_maxs[i];
+    _maxs[i]=_maxs[_maxs.length - 1 - i];
+    _maxs[_maxs.length - 1 - i]=t;
+  }
+  this.stats=_vec.isEnum() ? new EnumStats(_vec) : new NumStats(_vec,_zeros,_mins,_maxs,_percentiles);
+  if (_vec.isEnum())   bin_hdrs=_domains;
+ else {
+    bin_hdrs=new String[bin_cnts.length];
+    for (int i=0; i < bin_hdrs.length; i++)     bin_hdrs[i]=Utils.p2d(binValue(i));
+  }
+}

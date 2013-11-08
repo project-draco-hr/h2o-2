@@ -9,10 +9,10 @@
     s1.add(vec.chunk(i));
     s.add(s1);
   }
-  s.toString();
-  assertEquals(1,s.bins.length);
-  assertEquals(528,s.bins[0]);
-  assertEquals(0.1,s.start,0.00001);
-  for (  double pv : s.percentileValues)   assertEquals(0.1,pv,0.00001);
+  s.finishUp();
+  assertEquals(1,s.bin_cnts.length);
+  assertEquals(528,s.bin_cnts[0]);
+  assertEquals(0.1,s.bin_cnts[0],0.00001);
+  for (  double pv : s._percentiles)   assertEquals(0.1,pv,0.00001);
   UKV.remove(key);
 }
