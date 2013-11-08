@@ -1,0 +1,11 @@
+{
+  int lo=0, hi=(_mem.length - OFF) >>> 1;
+  while (lo + 1 != hi) {
+    int mid=(hi + lo) >>> 1;
+    int x=UDP.get2(_mem,(mid << 1) + OFF) & 0xFFFF;
+    if (idx < x)     hi=mid;
+ else     lo=mid;
+  }
+  int x=UDP.get2(_mem,(lo << 1) + OFF) & 0xFFFF;
+  return idx == x ? 1 : 0;
+}
