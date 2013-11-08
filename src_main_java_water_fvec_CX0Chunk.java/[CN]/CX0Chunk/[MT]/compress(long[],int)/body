@@ -4,7 +4,7 @@
     throw H2O.unimpl();
   }
   byte[] buf=new byte[nzcnt * 2 + OFF];
-  UDP.set2(buf,0,(short)ls.length);
+  UDP.set4(buf,0,ls.length);
   int j=OFF;
   for (int i=0; i < ls.length; i++)   if (ls[i] != 0)   j+=UDP.set2(buf,j,(short)i);
   return buf;
