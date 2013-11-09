@@ -10,6 +10,7 @@
     if (activation == Activation.Rectifier)     ls[i + 1]=new Layer.Rectifier(hidden[i]);
  else     ls[i + 1]=new Layer.Tanh(hidden[i]);
     ls[i + 1].rate=(float)rate;
+    ls[i + 1].rate_annealing=(float)rate_annealing;
     ls[i + 1].l2=(float)l2;
   }
   if (classification)   ls[ls.length - 1]=new VecSoftmax(trainResp,null);
@@ -57,9 +58,9 @@
         int classes=ls[ls.length - 1].units;
         cm=new long[classes][classes];
       }
-      Error trainE=NeuralNet.eval(ls,train,trainResp,EVAL_ROW_COUNT,valid == null ? cm : null,false);
+      Error trainE=NeuralNet.eval(ls,train,trainResp,EVAL_ROW_COUNT,valid == null ? cm : null);
       Error validE=null;
-      if (valid != null)       validE=NeuralNet.eval(ls,valid,validResp,EVAL_ROW_COUNT,cm,false);
+      if (valid != null)       validE=NeuralNet.eval(ls,valid,validResp,EVAL_ROW_COUNT,cm);
       model.processed_samples=trainer.samples();
       model.train_classification_error=trainE.classification;
       model.train_mse=trainE.mse;

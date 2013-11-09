@@ -1,0 +1,20 @@
+{
+  Softmax output=(Softmax)ls[ls.length - 1];
+  for (int i=0; i < ls.length; i++)   ls[i].fprop(false);
+  float[] out=ls[ls.length - 1]._a;
+  for (int o=0; o < out.length; o++) {
+    float t=o == output.target() ? 1 : 0;
+    float d=t - out[o];
+    error.mse+=d * d;
+  }
+  float max=Float.NEGATIVE_INFINITY;
+  int idx=-1;
+  for (int o=0; o < out.length; o++) {
+    if (out[o] > max) {
+      max=out[o];
+      idx=o;
+    }
+  }
+  if (confusion != null)   confusion[output.target()][idx]++;
+  return idx == output.target();
+}

@@ -9,7 +9,7 @@
     clones[y]._w=model.weights[y];
     clones[y]._b=model.biases[y];
   }
-  Error error=eval(clones,frs[0].vecs(),response,max_rows,confusion_matrix,false);
+  Error error=eval(clones,frs[0].vecs(),response,max_rows,confusion_matrix);
   classification_error=error.classification;
   mse=error.mse;
   if (frs[1] != null)   frs[1].remove();
