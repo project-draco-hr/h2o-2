@@ -14,6 +14,8 @@
     for (int j=0; j < denseN; ++j)     chol._xx[j][i]=d * _xx[j][i];
   }
   Futures fs=new Futures();
+  final int chk=Math.max(denseN / 10,1);
+  Log.info("SPARSEN = " + sparseN + "    DENSEN = "+ denseN);
   for (int i=0; i < denseN; ++i) {
     final int fi=i;
     fs.add(new RecursiveAction(){
