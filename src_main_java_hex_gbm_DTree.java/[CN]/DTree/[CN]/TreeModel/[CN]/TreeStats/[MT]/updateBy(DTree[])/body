@@ -1,0 +1,13 @@
+{
+  if (ktrees == null)   return;
+  for (int i=0; i < ktrees.length; i++) {
+    DTree tree=ktrees[i];
+    if (minDepth > tree.depth)     minDepth=tree.depth;
+    if (maxDepth < tree.depth)     maxDepth=tree.depth;
+    if (minLeaves > tree.leaves)     minLeaves=tree.leaves;
+    if (maxLeaves < tree.leaves)     maxLeaves=tree.leaves;
+    sumDepth+=tree.depth;
+    sumLeaves+=tree.leaves;
+    numTrees++;
+  }
+}
