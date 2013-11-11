@@ -3,17 +3,16 @@
   DKV.put(outputKey,model);
   int tid;
   DTree[] ktrees=null;
+  TreeStats tstats=new TreeStats();
   for (tid=0; tid < ntrees; tid++) {
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
     ktrees=buildNextKTrees(fr);
     if (cancelled())     break;
-    Score sc=new Score().doIt(model,fr,validation,_validResponse).report(Sys.GBM__,tid,ktrees);
-    model=new GBMModel(model,ktrees,(float)sc._sum / _nrows,sc._cm);
-    DKV.put(outputKey,model);
+    tstats.updateBy(ktrees);
+    model=doScoring(model,outputKey,fr,ktrees,tid,tstats);
   }
-  Score sc=new Score().doIt(model,fr,validation,_validResponse).report(Sys.GBM__,tid,ktrees);
-  model=new GBMModel(model,null,(float)sc._sum / _nrows,sc._cm);
-  DKV.put(outputKey,model);
+  tstats.close();
+  model=doScoring(model,outputKey,fr,ktrees,tid,tstats);
   cleanUp(fr,t_build);
 }
