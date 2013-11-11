@@ -1,0 +1,17 @@
+{
+  int y=_last;
+  int x=UDP.get2(_mem,y) & 0xFFFF;
+  if (idx == x)   return 1;
+  if (idx > x && y < _mem.length && idx < UDP.get2(_mem,y + 2))   return 0;
+  int lo=0, hi=(_mem.length - OFF) >>> 1;
+  while (hi - lo > 1) {
+    int mid=(hi + lo) >>> 1;
+    x=UDP.get2(_mem,(mid << 1) + OFF) & 0xFFFF;
+    if (idx < x)     hi=mid;
+ else     lo=mid;
+  }
+  y=(lo << 1) + OFF;
+  _last=y;
+  x=UDP.get2(_mem,y) & 0xFFFF;
+  return idx == x ? 1 : 0;
+}

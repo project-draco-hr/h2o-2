@@ -1,0 +1,12 @@
+{
+  nc._ds=null;
+  nc._ls=MemoryManager.malloc8(_len);
+  nc._xs=MemoryManager.malloc4(_len);
+  for (int i=OFF; i < _mem.length; i+=4) {
+    int row=UDP.get2(_mem,i + 0) & 0xFFFF;
+    int x=UDP.get2(_mem,i + 2);
+    if (x == C2Chunk._NA)     nc._xs[row]=Integer.MIN_VALUE;
+ else     nc._ls[row]=x;
+  }
+  return nc;
+}

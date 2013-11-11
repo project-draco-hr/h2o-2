@@ -5,8 +5,7 @@
   for (int i=0; i < _keys.length; i++) {
     final int ii=i;
     final Key k=_keys[i];
-    H2OCountedCompleter t;
-    H2O.submitTask(t=new H2OCountedCompleter(){
+    H2OCountedCompleter t=new H2OCountedCompleter(){
       @Override public byte priority(){
         return H2O.MIN_HI_PRIORITY;
       }
@@ -15,7 +14,8 @@
         tryComplete();
       }
     }
-);
+;
+    H2O.submitTask(t);
     fs.add(t);
   }
   fs.blockForPending();

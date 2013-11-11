@@ -1,0 +1,7 @@
+{
+  byte[] buf=new byte[nzcnt * 2 + OFF];
+  UDP.set4(buf,0,len);
+  int j=OFF;
+  for (int i=0; i < len; i++)   if (ls[i] != 0)   j+=UDP.set2(buf,j,(short)i);
+  return buf;
+}

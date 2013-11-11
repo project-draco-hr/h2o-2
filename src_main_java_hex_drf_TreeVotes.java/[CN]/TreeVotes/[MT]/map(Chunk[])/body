@@ -1,0 +1,21 @@
+{
+  int ntrees=_tmodel.numTrees();
+  double[] data=new double[chks.length - 1];
+  float[] preds=new float[_tmodel.nclasses()];
+  _nrows=new long[ntrees];
+  _treeCVotes=new long[ntrees];
+  for (int tidx=0; tidx < ntrees; tidx++) {
+    Chunk cresp=chk_resp(chks);
+    Random rng=rngForTree(_tmodel.treeBits[tidx],cresp.cidx());
+    for (int row=0; row < cresp._len; row++) {
+      if (rng.nextFloat() >= _rate) {
+        for (int i=0; i < chks.length - 1; i++)         data[i]=chks[i].at0(row);
+        Arrays.fill(preds,0);
+        _tmodel.score0(data,preds,tidx);
+        int pred=Utils.maxIndex(preds);
+        if (pred == cresp.at80(row))         _treeCVotes[tidx]++;
+        _nrows[tidx]++;
+      }
+    }
+  }
+}
