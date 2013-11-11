@@ -1,0 +1,64 @@
+def simpleCheckRF2View(node=None, rfv=None, noPrint=False, **kwargs):
+    if (not node):
+        node = h2o.nodes[0]
+    if ('warnings' in rfv):
+        warnings = rfv['warnings']
+        for w in warnings:
+            if (not noPrint):
+                print '\nwarning:', w
+            if (('Failed' in w) or ('failed' in w)):
+                raise Exception(w)
+    cm = rfv['confusion_matrix']
+    header = cm['header']
+    classification_error = cm['classification_error']
+    rows_skipped = cm['rows_skipped']
+    cm_type = cm['type']
+    if (not noPrint):
+        print 'classification_error * 100 (pct):', (classification_error * 100)
+        print 'rows_skipped:', rows_skipped
+        print 'type:', cm_type
+    used_trees = cm['used_trees']
+    if (used_trees <= 0):
+        raise Exception('used_trees should be >0. used_trees:', used_trees)
+    ntree = kwargs.get('ntree', None)
+    if ((ntree is not None) and (used_trees != ntree)):
+        raise Exception('used_trees should == ntree. used_trees:', used_trees)
+    scoresList = cm['scores']
+    totalScores = 0
+    totalRight = 0
+    classErrorPctList = []
+    predictedClassDict = {}
+    for (classIndex, s) in enumerate(scoresList):
+        classSum = sum(s)
+        if (classSum == 0):
+            if (not noPrint):
+                print 'class:', classIndex, 'classSum', classSum, '<- why 0?'
+        else:
+            classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
+            totalRight += s[classIndex]
+            classErrorPct = (100 - classRightPct)
+            classErrorPctList.append(classErrorPct)
+            if (not noPrint):
+                print 'class:', classIndex, 'classSum', classSum, 'classErrorPct:', ('%4.2f' % classErrorPct)
+            for (pIndex, p) in enumerate(s):
+                if (pIndex not in predictedClassDict):
+                    predictedClassDict[pIndex] = p
+                else:
+                    predictedClassDict[pIndex] += p
+        totalScores += classSum
+    if (not noPrint):
+        print 'Predicted summary:'
+        for (predictedClass, p) in predictedClassDict.items():
+            print (str(predictedClass) + ':'), p
+        print 'totalScores:', totalScores
+        print 'totalRight:', totalRight
+        if (totalScores != 0):
+            pctRight = ((100.0 * totalRight) / totalScores)
+        else:
+            pctRight = 0.0
+        print 'pctRight:', ('%5.2f' % pctRight)
+        print 'pctWrong:', ('%5.2f' % (100 - pctRight))
+    if ((totalScores <= 0) or (totalScores > 5000000000.0)):
+        raise Exception('scores in RFView seems wrong. scores:', scoresList)
+    h2o.check_sandbox_for_errors()
+    return (classification_error, classErrorPctList, totalScores)

@@ -43,6 +43,7 @@ def test_summary2_percentile2(self):
                 maxs.sort(reverse=True)
             mins = column['mins']
             percentileValues = column['percentileValues']
+            print 'percentilevalues', percentileValues
             rows = column['rows']
             start = column['start']
             zeros = column['zeros']
@@ -75,5 +76,5 @@ def test_summary2_percentile2(self):
                     m = ('Percentile threshold: %s with value %s should ~= %s' % (t, v, e))
                     self.assertAlmostEqual(v, e, delta=0.5, msg=m)
         trial += 1
-        if (1 == 1):
+        if (getpass.getuser() == 'kevin'):
             generate_scipy_comparison(csvPathname)
