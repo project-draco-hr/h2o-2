@@ -1,5 +1,2 @@
 {
-  final byte[] bs=MemoryManager.malloc1(_len * 8);
-  for (int i=0; i < _len; ++i)   UDP.set8d(bs,8 * i,_ds != null ? _ds[i] : (isNA(i) || isEnum(i)) ? Double.NaN : _ls[i] * DParseTask.pow10(_xs[i]));
-  return new C8DChunk(bs);
 }
