@@ -1,5 +1,5 @@
 {
-  _percentiles=new double[DEFAULT_PERCENTILES.length];
+  _pctile=new double[DEFAULT_PERCENTILES.length];
   if (hcnt.length == 0)   return;
   int k=0;
   long s=0;
@@ -10,6 +10,6 @@
       s+=bc;
       k++;
     }
-    _percentiles[j]=_mins[0] + k * _binsz + ((_binsz > 1) ? 0.5 * _binsz : 0);
+    _pctile[j]=_mins[0] + k * _binsz + ((_binsz > 1) ? 0.5 * _binsz : 0);
   }
 }

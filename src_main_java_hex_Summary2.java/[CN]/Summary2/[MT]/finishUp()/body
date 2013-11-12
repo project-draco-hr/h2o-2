@@ -8,7 +8,7 @@
     _maxs[i]=_maxs[_maxs.length - 1 - i];
     _maxs[_maxs.length - 1 - i]=t;
   }
-  this.stats=_vec.isEnum() ? new EnumStats(_vec) : new NumStats(_vec,_zeros,_mins,_maxs,_percentiles);
+  this.stats=_vec.isEnum() ? new EnumStats(_vec) : new NumStats(_vec,_zeros,_mins,_maxs,_pctile);
   if (_vec.isEnum())   hbrk=_domains;
  else {
     hbrk=new String[hcnt.length];

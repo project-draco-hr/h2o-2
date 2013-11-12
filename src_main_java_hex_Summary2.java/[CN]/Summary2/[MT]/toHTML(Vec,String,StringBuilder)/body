@@ -52,12 +52,12 @@
   if (!vec.isEnum()) {
     NumStats stats=(NumStats)this.stats;
     sb.append("<div style='width:100%;overflow-x:auto;'><table class='table-bordered'>");
-    sb.append("<tr> <th colspan='" + stats.percentile_thresholds.length + "' "+ "style='text-align:center' "+ ">Percentiles</th></tr>");
+    sb.append("<tr> <th colspan='" + stats.pct.length + "' "+ "style='text-align:center' "+ ">Percentiles</th></tr>");
     sb.append("<tr><th>Threshold(%)</th>");
-    for (    double pc : stats.percentile_thresholds)     sb.append("<td>" + (int)Math.round(pc * 100) + "</td>");
+    for (    double pc : stats.pct)     sb.append("<td>" + (int)Math.round(pc * 100) + "</td>");
     sb.append("</tr>");
     sb.append("<tr><th>Value</th>");
-    for (    double pv : stats.percentiles)     sb.append("<td>" + Utils.p2d(pv) + "</td>");
+    for (    double pv : stats.pctile)     sb.append("<td>" + Utils.p2d(pv) + "</td>");
     sb.append("</tr>");
     sb.append("</table>");
     sb.append("</div>");
