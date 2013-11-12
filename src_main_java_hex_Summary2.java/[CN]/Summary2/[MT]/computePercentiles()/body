@@ -1,12 +1,12 @@
 {
   _percentiles=new double[DEFAULT_PERCENTILES.length];
-  if (bin_cnts.length == 0)   return;
+  if (hcnt.length == 0)   return;
   int k=0;
   long s=0;
   for (int j=0; j < DEFAULT_PERCENTILES.length; ++j) {
     final double s1=DEFAULT_PERCENTILES[j] * nrow;
     long bc=0;
-    while (s1 > s + (bc=bin_cnts[k])) {
+    while (s1 > s + (bc=hcnt[k])) {
       s+=bc;
       k++;
     }

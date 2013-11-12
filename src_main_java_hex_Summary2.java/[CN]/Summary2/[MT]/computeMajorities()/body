@@ -3,22 +3,22 @@
   for (int i=0; i < _mins.length; i++)   _mins[i]=i;
   for (int i=0; i < _maxs.length; i++)   _maxs[i]=i;
   int mini=0, maxi=0;
-  for (int i=0; i < bin_cnts.length; i++) {
-    if (bin_cnts[i] < bin_cnts[(int)_mins[mini]]) {
+  for (int i=0; i < hcnt.length; i++) {
+    if (hcnt[i] < hcnt[(int)_mins[mini]]) {
       _mins[mini]=i;
-      for (int j=0; j < _mins.length; j++)       if (bin_cnts[(int)_mins[j]] > bin_cnts[(int)_mins[mini]])       mini=j;
+      for (int j=0; j < _mins.length; j++)       if (hcnt[(int)_mins[j]] > hcnt[(int)_mins[mini]])       mini=j;
     }
-    if (bin_cnts[i] > bin_cnts[(int)_maxs[maxi]]) {
+    if (hcnt[i] > hcnt[(int)_maxs[maxi]]) {
       _maxs[maxi]=i;
-      for (int j=0; j < _maxs.length; j++)       if (bin_cnts[(int)_maxs[j]] < bin_cnts[(int)_maxs[maxi]])       maxi=j;
+      for (int j=0; j < _maxs.length; j++)       if (hcnt[(int)_maxs[j]] < hcnt[(int)_maxs[maxi]])       maxi=j;
     }
   }
-  for (int i=0; i < _mins.length - 1; i++)   for (int j=0; j < i; j++)   if (bin_cnts[(int)_mins[j]] > bin_cnts[(int)_mins[j + 1]]) {
+  for (int i=0; i < _mins.length - 1; i++)   for (int j=0; j < i; j++)   if (hcnt[(int)_mins[j]] > hcnt[(int)_mins[j + 1]]) {
     double t=_mins[j];
     _mins[j]=_mins[j + 1];
     _mins[j + 1]=t;
   }
-  for (int i=0; i < _maxs.length - 1; i++)   for (int j=0; j < i; j++)   if (bin_cnts[(int)_maxs[j]] < bin_cnts[(int)_maxs[j + 1]]) {
+  for (int i=0; i < _maxs.length - 1; i++)   for (int j=0; j < i; j++)   if (hcnt[(int)_maxs[j]] < hcnt[(int)_maxs[j + 1]]) {
     double t=_maxs[j];
     _maxs[j]=_maxs[j + 1];
     _maxs[j + 1]=t;

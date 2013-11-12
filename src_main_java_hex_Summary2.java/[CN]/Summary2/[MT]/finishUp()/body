@@ -9,9 +9,9 @@
     _maxs[_maxs.length - 1 - i]=t;
   }
   this.stats=_vec.isEnum() ? new EnumStats(_vec) : new NumStats(_vec,_zeros,_mins,_maxs,_percentiles);
-  if (_vec.isEnum())   bin_hdrs=_domains;
+  if (_vec.isEnum())   hbrk=_domains;
  else {
-    bin_hdrs=new String[bin_cnts.length];
-    for (int i=0; i < bin_hdrs.length; i++)     bin_hdrs[i]=Utils.p2d(binValue(i));
+    hbrk=new String[hcnt.length];
+    for (int i=0; i < hbrk.length; i++)     hbrk[i]=Utils.p2d(binValue(i));
   }
 }

@@ -34,7 +34,7 @@
     sb.append("</table></div>");
   }
   final int MAX_HISTO_BINS_DISPLAYED=1000;
-  int len=Math.min(bin_cnts.length,MAX_HISTO_BINS_DISPLAYED);
+  int len=Math.min(hcnt.length,MAX_HISTO_BINS_DISPLAYED);
   sb.append("<div style='width:100%;overflow-x:auto;'><table class='table-bordered'>");
   sb.append("<tr> <th colspan=" + len + " style='text-align:center'>Histogram</th></tr>");
   sb.append("<tr>");
@@ -42,12 +42,12 @@
  else   for (int i=0; i < len; i++)   sb.append("<th>" + Utils.p2d(binValue(i)) + "</th>");
   sb.append("</tr>");
   sb.append("<tr>");
-  for (int i=0; i < len; i++)   sb.append("<td>" + bin_cnts[i] + "</td>");
+  for (int i=0; i < len; i++)   sb.append("<td>" + hcnt[i] + "</td>");
   sb.append("</tr>");
   sb.append("<tr>");
-  for (int i=0; i < len; i++)   sb.append(String.format("<td>%.1f%%</td>",(100.0 * bin_cnts[i] / nrow)));
+  for (int i=0; i < len; i++)   sb.append(String.format("<td>%.1f%%</td>",(100.0 * hcnt[i] / nrow)));
   sb.append("</tr>");
-  if (bin_cnts.length >= MAX_HISTO_BINS_DISPLAYED)   sb.append("<div class='alert'>Histogram for this column was too big and was truncated to 1000 values!</div>");
+  if (hcnt.length >= MAX_HISTO_BINS_DISPLAYED)   sb.append("<div class='alert'>Histogram for this column was too big and was truncated to 1000 values!</div>");
   sb.append("</table></div>");
   if (!vec.isEnum()) {
     NumStats stats=(NumStats)this.stats;
