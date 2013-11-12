@@ -8,27 +8,27 @@ def simpleCheckRF2View(node=None, rfv=None, noPrint=False, **kwargs):
                 print '\nwarning:', w
             if (('Failed' in w) or ('failed' in w)):
                 raise Exception(w)
-    cm = rfv['confusion_matrix']
-    header = cm['header']
-    classification_error = cm['classification_error']
-    rows_skipped = cm['rows_skipped']
-    cm_type = cm['type']
-    if (not noPrint):
-        print 'classification_error * 100 (pct):', (classification_error * 100)
-        print 'rows_skipped:', rows_skipped
-        print 'type:', cm_type
-    used_trees = cm['used_trees']
-    if (used_trees <= 0):
-        raise Exception('used_trees should be >0. used_trees:', used_trees)
-    ntree = kwargs.get('ntree', None)
-    if ((ntree is not None) and (used_trees != ntree)):
-        raise Exception('used_trees should == ntree. used_trees:', used_trees)
-    scoresList = cm['scores']
+    rf_model = rfv['drf_model']
+    cm = rf_model['cm']
+    ntrees = rf_model['N']
+    errs = rf_model['errs']
+    N = rf_model['N']
+    varimp = rf_model['varimp']
+    treeStats = rf_model['treeStats']
+    print 'maxDepth:', treeStats['maxDepth']
+    print 'maxLeaves:', treeStats['maxLeaves']
+    print 'minDepth:', treeStats['minDepth']
+    print 'minLeaves:', treeStats['minLeaves']
+    print 'meanLeaves:', treeStats['meanLeaves']
+    print 'meanDepth:', treeStats['meanDepth']
+    print 'errs[0]:', errs[0]
+    print 'errs[-1]:', errs[(-1)]
+    print 'errs:', errs
     totalScores = 0
     totalRight = 0
     classErrorPctList = []
     predictedClassDict = {}
-    for (classIndex, s) in enumerate(scoresList):
+    for (classIndex, s) in enumerate(cm):
         classSum = sum(s)
         if (classSum == 0):
             if (not noPrint):
@@ -61,4 +61,4 @@ def simpleCheckRF2View(node=None, rfv=None, noPrint=False, **kwargs):
     if ((totalScores <= 0) or (totalScores > 5000000000.0)):
         raise Exception('scores in RFView seems wrong. scores:', scoresList)
     h2o.check_sandbox_for_errors()
-    return (classification_error, classErrorPctList, totalScores)
+    return (errs[(-1)], classErrorPctList, totalScores)
