@@ -1,0 +1,25 @@
+{
+  if (env.isDbl()) {
+    int nbins=(int)Math.floor(env.popDbl());
+    if (nbins < 2)     throw new IllegalArgumentException("Number of intervals must be at least 2");
+    Frame fr=env.popAry();
+    String skey=env.key();
+    if (fr.vecs().length != 1 || fr.domains()[0] != null)     throw new IllegalArgumentException("First argument must be a numeric vector");
+    final double fmax=fr.vecs()[0].max();
+    final double fmin=fr.vecs()[0].min();
+    final double width=(fmax - fmin) / nbins;
+    Frame fr2=new MRTask2(){
+      @Override public void map(      Chunk chk,      NewChunk nchk){
+        for (int r=0; r < chk._len; r++) {
+          double x=chk.at0(r);
+          nchk.addNum(Math.floor((x - fmin) / width));
+        }
+      }
+    }
+.doAll(1,fr).outputFrame(fr._names,fr.domains());
+    env.subRef(fr,skey);
+    env.pop();
+    env.push(fr2);
+  }
+ else   throw H2O.unimpl();
+}

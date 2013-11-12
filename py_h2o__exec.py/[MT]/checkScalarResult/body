@@ -6,21 +6,33 @@ def checkScalarResult(resultInspect, resultKey):
         resultInspect0 = resultInspect
     emsg = None
     while True:
-        if ('type' not in resultInspect0):
-            emsg = "'type' missing. Look at the json just printed"
-            break
-        t = resultInspect0['type']
-        if (t != 'parsed'):
-            emsg = (resultKey + " 'type' is not 'parsed'. Look at the json just printed")
-            break
-        if ('rows' not in resultInspect0):
-            emsg = "Inspect response: 'rows' missing. Look at the json just printed"
-            break
-        rows = resultInspect0['rows']
-        if ('cols' not in resultInspect0):
-            emsg = "Inspect response: 'cols' missing. Look at the json just printed"
-            break
-        cols = resultInspect0['cols']
+        if h2o.beta_features:
+            if ('num_rows' not in resultInspect0):
+                emsg = "Inspect response: 'num_rows' missing. Look at the json just printed"
+                break
+            rows = resultInspect0['num_rows']
+            if ('cols' not in resultInspect0):
+                emsg = "Inspect response: 'num_cols' missing. Look at the json just printed"
+                break
+            cols = resultInspect0['cols']
+            print 'cols:', h2o.dump_json(cols)
+            num_cols = resultInspect0['num_cols']
+        else:
+            if ('type' not in resultInspect0):
+                emsg = "'type' missing. Look at the json just printed"
+                break
+            t = resultInspect0['type']
+            if (t != 'parsed'):
+                emsg = (resultKey + " 'type' is not 'parsed'. Look at the json just printed")
+                break
+            if ('rows' not in resultInspect0):
+                emsg = "Inspect response: 'rows' missing. Look at the json just printed"
+                break
+            rows = resultInspect0['rows']
+            if ('cols' not in resultInspect0):
+                emsg = "Inspect response: 'cols' missing. Look at the json just printed"
+                break
+            cols = resultInspect0['cols']
         break
     if (emsg is not None):
         print (("\nKey: '" + resultKey) + "' being inspected:\n"), h2o.dump_json(resultInspect)
@@ -28,7 +40,10 @@ def checkScalarResult(resultInspect, resultKey):
         raise Exception(('Inspect problem:' + emsg))
     metaDict = cols[0]
     for (key, value) in metaDict.items():
-        h2o.verboseprint('Inspect metadata:', key, value)
+        if h2o.beta_features:
+            print 'Inspect metaDict:', key, value
+        else:
+            h2o.verboseprint('Inspect metaDict:', key, value)
     min_value = metaDict['min']
     checkForBadFP(min_value)
     return min_value
