@@ -20,7 +20,7 @@ H2O.fail();
 }
 }
  else {
-int x=_xs[i] - scale;
+int x=(_xs[i] == Integer.MIN_VALUE + 1 ? 0 : _xs[i]) - scale;
 long le=x >= 0 ? _ls[i] * DParseTask.pow10i(x) : _ls[i] / DParseTask.pow10i(-x);
 le-=bias;
 switch (log) {
