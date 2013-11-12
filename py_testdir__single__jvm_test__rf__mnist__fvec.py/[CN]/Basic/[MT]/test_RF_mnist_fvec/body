@@ -46,3 +46,19 @@ def test_RF_mnist_fvec(self):
         rfView['ntrees'] = kwargs['ntrees']
         rfViewInitial.append(rfView)
         h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=120, retryDelaySecs=5)
+        print 'rfViewInitial', rfViewInitial
+        for rfView in rfViewInitial:
+            print 'Checking completed job:', rfView
+            print 'rfView', h2o.dump_json(rfView)
+            data_key = rfView['data_key']
+            model_key = rfView['model_key']
+            ntrees = rfView['ntrees']
+            rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, noPoll=True, doSimpleCheck=False)
+            h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
+            print 'rfView:', h2o.dump_json(rfView)
+            rf_model = rfView['drf_model']
+            cm = rf_model['cm']
+            ntrees = rf_model['N']
+            errs = rf_model['errs']
+            N = rf_model['N']
+            predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=data_key)

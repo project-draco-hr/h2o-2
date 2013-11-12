@@ -1,0 +1,9 @@
+import unittest, random, sys, time
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_browse as h2b, h2o_exec as h2e, h2o_hosts
+print 'FIX! evidently visibility between expressions depends on the type. constants disappear?'
+print 'hack by creating vectors'
+initList = ['Result0 = c(0)', 'Result1 = c(1)', 'Result2 = c(2)', 'Result3 = c(3)']
+exprList = ['Result.hex = Result<n> = Result1 + Result<n-1>']
+if (__name__ == '__main__'):
+    h2o.unit_main()
