@@ -10,27 +10,33 @@
     if (activation == Activation.Rectifier)     ls[i + 1]=new Layer.Rectifier(hidden[i]);
  else     ls[i + 1]=new Layer.Tanh(hidden[i]);
     ls[i + 1].rate=(float)rate;
+    ls[i + 1].rate_annealing=(float)rate_annealing;
     ls[i + 1].l2=(float)l2;
   }
   if (classification)   ls[ls.length - 1]=new VecSoftmax(trainResp,null);
  else   ls[ls.length - 1]=new VecLinear(trainResp,null);
   ls[ls.length - 1].rate=(float)rate;
+  ls[ls.length - 1].rate_annealing=(float)rate_annealing;
   ls[ls.length - 1].l2=(float)l2;
   for (int i=0; i < ls.length; i++)   ls[i].init(ls,i);
   final Key sourceKey=Key.make(input("source"));
   final Frame frame=new Frame(_names,train);
   frame.add(_responseName,trainResp);
-  final NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+  final Error[] trainErrors0=new Error[]{new Error()};
+  final Error[] validErrors0=validation == null ? null : new Error[]{new Error()};
+  NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+  model.training_errors=trainErrors0;
+  model.validation_errors=validErrors0;
   UKV.put(destination_key,model);
+  final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
   final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
   Thread thread=new Thread(){
+    Error[] trainErrors=trainErrors0, validErrors=validErrors0;
     @Override public void run(){
       try {
-        Frame[] adapted=null;
         Vec[] valid=null;
         Vec validResp=null;
         if (validation != null) {
-          adapted=model.adapt(validation,false);
           valid=new Vec[adapted[0].vecs().length];
           System.arraycopy(adapted[0].vecs(),0,valid,0,valid.length);
           validResp=_validResponse;
@@ -57,16 +63,24 @@
         int classes=ls[ls.length - 1].units;
         cm=new long[classes][classes];
       }
-      Error trainE=NeuralNet.eval(ls,train,trainResp,EVAL_ROW_COUNT,valid == null ? cm : null);
-      Error validE=null;
-      if (valid != null)       validE=NeuralNet.eval(ls,valid,validResp,EVAL_ROW_COUNT,cm);
-      model.processed_samples=trainer.samples();
-      model.train_classification_error=trainE.classification;
-      model.train_mse=trainE.mse;
-      model.validation_classification_error=validE != null ? validE.classification : Double.NaN;
-      model.validation_mse=validE != null ? validE.mse : Double.NaN;
+      Error e=eval(train,trainResp,valid == null ? cm : null);
+      trainErrors=Utils.append(trainErrors,e);
+      if (valid != null) {
+        e=eval(valid,validResp,cm);
+        validErrors=Utils.append(validErrors,e);
+      }
+      NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
+      model.training_errors=trainErrors;
+      model.validation_errors=validErrors;
       model.confusion_matrix=cm;
       UKV.put(model._selfKey,model);
+    }
+    private Error eval(    Vec[] vecs,    Vec resp,    long[][] cm){
+      Error e=NeuralNet.eval(ls,vecs,resp,EVAL_ROW_COUNT,cm);
+      e.training_samples=trainer.samples();
+      e.evaluation_samples=EVAL_ROW_COUNT;
+      e.training_time_ms=runTimeMs();
+      return e;
     }
   }
 ;

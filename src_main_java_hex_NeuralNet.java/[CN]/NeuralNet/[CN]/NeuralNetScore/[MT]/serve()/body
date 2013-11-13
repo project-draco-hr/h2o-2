@@ -11,7 +11,7 @@
   }
   Error error=eval(clones,frs[0].vecs(),response,max_rows,confusion_matrix);
   classification_error=error.classification;
-  mse=error.mse;
+  mean_square_error=error.mean_square;
   if (frs[1] != null)   frs[1].remove();
   return new Response(Response.Status.done,this,0,0,null);
 }
