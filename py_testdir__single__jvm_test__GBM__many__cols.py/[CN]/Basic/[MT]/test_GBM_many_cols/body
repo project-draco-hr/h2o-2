@@ -36,7 +36,7 @@ def test_GBM_many_cols(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
-        ntrees = 100
+        ntrees = 3
         prefixList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
         for max_depth in [5, 10]:
             print 'Creating new header', hdrPathname
@@ -44,7 +44,7 @@ def test_GBM_many_cols(self):
             write_syn_header(hdrPathname, rowCount, colCount, prefix)
             h2o.beta_features = False
             hdr_hex_key = (prefix + '_hdr.hex')
-            parseTrainResult = h2i.import_parse(bucket=None, path=hdrPathname, schema='put', header=1, hex_key=hdr_hex_key, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
+            parseHdrResult = h2i.import_parse(bucket=None, path=hdrPathname, schema='put', header=1, hex_key=hdr_hex_key, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
             h2o.nodes[0].set_column_names(target=hex_key, source=hdr_hex_key)
             print "The response col name is changing each iteration, since we're parsing a new header"
             params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': (prefix + '_response'), 'ignored_cols_by_name': None, }
