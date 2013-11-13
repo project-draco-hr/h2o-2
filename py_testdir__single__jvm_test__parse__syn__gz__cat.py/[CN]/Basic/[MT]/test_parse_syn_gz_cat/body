@@ -38,7 +38,7 @@ def test_parse_syn_gz_cat(self):
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
         value_size_bytes = inspect['value_size_bytes']
-        h2o_cmd.infoFromInspect(inspect, csvPathname)
-        print ('\n' + csvPathname), '\n    num_rows:', '{:,}'.format(num_rows), '\n    num_cols:', '{:,}'.format(num_cols), '\n    value_size_bytes:', '{:,}'.format(value_size_bytes)
+        h2o_cmd.infoFromInspect(inspect, csvPathnameReplgz)
+        print ('\n' + csvPathnameReplgz), '\n    num_rows:', '{:,}'.format(num_rows), '\n    num_cols:', '{:,}'.format(num_cols), '\n    value_size_bytes:', '{:,}'.format(value_size_bytes)
         self.assertEqual(inspect['num_cols'], colCount, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], colCount)))
         self.assertEqual(inspect['num_rows'], totalRows, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], rowCount)))

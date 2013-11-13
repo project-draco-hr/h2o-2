@@ -6,7 +6,7 @@
   Frame pred=null;
   try {
     drf=new DRF();
-    frTrain=drf.source=parseDs(fnametrain,destTrain);
+    frTrain=drf.source=parseFrame(destTrain,fnametrain);
     unifyFrame(drf,frTrain,prep);
     drf.classification=true;
     drf.ntrees=ntree;
@@ -19,7 +19,7 @@
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
     assertCM(expCM,model.cm);
-    frTest=fnametest != null ? parseDs(fnametest,destTest) : null;
+    frTest=fnametest != null ? parseFrame(destTest,fnametest) : null;
     pred=drf.score(frTest != null ? frTest : drf.source);
   }
  catch (  Throwable t) {

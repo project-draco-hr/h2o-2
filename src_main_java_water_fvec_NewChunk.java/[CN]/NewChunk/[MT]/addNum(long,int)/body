@@ -1,4 +1,9 @@
 {
   if (val == 0)   exp=0;
+  long t;
+  while (exp < 0 && exp > -9999999 && (t=val / 10) * 10 == val) {
+    val=t;
+    exp++;
+  }
   append2(val,exp);
 }
