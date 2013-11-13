@@ -11,18 +11,21 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=0.2, in
         print ('\n%s parameters:' % algo), params_dict
         sys.stdout.flush()
     rf = self.__do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
-    verboseprint(('\n%s result:' % algo), dump_json(rf))
+    print ('\n%s result:' % algo), dump_json(rf)
     if ((noPoll or (not rfView)) or (beta_features and (rfView == False))):
         return rf
-    if (rf['response']['redirect_request'] != algoView):
-        print dump_json(rf)
-        raise Exception(('H2O %s redirect is not %s json response precedes.' % (algo, algoView)))
-    data_key = rf['data_key']
-    model_key = rf['model_key']
-    rfCloud = rf['response']['h2o']
-    ntree = rf['ntree']
-    response_variable = rf['response_variable']
-    if (not beta_features):
+    if beta_features:
+        rfView = self.poll_url(rf, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+        return rfViewResult
+    else:
+        if (rf['response']['redirect_request'] != algoView):
+            print dump_json(rf)
+            raise Exception(('H2O %s redirect is not %s json response precedes.' % (algo, algoView)))
+        data_key = rf['data_key']
+        model_key = rf['model_key']
+        rfCloud = rf['response']['h2o']
+        ntree = rf['ntree']
+        response_variable = rf['response_variable']
         params_dict.update({'ntree': ntree, 'model_key': model_key, })
-    rfViewResult = self.random_forest_view(timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, print_params=print_params, noPoll=noPoll, useRFScore=False, **params_dict)
-    return rfViewResult
+        rfViewResult = self.random_forest_view(timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, print_params=print_params, noPoll=noPoll, useRFScore=False, **params_dict)
+        return rfViewResult
