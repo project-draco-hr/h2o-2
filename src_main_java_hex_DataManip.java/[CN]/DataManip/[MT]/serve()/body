@@ -16,8 +16,8 @@
       }
     }
     if (source.vecs()[0].length() != vadd[0].length())     throw new IllegalArgumentException("Data frames must have same number of rows!");
-    String[] names=(String[])ArrayUtils.addAll(source.names(),nadd);
-    Vec[] vecs=(Vec[])ArrayUtils.addAll(source.vecs(),vadd);
+    String[] names=Utils.append(source.names(),nadd);
+    Vec[] vecs=Utils.append(source.vecs(),vadd);
     Frame fr=new Frame(names,vecs);
     DKV.put(dest(),fr);
   }

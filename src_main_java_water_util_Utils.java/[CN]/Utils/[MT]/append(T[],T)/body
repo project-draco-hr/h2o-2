@@ -1,3 +1,6 @@
 {
-  return (T[])ArrayUtils.addAll(a,b);
+  if (a == null)   return b;
+  T[] tmp=Arrays.copyOf(a,a.length + b.length);
+  System.arraycopy(b,0,tmp,a.length,b.length);
+  return tmp;
 }
