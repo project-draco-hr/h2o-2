@@ -1,13 +1,7 @@
 {
   if (_ls == null || _len >= _ls.length)   append2slow();
   if (_len2 != _len) {
-    if (x != 0) {
-      long ls[]=MemoryManager.malloc8(_len2 + 1);
-      for (int i=0; i < _len; i++)       ls[_xs[i]]=_ls[i];
-      _ls=ls;
-      _xs=MemoryManager.malloc4(_len2 + 1);
-      _len=_len2;
-    }
+    if (x != 0)     cancel_sparse();
  else     if (l == 0) {
       _len2++;
       return;
