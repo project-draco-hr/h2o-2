@@ -54,7 +54,7 @@ def test_GBM_manyfiles_train_test(self):
             kwargs = params.copy()
             h2o.beta_features = True
             trainStart = time.time()
-            gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, noPoll=True, timeoutSecs=timeoutSecs, destination_key=((modelKey + '_') + str(trial)), **kwargs)
+            gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, noPoll=True, timeoutSecs=(timeoutSecs * 4), destination_key=((modelKey + '_') + str(trial)), **kwargs)
             trainElapsed = (time.time() - trainStart)
             print 'GBM dispatch completed in', trainElapsed, 'seconds. On dataset: ', trainFilename
         h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
