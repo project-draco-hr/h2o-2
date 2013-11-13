@@ -17,7 +17,7 @@
   Layer.shareWeights(ls[index],pre[index]);
   Layer.shareWeights(ls[index],pre[index + 1]);
   for (int i=0; i < pre.length; i++)   pre[i].init(pre,i,false,0);
-  Trainer.Direct trainer=new Trainer.Direct(pre,this);
+  Trainer.Direct trainer=new Trainer.Direct(pre,self());
   trainer.samples=1000;
   trainer.run();
 }

@@ -5,7 +5,7 @@
   for (int o=0; o < out.length; o++) {
     float t=o == output.target() ? 1 : 0;
     float d=t - out[o];
-    error.mse+=d * d;
+    error.mean_square+=d * d;
   }
   float max=Float.NEGATIVE_INFINITY;
   int idx=-1;
