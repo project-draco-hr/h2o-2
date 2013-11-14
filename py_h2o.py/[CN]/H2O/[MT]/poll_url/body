@@ -1,11 +1,12 @@
 def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False):
     verboseprint('poll_url input: response:', dump_json(response))
     if beta_features:
-        if ('redirect_url' in response['response_info']):
-            url = self.__url(response['response_info']['redirect_url'])
-            params = None
-        else:
+        if ('response_info' not in response):
+            raise Exception(("The response during polling should have 'response_info'. Don't see it: \n%s" % dump_json(response)))
+        if ('redirect_url' not in response['response_info']):
             raise Exception(("The response during polling should have 'redirect_url'. Don't see it: \n%s" % dump_json(response)))
+        url = self.__url(response['response_info']['redirect_url'])
+        params = None
     else:
         if ('response' not in response):
             raise Exception("'response' not in response. Maybe h2o.beta_features=True is needed?")
