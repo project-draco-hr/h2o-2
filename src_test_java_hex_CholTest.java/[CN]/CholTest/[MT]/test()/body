@@ -5,7 +5,7 @@
     DataSetup data=new DataSetup(sz,12345);
     long start=System.currentTimeMillis();
     CholeskyDecomposition jamaChol=new Matrix(data.xx).chol();
-    Log.err("JAMA CHOLESKY [N = " + sz + "] TAKES "+ (System.currentTimeMillis() - start)+ " MILLISECONDS.");
+    Log.info("JAMA CHOLESKY [N = " + sz + "] TAKES "+ (System.currentTimeMillis() - start)+ " MILLISECONDS.");
     if (!jamaChol.isSPD())     continue;
     ForkJoinPool fjp=new ForkJoinPool(32);
     for (int t=2; t <= 32; t+=2) {
