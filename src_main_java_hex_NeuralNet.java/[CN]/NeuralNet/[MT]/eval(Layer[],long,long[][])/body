@@ -7,12 +7,12 @@
     int correct=0;
     for (input._pos=0; input._pos < len; input._pos++)     if (correct(ls,error,cm))     correct++;
     error.classification=(len - (double)correct) / len;
-    error.mse/=len;
+    error.mean_square/=len;
   }
  else {
     for (input._pos=0; input._pos < len; input._pos++)     error(ls,error);
     error.classification=Double.NaN;
-    error.mse/=len;
+    error.mean_square/=len;
   }
   return error;
 }

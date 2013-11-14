@@ -28,6 +28,7 @@
   }
  else   if (env.isAry()) {
     Frame ary=env.popAry();
+    String skey1=env.key();
     if (ary.vecs().length != 1 || ary.vecs()[0].isEnum())     throw new IllegalArgumentException("Second argument must be a numeric column vector");
     Vec brks=ary.vecs()[0];
     SortedSet<Double> temp=new TreeSet<Double>();
@@ -40,7 +41,7 @@
     }
     if (cutoffs.length < 2)     throw new IllegalArgumentException("Vector of breaks must have at least 2 unique values");
     Frame fr=env.popAry();
-    String skey=env.key();
+    String skey2=env.key();
     if (fr.vecs().length != 1 || fr.vecs()[0].isEnum())     throw new IllegalArgumentException("First argument must be a numeric column vector");
     final int nbins=cutoffs.length - 1;
     String[][] domains=new String[1][nbins];
@@ -62,7 +63,8 @@
       }
     }
 .doAll(1,fr).outputFrame(fr._names,domains);
-    env.subRef(fr,skey);
+    env.subRef(ary,skey1);
+    env.subRef(fr,skey2);
     env.pop();
     env.push(fr2);
   }

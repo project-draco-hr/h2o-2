@@ -18,6 +18,8 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     print 'GLMModel/iterations:', iterations
     if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
         raise Exception(('Convergence issue? GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
+    if ('validations' not in GLMModel):
+        raise Exception(("Should be a 'validations' key in GLMModel: %s" % h2o.dump_json(GLMModel)))
     validationsList = GLMModel['validations']
     validations = validationsList[0]
     n_folds = kwargs.setdefault('n_folds', None)
