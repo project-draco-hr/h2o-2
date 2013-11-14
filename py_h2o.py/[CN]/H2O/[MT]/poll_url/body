@@ -52,7 +52,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         if create_noise:
             status = 'poll'
         elif beta_features:
-            status = r['status']
+            status = r['response_info']['status']
         else:
             status = r['response']['status']
         if ((time.time() - start) > timeoutSecs):
