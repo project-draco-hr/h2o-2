@@ -1,6 +1,5 @@
 def infoFromSummary(summaryResult, noPrint=False):
     if h2o.beta_features:
-        names = summaryResult['names']
         means = summaryResult['means']
         summaries = summaryResult['summaries']
         for column in summaries:
@@ -16,7 +15,6 @@ def infoFromSummary(summaryResult, noPrint=False):
             print '\n\n************************'
             print 'start:', start
             print 'zeros:', zeros
-            print 'len(names):', len(names)
             print 'len(means):', len(means)
     else:
         summary = summaryResult['summary']

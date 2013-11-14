@@ -1,4 +1,7 @@
 def runExec(node=None, timeoutSecs=20, **kwargs):
     if (not node):
         node = h2o.nodes[0]
-    return node.exec_query(timeoutSecs, **kwargs)
+    a = node.exec_query(timeoutSecs, **kwargs)
+    if h2o.beta_features:
+        h2o.check_sandbox_for_errors()
+    return a
