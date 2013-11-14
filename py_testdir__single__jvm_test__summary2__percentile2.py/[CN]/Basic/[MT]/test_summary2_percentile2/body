@@ -26,31 +26,33 @@ def test_summary2_percentile2(self):
         summaryResult = h2o_cmd.runSummary(key=hex_key, cols=0, max_ncols=1)
         if h2o.verbose:
             print 'summaryResult:', h2o.dump_json(summaryResult)
-        means = summaryResult['means']
-        names = summaryResult['names']
         summaries = summaryResult['summaries']
         for column in summaries:
-            bins = column['bins']
-            binsz = column['binsz']
-            self.assertEqual(binsz, 1)
-            domains = column['domains']
-            for b in bins:
+            colname = column['colname']
+            coltype = column['type']
+            nacnt = column['nacnt']
+            stats = column['stats']
+            stattype = stats['type']
+            mean = stats['mean']
+            sd = stats['sd']
+            zeros = stats['zeros']
+            mins = stats['mins']
+            maxs = stats['maxs']
+            pct = stats['pct']
+            pctile = stats['pctile']
+            hstart = column['hstart']
+            hstep = column['hstep']
+            hbrk = column['hbrk']
+            hcnt = column['hcnt']
+            for b in hcnt:
                 e = (0.1 * rowCount)
                 self.assertAlmostEqual(b, (0.1 * rowCount), delta=(0.01 * rowCount), msg=('Bins not right. b: %s e: %s' % (b, e)))
-            print 'FIX! reversing maxs list to match expected'
-            maxs = column['maxs']
-            if DO_TEMP_HACK:
-                maxs.sort(reverse=True)
-            mins = column['mins']
-            percentileValues = column['percentileValues']
-            print 'percentilevalues', percentileValues
-            start = column['start']
-            zeros = column['zeros']
+            print 'pctile:', pctile
             print 'maxs:', maxs
             self.assertEqual(maxs[0], expectedMax)
             print 'mins:', mins
             self.assertEqual(mins[0], expectedMin)
-            for v in percentileValues:
+            for v in pctile:
                 self.assertTrue((v >= expectedMin), ('Percentile value %s should all be >= the min dataset value %s' % (v, expectedMin)))
                 self.assertTrue((v <= expectedMax), ('Percentile value %s should all be <= the max dataset value %s' % (v, expectedMax)))
             eV1 = [1.0, 1.0, 1.0, 3.0, 4.0, 5.0, 7.0, 8.0, 9.0, 10.0, 10.0]
@@ -63,8 +65,8 @@ def test_summary2_percentile2(self):
             else:
                 raise Exception(("Test doesn't have the expected percentileValues for expectedMin: %s" % expectedMin))
             if (1 == 0):
-                for (t, v, e) in zip(thresholds, percentileValues, eV):
-                    m = ('Percentile threshold: %s with value %s should ~= %s' % (t, v, e))
+                for (v, e) in zip(pctile, eV):
+                    m = ('Percentile: value %s should ~= %s' % (v, e))
                     self.assertAlmostEqual(v, e, delta=0.5, msg=m)
         trial += 1
         if (getpass.getuser() == 'kevin'):
