@@ -1,0 +1,6 @@
+{
+  nc._ls=MemoryManager.malloc8(_len);
+  nc._xs=MemoryManager.malloc4(_len);
+  for (int i=OFF; i < _mem.length; i+=2)   nc._ls[UDP.get2(_mem,i) & 0xFFFF]=1;
+  return nc;
+}

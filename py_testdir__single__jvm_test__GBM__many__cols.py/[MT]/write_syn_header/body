@@ -1,0 +1,6 @@
+def write_syn_header(hdrPathname, rowCount, colCount, prefix):
+    dsf = open(hdrPathname, 'w+')
+    rowData = [((prefix + '_') + str(j)) for j in range(colCount)]
+    rowData.append((prefix + '_response'))
+    dsf.write((','.join(rowData) + '\n'))
+    dsf.close()

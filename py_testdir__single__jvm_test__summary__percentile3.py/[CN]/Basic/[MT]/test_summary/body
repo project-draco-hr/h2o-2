@@ -1,0 +1,56 @@
+def test_summary(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(500000, 1, 'cD', 300, 0, 9), (500000, 2, 'cE', 300, 1, 10), (500000, 2, 'cF', 300, 2, 11)]
+    timeoutSecs = 10
+    n = h2o.nodes[0]
+    lenNodes = len(h2o.nodes)
+    x = 0
+    for (rowCount, colCount, hex_key, timeoutSecs, expectedMin, expectedMax) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        x += 1
+        csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        legalValues = {}
+        for x in range(expectedMin, expectedMax):
+            legalValues[x] = x
+        (expectedMean, expectedSigma, noiseMin, noiseMax) = write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEEDPERFILE)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
+        print csvFilename, 'parse time:', parseResult['response']['time']
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+        print ('\n' + csvFilename)
+        summaryResult = h2o_cmd.runSummary(key=hex_key)
+        h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
+        summary = summaryResult['summary']
+        columnsList = summary['columns']
+        for columns in columnsList:
+            N = columns['N']
+            self.assertEqual(N, rowCount)
+            name = columns['name']
+            stype = columns['type']
+            self.assertEqual(stype, 'number')
+            histogram = columns['histogram']
+            bin_size = histogram['bin_size']
+            bin_names = histogram['bin_names']
+            bins = histogram['bins']
+            nbins = histogram['bins']
+            if (stype != 'enum'):
+                smax = columns['max']
+                smin = columns['min']
+                percentiles = columns['percentiles']
+                thresholds = percentiles['thresholds']
+                values = percentiles['values']
+                mean = columns['mean']
+                sigma = columns['sigma']
+                expectedMaxBoth = max(expectedMax, (noiseMax + 1))
+                expectedMinBoth = min(expectedMin, (noiseMin - 1))
+                for v in values:
+                    self.assertTrue((v >= expectedMinBoth), ('Percentile value %s should all be >= the min dataset value %s or noise min %s' % (v, expectedMin, noiseMin)))
+                    self.assertTrue((v <= expectedMaxBoth), ('Percentile value %s should all be <= the max dataset value %s or noise max %s' % (v, expectedMax, noiseMax)))
+                if DO_SCIPY_COMPARE:
+                    generate_scipy_comparison(csvPathname)
+                print 'col name:', name, 'mean:', mean, 'expectedMean:', expectedMean
+                self.assertAlmostEqual(mean, expectedMean, delta=0.001)
+                print 'col name:', name, 'sigma:', sigma, 'expectedSigma:', expectedSigma
+                self.assertAlmostEqual(sigma, expectedSigma, delta=0.001)

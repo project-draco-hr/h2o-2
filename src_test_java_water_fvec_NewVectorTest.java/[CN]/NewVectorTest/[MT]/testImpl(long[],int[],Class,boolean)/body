@@ -3,7 +3,7 @@
   NewChunk nv=new NewChunk(av,0);
   nv._ls=ls;
   nv._xs=xs;
-  nv._len=ls.length;
+  nv._len=nv._len2=ls.length;
   Chunk bv=nv.compress();
   bv._vec=av.close(new Futures());
   assertTrue("Found chunk class " + bv.getClass() + " but expected "+ C,C.isInstance(bv));

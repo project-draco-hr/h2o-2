@@ -1,6 +1,6 @@
 def test_parse_syn_gz_cat(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(10, 5000, 'cE', 600), (10, 10000, 'cF', 600), (10, 50000, 'cF', 600)]
+    tryList = [(100, 40000, 'cF', 600), (100, 20000, 'cF', 600), (100, 10000, 'cF', 600), (100, 5000, 'cF', 600)]
     FILEREPL = 200
     DOSUMMARY = True
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
@@ -35,7 +35,10 @@ def test_parse_syn_gz_cat(self):
         start = time.time()
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=timeoutSecs)
         print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
-        h2o_cmd.infoFromInspect(inspect, csvPathname)
-        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        num_rows = inspect['num_rows']
+        num_cols = inspect['num_cols']
+        value_size_bytes = inspect['value_size_bytes']
+        h2o_cmd.infoFromInspect(inspect, csvPathnameReplgz)
+        print ('\n' + csvPathnameReplgz), '\n    num_rows:', '{:,}'.format(num_rows), '\n    num_cols:', '{:,}'.format(num_cols), '\n    value_size_bytes:', '{:,}'.format(value_size_bytes)
         self.assertEqual(inspect['num_cols'], colCount, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], colCount)))
         self.assertEqual(inspect['num_rows'], totalRows, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['num_rows'], rowCount)))
