@@ -18,10 +18,10 @@ def test_GBM_fvec(self):
         h2o.check_sandbox_for_errors()
         if (importFolderPath == 'manyfiles-nflx-gz'):
             if DO_CLASSIFICATION:
-                execExpr = ('c.hex=colSwap(c.hex,%s,(c.hex[%s]>15 ? 1 : 0))' % (response, response))
-                resultExec = h2o_cmd.runExec(expression=execExpr)
+                execExpr = ('c.hex[,%s]=c.hex[,%s]>15' % (response, response))
+                kwargs = {'str': execExpr, }
+                resultExec = h2o_cmd.runExec(**kwargs)
             s = h2o_cmd.runSummary(key='c.hex', cols=response, max_ncols=1)
-            print h2o.dump_json(s)
             x = range(542)
             xIgnore = []
             for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, response]:
@@ -37,14 +37,31 @@ def test_GBM_fvec(self):
             xIgnore = ','.join(map(colIt, xIgnore))
         else:
             xIgnore = 0
-        modelKey = 'GBMKEY'
+        modelKey = 'GBMGood'
         params = {'destination_key': modelKey, 'ignored_cols_by_name': xIgnore, 'learn_rate': 0.1, 'ntrees': 2, 'max_depth': 8, 'min_rows': 1, 'response': ('C' + str(response)), 'classification': (1 if DO_CLASSIFICATION else 0), }
         kwargs = params.copy()
         timeoutSecs = 1800
         start = time.time()
         GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
         print '\nGBMFirstResult:', h2o.dump_json(GBMFirstResult)
-        h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+        for i in range(10):
+            kwargs['destination_key'] = 'GBMBad1'
+            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+            jobid1 = GBMFirstResult['job_key']
+            kwargs['destination_key'] = 'GBMBad2'
+            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+            jobid2 = GBMFirstResult['job_key']
+            kwargs['destination_key'] = 'GBMBad3'
+            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+            jobid3 = GBMFirstResult['job_key']
+            kwargs['destination_key'] = 'GBMBad4'
+            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+            jobid4 = GBMFirstResult['job_key']
+            h2o.nodes[0].jobs_cancel(key=jobid1)
+            h2o.nodes[0].jobs_cancel(key=jobid2)
+            h2o.nodes[0].jobs_cancel(key=jobid3)
+            h2o.nodes[0].jobs_cancel(key=jobid4)
+        h2o_jobs.pollWaitJobs(pattern='GBMGood', timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
         elapsed = (time.time() - start)
         print 'GBM training completed in', elapsed, 'seconds.'
         gbmTrainView = h2o_cmd.runGBMView(model_key=modelKey)
@@ -61,5 +78,3 @@ def test_GBM_fvec(self):
         h2o.check_sandbox_for_errors()
         if DELETE_KEYS:
             h2i.delete_keys_from_import_result(pattern=csvFilename, importResult=importResult)
-        sys.stdout.write('.')
-        sys.stdout.flush()
