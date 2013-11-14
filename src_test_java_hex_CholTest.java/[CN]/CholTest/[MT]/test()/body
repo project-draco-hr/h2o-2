@@ -1,0 +1,16 @@
+{
+  Log.info("CholTest::test enter");
+  for (int sz=6000; sz < 10000; sz+=2000) {
+    Log.info("CholTest::test sz is " + sz);
+    DataSetup data=new DataSetup(sz,12345);
+    long start=System.currentTimeMillis();
+    CholeskyDecomposition jamaChol=new Matrix(data.xx).chol();
+    Log.info("JAMA CHOLESKY [N = " + sz + "] TAKES "+ (System.currentTimeMillis() - start)+ " MILLISECONDS.");
+    if (!jamaChol.isSPD())     continue;
+    ForkJoinPool fjp=new ForkJoinPool(32);
+    for (int t=2; t <= 32; t+=2) {
+      for (      int step : STEPS)       fjp.invoke(new TestSetup(new DataSetup(data.xx),jamaChol.getL().getArray(),step,t));
+    }
+  }
+  Log.info("CholTest::test exit");
+}
