@@ -5,6 +5,7 @@
   Response response=serve();
   response.setTimeStart(time);
   if (this instanceof Request2)   ((Request2)this).fillResponseInfo(response);
+  if (this instanceof Parse2)   ((Parse2)this).fillResponseInfo(response);
   if (type == RequestType.json)   return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()),RequestType.json);
   return wrap(server,build(response));
 }
