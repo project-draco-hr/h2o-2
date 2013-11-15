@@ -55,6 +55,10 @@
     Placement placement=new Placement();
     placement.setGroupName(USER);
     run.withPlacement(placement);
+    BlockDeviceMapping map=new BlockDeviceMapping();
+    map.setDeviceName("/dev/sdb");
+    map.setVirtualName("ephemeral0");
+    run.withBlockDeviceMappings(map);
     run.withUserData(new String(Base64.encodeBase64(cloudConfig.getBytes())));
     RunInstancesResult runRes=ec2.runInstances(run);
     ArrayList<String> ids=new ArrayList<String>();
