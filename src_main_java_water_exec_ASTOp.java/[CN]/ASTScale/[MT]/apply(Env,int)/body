@@ -1,0 +1,12 @@
+{
+  if (!env.isAry()) {
+    env.poppush(Double.NaN);
+    return;
+  }
+  Frame fr=env.popAry();
+  String skey=env.key();
+  Frame fr2=new Scale().doIt(fr.numCols(),fr).outputFrame(fr._names,fr.domains());
+  env.subRef(fr,skey);
+  env.pop();
+  env.push(fr2);
+}
