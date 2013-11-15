@@ -1,4 +1,4 @@
 {
   progress=job.progress();
-  return new Response(Response.Status.poll,this,(int)(100 * job.progress()),100,"job_key",job_key.toString(),"destination_key",destination_key.toString());
+  return Response.poll(this,(int)(100 * job.progress()),100,"job_key",job_key.toString(),"destination_key",destination_key.toString());
 }
