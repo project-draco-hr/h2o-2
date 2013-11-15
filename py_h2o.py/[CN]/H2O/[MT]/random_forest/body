@@ -15,8 +15,7 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=0.2, in
     if ((noPoll or (not rfView)) or (beta_features and (rfView == False))):
         return rf
     if beta_features:
-        rfView = self.poll_url(rf, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
-        return rfViewResult
+        return rf
     else:
         if (rf['response']['redirect_request'] != algoView):
             print dump_json(rf)

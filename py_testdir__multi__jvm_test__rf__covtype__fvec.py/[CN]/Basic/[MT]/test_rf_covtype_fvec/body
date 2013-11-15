@@ -44,7 +44,7 @@ def test_rf_covtype_fvec(self):
         kwargs = paramDict.copy()
         timeoutSecs = (30 + (kwargs['ntrees'] * 200))
         start = time.time()
-        rfFirstResult = h2o_cmd.runRF(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, noPoll=True, rfView=False, **kwargs)
+        rfFirstResult = h2o_cmd.runRF(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, noPoll=False, rfView=False, **kwargs)
         rfView = {}
         rfView['data_key'] = hex_key
         rfView['model_key'] = kwargs['destination_key']
@@ -87,8 +87,9 @@ def test_rf_covtype_fvec(self):
             else:
                 raise Exception(('huh? %s' % TRY))
             xList.append(paramDict[xLabel])
-    eLabel = 'class 4 pctWrong'
-    fLabel = 'trainElapsed'
-    eListTitle = ''
-    fListTitle = ''
-    h2o_gbm.plotLists(xList, xLabel, eListTitle, eList, eLabel, fListTitle, fList, fLabel)
+    if DO_PLOT:
+        eLabel = 'class 4 pctWrong'
+        fLabel = 'trainElapsed'
+        eListTitle = ''
+        fListTitle = ''
+        h2o_gbm.plotLists(xList, xLabel, eListTitle, eList, eLabel, fListTitle, fList, fLabel)
