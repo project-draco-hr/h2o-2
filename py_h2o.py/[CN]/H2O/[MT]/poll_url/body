@@ -2,7 +2,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     verboseprint('poll_url input: response:', dump_json(response))
 
     def get_redirect_url(response, beta_features):
-        if beta_features:
+        if (beta_features or ('response_info' in response)):
             if ('response_info' not in response):
                 raise Exception(("The response during polling should have 'response_info'. Don't see it: \n%s" % dump_json(response)))
             if ('redirect_url' not in response['response_info']):
@@ -56,7 +56,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         if create_noise:
             status = 'poll'
         elif beta_features:
-            status = r['status']
+            status = r['response_info']['status']
         else:
             status = r['response']['status']
         if (1 == 0):

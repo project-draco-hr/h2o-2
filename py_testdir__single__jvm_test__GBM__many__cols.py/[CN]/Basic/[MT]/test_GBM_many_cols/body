@@ -36,9 +36,9 @@ def test_GBM_many_cols(self):
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
-        ntrees = 3
+        ntrees = 5
         prefixList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-        for max_depth in [5, 10]:
+        for max_depth in [5, 10, 20]:
             print 'Creating new header', hdrPathname
             prefix = prefixList.pop(0)
             write_syn_header(hdrPathname, rowCount, colCount, prefix)
@@ -66,14 +66,13 @@ def test_GBM_many_cols(self):
             print "GBM 'errsLast'", errsLast
             cm = gbmTrainView['gbm_model']['cm']
             pctWrongTrain = h2o_gbm.pp_cm_summary(cm)
-            print 'Last line of this cm might be NAs, not CM'
             print '\nTrain\n==========\n'
             print h2o_gbm.pp_cm(cm)
             xList.append(max_depth)
             eList.append(pctWrongTrain)
             fList.append(trainElapsed)
     h2o.beta_features = False
-    if (1 == 1):
+    if DO_PLOT:
         xLabel = 'max_depth'
         eLabel = 'pctWrong'
         fLabel = 'trainElapsed'

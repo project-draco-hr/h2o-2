@@ -58,7 +58,6 @@ def test_GBM_many_cols_enum(self):
             print "GBM 'errsLast'", errsLast
             cm = gbmTrainView['gbm_model']['cm']
             pctWrongTrain = h2o_gbm.pp_cm_summary(cm)
-            print 'Last line of this cm might be NAs, not CM'
             print '\nTrain\n==========\n'
             print h2o_gbm.pp_cm(cm)
             xList.append(max_depth)
