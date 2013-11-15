@@ -44,23 +44,14 @@ def test_GBM_fvec(self):
         start = time.time()
         GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
         print '\nGBMFirstResult:', h2o.dump_json(GBMFirstResult)
-        for i in range(10):
-            kwargs['destination_key'] = 'GBMBad1'
-            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
-            jobid1 = GBMFirstResult['job_key']
-            kwargs['destination_key'] = 'GBMBad2'
-            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
-            jobid2 = GBMFirstResult['job_key']
-            kwargs['destination_key'] = 'GBMBad3'
-            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
-            jobid3 = GBMFirstResult['job_key']
-            kwargs['destination_key'] = 'GBMBad4'
-            GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
-            jobid4 = GBMFirstResult['job_key']
-            h2o.nodes[0].jobs_cancel(key=jobid1)
-            h2o.nodes[0].jobs_cancel(key=jobid2)
-            h2o.nodes[0].jobs_cancel(key=jobid3)
-            h2o.nodes[0].jobs_cancel(key=jobid4)
+        for i in range(20):
+            jobids = []
+            for j in range(5):
+                kwargs['destination_key'] = ('GBMBad' + str(j))
+                GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+                jobids[j] = GBMFirstResult['job_key']
+            for j in jobids:
+                h2o.nodes[0].jobs_cancel(key=j)
         h2o_jobs.pollWaitJobs(pattern='GBMGood', timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
         elapsed = (time.time() - start)
         print 'GBM training completed in', elapsed, 'seconds.'
