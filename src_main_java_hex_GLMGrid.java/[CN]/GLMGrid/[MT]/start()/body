@@ -25,7 +25,8 @@ catch (            ExecutionException e) {
               throw Log.errRTExcept(e);
             }
           }
-          active[all++ % _parallelism]=t.fork();
+          H2O.submitTask(t);
+          active[all++ % _parallelism]=t;
         }
       }
  else {
@@ -35,6 +36,7 @@ catch (            ExecutionException e) {
         }
         remove();
       }
+      tryComplete();
     }
   }
 ;
