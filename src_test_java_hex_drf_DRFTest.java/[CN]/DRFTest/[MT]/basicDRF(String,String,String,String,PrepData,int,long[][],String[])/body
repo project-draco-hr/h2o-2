@@ -10,7 +10,7 @@
     unifyFrame(drf,frTrain,prep);
     drf.classification=true;
     drf.ntrees=ntree;
-    drf.max_depth=50;
+    drf.max_depth=10;
     drf.min_rows=1;
     drf.nbins=1024;
     drf.mtries=-1;
@@ -19,6 +19,9 @@
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
     assertCM(expCM,model.cm);
+    Assert.assertEquals("Number of trees differs!",ntree,model.errs.length - 1);
+    String[] cmDom=model._domains[model._domains.length - 1];
+    Assert.assertArrayEquals("CM domain differs!",expRespDom,cmDom);
     frTest=fnametest != null ? parseFrame(destTest,fnametest) : null;
     pred=drf.score(frTest != null ? frTest : drf.source);
   }
