@@ -15,7 +15,6 @@
   }
   Futures fs=new Futures();
   final int chk=Math.max(denseN / 10,1);
-  Log.info("SPARSEN = " + sparseN + "    DENSEN = "+ denseN);
   for (int i=0; i < denseN; ++i) {
     final int fi=i;
     fs.add(new RecursiveAction(){
@@ -32,21 +31,18 @@
   fs.blockForPending();
   double[][] arr=new double[denseN][];
   for (int i=0; i < arr.length; ++i)   arr[i]=Arrays.copyOfRange(fchol._xx[i],sparseN,sparseN + denseN);
-  Log.info("CHOLESKY PRECOMPUTE TIME " + (System.currentTimeMillis() - start));
   start=System.currentTimeMillis();
   if (parallelize == 1) {
     int p=Runtime.getRuntime().availableProcessors();
     InPlaceCholesky d=InPlaceCholesky.decompose_2(arr,10,p);
     fchol.setSPD(d.isSPD());
     arr=d.getL();
-    Log.info("H2O CHOLESKY DECOMPOSE ON DENSEN*DENSEN TAKES: " + (System.currentTimeMillis() - start));
   }
  else {
     for (int i=0; i < arr.length; ++i)     for (int j=0; j < i; ++j)     arr[j][i]=arr[i][j];
     CholeskyDecomposition c=new Matrix(arr).chol();
     fchol.setSPD(c.isSPD());
     arr=c.getL().getArray();
-    Log.info("JAMA CHOLESKY DECOMPOSE TAKES: " + (System.currentTimeMillis() - start));
   }
   for (int i=0; i < arr.length; ++i)   System.arraycopy(arr[i],0,fchol._xx[i],sparseN,i + 1);
   return chol;
