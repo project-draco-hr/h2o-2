@@ -1,7 +1,7 @@
 {
   int y=_last;
   int x=UDP.get2(_mem,y + 0) & 0xFFFF;
-  if (idx == x)   return UDP.get2(_mem,y + 2) & 0xFFFF;
+  if (idx == x)   return UDP.get2(_mem,y + 2);
   if (idx > x && y < _mem.length && idx < UDP.get2(_mem,y + 4))   return 0;
   int lo=0, hi=(_mem.length - OFF) >>> 2;
   int cnt=0;
