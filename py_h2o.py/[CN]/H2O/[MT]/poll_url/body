@@ -1,7 +1,9 @@
-def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False):
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, reuseFirstPollUrl=False):
     verboseprint('poll_url input: response:', dump_json(response))
 
     def get_redirect_url(response, beta_features):
+        url = None
+        params = None
         if (beta_features or ('response_info' in response)):
             if ('response_info' not in response):
                 raise Exception(("The response during polling should have 'response_info'. Don't see it: \n%s" % dump_json(response)))
@@ -15,20 +17,16 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
                 params = None
             elif (response_info['status'] != 'done'):
                 raise Exception(("'redirect_url' during polling is null but status!='done': \n%s" % dump_json(response)))
-            else:
-                url = None
-                params = None
         else:
             if ('response' not in response):
-                raise Exception("'response' not in response. Maybe h2o.beta_features=True is needed?")
-            if 'redirect_url':
+                raise Exception(("'response' not in response.\n%s" % dump_json(response)))
+            if (response['response']['status'] == 'done'):
+                pass
+            else:
+                if ('redirect_request' not in response['response']):
+                    raise Exception(("'redirect_request' not in response. \n%s" % dump_json(response)))
                 url = self.__url(response['response']['redirect_request'])
                 params = response['response']['redirect_request_args']
-            elif (response['status'] != 'done'):
-                raise Exception(("'redirect_url' during polling is null but status!='done': \n%s" % dump_json(response)))
-            else:
-                url = None
-                params = None
         return (url, params)
     (url, params) = get_redirect_url(response, beta_features)
     if params:
@@ -74,7 +72,9 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             status = r['response_info']['status']
         else:
             status = r['response']['status']
-        (url, params) = get_redirect_url(r, beta_features)
+        print 'beta_features:', beta_features
+        if (not reuseFirstPollUrl):
+            (url, params) = get_redirect_url(r, beta_features)
         if ((time.time() - start) > timeoutSecs):
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
             raise Exception(emsg)
