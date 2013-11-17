@@ -17,10 +17,15 @@
         sendError(HTTP_BADREQUEST,"BAD REQUEST: Content type is multipart/form-data but no content-disposition info found. Usage: GET /example/file.html");
       }
       String key=parms.getProperty("key");
-      ValueArray.readPut(key,new InputStreamWrapper(in,boundary.getBytes()));
+      if (useValueArray) {
+        ValueArray.readPut(key,new InputStreamWrapper(in,boundary.getBytes()));
+      }
+ else {
+        Frame.readPut(key,new InputStreamWrapper(in,boundary.getBytes()));
+      }
     }
   }
- catch (  IOException e) {
-    sendError(HTTP_INTERNALERROR,"SERVER INTERNAL ERROR: IOException: " + e.getMessage());
+ catch (  Exception e) {
+    sendError(HTTP_INTERNALERROR,"SERVER INTERNAL ERROR: Exception: " + e.getMessage());
   }
 }
