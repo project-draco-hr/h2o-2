@@ -13,10 +13,11 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=0.2, in
     rf = self.__do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
     print ('\n%s result:' % algo), dump_json(rf)
     if ((noPoll or (not rfView)) or (beta_features and (rfView == False))):
+        print 'HELLO rfView:', rfView, 'noPoll', noPoll
         return rf
     if beta_features:
         rfView = self.poll_url(rf, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
-        return rfViewResult
+        return rfView
     else:
         if (rf['response']['redirect_request'] != algoView):
             print dump_json(rf)

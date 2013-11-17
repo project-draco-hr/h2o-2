@@ -1,4 +1,9 @@
 {
-  if (!isArray())   return _max;
-  return ((ValueArray)get()).length();
+  if (isArray()) {
+    return ((ValueArray)get()).length();
+  }
+ else   if (isFrame()) {
+    return ((Frame)get()).byteSize();
+  }
+  return _max;
 }

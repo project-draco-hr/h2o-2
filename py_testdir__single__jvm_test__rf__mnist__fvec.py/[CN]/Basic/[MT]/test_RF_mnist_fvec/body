@@ -35,7 +35,7 @@ def test_RF_mnist_fvec(self):
         kwargs = params.copy()
         timeoutSecs = (30 + (kwargs['ntrees'] * 20))
         start = time.time()
-        rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, rfView=False, **kwargs)
+        rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not POLL), rfView=POLL, **kwargs)
         elapsed = (time.time() - start)
         print h2o.dump_json(rfResult)
         print 'rf job dispatch end on ', trainCsvFilename, 'took', (time.time() - start), 'seconds'
@@ -45,7 +45,8 @@ def test_RF_mnist_fvec(self):
         rfView['model_key'] = kwargs['destination_key']
         rfView['ntrees'] = kwargs['ntrees']
         rfViewInitial.append(rfView)
-        h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=120, retryDelaySecs=5)
+        if (not POLL):
+            h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=120, retryDelaySecs=5)
         print 'rfViewInitial', rfViewInitial
         for rfView in rfViewInitial:
             print 'Checking completed job:', rfView
@@ -53,8 +54,9 @@ def test_RF_mnist_fvec(self):
             data_key = rfView['data_key']
             model_key = rfView['model_key']
             ntrees = rfView['ntrees']
-            rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, noPoll=True, doSimpleCheck=False)
-            h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
+            rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, noPoll=(not POLL), doSimpleCheck=False)
+            if (not POLL):
+                h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
             print 'rfView:', h2o.dump_json(rfView)
             rf_model = rfView['drf_model']
             cm = rf_model['cm']
