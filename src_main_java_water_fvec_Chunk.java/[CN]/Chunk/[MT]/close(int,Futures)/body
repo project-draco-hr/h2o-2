@@ -1,5 +1,4 @@
 {
-  if (_chk instanceof NewChunk)   _chk=((NewChunk)_chk).new_close(fs);
-  if (_chk == this)   return;
-  DKV.put(_vec.chunkKey(cidx),_chk,fs);
+  boolean alwaysPutToDKV=false;
+  close(cidx,fs,alwaysPutToDKV);
 }
