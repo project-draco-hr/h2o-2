@@ -72,7 +72,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             status = r['response_info']['status']
         else:
             status = r['response']['status']
-        if (reuseFirstPollUrl or (not beta_features)):
+        if (beta_features and (not reuseFirstPollUrl)):
             (url, params) = get_redirect_url(r, beta_features)
         if ((time.time() - start) > timeoutSecs):
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
