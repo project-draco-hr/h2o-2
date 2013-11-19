@@ -1,6 +1,4 @@
 {
-  this.type=_vec.isEnum() ? "Enum" : _vec.isInt() ? "Int" : "Real";
-  this.nacnt=_vec.naCnt();
   computePercentiles();
   computeMajorities();
   for (int i=0; i < _maxs.length >>> 1; i++) {
@@ -8,11 +6,11 @@
     _maxs[i]=_maxs[_maxs.length - 1 - i];
     _maxs[_maxs.length - 1 - i]=t;
   }
-  this.stats=_vec.isEnum() ? new EnumStats(_vec) : new NumStats(_vec,_zeros,_mins,_maxs,_pctile);
-  if (_vec.isEnum()) {
-    this.hstart=_vec.min();
+  this.stats=_type == T_ENUM ? new EnumStats(vec.domain().length) : new NumStats(vec.mean(),vec.sigma(),_zeros,_mins,_maxs,_pctile);
+  if (_type == T_ENUM) {
+    this.hstart=0;
     this.hstep=1;
-    this.hbrk=_domains;
+    this.hbrk=_domain;
   }
  else {
     this.hstart=_start;
