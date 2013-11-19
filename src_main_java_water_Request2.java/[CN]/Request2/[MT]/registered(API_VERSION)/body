@@ -62,11 +62,11 @@
             ds=new double[val.length];
             for (int i=0; i < ds.length; i++)             ds[i]=val[i];
           }
-          arg=new RSeq(f.getName(),api.required(),new NumberSequence(ds,null),false);
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(ds,null,true),false,api.help());
         }
  else         if (f.getType() == double[].class) {
           double[] val=(double[])defaultValue;
-          arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null),false);
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null,false),false,api.help());
         }
  else         if (f.getType() == boolean.class && api.filter() == Default.class) {
           boolean val=(Boolean)defaultValue;
