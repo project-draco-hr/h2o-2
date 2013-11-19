@@ -4,7 +4,6 @@
   long cols[];
   if (!env.isAry()) {
     int col=(int)env._d[env._sp - 1];
-    if (col > 0 && col > len)     throw new IllegalArgumentException("Trying to select column " + col + " but only "+ len+ " present.");
     if (col < 0 && col < -len)     col=0;
     if (col == 0)     return new long[0];
     return new long[]{col};
