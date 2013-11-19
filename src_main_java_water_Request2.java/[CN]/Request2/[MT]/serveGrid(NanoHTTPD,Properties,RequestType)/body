@@ -2,10 +2,16 @@
   String[][] values=new String[_arguments.size()][];
   boolean gridSearch=false;
   for (int i=0; i < _arguments.size(); i++) {
-    String value=_parms.getProperty(_arguments.get(i)._name);
-    if (value != null) {
-      values[i]=split(value);
-      if (values[i].length > 1)       gridSearch=true;
+    Argument arg=_arguments.get(i);
+    if (arg._gridable) {
+      String value=_parms.getProperty(arg._name);
+      if (value != null) {
+        boolean imbricated=value.contains("(");
+        if (!arg._field.getType().isArray() || imbricated) {
+          values[i]=split(value);
+          if (values[i] != null && values[i].length > 1)           gridSearch=true;
+        }
+      }
     }
   }
   if (!gridSearch)   return superServeGrid(server,parms,type);

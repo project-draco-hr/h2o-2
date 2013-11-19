@@ -1,0 +1,8 @@
+{
+  if (value.contains(":")) {
+    double[] gen=NumberSequence.parseGenerator(value,false,1);
+    for (    double d : gen)     values=Utils.append(values,"" + d);
+  }
+ else   if (value.length() > 0)   values=Utils.append(values,value);
+  return values;
+}
