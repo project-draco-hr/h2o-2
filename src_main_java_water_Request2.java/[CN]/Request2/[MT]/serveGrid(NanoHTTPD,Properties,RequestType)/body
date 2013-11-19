@@ -3,12 +3,14 @@
   boolean gridSearch=false;
   for (int i=0; i < _arguments.size(); i++) {
     Argument arg=_arguments.get(i);
-    String value=_parms.getProperty(arg._name);
-    if (value != null) {
-      boolean imbricated=value.contains("(");
-      if (!arg._field.getType().isArray() || imbricated) {
-        values[i]=split(value);
-        if (values[i] != null && values[i].length > 1)         gridSearch=true;
+    if (arg._gridable) {
+      String value=_parms.getProperty(arg._name);
+      if (value != null) {
+        boolean imbricated=value.contains("(");
+        if (!arg._field.getType().isArray() || imbricated) {
+          values[i]=split(value);
+          if (values[i] != null && values[i].length > 1)           gridSearch=true;
+        }
       }
     }
   }
