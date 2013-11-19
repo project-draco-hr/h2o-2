@@ -1,14 +1,14 @@
 def infoFromInspect(inspect, csvPathname):
     cols = inspect['cols']
     if h2o.beta_features:
-        naString = 'naCnt'
+        keyNA = 'naCnt'
     else:
-        naString = 'num_missing_values'
+        keyNA = 'num_missing_values'
     missingValuesList = []
     for (i, colDict) in enumerate(cols):
-        num_missing_values = colDict[naString]
+        num_missing_values = colDict[keyNA]
         if (num_missing_values != 0):
-            print ('%s: col: %d, %s: %d' % (csvPathname, i, naString, num_missing_values))
+            print ('%s: col: %d, %s: %d' % (csvPathname, i, keyNA, num_missing_values))
             missingValuesList.append(num_missing_values)
     if h2o.beta_features:
         numCols = inspect['numCols']

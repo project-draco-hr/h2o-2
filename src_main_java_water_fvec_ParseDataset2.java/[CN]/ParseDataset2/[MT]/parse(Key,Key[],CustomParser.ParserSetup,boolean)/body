@@ -4,5 +4,5 @@
   byte[] bits=v.elem2BV(0).getBytes();
   Compression cpr=Utils.guessCompressionMethod(bits);
   globalSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),globalSetup,true)._setup;
-  return forkParseDataset(okey,keys,globalSetup).get();
+  return forkParseDataset(okey,keys,globalSetup,delete_on_done).get();
 }

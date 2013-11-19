@@ -1,6 +1,6 @@
 {
   Score sc=new Score().doIt(model,fr,validation,_validResponse,validation == null).report(Sys.DRF__,tid,ktrees);
-  model=new DRFModel(model,ktrees,(float)sc.sum() / sc.nrows(),sc.cm(),tstats);
+  model=new DRFModel(model,finalScoring ? null : ktrees,(float)sc.sum() / sc.nrows(),sc.cm(),tstats);
   DKV.put(outputKey,model);
   return model;
 }
