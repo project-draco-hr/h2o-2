@@ -1,4 +1,4 @@
-def test_import_nflx_parse_loop(self):
+def test_parse_nflx_loop_hdfs(self):
     print 'Using the -.gz files from hdfs'
     csvFilename = 'file_10.dat.gz'
     csvFilepattern = 'file_1[0-9].dat.gz'
@@ -18,7 +18,7 @@ def test_import_nflx_parse_loop(self):
             time.sleep(5)
             csvPathname = ((importFolderPath + '/') + csvFilePattern)
             start = time.time()
-            parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=key2, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
+            parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
             elapsed = (time.time() - start)
             print 'parse result:', parseResult['destination_key']
             print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
