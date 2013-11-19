@@ -1,16 +1,17 @@
 {
   Layer[] ls=_trainer.layers();
-  water.fvec.Frame frame=((FrameInput)ls[0])._frame;
+  Vec[] vecs=((VecsInput)ls[0]).vecs;
+  Vec resp=((VecSoftmax)ls[ls.length - 1]).vec;
   int edge=56, pad=10;
-  int rand=_rand.nextInt((int)frame.numRows());
+  int rand=_rand.nextInt((int)vecs[0].length());
 {
     BufferedImage in=new BufferedImage(EDGE,EDGE,BufferedImage.TYPE_INT_RGB);
     WritableRaster r=in.getRaster();
     int[] pix=new int[PIXELS];
-    for (int i=0; i < pix.length; i++)     pix[i]=(int)(frame._vecs[i].at8(rand));
+    for (int i=0; i < pix.length; i++)     pix[i]=(int)(vecs[i].at8(rand));
     r.setDataElements(0,0,EDGE,EDGE,pix);
     g.drawImage(in,pad,pad,null);
-    g.drawString("" + frame._vecs[PIXELS].at8(rand),10,50);
+    g.drawString("" + resp.at8(rand),10,50);
     g.drawString("RBM " + _level,10,70);
   }
   int offset=pad;

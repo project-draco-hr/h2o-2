@@ -1,0 +1,14 @@
+{
+  File target;
+  if (Boot._init.fromJar())   target=new File(Boot._init.jarPath());
+ else {
+    try {
+      URL url=Boot._init.getResource(H2O.class.getName().replace('.','/') + ".class");
+      target=new File(url.toURI()).getParentFile().getParentFile().getParentFile();
+    }
+ catch (    URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  return target.getParentFile();
+}

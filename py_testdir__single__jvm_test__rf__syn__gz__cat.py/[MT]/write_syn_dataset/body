@@ -6,13 +6,13 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
         rowSum = 0
         for j in range(colCount):
             if (BASE == 2):
-                r = h2o_util.choice_with_probability([(0, 0.5), (1, 0.5)])
+                r = h2o_util.choice_with_probability([(0, 0.98), (1, 0.2)])
             else:
                 raise Exception(('Unsupported BASE: ' + BASE))
             rowSum += r
             rowData.append(r)
         responseVar = (rowSum % BASE)
-        rowData.append(responseVar)
+        rowData.append(('%#034.32e' % responseVar))
         rowDataCsv = ','.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
     dsf.close()

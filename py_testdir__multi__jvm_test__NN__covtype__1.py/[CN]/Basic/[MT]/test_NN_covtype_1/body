@@ -1,20 +1,34 @@
 def test_NN_covtype_1(self):
-    csvFilename = 'covtype.data'
-    csvPathname = ('UCI/UCI-large/covtype/' + csvFilename)
-    hex_key = 'covtype.hex'
-    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10)
-    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
-    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-    print 'WARNING: just doing the first 33 features, for comparison to ??? numbers'
-    x = ','.join(map(str, range(33)))
-    response = 54
-    kwargs = {'cols': x, 'response': response, 'activation': 'Tanh', 'hidden': 500, 'rate': 0.01, 'l2': 0.0001, 'epochs': 100, 'destination_key': 'a.hex', 'validation': hex_key, }
-    timeoutSecs = 600
-    start = time.time()
-    h2o.beta_features = True
-    nnResult = h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
-    h2o.beta_features = False
-    print "Hack: neural net apparently doesn't support the right polling response yet?"
-    h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
-    print 'FIX! need to add something that looks at the neural net result here?'
-    print 'neural net end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+    tryList = ['covtype.shuffled.90pct.sorted.data', 'covtype.shuffled.90pct.data']
+    importFolderPath = 'standard'
+    for csvFilename in tryList:
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        hex_key = 'covtype.hex'
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=10)
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        x = ''
+        response = 54
+        modelKey = 'a.hex'
+        kwargs = {'response': response, 'ignored_cols': None, 'classification': 1, 'validation': hex_key, 'activation': 'Tanh', 'hidden': 500, 'rate': 0.01, 'l2': 0.0001, 'epochs': 1, 'destination_key': modelKey, }
+        timeoutSecs = 600
+        start = time.time()
+        h2o.beta_features = True
+        nnFirstResult = h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+        print 'nnFirstResult:', h2o.dump_json(nnFirstResult)
+        print "Hack: neural net apparently doesn't support the right polling response yet?"
+        h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+        print 'neural net end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        job_key = nnFirstResult['job_key']
+        params = {'job_key': job_key, 'destination_key': modelKey, }
+        a = h2o.nodes[0].completion_redirect(jsonRequest='2/NeuralNetProgress.json', params=params)
+        print 'NeuralNetProgress:', h2o.dump_json(a)
+        if DO_SCORE:
+            kwargs = {'max_rows': 0, 'response': response, 'ignored_cols': None, 'cols': None, 'classification': 1, 'destination_key': 'b.hex', 'model': modelKey, }
+            nnScoreFirstResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+            h2o.beta_features = False
+            print "Hack: neural net apparently doesn't support the right polling response yet?"
+            h2o_jobs.pollWaitJobs(pattern=None, errorIfCancelled=True, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+            print 'neural net score end on ', trainCsvFilename, 'took', (time.time() - start), 'seconds'
+            print 'nnScoreResult:', h2o.dump_json(nnScoreResult)
+        h2o.beta_features = False

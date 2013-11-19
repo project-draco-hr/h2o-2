@@ -1,0 +1,23 @@
+{
+  if (!env.isAry()) {
+    env.poppush(op(env.popDbl()));
+    return;
+  }
+  Frame fr=env.popAry();
+  String skey=env.key();
+  final ASTUniOp uni=this;
+  Frame fr2=new MRTask2(){
+    @Override public void map(    Chunk chks[],    NewChunk nchks[]){
+      for (int i=0; i < nchks.length; i++) {
+        NewChunk n=nchks[i];
+        Chunk c=chks[i];
+        int rlen=c._len;
+        for (int r=0; r < rlen; r++)         n.addNum(uni.op(c.at0(r)));
+      }
+    }
+  }
+.doAll(fr.numCols(),fr).outputFrame(fr._names,fr.domains());
+  env.subRef(fr,skey);
+  env.pop();
+  env.push(fr2);
+}

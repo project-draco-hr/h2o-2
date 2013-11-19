@@ -1,0 +1,22 @@
+{
+  if (_cats == -1 && _nums == -1) {
+    fr=adaptFrame(fr);
+    int i=0;
+    final Vec[] vecs=fr.vecs();
+    final int n=vecs.length;
+    while (i < n && vecs[i].isEnum())     ++i;
+    _cats=i;
+    while (i < n && !vecs[i].isEnum())     ++i;
+    _nums=i - _cats;
+    if (i != n)     throw new RuntimeException("Incorrect format of the input frame. Frame is assumed to be ordered so that categorical columns come before numerics.");
+    if (_normSub == null)     _normSub=MemoryManager.malloc8d(_nums);
+    if (_normMul == null) {
+      _normMul=MemoryManager.malloc8d(_nums);
+      Arrays.fill(_normMul,1);
+    }
+    _catOffsets=MemoryManager.malloc4(_cats + 1);
+    int len=_catOffsets[0]=0;
+    for (i=0; i < _cats; ++i)     _catOffsets[i + 1]=(len+=vecs[i].domain().length - 1);
+  }
+  return dfork(outputs,fr);
+}

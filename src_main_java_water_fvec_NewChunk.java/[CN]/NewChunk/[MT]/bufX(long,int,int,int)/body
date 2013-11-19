@@ -1,5 +1,6 @@
 {
-  byte[] bs=new byte[(_len << log) + off];
+  if (_len2 != _len)   cancel_sparse();
+  byte[] bs=new byte[(_len2 << log) + off];
   for (int i=0; i < _len; i++) {
     if (isNA(i)) {
 switch (log) {
@@ -20,7 +21,7 @@ H2O.fail();
 }
 }
  else {
-int x=_xs[i] - scale;
+int x=(_xs[i] == Integer.MIN_VALUE + 1 ? 0 : _xs[i]) - scale;
 long le=x >= 0 ? _ls[i] * DParseTask.pow10i(x) : _ls[i] / DParseTask.pow10i(-x);
 le-=bias;
 switch (log) {

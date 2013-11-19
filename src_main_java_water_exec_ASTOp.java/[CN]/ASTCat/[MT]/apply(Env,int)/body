@@ -1,0 +1,9 @@
+{
+  AppendableVec av=new AppendableVec(Vec.newKey());
+  NewChunk nc=new NewChunk(av,0);
+  for (int i=0; i < argcnt - 1; i++)   nc.addNum(env.dbl(-argcnt + 1 + i));
+  nc.close(0,null);
+  Vec v=av.close(null);
+  env.pop(argcnt);
+  env.push(new Frame(new String[]{"c"},new Vec[]{v}));
+}

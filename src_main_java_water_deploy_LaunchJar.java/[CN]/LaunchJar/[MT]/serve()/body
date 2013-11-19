@@ -1,0 +1,65 @@
+{
+  final Job job;
+  try {
+    ClassPool pool=new ClassPool(true);
+    ArrayList<JarEntry> entries=new ArrayList<JarEntry>();
+    String[] splits=jars.split(",");
+    for (int i=0; i < splits.length; i++) {
+      Key key=Key.make(splits[i]);
+      ValueArray va=UKV.get(key);
+      File file=File.createTempFile("h2o",".jar");
+      Utils.writeFileAndClose(file,va.openStream());
+      DKV.remove(key);
+      pool.appendClassPath(file.getPath());
+      JarFile jar=new JarFile(file);
+      Enumeration e=jar.entries();
+      while (e.hasMoreElements()) {
+        JarEntry entry=(JarEntry)e.nextElement();
+        entries.add(entry);
+      }
+      jar.close();
+    }
+    String uid=UUID.randomUUID().toString().replace("-","");
+    ClassMap renames=new ClassMap();
+    for (    JarEntry entry : entries) {
+      if (entry.getName().endsWith(".class")) {
+        String n=Utils.className(entry.getName());
+        String u;
+        int index=n.indexOf("$");
+        if (index < 0)         index=n.length();
+        u=n.substring(0,index) + "_" + uid+ n.substring(index);
+        renames.put(n,u);
+      }
+    }
+    ArrayList<CtClass> updated=new ArrayList();
+    for (    Entry<String,String> entry : ((Map<String,String>)renames).entrySet()) {
+      CtClass c=pool.get(entry.getKey().replace('/','.'));
+      c.replaceClassName(renames);
+      updated.add(c);
+    }
+    HashSet<String> packages=new HashSet();
+    ByteArrayOutputStream mem=new ByteArrayOutputStream();
+    JarOutputStream jar=new JarOutputStream(mem);
+    DataOutputStream bc=new DataOutputStream(jar);
+    for (    CtClass c : updated) {
+      jar.putNextEntry(new JarEntry(c.getName().replace('.','/') + ".class"));
+      c.toBytecode(bc);
+      bc.flush();
+      String p=c.getPackageName();
+      if (p == null)       throw new IllegalArgumentException("Package is null for class " + c);
+      packages.add(p);
+    }
+    jar.close();
+    weavePackages(packages.toArray(new String[0]));
+    AddJar task=new AddJar();
+    task._data=mem.toByteArray();
+    task.invokeOnAllNodes();
+    Class c=Class.forName(job_class + "_" + uid);
+    job=(Job)c.newInstance();
+    job.fork();
+  }
+ catch (  Exception ex) {
+    throw new RuntimeException(ex);
+  }
+  return Response.done(this);
+}

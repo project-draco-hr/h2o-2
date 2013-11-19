@@ -1,0 +1,6 @@
+{
+  if ((t & VARARGS) != 0)   return false;
+  if (t != FCN0 || ts == null)   return true;
+  for (int i=0; i < ts.length - 1; i++)   if (ts[i] != null && (ts[i]._t & VARARGS) != 0)   return false;
+  return true;
+}

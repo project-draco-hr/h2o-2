@@ -1,0 +1,16 @@
+{
+  for (int k=0; k < _nums; k++) {
+    int i=_ind[k];
+    NewChunk n=nchks[i];
+    Chunk c=chks[i];
+    int rlen=c._len;
+    for (int r=0; r < rlen; r++)     n.addNum((c.at0(r) - _normSub[i]) * _normMul[i]);
+  }
+  for (int k=_nums; k < chks.length; k++) {
+    int i=_ind[k];
+    NewChunk n=nchks[i];
+    Chunk c=chks[i];
+    int rlen=c._len;
+    for (int r=0; r < rlen; r++)     n.addNum(c.at0(r));
+  }
+}

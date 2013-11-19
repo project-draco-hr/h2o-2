@@ -1,0 +1,14 @@
+{
+  HttpClient client=new HttpClient();
+  GetMethod get=new GetMethod(URL + "/2/ExportModel.json?model=MyInitialNeuralNet");
+  int status=client.executeMethod(get);
+  if (status != 200)   throw new Exception(get.getStatusText());
+  JsonObject response=(JsonObject)new JsonParser().parse(new InputStreamReader(get.getResponseBodyAsStream()));
+  JsonElement model=response.get("model");
+  JsonWriter writer=new JsonWriter(new FileWriter(JSON_FILE));
+  writer.setLenient(true);
+  writer.setIndent("  ");
+  Streams.write(model,writer);
+  writer.close();
+  get.releaseConnection();
+}

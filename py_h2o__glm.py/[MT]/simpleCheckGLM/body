@@ -18,6 +18,8 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     print 'GLMModel/iterations:', iterations
     if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
         raise Exception(('Convergence issue? GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
+    if ('validations' not in GLMModel):
+        raise Exception(("Should be a 'validations' key in GLMModel: %s" % h2o.dump_json(GLMModel)))
     validationsList = GLMModel['validations']
     validations = validationsList[0]
     n_folds = kwargs.setdefault('n_folds', None)
@@ -32,6 +34,9 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         elif (len(xval_models) != 10):
             raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
     print 'GLMModel/validations'
+    validations['err'] = h2o_util.cleanseInfNan(validations['err'])
+    validations['nullDev'] = h2o_util.cleanseInfNan(validations['nullDev'])
+    validations['resDev'] = h2o_util.cleanseInfNan(validations['resDev'])
     print ('%15s %s' % ('err:\t', validations['err']))
     print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
     print ('%15s %s' % ('resDev:\t', validations['resDev']))
@@ -47,8 +52,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validations['resDev']))
         raise Exception(emsg)
     if math.isnan(validations['nullDev']):
-        emsg = ("Why is this nullDev = 'nan'?? %6s %s" % ('nullDev:\t', validations['nullDev']))
-        raise Exception(emsg)
+        pass
     if doNormalized:
         coefficients = GLMModel['normalized_coefficients'].copy()
     else:

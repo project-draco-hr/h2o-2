@@ -10,6 +10,8 @@
   if (_glm.family == Family.binomial)   sb.append("<tr><th>AUC</th><td>" + DFORMAT.format(auc()) + "</td></tr>");
   sb.append("</table>");
   if (_glm.family == Family.binomial) {
+    sb.append("<span><b>ROC curve</b></span>");
+    ROCc(sb);
     int best=(int)(100 * best_threshold);
     sb.append("<span><b>Confusion Matrix at decision threshold:</b></span><span>" + DEFAULT_THRESHOLDS[best] + "</span>");
     confusionHTML(_cms[best],sb);

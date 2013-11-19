@@ -1,0 +1,7 @@
+{
+  long start=System.currentTimeMillis();
+  double[][] chol=InPlaceCholesky.decompose_2(data.xx,step,p).getL();
+  Log.info("H2O CHOLESKY [N = " + data.xx.length + "  P = "+ p+ "  STEP = "+ step+ "] TAKES "+ (System.currentTimeMillis() - start)+ " MILLISECONDS.");
+  assertEquals(jama.length,chol.length);
+  for (int i=0; i < chol.length; i++)   for (int j=0; j <= i; j++)   assertEquals(jama[i][j],chol[i][j],0.0001);
+}

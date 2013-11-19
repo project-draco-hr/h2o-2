@@ -18,17 +18,11 @@
 switch (cpr) {
 case NONE:
       if (localSetup._pType.parallelParseSupported) {
-        DParse dp=new DParse(_vg,localSetup,_vecIdStart,chunkStartIdx);
+        DParse dp=new DParse(_vg,localSetup,_vecIdStart,chunkStartIdx,this);
         addToPendingCount(1);
-        dp.setCompleter(new H2OCallback<DParse>(){
-          @Override public void callback(          DParse d){
-            _dout=d._dout;
-            MultiFileParseTask.this.tryComplete();
-          }
-        }
-);
+        dp.setCompleter(this);
         dp.dfork(new Frame(vec));
-        for (int i=chunkStartIdx; i < vec.nChunks(); ++i)         _chunk2Enum[i]=vec.chunkKey(i - chunkStartIdx).home_node().index();
+        for (int i=0; i < vec.nChunks(); ++i)         _chunk2Enum[chunkStartIdx + i]=vec.chunkKey(i).home_node().index();
       }
  else {
         ParseProgressMonitor pmon=new ParseProgressMonitor(_progress);

@@ -1,0 +1,24 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEED):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    expectedRange = (expectedMax - expectedMin)
+    expectedMean = (expectedMin + (expectedRange / 2))
+    expectedSigma = (0.0001 * expectedRange)
+    noiseMin = expectedMin
+    noiseMax = expectedMax
+    for i in range(rowCount):
+        rowData = []
+        if (r1.randint(0, 10000) == 0):
+            ri = 0
+            if (ri < noiseMin):
+                noiseMin = ri
+            if (ri > noiseMax):
+                noiseMax = ri
+        else:
+            ri = r1.normalvariate(expectedMean, expectedSigma)
+        for j in range(colCount):
+            rowData.append(ri)
+        rowDataCsv = ','.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
+    return (expectedMean, expectedSigma, noiseMin, noiseMax)

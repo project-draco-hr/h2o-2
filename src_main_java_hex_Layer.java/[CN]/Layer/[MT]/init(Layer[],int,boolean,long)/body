@@ -1,14 +1,10 @@
 {
-  _a=new float[_units];
-  _e=new float[_units];
+  _a=new float[units];
+  _e=new float[units];
   _in=ls[index - 1];
   if (weights) {
-    _w=new float[_units * _in._units];
-    _b=new float[_units];
-    Random rand=new MersenneTwisterRNG(MersenneTwisterRNG.SEEDS);
-    float min=(float)-Math.sqrt(6. / (_in._units + _units));
-    float max=(float)+Math.sqrt(6. / (_in._units + _units));
-    for (int i=0; i < _w.length; i++)     _w[i]=rand(rand,min,max);
+    _w=new float[units * _in.units];
+    _b=new float[units];
   }
   if (_momentum != 0) {
     _wPrev=new float[_w.length];

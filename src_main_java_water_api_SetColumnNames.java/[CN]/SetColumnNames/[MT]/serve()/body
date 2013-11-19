@@ -1,5 +1,8 @@
 {
   ValueArray tgt=_tgtKey.value();
   tgt.setColumnNames(_srcKey.value().colNames());
+  Futures fs=new Futures();
+  DKV.put(tgt._key,tgt,fs);
+  fs.blockForPending();
   return Inspect.redirect(new JsonObject(),tgt._key);
 }

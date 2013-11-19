@@ -22,12 +22,12 @@ break;
 case poll:
 if (response._redirectArgs != null) {
 RString poll=new RString(_redirectJs);
-poll.replace("REDIRECT_URL",getClass().getSimpleName() + ".html" + encodeRedirectArgs(response._redirectArgs,response._redirArgs));
+poll.replace("REDIRECT_URL",requestName() + ".html" + encodeRedirectArgs(response._redirectArgs,response._redirArgs));
 result.replace("JSSTUFF",poll.toString());
 }
  else {
 RString poll=new RString(_pollJs);
-poll.replace("TIMEOUT",response._pollProgress == 0 ? 500 : 2000);
+poll.replace("TIMEOUT",response._pollProgress == 0 ? 1500 : 2000);
 result.replace("JSSTUFF",poll.toString());
 }
 int pct=(int)((double)response._pollProgress / response._pollProgressElements * 100);
