@@ -1,0 +1,17 @@
+{
+  Request2 request;
+  try {
+    request=getClass().newInstance();
+    request._arguments=_arguments;
+    request._parms=parms;
+    for (int i=0; i < _arguments.size(); ++i) {
+      Argument arg=_arguments.get(i);
+      arg.reset();
+      if (parms.containsKey(arg._name))       arg.check(request,parms.getProperty(arg._name));
+    }
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  return request;
+}

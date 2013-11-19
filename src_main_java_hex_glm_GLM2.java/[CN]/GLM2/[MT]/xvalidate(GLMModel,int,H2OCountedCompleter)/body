@@ -1,0 +1,22 @@
+{
+  final Key[] keys=new Key[n_folds];
+  H2OCallback callback=new H2OCallback(){
+    @Override public void callback(    H2OCountedCompleter t){
+      try {
+        GLMModel[] models=new GLMModel[keys.length];
+        for (int i=0; i < models.length; ++i)         models[i]=DKV.get(keys[i]).get();
+        new GLMXValidationTask(model,_lambdaIdx,models,cmp).dfork(_dinfo._adaptedFrame);
+      }
+ catch (      Throwable ex) {
+        cmp.completeExceptionally(ex);
+      }
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      cmp.completeExceptionally(ex);
+      return true;
+    }
+  }
+;
+  callback.addToPendingCount(n_folds - 1);
+  for (int i=0; i < n_folds; ++i)   new GLM2(this.description + "xval " + i,self(),keys[i]=Key.make(destination_key + "_xval" + i),_dinfo.getFold(i,n_folds),_glm,new double[]{lambda[_lambdaIdx]},model.alpha,0,model.beta_eps,self(),model.norm_beta(lambdaIxd)).run(callback);
+}

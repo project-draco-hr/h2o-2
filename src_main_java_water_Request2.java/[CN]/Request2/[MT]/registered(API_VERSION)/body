@@ -19,7 +19,9 @@
         f.setAccessible(true);
         Object defaultValue=f.get(this);
         Argument arg=null;
-        if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
+        if (Argument.class.isAssignableFrom(api.filter())) {
+          arg=(Argument)newInstance(api);
+        }
  else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
