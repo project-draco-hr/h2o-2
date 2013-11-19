@@ -1,0 +1,6 @@
+{
+  _maxParallelism=maxP;
+  _jobs=new GLM2[alphas.length];
+  _idx=new AtomicInteger(_maxParallelism);
+  for (int i=0; i < _jobs.length; ++i)   _jobs[i]=new GLM2("GLM grid(" + i + ")",self(),Key.make(dstKey.toString() + "_" + i),dinfo,glm,lambdas,alphas[i],nfolds,betaEpsilon,self());
+}

@@ -21,6 +21,7 @@
  else       j++;
     }
   }
+  for (int i=0; i < c2.length; i++)   if (c2[i] >= numCols())   throw new IllegalArgumentException("Trying to select column " + c2[i] + " but only "+ numCols()+ " present.");
   if (orows == null || orows instanceof long[])   return new DeepSlice((long[])orows,c2).doAll(c2.length,this).outputFrame(names(c2),domains(c2));
   Frame frows=(Frame)orows;
   Vec vrows=frows.anyVec();

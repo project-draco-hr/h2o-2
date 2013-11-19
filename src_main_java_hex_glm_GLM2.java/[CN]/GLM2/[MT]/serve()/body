@@ -1,6 +1,33 @@
 {
+  init();
+  if (this.destination_key == null) {
+    this.destination_key=Key.make("GLM<" + family + ">("+ SOURCE_KEY.toString()+ ")"+ Key.make().toString());
+  }
   link=family.defaultLink;
+  tweedie_link_power=1 - tweedie_variance_power;
   _startTime=System.currentTimeMillis();
-  run(null);
-  return GLMProgressPage2.redirect(this,self(),dest());
+  Frame fr=new Frame(source._names.clone(),source.vecs().clone());
+  fr.remove(ignored_cols);
+  final Vec[] vecs=fr.vecs();
+  ArrayList<Integer> constantOrNAs=new ArrayList<Integer>();
+  for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i] == response) {
+    fr.add(fr._names[i],fr.remove(i));
+    break;
+  }
+  for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i].min() == vecs[i].max() || vecs[i].naCnt() > vecs[i].length() * 0.2)   constantOrNAs.add(i);
+  if (!constantOrNAs.isEmpty()) {
+    int[] cols=new int[constantOrNAs.size()];
+    for (int i=0; i < cols.length; ++i)     cols[i]=constantOrNAs.get(i);
+    fr.remove(cols);
+  }
+  _dinfo=new DataInfo(fr,true,standardize);
+  _glm=new GLMParams(family,tweedie_variance_power,link,tweedie_link_power);
+  if (alpha.length > 1) {
+    Job j=gridSearch(destination_key,_dinfo,_glm,lambda,alpha,n_folds);
+    return GLMProgressPage2.GLMGrid.redirect(this,j.self(),j.destination_key,API_VERSION.V_2);
+  }
+ else {
+    start(null);
+    return GLMProgressPage2.redirect(this,self(),dest());
+  }
 }

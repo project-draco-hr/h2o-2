@@ -1,35 +1,61 @@
 {
-  if (!cancelled()) {
-    double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
-    solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
-    boolean done=false;
-    if (Utils.hasNaNsOrInfs(newBeta)) {
-      done=true;
-      newBeta=glmt._beta == null ? newBeta : glmt._beta;
-    }
-    done=done || family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || cancelled();
-    GLMModel res=new GLMModel(dest(),null,glmt._iter + 1,fr,glmt,beta_epsilon,alpha,lambda,newBeta,0.5,null,System.currentTimeMillis() - start_time,GLM2.this.case_mode,GLM2.this.case_val);
-    if (done) {
-      GLMValidationTask t=new GLMValidationTask(res,_step,_offset,true);
-      t.doAll(fr);
-      t._res.finalize_AIC_AUC();
-      res.setValidation(t._res);
-      DKV.put(dest(),res);
-      if (GLM2.this.n_folds < 2) {
-        remove();
-        fjt.tryComplete();
+  try {
+    if (!cancelled()) {
+      double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
+      double[] newBetaDeNorm=null;
+      _solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
+      final boolean diverged=Utils.hasNaNsOrInfs(newBeta);
+      if (diverged)       newBeta=glmt._beta == null ? newBeta : glmt._beta;
+      if (_dinfo._standardize) {
+        newBetaDeNorm=newBeta.clone();
+        double norm=0.0;
+        final int numoff=newBeta.length - _dinfo._nums - 1;
+        for (int i=numoff; i < newBeta.length - 1; i++) {
+          double b=newBetaDeNorm[i] * _dinfo._normMul[i - numoff];
+          norm+=b * _dinfo._normSub[i - numoff];
+          newBetaDeNorm[i]=b;
+        }
+        newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
       }
- else       xvalidate(res,fjt);
-    }
+      boolean done=false;
+      if (glmt._val != null) {
+        glmt._val.finalize_AIC_AUC();
+        _oldModel.setValidation(_lambdaIdx,glmt._val);
+      }
+      _model=(GLMModel)_oldModel.clone();
+      done=done || _glm.family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || cancelled();
+      _model.setLambdaSubmodel(_lambdaIdx,lambda[_lambdaIdx],newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,glmt._iter + 1);
+      if (done) {
+        H2OCallback fin=new H2OCallback<GLMValidationTask>(){
+          @Override public void callback(          GLMValidationTask tsk){
+            if (!diverged && tsk._improved && _lambdaIdx < (lambda.length - 1)) {
+              _oldModel=_model;
+              _solver=new ADMMSolver(lambda[++_lambdaIdx],alpha[0]);
+              glmt._val=null;
+              Iteration.this.callback(glmt);
+            }
+ else             _fjt.tryComplete();
+          }
+          @Override public boolean onExceptionalCompletion(          Throwable ex,          CountedCompleter cc){
+            _fjt.completeExceptionally(ex);
+            return true;
+          }
+        }
+;
+        if (GLM2.this.n_folds >= 2)         xvalidate(_model,_lambdaIdx,fin);
+ else         new GLMValidationTask(_model,_lambdaIdx,fin).dfork(_dinfo._adaptedFrame);
+      }
  else {
-      glmt._val.finalize_AIC_AUC();
-      _oldModel.setValidation(glmt._val);
-      DKV.put(dest(),_oldModel);
-      _oldModel=res;
-      GLMIterationTask nextIter=new GLMIterationTask(glmt,newBeta);
-      nextIter.setCompleter(clone());
-      nextIter.dfork2(fr);
+        DKV.put(dest(),_oldModel);
+        int iter=glmt._iter + 1;
+        GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,newBeta,iter,glmt._ymu,glmt._reg);
+        nextIter.setCompleter(new Iteration(_model,_solver,_dinfo,_fjt));
+        nextIter.dfork(_dinfo._adaptedFrame);
+      }
     }
+ else     throw new JobCancelledException();
   }
- else   fjt.onExceptionalCompletion(new RuntimeException("Cancelled!"),null);
+ catch (  Throwable ex) {
+    _fjt.completeExceptionally(ex);
+  }
 }
