@@ -19,7 +19,9 @@
         f.setAccessible(true);
         Object defaultValue=f.get(this);
         Argument arg=null;
-        if (Argument.class.isAssignableFrom(api.filter()))         arg=(Argument)newInstance(api);
+        if (Argument.class.isAssignableFrom(api.filter())) {
+          arg=(Argument)newInstance(api);
+        }
  else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
           H2OHexKey key=null;
@@ -60,11 +62,11 @@
             ds=new double[val.length];
             for (int i=0; i < ds.length; i++)             ds[i]=val[i];
           }
-          arg=new RSeq(f.getName(),api.required(),new NumberSequence(ds,null),false);
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(ds,null,true),false,api.help());
         }
  else         if (f.getType() == double[].class) {
           double[] val=(double[])defaultValue;
-          arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null),false);
+          arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null,false),false,api.help());
         }
  else         if (f.getType() == boolean.class && api.filter() == Default.class) {
           boolean val=(Boolean)defaultValue;

@@ -15,7 +15,7 @@
     fprs[t]=FPR;
   }
   auc+=trapeziod_area(FPR_pre,0,TPR_pre,0);
-  this.auc=auc;
+  this.auc=Math.round(1000 * auc) * 0.001;
   if (_glm.family == Family.binomial) {
     int best=0;
     for (int i=1; i < _cms.length; ++i) {
