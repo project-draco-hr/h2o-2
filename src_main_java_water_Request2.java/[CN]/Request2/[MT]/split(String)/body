@@ -13,9 +13,11 @@
         if (s == null)         throw new IllegalArgumentException("Missing closing parenthesis");
         current+=s;
       }
+      values=addSplit(values,current);
+      current="";
     }
  else     current+=s;
   }
-  if (current.length() > 0)   values=addSplit(values,current);
+  values=addSplit(values,current);
   return values;
 }
