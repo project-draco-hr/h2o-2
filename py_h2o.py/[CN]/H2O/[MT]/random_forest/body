@@ -3,10 +3,15 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=0.2, in
     algoView = ('2/DRFView' if beta_features else 'RFView')
     if beta_features:
         params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'cols': None, 'ignored_cols_by_name': None, 'classification': None, 'validation': None, 'importance': None, 'ntrees': trees, 'max_depth': None, 'min_rows': None, 'nbins': None, 'mtries': None, 'sample_rate': None, 'seed': None, }
+        if ('model_key' in kwargs):
+            kwargs['destination_key'] = kwargs['model_key']
     else:
         params_dict = {'data_key': data_key, 'ntree': trees, 'model_key': None, 'out_of_bag_error_estimate': 1, 'use_non_local_data': None, 'iterative_cm': None, 'response_variable': None, 'class_weights': None, 'stat_type': None, 'depth': None, 'bin_limit': None, 'parallel': None, 'ignore': None, 'sample': None, 'seed': None, 'features': None, 'exclusive_split_limit': None, 'sampling_strategy': None, 'strata_samples': None, }
     browseAlso = kwargs.pop('browseAlso', False)
     check_params_update_kwargs(params_dict, kwargs, 'random_forest', print_params)
+    if (beta_features and (not params_dict['response'])):
+        inspect = h2o_cmd.runInspect(key=data_key)
+        params_dict['response'] = str(inspect['cols'][(-1)]['name'])
     if print_params:
         print ('\n%s parameters:' % algo), params_dict
         sys.stdout.flush()
