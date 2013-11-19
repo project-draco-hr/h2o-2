@@ -1,5 +1,5 @@
 {
-  CtClass clz=ClassPool.getDefault().makeClass(_selfKey.toString());
+  CtClass clz=ClassPool.getDefault().makeClass(toJavaId(_selfKey.toString()));
   clz.addField(CtField.make(toJavaNAMES(new SB()).toString(),clz));
   clz.addField(CtField.make(toJavaNCLASSES(new SB()).toString(),clz));
   toJavaInit(clz);

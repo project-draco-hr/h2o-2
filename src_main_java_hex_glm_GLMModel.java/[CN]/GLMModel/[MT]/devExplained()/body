@@ -1,0 +1,5 @@
+{
+  if (submodels == null || submodels[best_lambda_idx].validation == null)   return 0;
+  GLMValidation val=submodels[best_lambda_idx].validation;
+  return 1.0 - val.residual_deviance / val.null_deviance;
+}

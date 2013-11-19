@@ -33,7 +33,7 @@
     checkStr("min(h.hex,1+2)");
     checkStr("is.na(h.hex)");
     checkStr("nrow(h.hex)*3");
-    checkStr("h.hex[ncol(h.hex),nrow(h.hex)]");
+    checkStr("h.hex[nrow(h.hex)-1,ncol(h.hex)-1]");
     checkStr("1=2");
     checkStr("x");
     checkStr("x+2");
@@ -87,6 +87,8 @@
     checkStr("h.hex[,2]+1");
     checkStr("h.hex[,3]=3.3;h.hex");
     checkStr("h.hex[,3]=h.hex[,2]+1");
+    checkStr("h.hex[,ncol(h.hex)+1]=4");
+    checkStr("a=ncol(h.hex);h.hex[,c(a+1,a+2)]=5");
     checkStr("a=0;x=0");
   }
   finally {
