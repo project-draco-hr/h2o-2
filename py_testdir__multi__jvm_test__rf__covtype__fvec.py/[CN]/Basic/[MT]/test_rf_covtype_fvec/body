@@ -3,7 +3,7 @@ def test_rf_covtype_fvec(self):
     csvTrainFilename = 'covtype.shuffled.90pct.data'
     csvTrainPathname = ((importFolderPath + '/') + csvTrainFilename)
     hex_key = (csvTrainFilename + '.hex')
-    parseTrainResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvTrainPathname, hex_key=hex_key, timeoutSecs=180)
+    parseTrainResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvTrainPathname, hex_key=hex_key, timeoutSecs=180, doSummary=False)
     inspect = h2o_cmd.runInspect(None, parseTrainResult['destination_key'])
     csvTestFilename = 'covtype.shuffled.10pct.data'
     csvTestPathname = ((importFolderPath + '/') + csvTestFilename)
@@ -55,7 +55,7 @@ def test_rf_covtype_fvec(self):
         data_key = rfView['data_key']
         model_key = rfView['model_key']
         ntrees = rfView['ntrees']
-        rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, noPoll=False, doSimpleCheck=False)
+        rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, retryDelaySecs=5, noPoll=False, doSimpleCheck=False)
         h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
         rf_model = rfView['drf_model']
         cm = rf_model['cm']

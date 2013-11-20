@@ -4,4 +4,23 @@
   this.norm_beta=norm_beta;
   this.run_time=run_time;
   this.iteration=iteration;
+  int r=0;
+  if (beta != null) {
+    final double[] b=norm_beta != null ? norm_beta : beta;
+    for (    double d : beta)     if (d != 0)     ++r;
+    idxs=new int[r];
+    int ii=0;
+    for (int i=0; i < b.length; ++i)     if (b[i] != 0)     idxs[ii++]=i;
+    for (int i=1; i < r; ++i) {
+      for (int j=1; j < r - i; ++j) {
+        if (Math.abs(b[idxs[j - 1]]) < Math.abs(b[idxs[j]])) {
+          int jj=idxs[j];
+          idxs[j]=idxs[j - 1];
+          idxs[j - 1]=jj;
+        }
+      }
+    }
+  }
+ else   idxs=null;
+  rank=r;
 }
