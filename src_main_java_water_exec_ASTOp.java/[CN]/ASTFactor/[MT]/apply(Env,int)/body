@@ -1,0 +1,14 @@
+{
+  Frame ary=env.popAry();
+  if (ary.numCols() != 1)   throw new IllegalArgumentException("factor requires a single column");
+  Vec v0=ary.vecs()[0];
+  if (!v0.isEnum()) {
+    Vec v1=v0.toEnum();
+    Vec vmaster=v1.masterVec();
+    if (vmaster != null)     env.addRef(vmaster);
+    ary=env.addRef(new Frame(ary._names,new Vec[]{v1}));
+  }
+  env.pop();
+  env.push(1);
+  env._ary[env._sp - 1]=ary;
+}

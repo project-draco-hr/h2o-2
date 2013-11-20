@@ -34,8 +34,8 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
                 params = response['response']['redirect_request_args']
         return (url, params)
     msgUsed = None
-    r = {}
-    if beta_features:
+    r = response
+    if (beta_features or ('response_info' in response)):
         status = response['response_info']['status']
     else:
         status = 'poll'
@@ -72,8 +72,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             paramsUsedStr = paramsStr
             msgUsed = '\nPolling with'
         r = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
-        if (1 == 1):
-            verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r))
+        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r))
         if ((count % 6) == 0):
             check_sandbox_for_errors()
         if create_noise:
