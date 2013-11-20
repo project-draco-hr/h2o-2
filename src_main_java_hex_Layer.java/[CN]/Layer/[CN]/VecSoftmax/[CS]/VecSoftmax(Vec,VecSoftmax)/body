@@ -1,5 +1,8 @@
 {
-  if (vec.domain() == null)   vec=vec.toEnum();
+  if (vec.domain() == null) {
+    vec=vec.toEnum();
+    _toClose=vec;
+  }
   this.units=stats != null ? stats.units : vec.domain().length;
   this.vec=vec;
 }
