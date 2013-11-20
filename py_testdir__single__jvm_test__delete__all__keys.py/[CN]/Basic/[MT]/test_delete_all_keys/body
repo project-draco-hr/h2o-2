@@ -1,4 +1,4 @@
-def test_from_import(self):
+def test_delete_all_keys(self):
     importFolderPath = 'standard'
     timeoutSecs = 500
     csvFilenameAll = ['covtype.data', 'covtype20x.data']
@@ -13,4 +13,6 @@ def test_from_import(self):
             print csvFilename, 'H2O reports parse time:', parseResult['response']['time']
             print "Parse result['destination_key']:", parseResult['destination_key']
             print ('\n' + csvFilename)
+            print 'Delete all keys'
+            h2o.nodes[0].remove_all_keys()
         print '\nTrial', trial, 'completed\n'
