@@ -30,7 +30,7 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
     if noPoll:
         return a
     if beta_features:
-        rfView = a
+        rfView = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     else:
         fake_a = {}
         fake_a['response'] = a['response']
