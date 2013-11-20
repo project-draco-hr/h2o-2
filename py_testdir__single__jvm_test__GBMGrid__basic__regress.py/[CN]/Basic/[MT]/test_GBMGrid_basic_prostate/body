@@ -5,7 +5,7 @@ def test_GBMGrid_basic_prostate(self):
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     colNames = ['ID', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
     modelKey = 'GBMGrid_prostate'
-    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'ID', 'learn_rate': 0.1, 'ntrees': 'c(2,4)', 'max_depth': 8, 'min_rows': 1, 'response': 'CAPSULE', 'classification': (1 if DO_CLASSIFICATION else 0), }
+    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'ID', 'learn_rate': 0.1, 'ntrees': '4,100', 'max_depth': 8, 'min_rows': 1, 'response': 'CAPSULE', 'classification': (1 if DO_CLASSIFICATION else 0), }
     kwargs = params.copy()
     timeoutSecs = 1800
     start = time.time()
