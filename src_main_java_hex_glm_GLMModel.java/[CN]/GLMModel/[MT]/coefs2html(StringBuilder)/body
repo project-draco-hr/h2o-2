@@ -1,17 +1,17 @@
 {
-  final double[] beta=beta(), norm_beta=norm_beta();
+  final Submodel sm=submodels[best_lambda_idx];
   StringBuilder names=new StringBuilder();
   StringBuilder equation=new StringBuilder();
   StringBuilder vals=new StringBuilder();
-  StringBuilder normVals=norm_beta == null ? null : new StringBuilder();
+  StringBuilder normVals=sm.norm_beta == null ? null : new StringBuilder();
   String[] cNames=coefNames();
-  for (int i=0; i < cNames.length; ++i) {
+  for (  int i : sm.idxs) {
     names.append("<th>" + cNames[i] + "</th>");
-    vals.append("<td>" + beta[i] + "</td>");
-    if (i != 0)     equation.append(beta[i] > 0 ? " + " : " - ");
-    equation.append(DFORMAT.format(Math.abs(beta[i])));
+    vals.append("<td>" + sm.beta[i] + "</td>");
+    if (i != 0)     equation.append(sm.beta[i] > 0 ? " + " : " - ");
+    equation.append(DFORMAT.format(Math.abs(sm.beta[i])));
     if (i < (cNames.length - 1))     equation.append("*x[" + cNames[i] + "]");
-    if (norm_beta != null)     normVals.append("<td>" + norm_beta[i] + "</td>");
+    if (sm.norm_beta != null)     normVals.append("<td>" + sm.norm_beta[i] + "</td>");
   }
   sb.append("<h4>Equation</h4>");
   RString eq=null;
@@ -42,7 +42,7 @@ sb.append("<h4>Coefficients</h4><table class='table table-bordered table-condens
 sb.append("<tr>" + names.toString() + "</tr>");
 sb.append("<tr>" + vals.toString() + "</tr>");
 sb.append("</table>");
-if (norm_beta != null) {
+if (sm.norm_beta != null) {
 sb.append("<h4>Normalized Coefficients</h4>" + "<table class='table table-bordered table-condensed'>");
 sb.append("<tr>" + names.toString() + "</tr>");
 sb.append("<tr>" + normVals.toString() + "</tr>");

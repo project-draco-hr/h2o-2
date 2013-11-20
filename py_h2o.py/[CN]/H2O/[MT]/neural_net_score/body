@@ -7,7 +7,6 @@ def neural_net_score(self, key, model, timeoutSecs=600, retryDelaySecs=1, initia
         a['python_elapsed'] = (time.time() - start)
         a['python_%timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)
         return a
-    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
     verboseprint('\nneural net score result:', dump_json(a))
     a['python_elapsed'] = (time.time() - start)
     a['python_%timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)
