@@ -10,12 +10,13 @@ def test_GBMGrid_basic_benign(self):
     kwargs = params.copy()
     timeoutSecs = 1800
     start = time.time()
-    GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
-    print '\nGBMFirstResult:', h2o.dump_json(GBMFirstResult)
-    h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+    GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=(not DO_POLL), **kwargs)
+    if (not DO_POLL):
+        print '\nfirst GBMResult:', h2o.dump_json(GBMResult)
+        h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
     elapsed = (time.time() - start)
     print 'GBM training completed in', elapsed, 'seconds.'
-    gbmGridView = h2o.nodes[0].gbm_grid_view(job_key=GBMFirstResult['job_key'], destination_key=modelKey)
+    gbmGridView = h2o.nodes[0].gbm_grid_view(job_key=GBMResult['job_key'], destination_key=modelKey)
     if (1 == 0):
         gbmTrainView = h2o_cmd.runGBMView(model_key=modelKey)
         errsLast = gbmTrainView['gbm_model']['errs'][(-1)]
