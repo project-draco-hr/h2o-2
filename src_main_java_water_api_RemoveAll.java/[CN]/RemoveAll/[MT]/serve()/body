@@ -1,0 +1,12 @@
+{
+  try {
+    Log.info("Removing all keys for the cluster");
+    RemoveAllKeysTask collector=new RemoveAllKeysTask();
+    collector.invokeOnAllNodes();
+  }
+ catch (  Exception e) {
+    return Response.error(e.getMessage());
+  }
+  JsonObject response=new JsonObject();
+  return Response.done(response);
+}

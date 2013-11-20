@@ -14,21 +14,24 @@ def test_GLM2_covtype_1(self):
     kwargs.update({'alpha': 0, 'lambda': 0, })
 
     def completionHack(jobKey, modelKey):
-        h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
+        if DO_POLL:
+            pass
+        else:
+            h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
         print 'FIX! how do we get the GLM result'
         params = {'job_key': jobKey, 'destination_key': modelKey, }
         a = h2o.nodes[0].completion_redirect(jsonRequest='2/GLMProgressPage2.json', params=params)
         print 'GLM result from completion_redirect:', h2o.dump_json(a)
-    glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+    glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not DO_POLL), **kwargs)
     completionHack(glmFirstResult['job_key'], modelKey)
     print 'glm (L2) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
     start = time.time()
-    glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+    glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not DO_POLL), **kwargs)
     completionHack(glmFirstResult['job_key'], modelKey)
     print 'glm (Elastic) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     kwargs.update({'alpha': 1, 'lambda': 0.0001, })
     start = time.time()
-    glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+    glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not DO_POLL), **kwargs)
     completionHack(glmFirstResult['job_key'], modelKey)
     print 'glm (L1) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
