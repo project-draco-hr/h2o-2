@@ -14,7 +14,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
                 pass
             else:
                 redirect_url = response_info['redirect_url']
-                if ('NeuralNetProgress' in str(redirect_url)):
+                if (('NeuralNetProgress' in str(redirect_url)) or ('KMeans2Progress' in str(redirect_url))):
                     if ('2/' not in str(redirect_url)):
                         redirect_url = ('2/' + redirect_url)
                 if redirect_url:
