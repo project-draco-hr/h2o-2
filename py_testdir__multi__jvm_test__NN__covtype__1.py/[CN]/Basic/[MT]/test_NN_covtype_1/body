@@ -17,24 +17,17 @@ def test_NN_covtype_1(self):
         kwargs = {'response': response, 'ignored_cols': None, 'classification': 1, 'validation': testHexKey, 'activation': 'Tanh', 'hidden': 500, 'rate': 0.01, 'l2': 0.01, 'epochs': 5, 'destination_key': modelKey, }
         timeoutSecs = 600
         start = time.time()
-        nnResult = h2o_cmd.runNNet(parseResult=trainParseResult, timeoutSecs=timeoutSecs, noPoll=(not DO_POLL), **kwargs)
-        print ('nnResult:' if DO_POLL else 'first nnResult:'), h2o.dump_json(nnResult)
-        if (not DO_POLL):
-            h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
-            job_key = nnResult['job_key']
-            params = {'job_key': job_key, 'destination_key': modelKey, }
-            a = h2o.nodes[0].completion_redirect(jsonRequest='2/NeuralNetProgress.json', params=params)
-            print 'NeuralNetProgress:', h2o.dump_json(a)
+        nnResult = h2o_cmd.runNNet(parseResult=trainParseResult, timeoutSecs=timeoutSecs, **kwargs)
+        print 'nnResult:', h2o.dump_json(nnResult)
         print 'neural net end on ', trainPathname, 'took', (time.time() - start), 'seconds'
-        if DO_SCORE:
-            kwargs = {'max_rows': 0, 'response': response, 'ignored_cols': None, 'cols': None, 'classification': 1, 'destination_key': 'b.hex', 'model': modelKey, }
-            nnScoreResult = h2o_cmd.runNNetScore(key=testParseResult['destination_key'], timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
-            print 'neural net score end on ', testPathname, 'took', (time.time() - start), 'seconds'
-            cm = nnScoreResult['confusion_matrix']
-            mean_square_error = nnScoreResult['mean_square_error']
-            classification_error = nnScoreResult['classification_error']
-            pctWrong = h2o_gbm.pp_cm_summary(cm)
-            print '\nTest\n==========\n'
-            print 'classification_error:', classification_error
-            print 'mean_square_error:', mean_square_error
-            print h2o_gbm.pp_cm(cm)
+        kwargs = {'max_rows': 0, 'response': response, 'ignored_cols': None, 'cols': None, 'classification': 1, 'destination_key': 'b.hex', 'model': modelKey, }
+        nnScoreResult = h2o_cmd.runNNetScore(key=testParseResult['destination_key'], timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+        print 'neural net score end on ', testPathname, 'took', (time.time() - start), 'seconds'
+        cm = nnScoreResult['confusion_matrix']
+        mean_square_error = nnScoreResult['mean_square_error']
+        classification_error = nnScoreResult['classification_error']
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        print '\nTest\n==========\n'
+        print 'classification_error:', classification_error
+        print 'mean_square_error:', mean_square_error
+        print h2o_gbm.pp_cm(cm)
