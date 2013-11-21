@@ -1,0 +1,47 @@
+def test_kmeans_sphere100_fvec(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_spheres100.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    centersList = write_spheres_dataset(csvPathname, CLUSTERS, SPHERE_PTS)
+    if SHUFFLE_SPHERES:
+        csvFilename2 = 'syn_spheres100_shuffled.csv'
+        csvPathname2 = ((SYNDATASETS_DIR + '/') + csvFilename2)
+        h2o_util.file_shuffle(csvPathname, csvPathname2)
+    else:
+        csvFilename2 = csvFilename
+        csvPathname2 = csvPathname
+    print '\nStarting', csvFilename
+    parseResult = h2i.import_parse(path=csvPathname2, schema='put', hex_key=(csvFilename2 + '.hex'))
+    cols = ','.join(map(str, range(DIMENSIONS)))
+    for trial in range(10):
+        kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'syn_spheres100.hex', }
+        timeoutSecs = 100
+        start = time.time()
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')
+        h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
+        clusters = kmeansResult['KMeansModel']['clusters']
+        clustersSorted = sorted(clusters, key=sum)
+        centersSorted = sorted(centersList, key=sum)
+        print '\ntrial #', trial, 'h2o result, centers (sorted by key=sum)'
+        cf = '{0:6.2f}'
+        for c in clustersSorted:
+            print ' '.join(map(cf.format, c))
+        print '\ngenerated centers (sorted by key=sum)'
+        for c in centersSorted:
+            print ' '.join(map(cf.format, c))
+        for (i, center) in enumerate(centersSorted):
+            a = center
+            b = clustersSorted[i]
+            print '\nexpected:', a
+            print 'h2o:', b
+            aStr = ','.join(map(str, a))
+            bStr = ','.join(map(str, b))
+            iStr = str(i)
+            for (i, v) in enumerate(a):
+                emsg = (((((((aStr + ' != ') + bStr) + '. Sorted cluster center ') + iStr) + ' axis ') + str(i)) + ' not correct.')
+                self.assertAlmostEqual(a[i], b[i], delta=ALLOWED_CENTER_DELTA, msg=emsg)
+        print 'Trial #', trial, 'completed'
