@@ -6,10 +6,10 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         params = None
         if (beta_features or ('response_info' in response)):
             if ('response_info' not in response):
-                raise Exception(("The response during polling should have 'response_info'. Don't see it: \n%s" % dump_json(response)))
+                raise Exception(("Response during polling must have 'response_info'\n%s" % dump_json(response)))
             response_info = response['response_info']
             if ('redirect_url' not in response_info):
-                raise Exception(("The response during polling should have 'redirect_url'. Don't see it: \n%s" % dump_json(response)))
+                raise Exception(("Response during polling must have 'redirect_url'\n%s" % dump_json(response)))
             if (response_info['status'] == 'done'):
                 pass
             else:
@@ -39,8 +39,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         status = response['response_info']['status']
     else:
         status = response['response']['status']
-        if (status == 'redirect'):
-            status = 'poll'
+    firstPoll = (status != 'done')
     (url, params) = get_redirect_url(response, beta_features)
     if params:
         paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])
@@ -59,7 +58,8 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     count = 0
     if initialDelaySecs:
         time.sleep(initialDelaySecs)
-    while ((status == 'poll') or (beta_features and (status == 'redirect') and ('Inspect' not in url))):
+    while ((status == 'poll') or firstPoll or (beta_features and (status == 'redirect') and ('Inspect' not in url))):
+        firstPoll = False
         print status, url
         time.sleep(retryDelaySecs)
         create_noise = (noise_enable and ((count % 2) == 0))
