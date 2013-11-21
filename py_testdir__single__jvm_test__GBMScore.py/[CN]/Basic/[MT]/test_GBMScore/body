@@ -14,8 +14,7 @@ def test_GBMScore(self):
     params = {'destination_key': 'GBMScore', 'response': response, 'ignored_cols_by_name': ignored_cols, 'classification': 1, 'validation': None, 'ntrees': 100, 'max_depth': 10, 'learn_rate': 5e-05, }
     parseResult = {'destination_key': trainhex, }
     kwargs = params.copy()
-    gbm = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, timeoutSecs=4800, **kwargs)
-    h2j.pollWaitJobs(timeoutSecs=16000, pollTimeoutSecs=16000, retryDelaySecs=5)
+    gbm = h2o_cmd.runGBM(parseResult=parseResult, timeoutSecs=4800, **kwargs)
     scoreStart = time.time()
     h2o.nodes[0].generate_predictions(model_key='GBMScore', data_key=trainhex)
     scoreElapsed = (time.time() - scoreStart)
