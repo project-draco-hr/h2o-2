@@ -44,7 +44,7 @@
       sampler._mults=mults;
       sampler.doAll(vecs);
       clusters=Utils.append(clusters,sampler._sampled);
-      if (cancelled())       return;
+      if (cancelled())       return Status.Done;
       model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
       model.error=sqr._sqr;
       model.iterations++;
@@ -68,4 +68,5 @@
     if (model.iterations >= max_iter)     break;
     if (cancelled())     break;
   }
+  return Status.Done;
 }
