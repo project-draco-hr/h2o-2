@@ -22,7 +22,9 @@ def simpleCheckKMeans(self, kmeans, **kwargs):
         normalized = model['normalized']
         max_iter = model['max_iter']
     else:
-        clusters = kmeansResult['KMeansModel']['clusters']
+        model = kmeansResult['KMeansModel']
+        clusters = model['clusters']
+        error = model['error']
     for (i, c) in enumerate(clusters):
         for n in c:
             if math.isnan(n):
