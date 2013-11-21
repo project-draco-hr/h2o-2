@@ -1,6 +1,6 @@
 def scoreRF(scoreParseResult, trainResult, vactual=None, **kwargs):
+    parseKey = scoreParseResult['destination_key']
     if h2o.beta_features:
-        parseKey = scoreParseResult['destination_key']
         rfModelKey = trainResult['drf_model']['_selfKey']
         predictKey = 'Predict.hex'
         start = time.time()
@@ -13,7 +13,6 @@ def scoreRF(scoreParseResult, trainResult, vactual=None, **kwargs):
         print h2o_gbm.pp_cm(cm)
         scoreResult = predictCMResult
     else:
-        parseKey = scoreParseResult['destination_key']
         ntree = trainResult['ntree']
         rfModelKey = trainResult['model_key']
         start = time.time()
