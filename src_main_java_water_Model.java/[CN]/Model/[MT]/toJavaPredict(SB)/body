@@ -4,8 +4,11 @@
   sb.p("  // main prediction (class for classifiers or value for regression),\n");
   sb.p("  // and remaining columns hold a probability distribution for classifiers.\n");
   sb.p("  float[] predict( double data[], float preds[] ) {\n");
-  toJavaPredictBody(sb);
+  SB afterCode=new SB().ii(1);
+  toJavaPredictBody(sb.ii(2),afterCode);
+  sb.di(1);
   sb.p("    return preds;\n");
   sb.p("  }\n");
+  sb.p(afterCode);
   return sb;
 }
