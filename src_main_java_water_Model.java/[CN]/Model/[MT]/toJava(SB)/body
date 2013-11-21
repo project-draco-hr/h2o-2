@@ -1,0 +1,40 @@
+{
+  sb.p("\n");
+  String modelName=toJavaId(_selfKey.toString());
+  sb.p("// Model for ").p(this.getClass().getSimpleName()).p(" with name ").p(modelName);
+  sb.p("\nclass ").p(modelName).p(" extends water.Model.GeneratedModel {\n");
+  toJavaNAMES(sb);
+  toJavaNCLASSES(sb);
+  toJavaInit(sb);
+  sb.p("\n");
+  toJavaPredict(sb);
+  sb.p(TOJAVA_MAP);
+  sb.p(TOJAVA_PREDICT_MAP);
+  sb.p(TOJAVA_PREDICT_MAP_ALLOC1);
+  sb.p(TOJAVA_PREDICT_MAP_ALLOC2);
+  Frame fr=UKV.get(_dataKey);
+  int nrows=(int)Math.min(1000,fr.numRows());
+  sb.p("public static final double[][] DATA = new double[][] {").nl();
+  Vec[] vecs=new Vec[_names.length - 1];
+  for (int i=0; i < _names.length - 1; i++)   vecs[i]=fr.vecs()[fr.find(_names[i])];
+  for (int row=0; row < nrows; row++) {
+    sb.indent(1).p(row > 0 ? "," : "").p("new double[] {");
+    for (int v=0; v < vecs.length; v++)     sb.p(v > 0 ? "," : "").p(vecs[v].at(row));
+    sb.p("}").nl();
+  }
+  sb.p("};").nl();
+  sb.p("public static void main(String[] args) {\n");
+  sb.indent(1).p(modelName).p(" m = new ").p(modelName).p("();").nl();
+  sb.p("}").nl();
+  try {
+    File f=new File("/Users/michal/Tmp/genmodel/" + toJavaId(_selfKey.toString()) + ".java");
+    FileWriter fw=new FileWriter(f);
+    BufferedWriter bw=new BufferedWriter(fw);
+    bw.write(sb.toString());
+    bw.close();
+  }
+ catch (  Throwable t) {
+    t.printStackTrace();
+  }
+  return sb;
+}

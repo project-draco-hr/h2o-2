@@ -1,0 +1,26 @@
+{
+  int rows=data.length;
+  int cols=data[0].length;
+  int levels=preds.length - 1;
+  int ntrees_internal=ntrees * levels;
+  System.out.println("Iterations: " + iters);
+  System.out.println("Rows      : " + rows);
+  System.out.println("Cols      : " + cols);
+  System.out.println("Levels    : " + levels);
+  System.out.println("Ntrees    : " + ntrees);
+  System.out.println("Ntrees internal   : " + ntrees_internal);
+  System.out.println("iter,total_time,time_per_row,time_per_tree,time_per_row_tree,time_per_inter_tree,time_per_row_inter_tree");
+  StringBuilder sb=new StringBuilder(100);
+  for (int i=0; i < iters; i++) {
+    long startTime=System.nanoTime();
+    for (    double[] row : data)     predict(row,preds);
+    long ttime=System.nanoTime() - startTime;
+    sb.append(i).append(',');
+    sb.append(ttime).append(',');
+    sb.append(ttime / rows).append(',');
+    sb.append(ttime / ntrees).append(',');
+    sb.append(ttime / (ntrees * rows)).append(',');
+    sb.append(ttime / ntrees_internal).append(',');
+    sb.append(ttime / (ntrees_internal * rows)).append('\n');
+  }
+}

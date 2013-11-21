@@ -1,32 +1,3 @@
 {
-  SB sb=new SB();
-  sb.p("\n");
-  String modelName=toJavaId(_selfKey.toString());
-  sb.p("// Model for ").p(this.getClass().getSimpleName()).p(" with name ").p(modelName);
-  sb.p("\nclass ").p(modelName).p(" {\n");
-  toJavaNAMES(sb);
-  toJavaNCLASSES(sb);
-  toJavaInit(sb);
-  sb.p("\n");
-  toJavaPredict(sb);
-  sb.p(TOJAVA_MAP);
-  sb.p(TOJAVA_PREDICT_MAP);
-  sb.p(TOJAVA_PREDICT_MAP_ALLOC1);
-  sb.p(TOJAVA_PREDICT_MAP_ALLOC2);
-  sb.p("static int main(String[] args) {\n");
-  sb.indent(1).p(modelName).p(" m = new ").p(modelName).p("();\n");
-  sb.p("  return 0;");
-  sb.p("}");
-  sb.p("}\n");
-  try {
-    File f=new File("/Users/michal/Tmp/genmodel/" + toJavaId(_selfKey.toString()) + ".java");
-    FileWriter fw=new FileWriter(f);
-    BufferedWriter bw=new BufferedWriter(fw);
-    bw.write(sb.toString());
-    bw.close();
-  }
- catch (  Throwable t) {
-    t.printStackTrace();
-  }
-  return sb.toString();
+  return toJava(new SB()).toString();
 }
