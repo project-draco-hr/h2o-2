@@ -15,15 +15,15 @@ def test_kmeans_sphere100_fvec(self):
     parseResult = h2i.import_parse(path=csvPathname2, schema='put', hex_key=(csvFilename2 + '.hex'))
     cols = ','.join(map(str, range(DIMENSIONS)))
     for trial in range(10):
-        kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'cols': cols, 'destination_key': 'syn_spheres100.hex', }
+        kwargs = {'k': CLUSTERS, 'initialization': 'Furthest', 'max_iter': 20, 'destination_key': 'syn_spheres100.hex', }
         timeoutSecs = 100
         start = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-        kmeansResult = h2o_cmd.runInspect(key='syn_spheres100.hex')
+        kmeansResult = kmeans
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-        clusters = kmeansResult['KMeansModel']['clusters']
+        clusters = kmeansResult['model']['clusters']
         clustersSorted = sorted(clusters, key=sum)
         centersSorted = sorted(centersList, key=sum)
         print '\ntrial #', trial, 'h2o result, centers (sorted by key=sum)'
