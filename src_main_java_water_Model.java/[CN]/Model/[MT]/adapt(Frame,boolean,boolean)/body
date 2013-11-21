@@ -1,6 +1,17 @@
 {
+  if (!dropResponse) {
+    String responseName=_names[_names.length - 1];
+    for (int i=0; i < fr._names.length; ++i) {
+      if (fr._names[i].equalsIgnoreCase(responseName)) {
+        fr.add(responseName,fr.remove(i));
+        break;
+      }
+    }
+  }
   String frnames[]=fr.names();
   Vec frvecs[]=fr.vecs();
+  int len=dropResponse ? frvecs.length - 1 : frvecs.length;
+  if (!exact)   for (int i=0; i < len; ++i)   if (_domains[i] != null && !frvecs[i].isEnum())   frvecs[i]=frvecs[i].toEnum();
   int map[][]=adapt(frnames,fr.domains(),exact,dropResponse);
   int cmap[]=dropResponse ? map[_names.length - 1] : map[_names.length];
   Vec vecs[]=dropResponse ? new Vec[_names.length - 1] : new Vec[_names.length];
