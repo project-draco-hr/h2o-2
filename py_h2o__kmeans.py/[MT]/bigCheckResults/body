@@ -3,17 +3,23 @@ def bigCheckResults(self, kmeans, csvPathname, parseResult, applyDestinationKey,
     if h2o.beta_features:
         model_key = kmeans['model']['_selfKey']
         kmeansResult = kmeans
-        centers = kmeansResult['model']['clusters']
+        model = kmeansResult['model']
+        centers = model['clusters']
+        error = model['error']
     else:
         model_key = kmeans['destination_key']
         kmeansResult = h2o_cmd.runInspect(key=model_key)
-        centers = kmeansResult['KMeansModel']['clusters']
+        model = kmeansResult['KMeansModel']
+        centers = model['clusters']
+        error = model['error']
     if h2o.beta_features:
         pass
-        kmeansScoreResult = kmeans
-        score = kmeansScoreResult['model']
-        rows_per_cluster = score['rows_per_cluster']
-        sqr_error_per_cluster = score['sqr_error_per_cluster']
+        predictKey = applyDestinationKey
+        predictResult = h2o.nodes[0].generate_predictions(data_key=parseResult['destination_key'], model_key=model_key, destination_key=predictKey)
+        summaryResult = h2o.nodes[0].summary_page(key=predictKey)
+        hcnt = summaryResult['summaries'][0]['hcnt']
+        rows_per_cluster = hcnt
+        sqr_error_per_cluster = [0 for h in hcnt]
     else:
         kmeansApplyResult = h2o.nodes[0].kmeans_apply(data_key=parseResult['destination_key'], model_key=model_key, destination_key=applyDestinationKey)
         inspect = h2o_cmd.runInspect(None, applyDestinationKey)
@@ -25,6 +31,7 @@ def bigCheckResults(self, kmeans, csvPathname, parseResult, applyDestinationKey,
         rows_per_cluster = score['rows_per_cluster']
         sqr_error_per_cluster = score['sqr_error_per_cluster']
     tupleResultList = []
+    print '\nerror: ', error
     for (i, c) in enumerate(centers):
         print (('\ncenters[' + str(i)) + ']: '), centers[i]
         print (('rows_per_cluster[' + str(i)) + ']: '), rows_per_cluster[i]
