@@ -38,7 +38,9 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     if (beta_features or ('response_info' in response)):
         status = response['response_info']['status']
     else:
-        status = 'poll'
+        status = response['response']['status']
+        if (status == 'redirect'):
+            status = 'poll'
     (url, params) = get_redirect_url(response, beta_features)
     if params:
         paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])

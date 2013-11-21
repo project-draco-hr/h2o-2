@@ -34,4 +34,5 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=0.2, in
         response_variable = rf['response_variable']
         params_dict.update({'ntree': ntree, 'model_key': model_key, })
         rfViewResult = self.random_forest_view(timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, print_params=print_params, noPoll=noPoll, useRFScore=False, **params_dict)
+        verboseprint('random_forest_view:', rfViewResult)
         return rfViewResult
