@@ -1,4 +1,10 @@
 {
+  if (!_error.specified()) {
+    for (    Argument arg : _arguments) {
+      arg.reset();
+      arg.check(this,parms.getProperty(arg._name,""));
+    }
+  }
   water.NanoHTTPD.Response r=super.serve(server,parms,type);
   r.status=NanoHTTPD.HTTP_INTERNALERROR;
   return r;
