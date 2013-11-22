@@ -28,7 +28,7 @@
   model.training_errors=trainErrors0;
   model.validation_errors=validErrors0;
   UKV.put(destination_key,model);
-  final Frame[] adapted=validation == null ? null : model.adapt(validation,false,false);
+  final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
   final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
   Thread thread=new Thread(){
     Error[] trainErrors=trainErrors0, validErrors=validErrors0;

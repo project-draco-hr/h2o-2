@@ -1,5 +1,10 @@
 {
-  Frame[] adaptFrms=adapt(fr,exact);
+  int ridx=fr.find(_names[_names.length - 1]);
+  if (ridx != -1) {
+    fr=new Frame(fr._names,fr.vecs());
+    fr.remove(ridx);
+  }
+  Frame[] adaptFrms=adapt(fr,false);
   Frame adaptFrm=adaptFrms[0];
   Frame onlyAdaptFrm=adaptFrms[1];
   Vec v=adaptFrm.anyVec().makeZero();
