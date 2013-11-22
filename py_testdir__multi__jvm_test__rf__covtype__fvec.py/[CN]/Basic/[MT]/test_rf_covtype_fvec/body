@@ -73,7 +73,6 @@ def test_rf_covtype_fvec(self):
         print 'errs[-1]:', errs[(-1)]
         print 'errs:', errs
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView)
-        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=data_key)
         eList.append(classErrorPctList[4])
         fList.append(trainElapsed)
