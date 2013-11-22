@@ -8,12 +8,8 @@
       sb.indent().p("// Tree ").p(i);
       if (cnames != null)       sb.p(", class=").p(cnames[c]);
       sb.p("\n");
-      sb.indent().p("preds[").p(c + 1).p("] +=").p(" pred_tree_").p(i).p("_class_").p(c).p("(data);\n");
+      sb.indent().p("preds[").p(c + 1).p("] +=").p(" Tree_").p(i).p("_class_").p(c).p(".predict(data);").nl();
       toJavaTreePredictFct(afterBodySb,cts[c],i,c);
     }
   }
-  sb.indent().p("// Compute Probabilities\n");
-  sb.indent().p("float sum = 0;\n");
-  sb.indent().p("for(int i=1;i<preds.length; i++) sum += Math.exp(preds[i]);\n");
-  sb.indent().p("for(int i=1; i<preds.length; i++) preds[i] = (float) Math.exp(preds[i]) / sum;\n");
 }
