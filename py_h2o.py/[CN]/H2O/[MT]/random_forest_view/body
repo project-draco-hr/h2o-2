@@ -2,6 +2,8 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
     if beta_features:
         print 'random_forest_view not supported in H2O fvec yet. hacking done response'
         r = {'response': {'status': 'done', }, 'trees': {'number_built': 0, }, }
+    if (beta_features and data_key):
+        print "Can't pass a new data_key to random_forest_view for v2's DRFModelView. Not using"
     algo = ('2/DRFModelView' if beta_features else 'RFView')
     algoScore = ('2/DRFScore2' if beta_features else 'RFScore')
     if beta_features:
@@ -32,7 +34,7 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
     if beta_features:
         rfView = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
     else:
-        fake_a = {}
+        fake_a = a
         fake_a['response'] = a['response']
         fake_a['response']['redirect_request'] = (whichUsed + '.json')
         fake_a['response']['redirect_request_args'] = params_dict
@@ -45,9 +47,7 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
         drf_model = rfView['drf_model']
         numberBuilt = drf_model['N']
     else:
-        numberBuilt = rfView['trees']['number_built']
-        if (numberBuilt != ntree):
-            raise Exception(('%s done but number_built!=ntree: %s %s' % (whichUsed, numberBuilt, ntree)))
+        pass
     errorInResponse = False
     if errorInResponse:
         raise Exception((('\nBad values in %s.json\n' % whichUsed) + ('progress: %s, progressTotal: %s, ntree: %s, numberBuilt: %s, status: %s' % (progress, progressTotal, ntree, numberBuilt, status))))

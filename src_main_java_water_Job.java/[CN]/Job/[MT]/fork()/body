@@ -4,8 +4,8 @@
     @Override public void compute2(){
       Throwable t=null;
       try {
-        Job.this.exec();
-        Job.this.done();
+        Status status=Job.this.exec();
+        if (status == Status.Done)         Job.this.remove();
       }
  catch (      Throwable t_) {
         t=t_;
