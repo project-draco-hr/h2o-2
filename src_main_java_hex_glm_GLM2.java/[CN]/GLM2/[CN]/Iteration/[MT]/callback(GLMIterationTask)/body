@@ -28,7 +28,7 @@
       if (done) {
         H2OCallback fin=new H2OCallback<GLMValidationTask>(){
           @Override public void callback(          GLMValidationTask tsk){
-            if (!diverged && tsk._improved && _lambdaIdx < (lambda.length - 1)) {
+            if (!diverged && (tsk._improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
               _oldModel=_model;
               _solver=new ADMMSolver(lambda[++_lambdaIdx],alpha[0]);
               glmt._val=null;

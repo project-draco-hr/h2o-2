@@ -1,0 +1,63 @@
+{
+  String title=(val instanceof GLMXValidation) ? "Cross Validation" : "Validation";
+  sb.append("<h4>" + title + "</h4>");
+  sb.append("<table class='table table-striped table-bordered table-condensed'>");
+  final long null_dof=val.nobs - 1, res_dof=Math.max(0,val.nobs - sm.rank - 1);
+  sb.append("<tr><th>Degrees of freedom:</th><td>" + null_dof + " total (i.e. Null); "+ res_dof+ " Residual</td></tr>");
+  sb.append("<tr><th>Null Deviance</th><td>" + val.null_deviance + "</td></tr>");
+  sb.append("<tr><th>Residual Deviance</th><td>" + val.residual_deviance + "</td></tr>");
+  sb.append("<tr><th>AIC</th><td>" + val.aic() + "</td></tr>");
+  sb.append("<tr><th>Training Error Rate Avg</th><td>" + val.avg_err + "</td></tr>");
+  if (glm_model.glm.family == Family.binomial)   sb.append("<tr><th>AUC</th><td>" + DFORMAT.format(val.auc()) + "</td></tr>");
+  sb.append("</table>");
+  if (glm_model.glm.family == Family.binomial) {
+    sb.append("<span><b>ROC curve</b></span>");
+    ROCc(sb,val);
+    int best=(int)(100 * glm_model.threshold);
+    confusionHTML(val._cms[best],sb);
+    sb.append("\n<script type=\"text/javascript\">");
+    sb.append("var cms = [\n");
+    for (    ConfusionMatrix cm : val._cms) {
+      sb.append("\t[\n");
+      for (      long[] line : cm._arr) {
+        sb.append("\t\t[");
+        for (        long l : line)         sb.append(l + ",");
+        sb.append("],\n");
+      }
+      sb.append("\t],\n");
+    }
+    sb.append("];\n");
+    sb.append("function show_cm(i){\n");
+    sb.append("\t" + "document.getElementById('TN').innerHTML = cms[i][0][0];\n");
+    sb.append("\t" + "document.getElementById('TP').innerHTML = cms[i][1][1];\n");
+    sb.append("\t" + "document.getElementById('FN').innerHTML = cms[i][0][1];\n");
+    sb.append("\t" + "document.getElementById('FP').innerHTML = cms[i][1][0];\n");
+    sb.append("}\n");
+    sb.append("</script>\n");
+    sb.append("\n<div><b>Confusion Matrix at decision threshold:</b></div><select onchange='show_cm(this.value)'>\n");
+    for (int i=0; i < GLMValidation.DEFAULT_THRESHOLDS.length; ++i)     sb.append("\t<option value='" + i + "'"+ (GLMValidation.DEFAULT_THRESHOLDS[i] == glm_model.threshold ? "selected='selected'" : "")+ ">"+ GLMValidation.DEFAULT_THRESHOLDS[i]+ "</option>\n");
+    sb.append("</select>\n");
+  }
+  if (val instanceof GLMXValidation) {
+    GLMXValidation xval=(GLMXValidation)val;
+    sb.append("<h4>Cross Validation Models</h4>");
+    sb.append("<table class='table table-bordered table-condensed'>");
+    sb.append("<tr><th>Model</th><th>nonzeros</th>");
+    sb.append("<th>" + ((glm_model.glm.family == Family.binomial) ? "AUC" : "AIC") + "</th>");
+    sb.append("<th>Deviance Explained</th>");
+    sb.append("</tr>");
+    int i=0;
+    for (    Key k : xval._xvalModels) {
+      Value v=DKV.get(k);
+      if (v == null)       continue;
+      GLMModel m=v.get();
+      sb.append("<tr>");
+      sb.append("<td>" + GLMModelView.link("Model " + ++i,k) + "</td>");
+      sb.append("<td>" + (m.rank() - 1) + "</td>");
+      sb.append("<td>" + ((glm_model.glm.family == Family.binomial) ? format(m.auc()) : format(m.aic())) + "</td>");
+      sb.append("<td>" + format(m.devExplained()) + "</td>");
+      sb.append("</tr>");
+    }
+    sb.append("</table>");
+  }
+}
