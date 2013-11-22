@@ -1,4 +1,5 @@
 def test_rf_covtype_fvec(self):
+    h2o.beta_features = True
     importFolderPath = 'standard'
     csvTrainFilename = 'covtype.shuffled.90pct.data'
     csvTrainPathname = ((importFolderPath + '/') + csvTrainFilename)
@@ -44,19 +45,17 @@ def test_rf_covtype_fvec(self):
         kwargs = paramDict.copy()
         timeoutSecs = (30 + (kwargs['ntrees'] * 200))
         start = time.time()
-        rfFirstResult = h2o_cmd.runRF(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, noPoll=False, rfView=False, **kwargs)
+        rfFirstResult = h2o_cmd.runRF(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, rfView=False, **kwargs)
         rfView = {}
         rfView['data_key'] = hex_key
         rfView['model_key'] = kwargs['destination_key']
         rfView['ntrees'] = kwargs['ntrees']
-        h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=120, retryDelaySecs=5)
         trainElapsed = (time.time() - start)
         print 'rf train end on ', csvTrainPathname, 'took', trainElapsed, 'seconds'
         data_key = rfView['data_key']
         model_key = rfView['model_key']
         ntrees = rfView['ntrees']
-        rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, retryDelaySecs=5, noPoll=False, doSimpleCheck=False)
-        h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
+        rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, retryDelaySecs=5, doSimpleCheck=False)
         rf_model = rfView['drf_model']
         cm = rf_model['cm']
         ntrees = rf_model['N']
@@ -73,7 +72,8 @@ def test_rf_covtype_fvec(self):
         print 'errs[0]:', errs[0]
         print 'errs[-1]:', errs[(-1)]
         print 'errs:', errs
-        (error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRF2View(rfv=rfView)
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView)
+        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=data_key)
         eList.append(classErrorPctList[4])
         fList.append(trainElapsed)
