@@ -1,0 +1,12 @@
+{
+  for (int i=1; i < argcnt; i++) {
+    if (env.isAry(i - argcnt)) {
+      env._sb.append(env.ary(i - argcnt).toStringAll());
+    }
+ else {
+      env._sb.append(env.toString(env._sp + i - argcnt,true));
+    }
+  }
+  env.pop(argcnt - 2);
+  env.pop_into_stk(-2);
+}
