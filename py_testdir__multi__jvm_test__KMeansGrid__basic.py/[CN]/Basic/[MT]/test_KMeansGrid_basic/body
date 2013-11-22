@@ -9,7 +9,8 @@ def test_KMeansGrid_basic(self):
         print 'python_source:', parseResult['python_source']
         csvPathname = parseResult['python_source']
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-        params = {'k': 2, 'initialization': None, 'seed': 3923021996079663354, 'normalize': 0, 'max_iter': '2', 'destination_key': 'd.hex', }
+        destination_key = 'd.hex'
+        params = {'k': 2, 'initialization': None, 'seed': 3923021996079663354, 'normalize': 0, 'max_iter': '2', 'destination_key': destination_key, }
         for trial in range(3):
             kwargs = params.copy()
             h2o.beta_features = True
@@ -18,6 +19,4 @@ def test_KMeansGrid_basic(self):
             elapsed = (time.time() - start)
             print 'kmeans (with grid) end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-            inspect = h2o_cmd.runInspect(None, key=kmeans['destination_key'])
-            print h2o.dump_json(inspect)
             print 'Trial #', trial, 'completed\n'
