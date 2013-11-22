@@ -34,7 +34,7 @@
     sb.append("\t" + "document.getElementById('FP').innerHTML = cms[i][1][0];\n");
     sb.append("}\n");
     sb.append("</script>\n");
-    sb.append("\n<div><b>Confusion Matrix at decision threshold:</b></div><select onchange='show_cm(this.value)'>\n");
+    sb.append("\n<div><b>Confusion Matrix at decision threshold:</b></div><select id=\"select\" onchange='show_cm(this.value)'>\n");
     for (int i=0; i < GLMValidation.DEFAULT_THRESHOLDS.length; ++i)     sb.append("\t<option value='" + i + "'"+ (GLMValidation.DEFAULT_THRESHOLDS[i] == glm_model.threshold ? "selected='selected'" : "")+ ">"+ GLMValidation.DEFAULT_THRESHOLDS[i]+ "</option>\n");
     sb.append("</select>\n");
   }
