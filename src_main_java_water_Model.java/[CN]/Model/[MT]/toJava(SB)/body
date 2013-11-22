@@ -13,15 +13,5 @@
   sb.p(TOJAVA_PREDICT_MAP_ALLOC1);
   sb.p(TOJAVA_PREDICT_MAP_ALLOC2);
   sb.p("}").nl();
-  try {
-    File f=new File("/Users/michal/Tmp/genmodel/" + modelName + ".java");
-    FileWriter fw=new FileWriter(f);
-    BufferedWriter bw=new BufferedWriter(fw);
-    bw.write(sb.toString());
-    bw.close();
-  }
- catch (  Throwable t) {
-    t.printStackTrace();
-  }
   return sb;
 }

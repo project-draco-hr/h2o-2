@@ -1,8 +1,7 @@
 {
   if (treeStats == null)   return;
   sb.append("<br /><br /><div class=\"pull-right\"><a href=\"#\" onclick=\'$(\"#javaModel\").toggleClass(\"hide\");\'" + "class=\'btn btn-inverse btn-mini\'>Java Model</a></div><br /><div class=\"hide\" id=\"javaModel\">" + "<pre style=\"overflow-y:scroll;\"><code class=\"language-java\">");
-  boolean debug=true;
-  if (!debug && numTrees() * treeStats.meanLeaves > 10000)   sb.append("/* Java code is too large to display, download it directly. */");
+  if (numTrees() * treeStats.meanLeaves > 10000)   sb.append("/* Java code is too large to display, download it directly. */");
  else   DocGen.HTML.escape(sb,toJava());
   sb.append("</code></pre></div>");
 }
