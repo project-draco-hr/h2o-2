@@ -1,4 +1,50 @@
 {
-  glm_model.generateHTML("",sb);
+  DocGen.HTML.paragraph(sb,"Model Key: " + glm_model._selfKey);
+  if (glm_model.submodels != null)   DocGen.HTML.paragraph(sb,water.api.Predict.link(glm_model._selfKey,"Predict!"));
+  String succ=(glm_model.warnings == null || glm_model.warnings.length == 0) ? "alert-success" : "alert-warning";
+  sb.append("<div class='alert " + succ + "'>");
+  pprintTime(sb.append(glm_model.iteration() + " iterations computed in "),glm_model.run_time);
+  if (glm_model.warnings != null && glm_model.warnings.length > 0) {
+    sb.append("<b>Warnings:</b><ul>");
+    for (    String w : glm_model.warnings)     sb.append("<li>" + w + "</li>");
+    sb.append("</ul>");
+  }
+  sb.append("</div>");
+  sb.append("<h4>Parameters</h4>");
+  parm(sb,"family",glm_model.glm.family);
+  parm(sb,"link",glm_model.glm.link);
+  parm(sb,"&epsilon;<sub>&beta;</sub>",glm_model.beta_eps);
+  parm(sb,"&alpha;",glm_model.alpha);
+  parm(sb,"&lambda;",DFORMAT2.format(lambda));
+  if (glm_model.submodels.length > 1) {
+    sb.append("\n<table class='table table-bordered table-condensed'>\n");
+    StringBuilder firstRow=new StringBuilder("\t<tr><th>&lambda;</th>\n");
+    StringBuilder secondRow=new StringBuilder("\t<tr><th>nonzeros</th>\n");
+    StringBuilder thirdRow=new StringBuilder("\t<tr><th>Devieance Explained</th>\n");
+    StringBuilder fourthRow=new StringBuilder("\t<tr><th>" + (glm_model.glm.family == Family.binomial ? "AUC" : "AIC") + "</th>\n");
+    for (    Submodel sm : glm_model.submodels) {
+      if (sm.validation == null)       break;
+      if (sm.lambda == lambda)       firstRow.append("\t\t<td><b>" + DFORMAT2.format(sm.lambda) + "</b></td>\n");
+ else       firstRow.append("\t\t<td>" + link(DFORMAT2.format(sm.lambda),glm_model._selfKey,sm.lambda) + "</td>\n");
+      secondRow.append("\t\t<td>" + (sm.rank - 1) + "</td>\n");
+      thirdRow.append("\t\t<td>" + DFORMAT.format(1 - sm.validation.residual_deviance / sm.validation.null_deviance) + "</td>\n");
+      fourthRow.append("\t\t<td>" + DFORMAT.format(glm_model.glm.family == Family.binomial ? sm.validation.auc : sm.validation.aic) + "</td>\n");
+    }
+    sb.append(firstRow.append("\t</tr>\n"));
+    sb.append(secondRow.append("\t</tr>\n"));
+    sb.append(thirdRow.append("\t</tr>\n"));
+    sb.append(fourthRow.append("\t</tr>\n"));
+    sb.append("</table>\n");
+  }
+  Submodel sm=glm_model.submodels[glm_model.best_lambda_idx];
+  if (!Double.isNaN(lambda) && sm.lambda != lambda) {
+    int ii=0;
+    sm=glm_model.submodels[0];
+    while (sm.lambda != lambda && ++ii < glm_model.submodels.length)     sm=glm_model.submodels[ii];
+    if (ii == glm_model.submodels.length)     throw new IllegalArgumentException("Unexpected value of lambda '" + lambda + "'");
+  }
+  if (glm_model.beta() != null)   coefs2html(sm,sb);
+  GLMValidation val=sm.validation;
+  if (val != null)   val2HTML(sm,val,sb);
   return true;
 }

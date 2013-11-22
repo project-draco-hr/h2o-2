@@ -1,0 +1,8 @@
+{
+  if (cm == null)   return;
+  sb.append("<table class='table table-bordered table-condensed'>");
+  sb.append("<tr><th>Actual / Predicted</th><th>false</th><th>true</th></tr>");
+  sb.append("<tr><th>false</th><td id='TN'>" + cm._arr[0][0] + "</td><td id='FN'>"+ cm._arr[0][1]+ "</td></tr>");
+  sb.append("<tr><th>true</th><td id='FP'>" + cm._arr[1][0] + "</td><td id='TP'>"+ cm._arr[1][1]+ "</td></tr>");
+  sb.append("</table>");
+}

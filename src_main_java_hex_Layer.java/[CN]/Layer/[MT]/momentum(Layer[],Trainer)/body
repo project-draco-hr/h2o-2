@@ -1,0 +1,13 @@
+{
+  Thread thread=new Thread(){
+    @Override public void run(){
+      for (int y=1; y < ls.length; y++)       ls[y].initMomentum();
+      for (; ; ) {
+        long n=trainer.samples();
+        for (int y=1; y < ls.length; y++)         ls[y].momentum(n);
+      }
+    }
+  }
+;
+  thread.start();
+}
