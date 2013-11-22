@@ -4,6 +4,7 @@
       String p2=path.toLowerCase();
       if (p2.startsWith("hdfs://") || p2.startsWith("s3n://"))       serveHdfs();
  else       if (p2.startsWith("s3://"))       serveS3();
+ else       if (p2.startsWith("http://") || p2.startsWith("https://"))       serveHttp();
  else       serveLocalDisk();
     }
     return Response.done(this);

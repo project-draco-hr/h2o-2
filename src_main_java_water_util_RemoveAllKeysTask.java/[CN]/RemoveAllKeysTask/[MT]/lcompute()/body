@@ -5,7 +5,6 @@
   Log.info("Removing " + keysetSize + " keys on this node; nodeIdx("+ nodeIdx+ ") numNodes("+ numNodes+ ")");
   for (  Job job : Job.all()) {
     job.cancel();
-    if (job.cancelled())     continue;
     Job.waitUntilJobEnded(job.self());
   }
   Futures fs=new Futures();
