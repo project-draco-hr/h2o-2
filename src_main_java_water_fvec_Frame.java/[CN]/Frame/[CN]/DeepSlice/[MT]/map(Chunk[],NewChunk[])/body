@@ -4,7 +4,7 @@
   int rx=0;
   int rlo=0;
   int rhi=rlen;
-  while (rlo < rlen) {
+  while (true) {
     if (_rows != null) {
       if (rx >= _rows.length)       break;
       long r=_rows[rx++] - 1;
@@ -33,5 +33,6 @@
       }
     }
     rlo=rhi;
+    if (_rows == null)     break;
   }
 }

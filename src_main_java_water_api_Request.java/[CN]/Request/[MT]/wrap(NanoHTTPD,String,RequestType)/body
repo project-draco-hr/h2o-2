@@ -1,4 +1,5 @@
 {
   if (type == RequestType.json)   return server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_JSON,value);
+  if (type == RequestType.java)   return server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_PLAINTEXT,value);
   return wrap(server,value);
 }

@@ -20,9 +20,11 @@
     }
     for (int i=0; i < len; i++)     if (!t0._ts[i].union(t1._ts[i]))     ok=false;
     if (len == t1._ts.length)     return ok;
+    if (len == t1._ts.length - 1 && (t1._ts[len].find()._t & VARARGS) != 0)     return true;
     if (varargs == null)     return false;
     for (int i=len; i < t1._ts.length; i++) {
-      Type var=(varargs._t & (VARARGS - 1)) == DBLARY0 ? dblary() : varargs;
+      int tvar=(varargs._t & (VARARGS - 1));
+      Type var=tvar == DBLARY0 ? dblary() : (tvar == UNBOUND ? unbound() : varargs);
       if (!var.union(t1._ts[i]))       ok=false;
     }
     return ok;

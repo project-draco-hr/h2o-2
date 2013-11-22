@@ -1,0 +1,15 @@
+{
+  String[] cnames=classNames();
+  sb.indent().p("java.util.Arrays.fill(preds,0f);\n");
+  for (int i=0; i < treeBits.length; i++) {
+    CompressedTree cts[]=treeBits[i];
+    for (int c=0; c < cts.length; c++) {
+      if (cts[c] == null)       continue;
+      sb.indent().p("// Tree ").p(i);
+      if (cnames != null)       sb.p(", class=").p(cnames[c]);
+      sb.p("\n");
+      sb.indent().p("preds[").p(c + 1).p("] +=").p(" Tree_").p(i).p("_class_").p(c).p(".predict(data);").nl();
+      toJavaTreePredictFct(afterBodySb,cts[c],i,c);
+    }
+  }
+}
