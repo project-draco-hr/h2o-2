@@ -1,0 +1,11 @@
+{
+  JCodeGen.toStaticVar(sb,"NTREES",numTrees());
+  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses());
+  String modelName=JCodeGen.toJavaId(_selfKey.toString());
+  JCodeGen.toStaticVar(sb,null,"DATA",0);
+  sb.p("public static void main(String[] args) {\n");
+  sb.indent(1).p("long iters = args.length > 0 ? Integer.valueOf(args[0]) : 1000;").nl();
+  sb.indent(1).p(modelName).p(" model = new ").p(modelName).p("();").nl();
+  sb.indent(1).p("model.bench(iters, DATA, new float[NCLASSES+1], NTREES );").nl();
+  sb.p("}").nl();
+}
