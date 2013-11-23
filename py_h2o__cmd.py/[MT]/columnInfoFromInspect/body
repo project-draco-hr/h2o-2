@@ -21,11 +21,16 @@ def columnInfoFromInspect(key, exceptionOnMissingValues=True, **kwargs):
         msg = ('%s %d' % (c['name'], k))
         msg += (' type: %s' % c['type'])
         printMsg = False
-        if (not h2o.beta_features):
-            if (c['type'] == 'enum'):
-                msg += (' enum_domain_size: %d' % c['enum_domain_size'])
-                enumSizeDict[k] = c['enum_domain_size']
+        if h2o.beta_features:
+            if (c['type'] == 'Enum'):
+                enum_domain_size = ((c['max'] - c['min']) + 1)
+                msg += (' enum_domain_size: %d' % enum_domain_size)
+                enumSizeDict[k] = enum_domain_size
                 printMsg = True
+        elif (c['type'] == 'enum'):
+            msg += (' enum_domain_size: %d' % c['enum_domain_size'])
+            enumSizeDict[k] = c['enum_domain_size']
+            printMsg = True
         if (c[keyNA] != 0):
             pct = (((c[keyNA] + 0.0) / num_rows) * 100)
             msg += (' %s: %s (%0.1f%s)' % (keyNA, c[keyNA], pct, '%'))

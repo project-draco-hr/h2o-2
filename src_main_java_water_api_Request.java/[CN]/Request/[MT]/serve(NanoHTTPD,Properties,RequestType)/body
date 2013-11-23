@@ -19,6 +19,10 @@ for (Argument arg : _arguments) arg.reset();
 String query=buildQuery(parms,type);
 return wrap(server,query);
 }
+case java:
+checkArguments(parms,type);
+String javacode=serveJava();
+return wrap(server,javacode,RequestType.java);
 default :
 throw new RuntimeException("Invalid request type " + type.toString());
 }

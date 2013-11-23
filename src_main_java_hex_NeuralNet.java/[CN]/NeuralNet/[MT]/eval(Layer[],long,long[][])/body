@@ -5,12 +5,15 @@
   if (n != 0)   len=Math.min(len,n);
   if (ls[ls.length - 1] instanceof Softmax) {
     int correct=0;
-    for (input._pos=0; input._pos < len; input._pos++)     if (correct(ls,error,cm))     correct++;
+    for (input._pos=0; input._pos < len; input._pos++) {
+      if (((Softmax)ls[ls.length - 1]).target() == -2)       continue;
+      if (correct(ls,error,cm))       correct++;
+    }
     error.classification=(len - (double)correct) / len;
     error.mean_square/=len;
   }
  else {
-    for (input._pos=0; input._pos < len; input._pos++)     error(ls,error);
+    for (input._pos=0; input._pos < len; input._pos++)     if (!Float.isNaN(ls[ls.length - 1]._a[0]))     error(ls,error);
     error.classification=Double.NaN;
     error.mean_square/=len;
   }
