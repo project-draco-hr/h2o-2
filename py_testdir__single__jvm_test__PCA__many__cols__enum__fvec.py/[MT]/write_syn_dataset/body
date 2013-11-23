@@ -1,0 +1,15 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEED, translateList):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    for i in range(rowCount):
+        rowData = []
+        for j in range(colCount):
+            if ((j % 2) == 0):
+                ri1 = int(r1.triangular(1, 5, 2.5))
+            else:
+                ri1 = ''.join((random.choice((string.ascii_uppercase + string.digits)) for x in range(16)))
+            rowData.append(ri1)
+        rowDataStr = map(str, rowData)
+        rowDataCsv = ','.join(rowDataStr)
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
