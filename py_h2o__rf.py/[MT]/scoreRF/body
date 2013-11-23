@@ -4,7 +4,7 @@ def scoreRF(scoreParseResult, trainResult, vactual=None, **kwargs):
         rfModelKey = trainResult['drf_model']['_selfKey']
         predictKey = 'Predict.hex'
         start = time.time()
-        predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+        predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=30)
         predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual=vactual, predict=predictKey, vpredict='predict')
         rftime = (time.time() - start)
         cm = predictCMResult['cm']
