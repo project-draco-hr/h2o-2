@@ -15,11 +15,8 @@ def test_rf_float_rand_fvec(self):
         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         ntree = 2
         kwargs = {'ntrees': ntree, 'mtries': None, 'max_depth': 20, 'sample_rate': 0.67, 'destination_key': None, 'nbins': 1024, 'seed': 784834182943470027, }
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, doSummary=True)
         start = time.time()
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key)
-        if (1 == 0):
-            summaryResult = h2o_cmd.runSummary(key=hex_key, max_column_display=(colCount + 1))
-            h2o_cmd.infoFromSummary(summaryResult)
         rfView = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=15, pollTimeoutSecs=5, **kwargs)
         print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
