@@ -5,13 +5,13 @@ def test_GBMGrid_basic_many(self):
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     colNames = ['ID', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
     modelKey = 'GBMGrid_prostate'
-    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'ID', 'learn_rate': '.1,.2', 'ntrees': '5,8', 'max_depth': '8,9', 'min_rows': '1,5', 'response': 'CAPSULE', 'classification': (1 if DO_CLASSIFICATION else 0), }
+    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'ID', 'learn_rate': '.1,.2', 'ntrees': '5,8', 'max_depth': '8,9', 'min_rows': '1,5', 'response': 'CAPSULE', 'classification': (1 if DO_CLASSIFICATION else 0), 'grid_parallelism': 1, }
     kwargs = params.copy()
     timeoutSecs = 1800
     jobs = []
     start = time.time()
     totalGBMGridJobs = 0
-    for more in range(10):
+    for more in range((10 if DO_FAIL_CASE else 8)):
         for i in range(5, 10):
             kwargs = params.copy()
             kwargs['min_rows'] = ('1,' + str(i))
