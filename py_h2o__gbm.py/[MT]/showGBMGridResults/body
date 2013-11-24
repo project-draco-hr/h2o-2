@@ -1,4 +1,4 @@
-def showResults(GBMResult, expectedError):
+def showGBMGridResults(GBMResult, expectedErrorMax, classification=True):
     jobs = GBMResult['jobs']
     for (jobnum, j) in enumerate(jobs):
         _distribution = j['_distribution']
@@ -7,15 +7,15 @@ def showResults(GBMResult, expectedError):
         inspect = h2o_cmd.runInspect(key=model_key)
         gbmTrainView = h2o_cmd.runGBMView(model_key=model_key)
         print 'jobnum:', jobnum, h2o.dump_json(gbmTrainView)
-        if DO_CLASSIFICATION:
+        if classification:
             cm = gbmTrainView['gbm_model']['cm']
-            pctWrongTrain = h2o_gbm.pp_cm_summary(cm)
-            if (pctWrongTrain > expectedError):
-                raise Exception(('Should have < %s error here. pctWrongTrain: %s' % (expectedError, pctWrongTrain)))
+            pctWrongTrain = pp_cm_summary(cm)
+            if (pctWrongTrain > expectedErrorMax):
+                raise Exception(('Should have < %s error here. pctWrongTrain: %s' % (expectedErrorMax, pctWrongTrain)))
             errsLast = gbmTrainView['gbm_model']['errs'][(-1)]
             print '\nTrain', jobnum, job_key, '\n==========\n', 'pctWrongTrain:', pctWrongTrain, 'errsLast:', errsLast
             print "GBM 'errsLast'", errsLast
-            print h2o_gbm.pp_cm(cm)
+            print pp_cm(cm)
         else:
             print '\nTrain', jobnum, job_key, '\n==========\n', 'errsLast:', errsLast
             print 'GBMTrainView errs:', gbmTrainView['gbm_model']['errs']

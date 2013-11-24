@@ -3,14 +3,15 @@ def simpleCheckGLMGrid(self, glmGridResult, colX=None, allowFailWarning=False, *
     inspectGG = h2o_cmd.runInspect(None, destination_key)
     h2o.verboseprint('Inspect of destination_key', destination_key, ':\n', h2o.dump_json(inspectGG))
     response = inspectGG['response']
-    model0 = glmGridResult['models'][0]
-    alpha = model0['alpha']
-    area_under_curve = model0['area_under_curve']
-    error_0 = model0['error_0']
-    error_1 = model0['error_1']
-    model_key = model0['key']
-    print 'best GLM model key:', model_key
-    glm_lambda = model0['lambda']
-    inspectGLM = h2o_cmd.runInspect(None, model_key)
-    h2o.verboseprint('GLMGrid inspectGLM:', h2o.dump_json(inspectGLM))
-    simpleCheckGLM(self, inspectGLM, colX, allowFailWarning=allowFailWarning, **kwargs)
+    for (m, model) in enumerate(glmGridResult['models']):
+        alpha = model['alpha']
+        area_under_curve = model['area_under_curve']
+        error_0 = model['error_0']
+        error_1 = model['error_1']
+        model_key = model['key']
+        print ('#%s GLM model key: %s' % (m, model_key))
+        glm_lambda = model['lambda']
+    inspectGLM = h2o_cmd.runInspect(None, glmGridResult['models'][0]['key'])
+    h2o.verboseprint('GLMGrid inspect GLMGrid model 0(best):', h2o.dump_json(inspectGLM))
+    g = simpleCheckGLM(self, inspectGLM, colX, allowFailWarning=allowFailWarning, **kwargs)
+    return g

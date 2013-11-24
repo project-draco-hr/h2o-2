@@ -12,4 +12,4 @@ def test_GBMGrid_basic_benign(self):
     GBMResult = h2o_cmd.runGBM(parseResult=parseResult, **kwargs)
     elapsed = (time.time() - start)
     print 'GBM training completed in', elapsed, 'seconds.'
-    showResults(GBMResult, 0)
+    h2o_gbm.showGBMGridResults(GBMResult, 0)
