@@ -5,35 +5,9 @@
     final int cyl_idx=fr.find("cylinders");
     final int year_idx=fr.find("year");
     SumCol sumcols=fr.with(new SumCol(year_idx)).doit();
-    SumCol sumcols1=fr.with(new FilterRow(){
-      boolean filter(      double ds[]){
-        return ds[cyl_idx] != 5;
-      }
-    }
-).with(new SumCol(year_idx)).doit();
-    NonBlockingHashMapLong<SumCol> sumcols2=fr.with(new FilterRow(){
-      boolean filter(      double ds[]){
-        return ds[cyl_idx] != 5;
-      }
-    }
-).with(new GroupBy(){
-      long groupId(      double ds[]){
-        return (long)ds[cyl_idx];
-      }
-    }
-).with(new SumCol(year_idx)).doit();
-    NonBlockingHashMapLong<SumCol> sumcols3=fr.with(new GroupBy(){
-      long groupId(      double ds[]){
-        return (long)ds[cyl_idx];
-      }
-    }
-).with(new FilterRow(){
-      boolean filter(      double ds[]){
-        return ds[cyl_idx] != 5;
-      }
-    }
-).with(new SumCol(year_idx)).doit();
     System.out.println(sumcols._sum + "/" + sumcols._n+ " = "+ (sumcols._sum / sumcols._n));
+    SumCol sumcols1=fr.with(new FilterCol(cyl_idx)).with(new SumCol(year_idx)).doit();
+    System.out.println(sumcols1._sum + "/" + sumcols1._n+ " = "+ (sumcols1._sum / sumcols1._n));
   }
   finally {
     UKV.remove(k);
