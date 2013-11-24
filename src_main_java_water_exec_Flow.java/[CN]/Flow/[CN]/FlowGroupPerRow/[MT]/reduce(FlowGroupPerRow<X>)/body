@@ -1,0 +1,10 @@
+{
+  for (  IcedLong gid : that._prs.keySet()) {
+    PerRow<X> that_pr=that._prs.get(gid);
+    PerRow<X> this_pr=this._prs.get(gid);
+    if (that_pr != null) {
+      if (this_pr != null)       this_pr.reduce((X)that_pr);
+ else       this._prs.put(gid,that_pr);
+    }
+  }
+}
