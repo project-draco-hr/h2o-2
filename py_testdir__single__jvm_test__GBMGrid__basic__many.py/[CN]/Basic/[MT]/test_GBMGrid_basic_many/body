@@ -17,7 +17,6 @@ def test_GBMGrid_basic_many(self):
             kwargs['min_rows'] = ('1,' + str(i))
             kwargs['max_depth'] = ('5,' + str(i))
             GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
-            print 'GBMResult:', h2o.dump_json(GBMResult)
             job_key = GBMResult['job_key']
             model_key = GBMResult['destination_key']
             jobs.append((job_key, model_key))
