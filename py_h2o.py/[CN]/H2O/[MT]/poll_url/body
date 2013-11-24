@@ -77,6 +77,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         if ((count % 6) == 0):
             check_sandbox_for_errors()
         if create_noise:
+            status = 'poll'
             progress = ''
         else:
             if ('response_info' in response):
@@ -91,7 +92,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
             raise Exception(emsg)
         count += 1
-        if noPoll:
+        if (noPoll and (not create_noise)):
             return response
         if benchmarkLogging:
             cloudPerfH2O.get_log_save(benchmarkLogging)
