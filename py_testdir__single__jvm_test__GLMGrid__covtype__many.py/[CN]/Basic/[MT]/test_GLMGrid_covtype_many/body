@@ -1,0 +1,32 @@
+def test_GLMGrid_covtype_many(self):
+    csvFilename = 'covtype.data'
+    csvPathname = ('UCI/UCI-large/covtype/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put', timeoutSecs=10)
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+    print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+    x = ''
+    print 'WARNING: max_iter set to 8 for benchmark comparisons'
+    max_iter = 8
+    y = '54'
+    kwargs = {'x': x, 'y': y, 'family': 'binomial', 'link': 'logit', 'n_folds': 2, 'case_mode': '=', 'case': 1, 'max_iter': max_iter, 'beta_eps': 0.001, 'lambda': '0,0.5,0.8', 'alpha': '0,1e-8,1e-4', 'parallel': 1, }
+    start = time.time()
+    jobs = []
+    totalGLMGridJobs = 0
+    for i in range(3):
+        GLMResult = h2o_cmd.runGLMGrid(parseResult=parseResult, timeoutSecs=300, noPoll=True, **kwargs)
+        job_key = GLMResult['response']['redirect_request_args']['job']
+        model_key = GLMResult['response']['redirect_request_args']['destination_key']
+        jobs.append((job_key, model_key))
+        totalGLMGridJobs += 1
+    for i in range(10):
+        time.sleep(3)
+        hex_key = (str(i) + '.hex')
+        src_key = (str(i) + '.src')
+        parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put', src_key=src_key, hex_key=hex_key, timeoutSecs=10, noPoll=True, doSummary=False)
+    h2o_jobs.pollWaitJobs(timeoutSecs=300)
+    elapsed = (time.time() - start)
+    for (job_key, model_key) in jobs:
+        GLMResult = h2o.nodes[0].GLMGrid_view(job=job_key, destination_key=model_key)
+        h2o_glm.simpleCheckGLMGrid(self, GLMResult, **kwargs)
+    print 'All GLMGrid jobs completed in', elapsed, 'seconds.'
+    print 'totalGLMGridJobs:', totalGLMGridJobs

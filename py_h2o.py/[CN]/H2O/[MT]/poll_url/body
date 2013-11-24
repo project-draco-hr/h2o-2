@@ -1,12 +1,10 @@
-def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, reuseFirstPollUrl=False):
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=0, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, reuseFirstPollUrl=False):
     verboseprint('poll_url input: response:', dump_json(response))
 
     def get_redirect_url(response, beta_features):
         url = None
         params = None
-        if (beta_features or ('response_info' in response)):
-            if ('response_info' not in response):
-                raise Exception(("Response during polling must have 'response_info'\n%s" % dump_json(response)))
+        if ('response_info' in response):
             response_info = response['response_info']
             if ('redirect_url' not in response_info):
                 raise Exception(("Response during polling must have 'redirect_url'\n%s" % dump_json(response)))
@@ -34,11 +32,12 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
                 params = response['response']['redirect_request_args']
         return (url, params)
     msgUsed = None
-    r = response
-    if (beta_features or ('response_info' in response)):
+    if ('response_info' in response):
         status = response['response_info']['status']
+        progress = response.get('progress', '')
     else:
         status = response['response']['status']
+        progress = response['response'].get('progress', '')
     firstPoll = (status != 'done')
     (url, params) = get_redirect_url(response, beta_features)
     if params:
@@ -60,7 +59,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         time.sleep(initialDelaySecs)
     while ((status == 'poll') or firstPoll or (beta_features and (status == 'redirect') and ('Inspect' not in url))):
         firstPoll = False
-        print status, url
+        print status, progress, url
         time.sleep(retryDelaySecs)
         create_noise = (noise_enable and ((count % 2) == 0))
         if create_noise:
@@ -73,26 +72,30 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             paramsUsed = params
             paramsUsedStr = paramsStr
             msgUsed = '\nPolling with'
-        r = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
-        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r))
+        response = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
+        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(response))
         if ((count % 6) == 0):
             check_sandbox_for_errors()
         if create_noise:
             status = 'poll'
-        elif beta_features:
-            status = r['response_info']['status']
+            progress = ''
         else:
-            status = r['response']['status']
-        if (beta_features and (not reuseFirstPollUrl)):
-            (url, params) = get_redirect_url(r, beta_features)
+            if ('response_info' in response):
+                status = response['response_info']['status']
+                progress = response.get('progress', '')
+            else:
+                status = response['response']['status']
+                progress = response['response'].get('progress', '')
+            if (beta_features and (not reuseFirstPollUrl)):
+                (url, params) = get_redirect_url(response, beta_features)
         if ((time.time() - start) > timeoutSecs):
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
             raise Exception(emsg)
         count += 1
-        if noPoll:
-            return r
+        if (noPoll and (not create_noise)):
+            return response
         if benchmarkLogging:
             cloudPerfH2O.get_log_save(benchmarkLogging)
     if msgUsed:
-        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r))
-    return r
+        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(response))
+    return response
