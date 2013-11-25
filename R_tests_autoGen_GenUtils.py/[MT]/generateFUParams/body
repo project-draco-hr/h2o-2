@@ -1,0 +1,100 @@
+def generateFUParams(FU, dataname, datajson, choiceAs=None):
+    numCols = int(datajson[dataname]['ATTRS']['NUMCOLS'])
+    numRows = int(datajson[dataname]['ATTRS']['NUMROWS'])
+    if ((numRows == 0) or (numCols == 0)):
+        return 'abort'
+    if (numCols >= 50):
+        numCols = 15
+    if (numRows >= 10000):
+        numRows = 500
+    names = datajson[dataname]['ATTRS']['NAMES']
+    if (names[0] == 0):
+        names = [(i + 1) for i in names]
+    if (names[0] not in range(numCols)):
+        names = [(('"' + i) + '"') for i in names]
+    ranges = datajson[dataname]['ATTRS']['RANGE']
+    ranges = [r.strip('(').strip(')').split(',') for r in ranges]
+    ranges = [list(convertSeq(seq)) for seq in ranges]
+    colValDict = dict(zip(names, ranges))
+    colChoices = range(1, (numCols + 1))
+    rowChoices = range(1, (numRows + 1))
+    cols = ('0' if (random() < 0.5) else range(randrange(numCols)))
+    rows = ('0' if (random() < 0.5) else range((randrange(numRows) + 1)))
+    if (FU == '['):
+        cols = ('0' if (cols == '0') else [names[i] for i in cols])
+        colPipe = ('0' if (random() < 0.5) else [choice(names) for x in range(randrange(numCols))])
+        rowPipe = ('0' if (colPipe == '0') else [choice(rowChoices) for x in range(randrange(numRows))])
+        loopCols = ('0' if (random() < 0.5) else [choice(names) for x in range(randrange(numCols))])
+        loopRows = ('0' if (random() < 0.5) else [choice(rowChoices) for x in range(randrange(numRows))])
+        loopColPipe = ('0' if (random() < 0.5) else [choice(names) for x in range(randrange(numCols))])
+        loopRowPipe = ('0' if (loopColPipe == '0') else [choice(rowChoices) for x in range(randrange(numRows))])
+        cols = ';'.join(list(makeChar(cols)))
+        rows = ';'.join(list(makeChar(rows)))
+        colPipe = ';'.join(list(makeChar(colPipe)))
+        rowPipe = ';'.join(list(makeChar(rowPipe)))
+        colPipeRow = ((colPipe + '|') + rowPipe)
+        loopCols = ';'.join(list(makeChar(loopCols)))
+        loopRows = ';'.join(list(makeChar(loopRows)))
+        loopColPipe = ';'.join(list(makeChar(loopColPipe)))
+        loopRowPipe = ';'.join(list(makeChar(loopRowPipe)))
+        loopColPipeLoopRow = ((loopColPipe + '|') + loopRowPipe)
+        return [cols, rows, colPipeRow, loopCols, loopRows, loopColPipeLoopRow]
+    if (len(FU.split(';')) > 1):
+        colLPipe = []
+        colRPipe = []
+        colL2Pipe = []
+        colR2Pipe = []
+        valLPipe = []
+        valRPipe = []
+        valL2Pipe = []
+        valR2Pipe = []
+        for i in range(choiceAs):
+            colKeyL = getCol(colValDict)
+            colKeyL2 = getCol(colValDict)
+            colKeyR = getCol(colValDict)
+            colKeyR2 = getCol(colValDict)
+            rangeValuesL = colValDict[colKeyL]
+            rangeValuesR = colValDict[colKeyR]
+            rangeValuesL2 = colValDict[colKeyL2]
+            rangeValuesR2 = colValDict[colKeyR2]
+            colLPipe.append(colKeyL)
+            colRPipe.append(colKeyR)
+            colL2Pipe.append(colKeyL2)
+            colR2Pipe.append(colKeyR2)
+            valLPipe.append(uniform(rangeValuesL[0], rangeValuesL[1]))
+            valRPipe.append(uniform(rangeValuesR[0], rangeValuesR[1]))
+            valL2Pipe.append(uniform(rangeValuesL2[0], rangeValuesL2[1]))
+            valR2Pipe.append(uniform(rangeValuesR2[0], rangeValuesR2[1]))
+        colLPipe = ';'.join(list(makeChar(colLPipe)))
+        colRPipe = ';'.join(list(makeChar(colRPipe)))
+        colL2Pipe = ';'.join(list(makeChar(colL2Pipe)))
+        colR2Pipe = ';'.join(list(makeChar(colR2Pipe)))
+        valLPipe = ';'.join(list(makeChar(valLPipe)))
+        valRPipe = ';'.join(list(makeChar(valRPipe)))
+        valL2Pipe = ';'.join(list(makeChar(valL2Pipe)))
+        valR2Pipe = ';'.join(list(makeChar(valR2Pipe)))
+        valLPipeColL = ((valLPipe + '|') + colLPipe)
+        valRPipeColR = ((valRPipe + '|') + colRPipe)
+        valL2PipeColL2 = ((valL2Pipe + '|') + colL2Pipe)
+        valR2PipeColR2 = ((valR2Pipe + '|') + colR2Pipe)
+        return [valLPipeColL, valRPipeColR, valL2PipeColL2, valR2PipeColR2]
+    colPipe = []
+    colPipe2 = []
+    valPipe = []
+    valPipe2 = []
+    for i in range(randrange((2 * numCols))):
+        colKey = getCol(colValDict)
+        rangeValues = colValDict[colKey]
+        colPipe.append(colKey)
+        valPipe.append(uniform(rangeValues[0], rangeValues[1]))
+        colKey2 = getCol(colValDict)
+        rangeValues2 = colValDict[colKey2]
+        colPipe2.append(colKey2)
+        valPipe2.append(uniform(rangeValues2[0], rangeValues2[1]))
+    colPipe = ';'.join(list(makeChar(colPipe)))
+    valPipe = ';'.join(list(makeChar(valPipe)))
+    colPipe2 = ';'.join(list(makeChar(colPipe2)))
+    valPipe2 = ';'.join(list(makeChar(valPipe2)))
+    valPipeCol = ((valPipe + '|') + colPipe)
+    valPipeCol2 = ((valPipe2 + '|') + colPipe2)
+    return [valPipeCol, valPipeCol2]
