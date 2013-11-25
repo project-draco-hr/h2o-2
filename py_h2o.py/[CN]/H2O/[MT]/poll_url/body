@@ -10,11 +10,10 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             response_info = response['response_info']
             if ('redirect_url' not in response_info):
                 raise Exception(("Response during polling must have 'redirect_url'\n%s" % dump_json(response)))
-            if (response_info['status'] == 'done'):
-                pass
-            else:
+            if (response_info['status'] != 'done'):
                 redirect_url = response_info['redirect_url']
                 if (('NeuralNetProgress' in str(redirect_url)) or ('KMeans2Progress' in str(redirect_url))):
+                    print 'Hacking in the 2/ prefix..tell cyprien'
                     if ('2/' not in str(redirect_url)):
                         redirect_url = ('2/' + redirect_url)
                 if redirect_url:
@@ -25,21 +24,18 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         else:
             if ('response' not in response):
                 raise Exception(("'response' not in response.\n%s" % dump_json(response)))
-            if (response['response']['status'] == 'done'):
-                pass
-            else:
+            if (response['response']['status'] != 'done'):
                 if ('redirect_request' not in response['response']):
                     raise Exception(("'redirect_request' not in response. \n%s" % dump_json(response)))
                 url = self.__url(response['response']['redirect_request'])
                 params = response['response']['redirect_request_args']
         return (url, params)
     msgUsed = None
-    r = response
     if (beta_features or ('response_info' in response)):
         status = response['response_info']['status']
     else:
         status = response['response']['status']
-    firstPoll = (status != 'done')
+    doFirstPoll = (status != 'done')
     (url, params) = get_redirect_url(response, beta_features)
     if params:
         paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])
@@ -58,8 +54,13 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     count = 0
     if initialDelaySecs:
         time.sleep(initialDelaySecs)
-    while ((status == 'poll') or firstPoll or (beta_features and (status == 'redirect') and ('Inspect' not in url))):
-        firstPoll = False
+    while ((status == 'poll') or doFirstPoll or (beta_features and (status == 'redirect') and ('Inspect' not in url))):
+        count += 1
+        if ((time.time() - start) > timeoutSecs):
+            emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
+            raise Exception(emsg)
+        if benchmarkLogging:
+            cloudPerfH2O.get_log_save(benchmarkLogging)
         print status, url
         time.sleep(retryDelaySecs)
         create_noise = (noise_enable and ((count % 2) == 0))
@@ -73,26 +74,22 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             paramsUsed = params
             paramsUsedStr = paramsStr
             msgUsed = '\nPolling with'
-        r = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
-        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r))
+        response = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
+        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(response))
         if ((count % 6) == 0):
             check_sandbox_for_errors()
         if create_noise:
             status = 'poll'
-        elif beta_features:
-            status = r['response_info']['status']
         else:
-            status = r['response']['status']
-        if (beta_features and (not reuseFirstPollUrl)):
-            (url, params) = get_redirect_url(r, beta_features)
-        if ((time.time() - start) > timeoutSecs):
-            emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
-            raise Exception(emsg)
-        count += 1
-        if noPoll:
-            return r
-        if benchmarkLogging:
-            cloudPerfH2O.get_log_save(benchmarkLogging)
+            doFirstPoll = False
+            if (beta_features or ('response_info' in response)):
+                status = response['response_info']['status']
+            else:
+                status = response['response']['status']
+            if (beta_features and (not reuseFirstPollUrl)):
+                (url, params) = get_redirect_url(response, beta_features)
+            if noPoll:
+                return response
     if msgUsed:
-        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(r))
-    return r
+        verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(response))
+    return response

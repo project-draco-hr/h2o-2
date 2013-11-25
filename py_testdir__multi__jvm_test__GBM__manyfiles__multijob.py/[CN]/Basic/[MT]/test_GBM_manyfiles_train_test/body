@@ -30,7 +30,8 @@ def test_GBM_manyfiles_train_test(self):
         resultExec = h2o_cmd.runExec(expression=execExpr, timeoutSecs=60)
         if h2o.beta_features:
             print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
-        parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
+        csvPathname = ((importFolderPath + '/') + testFilename)
+        parseTestResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
         if h2o.beta_features:
             h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             print "Filling in the parseTestResult['destination_key'] for h2o"
