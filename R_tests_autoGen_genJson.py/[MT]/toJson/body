@@ -1,0 +1,13 @@
+def toJson(DATANAME, PATHS, NAMES, NUMCOLS, NUMROWS, TYPES, RANGES, IGNORED='NA', TARGET='NA'):
+    print RANGES
+    PATHS = (('[' + ','.join(PATHS)) + ']')
+    NAMES = (('[' + ','.join(NAMES)) + ']')
+    TYPES = (('[' + ','.join(TYPES)) + ']')
+    RANGES = (('[' + ','.join(RANGES)) + ']')
+    print PATHS
+    print NAMES
+    print TYPES
+    print RANGES
+    j_s_o_n = '\n    "{0}": {{\n        "PATHS":{1},\n        "ATTRS": {{\n            "NAMES":{2},\n            "NUMCOLS":"{3}",\n            "NUMROWS":"{4}",\n            "TYPES":{5},\n            "RANGE":{6},\n            "IGNORED":{7},\n            "TARGET":{8}\n        }}\n    }}\n\n    '.format(DATANAME, PATHS, NAMES, NUMCOLS, NUMROWS, TYPES, RANGES, IGNORED, TARGET)
+    with open('data.json', 'a') as f:
+        f.write(j_s_o_n)

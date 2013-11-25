@@ -1,0 +1,6 @@
+def makeCharVec(item):
+    item = item.split(';')
+    res = 'c('
+    for (i, it) in enumerate(item):
+        res += ((('"' + it) + '",') if (i != (len(item) - 1)) else (('"' + it) + '")'))
+    return res

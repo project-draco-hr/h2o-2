@@ -1,0 +1,43 @@
+def makeExpression(O, vcPairs):
+    O = filter(None, O)
+    endParen = False
+    EXPRESSION = ''
+    if (O[0] == '!'):
+        EXPRESSION += '!( '
+        endParen = True
+        O.pop(0)
+    for vcPair in vcPairs:
+        if (len(O) == 1):
+            EXPRESSION += (('( ' + makeUnit(vcPair[0], O.pop(0))) + ') ')
+            break
+        if (O == []):
+            break
+        if (O[0] == '!'):
+            O.pop(0)
+            if (len(O) == 1):
+                EXPRESSION += ((('!( ' + makeUnit(vcPair[0], O.pop(0))) + ')') + ' ')
+                break
+            else:
+                EXPRESSION += ((((((('!( ' + makeUnit(vcPair[0], O.pop(0))) + ' ') + O.pop(0)) + ' ') + makeUnit(vcPair[1], O.pop(0))) + ')') + ' ')
+            continue
+        if (O[0] == '('):
+            O.pop(0)
+            if (len(O) == 1):
+                EXPRESSION += ((('( ' + makeUnit(vcPair[0], O.pop(0))) + ' )') + ' ')
+                break
+            else:
+                EXPRESSION += (((((('( ' + makeUnit(vcPair[0], O.pop(0))) + ' ') + O.pop(0)) + ' ') + makeUnit(vcPair[1], O.pop(0))) + ')')
+            continue
+        if (O[0] == '&'):
+            O.pop(0)
+            EXPRESSION += ((' ' + '&') + ' ')
+        if (O[0] == '|'):
+            O.pop(0)
+            EXPRESSION += ((' ' + '|') + ' ')
+        if (len(O) == 1):
+            EXPRESSION += (('( ' + makeUnit(vcPair[0], O.pop(0))) + ') ')
+            break
+        EXPRESSION += ((((makeUnit(vcPair[0], O.pop(0)) + ' ') + O.pop(0)) + ' ') + makeUnit(vcPair[1], O.pop(0)))
+    if endParen:
+        EXPRESSION += ')'
+    return EXPRESSION
