@@ -1,8 +1,8 @@
 {
-  predictBody.indent().p("// Call forest predicting class ").p(c).nl();
-  predictBody.indent().p("preds[").p(c + 1).p("] +=").p(" Forest_").p(fidx).p("_class_").p(c).p(".predict(data);").nl();
-  forest.indent().p("// Forest representing a subset of trees scoring class ").p(c).nl();
-  forest.indent().p("public static class Forest_").p(fidx).p("_class_").p(c).p(" {").nl().ii(1);
-  forest.indent().p("public static float predict(double[] data) {").nl().ii(1);
-  forest.indent().p("float pred = 0;").nl();
+  predictBody.i().p("// Call forest predicting class ").p(c).nl();
+  predictBody.i().p("preds[").p(c + 1).p("] +=").p(" Forest_").p(fidx).p("_class_").p(c).p(".predict(data);").nl();
+  forest.i().p("// Forest representing a subset of trees scoring class ").p(c).nl();
+  forest.i().p("public static class Forest_").p(fidx).p("_class_").p(c).p(" {").nl().ii(1);
+  forest.i().p("public static float predict(double[] data) {").nl().ii(1);
+  forest.i().p("float pred = 0;").nl();
 }
