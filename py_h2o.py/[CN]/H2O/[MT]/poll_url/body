@@ -1,12 +1,10 @@
-def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, reuseFirstPollUrl=False):
+def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=0, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, reuseFirstPollUrl=False):
     verboseprint('poll_url input: response:', dump_json(response))
 
     def get_redirect_url(response, beta_features):
         url = None
         params = None
-        if (beta_features or ('response_info' in response)):
-            if ('response_info' not in response):
-                raise Exception(("Response during polling must have 'response_info'\n%s" % dump_json(response)))
+        if ('response_info' in response):
             response_info = response['response_info']
             if ('redirect_url' not in response_info):
                 raise Exception(("Response during polling must have 'redirect_url'\n%s" % dump_json(response)))
@@ -31,8 +29,9 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
                 params = response['response']['redirect_request_args']
         return (url, params)
     msgUsed = None
-    if (beta_features or ('response_info' in response)):
+    if ('response_info' in response):
         status = response['response_info']['status']
+        progress = response.get('progress', '')
     else:
         status = response['response']['status']
     doFirstPoll = (status != 'done')
@@ -80,6 +79,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             check_sandbox_for_errors()
         if create_noise:
             status = 'poll'
+            progress = ''
         else:
             doFirstPoll = False
             if (beta_features or ('response_info' in response)):

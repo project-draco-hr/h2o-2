@@ -69,5 +69,5 @@ def test_summary2_percentile2(self):
                     m = ('Percentile: value %s should ~= %s' % (v, e))
                     self.assertAlmostEqual(v, e, delta=0.5, msg=m)
         trial += 1
-        if (getpass.getuser() == 'kevin'):
+        if DO_SCIPY_COMPARE:
             generate_scipy_comparison(csvPathname)

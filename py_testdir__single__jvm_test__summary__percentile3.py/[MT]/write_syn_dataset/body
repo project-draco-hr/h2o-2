@@ -8,7 +8,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax,
     noiseMax = expectedMax
     for i in range(rowCount):
         rowData = []
-        if (r1.randint(0, 10000) == 0):
+        if (DO_NOISE and (r1.randint(0, 10000) == 0)):
             ri = 0
             if (ri < noiseMin):
                 noiseMin = ri

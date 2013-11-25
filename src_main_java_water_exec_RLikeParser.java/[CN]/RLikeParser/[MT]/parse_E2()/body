@@ -1,8 +1,0 @@
-{
-  Expr result=parse_E3();
-  while ((top()._type == Token.Type.ttOpEq) || (top()._type == Token.Type.ttOpNeq)) {
-    Token t=pop();
-    result=new BinaryOperator(t._pos,t._type,result,parse_E3());
-  }
-  return result;
-}

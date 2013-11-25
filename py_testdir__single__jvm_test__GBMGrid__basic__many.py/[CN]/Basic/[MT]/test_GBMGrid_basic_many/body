@@ -1,0 +1,32 @@
+def test_GBMGrid_basic_many(self):
+    csvFilename = 'prostate.csv'
+    print '\nStarting', csvFilename
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    colNames = ['ID', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
+    modelKey = 'GBMGrid_prostate'
+    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'ID', 'learn_rate': '.1,.2', 'ntrees': '5,8', 'max_depth': '8,9', 'min_rows': '1,5', 'response': 'CAPSULE', 'classification': (1 if DO_CLASSIFICATION else 0), 'grid_parallelism': 1, }
+    kwargs = params.copy()
+    timeoutSecs = 1800
+    jobs = []
+    start = time.time()
+    totalGBMGridJobs = 0
+    for i in range((50 if DO_FAIL_CASE else 10)):
+        kwargs = params.copy()
+        kwargs['min_rows'] = '1,2,3'
+        if DO_FROM_TO_STEP:
+            kwargs['max_depth'] = '5:10:1'
+        else:
+            kwargs['max_depth'] = '5,6,10'
+        GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+        job_key = GBMResult['job_key']
+        model_key = GBMResult['destination_key']
+        jobs.append((job_key, model_key))
+        totalGBMGridJobs += 1
+    h2o_jobs.pollWaitJobs(timeoutSecs=300)
+    elapsed = (time.time() - start)
+    for (job_key, model_key) in jobs:
+        GBMResult = h2o.nodes[0].gbm_grid_view(job_key=job_key, destination_key=model_key)
+        h2o_gbm.showGBMGridResults(GBMResult, 15)
+    print 'All GBM jobs completed in', elapsed, 'seconds.'
+    print 'totalGBMGridJobs:', totalGBMGridJobs

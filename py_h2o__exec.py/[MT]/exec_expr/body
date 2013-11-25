@@ -1,25 +1,21 @@
-def exec_expr(node=None, execExpr=None, resultKey='Result.hex', timeoutSecs=10, ignoreH2oError=False):
+def exec_expr(node=None, execExpr=None, resultKey=None, timeoutSecs=10, ignoreH2oError=False):
     if (not node):
         node = h2o.nodes[0]
     start = time.time()
-    if h2o.beta_features:
-        kwargs = {'str': execExpr, }
-        resultExec = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
-    else:
-        kwargs = {'expression': execExpr, }
-        resultExec = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
-    h2o.verboseprint(resultExec)
+    kwargs = {'str': execExpr, }
+    resultExec = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
     h2o.verboseprint('exec took', (time.time() - start), 'seconds')
-    h2o.verboseprint('\nfirst look at the default Result key')
-    if h2o.beta_features:
+    h2o.verboseprint(resultExec)
+    if (resultKey is not None):
         kwargs = {'str': resultKey, }
         resultExec2 = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
         print 'resultExec2:', h2o.dump_json(resultExec2)
         return (resultExec2, resultExec2['cols'][0]['min'])
     else:
-        defaultInspectM1 = h2o_cmd.runInspect(None, 'Result.hex', offset=(-1))
-        checkScalarResult(defaultInspectM1, 'Result.hex')
-        h2o.verboseprint((('\nNow look at the assigned ' + resultKey) + ' key'))
-        resultInspectM1 = h2o_cmd.runInspect(None, resultKey, offset=(-1))
-        min_value = checkScalarResult(resultInspectM1, resultKey)
-        return (resultInspectM1, min_value)
+        if ('scalar' in resultExec):
+            result = resultExec['scalar']
+        elif ('result' in resultExec):
+            result = resultExec['result']
+        else:
+            result = None
+        return (resultExec, result)

@@ -1,0 +1,11 @@
+{
+  _prs=new IcedHashMap<IcedLong,PerRow<X>>();
+  double ds[]=new double[chks.length];
+  for (int i=0; i < chks[0]._len; i++) {
+    for (int j=0; j < chks.length; j++)     ds[j]=chks[j].at0(i);
+    IcedLong gid=new IcedLong(_ex._gb.groupId(ds));
+    PerRow<X> pr1=_prs.get(gid);
+    PerRow<X> pr2=_ex._ex.doit(pr1,ds,_pr);
+    if (pr1 == null && pr2 != null)     _prs.put(gid,pr2);
+  }
+}

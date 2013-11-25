@@ -1,0 +1,26 @@
+{
+  int nrows=0;
+  BufferedReader ir=null;
+  double[][] result=new double[1000][];
+  try {
+    ir=new BufferedReader(new FileReader(new File(file)));
+    String line=null;
+    while ((line=ir.readLine()) != null) {
+      String[] row=line.split(",");
+      result[nrows]=new double[ncols];
+      for (int i=0; i < ncols; i++)       try {
+        result[nrows][i]=Double.valueOf(row[i]);
+      }
+ catch (      NumberFormatException e) {
+        result[nrows][i]=Double.NaN;
+      }
+      nrows++;
+      if (result.length == nrows)       result=Arrays.copyOf(result,2 * nrows);
+    }
+  }
+  finally {
+    ir.close();
+  }
+  if (nrows != result.length)   result=Arrays.copyOf(result,nrows);
+  return result;
+}
