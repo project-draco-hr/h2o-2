@@ -18,5 +18,5 @@
     if (model._caseMode != CaseMode.none)     response=model._caseMode.isCase(response,model._caseVal) ? 1 : 0;
     val.add(response,model.glm.family == Family.binomial ? preds[1] : preds[0]);
   }
-  for (  GLMValidation val : _xvals)   if (val.nobs > 0)   val.avg_err=Math.sqrt(val.avg_err) / val.nobs;
+  for (  GLMValidation val : _xvals)   if (val.nobs > 0)   val.avg_err=val.avg_err / val.nobs;
 }
