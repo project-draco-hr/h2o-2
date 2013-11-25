@@ -9,8 +9,8 @@ def exec_expr_list_rand(lenNodes, exprList, keyX, minCol=0, maxCol=54, minRow=1,
         colX = random.randint(minCol, maxCol)
         row = str(random.randint(minRow, maxRow))
         execExpr = fill_in_expr_template(exprTemplate, colX, (((trial + 1) % 4) + 1), row, keyX)
-        execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, 'Result.hex', timeoutSecs, ignoreH2oError)
-        checkScalarResult(execResultInspect, 'Result.hex')
+        execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs, ignoreH2oError)
+        checkScalarResult(execResultInspect, None)
         sys.stdout.write('.')
         sys.stdout.flush()
         if h2o.check_sandbox_for_errors():
