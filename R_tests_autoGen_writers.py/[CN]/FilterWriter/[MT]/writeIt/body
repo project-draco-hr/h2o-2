@@ -1,0 +1,6 @@
+def writeIt(self):
+    if (self._FU == '['):
+        return writeSimpleSliceTestTask(self._FU, self._data, self._dataPath, self._FUParams)
+    if (self._FU in ['<', '>', '<=', '>=', '!=', '==']):
+        return writeSimpleNumericFilterTestTask(self._FU, self._data, self._dataPath, self._FUParams)
+    return writeCompoundFilterTestTask(self._FU, self._data, self._dataPath, self._FUParams)

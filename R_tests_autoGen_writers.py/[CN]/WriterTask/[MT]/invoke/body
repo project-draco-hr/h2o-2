@@ -1,0 +1,7 @@
+def invoke(self, object):
+    object._data = self._data
+    object._dataPath = self._dataPath
+    object._FUParams = self._FUParams
+    object._FU = self._FU
+    print 'Invoking task: {0}'.format(self._dataTask)
+    return object.invoke(switch(self._dataTask))
