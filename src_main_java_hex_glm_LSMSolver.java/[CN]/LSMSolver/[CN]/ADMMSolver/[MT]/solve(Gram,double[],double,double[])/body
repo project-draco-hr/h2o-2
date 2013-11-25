@@ -3,14 +3,15 @@
   Arrays.fill(z,0);
   if (_lambda > 0) {
     gram.addDiag(_lambda * (1 - _alpha) * 0.5);
-    if (_alpha > 0)     gram.addDiag(_rho,true);
+    if (_alpha > 0)     gram.addDiag(_rho);
   }
   int attempts=0;
   Cholesky chol=gram.cholesky(null);
   while (!chol.isSPD() && attempts < 10) {
-    _rho*=8;
+    System.out.println("got SPD, bumped up rho to " + _rho * 10);
+    _rho*=10;
     ++attempts;
-    gram.addDiag(_rho,true);
+    gram.addDiag(_rho);
     gram.cholesky(chol);
   }
   if (!chol.isSPD()) {
