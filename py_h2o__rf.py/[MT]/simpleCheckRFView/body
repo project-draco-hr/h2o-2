@@ -1,4 +1,4 @@
-def simpleCheckRFView(node=None, rfv=None, noPrint=False, **kwargs):
+def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False, **kwargs):
     if (not node):
         node = h2o.nodes[0]
     if ('warnings' in rfv):
@@ -9,7 +9,10 @@ def simpleCheckRFView(node=None, rfv=None, noPrint=False, **kwargs):
             if (('Failed' in w) or ('failed' in w)):
                 raise Exception(w)
     if h2o.beta_features:
-        cm = rfv['drf_model']['cm']
+        if ('cm' in rfv):
+            cm = rfv['cm']
+        else:
+            cm = rfv['drf_model']['cm']
         scoresList = cm
     else:
         cm = rfv['confusion_matrix']
@@ -63,6 +66,10 @@ def simpleCheckRFView(node=None, rfv=None, noPrint=False, **kwargs):
         pctWrong = (100 - pctRight)
         print 'pctRight:', ('%5.2f' % pctRight)
         print 'pctWrong:', ('%5.2f' % pctWrong)
+    if checkScoringOnly:
+        h2o.check_sandbox_for_errors()
+        classification_error = pctWrong
+        return (round(classification_error, 2), classErrorPctList, totalScores)
     if ((totalScores <= 0) or (totalScores > 5000000000.0)):
         raise Exception('scores in RFView seems wrong. scores:', scoresList)
     if h2o.beta_features:
