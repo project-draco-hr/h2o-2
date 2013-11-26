@@ -1,0 +1,16 @@
+def makeVec(item):
+    it = item.split(';')
+    it = [i.replace('"', '') for i in it]
+    it = [quoteIt(i) for i in it]
+    it = makeChar(it)
+    it = list(set(it))
+    it = filter((lambda a: (a != 0)), it)
+    it = filter((lambda a: (a != '0')), it)
+    if (it == []):
+        it = ['1']
+    if (it == ['']):
+        it = ['1']
+    if (it == ['""']):
+        it = ['1']
+    res = ((('c(' + ','.join(it)) + ')') if (item != '0') else '0')
+    return res

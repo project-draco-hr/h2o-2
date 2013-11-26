@@ -1,0 +1,26 @@
+def getSummaries():
+    with open('./smalldata.csv', 'rb') as f:
+        for line in f:
+            PATHS = []
+            NAMES = []
+            NUMCOLS = 0
+            NUMROWS = 0
+            TYPES = []
+            RANGES = []
+            IGNORED = 'NA'
+            TARGET = 'NA'
+            (DATANAME, uploadPath, importPath, importHDFS, fullPath) = line.strip('\n').split(',')
+            PATHS = [uploadPath, importPath, importHDFS]
+            bucket = 'smalldata'
+            path = '/'.join(importPath.split('/')[2:]).strip('"')
+            parseResult = h2i.import_parse(bucket=bucket, path=path, schema='local', doSummary=False)
+            summary = h2o_cmd.runSummary(key=parseResult['destination_key'])
+            columns = summary['summary']['columns']
+            NUMCOLS = len(columns)
+            NUMROWS = columns[0]['N']
+            for col in columns:
+                NAMES.append((('"' + col['name']) + '"'))
+                TYPES.append((('"' + col['type']) + '"'))
+                tup = ((((((((('(' + '"') + str(min(col['min']))) + '"') + ',') + '"') + str(max(col['max']))) + '"') + ')') if (col['type'] == 'number') else '("NA", "NA")')
+                RANGES += [tup]
+            toJson(DATANAME, PATHS, NAMES, NUMCOLS, NUMROWS, TYPES, RANGES, IGNORED='NA', TARGET='NA')

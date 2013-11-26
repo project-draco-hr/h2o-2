@@ -1,0 +1,7 @@
+def genTestName(FU, dataname):
+    res = ((dataname + '_') + str(uuid4()).replace('-', '_'))
+    if (FU == '['):
+        return ('sliceTest_' + res)
+    if (len(FU.split(';')) > 1):
+        return ('complexFilterTest_' + res)
+    return ('simpleFilterTest_' + res)

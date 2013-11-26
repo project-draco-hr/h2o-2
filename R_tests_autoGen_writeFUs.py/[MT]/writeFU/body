@@ -1,0 +1,8 @@
+def writeFU(FU, data, dataPath, dataTask, taskType, FUParams):
+    wt = WriterTask()
+    wt.setType(taskType)
+    wt.setData(data, dataPath)
+    wt.setFUParams(FUParams)
+    wt.setFU(FU)
+    wt.setDataTask(dataTask)
+    return wt.invoke(switch(taskType))
