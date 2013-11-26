@@ -31,9 +31,9 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     msgUsed = None
     if ('response_info' in response):
         status = response['response_info']['status']
-        progress = response.get('progress', '')
     else:
         status = response['response']['status']
+    progress = response.get('progress', '')
     doFirstPoll = (status != 'done')
     (url, params) = get_redirect_url(response, beta_features)
     if params:
@@ -60,7 +60,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             raise Exception(emsg)
         if benchmarkLogging:
             cloudPerfH2O.get_log_save(benchmarkLogging)
-        print status, url
+        print status, progress, url
         time.sleep(retryDelaySecs)
         create_noise = (noise_enable and ((count % 2) == 0))
         if create_noise:
@@ -86,6 +86,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
                 status = response['response_info']['status']
             else:
                 status = response['response']['status']
+            progress = response.get('progress', '')
             if (beta_features and (not reuseFirstPollUrl)):
                 (url, params) = get_redirect_url(response, beta_features)
             if noPoll:
