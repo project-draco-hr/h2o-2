@@ -48,7 +48,7 @@
  else {
         DKV.put(dest(),_oldModel);
         int iter=glmt._iter + 1;
-        GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,newBeta,iter,glmt._ymu,glmt._reg);
+        GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,case_mode,case_val,newBeta,iter,glmt._ymu,glmt._reg);
         nextIter.setCompleter(new Iteration(_model,_solver,_dinfo,_fjt));
         nextIter.dfork(_dinfo._adaptedFrame);
       }
