@@ -1,0 +1,16 @@
+{
+  gram.addDiag(-_rho);
+  double[][] xx=gram.getXX();
+  gram.addDiag(_rho);
+  final int n=xy.length;
+  double res=yy;
+  for (int i=0; i < n; ++i) {
+    double x=0;
+    for (int j=0; j < n; ++j) {
+      x+=xx[i][j] * beta[j];
+    }
+    res+=(0.5 * x + xy[i]) * beta[i];
+  }
+  res+=_lambda * (_alpha * l1_norm(beta) + (1 - _alpha) * l2_norm(beta) * 0.5);
+  return res;
+}
