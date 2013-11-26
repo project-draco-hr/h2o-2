@@ -1,0 +1,7 @@
+def genTestDescription(FU, dataname):
+    res = ' on data {0}'.format(dataname)
+    if (FU == '['):
+        return ('sliceTest_' + res)
+    if (len(FU.split(';')) > 1):
+        return ('compoundFilterTest_' + res)
+    return ('simpleFilterTest_' + res)

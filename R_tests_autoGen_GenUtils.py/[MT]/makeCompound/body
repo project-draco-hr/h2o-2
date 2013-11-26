@@ -1,0 +1,17 @@
+def makeCompound(choiceAs):
+    A = ['<', '<=', '>', '>=', '==', '!=']
+    B = ['&', '|']
+    C = ['&', '|', '&;!|;!']
+    start = [choice(['', '!'])]
+    while (choiceAs > 0):
+        if (choiceAs == 1):
+            start.append(choice(A))
+            return ';'.join(start)
+        start.append(choice(A))
+        start.append(choice(B))
+        start.append(choice(A))
+        start.append(choice(C))
+        choiceAs -= 2
+        if (choiceAs <= 0):
+            start.append(choice(A))
+            return ';'.join(start)

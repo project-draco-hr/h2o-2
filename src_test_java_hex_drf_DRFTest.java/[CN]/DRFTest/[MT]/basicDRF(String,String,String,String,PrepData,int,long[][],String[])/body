@@ -16,6 +16,7 @@
     drf.mtries=-1;
     drf.sample_rate=0.66667f;
     drf.seed=(1L << 32) | 2;
+    drf.destination_key=Key.make("DRF_model_4_" + hexnametrain);
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
     assertCM(expCM,model.cm);
