@@ -1,7 +1,7 @@
 {
   Job jjob=Job.findJob(job_key);
-  Value value=DKV.get(jjob.dest());
-  if (value == null)   DocGen.HTML.paragraph(sb,"Pending...");
- else   ((GBMModel)value.get()).generateHTML("GBM Model",sb);
+  GBMModel m=UKV.get(jjob.dest());
+  if (m != null)   m.generateHTML("GBM Model",sb);
+ else   DocGen.HTML.paragraph(sb,"Pending...");
   return true;
 }
