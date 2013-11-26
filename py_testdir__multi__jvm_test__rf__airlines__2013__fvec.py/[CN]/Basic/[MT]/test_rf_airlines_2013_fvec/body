@@ -11,7 +11,7 @@ def test_rf_airlines_2013_fvec(self):
     print 'parse took {0} sec'.format(parse_time)
     start = time.time()
     start = time.time()
-    h2o_cmd.runSummary(key=hex_key)
+    h2o_cmd.runSummary(key=hex_key, timeoutSecs=200)
     elapsed = (time.time() - start)
     print 'summary took {0} sec'.format(elapsed)
     trees = 10
