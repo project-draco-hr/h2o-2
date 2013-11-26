@@ -1,13 +1,19 @@
 def test_rf_airlines_2013_fvec(self):
     h2o.beta_features = True
+    h2b.browseTheCloud()
     csvFilename = 'year2013.csv'
     hex_key = 'year2013.hex'
     importFolderPath = 'airlines'
     csvPathname = ((importFolderPath + '/') + csvFilename)
     start = time.time()
-    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=900)
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=900, doSummary=False)
     parse_time = (time.time() - start)
-    print 'parse and summary took {0} sec'.format(parse_time)
+    print 'parse took {0} sec'.format(parse_time)
+    start = time.time()
+    start = time.time()
+    h2o_cmd.runSummary(key=hex_key)
+    elapsed = (time.time() - start)
+    print 'summary took {0} sec'.format(elapsed)
     trees = 10
     paramsTrainRF = {'ntrees': trees, 'max_depth': 20, 'nbins': 200, 'ignored_cols_by_name': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', 'timeoutSecs': 14800, }
     kwargs = paramsTrainRF.copy()
