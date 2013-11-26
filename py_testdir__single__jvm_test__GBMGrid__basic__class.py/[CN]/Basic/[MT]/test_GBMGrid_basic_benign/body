@@ -5,7 +5,7 @@ def test_GBMGrid_basic_benign(self):
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
     colNames = ['STR', 'OBS', 'AGMT', 'FNDX', 'HIGD', 'DEG', 'CHK', 'AGP1', 'AGMN', 'NLV', 'LIV', 'WT', 'AGLP', 'MST']
     modelKey = 'GBMGrid_benign'
-    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'STR', 'learn_rate': '.1,.2', 'ntrees': '3,4', 'max_depth': '5,7', 'min_rows': '1,2', 'response': 'FNDX', 'classification': (1 if DO_CLASSIFICATION else 0), }
+    params = {'destination_key': modelKey, 'ignored_cols_by_name': 'STR', 'learn_rate': '.1,.2,.25', 'ntrees': '3,4,5', 'max_depth': '5,7', 'min_rows': '1,2', 'response': 'FNDX', 'classification': (1 if DO_CLASSIFICATION else 0), }
     kwargs = params.copy()
     timeoutSecs = 1800
     start = time.time()
