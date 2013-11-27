@@ -1,9 +1,8 @@
 {
   sb.ii(1);
-  JCodeGen.toStaticVar(sb,"NTREES",numTrees());
-  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses());
+  JCodeGen.toStaticVar(sb,"NTREES",numTrees(),"Number of trees in this model.");
+  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses(),"Number of internal trees in this model (= NTREES*NCLASSES).");
   String modelName=JCodeGen.toJavaId(_selfKey.toString());
-  JCodeGen.toStaticVar(sb,null,"DATA",0);
   sb.i().p("public static void main(String[] args) throws Exception {").nl();
   sb.i(1).p("if (args.length!=2) { System.err.println(\"Command line should include <num of iterations> <path to datafile>\"); System.exit(1); }").nl();
   sb.i(1).p("long iters = Integer.valueOf(args[0]);").nl();
