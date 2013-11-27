@@ -1,10 +1,10 @@
 {
-  int[] s1=determineSeparatorCounts(l1);
-  int[] s2=determineSeparatorCounts(l2);
+  int[] s1=determineSeparatorCounts(l1,single_quote);
+  int[] s2=determineSeparatorCounts(l2,single_quote);
   for (int i=0; i < s1.length; ++i)   if (((s1[i] == s2[i]) && (s1[i] != 0)) || (i == separators.length - 1)) {
     try {
-      String[] t1=determineTokens(l1,separators[i]);
-      String[] t2=determineTokens(l2,separators[i]);
+      String[] t1=determineTokens(l1,separators[i],single_quote);
+      String[] t2=determineTokens(l2,separators[i],single_quote);
       if (t1.length == 0 || t1.length != t2.length)       continue;
       return separators[i];
     }
