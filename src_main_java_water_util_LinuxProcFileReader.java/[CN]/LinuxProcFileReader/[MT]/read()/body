@@ -1,0 +1,10 @@
+{
+  File f=new File("/proc/stat");
+  if (!f.exists()) {
+    return;
+  }
+  readSystemProcFile();
+  readProcessProcFile();
+  parseSystemProcFile(_systemData);
+  parseProcessProcFile(_processData);
+}

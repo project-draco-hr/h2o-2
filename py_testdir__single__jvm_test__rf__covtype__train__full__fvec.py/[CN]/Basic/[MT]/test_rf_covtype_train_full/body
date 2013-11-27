@@ -1,0 +1,15 @@
+def test_rf_covtype_train_full(self):
+    h2o.beta_features = True
+    csvFilename = 'train.csv'
+    csvPathname = ('bench/covtype/h2o/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'), header=1, timeoutSecs=180)
+    for trial in range(1):
+        kwargs = paramDict
+        timeoutSecs = (30 + (kwargs['ntrees'] * 20))
+        start = time.time()
+        rfView = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'RF end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView)
+        self.assertLess(classification_error, 0.02, 'train.csv should have full classification error <0.02')
+        print 'Trial #', trial, 'completed'

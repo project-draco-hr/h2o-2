@@ -1,0 +1,11 @@
+{
+  testModelAdaptation("./smalldata/test/classifier/coldom_train_2.csv","./smalldata/test/classifier/coldom_test_2.csv",new PrepData(){
+    @Override Vec prep(    Frame fr){
+      return fr.vecs()[fr.find("R")];
+    }
+    @Override int needAdaptation(    Frame fr){
+      return 0;
+    }
+  }
+);
+}

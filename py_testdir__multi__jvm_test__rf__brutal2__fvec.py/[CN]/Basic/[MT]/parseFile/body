@@ -1,10 +1,10 @@
-def parseFile(self, bucket, pathname, timeoutSecs, header, **kwargs):
+def parseFile(self, bucket, pathname, timeoutSecs, header, hex_key, **kwargs):
     if USE_LOCAL:
         schema = None
     else:
         schema = 's3n'
     start = time.time()
-    parseResult = h2i.import_parse(bucket=bucket, path=pathname, schema='put', timeoutSecs=180)
+    parseResult = h2i.import_parse(bucket=bucket, path=pathname, schema='put', hex_key=hex_key, timeoutSecs=180, **kwargs)
     parse_time = (time.time() - start)
     h2o.verboseprint('parse took {0} sec'.format(parse_time))
     parseResult['python_call_timer'] = parse_time

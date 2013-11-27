@@ -1,10 +1,5 @@
 {
-  try {
-    _fjtask.join();
-  }
- catch (  DistributedException e) {
-    throw new RuntimeException(e);
-  }
+  _fjtask.join();
   T ans=(T)UKV.get(destination_key);
   remove();
   return ans;
