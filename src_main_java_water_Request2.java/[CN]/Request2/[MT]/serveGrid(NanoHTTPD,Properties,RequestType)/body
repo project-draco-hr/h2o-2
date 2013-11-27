@@ -11,6 +11,9 @@
           values[i]=split(value);
           if (values[i] != null && values[i].length > 1)           gridSearch=true;
         }
+ else         if (arg._field.getType().isArray() && !imbricated) {
+          values[i]=new String[]{value};
+        }
       }
     }
   }
