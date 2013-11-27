@@ -1,5 +1,7 @@
 def genTestName(FU, dataname):
-    res = ((dataname + '_') + str(uuid4()).replace('-', '_'))
+    global count
+    count += 1
+    res = ((dataname + '_') + str(count))
     if (FU == '['):
         return ('sliceTest_' + res)
     if (len(FU.split(';')) > 1):

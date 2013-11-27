@@ -14,8 +14,6 @@
     Assert.assertEquals("Adapt method should return two frames",2,frAdapted.length);
     Assert.assertEquals("Test expects that all columns in  test dataset has to be adapted",dprep.needAdaptation(frTrain),frAdapted[1].numCols());
     Frame adaptedFrame=frAdapted[0];
-    System.err.println(frTest.toStringAll());
-    System.err.println(adaptedFrame.toStringAll());
     for (int av=0; av < frTrain.numCols() - 1; av++) {
       int ev=av + frTrain.numCols();
       Vec actV=adaptedFrame.vecs()[av];

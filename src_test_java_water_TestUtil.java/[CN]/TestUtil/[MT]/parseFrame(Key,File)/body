@@ -2,7 +2,10 @@
   if (!file.exists())   throw new RuntimeException("File not found " + file);
   if (okey == null)   okey=Key.make(file.getName());
   Key fkey=NFSFileVec.make(file);
-  Frame fr=ParseDataset2.parse(okey,new Key[]{fkey});
-  UKV.remove(fkey);
-  return fr;
+  try {
+    return ParseDataset2.parse(okey,new Key[]{fkey});
+  }
+  finally {
+    UKV.remove(fkey);
+  }
 }
