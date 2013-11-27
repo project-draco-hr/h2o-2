@@ -1,0 +1,11 @@
+{
+  Key k=Key.make("q.hex");
+  try {
+    Frame fr=TestUtil.parseFrame(k,"smalldata/test/test_quote.csv");
+    Assert.assertEquals(fr.numCols(),11);
+    Assert.assertEquals(fr.numRows(),7);
+  }
+  finally {
+    UKV.remove(k);
+  }
+}
