@@ -14,11 +14,6 @@ def rf_covtype_train_oobe(self, csvFilename, checkExpectedResults=True):
     rowsForPct[0] = rowsForPct[10]
     expectTrainPctRightList = [0, 85.16, 88.45, 90.24, 91.27, 92.03, 92.64, 93.11, 93.48, 93.79]
     expectScorePctRightList = [0, 88.81, 91.72, 93.06, 94.02, 94.52, 95.09, 95.41, 95.77, 95.78]
-    print 'Creating the key of the last 10% data, for scoring'
-    dataKeyTest = 'rTest.hex'
-    execExpr = (('a.hex=runif(%s); ' % hex_key) + ('%s=%s[a.hex>=%s,]; factor(%s[,%s])' % (dataKeyTest, parseResult['destination_key'], 0.9, parseResult['destination_key'], numCols)))
-    h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTest, timeoutSecs=10)
-    inspect = h2o_cmd.runInspect(key=dataKeyTest)
     actualTrainPctRightList = [0]
     actualScorePctRightList = [0]
     trial = 0
@@ -27,11 +22,9 @@ def rf_covtype_train_oobe(self, csvFilename, checkExpectedResults=True):
         rowsToUse = rowsForPct[(trial % 10)]
         resultKey = ((('r_' + csvFilename) + '_') + str(trial))
         dataKeyTrain = 'rTrain.hex'
-        execExpr = (('a.hex=runif(%s); ' % hex_key) + ('%s=%s[a.hex<%s,]; factor(%s[, %s])' % (dataKeyTrain, parseResult['destination_key'], 0.9, parseResult['destination_key'], numCols)))
-        h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTrain, timeoutSecs=10)
-        inspect = h2o_cmd.runInspect(key=dataKeyTrain)
-        h2o_cmd.infoFromInspect(inspect, 'going into RF')
-        sliceResult = {'destination_key': 'rTrain.hex', }
+        dataKeyTest = 'rTest.hex'
+        createTestTrain(hex_key, dataKeyTrain, dataKeyTest, percent=0.9, outputClass=4, numCols=numCols)
+        sliceResult = {'destination_key': dataKeyTrain, }
         kwargs = paramDict.copy()
         kwargs['destination_key'] = ((('model_' + csvFilename) + '_') + str(trial))
         timeoutSecs = (30 + (kwargs['ntrees'] * 20))
@@ -50,8 +43,6 @@ def rf_covtype_train_oobe(self, csvFilename, checkExpectedResults=True):
         used_trees = rf_model['N']
         data_key = rf_model['_dataKey']
         model_key = rf_model['_selfKey']
-        inspect = h2o_cmd.runInspect(key=dataKeyTest)
-        h2o_cmd.infoFromInspect(inspect, 'dataKeyTest')
         rfvScoring = h2o_cmd.runRFView(None, dataKeyTest, model_key, used_trees, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
         (error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfvScoring)
         fullScorePctRight = (100 - error)
