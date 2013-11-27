@@ -1,12 +1,20 @@
 def test_rf_hhp_2a_fvec(self):
     h2o.beta_features = True
-    csvFilenameList = {'hhp_9_17_12.predict.data.gz', 'hhp.cut3.214.data.gz'}
-    print "\nTemporarily won't run some because NAs cause CM=0"
+    csvFilenameList = {'hhp.cut3.214.data.gz'}
     for csvFilename in csvFilenameList:
         csvPathname = csvFilename
-        print 'RF start on ', csvPathname, 'this will probably take a minute..'
+        print 'RF start on ', csvPathname
         start = time.time()
         parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
-        rfView = h2o_cmd.runRF(parseResult=parseResult, trees=50, timeoutSecs=300, retryDelaySecs=10)
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+        numCols = inspect['numCols']
+        dataKeyTrain = 'rTrain.hex'
+        execExpr = ('%s[,%s] = s[%s==14,]' % (dataKeyTrain, numCols, dataKeyTrain))
+        h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTrain, timeoutSecs=10)
+        inspect = h2o_cmd.runInspect(key=dataKeyTrain)
+        h2o_cmd.infoFromInspect(inspect, 'going into RF')
+        execResult = {'destination_key': dataKeyTrain, }
+        rfView = h2o_cmd.runRF(parseResult=execResult, trees=50, timeoutSecs=300, retryDelaySecs=10)
         print 'RF end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         (error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRF2View(rfv=rfView)
