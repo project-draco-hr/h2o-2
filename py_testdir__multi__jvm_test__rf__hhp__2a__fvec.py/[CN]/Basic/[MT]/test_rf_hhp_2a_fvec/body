@@ -4,13 +4,13 @@ def test_rf_hhp_2a_fvec(self):
     for csvFilename in csvFilenameList:
         csvPathname = csvFilename
         print 'RF start on ', csvPathname
+        dataKeyTrain = 'rTrain.hex'
         start = time.time()
-        parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+        parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=dataKeyTrain, schema='put')
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         numCols = inspect['numCols']
-        dataKeyTrain = 'rTrain.hex'
-        execExpr = ('%s[,%s] = s[%s==14,]' % (dataKeyTrain, numCols, dataKeyTrain))
+        execExpr = ('%s[,%s] = %s[,%s]==14' % (dataKeyTrain, numCols, dataKeyTrain, numCols))
         h2o_exec.exec_expr(None, execExpr, resultKey=dataKeyTrain, timeoutSecs=10)
         inspect = h2o_cmd.runInspect(key=dataKeyTrain)
         h2o_cmd.infoFromInspect(inspect, 'going into RF')
