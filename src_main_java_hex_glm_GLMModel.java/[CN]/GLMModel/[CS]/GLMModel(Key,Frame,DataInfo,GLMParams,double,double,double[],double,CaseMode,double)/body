@@ -3,7 +3,7 @@
   this.ymu=ymu;
   this.glm=glm;
   threshold=0.5;
-  this.catOffsets=catOffsets;
+  this.catOffsets=dinfo._catOffsets;
   this.warnings=null;
   this.alpha=alpha;
   this.beta_eps=beta_eps;
@@ -13,4 +13,5 @@
   for (int i=0; i < submodels.length; ++i)   submodels[i]=new Submodel(lambda[i],null,null,0,0);
   run_time=0;
   start_time=System.currentTimeMillis();
+  coefficients_names=coefNames(dinfo.fullN() + 1);
 }

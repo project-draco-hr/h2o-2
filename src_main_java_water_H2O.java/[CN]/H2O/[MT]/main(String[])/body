@@ -21,8 +21,6 @@
   Log.wrap();
   startLocalNode();
   Log.POST(320,"");
-  ParseDataset.PLIMIT=OPT_ARGS.pparse_limit;
-  Log.POST(330,"");
   String logDir=(Log.getLogDir() != null) ? Log.getLogDir() : "(unknown)";
   Log.info("Log dir: '" + logDir + "'");
   initializePersistence();
@@ -31,7 +29,6 @@
   Log.POST(350,"");
   startApiIpPortWatchdog();
   Log.POST(360,"");
-  ParseDataset.PLIMIT=OPT_ARGS.pparse_limit;
   startupFinalize();
   Log.POST(380,"");
 }
