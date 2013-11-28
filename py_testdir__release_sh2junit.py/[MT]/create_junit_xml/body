@@ -23,6 +23,6 @@ def create_junit_xml(name, out, err, sandboxErrorMessage, errors=0, elapsed=0):
     content += '            </system-err>\n'
     content += '        </testcase>\n'
     content += '    </testsuite>\n'
-    f = open((('./test_' + os.path.basename(name)) + '.nosetests.xml'), 'w')
-    f.write(content)
-    f.close()
+    x = (('./test_' + os.path.basename(name)) + '.nosetests.xml')
+    with open(x, 'wb') as f:
+        f.write(content)
