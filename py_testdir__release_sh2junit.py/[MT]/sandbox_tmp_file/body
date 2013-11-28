@@ -1,5 +1,4 @@
 def sandbox_tmp_file(prefix='', suffix=''):
     (fd, path) = tempfile.mkstemp(prefix=prefix, suffix=suffix, dir='./sandbox')
-    permissions = (((stat.S_IRUSR | stat.S_IWUSR) | stat.S_IRGRP) | stat.S_IROTH)
-    os.chmod(path, permissions)
+    os.chmod(path, 420)
     return (fd, path)
