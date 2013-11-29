@@ -33,5 +33,5 @@ def writeCompoundFilterTestTask(FU, data, dataPath, FUParams):
         test += '\n                Log.info("Now do the same filter & subset, but select complement of columns.")\n                '
         cC = filter((lambda a: (a not in selectCols)), compCols)
         test += rowFilterByColNSelect.format(EXPRESSION, makeVec(';'.join(cC)))
-    test += '\n            }}\n            \n            conn = new("H2OClient", ip=myIP, port=myPort)\n            tryCatch(test_that({1}, {0}(conn)), warning = function(w) WARN(w), error = function(e) FAIL(e))\n            PASS()'.format(TESTNAME.replace('-', '_'), DESCRIPTION)
+    test += '\n            Log.info("End of test")\n            PASSS <<- TRUE\n            }}\n            \n            PASSS <- FALSE\n            conn = new("H2OClient", ip=myIP, port=myPort)\n            tryCatch(test_that({1}, {0}(conn)), warning = function(w) WARN(w), error = function(e) FAIL(e))\n            if (!PASSS) FAIL("Did not reach the end of test. Check Rsandbox/errors.log for warnings and errors.")\n            PASS()'.format(TESTNAME.replace('-', '_'), DESCRIPTION)
     return test
