@@ -44,5 +44,5 @@ def writeSimpleSliceTestTask(FU, data, dataPath, FUParams):
         for i in loopColsRows:
             test += '\n                    Log.info("Slicing row {1} and column {2} from data {0}")\n                '.format(DATANAME, escape(i[0]), escape(i[1]))
             test += colRowSlice.format(i[0], i[1])
-    test += '\n            }}\n            \n            conn = new("H2OClient", ip=myIP, port=myPort)\n            tryCatch(test_that({1}, {0}(conn)), warning = function(w) WARN(w), error = function(e) FAIL(e))\n            PASS()'.format(TESTNAME.replace('-', '_'), DESCRIPTION)
+    test += '\n            Log.inf("End of test")\n            PASSS <<- TRUE\n            }}\n            PASSS <- FALSE\n            conn = new("H2OClient", ip=myIP, port=myPort)\n            tryCatch(test_that({1}, {0}(conn)), warning = function(w) WARN(w), error = function(e) FAIL(e))\n            if (!PASSS) FAIL("Did not reach the end of test. Check Rsandbox/errors.log for warnings and errors.")\n            PASS()'.format(TESTNAME.replace('-', '_'), DESCRIPTION)
     return test
