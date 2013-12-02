@@ -1,4 +1,5 @@
 {
+  float r2=0;
   for (int i=0; i < _previous._a.length; i++) {
     int w=u * _previous._a.length + i;
     if (_previous._e != null)     _previous._e[i]+=g * _w[w];
@@ -8,6 +9,14 @@
       _wm[w]=d=_wm[w] + d;
     }
     _w[w]+=r * d;
+    r2+=_w[w] * _w[w];
+  }
+  if (r2 > 15) {
+    float scale=(float)Math.sqrt(15 / r2);
+    for (int i=0; i < _previous._a.length; i++) {
+      int w=u * _previous._a.length + i;
+      _w[w]*=scale;
+    }
   }
   float d=g;
   if (_bm != null) {

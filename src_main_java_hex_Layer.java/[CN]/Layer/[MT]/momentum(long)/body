@@ -1,3 +1,8 @@
 {
-  return momentum * (n + 1) / (n + 1 + momentum_annealing);
+  float m=momentum_start;
+  if (momentum_ramp > 0) {
+    if (n >= momentum_ramp)     m=momentum_stable;
+ else     m+=(momentum_stable - momentum_start) * n / momentum_ramp;
+  }
+  return m;
 }

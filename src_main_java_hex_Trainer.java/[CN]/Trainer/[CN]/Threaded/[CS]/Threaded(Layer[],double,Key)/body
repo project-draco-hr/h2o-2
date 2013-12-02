@@ -1,14 +1,19 @@
 {
   _trainers=new Base[Runtime.getRuntime().availableProcessors()];
   _threads=new Thread[_trainers.length];
-  _stepsPerThread=epochs * ((Input)ls[0])._len / _threads.length;
+  _stepsPerThread=(long)(epochs * ((Input)ls[0])._len / _threads.length);
   _resume=new CyclicBarrier(_threads.length + 1);
   for (int t=0; t < _trainers.length; t++) {
     Layer[] clones=new Layer[ls.length];
     for (int y=0; y < clones.length; y++)     clones[y]=ls[y].clone();
     for (int y=0; y < clones.length; y++) {
       clones[y].init(clones,y,false,0);
-      clones[y]._trainer=this;
+      clones[y]._training=new Training(){
+        @Override long processed(){
+          return _processed.get();
+        }
+      }
+;
     }
     final Input input=(Input)clones[0];
     input._pos=input._len * t / _trainers.length;
@@ -31,7 +36,7 @@
           }
           trainer.step();
           input.move();
-          _samples.incrementAndGet();
+          _processed.incrementAndGet();
         }
       }
     }

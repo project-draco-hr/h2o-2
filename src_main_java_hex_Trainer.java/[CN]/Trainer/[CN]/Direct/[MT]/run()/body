@@ -1,6 +1,13 @@
 {
+  Training training=new Training(){
+    @Override long processed(){
+      return _processed;
+    }
+  }
+;
+  for (int i=0; i < _ls.length; i++)   _ls[i]._training=training;
   Input input=(Input)_ls[0];
-  for (long i=0; _samples == 0 || i < _samples; i++) {
+  for (; _limit == 0 || _processed < _limit; _processed++) {
     step();
     input.move();
     if (_job != null && Job.cancelled(_job))     break;
