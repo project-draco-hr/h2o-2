@@ -1,0 +1,17 @@
+{
+  while (!isDone()) {
+    try {
+      get();
+    }
+ catch (    ExecutionException eex) {
+      Throwable tex=eex.getCause();
+      if (tex instanceof Error)       throw (Error)tex;
+      if (tex instanceof DistributedException)       throw (DistributedException)tex;
+      throw new RuntimeException(tex);
+    }
+catch (    CancellationException cex) {
+      Log.errRTExcept(cex);
+    }
+  }
+  return true;
+}
