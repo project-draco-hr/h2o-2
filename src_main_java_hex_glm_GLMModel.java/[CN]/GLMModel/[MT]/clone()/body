@@ -1,0 +1,6 @@
+{
+  GLMModel res=new GLMModel(_selfKey,data_info,glm,beta_eps,alpha,lambdas,ymu,_caseMode,_caseVal);
+  res.submodels=submodels.clone();
+  for (int i=0; i < submodels.length && submodels[i] != null; ++i)   res.submodels[i]=submodels[i].clone();
+  return (GLMModel)super.clone();
+}

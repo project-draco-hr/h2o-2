@@ -1,3 +1,5 @@
 {
-  return submodels[best_lambda_idx].iteration;
+  int res=0;
+  for (int i=0; i < submodels.length && submodels[i] != null && submodels[i].iteration != 0; ++i)   res=submodels[i].iteration;
+  return res;
 }
