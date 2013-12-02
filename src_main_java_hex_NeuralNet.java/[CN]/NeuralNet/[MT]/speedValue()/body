@@ -3,7 +3,7 @@
   NeuralNetModel m=value != null ? (NeuralNetModel)value.get() : null;
   long sv=0;
   if (m != null) {
-    Error[] e=m.training_errors;
+    Errors[] e=m.training_errors;
     double epochsSoFar=e[e.length - 1].training_samples / (double)source.numRows();
     sv=(epochsSoFar <= 0) ? 0 : (long)(e[e.length - 1].training_time_ms / epochsSoFar);
   }

@@ -6,7 +6,7 @@
       while (_job == null || !Job.cancelled(_job)) {
         if (!home)         _node.sync();
  else {
-          _node._total=_node._trainer.samples();
+          _node._total=_node._trainer.processed();
           try {
             Thread.sleep(1);
           }

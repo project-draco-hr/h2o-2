@@ -1,5 +1,5 @@
 {
-  Error error=new Error();
+  Errors e=new Errors();
   Input input=(Input)ls[0];
   long len=input._len;
   if (n != 0)   len=Math.min(len,n);
@@ -7,16 +7,16 @@
     int correct=0;
     for (input._pos=0; input._pos < len; input._pos++) {
       if (((Softmax)ls[ls.length - 1]).target() == -2)       continue;
-      if (correct(ls,error,cm))       correct++;
+      if (correct(ls,e,cm))       correct++;
     }
-    error.classification=(len - (double)correct) / len;
-    error.mean_square/=len;
+    e.classification=(len - (double)correct) / len;
+    e.mean_square/=len;
   }
  else {
-    for (input._pos=0; input._pos < len; input._pos++)     if (!Float.isNaN(ls[ls.length - 1]._a[0]))     error(ls,error);
-    error.classification=Double.NaN;
-    error.mean_square/=len;
+    for (input._pos=0; input._pos < len; input._pos++)     if (!Float.isNaN(ls[ls.length - 1]._a[0]))     error(ls,e);
+    e.classification=Double.NaN;
+    e.mean_square/=len;
   }
   input._pos=0;
-  return error;
+  return e;
 }
