@@ -1,5 +1,8 @@
 {
-  float m=_momentum * (n + 1) / ((n + 1) + _momentumAnnealing);
-  momentum(_w,_wPrev,_wSpeed,m);
-  momentum(_b,_bPrev,_bSpeed,m);
+  float m=momentum_start;
+  if (momentum_ramp > 0) {
+    if (n >= momentum_ramp)     m=momentum_stable;
+ else     m+=(momentum_stable - momentum_start) * n / momentum_ramp;
+  }
+  return m;
 }
