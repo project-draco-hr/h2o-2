@@ -79,10 +79,10 @@ if (classification) {
 int classes=ls[ls.length - 1].units;
 cm=new long[classes][classes];
 }
-Errors e=eval(train,trainResp,valid == null ? cm : null);
+Errors e=eval(train,trainResp,10000,valid == null ? cm : null);
 trainErrors=Utils.append(trainErrors,e);
 if (valid != null) {
-e=eval(valid,validResp,cm);
+e=eval(valid,validResp,0,cm);
 validErrors=Utils.append(validErrors,e);
 }
 NeuralNetModel model=new NeuralNetModel(destination_key,sourceKey,frame,ls);
@@ -91,10 +91,9 @@ model.validation_errors=validErrors;
 model.confusion_matrix=cm;
 UKV.put(model._selfKey,model);
 }
-private Errors eval(Vec[] vecs,Vec resp,long[][] cm){
-Errors e=NeuralNet.eval(ls,vecs,resp,EVAL_ROW_COUNT,cm);
+private Errors eval(Vec[] vecs,Vec resp,long n,long[][] cm){
+Errors e=NeuralNet.eval(ls,vecs,resp,n,cm);
 e.training_samples=trainer.processed();
-e.evaluation_samples=EVAL_ROW_COUNT;
 e.training_time_ms=runTimeMs();
 return e;
 }
