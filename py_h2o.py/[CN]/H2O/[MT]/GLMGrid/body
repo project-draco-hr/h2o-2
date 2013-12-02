@@ -1,6 +1,6 @@
 def GLMGrid(self, key, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, **kwargs):
-    if (not kwargs['parallel']):
-        kwargs['parallel'] = 1
+    if (not kwargs['parallelism']):
+        kwargs['parallelism'] = 1
     a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName='GLMGrid', **kwargs)
     if (not beta_features):
         if (a['response']['redirect_request'] != 'GLMGridProgress'):

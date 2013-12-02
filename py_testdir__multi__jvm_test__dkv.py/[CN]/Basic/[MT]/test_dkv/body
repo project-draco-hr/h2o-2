@@ -1,4 +1,4 @@
-def test_enum_with_syn(self):
+def test_dkv(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilenameAll = [('syn_10x8.csv', 'cA', 5)]
     csvFilenameList = csvFilenameAll
@@ -14,4 +14,4 @@ def test_enum_with_syn(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         h2e.exec_zero_list(zeroList)
-        h2e.exec_expr_list_rand(lenNodes, exprList, hex_key, maxCol=0, maxRow=400000, maxTrials=100, timeoutSecs=timeoutSecs)
+        h2e.exec_expr_list_rand(lenNodes, exprList, hex_key, maxCol=6, maxRow=400000, maxTrials=100, timeoutSecs=timeoutSecs)
