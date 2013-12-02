@@ -11,6 +11,14 @@
       clones[y].init(clones,y,false,_node._total);
       clones[y]._w=_node._ws[y];
       clones[y]._b=_node._bs[y];
+      clones[y]._wm=_node._wm[y];
+      clones[y]._bm=_node._bm[y];
+      clones[y]._training=new Training(){
+        @Override long processed(){
+          return _node._total;
+        }
+      }
+;
     }
     Base base=new Base(clones);
     for (input._pos=0; input._pos < _cs[0]._len; input._pos++)     base.step();

@@ -1,11 +1,9 @@
 {
-  for (int o=0; o < _a.length; o++) {
-    float g=_e[o];
-    for (int i=0; i < _in._a.length; i++) {
-      int w=o * _in._a.length + i;
-      if (_in._e != null)       _in._e[i]+=g * _w[w];
-      _w[w]+=_r * (g * _in._a[i] - _w[w] * l2);
-    }
-    _b[o]+=_r * g;
+  long processed=_training.processed();
+  float r=rate(processed);
+  float m=momentum(processed);
+  for (int u=0; u < _a.length; u++) {
+    float g=_e[u];
+    bprop(u,g,r,m);
   }
 }
