@@ -3,8 +3,15 @@
   if (!f.exists()) {
     return;
   }
-  readSystemProcFile();
-  readProcessProcFile();
-  parseSystemProcFile(_systemData);
-  parseProcessProcFile(_processData);
+  String pid;
+  try {
+    pid=getProcessId();
+    readSystemProcFile();
+    readProcessProcFile(pid);
+    readProcessNumOpenFds(pid);
+    parseSystemProcFile(_systemData);
+    parseProcessProcFile(_processData);
+  }
+ catch (  Exception _) {
+  }
 }
