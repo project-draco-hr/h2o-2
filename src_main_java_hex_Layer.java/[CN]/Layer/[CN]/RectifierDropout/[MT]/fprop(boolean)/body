@@ -4,6 +4,7 @@
     _bits=new byte[units / 8 + 1];
   }
   _rand.nextBytes(_bits);
+  float max=0;
   for (int o=0; o < _a.length; o++) {
     _a[o]=0;
     boolean b=(_bits[o >> 3] & (1 << o)) != 0;
@@ -12,6 +13,8 @@
       _a[o]+=_b[o];
       if (_a[o] < 0)       _a[o]=0;
  else       if (!training)       _a[o]*=.5f;
+      if (max < _a[o])       max=_a[o];
     }
   }
+  if (max > 1)   for (int o=0; o < _a.length; o++)   _a[o]/=max;
 }
