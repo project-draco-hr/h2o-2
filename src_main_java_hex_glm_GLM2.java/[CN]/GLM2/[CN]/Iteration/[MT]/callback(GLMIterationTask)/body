@@ -18,7 +18,7 @@
         newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
       }
       boolean done=false;
-      _model=(GLMModel)_oldModel.clone();
+      _model=_oldModel.clone();
       done=done || _glm.family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || cancelled();
       _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,glmt._iter + 1);
       if (done) {
