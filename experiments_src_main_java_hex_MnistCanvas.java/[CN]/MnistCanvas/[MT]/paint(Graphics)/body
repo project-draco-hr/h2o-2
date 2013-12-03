@@ -32,9 +32,9 @@
       offset=pad;
       buf+=pad + edge;
     }
-    int[] start=new int[layer._in._a.length];
-    for (int i=0; i < layer._in._a.length; i++) {
-      double w=layer._w[o * layer._in._a.length + i];
+    int[] start=new int[layer._previous._a.length];
+    for (int i=0; i < layer._previous._a.length; i++) {
+      double w=layer._w[o * layer._previous._a.length + i];
       w=((w - mean) / sigma) * 200;
       if (w >= 0)       start[i]=((int)Math.min(+w,255)) << 8;
  else       start[i]=((int)Math.min(-w,255)) << 16;
