@@ -18,13 +18,9 @@
         newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
       }
       boolean done=false;
-      if (glmt._val != null) {
-        glmt._val.finalize_AIC_AUC();
-        _oldModel.setValidation(_lambdaIdx,glmt._val);
-      }
-      _model=(GLMModel)_oldModel.clone();
+      _model=_oldModel.clone();
       done=done || _glm.family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || cancelled();
-      _model.setLambdaSubmodel(_lambdaIdx,lambda[_lambdaIdx],newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,glmt._iter + 1);
+      _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,glmt._iter + 1);
       if (done) {
         H2OCallback fin=new H2OCallback<GLMValidationTask>(){
           @Override public void callback(          GLMValidationTask tsk){
@@ -46,7 +42,10 @@
  else         new GLMValidationTask(_model,_lambdaIdx,fin).dfork(_dinfo._adaptedFrame);
       }
  else {
-        DKV.put(dest(),_oldModel);
+        if (glmt._val != null) {
+          glmt._val.finalize_AIC_AUC();
+          _oldModel.setValidation(_lambdaIdx,glmt._val).store();
+        }
         int iter=glmt._iter + 1;
         GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,case_mode,case_val,newBeta,iter,glmt._ymu,glmt._reg);
         nextIter.setCompleter(new Iteration(_model,_solver,_dinfo,_fjt));
