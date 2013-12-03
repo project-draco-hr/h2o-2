@@ -12,6 +12,11 @@ def test_GBMGrid_basic_prostate(self):
     GBMResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=(not DO_POLL), **kwargs)
     if (not DO_POLL):
         print '\nfirst GBMResult:', h2o.dump_json(GBMResult)
+        statMean = h2o_jobs.pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
+        num_cpus = (statMean['num_cpus'],)
+        my_cpu_pct = (statMean['my_cpu_%'],)
+        sys_cpu_pct = (statMean['sys_cpu_%'],)
+        system_load = statMean['system_load']
         h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=300, pollTimeoutSecs=10, retryDelaySecs=5)
     elapsed = (time.time() - start)
     print 'GBM training completed in', elapsed, 'seconds.'
