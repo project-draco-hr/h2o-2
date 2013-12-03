@@ -1,10 +1,11 @@
 def test_rf_params_rand2(self):
+    h2o.beta_features = True
     csvPathname = 'standard/covtype.data'
     for trial in range(10):
-        params = {'ntree': 13, 'parallel': 1, 'features': 7, }
+        params = {'ntrees': 13, 'mtries': 7, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
-        timeoutSecs = (30 + (((kwargs['ntree'] * 20) * max(1, (kwargs['features'] / 15))) * ((kwargs['parallel'] and 1) or 3)))
+        timeoutSecs = (30 + ((kwargs['ntrees'] * 80) * max(1, (kwargs['mtries'] / 60))))
         start = time.time()
         parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put')
         h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=1, **kwargs)
