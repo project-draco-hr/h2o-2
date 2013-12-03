@@ -1,17 +1,18 @@
 {
-  super(selfKey,null,fr);
+  super(selfKey,null,dinfo._adaptedFrame);
   this.ymu=ymu;
   this.glm=glm;
   threshold=0.5;
-  this.catOffsets=dinfo._catOffsets;
+  this.data_info=dinfo;
   this.warnings=null;
   this.alpha=alpha;
+  this.lambdas=lambda;
   this.beta_eps=beta_eps;
   _caseVal=caseVal;
   _caseMode=caseMode;
   submodels=new Submodel[lambda.length];
-  for (int i=0; i < submodels.length; ++i)   submodels[i]=new Submodel(lambda[i],null,null,0,0);
+  for (int i=0; i < submodels.length; ++i)   submodels[i]=new Submodel(null,null,0,0);
   run_time=0;
   start_time=System.currentTimeMillis();
-  coefficients_names=coefNames(dinfo.fullN() + 1);
+  coefficients_names=coefNames();
 }
