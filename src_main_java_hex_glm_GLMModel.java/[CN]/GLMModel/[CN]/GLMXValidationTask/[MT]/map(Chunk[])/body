@@ -10,6 +10,7 @@
       if (chunks[j].isNA0(i))       continue OUTER;
       row[j]=chunks[j].at0(i);
     }
+    ++_nobs;
     final int mid=i % _xmodels.length;
     final GLMModel model=_xmodels[mid];
     final GLMValidation val=_xvals[mid];
