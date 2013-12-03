@@ -1,0 +1,8 @@
+{
+  if (isClassifier()) {
+    bodyCtxSB.i().p("// Compute Probabilities").nl();
+    bodyCtxSB.i().p("float sum = 0;").nl();
+    bodyCtxSB.i().p("for(int i=1;i<preds.length; i++) sum += (preds[i]=(float) Math.exp(preds[i]));").nl();
+    bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) preds[i] = (float) preds[i] / sum;").nl();
+  }
+}
