@@ -8,7 +8,7 @@
     if (output instanceof VecSoftmax)     clones[clones.length - 1]=new ChunkSoftmax(_cs[_cs.length - 1],(VecSoftmax)output);
  else     clones[clones.length - 1]=new ChunkLinear(_cs[_cs.length - 1],(VecLinear)output);
     for (int y=0; y < clones.length; y++) {
-      clones[y].init(clones,y,false,_node._total);
+      clones[y].init(clones,y,false,_node._total,null);
       clones[y]._w=_node._ws[y];
       clones[y]._b=_node._bs[y];
       clones[y]._wm=_node._wm[y];
