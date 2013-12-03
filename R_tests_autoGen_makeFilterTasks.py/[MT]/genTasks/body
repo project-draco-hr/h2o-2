@@ -2,10 +2,10 @@ def genTasks():
     jsondata = open('./smalldata.json')
     data = json.load(jsondata)
     jsondata.close()
-    tasks = open('./tasks', 'wb')
+    tasks = open('./filterTasks', 'wb')
     for FU in ['[', '<', '<=', '>', '>=', '==', '!=', makeCompound(1), makeCompound(2)]:
         achoice = None
-        for i in sample(range(len(data['datasets'])), 10):
+        for i in sample(range(len(data['datasets'])), 5):
             cnt = achoice
             datajson = data['datasets'][i]
             DATANAME = datajson.keys()[0]
