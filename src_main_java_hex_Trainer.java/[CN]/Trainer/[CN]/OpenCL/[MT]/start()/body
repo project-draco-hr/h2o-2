@@ -27,7 +27,6 @@
         bprops[y]=program.createCLKernel(_ls.getClass().getSimpleName() + "_bprop");
         bprops[y].putArg(_ls[y - 1]._a.length);
         bprops[y].putArgs(a[y - 1],w[y],b[y],a[y],e[y]);
-        bprops[y].putArg(_ls[y]._r);
         if (e[y - 1] != null)         bprops[y].putArg(e[y - 1]);
         resets[y]=program.createCLKernel("reset_error");
         resets[y].putArg(e[y]);

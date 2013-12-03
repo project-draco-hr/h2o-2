@@ -1,3 +1,5 @@
 {
-  return sb.p("  public static final String[] NAMES = new String[] ").toJavaStringInit(_names).p(";\n");
+  sb.nl();
+  sb.i(1).p("// Names of columns used by model.").nl();
+  return sb.i(1).p("public static final String[] NAMES = new String[] ").toJavaStringInit(_names).p(";").nl();
 }

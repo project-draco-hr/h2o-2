@@ -47,7 +47,8 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
         print 'x has', len(x), 'cols'
         print 'ignore_x has', len(ignore_x), 'cols'
     x = ','.join(map(str, x))
-    ignore_x = ','.join(map(str, ignore_x))
+    if h2o.beta_features:
+        ignore_x = ','.join(map((lambda x: ('C' + str(x))), ignore_x))
     if (not noPrint):
         print '\nx:', x
         print '\nignore_x:', ignore_x

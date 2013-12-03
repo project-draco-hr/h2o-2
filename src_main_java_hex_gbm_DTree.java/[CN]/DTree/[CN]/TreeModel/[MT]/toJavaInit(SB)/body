@@ -1,16 +1,21 @@
 {
-  sb.ii(1);
-  JCodeGen.toStaticVar(sb,"NTREES",numTrees());
-  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses());
+  sb=super.toJavaInit(sb);
   String modelName=JCodeGen.toJavaId(_selfKey.toString());
-  JCodeGen.toStaticVar(sb,null,"DATA",0);
+  sb.ii(1);
+  sb.i().p("/**").nl();
+  sb.i().p(" * Sample program harness providing an example of how to call predict().").nl();
+  sb.i().p(" */").nl();
   sb.i().p("public static void main(String[] args) throws Exception {").nl();
-  sb.i(1).p("if (args.length!=2) { System.err.println(\"Command line should include <num of iterations> <path to datafile>\"); System.exit(1); }").nl();
-  sb.i(1).p("long iters = Integer.valueOf(args[0]);").nl();
-  sb.i(1).p("String datafile = args[1];").nl();
+  sb.i(1).p("int iters = args.length > 0 ? Integer.valueOf(args[0]) : DEFAULT_ITERATIONS;").nl();
   sb.i(1).p(modelName).p(" model = new ").p(modelName).p("();").nl();
-  sb.i(1).p("model.bench(iters, datafile, new float[NCLASSES+1], NTREES, NAMES.length-1 );").nl();
+  sb.i(1).p("model.bench(iters, DATA, new float[NCLASSES+1], NTREES);").nl();
   sb.i().p("}").nl();
   sb.di(1);
+  sb.p(TO_JAVA_BENCH_FUNC);
+  JCodeGen.toStaticVar(sb,"NTREES",numTrees(),"Number of trees in this model.");
+  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses(),"Number of internal trees in this model (= NTREES*NCLASSES).");
+  JCodeGen.toStaticVar(sb,"DEFAULT_ITERATIONS",10000,"Default number of iterations.");
+  JCodeGen.toStaticVar(sb,"DATA",ValueArray.asFrame(DKV.get(_dataKey)),100,"Sample test data.");
+  sb.i(1).p(TO_JAVA_MAX_INDEX_FUNC);
   return sb;
 }

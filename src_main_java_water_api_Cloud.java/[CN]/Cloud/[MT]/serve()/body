@@ -34,6 +34,46 @@
     node.addProperty(FJ_QUEUE_LO,(int)hb._fjqueue_lo);
     node.addProperty(RPCS,(int)hb._rpcs);
     node.addProperty(TCPS_ACTIVE,(int)hb._tcps_active);
+    if (hb._process_num_open_fds >= 0) {
+      node.addProperty("open_fds",hb._process_num_open_fds);
+    }
+ else {
+      node.addProperty("open_fds","N/A");
+    }
+    int my_cpu_pct=-1;
+    int sys_cpu_pct=-1;
+{
+      LastTicksEntry lte=ticksHashMap.get(h2o.toString());
+      if (lte != null) {
+        long system_total_ticks_delta=hb._system_total_ticks - lte._system_total_ticks;
+        if (system_total_ticks_delta > 0) {
+          long system_idle_ticks_delta=hb._system_idle_ticks - lte._system_idle_ticks;
+          double sys_cpu_frac_double=1 - ((double)(system_idle_ticks_delta) / (double)system_total_ticks_delta);
+          if (sys_cpu_frac_double < 0)           sys_cpu_frac_double=0;
+ else           if (sys_cpu_frac_double > 1)           sys_cpu_frac_double=1;
+          sys_cpu_pct=(int)(sys_cpu_frac_double * 100);
+          long process_total_ticks_delta=hb._process_total_ticks - lte._process_total_ticks;
+          double process_cpu_frac_double=((double)(process_total_ticks_delta) / (double)system_total_ticks_delta);
+          if (process_cpu_frac_double < 0)           process_cpu_frac_double=0;
+ else           if (process_cpu_frac_double > 1)           process_cpu_frac_double=1;
+          my_cpu_pct=(int)(process_cpu_frac_double * 100);
+        }
+      }
+      LastTicksEntry newLte=new LastTicksEntry(hb);
+      ticksHashMap.put(h2o.toString(),newLte);
+    }
+    if (my_cpu_pct >= 0) {
+      node.addProperty("my_cpu_%",my_cpu_pct);
+    }
+ else {
+      node.addProperty("my_cpu_%","N/A");
+    }
+    if (sys_cpu_pct >= 0) {
+      node.addProperty("sys_cpu_%",sys_cpu_pct);
+    }
+ else {
+      node.addProperty("sys_cpu_%","N/A");
+    }
     node.addProperty(LAST_CONTACT,h2o._last_heard_from);
     nodes.add(node);
   }

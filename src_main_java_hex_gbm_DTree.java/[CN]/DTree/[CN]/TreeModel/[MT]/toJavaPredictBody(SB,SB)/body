@@ -1,5 +1,5 @@
 {
-  final int maxfsize=100;
+  final int maxfsize=numTrees() * nclasses();
   int fidx=0;
   int treesInForest=0;
   SB forest=new SB().ii(1);
@@ -21,4 +21,5 @@
     treesInForest=0;
   }
   afterBodySb.p(forest);
+  sb.i().p("preds[0] = maxIndex(preds,1);");
 }

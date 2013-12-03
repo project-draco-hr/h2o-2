@@ -1,0 +1,8 @@
+{
+  testModelAdaptation("./smalldata/test/classifier/coldom_train_1.csv","./smalldata/test/classifier/coldom_test_1.csv",new PrepData(){
+    @Override Vec prep(    Frame fr){
+      return fr.vecs()[fr.numCols() - 1];
+    }
+  }
+,true);
+}
