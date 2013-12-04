@@ -64,10 +64,6 @@ def test_summary2_percentile2(self):
                 eV = [(e + 1) for e in eV1]
             else:
                 raise Exception(("Test doesn't have the expected percentileValues for expectedMin: %s" % expectedMin))
-            if (1 == 0):
-                for (v, e) in zip(pctile, eV):
-                    m = ('Percentile: value %s should ~= %s' % (v, e))
-                    self.assertAlmostEqual(v, e, delta=0.5, msg=m)
         trial += 1
         if DO_SCIPY_COMPARE:
             generate_scipy_comparison(csvPathname)

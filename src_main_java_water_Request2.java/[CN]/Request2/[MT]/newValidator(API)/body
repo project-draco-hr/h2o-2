@@ -1,0 +1,8 @@
+{
+  for (  Constructor c : api.validator().getDeclaredConstructors()) {
+    c.setAccessible(true);
+    Class[] ps=c.getParameterTypes();
+    return (Validator)c.newInstance();
+  }
+  return null;
+}

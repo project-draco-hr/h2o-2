@@ -9,7 +9,7 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=1.0, in
         params_dict = {'data_key': data_key, 'ntree': trees, 'model_key': None, 'out_of_bag_error_estimate': 1, 'use_non_local_data': None, 'iterative_cm': None, 'response_variable': None, 'class_weights': None, 'stat_type': None, 'depth': None, 'bin_limit': None, 'parallel': None, 'ignore': None, 'sample': None, 'seed': None, 'features': None, 'exclusive_split_limit': None, 'sampling_strategy': None, 'strata_samples': None, }
     browseAlso = kwargs.pop('browseAlso', False)
     check_params_update_kwargs(params_dict, kwargs, 'random_forest', print_params)
-    if (beta_features and (not params_dict['response'])):
+    if (beta_features and (params_dict['response'] is None)):
         inspect = h2o_cmd.runInspect(key=data_key)
         params_dict['response'] = str(inspect['cols'][(-1)]['name'])
     if print_params:
