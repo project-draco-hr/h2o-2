@@ -15,17 +15,15 @@ def test_c6_hdfs(self):
         csvPathname = ((importFolderPath + '/') + csvFilename)
         timeoutSecs = 1000
         (importResult, importPattern) = h2i.import_only(path=csvPathname, schema='hdfs', timeoutSecs=timeoutSecs)
-        succeeded = importResult['succeeded']
-        if (len(succeeded) < 1):
+        keys = importResult['keys']
+        if (len(keys) < 1):
             raise Exception(('Should have imported at least 1 key for %s' % csvPathname))
         foundIt = None
-        for f in succeeded:
-            if (csvPathname in f['key']):
+        for f in keys:
+            if (csvPathname in f):
                 foundIt = f
                 break
-        if foundIt:
-            value_size_bytes = f['value_size_bytes']
-        else:
+        if (not foundIt):
             raise Exception(('Should have found %s in the imported keys for %s' % (importPattern, csvPathname)))
         totalBytes = value_size_bytes
         print 'Loading', csvFilename, 'from hdfs'

@@ -1,0 +1,40 @@
+def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, hex_key, rowCount, colCount, FILEREPL, SEEDPERFILE, timeoutSecs):
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    print 'Creating random', csvPathname
+    write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+    csvFilenamegz = (csvFilename + '.gz')
+    csvPathnamegz = ((SYNDATASETS_DIR + '/') + csvFilenamegz)
+    h2o_util.file_gzip(csvPathname, csvPathnamegz)
+    csvFilenameReplgz = (((csvFilename + '_') + str(FILEREPL)) + 'x.gz')
+    csvPathnameReplgz = ((SYNDATASETS_DIR + '/') + csvFilenameReplgz)
+    print 'Replicating', csvFilenamegz, 'into', csvFilenameReplgz
+    start = time.time()
+    h2o_util.file_cat(csvPathnamegz, csvPathnamegz, csvPathnameReplgz)
+    totalRows = (2 * rowCount)
+    for i in range((FILEREPL - 2)):
+        h2o_util.file_append(csvPathnamegz, csvPathnameReplgz)
+        totalRows += rowCount
+    print 'Replication took:', (time.time() - start), 'seconds'
+    start = time.time()
+    print 'Parse start:', csvPathnameReplgz
+    doSummary = False
+    parseResult = h2i.import_parse(path=csvPathnameReplgz, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=120, doSummary=doSummary)
+    if doSummary:
+        algo = 'Parse and Summary:'
+    else:
+        algo = 'Parse:'
+    print algo, parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+    print 'Inspecting..'
+    start = time.time()
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=timeoutSecs)
+    print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+    h2o_cmd.infoFromInspect(inspect, csvPathname)
+    print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    if (inspect['numCols'] != (colCount + 1)):
+        raise Exception(('parse created result with the wrong number of cols %s %s' % (inspect['numCols'], colCount)))
+    if (inspect['numRows'] != totalRows):
+        raise Exception(("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['numRows'], rowCount)))
+    parseResult['numRows'] = inspect['numRows']
+    parseResult['numCols'] = inspect['numCols']
+    parseResult['value_size_bytes'] = inspect['value_size_bytes']
+    return parseResult
