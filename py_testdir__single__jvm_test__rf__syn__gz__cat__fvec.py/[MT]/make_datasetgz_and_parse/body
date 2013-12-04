@@ -36,5 +36,5 @@ def make_datasetgz_and_parse(SYNDATASETS_DIR, csvFilename, hex_key, rowCount, co
         raise Exception(("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['numRows'], rowCount)))
     parseResult['numRows'] = inspect['numRows']
     parseResult['numCols'] = inspect['numCols']
-    parseResult['value_size_bytes'] = inspect['value_size_bytes']
+    parseResult['byteSize'] = inspect['byteSize']
     return parseResult
