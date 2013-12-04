@@ -20,7 +20,10 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
             print ('Node %s:' % i), 'num_cpus:', n['num_cpus'], 'my_cpu_%:', n['my_cpu_%'], 'sys_cpu_%:', n['sys_cpu_%'], 'system_load:', n['system_load']
             for stat in n:
                 if (stat in statSum):
-                    statSum[stat] += n[stat]
+                    try:
+                        statSum[stat] += n[stat]
+                    except TypeError:
+                        raise Exception(('statSum[stat] should be number %s %s' % (statSum[stat], stat)))
                 else:
                     try:
                         statSum[stat] = (n[stat] + 0.0)
