@@ -19,11 +19,11 @@
     for (int i=0; i < cols.length; ++i)     cols[i]=constantOrNAs.get(i);
     fr.remove(cols);
   }
-  _dinfo=new DataInfo(fr,true,standardize);
+  _dinfo=new DataInfo(fr,1,standardize);
   _glm=new GLMParams(family,tweedie_variance_power,link,tweedie_link_power);
   if (alpha.length > 1) {
     Job j=gridSearch(destination_key,_dinfo,_glm,lambda,alpha,n_folds);
-    return GLMProgressPage2.GLMGrid.redirect(this,j.self(),j.destination_key,API_VERSION.V_2);
+    return GLMGridView.redirect(this,j.destination_key);
   }
  else {
     start(null);

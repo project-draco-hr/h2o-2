@@ -7,7 +7,7 @@
   try {
     String[] cfs1=new String[]{"Intercept","AGE","RACE.R2","RACE.R3","DPROS","DCAPS","PSA","VOL","GLEASON"};
     double[] vals=new double[]{-8.14867,-0.01368,0.32337,-0.38028,0.55964,0.49548,0.02794,-0.01104,0.97704};
-    DataInfo dinfo=new DataInfo(fr,true,false);
+    DataInfo dinfo=new DataInfo(fr,1,false);
     GLMParams glm=new GLMParams(Family.binomial);
     new GLM2("GLM test on prostate.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).start(null).get();
     model=DKV.get(modelKey).get();
