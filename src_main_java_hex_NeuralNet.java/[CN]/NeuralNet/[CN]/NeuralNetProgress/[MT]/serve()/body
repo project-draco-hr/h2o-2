@@ -1,0 +1,9 @@
+{
+  NeuralNetModel model=UKV.get(destination_key);
+  if (model != null) {
+    training_errors=model.training_errors;
+    validation_errors=model.validation_errors;
+    confusion_matrix=model.confusion_matrix;
+  }
+  return super.serve();
+}
