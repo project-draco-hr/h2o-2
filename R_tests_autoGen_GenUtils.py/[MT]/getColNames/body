@@ -1,0 +1,7 @@
+def getColNames(datajson, dataname):
+    names = datajson[dataname]['ATTRS']['NAMES']
+    if (names[0] == 0):
+        names = [(i + 1) for i in names]
+    if (names[0] not in range(numCols)):
+        names = [(('"' + i) + '"') for i in names]
+    return names
