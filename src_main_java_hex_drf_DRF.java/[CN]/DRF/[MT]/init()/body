@@ -1,0 +1,6 @@
+{
+  super.init();
+  _mtry=(mtries == -1) ? (classification ? Math.max((int)Math.sqrt(_ncols),1) : Math.max(_ncols / 3,1)) : mtries;
+  if (!(1 <= _mtry && _mtry <= _ncols))   throw new IllegalArgumentException("Computed mtry should be in interval <1,#cols> but it is " + _mtry);
+  if (!(0.0 < sample_rate && sample_rate <= 1.0))   throw new IllegalArgumentException("Sample rate should be interval (0,1> but it is " + sample_rate);
+}

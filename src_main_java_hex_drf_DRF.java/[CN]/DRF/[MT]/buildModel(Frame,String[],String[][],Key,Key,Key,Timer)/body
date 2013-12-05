@@ -1,2 +1,25 @@
 {
+  DRFModel model=new DRFModel(outputKey,dataKey,testKey,names,domains,ntrees,max_depth,min_rows,nbins,mtries,sample_rate,seed);
+  DKV.put(outputKey,model);
+  Random rand=createRNG(seed);
+  new SetWrkTask().doAll(fr);
+  int tid=0;
+  DTree[] ktrees=null;
+  TreeStats tstats=new TreeStats();
+  for (tid=0; tid < ntrees; tid++) {
+    Timer t_kTrees=new Timer();
+    ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
+    Log.info(Sys.DRF__,"Tree " + (tid + 1) + "x"+ _nclass+ " produced in "+ t_kTrees);
+    if (cancelled())     break;
+    tstats.updateBy(ktrees);
+    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false);
+  }
+  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true);
+  if (classification && importance) {
+    float varimp[]=doVarImp(model,fr);
+    Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));
+    model=new DRFModel(model,varimp);
+    DKV.put(outputKey,model);
+  }
+  cleanUp(fr,t_build);
 }
