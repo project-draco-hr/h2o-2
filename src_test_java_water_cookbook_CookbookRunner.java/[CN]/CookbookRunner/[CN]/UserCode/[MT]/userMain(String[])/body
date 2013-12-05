@@ -1,0 +1,17 @@
+{
+  H2O.main(args);
+  TestUtil.stall_till_cloudsize(NODES);
+  List<Class> tests=new ArrayList<Class>();
+  tests.add(water.cookbook.Cookbook.class);
+  JUnitCore junit=new JUnitCore();
+  junit.addListener(new LogListener());
+  Result result=junit.run(tests.toArray(new Class[0]));
+  if (result.getFailures().size() == 0) {
+    Log.info("ALL TESTS PASSED");
+    H2O.exit(0);
+  }
+ else {
+    Log.err("SOME TESTS FAILED");
+    H2O.exit(1);
+  }
+}
