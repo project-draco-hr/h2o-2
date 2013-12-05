@@ -1,7 +1,7 @@
 {
   long processed=_training.processed();
-  float r=rate(processed);
   float m=momentum(processed);
+  float r=rate(processed) * (1 - m);
   float[] v=target();
   for (int u=0; u < _a.length; u++) {
     float e=v[u] - _a[u];

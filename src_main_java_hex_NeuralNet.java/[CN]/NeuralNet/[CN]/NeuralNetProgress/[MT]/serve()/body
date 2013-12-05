@@ -1,0 +1,24 @@
+{
+  NeuralNet job=job_key == null ? null : (NeuralNet)Job.findJob(job_key);
+  if (job != null) {
+    activation=job.activation;
+    hidden=job.hidden;
+    rate=job.rate;
+    rate_annealing=job.rate_annealing;
+    momentum_start=job.momentum_start;
+    momentum_ramp=job.momentum_ramp;
+    momentum_stable=job.momentum_stable;
+    l1=job.l1;
+    l2=job.l2;
+    epochs=job.epochs;
+    seed=job.seed;
+  }
+  NeuralNetModel model=UKV.get(destination_key);
+  if (model != null) {
+    training_errors=model.training_errors;
+    validation_errors=model.validation_errors;
+    class_names=model.classNames();
+    confusion_matrix=model.confusion_matrix;
+  }
+  return super.serve();
+}

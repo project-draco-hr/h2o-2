@@ -1,0 +1,18 @@
+{
+  int[] ports=new int[NODES];
+  for (int i=0; i < ports.length; i++)   ports[i]=54321 + i * 2;
+  String flat="";
+  for (int i=0; i < ports.length; i++)   flat+="127.0.0.1:" + ports[i] + "\n";
+  flat=Utils.writeFile(flat).getAbsolutePath();
+  for (int i=0; i < ports.length; i++) {
+    Class c;
+    if (i == 0) {
+      c=UserCode.class;
+    }
+ else {
+      c=SecondNode.class;
+    }
+    NodeCL n=new NodeCL(c,("-ip 127.0.0.1 -port " + ports[i] + " -flatfile "+ flat).split(" "));
+    n.start();
+  }
+}
