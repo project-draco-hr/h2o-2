@@ -1,4 +1,5 @@
 {
+  if (_validator != null)   _validator.validateRaw(input);
   Key k=Key.make(input);
   Value v=DKV.get(k);
   if (v == null && _mustExist)   throw new IllegalArgumentException("Key '" + input + "' does not exist!");
