@@ -1,7 +1,10 @@
 def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, doNormalized=False, **kwargs):
-    GLMModel = glm['GLMModel']
+    if h2o.beta_features:
+        GLMModel = glm['glm_model']
+    else:
+        GLMModel = glm['GLMModel']
     warnings = None
-    if ('warnings' in GLMModel):
+    if (('warnings' in GLMModel) and GLMModel['warnings']):
         warnings = GLMModel['warnings']
         x = re.compile('failed', re.IGNORECASE)
         c = re.compile('converge', re.IGNORECASE)
@@ -12,54 +15,94 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
                     pass
                 else:
                     raise Exception(w)
-    GLMParams = GLMModel['GLMParams']
+    if h2o.beta_features:
+        GLMParams = GLMModel['glm']
+    else:
+        GLMParams = GLMModel['GLMParams']
     family = GLMParams['family']
-    iterations = GLMModel['iterations']
+    if h2o.beta_features:
+        submodels0 = GLMModel['submodels'][0]
+        iterations = submodels0['iteration']
+    else:
+        iterations = GLMModel['iterations']
     print 'GLMModel/iterations:', iterations
     if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
         raise Exception(('Convergence issue? GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
-    if ('validations' not in GLMModel):
-        raise Exception(("Should be a 'validations' key in GLMModel: %s" % h2o.dump_json(GLMModel)))
-    validationsList = GLMModel['validations']
-    validations = validationsList[0]
-    n_folds = kwargs.setdefault('n_folds', None)
-    if (not ('xval_models' in validations)):
-        if (n_folds > 1):
-            raise Exception(('No cross validation models returned. Asked for ' + n_folds))
+    if h2o.beta_features:
+        if ('validation' not in submodels0):
+            raise Exception(("Should be a 'validations' key in submodels0: %s" % h2o.dump_json(submodels0)))
+        validationsList = submodels0['validation']
+        validations = validationsList
     else:
-        xval_models = validations['xval_models']
-        if (n_folds and (n_folds > 1)):
-            if (len(xval_models) != n_folds):
-                raise Exception(((len(xval_models) + ' cross validation models returned. Asked for ') + n_folds))
-        elif (len(xval_models) != 10):
-            raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
-    print 'GLMModel/validations'
-    validations['err'] = h2o_util.cleanseInfNan(validations['err'])
-    validations['nullDev'] = h2o_util.cleanseInfNan(validations['nullDev'])
-    validations['resDev'] = h2o_util.cleanseInfNan(validations['resDev'])
-    print ('%15s %s' % ('err:\t', validations['err']))
-    print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
-    print ('%15s %s' % ('resDev:\t', validations['resDev']))
+        if ('validations' not in GLMModel):
+            raise Exception(("Should be a 'validations' key in GLMModel: %s" % h2o.dump_json(GLMModel)))
+        validationsList = GLMModel['validations']
+        validations = validationsList[0]
+    n_folds = kwargs.setdefault('n_folds', None)
+    if (not h2o.beta_features):
+        if (not ('xval_models' in validations)):
+            if (n_folds > 1):
+                raise Exception(('No cross validation models returned. Asked for ' + n_folds))
+        else:
+            xval_models = validations['xval_models']
+            if (n_folds and (n_folds > 1)):
+                if (len(xval_models) != n_folds):
+                    raise Exception(((len(xval_models) + ' cross validation models returned. Asked for ') + n_folds))
+            elif (len(xval_models) != 10):
+                raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
+    if h2o.beta_features:
+        print 'GLMModel/validations'
+        validations['avg_err'] = h2o_util.cleanseInfNan(validations['avg_err'])
+        validations['null_deviance'] = h2o_util.cleanseInfNan(validations['null_deviance'])
+        validations['residual_deviance'] = h2o_util.cleanseInfNan(validations['residual_deviance'])
+        print ('%15s %s' % ('avg_err:\t', validations['avg_err']))
+        print ('%15s %s' % ('null_deviance:\t', validations['null_deviance']))
+        print ('%15s %s' % ('residual_deviance:\t', validations['residual_deviance']))
+    else:
+        print 'GLMModel/validations'
+        validations['err'] = h2o_util.cleanseInfNan(validations['err'])
+        validations['nullDev'] = h2o_util.cleanseInfNan(validations['nullDev'])
+        validations['resDev'] = h2o_util.cleanseInfNan(validations['resDev'])
+        print ('%15s %s' % ('err:\t', validations['err']))
+        print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
+        print ('%15s %s' % ('resDev:\t', validations['resDev']))
     if (family == 'binomial'):
         print ('%15s %s' % ('auc:\t', validations['auc']))
-        print ('%15s %s' % ('threshold:\t', validations['threshold']))
+        if h2o.beta_features:
+            print ('%15s %s' % ('best_threshold:\t', validations['best_threshold']))
+        else:
+            print ('%15s %s' % ('threshold:\t', validations['threshold']))
     if ((family == 'poisson') or (family == 'gaussian')):
         print ('%15s %s' % ('aic:\t', validations['aic']))
-    if math.isnan(validations['err']):
-        emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validations['err']))
-        raise Exception(emsg)
-    if math.isnan(validations['resDev']):
-        emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validations['resDev']))
-        raise Exception(emsg)
-    if math.isnan(validations['nullDev']):
-        pass
-    if doNormalized:
+    if (not h2o.beta_features):
+        if math.isnan(validations['err']):
+            emsg = ("Why is this err = 'nan'?? %6s %s" % ('err:\t', validations['err']))
+            raise Exception(emsg)
+        if math.isnan(validations['resDev']):
+            emsg = ("Why is this resDev = 'nan'?? %6s %s" % ('resDev:\t', validations['resDev']))
+            raise Exception(emsg)
+        if math.isnan(validations['nullDev']):
+            pass
+    if h2o.beta_features:
+        if doNormalized:
+            coefficients = submodels0['normalized_beta'].copy()
+        else:
+            print 'beta:', submodels0['beta']
+            coefficients = list(submodels0['beta'])
+    elif doNormalized:
         coefficients = GLMModel['normalized_coefficients'].copy()
     else:
         coefficients = GLMModel['coefficients'].copy()
-    column_names = GLMModel['column_names']
-    intercept = coefficients.pop('Intercept', None)
-    y = kwargs['y']
+    if h2o.beta_features:
+        column_names = GLMModel['_names']
+        print 'column_names:', column_names
+    else:
+        column_names = GLMModel['column_names']
+        intercept = coefficients.pop('Intercept', None)
+    if h2o.beta_features:
+        y = kwargs['response']
+    else:
+        y = kwargs['y']
 
     def add_to_coefficient_list_and_string(c, cList, cString):
         if (c in coefficients):
@@ -101,8 +144,11 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
             v = coefficients[c]
             s += abs(float(v))
         self.assertGreater(s, 1e-26, (('sum of abs. value of GLM coefficients/intercept is ' + str(s)) + ', not >= 1e-26'))
-    print 'GLMModel model time (milliseconds):', GLMModel['model_time']
-    print 'GLMModel validation time (milliseconds):', validations['val_time']
-    print 'GLMModel lsm time (milliseconds):', GLMModel['lsm_time']
+    if h2o.beta_features:
+        print 'submodels0, run_time (milliseconds):', submodels0['run_time']
+    else:
+        print 'GLMModel model time (milliseconds):', GLMModel['model_time']
+        print 'GLMModel validation time (milliseconds):', validations['val_time']
+        print 'GLMModel lsm time (milliseconds):', GLMModel['lsm_time']
     h2o.check_sandbox_for_errors()
     return (warnings, cList, intercept)
