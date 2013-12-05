@@ -24,7 +24,17 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, **kwargs):
             lineBurstCnt += 1
             sys.stdout.write(('R->' + line))
             os.write(outfd, line)
+            elapsed = (time.time() - start)
+            if (elapsed > timeout):
+                timeoutError = True
+                errors += 1
+                print ('ERROR: sh2junit: elapsed: %0.2f timeout: %s (secs) while echoing subprocess stdout' % (elapsed, timeout))
+                terminate_process_tree(ps.pid, including_parent=False)
+                break
             line = ps.stdout.readline()
+        if timeoutError:
+            print '\n\n\nERROR: timeout'
+            break
         line = ps.stderr.readline()
         while line:
             lineBurstCnt += 1
@@ -37,7 +47,7 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, **kwargs):
         (lastrc, error) = rc_if_exists_and_done(ps)
         errors += error
         elapsed = (time.time() - start)
-        if (timeout and (elapsed > timeout)):
+        if (elapsed > timeout):
             timeoutError = True
             errors += 1
             print ('ERROR: sh2junit: elapsed: %0.2f timeout: %s (secs) while echoing subprocess stdout' % (elapsed, timeout))
@@ -55,12 +65,22 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, **kwargs):
     if (not errors):
         return (errors, outpath, errpath)
     else:
+        hline = '\n===========================================BEGIN DUMP=============================================================\n'
+        hhline = '\n===========================================END DUMP=============================================================\n'
+        out = '[stdout->err]: '.join(out.splitlines(True))
+        err = '[sterr->err]: '.join(err.splitlines(True))
         if ps.is_running():
             print 'Before terminate:', ps.pid, ps.is_running()
             terminate_process_tree(ps.pid, including_parent=True)
         if sandboxErrorMessage:
-            raise Exception(('%s %s lastrc:%s errors:%s Errors found in ./sandbox log files?.\nR stdout:\n%s\n\nR stderr:\n%s' % (name, cmd_string, lastrc, errors, out, err)))
+            print '\n\n\nError in Sandbox. Ending test. Dumping sub-process output.\n'
+            print hline
+            raise Exception(('%s %s \n\tlastrc:%s \n\terrors:%s \n\tErrors found in ./sandbox log files?.\nR stdout:\n%s\n\nR stderr:\n%s\n%s' % (name, cmd_string, lastrc, errors, out, err, hhline)))
         elif timeoutError:
-            raise Exception(('%s %s lastrc:%s errors:%s timed out after %d secs. \nR stdout:\n%s\n\nR stderr:\n%s' % (name, cmd_string, lastrc, errors, (timeout or 0), out, err)))
+            print '\n\n\nTimeout Error. Ending test. Dumping sub-process output.\n'
+            print hline
+            raise Exception(('%s %s \n\tlastrc:%s \n\terrors:%s \n\ttimed out after %d secs. \nR stdout:\n%s\n\nR stderr:\n%s\n%s' % (name, cmd_string, lastrc, errors, (timeout or 0), out, err, hhline)))
         else:
-            raise Exception(('%s %s lastrc:%s errors:%s Likely non-zero exit code from R.\nR stdout:\n%s\n\nR stderr:\n%s' % (name, cmd_string, lastrc, errors, out, err)))
+            print '\n\n\nCaught exception. Ending test. Dumping sub-process output.\n'
+            print hline
+            raise Exception(('%s %s \n\tlastrc:%s \n\terrors:%s \n\tLikely non-zero exit code from R.\nR stdout:\n%s\n\nR stderr:\n%s\n%s' % (name, cmd_string, lastrc, errors, out, err, hhline)))

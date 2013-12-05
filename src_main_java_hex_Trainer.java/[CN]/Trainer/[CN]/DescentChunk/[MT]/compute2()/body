@@ -8,9 +8,17 @@
     if (output instanceof VecSoftmax)     clones[clones.length - 1]=new ChunkSoftmax(_cs[_cs.length - 1],(VecSoftmax)output);
  else     clones[clones.length - 1]=new ChunkLinear(_cs[_cs.length - 1],(VecLinear)output);
     for (int y=0; y < clones.length; y++) {
-      clones[y].init(clones,y,false,_node._total);
+      clones[y].init(clones,y,false,_node._total,null);
       clones[y]._w=_node._ws[y];
       clones[y]._b=_node._bs[y];
+      clones[y]._wm=_node._wm[y];
+      clones[y]._bm=_node._bm[y];
+      clones[y]._training=new Training(){
+        @Override long processed(){
+          return _node._total;
+        }
+      }
+;
     }
     Base base=new Base(clones);
     for (input._pos=0; input._pos < _cs[0]._len; input._pos++)     base.step();
