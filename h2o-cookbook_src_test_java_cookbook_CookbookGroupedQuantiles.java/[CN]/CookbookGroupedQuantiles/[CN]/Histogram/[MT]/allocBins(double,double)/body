@@ -1,0 +1,18 @@
+{
+  if (max - min < 1e-10) {
+    _bins=new double[1];
+    _step=1e-10;
+    _values=new double[1];
+    _values[0]=Double.NaN;
+  }
+ else {
+    int nbin=1000;
+    _step=(max - min) / (double)nbin;
+    while ((int)((max - min) / _step) >= nbin++)     ;
+    _bins=new double[nbin];
+    _values=new double[nbin];
+    for (int i=0; i < _values.length; i++) {
+      _values[i]=Double.NaN;
+    }
+  }
+}
