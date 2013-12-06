@@ -33,7 +33,7 @@ def test_RF_mnist_both(self):
         print "This is the 'ignore=' we'll use"
         ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300, forRF=True)
         ntree = 10
-        params = {'response_variable': 0, 'ignore': ignore_x, 'ntree': ntree, 'iterative_cm': 1, 'out_of_bag_error_estimate': 1, 'features': 28, 'exclusive_split_limit': None, 'depth': 2147483647, 'stat_type': 'ENTROPY', 'sampling_strategy': 'RANDOM', 'sample': 67, 'model_key': 'RF_model', 'bin_limit': 1024, 'parallel': 1, 'use_non_local_data': 0, 'class_weights': '0=1.0,1=1.0,2=1.0,3=1.0,4=1.0,5=1.0,6=1.0,7=1.0,8=1.0,9=1.0', }
+        params = {'response_variable': 0, 'ignore': ignore_x, 'ntree': ntree, 'iterative_cm': 1, 'out_of_bag_error_estimate': 1, 'features': 28, 'exclusive_split_limit': None, 'depth': 2147483647, 'stat_type': 'ENTROPY', 'sampling_strategy': 'RANDOM', 'sample': 67, 'model_key': 'RF_model', 'bin_limit': 1024, 'use_non_local_data': 0, 'class_weights': '0=1.0,1=1.0,2=1.0,3=1.0,4=1.0,5=1.0,6=1.0,7=1.0,8=1.0,9=1.0', }
         if (rfSeed is None):
             params['seed'] = random.randint(0, sys.maxint)
         else:

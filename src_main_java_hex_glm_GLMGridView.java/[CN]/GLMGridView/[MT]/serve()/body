@@ -1,0 +1,6 @@
+{
+  grid=DKV.get(grid_key).get();
+  Job j;
+  if (DKV.get(grid._jobKey) != null && (j=Job.findJob(grid._jobKey)) != null)   return Response.poll(this,(int)(100 * j.progress()),100,"grid_key",grid_key.toString());
+ else   return Response.done(this);
+}
