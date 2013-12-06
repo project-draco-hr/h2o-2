@@ -1,7 +1,7 @@
 def test_parse_syn_gz_cat(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 40000, 'cF', 600), (100, 20000, 'cF', 600), (100, 10000, 'cF', 600), (100, 5000, 'cF', 600)]
-    FILEREPL = 200
+    FILEREPL = 2
     DOSUMMARY = True
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
@@ -33,7 +33,7 @@ def test_parse_syn_gz_cat(self):
         print algo, parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         print 'Inspecting..'
         start = time.time()
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=timeoutSecs)
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'], timeoutSecs=timeoutSecs)
         print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']

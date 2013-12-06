@@ -1,10 +1,10 @@
 def test_C_kmeans_prostate(self):
     h2o.beta_features = True
-    importFolderPath = 'standard'
+    importFolderPath = 'logreg'
     csvFilename = 'prostate.csv'
     hex_key = 'prostate.hex'
     csvPathname = ((importFolderPath + '/') + csvFilename)
-    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, header=1, timeoutSecs=180)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hex_key, header=1, timeoutSecs=180)
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     print '\nStarting', csvFilename
     expected = [([43.07058823529412, 0.36470588235294116, 67.70588235294117, 1.1058823529411765, 2.3529411764705883, 1.2117647058823529, 17.33529411764706, 14.201176470588232, 6.588235294117647], 103, 0), ([166.04347826086956, 0.4658385093167702, 66.09316770186335, 1.0807453416149069, 2.3043478260869565, 1.0807453416149069, 15.0632298136646, 16.211118012422357, 6.527950310559007], 136, 0), ([313.4029850746269, 0.35074626865671643, 64.91791044776119, 1.0820895522388059, 2.1791044776119404, 1.0746268656716418, 14.601492537313437, 16.35686567164179, 6.082089552238806], 141, 0)]
