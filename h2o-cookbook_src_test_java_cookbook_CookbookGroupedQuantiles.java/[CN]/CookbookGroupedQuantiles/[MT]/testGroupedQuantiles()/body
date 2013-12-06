@@ -23,7 +23,6 @@
   new AssignCompactGroupNumber(sparse_group_number_set,sg_idx,dg_idx).doAll(fr);
   IcedHashMap<IcedLong,BasicSummary> basic_summaries=fr.with(new MyGroupBy(dg_idx)).with(new BasicSummary(val_idx)).doit();
   IcedHashMap<IcedLong,Histogram> histograms=fr.with(new MyGroupBy(dg_idx)).with(new Histogram(dg_idx,val_idx,wt_idx,false,basic_summaries)).doit();
-  Log.info("FINISHED PASS 5, CREATING FRAME OF HISTOGRAM DATA");
   AppendableVec gidVec=new AppendableVec("GID");
   AppendableVec[] avecs=new AppendableVec[1001];
   Vec[] vecs=new Vec[1001];
@@ -65,11 +64,6 @@
   fs=new Futures();
   UKV.put(histfr_key,histfr,fs);
   fs.blockForPending();
-  Log.info("BEFORE SLEEP");
-  try {
-    Thread.sleep(100000000);
-  }
- catch (  Exception e) {
-  }
   UKV.remove(k);
+  UKV.remove(histfr_key);
 }
