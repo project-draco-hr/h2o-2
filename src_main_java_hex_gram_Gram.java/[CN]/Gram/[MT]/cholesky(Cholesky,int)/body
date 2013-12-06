@@ -12,11 +12,11 @@
     double d=1.0 / (chol._diag[i]=Math.sqrt(_diag[i]));
     for (int j=0; j < denseN; ++j)     chol._xx[j][i]=d * _xx[j][i];
   }
-  Futures fs=new Futures();
+  ForkJoinTask[] fjts=new ForkJoinTask[denseN];
   final int[][] nz=new int[denseN][];
   for (int i=0; i < denseN; ++i) {
     final int fi=i;
-    fs.add(new RecursiveAction(){
+    fjts[i]=new RecursiveAction(){
       @Override protected void compute(){
         int[] tmp=new int[sparseN];
         double[] rowi=fchol._xx[fi];
@@ -25,13 +25,12 @@
         nz[fi]=Arrays.copyOf(tmp,n);
       }
     }
-.fork());
+;
   }
-  fs.blockForPending();
-  fs=new Futures();
+  ForkJoinTask.invokeAll(fjts);
   for (int i=0; i < denseN; ++i) {
     final int fi=i;
-    fs.add(new RecursiveAction(){
+    fjts[i]=new RecursiveAction(){
       @Override protected void compute(){
         double[] rowi=fchol._xx[fi];
         int[] nzi=nz[fi];
@@ -60,9 +59,9 @@
         }
       }
     }
-.fork());
+;
   }
-  fs.blockForPending();
+  ForkJoinTask.invokeAll(fjts);
   double[][] arr=new double[denseN][];
   for (int i=0; i < arr.length; ++i)   arr[i]=Arrays.copyOfRange(fchol._xx[i],sparseN,sparseN + denseN);
   start=System.currentTimeMillis();

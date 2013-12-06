@@ -1,7 +1,0 @@
-def getRanges(datajson, dataname):
-    names = getColNames(datajson, dataname)
-    ranges = datajson[dataname]['ATTRS']['RANGE']
-    ranges = [r.strip('(').strip(')').split(',') for r in ranges]
-    ranges = [list(convertSeq(seq)) for seq in ranges]
-    colValDict = dict(zip(names, ranges))
-    return colValDict

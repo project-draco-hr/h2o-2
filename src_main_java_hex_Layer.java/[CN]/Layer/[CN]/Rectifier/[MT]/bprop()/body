@@ -4,7 +4,7 @@
   float r=rate(processed) * (1 - m);
   for (int u=0; u < _a.length; u++) {
     float g=_e[u];
-    if (_a[u] < 0)     g=0;
-    bprop(u,g,r,m);
+    int todo_test_ge;
+    if (_a[u] > 0)     bprop(u,g,r,m);
   }
 }
