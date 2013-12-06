@@ -1,0 +1,24 @@
+{
+  if (this._bins == null) {
+    _min=that._min;
+    _n=that._n;
+    _step=that._step;
+    _bins=that._bins;
+    _values=that._values;
+  }
+ else   if (that._bins == null) {
+  }
+ else {
+    for (int i=0; i < _bins.length; i++) {
+      _bins[i]+=that._bins[i];
+      if (Double.isNaN(_values[i])) {
+        _values[i]=that._bins[i];
+      }
+ else       if (Double.isNaN(that._bins[i])) {
+      }
+ else {
+        _values[i]=Math.min(_values[i],that._values[i]);
+      }
+    }
+  }
+}

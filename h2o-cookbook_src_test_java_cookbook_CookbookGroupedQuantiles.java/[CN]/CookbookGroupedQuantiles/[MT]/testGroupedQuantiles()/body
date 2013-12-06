@@ -2,6 +2,7 @@
   final String INPUT_FILE_NAME="/Users/bai/testdata/year2013.csv";
   final String GROUP_COLUMN_NAME="CRSDepTime";
   final String VALUE_COLUMN_NAME="Distance";
+  final String WEIGHT_COLUMN_NAME="";
   final String KEY_STRING="year2013.hex";
   Key k=Key.make(KEY_STRING);
   Frame fr=parseFrame(k,INPUT_FILE_NAME);
@@ -14,20 +15,13 @@
   final int sg_idx=fr.find("sparse_group_number");
   final int dg_idx=fr.find("dense_group_number");
   final int val_idx=fr.find(VALUE_COLUMN_NAME);
+  final int wt_idx=fr.find(WEIGHT_COLUMN_NAME);
   new AddSparseGroupNumber(cyl_idx,sg_idx).doAll(fr);
   IcedHashMap<IcedLong,IcedLong> sparse_group_number_set=new CompactGroupNumber(sg_idx).doAll(fr).sparse_group_number_set;
   int ng=1;
   for (  IcedLong key : sparse_group_number_set.keySet())   sparse_group_number_set.put(key,new IcedLong(ng++));
   new AssignCompactGroupNumber(sparse_group_number_set,sg_idx,dg_idx).doAll(fr);
   IcedHashMap<IcedLong,BasicSummary> basic_summaries=fr.with(new MyGroupBy(dg_idx)).with(new BasicSummary(val_idx)).doit();
-  for (  IcedLong key : basic_summaries.keySet()) {
-    BasicSummary bs=basic_summaries.get(key);
-    Log.info("sgid " + key._val + "  min "+ bs._min+ "  max "+ bs._max," n " + bs._n);
-  }
-  try {
-    Thread.sleep(100000000);
-  }
- catch (  Exception e) {
-  }
+  IcedHashMap<IcedLong,Histogram> histograms=fr.with(new MyGroupBy(dg_idx)).with(new Histogram(dg_idx,val_idx,wt_idx,true,basic_summaries)).doit();
   UKV.remove(k);
 }

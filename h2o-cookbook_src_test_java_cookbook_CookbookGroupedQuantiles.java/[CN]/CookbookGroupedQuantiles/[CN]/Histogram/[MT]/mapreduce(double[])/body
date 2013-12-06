@@ -1,0 +1,19 @@
+{
+  if (_bins == null) {
+    long gid=(long)ds[_dg_idx];
+    BasicSummary bs=_bs.get(new IcedLong(gid));
+    _min=bs._min;
+    _n=bs._n;
+    allocBins(bs._min,bs._max);
+  }
+  double v=ds[_val_idx];
+  double w;
+  int ix=(int)((v - _min) / _step);
+  if (_weighted) {
+    w=ds[_wt_idx];
+    _bins[ix]+=w * v;
+  }
+ else {
+    _bins[ix]++;
+  }
+}
