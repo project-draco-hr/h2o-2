@@ -9,6 +9,8 @@
   double v=ds[_val_idx];
   double w;
   int ix=(int)((v - _min) / _step);
+  if (Double.isNaN(_values[ix]))   _values[ix]=v;
+ else   if (!Double.isNaN(v))   _values[ix]=Math.min(_values[ix],v);
   if (_weighted) {
     w=ds[_wt_idx];
     _bins[ix]+=w * v;

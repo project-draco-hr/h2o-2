@@ -22,6 +22,54 @@
   for (  IcedLong key : sparse_group_number_set.keySet())   sparse_group_number_set.put(key,new IcedLong(ng++));
   new AssignCompactGroupNumber(sparse_group_number_set,sg_idx,dg_idx).doAll(fr);
   IcedHashMap<IcedLong,BasicSummary> basic_summaries=fr.with(new MyGroupBy(dg_idx)).with(new BasicSummary(val_idx)).doit();
-  IcedHashMap<IcedLong,Histogram> histograms=fr.with(new MyGroupBy(dg_idx)).with(new Histogram(dg_idx,val_idx,wt_idx,true,basic_summaries)).doit();
+  IcedHashMap<IcedLong,Histogram> histograms=fr.with(new MyGroupBy(dg_idx)).with(new Histogram(dg_idx,val_idx,wt_idx,false,basic_summaries)).doit();
+  Log.info("FINISHED PASS 5, CREATING FRAME OF HISTOGRAM DATA");
+  AppendableVec gidVec=new AppendableVec("GID");
+  AppendableVec[] avecs=new AppendableVec[1001];
+  Vec[] vecs=new Vec[1001];
+  NewChunk[] chunks=new NewChunk[1001];
+  for (int i=1; i < 1001; i++) {
+    avecs[i]=new AppendableVec("Bin_" + i);
+    chunks[i]=new NewChunk(avecs[i],0);
+  }
+  avecs[0]=gidVec;
+  chunks[0]=new NewChunk(avecs[0],0);
+  fs=new Futures();
+  for (  IcedLong key : histograms.keySet()) {
+    Histogram hist=histograms.get(key);
+    chunks[0].addNum(key._val);
+    chunks[0].addNum(key._val);
+    double[] bins=hist._bins;
+    double[] vals=hist._values;
+    for (int i=1; i < 1001; i++) {
+      if (i - 1 < bins.length) {
+        chunks[i].addNum(bins[i - 1]);
+        chunks[i].addNum(vals[i - 1]);
+      }
+ else {
+        chunks[i].addNum(Double.NaN);
+        chunks[i].addNum(Double.NaN);
+      }
+    }
+  }
+  for (int i=0; i < chunks.length; i++) {
+    chunks[i].close(0,fs);
+    vecs[i]=avecs[i].close(fs);
+  }
+  fs.blockForPending();
+  String[] vnames=new String[1001];
+  vnames[0]="GID";
+  for (int i=1; i < 1001; i++)   vnames[i]="Bin_" + (i - 1);
+  Frame histfr=new Frame(vnames,vecs);
+  Key histfr_key=Key.make("histograms.hex");
+  fs=new Futures();
+  UKV.put(histfr_key,histfr,fs);
+  fs.blockForPending();
+  Log.info("BEFORE SLEEP");
+  try {
+    Thread.sleep(100000000);
+  }
+ catch (  Exception e) {
+  }
   UKV.remove(k);
 }
