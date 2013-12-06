@@ -2,7 +2,7 @@ def genTasks():
     jsondata = open('./smalldata.json')
     data = json.load(jsondata)
     jsondata.close()
-    tasks = open('./filterTasks', 'wb')
+    tasks = open('./tasks', 'wb')
     for FU in ['[', '<', '<=', '>', '>=', '==', '!=', makeCompound(1), makeCompound(2)]:
         achoice = None
         for i in sample(range(len(data['datasets'])), 5):

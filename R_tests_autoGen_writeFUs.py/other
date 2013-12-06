@@ -1,13 +1,14 @@
 import os
 from writers import *
-import makeFilterTasks
+from makeTestTasks import genTasks
+from GenUtils import setup_random_seed
 import GenUtils
-SEED = GenUtils.setup_random_seed()
+SEED = setup_random_seed()
 with open('seed', 'wb') as f:
     f.write(str(SEED))
-makeFilterTasks.genTasks()
+genTasks()
 os.system('git rev-parse HEAD > githash')
-with open('./filterTasks', 'rb') as f:
+with open('./tasks', 'rb') as f:
     for line in f:
         with open('task', 'wb') as g:
             g.write(line)
