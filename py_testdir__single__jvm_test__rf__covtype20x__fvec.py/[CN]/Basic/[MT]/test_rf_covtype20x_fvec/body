@@ -30,13 +30,13 @@ def test_rf_covtype20x_fvec(self):
         params = {'ntrees': 6, 'destination_key': 'RF_model', }
     else:
         paramDict = drf1ParamDict
-        params = {'ntree': 6, 'parallel': 1, 'out_of_bag_error_estimate': 0, 'model_key': 'RF_model', }
+        params = {'ntree': 6, 'out_of_bag_error_estimate': 0, 'model_key': 'RF_model', }
     colX = h2o_rf.pickRandRfParams(paramDict, params)
     kwargs = params.copy()
     if h2o.beta_features:
         timeoutSecs = (30 + (kwargs['ntrees'] * 60))
     else:
-        timeoutSecs = (30 + ((kwargs['ntree'] * 60) * ((kwargs['parallel'] and 1) or 5)))
+        timeoutSecs = (30 + (kwargs['ntree'] * 60))
     start = time.time()
     rf = h2o_cmd.runRF(parseResult=parseResultTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, **kwargs)
     print 'rf job end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
