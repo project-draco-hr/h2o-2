@@ -2,6 +2,7 @@
   final String INPUT_FILE_NAME="/Users/bai/testdata/year2013.csv";
   final String GROUP_COLUMN_NAME="CRSDepTime";
   final String VALUE_COLUMN_NAME="Distance";
+  final String WEIGHT_COLUMN_NAME="";
   final String KEY_STRING="year2013.hex";
   Key k=Key.make(KEY_STRING);
   Frame fr=parseFrame(k,INPUT_FILE_NAME);
@@ -14,20 +15,55 @@
   final int sg_idx=fr.find("sparse_group_number");
   final int dg_idx=fr.find("dense_group_number");
   final int val_idx=fr.find(VALUE_COLUMN_NAME);
+  final int wt_idx=fr.find(WEIGHT_COLUMN_NAME);
   new AddSparseGroupNumber(cyl_idx,sg_idx).doAll(fr);
   IcedHashMap<IcedLong,IcedLong> sparse_group_number_set=new CompactGroupNumber(sg_idx).doAll(fr).sparse_group_number_set;
   int ng=1;
   for (  IcedLong key : sparse_group_number_set.keySet())   sparse_group_number_set.put(key,new IcedLong(ng++));
   new AssignCompactGroupNumber(sparse_group_number_set,sg_idx,dg_idx).doAll(fr);
   IcedHashMap<IcedLong,BasicSummary> basic_summaries=fr.with(new MyGroupBy(dg_idx)).with(new BasicSummary(val_idx)).doit();
-  for (  IcedLong key : basic_summaries.keySet()) {
-    BasicSummary bs=basic_summaries.get(key);
-    Log.info("sgid " + key._val + "  min "+ bs._min+ "  max "+ bs._max," n " + bs._n);
+  IcedHashMap<IcedLong,Histogram> histograms=fr.with(new MyGroupBy(dg_idx)).with(new Histogram(dg_idx,val_idx,wt_idx,false,basic_summaries)).doit();
+  AppendableVec gidVec=new AppendableVec("GID");
+  AppendableVec[] avecs=new AppendableVec[1001];
+  Vec[] vecs=new Vec[1001];
+  NewChunk[] chunks=new NewChunk[1001];
+  for (int i=1; i < 1001; i++) {
+    avecs[i]=new AppendableVec("Bin_" + i);
+    chunks[i]=new NewChunk(avecs[i],0);
   }
-  try {
-    Thread.sleep(100000000);
+  avecs[0]=gidVec;
+  chunks[0]=new NewChunk(avecs[0],0);
+  fs=new Futures();
+  for (  IcedLong key : histograms.keySet()) {
+    Histogram hist=histograms.get(key);
+    chunks[0].addNum(key._val);
+    chunks[0].addNum(key._val);
+    double[] bins=hist._bins;
+    double[] vals=hist._values;
+    for (int i=1; i < 1001; i++) {
+      if (i - 1 < bins.length) {
+        chunks[i].addNum(bins[i - 1]);
+        chunks[i].addNum(vals[i - 1]);
+      }
+ else {
+        chunks[i].addNum(Double.NaN);
+        chunks[i].addNum(Double.NaN);
+      }
+    }
   }
- catch (  Exception e) {
+  for (int i=0; i < chunks.length; i++) {
+    chunks[i].close(0,fs);
+    vecs[i]=avecs[i].close(fs);
   }
+  fs.blockForPending();
+  String[] vnames=new String[1001];
+  vnames[0]="GID";
+  for (int i=1; i < 1001; i++)   vnames[i]="Bin_" + (i - 1);
+  Frame histfr=new Frame(vnames,vecs);
+  Key histfr_key=Key.make("histograms.hex");
+  fs=new Futures();
+  UKV.put(histfr_key,histfr,fs);
+  fs.blockForPending();
   UKV.remove(k);
+  UKV.remove(histfr_key);
 }
