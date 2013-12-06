@@ -36,7 +36,6 @@ def test_c6_maprfs(self):
         parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, pollTimeoutSecs=360, doSummary=True, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
         if h2o.beta_features:
             h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
-        print csvFilename, 'parse time:', parseResult['response']['time']
         print 'parse result:', parseResult['destination_key']
         elapsed = (time.time() - start)
         fileMBS = ((totalBytes / 1000000.0) / elapsed)
