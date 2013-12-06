@@ -17,12 +17,12 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
         cloudStatus = h2o.nodes[0].get_cloud(timeoutSecs=timeoutSecs)
         nodes = cloudStatus['nodes']
         for (i, n) in enumerate(nodes):
-            print ('Node %s:' % i), 'num_cpus:', n['num_cpus'], 'my_cpu_%:', n['my_cpu_%'], 'sys_cpu_%:', n['sys_cpu_%'], 'system_load:', n['system_load'], 'free_mem_bytes', n['free_mem_bytes']
+            print ('Node %s:' % i), 'num_cpus:', n['num_cpus'], 'my_cpu_%:', n['my_cpu_%'], 'sys_cpu_%:', n['sys_cpu_%'], 'system_load:', n['system_load'], 'free_mem_bytes: {:,}'.format(n['free_mem_bytes'])
             freeMemBytes = n['free_mem_bytes']
-            decrease = round((((0.0 + lastFreeMemBytes[i]) - freeMemBytes) / lastFreeMemBytes[i]), 2)
+            decrease = round((((0.0 + lastFreeMemBytes[i]) - freeMemBytes) / lastFreeMemBytes[i]), 3)
             if (decrease > 0.05):
                 print 
-                print ('\nProbably GC at Node %s:' % i), ('free_mem_bytes decreased by %s pct.. %s %s' % ((100 * decrease), lastFreeMemBytes[i], freeMemBytes))
+                print '\nProbably GC at Node {:,s}: free_mem_bytes decreased by %s pct.. {:,} {:,}'.format((100 * decrease), lastFreeMemBytes[i], freeMemBytes)
                 lastFreeMemBytes[i] = freeMemBytes
             if (freeMemBytes > lastFreeMemBytes[i]):
                 lastFreeMemBytes[i] = freeMemBytes

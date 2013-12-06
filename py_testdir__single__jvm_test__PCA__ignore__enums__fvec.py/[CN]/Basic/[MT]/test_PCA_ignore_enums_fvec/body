@@ -1,7 +1,7 @@
 def test_PCA_ignore_enums_fvec(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100001, 2, 'cA', 300)]
+    tryList = [(10001, 3, 'cA', 300)]
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -28,7 +28,8 @@ def test_PCA_ignore_enums_fvec(self):
             kwargs = params.copy()
             PCAResult = {'python_elapsed': 0, 'python_%timeout': 0, }
             start = time.time()
-            pcaResult = h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+            pcaResult = h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
+            h2j.pollStatsWhileBusy(timeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             PCAResult['python_elapsed'] = elapsed
             PCAResult['python_%timeout'] = ((1.0 * elapsed) / timeoutSecs)
