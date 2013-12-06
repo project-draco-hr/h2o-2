@@ -22,7 +22,7 @@ def test_rf_syn_gz_cat(self):
             print 'RF end on ', parseResult['destination_key'], 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView)
             algo = 'RF '
-            l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs. trees: {:d} Error: {:6.2f}                     numRows: {:d} numCols: {:d} value_size_bytes: {:d}'.format(len(h2o.nodes), tryHeap, algo, parseResult['destination_key'], elapsed, kwargs['ntrees'], classification_error, parseResult['numRows'], parseResult['numCols'], parseResult['byteSize'])
+            l = '{:d} jvms, {:d}GB heap, {:s} {:s} {:6.2f} secs. trees: {:d} Error: {:6.2f}                     numRows: {:d} numCols: {:d} byteSize: {:d}'.format(len(h2o.nodes), tryHeap, algo, parseResult['destination_key'], elapsed, kwargs['ntrees'], classification_error, parseResult['numRows'], parseResult['numCols'], parseResult['byteSize'])
             print l
             h2o.cloudPerfH2O.message(l)
         print 'Trial #', trial, 'completed'
