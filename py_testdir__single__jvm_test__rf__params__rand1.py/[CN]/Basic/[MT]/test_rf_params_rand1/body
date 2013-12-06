@@ -1,11 +1,11 @@
 def test_rf_params_rand1(self):
     csvPathname = 'poker/poker1000'
     for trial in range(10):
-        params = {'ntree': 63, 'parallel': 1, 'use_non_local_data': 1, }
+        params = {'ntree': 63, 'use_non_local_data': 1, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         kwargs = params.copy()
         print kwargs
-        timeoutSecs = (30 + ((kwargs['ntree'] * 6) * ((kwargs['parallel'] and 1) or 5)))
+        timeoutSecs = (30 + (kwargs['ntree'] * 6))
         parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=timeoutSecs)
         h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'Trial #', trial, 'completed'
