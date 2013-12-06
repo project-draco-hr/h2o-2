@@ -4,6 +4,7 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
     start = time.time()
     polls = 0
     statSum = {}
+    lastFreeMemBytes = [1 for i in range(32)]
     while busy:
         polls += 1
         a = h2o.nodes[0].jobs_admin(timeoutSecs=10)
@@ -15,9 +16,16 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
                 break
         cloudStatus = h2o.nodes[0].get_cloud(timeoutSecs=timeoutSecs)
         nodes = cloudStatus['nodes']
-        print '\n'
         for (i, n) in enumerate(nodes):
-            print ('Node %s:' % i), 'num_cpus:', n['num_cpus'], 'my_cpu_%:', n['my_cpu_%'], 'sys_cpu_%:', n['sys_cpu_%'], 'system_load:', n['system_load']
+            print ('Node %s:' % i), 'num_cpus:', n['num_cpus'], 'my_cpu_%:', n['my_cpu_%'], 'sys_cpu_%:', n['sys_cpu_%'], 'system_load:', n['system_load'], 'free_mem_bytes', n['free_mem_bytes']
+            freeMemBytes = n['free_mem_bytes']
+            decrease = round((((0.0 + lastFreeMemBytes[i]) - freeMemBytes) / lastFreeMemBytes[i]), 2)
+            if (decrease > 0.05):
+                print 
+                print ('\nProbably GC at Node %s:' % i), ('free_mem_bytes decreased by %s pct.. %s %s' % ((100 * decrease), lastFreeMemBytes[i], freeMemBytes))
+                lastFreeMemBytes[i] = freeMemBytes
+            if (freeMemBytes > lastFreeMemBytes[i]):
+                lastFreeMemBytes[i] = freeMemBytes
             for stat in n:
                 if (stat in statSum):
                     try:
