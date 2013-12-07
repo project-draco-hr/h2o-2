@@ -1,4 +1,5 @@
-def test_exec_import_hosts(self):
+def test_exec2_col_scalar(self):
+    h2o.beta_features = True
     if localhost:
         maxTrials = 200
         csvFilenameAll = [('covtype.data', 'cA', 15)]
@@ -12,7 +13,6 @@ def test_exec_import_hosts(self):
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvPathname = ((importFolderPath + '/') + csvFilename)
         parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=2000)
-        print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
