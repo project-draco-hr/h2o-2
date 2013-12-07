@@ -21,23 +21,16 @@ def test_RF_mnist_fvec(self):
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
         print "This is the 'ignore=' we'll use"
-        x = range(1, 50)
-
-        def cit(i):
-            return ('C' + str(i))
-        cols = ','.join(map(cit, x))
-        print 'cols:', cols
-        ntree = 10
-        params = {'response': ('C' + str(y)), 'cols': cols, 'ignored_cols_by_name': None, 'classification': None, 'validation': None, 'ntrees': 2, 'max_depth': None, 'min_rows': None, 'nbins': 10000, 'mtries': None, 'sample_rate': 0.66, 'seed': None, }
+        ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300, forRF=True)
+        params = {'response': ('C' + str(y)), 'cols': None, 'ignored_cols_by_name': ignore_x, 'classification': 1, 'validation': None, 'ntrees': 10, 'max_depth': 20, 'min_rows': None, 'nbins': 1000, 'mtries': None, 'sample_rate': 0.66, 'seed': None, }
     rfViewInitial = []
     for jobDispatch in range(1):
         params['destination_key'] = ('RFModel_' + str('jobDispatch'))
         kwargs = params.copy()
-        timeoutSecs = (30 + (kwargs['ntrees'] * 20))
+        timeoutSecs = 1200
         start = time.time()
-        rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not POLL), rfView=POLL, **kwargs)
+        rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not DO_POLL), rfView=DO_POLL, **kwargs)
         elapsed = (time.time() - start)
-        print h2o.dump_json(rfResult)
         print 'rf job dispatch end on ', trainCsvFilename, 'took', (time.time() - start), 'seconds'
         print '\njobDispatch #', jobDispatch
         rfView = {}
@@ -45,22 +38,23 @@ def test_RF_mnist_fvec(self):
         rfView['model_key'] = kwargs['destination_key']
         rfView['ntrees'] = kwargs['ntrees']
         rfViewInitial.append(rfView)
-        if (not POLL):
-            h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=120, retryDelaySecs=5)
-        print 'rfViewInitial', rfViewInitial
-        for rfView in rfViewInitial:
-            print 'Checking completed job:', rfView
-            print 'rfView', h2o.dump_json(rfView)
-            data_key = rfView['data_key']
-            model_key = rfView['model_key']
-            ntrees = rfView['ntrees']
-            rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, noPoll=(not POLL), doSimpleCheck=False)
-            if (not POLL):
-                h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
-            print 'rfView:', h2o.dump_json(rfView)
-            rf_model = rfView['drf_model']
-            cm = rf_model['cm']
-            ntrees = rf_model['N']
-            errs = rf_model['errs']
-            N = rf_model['N']
-            predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=data_key)
+        if (not DO_POLL):
+            h2o_jobs.pollStatsWhileBusy(timeoutSecs=1200, pollTimeoutSecs=120, retryDelaySecs=5)
+    print 'rfViewInitial', rfViewInitial
+    for rfView in rfViewInitial:
+        print 'Checking completed job:', rfView
+        print 'rfView', h2o.dump_json(rfView)
+        data_key = rfView['data_key']
+        model_key = rfView['model_key']
+        ntrees = rfView['ntrees']
+        rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, noPoll=(not DO_POLL), doSimpleCheck=False)
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView)
+        self.assertAlmostEqual(classification_error, 10, delta=2, msg=('Classification error %s differs too much' % classification_error))
+        if (not DO_POLL):
+            h2o_jobs.pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=120, retryDelaySecs=5)
+        rf_model = rfView['drf_model']
+        cm = rf_model['cm']
+        ntrees = rf_model['N']
+        errs = rf_model['errs']
+        N = rf_model['N']
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=data_key)
