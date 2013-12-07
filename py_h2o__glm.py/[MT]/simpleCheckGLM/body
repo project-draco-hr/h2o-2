@@ -94,8 +94,12 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     else:
         coefficients = GLMModel['coefficients'].copy()
     if h2o.beta_features:
-        column_names = GLMModel['_names']
+        coefficients_names = GLMModel['coefficients_names']
+        idxs = GLMModel['idxs']
+        for i in idxs:
+            column_names = coefficient_names[i]
         print 'column_names:', column_names
+        intercept = coefficients.pop('Intercept', None)
     else:
         column_names = GLMModel['column_names']
         intercept = coefficients.pop('Intercept', None)
