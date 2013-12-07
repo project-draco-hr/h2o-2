@@ -8,7 +8,7 @@
     Frame fr=getFrameForFile(parsed,"smalldata/cars.csv",ignores,response);
     DataInfo dinfo=new DataInfo(fr,1,true);
     GLMParams glm=new GLMParams(Family.poisson,0,Family.poisson.defaultLink,0);
-    new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).start(null).get();
+    new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
     HashMap<String,Double> coefs=model.coefficients();
     String[] cfs1=new String[]{"Intercept","economy (mpg)","cylinders","displacement (cc)","weight (lb)","0-60 mph (s)","year"};
@@ -18,7 +18,7 @@
     model.delete();
     dinfo=new DataInfo(fr,1,true);
     glm=new GLMParams(Family.gamma,0,Family.gamma.defaultLink,0);
-    new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).start(null).get();
+    new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
     coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls2[i],coefs.get(cfs1[i]),1e-4);
@@ -26,7 +26,7 @@
     double[] vls3=new double[]{166.95862,-0.00531,-2.46690,0.12635,0.02159,-4.66995,-0.85724};
     glm=new GLMParams(Family.gaussian);
     dinfo=new DataInfo(fr,1,true);
-    new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).start(null).get();
+    new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
     coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls3[i],coefs.get(cfs1[i]),1e-4);

@@ -1,8 +1,5 @@
 {
   init();
-  if (this.destination_key == null) {
-    this.destination_key=Key.make("GLM<" + family + ">("+ SOURCE_KEY.toString()+ ")"+ Key.make().toString());
-  }
   link=family.defaultLink;
   tweedie_link_power=1 - tweedie_variance_power;
   Frame fr=new Frame(source._names.clone(),source.vecs().clone());
@@ -22,11 +19,15 @@
   _dinfo=new DataInfo(fr,1,standardize);
   _glm=new GLMParams(family,tweedie_variance_power,link,tweedie_link_power);
   if (alpha.length > 1) {
-    Job j=gridSearch(destination_key,_dinfo,_glm,lambda,alpha,n_folds);
+    if (destination_key == null)     destination_key=Key.make("GLMGridModel_" + Key.make());
+    if (job_key == null)     job_key=Key.make("GLMGridJob_" + Key.make());
+    Job j=gridSearch(self(),destination_key,_dinfo,_glm,lambda,alpha,n_folds);
     return GLMGridView.redirect(this,j.destination_key);
   }
  else {
-    start(null);
+    if (destination_key == null)     destination_key=Key.make("GLMModel_" + Key.make());
+    if (job_key == null)     job_key=Key.make("GLM2Job_" + Key.make());
+    fork();
     return GLMProgressPage2.redirect(this,self(),dest());
   }
 }

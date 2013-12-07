@@ -26,9 +26,7 @@ def test_c6_maprfs(self):
             if (csvPathname in f['key']):
                 foundIt = f
                 break
-        if foundIt:
-            value_size_bytes = f['value_size_bytes']
-        else:
+        if (not foundIt):
             raise Exception(('Should have found %s in the imported keys for %s' % (importPattern, csvPathname)))
         totalBytes = value_size_bytes
         print 'Loading', csvFilename, 'from maprfs'
@@ -39,7 +37,7 @@ def test_c6_maprfs(self):
         print 'parse result:', parseResult['destination_key']
         elapsed = (time.time() - start)
         fileMBS = ((totalBytes / 1000000.0) / elapsed)
-        l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f}MB {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, ((totalBytes + 0.0) / 1000000.0), fileMBS, elapsed)
+        l = '{!s} jvms, {!s}GB heap, {:s} {:s} for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, elapsed)
         print ('\n' + l)
         h2o.cloudPerfH2O.message(l)
         if DO_RF:

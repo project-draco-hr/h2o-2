@@ -9,7 +9,7 @@
     double[] vals=new double[]{-8.14867,-0.01368,0.32337,-0.38028,0.55964,0.49548,0.02794,-0.01104,0.97704};
     DataInfo dinfo=new DataInfo(fr,1,false);
     GLMParams glm=new GLMParams(Family.binomial);
-    new GLM2("GLM test on prostate.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).start(null).get();
+    new GLM2("GLM test on prostate.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
     HashMap<String,Double> coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vals[i],coefs.get(cfs1[i]),1e-4);
