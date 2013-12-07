@@ -1,3 +1,8 @@
 {
-  callback((T)caller);
+  try {
+    callback((T)caller);
+  }
+ catch (  Throwable ex) {
+    completeExceptionally(ex);
+  }
 }
