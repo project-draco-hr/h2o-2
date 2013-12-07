@@ -27,10 +27,10 @@ def test_c6_maprfs(self):
                 foundIt = f
                 break
         if foundIt:
-            byteSize = f['byteSize']
+            value_size_bytes = f['value_size_bytes']
         else:
             raise Exception(('Should have found %s in the imported keys for %s' % (importPattern, csvPathname)))
-        totalBytes = byteSize
+        totalBytes = value_size_bytes
         print 'Loading', csvFilename, 'from maprfs'
         start = time.time()
         parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, pollTimeoutSecs=360, doSummary=True, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
