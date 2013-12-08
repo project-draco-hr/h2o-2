@@ -1,0 +1,22 @@
+{
+  String fileName="../smalldata/airlines/allyears2k_headers.zip";
+  Key resultFrameKey=Key.make("allyears2k_headers.hex");
+  File file=new File(fileName);
+  Key tmpKey=NFSFileVec.make(file);
+  Key[] arrayOfKeysToParse=new Key[]{tmpKey};
+  Frame fr;
+  try {
+    fr=ParseDataset2.parse(resultFrameKey,arrayOfKeysToParse);
+  }
+  finally {
+    UKV.remove(tmpKey);
+  }
+  Log.info("======================================================================");
+  Log.info("Number of columns: " + fr.numCols());
+  String[] columnNames=fr.names();
+  Log.info("Column names:");
+  for (  String s : columnNames) {
+    Log.info("    " + s);
+  }
+  UKV.remove(resultFrameKey);
+}
