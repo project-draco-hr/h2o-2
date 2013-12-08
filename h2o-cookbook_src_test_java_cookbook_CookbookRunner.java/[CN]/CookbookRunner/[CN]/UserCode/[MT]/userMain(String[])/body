@@ -2,7 +2,9 @@
   H2O.main(args);
   TestUtil.stall_till_cloudsize(NODES);
   List<Class> tests=new ArrayList<Class>();
-  tests.add(cookbook.CookbookGroupedQuantiles.class);
+  tests.add(H2OCookbook.class);
+  tests.add(FrameCookbook.class);
+  tests.add(cookbook.GroupedQuantilesCookbook.class);
   JUnitCore junit=new JUnitCore();
   junit.addListener(new LogListener());
   Result result=junit.run(tests.toArray(new Class[0]));
