@@ -26,11 +26,12 @@ def test_GLM2_basic(self):
     if (1 == 0):
         job_key = glmResult['job_key']
         params = {'job_key': job_key, 'destination_key': modelKey, }
-        a = h2o.nodes[0].completion_redirect(jsonRequest='2/GLMProgressPage2.json', params=params)
+        glm = h2o.nodes[0].completion_redirect(jsonRequest='2/GLMProgressPage2.json', params=params)
         print 'GLM result from completion_redirect:', h2o.dump_json(a)
     if (1 == 1):
-        a = h2o.nodes[0].glm_view(_modelKey=modelKey)
-    glm_model = a['glm_model']
+        glm = h2o.nodes[0].glm_view(_modelKey=modelKey)
+    h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+    glm_model = glm['glm_model']
     _names = glm_model['_names']
     coefficients_names = glm_model['coefficients_names']
     submodels = glm_model['submodels'][0]
