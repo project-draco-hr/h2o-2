@@ -11,9 +11,13 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             if (response_info['status'] != 'done'):
                 redirect_url = response_info['redirect_url']
                 if (('NeuralNetProgress' in str(redirect_url)) or ('PCAProgressPage' in str(redirect_url))):
-                    print 'Hacking in the 2/ prefix..tell cyprien'
                     if ('2/' not in str(redirect_url)):
+                        print 'Hacking in the 2/ prefix..need to fix h2o?'
                         redirect_url = ('2/' + redirect_url)
+                if ('DRFProgressPage' in str(redirect_url)):
+                    if ('2/' not in str(redirect_url)):
+                        print 'Hacking in the 2/ prefix..need to fix h2o?'
+                        redirect_url = ('2' + redirect_url)
                 if redirect_url:
                     url = self.__url(redirect_url)
                     params = None
