@@ -61,7 +61,6 @@ def test_GBM_covtype_train_test(self):
                 h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
-            print 'This is crazy!'
             gbmPredictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseTestResult['destination_key'], vactual=response, predict=predictKey, vpredict='predict')
             cm = gbmPredictCMResult['cm']
             pctWrong = h2o_gbm.pp_cm_summary(cm)

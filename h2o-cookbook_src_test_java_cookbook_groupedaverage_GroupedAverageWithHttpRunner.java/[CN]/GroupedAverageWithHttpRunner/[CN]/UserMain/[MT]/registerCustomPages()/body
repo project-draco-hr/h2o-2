@@ -1,0 +1,11 @@
+{
+  try {
+    Request r=(Request)Class.forName("cookbook.groupedaverage.GroupedAverage").newInstance();
+    Request.addToNavbar(RequestServer.registerRequest(r),"Grouped Average","Grouped");
+    Request.initializeNavBar();
+    System.out.println("Pages added.");
+  }
+ catch (  Exception e) {
+    Log.err(e);
+  }
+}
