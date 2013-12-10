@@ -17,11 +17,9 @@ def test_GLM2_covtype_1(self):
         if DO_POLL:
             pass
         else:
-            h2o_jobs.pollWaitJobs(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
-        print 'FIX! how do we get the GLM result'
-        params = {'job_key': jobKey, 'destination_key': modelKey, }
-        a = h2o.nodes[0].completion_redirect(jsonRequest='2/GLMProgressPage2.json', params=params)
-        print 'GLM result from completion_redirect:', h2o.dump_json(a)
+            h2o_jobs.pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=300, retryDelaySecs=5)
+        params = {'_modelKey': modelKey, }
+        a = h2o.nodes[0].completion_redirect(jsonRequest='2/GLMModelView.json', params=params)
     glmFirstResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=(not DO_POLL), **kwargs)
     completionHack(glmFirstResult['job_key'], modelKey)
     print 'glm (L2) end on ', csvPathname, 'took', (time.time() - start), 'seconds'
