@@ -84,23 +84,25 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         if math.isnan(validations['nullDev']):
             pass
     if h2o.beta_features:
-        if doNormalized:
-            coefficients = submodels0['normalized_beta'].copy()
-        else:
-            print 'beta:', submodels0['beta']
-            coefficients = list(submodels0['beta'])
-    elif doNormalized:
-        coefficients = GLMModel['normalized_coefficients'].copy()
-    else:
-        coefficients = GLMModel['coefficients'].copy()
-    if h2o.beta_features:
         coefficients_names = GLMModel['coefficients_names']
-        idxs = GLMModel['idxs']
-        for i in idxs:
-            column_names = coefficient_names[i]
-        print 'column_names:', column_names
+        idxs = submodels0['idxs']
+        column_names = [coefficients_names[i] for i in idxs]
+        if doNormalized:
+            beta = submodels0['normalized_beta']
+        else:
+            beta = submodels0['beta']
+        coefficients = {}
+        for (n, b) in zip(column_names, beta):
+            coefficients[n] = b
+        print 'HELLO: coefficients:', coefficients
+        print 'HELLO: beta:', beta
         intercept = coefficients.pop('Intercept', None)
+        column_names.pop()
     else:
+        if doNormalized:
+            coefficients = GLMModel['normalized_coefficients'].copy()
+        else:
+            coefficients = GLMModel['coefficients'].copy()
         column_names = GLMModel['column_names']
         intercept = coefficients.pop('Intercept', None)
     if h2o.beta_features:
