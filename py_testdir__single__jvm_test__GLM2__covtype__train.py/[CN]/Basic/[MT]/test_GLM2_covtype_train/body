@@ -18,7 +18,7 @@ def test_GLM2_covtype_train(self):
     trainDataKey = 'rTrain'
     testDataKey = 'rTest'
     h2o_cmd.createTestTrain(srcKey=hex_key, trainDstKey=trainDataKey, testDstKey=testDataKey, trainPercent=90)
-    kwargs = {'response': 'C54', 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', 'case_mode': '=', 'case_val': 4, }
+    kwargs = {'response': 'C54', 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', 'case_mode': '=', 'case_val': 4, 'classification': 1, }
     timeoutSecs = 60
     for trial in range(10):
         rowsToUse = rowsForPct[(trial % 10)]
@@ -29,13 +29,25 @@ def test_GLM2_covtype_train(self):
         print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         modelKey = glm['glm_model']['_selfKey']
+        if (1 == 0):
+            start = time.time()
+            glmScore = h2o_cmd.runGLMScore(key=testDataKey, model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)
+            print 'glmScore end on ', testDataKey, 'took', (time.time() - start), 'seconds'
+            classErr = glmScore['validation']['classErr']
+            auc = glmScore['validation']['auc']
+            err = glmScore['validation']['err']
+            print 'classErr:', classErr
+            print 'err:', err
+            print 'auc:', auc
+        parseKey = parseResult['destination_key']
+        predictKey = 'Predict.hex'
+        h2e.exec_expr(execExpr='Z.hex=rTest;rTest[,54+1]=(rTest[,54+1]==4)', timeoutSecs=30)
         start = time.time()
-        glmScore = h2o_cmd.runGLMScore(key=testDataKey, model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)
-        print 'glmScore end on ', testDataKey, 'took', (time.time() - start), 'seconds'
-        classErr = glmScore['validation']['classErr']
-        auc = glmScore['validation']['auc']
-        err = glmScore['validation']['err']
-        print 'classErr:', classErr
-        print 'err:', err
-        print 'auc:', auc
+        predictResult = h2o_cmd.runPredict(data_key='Z.hex', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='Z.hex', vactual='C54', predict=predictKey, vpredict='predict')
+        cm = predictCMResult['cm']
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        self.assertLess(pctWrong, 8, 'Should see less than 7% error (class = 4)')
+        print '\nTest\n==========\n'
+        print h2o_gbm.pp_cm(cm)
         print 'Trial #', trial, 'completed', ('using %6.2f' % ((rowsToUse * 100.0) / numRows)), 'pct. of all rows'
