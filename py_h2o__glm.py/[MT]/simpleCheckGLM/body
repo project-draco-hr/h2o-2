@@ -86,16 +86,26 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if h2o.beta_features:
         coefficients_names = GLMModel['coefficients_names']
         idxs = submodels0['idxs']
-        column_names = [coefficients_names[i] for i in idxs]
+        column_names = coefficients_names
         if doNormalized:
             beta = submodels0['normalized_beta']
+            if (len(column_names) != len(beta)):
+                print len(column_names), len(beta)
+                raise Exception(('column_names and normalized_beta from h2o json not same length. column_names: %s normalized_beta: %s' % (column_names, beta)))
         else:
             beta = submodels0['beta']
+            if (len(column_names) != len(beta)):
+                print len(column_names), len(beta)
+                raise Exception(('column_names and beta from h2o json not same length. column_names: %s beta: %s' % (column_names, beta)))
         coefficients = {}
         for (n, b) in zip(column_names, beta):
             coefficients[n] = b
         print 'HELLO: coefficients:', coefficients
         print 'HELLO: beta:', beta
+        print 'intercept demapping info:', 'column_names[-i]:', column_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficient_names[[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta[-1]:', beta[(-1)], "coefficients['Intercept']", coefficients['Intercept']
+        for i in idxs:
+            if (beta[i] == 0.0):
+                raise Exception("idxs shouldn't point to any 0 coefficients i: %s beta[i]:"(i, beta[i]))
         intercept = coefficients.pop('Intercept', None)
         column_names.pop()
     else:
@@ -105,6 +115,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
             coefficients = GLMModel['coefficients'].copy()
         column_names = GLMModel['column_names']
         intercept = coefficients.pop('Intercept', None)
+        print 'First intercept:', intercept
     if h2o.beta_features:
         y = kwargs['response']
     else:
