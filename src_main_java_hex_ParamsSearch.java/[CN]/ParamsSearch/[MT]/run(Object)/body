@@ -16,8 +16,9 @@
           f.setAccessible(true);
           if ((f.getModifiers() & Modifier.STATIC) == 0 && !ignore(f)) {
             Object v=f.get(expanded.get(i));
-            if (v instanceof Number || (_booleans && v instanceof Boolean)) {
+            if (v instanceof Number || v instanceof Boolean) {
               Param param=new Param();
+              for (              Annotation a : f.getAnnotations())               if (a.annotationType() == Info.class)               param._info=(Info)a;
               param._objectIndex=i;
               param._field=f;
               if (v instanceof Boolean)               param._initial=((Boolean)v).booleanValue() ? 1 : 0;
@@ -36,7 +37,7 @@
       for (int i=0; i < _params.length; i++)       modify(expanded,i);
     }
   }
- catch (  IllegalAccessException ex) {
+ catch (  Exception ex) {
     throw new RuntimeException(ex);
   }
 }

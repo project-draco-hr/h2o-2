@@ -6,7 +6,8 @@
     }
   }
  else {
-    double delta=_best * _rate;
+    if (_info == null)     _info=Param.class.getField("defaults").getAnnotation(Info.class);
+    double delta=(_best - _info.origin()) * _rate;
     double min=_best - delta, max=_best + delta;
     _last=min + _rand.nextDouble() * (max - min);
     if (_field.getType() == float.class)     _field.set(o,(float)_last);
