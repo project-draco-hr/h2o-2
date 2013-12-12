@@ -54,7 +54,7 @@
     AddJar task=new AddJar();
     task._data=mem.toByteArray();
     task.invokeOnAllNodes();
-    Class c=Class.forName(job_class + "_" + uid);
+    Class c=Class.forName(job_class + uid);
     job=(Job)c.newInstance();
     job.fork();
   }

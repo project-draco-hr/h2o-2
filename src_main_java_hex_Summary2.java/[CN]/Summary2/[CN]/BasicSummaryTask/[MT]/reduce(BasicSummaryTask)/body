@@ -1,0 +1,8 @@
+{
+  for (int c=0; c < _finite_min.length; c++) {
+    double min=_finite_min[c];
+    double max=_finite_max[c];
+    _finite_min[c]=Double.isNaN(min) ? other._finite_min[c] : Math.min(min,other._finite_min[c]);
+    _finite_max[c]=Double.isNaN(max) ? other._finite_max[c] : Math.max(max,other._finite_max[c]);
+  }
+}
