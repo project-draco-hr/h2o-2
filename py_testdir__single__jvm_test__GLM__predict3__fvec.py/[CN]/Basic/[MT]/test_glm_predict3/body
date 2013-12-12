@@ -62,13 +62,20 @@ def test_glm_predict3(self):
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     trainKey = parseResult['destination_key']
     y = 54
+    CLASS = 1
     if DO_BUG:
-        execExpr = ('A.hex=%s;A.hex[,%s]=(A.hex[,%s]!=%s)' % (trainKey, (y + 1), (y + 1), 4))
+        if DO_BUG2:
+            execExpr = ('A.hex=%s;A.hex[,%s]=(A.hex[,%s]!=%s)' % (trainKey, (y + 1), (y + 1), CLASS))
+        else:
+            execExpr = ('A.hex=%s;A.hex[,%s]=(A.hex[,%s]==%s)' % (trainKey, (y + 1), (y + 1), CLASS))
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     else:
         execExpr = ('A.hex=%s' % trainKey)
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-        execExpr = ('A.hex[,%s]=(A.hex[,%s]!=%s)' % ((y + 1), (y + 1), 4))
+        if DO_BUG2:
+            execExpr = ('A.hex[,%s]=(A.hex[,%s]!=%s)' % ((y + 1), (y + 1), CLASS))
+        else:
+            execExpr = ('A.hex[,%s]=(A.hex[,%s]==%s)' % ((y + 1), (y + 1), CLASS))
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     max_iter = 8
     kwargs = {'classification': 1, 'response': ('C' + str(y)), 'family': 'binomial', 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
