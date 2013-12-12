@@ -24,24 +24,14 @@ def test_GLM2_covtype_train(self):
         rowsToUse = rowsForPct[(trial % 10)]
         h2o_cmd.createTestTrain(srcKey=hex_key, trainDstKey=trainDataKey, testDstKey=testDataKey, trainPercent=90)
         parseResult['destination_key'] = trainDataKey
+        parseKey = trainDataKey
+        h2e.exec_expr(execExpr='Z.hex=rTest;rTest[,54+1]=(rTest[,54+1]==4)', timeoutSecs=30)
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         modelKey = glm['glm_model']['_selfKey']
-        if (1 == 0):
-            start = time.time()
-            glmScore = h2o_cmd.runGLMScore(key=testDataKey, model_key=modelKey, thresholds='0.5', timeoutSecs=timeoutSecs)
-            print 'glmScore end on ', testDataKey, 'took', (time.time() - start), 'seconds'
-            classErr = glmScore['validation']['classErr']
-            auc = glmScore['validation']['auc']
-            err = glmScore['validation']['err']
-            print 'classErr:', classErr
-            print 'err:', err
-            print 'auc:', auc
-        parseKey = parseResult['destination_key']
         predictKey = 'Predict.hex'
-        h2e.exec_expr(execExpr='Z.hex=rTest;rTest[,54+1]=(rTest[,54+1]==4)', timeoutSecs=30)
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key='Z.hex', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
         predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='Z.hex', vactual='C54', predict=predictKey, vpredict='predict')
