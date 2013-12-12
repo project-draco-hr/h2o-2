@@ -1,0 +1,27 @@
+{
+  long n=splat == 0 ? _n0 : _n1;
+  if (n < min_rows || n <= 1)   return null;
+  double se=splat == 0 ? _se0 : _se1;
+  if (se <= 1e-30)   return null;
+  int cnt=0;
+  DSharedHistogram nhists[]=new DSharedHistogram[hs.length];
+  for (int j=0; j < hs.length; j++) {
+    DSharedHistogram h=hs[j];
+    if (h == null)     continue;
+    float min=h._min, max=h._max;
+    if (_col == j) {
+      if (_equal) {
+        if (splat == 1)         max=min=h.mins(_bin);
+      }
+ else {
+        if (splat == 0)         max=h.maxs(_bin - 1);
+ else         min=h.mins(_bin);
+      }
+    }
+    if (min == max)     continue;
+    if (min > max)     continue;
+    nhists[j]=new DSharedHistogram(h._name,nbins,h._isInt,min,max,n);
+    cnt++;
+  }
+  return cnt == 0 ? null : nhists;
+}

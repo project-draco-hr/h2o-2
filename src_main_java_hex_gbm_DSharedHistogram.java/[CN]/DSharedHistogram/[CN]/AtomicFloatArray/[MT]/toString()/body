@@ -1,0 +1,10 @@
+{
+  SB sb=new SB();
+  sb.p('[');
+  final int len=length();
+  for (int i=0; i < len; i++) {
+    float f=getf(i);
+    sb.p(f == Float.MAX_VALUE ? "max" : (f == -Float.MAX_VALUE ? "min" : Float.toString(f))).p(',');
+  }
+  return sb.p(']').toString();
+}

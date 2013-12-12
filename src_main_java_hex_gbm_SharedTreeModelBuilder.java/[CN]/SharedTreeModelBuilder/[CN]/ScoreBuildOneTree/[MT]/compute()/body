@@ -3,7 +3,7 @@
   final Chunk chks[]=_chks;
   final DTree tree=_trees[k];
   final int leaf=_leafs[k];
-  final DHistogram hcs[][]=_hcs[k]=new DHistogram[tree._len - leaf][];
+  final DSharedHistogram hcs[][]=_hcs[k];
   final Chunk nids=chk_nids(chks,k);
   final Chunk wrks=chk_work(chks,k);
   for (int row=0; row < nids._len; row++) {
@@ -26,35 +26,13 @@
       if (nid != -1)       nids.set0(row,nid);
     }
     if (nid < leaf)     continue;
-    DHistogram nhs[]=hcs[nid - leaf];
-    if (nhs != null)     continue;
-    nhs=hcs[nid - leaf]=new DHistogram[_ncols];
-    DHistogram ohs[]=tree.undecided(nid)._hs;
-    int sCols[]=tree.undecided(nid)._scoreCols;
-    if (sCols != null) {
-      for (int j=0; j < sCols.length; j++) {
-        int idx=sCols[j];
-        nhs[idx]=ohs[idx].bigCopy();
-      }
-      for (int j=0; j < nhs.length; j++)       if (ohs[j] != null && nhs[j] == null)       nhs[j]=ohs[j].smallCopy();
-    }
- else {
-      for (int j=0; j < nhs.length; j++)       if (ohs[j] != null)       nhs[j]=ohs[j].bigCopy();
-    }
-  }
-  for (int row=0; row < nids._len; row++) {
-    int nid=(int)nids.at80(row);
-    if (nid < leaf)     continue;
     if (wrks.isNA0(row))     continue;
-    DHistogram nhs[]=hcs[nid - leaf];
+    DSharedHistogram nhs[]=hcs[nid - leaf];
     double y=wrks.at0(row);
     for (int j=0; j < _ncols; j++) {
-      DHistogram nh=nhs[j];
-      if (nh == null)       continue;
+      DSharedHistogram nh=nhs[j];
       float col_data=(float)chks[j].at0(row);
-      if (nh instanceof DBinHistogram)       ((DBinHistogram)nh).incr(row,col_data,y);
- else       nh.incr(col_data);
+      nh.incr(col_data,y);
     }
   }
-  for (  DHistogram dbh[] : hcs)   if (dbh != null)   for (int j=0; j < dbh.length; j++)   if (dbh[j] != null)   (dbh[j]).fini();
 }

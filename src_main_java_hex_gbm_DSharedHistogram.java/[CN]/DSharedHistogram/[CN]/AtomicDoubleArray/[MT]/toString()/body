@@ -1,0 +1,10 @@
+{
+  SB sb=new SB();
+  sb.p('[');
+  final int len=length();
+  for (int i=0; i < len; i++) {
+    double d=getd(i);
+    sb.p(d == Double.MAX_VALUE ? "max" : (d == -Double.MAX_VALUE ? "min" : Double.toString(d))).p(',');
+  }
+  return sb.p(']').toString();
+}

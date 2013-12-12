@@ -1,0 +1,10 @@
+{
+  int b=bin(col_data);
+  _bins.incrementAndGet(b);
+  _mins.setMin(b,col_data);
+  _maxs.setMax(b,col_data);
+  if (y != 0) {
+    _sums.add(b,y);
+    _ssqs.add(b,y * y);
+  }
+}
