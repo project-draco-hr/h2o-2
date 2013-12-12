@@ -1,0 +1,10 @@
+{
+  long sum=super.byteSize();
+  sum+=4 + 4 + 2+ 2;
+  sum+=8 + 32 + 20+ _bins.length() << 2;
+  sum+=8 + 32 + 20+ _mins.length() << 2;
+  sum+=8 + 32 + 20+ _maxs.length() << 2;
+  sum+=8 + 32 + 24+ _sums.length() << 3;
+  sum+=8 + 32 + 24+ _ssqs.length() << 3;
+  return sum;
+}
