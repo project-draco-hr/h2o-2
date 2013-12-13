@@ -39,7 +39,10 @@
         Chunk c0=!lf ? null : chks[i];
         Chunk c1=!rf ? null : chks[i + (lf ? nchks.length : 0)];
         int rlen=(lf ? c0 : c1)._len;
-        for (int r=0; r < rlen; r++)         n.addNum(bin.op(lf ? c0.at0(r) : fd0,rf ? c1.at0(r) : fd1));
+        for (int r=0; r < rlen; r++) {
+          if (chks[i]._vec.isEnum())           n.addNA();
+ else           n.addNum(bin.op(lf ? c0.at0(r) : fd0,rf ? c1.at0(r) : fd1));
+        }
       }
     }
   }
