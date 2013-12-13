@@ -1,4 +1,4 @@
-def delete_keys(node=None, pattern=None, timeoutSecs=90):
+def delete_keys(node=None, pattern=None, timeoutSecs=120):
     if (not node):
         node = h2o.nodes[0]
     kwargs = {'filter': pattern, }
@@ -9,6 +9,6 @@ def delete_keys(node=None, pattern=None, timeoutSecs=90):
         if (not keys):
             break
         for k in keys:
-            node.remove_key(k['key'])
+            node.remove_key(k['key'], timeoutSecs=timeoutSecs)
         deletedCnt += len(keys)
     return deletedCnt
