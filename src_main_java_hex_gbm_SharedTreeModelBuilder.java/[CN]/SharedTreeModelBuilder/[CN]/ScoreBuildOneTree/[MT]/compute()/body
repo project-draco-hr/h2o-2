@@ -26,14 +26,18 @@
       if (nid != -1)       nids.set0(row,nid);
     }
     if (nid < leaf)     continue;
-    if (wrks.isNA0(row))     continue;
-    DSharedHistogram nhs[]=hcs[nid - leaf];
     double y=wrks.at0(row);
-    for (int j=0; j < _ncols; j++) {
-      DSharedHistogram nh=nhs[j];
-      if (nh == null)       continue;
-      float col_data=(float)chks[j].at0(row);
-      nh.incr(col_data,y);
+    if (Double.isNaN(y))     continue;
+    DSharedHistogram nhs[]=hcs[nid - leaf];
+    int sCols[]=tree.undecided(nid)._scoreCols;
+    if (sCols != null) {
+      for (int j=0; j < sCols.length; j++) {
+        final int c=sCols[j];
+        nhs[c].incr((float)chks[c].at0(row),y);
+      }
+    }
+ else {
+      for (int j=0; j < _ncols; j++)       if (nhs[j] != null)       nhs[j].incr((float)chks[j].at0(row),y);
     }
   }
 }

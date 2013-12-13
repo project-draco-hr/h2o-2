@@ -8,7 +8,7 @@
   printLine(sb).append("\n");
   if (_hs == null)   return sb.append("_hs==null").toString();
   final int ncols=_hs.length;
-  for (int j=0; j < ncols; j++)   if (_hs[j] != null)   p(sb,_hs[j]._name + String.format(", %4.1f",_hs[j]._min),colW).append(colPad);
+  for (int j=0; j < ncols; j++)   if (_hs[j] != null)   p(sb,_hs[j]._name + String.format(", %4.1f-%4.1f",_hs[j]._min,_hs[j]._max),colW).append(colPad);
   sb.append('\n');
   for (int j=0; j < ncols; j++) {
     if (_hs[j] == null)     continue;
@@ -24,7 +24,8 @@
   for (int i=0; i < nbins; i++) {
     for (int j=0; j < ncols; j++) {
       DSharedHistogram h=_hs[j];
-      if (i < h.nbins()) {
+      if (h == null)       continue;
+      if (i < h.nbins() && h._bins != null) {
         p(sb,h.bins(i),cntW).append('/');
         p(sb,h.mins(i),mmmW).append('/');
         p(sb,h.maxs(i),mmmW).append('/');

@@ -1,13 +1,5 @@
 {
   ForkJoinTask sb1t[]=new ForkJoinTask[_nclass];
-  for (int k=0; k < _nclass; k++) {
-    if (_trees[k] != null) {
-      sb1t[k]=new ScoreBuildOneTree(_trees,_leafs,_hcs,chks,k).fork();
-    }
-  }
-  for (int k=0; k < _nclass; k++) {
-    if (_trees[k] != null) {
-      sb1t[k].join();
-    }
-  }
+  for (int k=0; k < _nclass; k++)   if (_trees[k] != null)   sb1t[k]=new ScoreBuildOneTree(_trees,_leafs,_hcs,chks,k).fork();
+  for (int k=0; k < _nclass; k++)   if (_trees[k] != null)   sb1t[k].join();
 }
