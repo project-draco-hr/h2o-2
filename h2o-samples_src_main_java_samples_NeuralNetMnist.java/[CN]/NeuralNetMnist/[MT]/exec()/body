@@ -6,7 +6,6 @@
   final Vec testLabels=test[test.length - 1];
   test=Utils.remove(test,test.length - 1);
   final Layer[] ls=build(train,trainLabels,null,null);
-  final Trainer trainer=startTraining(ls);
   final Timer timer=new Timer();
   final long start=System.nanoTime();
   final AtomicInteger evals=new AtomicInteger(1);
@@ -15,7 +14,8 @@
       if (NeuralNetMnist.this.cancelled())       timer.cancel();
  else {
         double time=(System.nanoTime() - start) / 1e9;
-        long processed=trainer.processed();
+        Trainer trainer=_trainer;
+        long processed=trainer == null ? 0 : trainer.processed();
         int ps=(int)(processed / time);
         String text=(int)time + "s, " + processed+ " samples ("+ (ps)+ "/s) ";
         Layer[] temp=build(train,trainLabels,(VecsInput)ls[0],(VecSoftmax)ls[ls.length - 1]);
@@ -23,11 +23,12 @@
         Errors e=NeuralNet.eval(temp,1000,null);
         text+="train: " + e;
         text+=", rate: ";
-        text+=String.format("%.5g",ls[0].rate(processed)) + ", ";
+        text+=String.format("%.5g",ls[0].rate(processed));
         text+=", momentum: ";
-        text+=String.format("%.5g",ls[0].momentum(processed)) + ", ";
+        text+=String.format("%.5g",ls[0].momentum(processed));
         System.out.println(text);
-        if ((evals.incrementAndGet() % 8) == 0) {
+        if ((evals.incrementAndGet() % 32) == 0) {
+          System.out.println("Computing test error");
           temp=build(test,testLabels,(VecsInput)ls[0],(VecSoftmax)ls[ls.length - 1]);
           Layer.shareWeights(ls,temp);
           e=NeuralNet.eval(temp,0,null);
@@ -37,5 +38,6 @@
     }
   }
 ,0,2000);
+  startTraining(ls);
   return Status.Running;
 }

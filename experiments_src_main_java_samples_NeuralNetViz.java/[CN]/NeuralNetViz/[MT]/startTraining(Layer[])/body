@@ -1,12 +1,11 @@
 {
-  Trainer trainer=new Trainer.MapReduce(ls,0,self());
+  _trainer=new Trainer.MapReduce(ls,0,self());
   JFrame frame=new JFrame("H2O");
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  MnistCanvas canvas=new MnistCanvas(trainer);
+  MnistCanvas canvas=new MnistCanvas(_trainer);
   frame.setContentPane(canvas.init());
   frame.pack();
   frame.setLocationRelativeTo(null);
   frame.setVisible(true);
-  trainer.start();
-  return trainer;
+  _trainer.start();
 }
