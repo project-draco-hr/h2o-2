@@ -31,6 +31,7 @@
     double y=wrks.at0(row);
     for (int j=0; j < _ncols; j++) {
       DSharedHistogram nh=nhs[j];
+      if (nh == null)       continue;
       float col_data=(float)chks[j].at0(row);
       nh.incr(col_data,y);
     }
