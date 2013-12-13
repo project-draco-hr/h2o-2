@@ -1,9 +1,9 @@
 {
   StringBuilder sb=new StringBuilder();
-  sb.append(_name).append(":").append(_min).append("-").append(_max).append(" step=" + (1 / _step) + " nbins="+ _bins.length());
+  sb.append(_name).append(":").append(_min).append("-").append(_max).append(" step=" + (1 / _step) + " nbins="+ _bins.length);
   if (_bins != null) {
-    for (int b=0; b < _bins.length(); b++) {
-      sb.append(String.format("\ncnt=%d, min=%f, max=%f, mean/var=",_bins.get(b),_mins.getf(b),_maxs.getf(b)));
+    for (int b=0; b < _bins.length; b++) {
+      sb.append(String.format("\ncnt=%d, min=%f, max=%f, mean/var=",_bins[b],_mins[b],_maxs[b]));
       sb.append(String.format("%6.2f/%6.2f,",mean(b),var(b)));
     }
     sb.append('\n');

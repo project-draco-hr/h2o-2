@@ -1,5 +1,4 @@
 {
-  long memNow, memStart=MemoryManager.MEM_ALLOC.get();
   DRFModel model=new DRFModel(outputKey,dataKey,testKey,names,domains,ntrees,max_depth,min_rows,nbins,mtries,sample_rate,seed);
   DKV.put(outputKey,model);
   Random rand=createRNG(seed);
@@ -8,19 +7,13 @@
   DTree[] ktrees=null;
   TreeStats tstats=new TreeStats();
   for (tid=0; tid < ntrees; tid++) {
-    memNow=MemoryManager.MEM_ALLOC.get();
-    System.out.println("Starting on tree " + tid + ", mem consumed size last: "+ PrettyPrint.bytes(memNow - memStart));
-    memStart=memNow;
     Timer t_kTrees=new Timer();
-    ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand,memStart);
+    ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
     Log.info(Sys.DRF__,"Tree " + (tid + 1) + "x"+ _nclass+ " produced in "+ t_kTrees);
     if (cancelled())     break;
     tstats.updateBy(ktrees);
     model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false);
   }
-  memNow=MemoryManager.MEM_ALLOC.get();
-  System.out.println("Final scoring, mem consumed size last: " + PrettyPrint.bytes(memNow - memStart));
-  memStart=memNow;
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true);
   if (classification && importance) {
     float varimp[]=doVarImp(model,fr);
@@ -29,7 +22,4 @@
     DKV.put(outputKey,model);
   }
   cleanUp(fr,t_build);
-  memNow=MemoryManager.MEM_ALLOC.get();
-  System.out.println("Post cleanup, mem consumed size last: " + PrettyPrint.bytes(memNow - memStart));
-  memStart=memNow;
 }

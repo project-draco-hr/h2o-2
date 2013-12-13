@@ -4,7 +4,7 @@
     if (_trees[k] != null) {
       for (int l=_leafs[k]; l < _trees[k]._len; l++) {
         DTree.UndecidedNode udn=_trees[k].undecided(l);
-        DSharedHistogram hs[]=udn._hs;
+        DSharedHistogram hs[]=_hcs[k][l - _leafs[k]];
         int sCols[]=udn._scoreCols;
         if (sCols != null) {
           for (int j=0; j < sCols.length; j++)           hs[sCols[j]].init();
