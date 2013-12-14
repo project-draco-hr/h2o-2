@@ -15,12 +15,10 @@
     sb.append("<th>zeros</th><td>" + stats.zeros + "</td>");
     sb.append("<th>min[" + stats.mins.length + "]</th>");
     for (    double min : stats.mins) {
-      if (min == Double.POSITIVE_INFINITY)       break;
       sb.append("<td>" + Utils.p2d(min) + "</td>");
     }
     sb.append("<th>max[" + stats.maxs.length + "]</th>");
     for (    double max : stats.maxs) {
-      if (max == Double.NEGATIVE_INFINITY)       continue;
       sb.append("<td>" + Utils.p2d(max) + "</td>");
     }
     sb.append("</tr> </table>");
@@ -39,7 +37,7 @@
   sb.append("<tr> <th colspan=" + len + " style='text-align:center'>Histogram</th></tr>");
   sb.append("<tr>");
   if (_type == T_ENUM)   for (int i=0; i < len; i++)   sb.append("<th>" + vec.domain(i) + "</th>");
- else   for (int i=0; i < len; i++)   sb.append("<th>" + Utils.p2d(binValue(i)) + "</th>");
+ else   for (int i=0; i < len; i++)   sb.append("<th>" + Utils.p2d(i == 0 ? _start : binValue(i)) + "</th>");
   sb.append("</tr>");
   sb.append("<tr>");
   for (int i=0; i < len; i++)   sb.append("<td>" + hcnt[i] + "</td>");

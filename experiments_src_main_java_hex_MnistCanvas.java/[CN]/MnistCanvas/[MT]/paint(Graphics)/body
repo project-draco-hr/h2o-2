@@ -1,7 +1,6 @@
 {
   Layer[] ls=_trainer.layers();
   Vec[] vecs=((VecsInput)ls[0]).vecs;
-  Vec resp=((VecSoftmax)ls[ls.length - 1]).vec;
   int edge=56, pad=10;
   int rand=_rand.nextInt((int)vecs[0].length());
 {
@@ -11,8 +10,6 @@
     for (int i=0; i < pix.length; i++)     pix[i]=(int)(vecs[i].at8(rand));
     r.setDataElements(0,0,EDGE,EDGE,pix);
     g.drawImage(in,pad,pad,null);
-    g.drawString("" + resp.at8(rand),10,50);
-    g.drawString("RBM " + _level,10,70);
   }
   int offset=pad;
   int buf=EDGE + pad + pad;

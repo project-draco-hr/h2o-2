@@ -1,11 +1,14 @@
 {
   Key key=Key.make("cars.hex");
   Frame fr=parseFrame(key,"./smalldata/cars.csv");
+  Futures fs=new Futures();
+  for (  Vec vec : fr.vecs())   vec.rollupStats(fs);
+  fs.blockForPending();
   Vec vec=fr.vecs()[fr.find("cylinders")];
-  Summary2 s=new Summary2(vec,"");
+  Summary2 s=new Summary2(vec,"",vec.min(),vec.max());
   s.add(vec.chunk(0));
   for (int i=1; i < vec.nChunks(); i++) {
-    Summary2 s1=new Summary2(vec,"");
+    Summary2 s1=new Summary2(vec,"",vec.min(),vec.max());
     s1.add(vec.chunk(i));
     s.add(s1);
   }

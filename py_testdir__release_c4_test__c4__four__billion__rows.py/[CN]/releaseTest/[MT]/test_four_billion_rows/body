@@ -22,12 +22,12 @@ def test_four_billion_rows(self):
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         self.assertEqual(2, numCols, msg=('generated %s cols (including output).  parsed to %s cols' % (2, numCols)))
         self.assertEqual((4 * 1000000000), numRows, msg=('generated %s rows, parsed to %s rows' % ((4 * 1000000000), numRows)))
-        kwargs = {'k': 3, 'initialization': 'Furthest', 'max_iter': 4, 'cols': None, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
+        kwargs = {'k': 3, 'initialization': 'Furthest', 'max_iter': 4, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
         timeoutSecs = 900
         start = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print ('\n' + csvFilename)
-        kwargs = {'x': 0, 'y': 1, 'n_folds': 0, 'case_mode': '=', 'case_val': 1, }
+        kwargs = {'response': ('C' + str(1)), 'n_folds': 0, 'family': 'binomial', 'case_mode': '=', 'case_val': 1, }
         colX = 0
         timeoutSecs = 900
         kwargs.update({'alpha': 0, 'lambda': 0, })
@@ -35,4 +35,4 @@ def test_four_billion_rows(self):
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'glm (L2) end on ', csvFilename, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-        h2o_glm.simpleCheckGLM(self, glm, colX, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, ('C' + str(colX)), **kwargs)

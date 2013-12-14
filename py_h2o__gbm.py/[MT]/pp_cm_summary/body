@@ -7,7 +7,9 @@ def pp_cm_summary(cm):
     for (classIndex, s) in enumerate(scoresList):
         classSum = sum(s)
         if (classSum == 0):
-            print 'class:', classIndex, 'classSum', classSum, '<- why 0?'
+            print 'classIndex:', classIndex, 'classSum', classSum, '<- why 0?'
+        elif (classIndex >= len(s)):
+            print 'Why is classindex:', classIndex, 'for s:"', s
         else:
             classRightPct = (((s[classIndex] + 0.0) / classSum) * 100)
             totalRight += s[classIndex]
