@@ -4,6 +4,12 @@ def test_rf_params_rand2(self):
     for trial in range(10):
         params = {'ntrees': 13, 'mtries': 7, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
+        if (('cols' in params) and params['cols']):
+            pass
+        elif (('ignored_cols_by_name' in params) and params['ignored_cols_by_name']):
+            params['mtries'] = random.randint(1, 53)
+        else:
+            params['mtries'] = random.randint(1, 54)
         kwargs = params.copy()
         timeoutSecs = (30 + ((kwargs['ntrees'] * 80) * max(1, (kwargs['mtries'] / 60))))
         start = time.time()
