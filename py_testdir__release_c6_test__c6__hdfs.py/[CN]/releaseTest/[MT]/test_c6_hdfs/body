@@ -14,17 +14,6 @@ def test_c6_hdfs(self):
     for csvFilename in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         timeoutSecs = 1000
-        (importResult, importPattern) = h2i.import_only(path=csvPathname, schema='hdfs', timeoutSecs=timeoutSecs)
-        keys = importResult['keys']
-        if (len(keys) < 1):
-            raise Exception(('Should have imported at least 1 key for %s' % csvPathname))
-        foundIt = None
-        for f in keys:
-            if (csvPathname in f):
-                foundIt = f
-                break
-        if (not foundIt):
-            raise Exception(('Should have found %s in the imported keys for %s' % (importPattern, csvPathname)))
         print 'Loading', csvFilename, 'from hdfs'
         start = time.time()
         parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', timeoutSecs=timeoutSecs, doSummary=True, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
@@ -48,6 +37,7 @@ def test_c6_hdfs(self):
             l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:s} for {:.2f} secs {:s}'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'RF', ('trial ' + str(trial)), csvFilename, elapsed, paramsString)
             print l
             h2o.cloudPerfH2O.message(l)
-        print "Deleting all keys, to make sure our parse times don't include spills"
-        h2i.delete_keys_at_all_nodes()
+        if (1 == 0):
+            print "Deleting all keys, to make sure our parse times don't include spills"
+            h2i.delete_keys_at_all_nodes()
         trial += 1
