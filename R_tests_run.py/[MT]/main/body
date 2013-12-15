@@ -1,0 +1,19 @@
+def main(argv):
+    test_root_dir = os.path.dirname(os.path.realpath(__file__))
+    output_dir = ((test_root_dir + '/') + 'results')
+    parse_args(argv)
+    if wipe_output_dir:
+        try:
+            if os.path.isdir(output_dir):
+                os.rmdir(output_dir)
+        except OSError as e:
+            print ''
+            print 'rmdir failed (errno {0}): {1}'.format(e.errno, e.strerror)
+            print ('    ' + output_dir)
+            print ''
+            sys.exit(1)
+    nodes_per_cloud = 1
+    xmx = '2g'
+    runner = RUnitRunner(test_root_dir, num_clouds, nodes_per_cloud, base_port, xmx, output_dir)
+    runner.run()
+    print str(runner)

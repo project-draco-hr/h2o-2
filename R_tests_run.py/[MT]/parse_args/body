@@ -1,0 +1,22 @@
+def parse_args(argv):
+    global base_port
+    global num_clouds
+    global wipe_output_dir
+    i = 1
+    while (i < len(argv)):
+        s = argv[i]
+        if (s == '--baseport'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            base_port = argv[i]
+        elif (s == '--numjvms'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            num_clouds = argv[i]
+        elif (s == '--wipe'):
+            wipe_output_dir = True
+        else:
+            usage()
+        i += 1
