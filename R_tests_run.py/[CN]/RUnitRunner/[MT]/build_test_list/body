@@ -1,3 +1,13 @@
 def build_test_list(self):
     '\n        Recursively find the list of tests to run and store them in the object.\n        @return:  none\n        '
-    pass
+    if self.terminated:
+        return
+    for (root, dirs, files) in os.walk(self.test_root_dir):
+        if root.endswith('Util'):
+            continue
+        for f in files:
+            if (not re.search('runit', f)):
+                continue
+            test = Test(root, f, self.output_dir)
+            self.tests.append(test)
+            self.tests_not_started.append(test)

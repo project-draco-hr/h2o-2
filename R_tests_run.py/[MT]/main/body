@@ -1,7 +1,10 @@
 def main(argv):
+    global output_dir
     global runner
     test_root_dir = os.path.dirname(os.path.realpath(__file__))
     output_dir = ((test_root_dir + '/') + 'results')
+    nodes_per_cloud = 1
+    xmx = '2g'
     h2o_jar = os.path.abspath((test_root_dir + '/../../target/h2o.jar'))
     parse_args(argv)
     if (not os.path.exists(h2o_jar)):
@@ -20,10 +23,11 @@ def main(argv):
             print ('    ' + output_dir)
             print ''
             sys.exit(1)
-    nodes_per_cloud = 1
-    xmx = '2g'
     runner = RUnitRunner(test_root_dir, num_clouds, nodes_per_cloud, h2o_jar, base_port, xmx, output_dir)
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    runner.run()
+    runner.build_test_list()
+    runner.start_clouds()
+    runner.run_tests()
+    runner.stop_clouds()
     print str(runner)

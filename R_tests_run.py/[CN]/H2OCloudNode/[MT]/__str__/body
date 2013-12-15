@@ -1,7 +1,8 @@
 def __str__(self):
     s = ''
-    s += '    cloud {} code {}\n'.format(self.cloud_num, self.node_num)
-    s += '        xmx:  {}\n'.format(self.xmx)
-    s += '        port: {}\n'.format(self.port)
-    s += '        pid:  {}\n'.format(self.pid)
+    s += '    cloud {} ({}) node {}\n'.format(self.cloud_num, self.cloud_name, self.node_num)
+    s += '        xmx:          {}\n'.format(self.xmx)
+    s += '        my_base_port: {}\n'.format(self.my_base_port)
+    s += '        port:         {}\n'.format(self.port)
+    s += '        pid:          {}\n'.format(self.pid)
     return s

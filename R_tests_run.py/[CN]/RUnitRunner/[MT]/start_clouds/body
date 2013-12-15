@@ -1,2 +1,5 @@
 def start_clouds(self):
-    pass
+    if self.terminated:
+        return
+    for cloud in self.clouds:
+        cloud.start()
