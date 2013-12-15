@@ -1,0 +1,7 @@
+def terminate(self):
+    self.terminated = True
+    for test in self.tests:
+        if test.is_running():
+            test.terminate()
+    for cloud in self.clouds:
+        cloud.terminate()

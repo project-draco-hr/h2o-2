@@ -1,9 +1,15 @@
 import sys
 import os
 import shutil
+import signal
+import time
 base_port = 40000
 num_clouds = 3
 wipe_output_dir = False
 output_dir = ''
+h2o_jar = ''
+runner = None
+handling_signal = False
 if (__name__ == '__main__'):
     main(sys.argv)
+    time.sleep(100)
