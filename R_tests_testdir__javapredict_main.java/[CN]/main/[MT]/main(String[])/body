@@ -7,7 +7,7 @@
   output.write("predict");
   for (int i=0; i < model.getNumResponseClasses(); i++) {
     output.write(",");
-    output.write(model.getNames()[i]);
+    output.write(model.getDomainValues(model.getResponseIdx())[i]);
   }
   output.write("\n");
   int lineno=0;
@@ -37,10 +37,26 @@
     float[] preds=new float[model.getNumResponseClasses() + 1];
     model.predict(row,preds);
     for (int i=0; i < preds.length; i++) {
-      if (i > 0) {
-        output.write(",");
+      if (i == 0) {
+        String[] domainValues=model.getDomainValues(model.getResponseIdx());
+        if (domainValues != null) {
+          double value=preds[i];
+          int valueAsInt=(int)value;
+          if (value != (int)valueAsInt) {
+            System.out.println("ERROR: Line " + lineno + " has non-integer output for classification ("+ value+ ")");
+            System.exit(1);
+          }
+          String predictedOutputClassLevel=domainValues[valueAsInt];
+          output.write(predictedOutputClassLevel);
+        }
+ else {
+          output.write(Double.toString(preds[i]));
+        }
       }
-      output.write(Double.toString(preds[i]));
+ else {
+        output.write(",");
+        output.write(Double.toString(preds[i]));
+      }
     }
     output.write("\n");
     line=input.readLine();
