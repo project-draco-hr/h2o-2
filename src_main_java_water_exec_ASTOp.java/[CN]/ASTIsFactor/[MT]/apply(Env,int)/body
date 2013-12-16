@@ -1,0 +1,12 @@
+{
+  Frame fr=env.popAry();
+  String skey=env.key();
+  AppendableVec av=new AppendableVec(Key.make());
+  NewChunk nc=new NewChunk(av,0);
+  for (  Vec v : fr.vecs())   nc.addNum(v.isEnum() ? 1 : 0);
+  nc.close(0,null);
+  Vec res=av.close(null);
+  env.subRef(fr,skey);
+  env.pop();
+  env.push(new Frame(new String[]{"is.factor"},new Vec[]{res}));
+}
