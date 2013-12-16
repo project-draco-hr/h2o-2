@@ -1,13 +1,14 @@
 def signal_handler(signum, stackframe):
-    global runner
-    global handling_signal
-    if handling_signal:
+    global g_runner
+    global g_handling_signal
+    use(stackframe)
+    if g_handling_signal:
         return
-    handling_signal = True
+    g_handling_signal = True
     print ''
     print '----------------------------------------------------------------------'
     print ''
-    print 'SIGNAL CAUGHT.  SHUTTING DOWN NOW.'
+    print (('SIGNAL CAUGHT (' + str(signum)) + ').  SHUTTING DOWN NOW.')
     print ''
     print '----------------------------------------------------------------------'
-    runner.terminate()
+    g_runner.terminate()

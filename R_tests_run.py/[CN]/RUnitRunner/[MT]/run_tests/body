@@ -2,24 +2,29 @@ def run_tests(self):
     '\n        Run all tests.\n\n        @return: none\n        '
     if self.terminated:
         return
+    num_tests = len(self.tests)
+    num_nodes = len((self.clouds * self.nodes_per_cloud))
+    self._log('')
+    self._log('Starting {} tests on {} H2O nodes...'.format(num_tests, num_nodes))
+    self._log('')
     start_count = min(len(self.tests_not_started), len(self.clouds))
     for i in range(start_count):
         cloud = self.clouds[i]
         port = cloud.get_port()
-        self.start_next_test_on_port(port)
+        self._start_next_test_on_port(port)
     while (len(self.tests_not_started) > 0):
         if self.terminated:
             return
-        completed_test = self.wait_for_one_test_to_complete()
+        completed_test = self._wait_for_one_test_to_complete()
         if self.terminated:
             return
-        self.report_test_result(completed_test)
+        self._report_test_result(completed_test)
         port_of_completed_test = completed_test.get_port()
-        self.start_next_test_on_port(port_of_completed_test)
+        self._start_next_test_on_port(port_of_completed_test)
     while (len(self.tests_running) > 0):
         if self.terminated:
             return
-        completed_test = self.wait_for_one_test_to_complete()
+        completed_test = self._wait_for_one_test_to_complete()
         if self.terminated:
             return
-        self.report_test_result(completed_test)
+        self._report_test_result(completed_test)

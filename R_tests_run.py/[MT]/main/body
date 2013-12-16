@@ -1,34 +1,34 @@
 def main(argv):
     '\n    Main program.\n\n    @return: none\n    '
-    global output_dir
-    global runner
+    global g_output_dir
+    global g_runner
     test_root_dir = os.path.dirname(os.path.realpath(__file__))
-    output_dir = ((test_root_dir + '/') + 'results')
+    g_output_dir = os.path.join(test_root_dir, 'results')
     nodes_per_cloud = 1
     xmx = '2g'
-    h2o_jar = os.path.abspath((test_root_dir + '/../../target/h2o.jar'))
+    h2o_jar = os.path.abspath(os.path.join(os.path.join(os.path.join(os.path.join(test_root_dir, '..'), '..'), 'target'), 'h2o.jar'))
     parse_args(argv)
     if (not os.path.exists(h2o_jar)):
         print ''
         print 'h2o jar not found: {}'.format(h2o_jar)
-        print ('    ' + output_dir)
+        print ('    ' + g_output_dir)
         print ''
         sys.exit(1)
-    if wipe_output_dir:
+    if g_wipe_output_dir:
         try:
-            if os.path.exists(output_dir):
-                shutil.rmtree(output_dir)
+            if os.path.exists(g_output_dir):
+                shutil.rmtree(g_output_dir)
         except OSError as e:
             print ''
             print 'removing directory failed (errno {0}): {1}'.format(e.errno, e.strerror)
-            print ('    ' + output_dir)
+            print ('    ' + g_output_dir)
             print ''
             sys.exit(1)
-    runner = RUnitRunner(test_root_dir, num_clouds, nodes_per_cloud, h2o_jar, base_port, xmx, output_dir)
+    g_runner = RUnitRunner(test_root_dir, g_num_clouds, nodes_per_cloud, h2o_jar, g_base_port, xmx, g_output_dir)
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    runner.build_test_list()
-    runner.start_clouds()
-    runner.run_tests()
-    runner.stop_clouds()
-    runner.report_summary()
+    g_runner.build_test_list()
+    g_runner.start_clouds()
+    g_runner.run_tests()
+    g_runner.stop_clouds()
+    g_runner.report_summary()
