@@ -1,4 +1,9 @@
 def stop(self):
     if (self.pid > 0):
         print 'Killing JVM with PID {}'.format(self.pid)
-        os.kill(self.pid, signal.SIGTERM)
+        try:
+            child = self.child
+            child.terminate()
+        except OSError:
+            pass
+        self.pid = (-1)

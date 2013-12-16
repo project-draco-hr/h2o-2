@@ -1,0 +1,10 @@
+def is_completed(self):
+    '\n        Check if test has completed.\n\n        This has side effects and MUST be called for the normal test queueing to work.\n        Specifically, child.poll().\n        '
+    child = self.child
+    if (child is None):
+        return False
+    child.poll()
+    if (child.returncode is None):
+        return False
+    self.returncode = child.returncode
+    return True

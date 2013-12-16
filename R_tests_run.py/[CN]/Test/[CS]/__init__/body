@@ -1,7 +1,12 @@
-def __init__(self, test_dir, test_name, output_dir):
+def __init__(self, test_dir, test_short_dir, test_name, output_dir):
     self.test_dir = test_dir
+    self.test_short_dir = test_short_dir
     self.test_name = test_name
     self.output_dir = output_dir
+    self.output_file_name = ''
     self.terminated = False
-    self.exit_status = (-9999)
+    self.returncode = (-9999)
     self.pid = (-1)
+    self.ip = None
+    self.port = (-1)
+    self.child = None

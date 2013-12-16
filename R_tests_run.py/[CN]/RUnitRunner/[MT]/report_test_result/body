@@ -1,0 +1,13 @@
+def report_test_result(self, test):
+    port = test.get_port()
+    summary_file_name = os.path.join(self.output_dir, 'summary.txt')
+    f = open(summary_file_name, 'a')
+    if test.get_passed():
+        s = ('PASS      %d %-50s' % (port, test.get_test_name()))
+        print s
+        f.write((s + '\n'))
+    else:
+        s = ('     FAIL %d %-50s %s' % (port, test.get_test_name(), test.get_output_dir_file_name()))
+        print s
+        f.write((s + '\n'))
+    f.close()

@@ -2,12 +2,16 @@ def build_test_list(self):
     '\n        Recursively find the list of tests to run and store them in the object.\n        @return:  none\n        '
     if self.terminated:
         return
+    abs_test_root_dir = os.path.abspath(self.test_root_dir)
     for (root, dirs, files) in os.walk(self.test_root_dir):
         if root.endswith('Util'):
             continue
         for f in files:
             if (not re.search('runit', f)):
                 continue
-            test = Test(root, f, self.output_dir)
+            test_short_dir = root
+            if test_short_dir.startswith(abs_test_root_dir):
+                test_short_dir = test_short_dir.replace(abs_test_root_dir, '', 1)
+            test = Test(root, test_short_dir, f, self.output_dir)
             self.tests.append(test)
             self.tests_not_started.append(test)
