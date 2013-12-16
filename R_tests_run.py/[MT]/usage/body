@@ -1,0 +1,42 @@
+def usage():
+    print ''
+    print (('Usage:  ' + g_script_name) + ' [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file]')
+    print ''
+    print (('    (Output dir is: ' + g_output_dir) + ')')
+    print ''
+    print '    --wipe        Wipes the output dir before starting.'
+    print ''
+    print '    --baseport    The first port at which H2O starts searching for free ports.'
+    print ''
+    print '    --numclouds   The number of clouds to start.'
+    print '                  Each test is randomly assigned to a cloud.'
+    print ''
+    print '    --test        If you only want to run one test, specify it like this.'
+    print ''
+    print '    --testlist    A file containing a list of tests to run (for example the'
+    print "                  'failed.txt' file from the output directory)."
+    print ''
+    print '    If neither --test nor --testlist is specified, then the list of tests is'
+    print "    discovered automatically as files matching '*runit*.R'."
+    print ''
+    print ''
+    print 'Examples:'
+    print ''
+    print '    Just accept the defaults and go (note: output dir must not exist):'
+    print ('        ' + g_script_name)
+    print ''
+    print '    On a powerful laptop with 8 cores:'
+    print (('        ' + g_script_name) + ' --wipe --numclouds 5')
+    print ''
+    print '    On a big server with 32 cores:'
+    print (('        ' + g_script_name) + ' --wipe --numclouds 16')
+    print ''
+    print '    Run one specific test:'
+    print (('        ' + g_script_name) + ' --wipe --numclouds 1 --test path/to/test.R')
+    print ''
+    print '    Rerunning failures from a previous run:'
+    print '        # Copy failures.txt, otherwise --wipe removes the directory with the list!'
+    print (('        cp ' + os.path.join(g_output_dir, 'failures.txt')) + ' .')
+    print (('        ' + g_script_name) + ' --wipe --numclouds 16 --testlist failures.txt')
+    print ''
+    sys.exit(1)

@@ -1,0 +1,11 @@
+def _report_test_result(self, test):
+    port = test.get_port()
+    if test.get_passed():
+        s = ('PASS      %d %-70s' % (port, test.get_test_name()))
+        self._log(s)
+    else:
+        s = ('     FAIL %d %-70s %s' % (port, test.get_test_name(), test.get_output_dir_file_name()))
+        self._log(s)
+        f = self._get_failed_filehandle_for_appending()
+        f.write((test.get_test_dir_file_name() + '\n'))
+        f.close()
