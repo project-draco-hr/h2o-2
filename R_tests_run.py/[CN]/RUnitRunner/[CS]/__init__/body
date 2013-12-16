@@ -11,7 +11,7 @@ def __init__(self, test_root_dir, num_clouds, nodes_per_cloud, h2o_jar, base_por
     self.tests = []
     self.tests_not_started = []
     self.tests_running = []
-    self.create_output_dir()
+    self._create_output_dir()
     for i in range(self.num_clouds):
         cloud = H2OCloud(i, self.nodes_per_cloud, h2o_jar, self.base_port, xmx, self.output_dir)
         self.clouds.append(cloud)
