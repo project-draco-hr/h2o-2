@@ -1,4 +1,5 @@
 def start_clouds(self):
+    '\n        Start all H2O clouds.\n\n        @return: none\n        '
     if self.terminated:
         return
     for cloud in self.clouds:
@@ -9,4 +10,4 @@ def start_clouds(self):
     for cloud in self.clouds:
         if self.terminated:
             return
-        cloud.scrape_port_from_stdout()
+        cloud.wait_for_cloud_to_be_up()
