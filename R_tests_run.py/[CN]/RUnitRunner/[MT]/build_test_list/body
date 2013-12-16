@@ -7,7 +7,7 @@ def build_test_list(self):
         if root.endswith('Util'):
             continue
         for f in files:
-            if (not re.search('runit', f)):
+            if (not re.search('runit.*\\.[rR]$', f)):
                 continue
             test_short_dir = root
             prefix = os.path.join(abs_test_root_dir, '')
