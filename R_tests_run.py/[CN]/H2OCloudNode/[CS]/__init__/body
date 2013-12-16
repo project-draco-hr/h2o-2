@@ -9,7 +9,8 @@ def __init__(self, cloud_num, nodes_per_cloud, node_num, cloud_name, h2o_jar, ba
     self.output_dir = output_dir
     self.port = (-1)
     self.pid = (-1)
-    self.my_base_port = ((self.base_port + ((self.cloud_num * self.nodes_per_cloud) * 2)) + (self.node_num * 2))
     self.output_file_name = ''
     self.child = None
     self.terminated = False
+    ports_per_node = 2
+    self.my_base_port = ((self.base_port + ((self.cloud_num * self.nodes_per_cloud) * ports_per_node)) + (self.node_num * ports_per_node))

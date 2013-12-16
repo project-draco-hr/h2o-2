@@ -4,4 +4,4 @@ def start(self):
     f = open(self.output_file_name, 'w')
     self.child = subprocess.Popen(args=cmd, stdout=f, stderr=subprocess.STDOUT, cwd=self.output_dir)
     self.pid = self.child.pid
-    print cmd
+    print ('+ CMD: ' + ' '.join(cmd))

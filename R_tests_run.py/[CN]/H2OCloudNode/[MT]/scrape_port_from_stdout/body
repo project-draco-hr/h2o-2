@@ -15,7 +15,7 @@ def scrape_port_from_stdout(self):
                 if (port is not None):
                     self.port = port
                     f.close()
-                    print 'Node {}_{} started on port {}'.format(self.cloud_num, self.node_num, self.port)
+                    print 'H2O Cloud {} Node {} started with output file {}'.format(self.cloud_num, self.node_num, self.output_file_name)
                     return
             s = f.readline()
         f.close()
