@@ -1,5 +1,3 @@
 def terminate(self):
     self.terminated = True
-    if (self.pid > 0):
-        print 'Killing JVM with PID {}'.format(self.pid)
-        os.kill(self.pid, signal.SIGTERM)
+    self.stop()

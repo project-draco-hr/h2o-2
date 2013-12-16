@@ -1,0 +1,27 @@
+def scrape_port_from_stdout(self):
+    '\n        Look at the stdout log and try to\n        '
+    retries = 30
+    while (retries > 0):
+        if self.terminated:
+            return
+        f = open(self.output_file_name, 'r')
+        s = f.readline()
+        while (len(s) > 0):
+            if self.terminated:
+                return
+            match_groups = re.search('Listening for HTTP and REST traffic on  http://(\\S+):(\\d+)', s)
+            if (match_groups is not None):
+                port = match_groups.group(2)
+                if (port is not None):
+                    self.port = port
+                    f.close()
+                    print 'Node {}_{} started on port {}'.format(self.cloud_num, self.node_num, self.port)
+                    return
+            s = f.readline()
+        f.close()
+        retries -= 1
+        if self.terminated:
+            return
+        time.sleep(1)
+    print 'ERROR: Too many retries starting cloud.'
+    sys.exit(1)

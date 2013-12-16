@@ -2,4 +2,10 @@ def start_clouds(self):
     if self.terminated:
         return
     for cloud in self.clouds:
+        if self.terminated:
+            return
         cloud.start()
+    for cloud in self.clouds:
+        if self.terminated:
+            return
+        cloud.scrape_port_from_stdout()
