@@ -3,8 +3,7 @@ def terminate(self):
     if (self.pid > 0):
         print 'Killing Test with PID {}'.format(self.pid)
         try:
-            child = self.child
-            child.terminate()
+            self.child.terminate()
         except OSError:
             pass
     self.pid = (-1)

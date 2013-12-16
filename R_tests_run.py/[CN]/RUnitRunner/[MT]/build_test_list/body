@@ -10,7 +10,7 @@ def build_test_list(self):
             if (not re.search('runit', f)):
                 continue
             test_short_dir = root
-            if test_short_dir.startswith(abs_test_root_dir):
+            if test_short_dir.startswith((abs_test_root_dir + '/')):
                 test_short_dir = test_short_dir.replace(abs_test_root_dir, '', 1)
             test = Test(root, test_short_dir, f, self.output_dir)
             self.tests.append(test)

@@ -4,7 +4,7 @@ def start(self, ip, port):
         return
     self.ip = ip
     self.port = port
-    cmd = ['R', '-f', self.test_name, self.ip, str(self.port)]
+    cmd = ['R', '-f', self.test_name, '--args', ((self.ip + ':') + str(self.port))]
     test_short_dir_with_no_slashes = re.sub('[\\\\/]', '_', self.test_short_dir)
     self.output_file_name = os.path.join(self.output_dir, (((test_short_dir_with_no_slashes + '_') + self.test_name) + '.out'))
     f = open(self.output_file_name, 'w')
