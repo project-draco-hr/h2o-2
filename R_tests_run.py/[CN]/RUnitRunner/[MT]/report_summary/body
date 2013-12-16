@@ -12,6 +12,8 @@ def report_summary(self):
         else:
             notrun += 1
         total += 1
+    end_seconds = time.time()
+    delta_seconds = (end_seconds - self.start_seconds)
     self._log('')
     self._log('----------------------------------------------------------------------')
     self._log('')
@@ -19,8 +21,11 @@ def report_summary(self):
     self._log('')
     self._log('----------------------------------------------------------------------')
     self._log('')
-    self._log(('Total tests:      ' + str(total)))
-    self._log(('Passed:           ' + str(passed)))
-    self._log(('Did not pass:     ' + str(failed)))
-    self._log(('Did not complete: ' + str(notrun)))
+    self._log(('Total tests:          ' + str(total)))
+    self._log(('Passed:               ' + str(passed)))
+    self._log(('Did not pass:         ' + str(failed)))
+    self._log(('Did not complete:     ' + str(notrun)))
+    self._log('')
+    self._log(('Total time:           %.2f sec' % delta_seconds))
+    self._log(('Time/completed test:  %.2f sec' % (delta_seconds / (total - notrun))))
     self._log('')
