@@ -1,6 +1,6 @@
 def start(self, ip, port):
     '\n        Start the test in a non-blocking fashion.\n\n        @param ip: IP address of cloud to run on.\n        @param port: Port of cloud to run on.\n        @return: none\n        '
-    if self.terminated:
+    if (self.cancelled or self.terminated):
         return
     self.ip = ip
     self.port = port

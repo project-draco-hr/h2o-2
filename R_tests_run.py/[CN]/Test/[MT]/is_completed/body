@@ -6,5 +6,6 @@ def is_completed(self):
     child.poll()
     if (child.returncode is None):
         return False
+    self.pid = (-1)
     self.returncode = child.returncode
     return True
