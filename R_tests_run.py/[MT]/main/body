@@ -1,9 +1,11 @@
 def main(argv):
     '\n    Main program.\n\n    @return: none\n    '
+    global g_script_name
     global g_output_dir
     global g_test_to_run
     global g_test_list_file
     global g_runner
+    g_script_name = os.path.basename(argv[0])
     test_root_dir = os.path.dirname(os.path.realpath(__file__))
     g_output_dir = os.path.join(test_root_dir, 'results')
     nodes_per_cloud = 1
@@ -13,7 +15,6 @@ def main(argv):
     if (not os.path.exists(h2o_jar)):
         print ''
         print 'H2O jar not found: {}'.format(h2o_jar)
-        print ('    ' + g_output_dir)
         print ''
         sys.exit(1)
     if g_wipe_output_dir:
