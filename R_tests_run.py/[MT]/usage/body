@@ -1,8 +1,15 @@
 def usage():
     print ''
-    print 'usage:  $0 [--baseport port] [--numclouds n] [--wipe]'
+    print 'usage:  $0 [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file]'
     print ''
-    print '    --wipe wipes the output dir before starting'
     print (('    (Output dir is: ' + g_output_dir) + ')')
+    print ''
+    print '    --wipe        Wipes the output dir before starting.'
+    print '    --baseport    The port at which H2O starts searching for ports'
+    print '    --numclouds   The number of clouds to start.'
+    print '                  Each test is randomly assigned to a cloud.'
+    print '    --test        If you only want to run one test, specify it like this.'
+    print '    --testlist    A file containing a list of tests to run (for example the'
+    print "                  'failed' file from the output directory)."
     print ''
     sys.exit(1)
