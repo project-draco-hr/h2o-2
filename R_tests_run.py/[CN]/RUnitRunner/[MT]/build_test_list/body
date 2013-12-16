@@ -6,6 +6,6 @@ def build_test_list(self):
         if root.endswith('Util'):
             continue
         for f in files:
-            if (not re.search('runit.*\\.[rR]$', f)):
+            if (not re.match('.*runit.*\\.[rR]', f)):
                 continue
             self.add_test(os.path.join(root, f))
