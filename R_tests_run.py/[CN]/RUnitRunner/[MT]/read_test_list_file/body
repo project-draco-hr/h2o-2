@@ -16,7 +16,7 @@ def read_test_list_file(self, test_list_file):
         f.close()
     except IOError as e:
         print ''
-        print (('ERROR: Failure reading test list (' + test_list_file) + ')')
+        print ('ERROR: Failure reading test list: ' + test_list_file)
         print '       (errno {0}): {1}'.format(e.errno, e.strerror)
         print ''
         sys.exit(1)
