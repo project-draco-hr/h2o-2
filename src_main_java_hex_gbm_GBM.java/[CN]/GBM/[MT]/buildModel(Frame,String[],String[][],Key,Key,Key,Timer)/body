@@ -10,8 +10,8 @@
     ktrees=buildNextKTrees(fr);
     if (cancelled())     break;
     tstats.updateBy(ktrees);
-    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false);
+    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,false);
   }
-  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true);
+  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,false);
   cleanUp(fr,t_build);
 }
