@@ -12,7 +12,7 @@
   for (int k=0; k < _nclass; k++) {
     if (_trees[k] != null) {
       for (int l=_leafs[k]; l < _trees[k]._len; l++) {
-        DTree.UndecidedNode udn=_trees[k].undecided(l);
+        UndecidedNode udn=_trees[k].undecided(l);
         DSharedHistogram hs[]=_hcs[k][l - _leafs[k]];
         int sCols[]=udn._scoreCols;
         if (sCols != null) {
