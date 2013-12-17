@@ -1,0 +1,29 @@
+import sys
+import json
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_import as h2i
+print '--------------------------------------------------------------------------------'
+print 'BUILDING CLOUD'
+print '--------------------------------------------------------------------------------'
+h2o.build_cloud(node_count=2, java_heap_GB=2)
+h2o.beta_features = False
+print '--------------------------------------------------------------------------------'
+print 'PARSING DATASET'
+print '--------------------------------------------------------------------------------'
+csvPathname = 'iris/iris2.csv'
+parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+print '--------------------------------------------------------------------------------'
+print 'RUNNING RF'
+print '--------------------------------------------------------------------------------'
+timeoutSecs = 20
+if h2o.beta_features:
+    kwargs = {'ntrees': 6, }
+else:
+    kwargs = {'ntree': 6, }
+rf_json_response = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+print json.dumps(rf_json_response, indent=4)
+print '--------------------------------------------------------------------------------'
+print 'SHUTTING DOWN'
+print '--------------------------------------------------------------------------------'
+h2o.check_sandbox_for_errors()
+h2o.tear_down_cloud()
