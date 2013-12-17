@@ -15,7 +15,7 @@ def main(argv):
     parse_args(argv)
     if (not os.path.exists(h2o_jar)):
         print ''
-        print 'H2O jar not found: {}'.format(h2o_jar)
+        print ('ERROR: H2O jar not found: ' + h2o_jar)
         print ''
         sys.exit(1)
     if g_wipe_output_dir:
@@ -24,8 +24,8 @@ def main(argv):
                 shutil.rmtree(g_output_dir)
         except OSError as e:
             print ''
-            print 'Removing directory failed (errno {0}): {1}'.format(e.errno, e.strerror)
-            print ('    ' + g_output_dir)
+            print ('ERROR: Removing output directory failed: ' + g_output_dir)
+            print '       (errno {0}): {1}'.format(e.errno, e.strerror)
             print ''
             sys.exit(1)
     if (g_test_to_run is not None):
