@@ -6,6 +6,9 @@ def pickRandRfParams(paramDict, params):
         randomV = paramDict[randomKey]
         randomValue = random.choice(randomV)
         params[randomKey] = randomValue
+        if (('cols' in params) and ('ignored_cols_by_name' in params)):
+            if (params['cols'] and params['ignored_cols_by_name']):
+                params['cols'] = None
         if (randomKey == 'x'):
             colX = randomValue
     return colX
