@@ -1,13 +1,14 @@
 {
   ScoreBuildHistogram sbh=new ScoreBuildHistogram(ktrees,leafs,hcs).doAll(fr);
+  hcs=sbh._hcs;
   boolean did_split=false;
   for (int k=0; k < _nclass; k++) {
     DTree tree=ktrees[k];
     if (tree == null)     continue;
     int tmax=tree.len();
     for (int leaf=leafs[k]; leaf < tmax; leaf++) {
-      UndecidedNode udn=tree.undecided(leaf);
-      DecidedNode dn=makeDecided(udn,hcs[k][leaf - leafs[k]]);
+      DTree.UndecidedNode udn=tree.undecided(leaf);
+      DTree.DecidedNode dn=makeDecided(udn,hcs[k][leaf - leafs[k]]);
       if (dn._split.col() == -1)       udn.do_not_split();
  else       did_split=true;
     }
@@ -17,5 +18,5 @@
     for (int nl=tmax; nl < tree.len(); nl++)     hcs[k][nl - tmax]=tree.undecided(nl)._hs;
     tree.depth++;
   }
-  return did_split;
+  return did_split ? hcs : null;
 }
