@@ -1,8 +1,0 @@
-def terminate_self_only(self):
-    self.channel.close()
-    time.sleep(1)
-    try:
-        gc_output = self.get_cloud(noExtraErrorCheck=True)
-        raise Exception(("get_cloud() should fail after we terminate a node. It isn't. %s %s" % (self, gc_output)))
-    except:
-        return True

@@ -1,6 +1,0 @@
-def gbm_view(self, model_key, timeoutSecs=300, print_params=False, **kwargs):
-    params_dict = {'_modelKey': model_key, }
-    check_params_update_kwargs(params_dict, kwargs, 'gbm_view', print_params)
-    a = self.__do_json_request('2/GBMModelView.json', timeout=timeoutSecs, params=params_dict)
-    verboseprint('\ngbm_view result:', dump_json(a))
-    return a

@@ -1,7 +1,0 @@
-def inspect(self, key, offset=None, view=None, max_column_display=1000, ignoreH2oError=False, timeoutSecs=30):
-    if beta_features:
-        params = {'src_key': key, 'offset': offset, }
-    else:
-        params = {'key': key, 'offset': offset, 'view': view, 'max_column_display': max_column_display, }
-    a = self.__do_json_request(('2/Inspect2.json' if beta_features else 'Inspect.json'), params=params, ignoreH2oError=ignoreH2oError, timeout=timeoutSecs)
-    return a

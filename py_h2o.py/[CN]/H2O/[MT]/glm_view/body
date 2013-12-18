@@ -1,6 +1,0 @@
-def glm_view(self, modelKey=None, timeoutSecs=300, print_params=False, **kwargs):
-    params_dict = {'_modelKey': modelKey, }
-    check_params_update_kwargs(params_dict, kwargs, 'glm_view', print_params)
-    a = self.__do_json_request('2/GLMModelView.json', timeout=timeoutSecs, params=params_dict)
-    verboseprint('\nglm_view result:', dump_json(a))
-    return a
