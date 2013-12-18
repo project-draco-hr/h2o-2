@@ -80,7 +80,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         response = self.__do_json_request(fullUrl=urlUsed, timeout=pollTimeoutSecs, params=paramsUsed)
         verboseprint(msgUsed, urlUsed, paramsUsedStr, 'Response:', dump_json(response))
         if ((count % 6) == 0):
-            check_sandbox_for_errors()
+            check_sandbox_for_errors(python_test_name=python_test_name)
         if create_noise:
             status = 'poll'
             progress = ''
