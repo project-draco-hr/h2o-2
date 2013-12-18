@@ -1,0 +1,6 @@
+def get_key(self, key, timeoutSecs=30):
+    params = {'key': key, }
+    paramsStr = ('?' + '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()]))
+    url = self.__url('Get.html')
+    log((('Start ' + url) + paramsStr))
+    return requests.get(url, params=params, timeout=timeoutSecs)
