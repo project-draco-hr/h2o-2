@@ -13,10 +13,11 @@ def parse_our_args():
     parser.add_argument('-aai', '--abort_after_import', help='abort the test after printing the full path to the first dataset used by import_parse/import_only', action='store_true')
     parser.add_argument('-ccj', '--clone_cloud_json', type=str, help='a h2o-nodes.json file can be passed (see build_cloud(create_json=True). This will create a cloned set of node objects, so any test that builds a cloud, can also be run on an existing cloud without changing the test')
     parser.add_argument('-dts', '--disable_time_stamp', help='Disable the timestamp on all stdout. Useful when trying to capture some stdout (like json prints) for use elsewhere', action='store_true')
+    parser.add_argument('-debug_rest', '--debug_rest', help='Print REST API interactions to rest.log', action='store_true')
     parser.add_argument('unittest_args', nargs='*')
     args = parser.parse_args()
     global browse_disable, browse_json, verbose, ipaddr_from_cmd_line, config_json, debugger, random_udp_drop
-    global random_seed, beta_features, sleep_at_tear_down, abort_after_import, clone_cloud_json, disable_time_stamp
+    global random_seed, beta_features, sleep_at_tear_down, abort_after_import, clone_cloud_json, disable_time_stamp, debug_rest
     browse_disable = (args.browse_disable or (getpass.getuser() == 'jenkins'))
     browse_json = args.browse_json
     verbose = args.verbose
@@ -30,4 +31,5 @@ def parse_our_args():
     abort_after_import = args.abort_after_import
     clone_cloud_json = args.clone_cloud_json
     disable_time_stamp = args.disable_time_stamp
+    debug_rest = args.debug_rest
     sys.argv[1:] = (['-v', '--failfast'] + args.unittest_args)
