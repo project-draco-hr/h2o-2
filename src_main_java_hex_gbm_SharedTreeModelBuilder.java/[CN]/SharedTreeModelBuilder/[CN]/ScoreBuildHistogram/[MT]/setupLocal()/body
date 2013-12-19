@@ -1,3 +1,14 @@
 {
-  for (  DTree dt : _trees)   if (dt != null)   dt.init_tree();
+  _tree.init_tree();
+  for (int l=_leaf; l < _tree._len; l++) {
+    DTree.UndecidedNode udn=_tree.undecided(l);
+    DSharedHistogram hs[]=_hcs[l - _leaf];
+    int sCols[]=udn._scoreCols;
+    if (sCols != null) {
+      for (int j=0; j < sCols.length; j++)       hs[sCols[j]].init();
+    }
+ else {
+      for (int j=0; j < _ncols; j++)       if (hs[j] != null)       hs[j].init();
+    }
+  }
 }
