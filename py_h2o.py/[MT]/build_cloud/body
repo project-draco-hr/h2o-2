@@ -49,17 +49,18 @@ def build_cloud(node_count=2, base_port=54321, hosts=None, timeoutSecs=30, retry
                 stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
         else:
             pass
-        check_sandbox_for_errors()
+        check_sandbox_for_errors(python_test_name=python_test_name)
     except:
         if cleanup:
             for n in nodeList:
                 n.terminate()
         else:
             nodes[:] = nodeList
-        check_sandbox_for_errors()
+        check_sandbox_for_errors(python_test_name=python_test_name)
         raise
     nodes[:] = nodeList
     print len(nodeList), 'total jvms in H2O cloud'
+    nodes[0].h2o_log_msg()
     if config_json:
         print 'Saving the ', config_json, 'we used to', LOG_DIR
         shutil.copy(config_json, ((LOG_DIR + '/') + os.path.basename(config_json)))

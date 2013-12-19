@@ -1,4 +1,4 @@
-def check_sandbox_for_errors(LOG_DIR=None, python_test_name='Invalid', cloudShutdownIsError=False, sandboxIgnoreErrors=False):
+def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsError=False, sandboxIgnoreErrors=False):
     errorFound = False
     if (not LOG_DIR):
         LOG_DIR = './sandbox'
@@ -25,12 +25,11 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='Invalid', cloudShut
             log_python_test_name = None
             for line in sandFile:
                 currentLine += 1
-                if line.startswith('python_test_name: '):
-                    log_python_test_name = line[17:]
+                m = re.search('(python_test_name:) (.*)', line)
+                if m:
+                    log_python_test_name = m.group(2)
                 if (currentLine <= doneToLine):
                     continue
-                if (log_python_test_name and (log_python_test_name != python_test_name)):
-                    print 'h2o_sandbox.py: ignoring because wrong test name:', currentLine
                 printSingleWarning = False
                 foundBad = False
                 if (not (' bytes)' in line)):
