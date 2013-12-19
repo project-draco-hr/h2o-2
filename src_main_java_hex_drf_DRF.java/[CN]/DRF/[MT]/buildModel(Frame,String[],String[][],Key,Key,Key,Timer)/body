@@ -7,14 +7,12 @@
   DTree[] ktrees=null;
   TreeStats tstats=new TreeStats();
   for (tid=0; tid < ntrees; tid++) {
-    Timer t_kTrees=new Timer();
     ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
-    Log.info(Sys.DRF__,"Tree " + (tid + 1) + "x"+ _nclass+ " produced in "+ t_kTrees);
     if (cancelled())     break;
     tstats.updateBy(ktrees);
-    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false);
+    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,validation == null);
   }
-  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true);
+  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,validation == null);
   if (classification && importance) {
     float varimp[]=doVarImp(model,fr);
     Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));

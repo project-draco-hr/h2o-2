@@ -1,0 +1,4 @@
+{
+  double old=ds[i];
+  while (!_unsafe.compareAndSwapLong(ds,rawIndex(ds,i),Double.doubleToRawLongBits(old),Double.doubleToRawLongBits(old + y)))   old=ds[i];
+}
