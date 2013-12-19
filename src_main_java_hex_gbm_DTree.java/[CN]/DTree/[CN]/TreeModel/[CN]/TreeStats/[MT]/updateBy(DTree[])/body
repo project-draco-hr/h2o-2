@@ -2,6 +2,7 @@
   if (ktrees == null)   return;
   for (int i=0; i < ktrees.length; i++) {
     DTree tree=ktrees[i];
+    if (tree == null)     continue;
     if (minDepth > tree.depth)     minDepth=tree.depth;
     if (maxDepth < tree.depth)     maxDepth=tree.depth;
     if (minLeaves > tree.leaves)     minLeaves=tree.leaves;
@@ -9,7 +10,7 @@
     sumDepth+=tree.depth;
     sumLeaves+=tree.leaves;
     numTrees++;
-    meanDepth=(int)(sumDepth / numTrees);
-    meanLeaves=(int)(sumLeaves / numTrees);
+    meanDepth=((float)sumDepth / numTrees);
+    meanLeaves=((float)sumLeaves / numTrees);
   }
 }

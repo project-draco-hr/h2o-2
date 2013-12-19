@@ -11,5 +11,5 @@ def tear_down_cloud(nodeList=None, sandboxIgnoreErrors=False):
             n.terminate()
             verboseprint('tear_down_cloud n:', n)
     finally:
-        check_sandbox_for_errors(sandboxIgnoreErrors=sandboxIgnoreErrors)
+        check_sandbox_for_errors(sandboxIgnoreErrors=sandboxIgnoreErrors, python_test_name=python_test_name)
         nodeList[:] = []
