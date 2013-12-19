@@ -1,4 +1,4 @@
-def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is ???', cloudShutdownIsError=False, sandboxIgnoreErrors=False):
+def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsError=False, sandboxIgnoreErrors=False):
     errorFound = False
     if (not LOG_DIR):
         LOG_DIR = './sandbox'
@@ -22,8 +22,12 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='python_test_name is
             printing = 0
             lines = 0
             currentLine = 0
+            log_python_test_name = None
             for line in sandFile:
                 currentLine += 1
+                m = re.search('(python_test_name:) (.*)', line)
+                if m:
+                    log_python_test_name = m.group(2)
                 if (currentLine <= doneToLine):
                     continue
                 printSingleWarning = False
