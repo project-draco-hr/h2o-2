@@ -7,7 +7,7 @@ def test_KMeans_fuzzy_centers(self):
     else:
         genCenters = [[100, 100, 100, 100, 100, 100], [110, 110, 110, 110, 110, 110], [120, 120, 120, 120, 120, 120], [130, 130, 130, 130, 130, 130]]
     lenNodes = len(h2o.nodes)
-    rowCount = 4
+    rowCount = 10000
     expected = [(g, rowCount, None) for g in genCenters]
     allowedDelta = (0.2, 0.2, 0.2, 0.2, 0.2, 0.2)
     allowedDelta = (0.2, 0.2)
@@ -43,6 +43,8 @@ def test_KMeans_fuzzy_centers(self):
         print 'trial:', trial, 'genDistances:', genDistances
         print 'trial:', trial, 'centers:', centers
         print 'trial:', trial, 'error:', error
+        if (abs((genDistances - error)) > (0.001 * genDistances)):
+            raise Exception(('genDistances: %s error: %s are too different' % (genDistances, error)))
         if ((not bestError) or (error < bestError)):
             print 'Found smaller error:', error
             bestError = error
