@@ -1,6 +1,6 @@
 {
   int leafk=_leafs[_k];
-  ScoreBuildHistogram sbh=new ScoreBuildHistogram(_k,_tree,leafk,_hcs[_k]).doAll(_fr2,_copy_data);
+  ScoreBuildHistogram sbh=new ScoreBuildHistogram(_k,_tree,leafk,_hcs[_k]).doAll(_fr2,_build_tree_per_node);
   int tmax=_tree.len();
   for (int leaf=leafk; leaf < tmax; leaf++) {
     DTree.UndecidedNode udn=_tree.undecided(leaf);

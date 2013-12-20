@@ -10,9 +10,9 @@
     ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
     if (cancelled())     break;
     tstats.updateBy(ktrees);
-    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,validation == null,copy_data);
+    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,validation == null,build_tree_per_node);
   }
-  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,validation == null,copy_data);
+  model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,validation == null,build_tree_per_node);
   if (classification && importance) {
     float varimp[]=doVarImp(model,fr);
     Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));
