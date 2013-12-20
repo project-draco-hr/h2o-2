@@ -45,6 +45,9 @@
             FrameClassVec response=classVecs.get(d._ref);
             arg=new ClassifyBool(f.getName(),response);
           }
+ else           if (d instanceof DRFCopyDataBoolean) {
+            arg=new DRFCopyDataBool(f.getName(),(TypeaheadKey)ref);
+          }
         }
  else         if (f.getType() == String.class)         arg=new Str(f.getName(),(String)defaultValue);
  else         if (f.getType() == float.class || f.getType() == double.class) {
