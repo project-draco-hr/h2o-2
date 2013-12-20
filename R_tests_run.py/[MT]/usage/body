@@ -1,6 +1,6 @@
 def usage():
     print ''
-    print (('Usage:  ' + g_script_name) + ' [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file]')
+    print (('Usage:  ' + g_script_name) + ' [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file] [--usecloud ip:port]')
     print ''
     print (('    (Output dir is: ' + g_output_dir) + ')')
     print ''
@@ -15,6 +15,9 @@ def usage():
     print ''
     print '    --testlist    A file containing a list of tests to run (for example the'
     print "                  'failed.txt' file from the output directory)."
+    print ''
+    print '    --usecloud    ip:port of cloud to send tests to instead of starting clouds.'
+    print '                  (When this is specified, numclouds is ignored.)'
     print ''
     print '    If neither --test nor --testlist is specified, then the list of tests is'
     print "    discovered automatically as files matching '*runit*.R'."

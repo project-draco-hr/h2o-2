@@ -13,5 +13,5 @@ def __init__(self, cloud_num, nodes_per_cloud, h2o_jar, base_port, xmx, output_d
     self.nodes = []
     self.jobs_run = 0
     for node_num in range(self.nodes_per_cloud):
-        node = H2OCloudNode(self.cloud_num, self.nodes_per_cloud, node_num, self.cloud_name, self.h2o_jar, self.base_port, self.xmx, self.output_dir)
+        node = H2OCloudNode(self.cloud_num, self.nodes_per_cloud, node_num, self.cloud_name, self.h2o_jar, '127.0.0.1', self.base_port, self.xmx, self.output_dir)
         self.nodes.append(node)
