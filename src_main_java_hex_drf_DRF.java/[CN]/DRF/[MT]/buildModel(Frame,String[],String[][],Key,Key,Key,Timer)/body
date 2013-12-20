@@ -16,7 +16,7 @@
   if (classification && importance) {
     float varimp[]=doVarImp(model,fr);
     Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));
-    model=new DRFModel(model,varimp);
+    model.varimp=varimp;
     DKV.put(outputKey,model);
   }
   cleanUp(fr,t_build);
