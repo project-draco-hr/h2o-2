@@ -6,8 +6,7 @@ def write_syn_dataset(csvPathname, rowCount, centers, SEED):
         for i in range(rowCount):
             rowData = []
             for c in center:
-                r = random.randint((-2), 2)
-                r = random.randint(0, 2)
+                r = random.randint((-1), 1)
                 rowData.append((c + r))
             rowDataCsv = ','.join(map(str, rowData))
             dsf.write((rowDataCsv + '\n'))

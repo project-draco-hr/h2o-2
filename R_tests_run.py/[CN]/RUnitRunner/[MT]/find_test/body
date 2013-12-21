@@ -8,4 +8,7 @@ def find_test(test_to_run):
         for f in files:
             if (f == test_to_run):
                 return os.path.join(d, f)
-    return file
+    print ''
+    print ('ERROR: Test does not exist: ' + test_to_run)
+    print ''
+    sys.exit(1)
