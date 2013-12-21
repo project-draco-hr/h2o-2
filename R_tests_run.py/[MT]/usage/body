@@ -1,6 +1,6 @@
 def usage():
     print ''
-    print (('Usage:  ' + g_script_name) + ' [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file]')
+    print (('Usage:  ' + g_script_name) + ' [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file] [--usecloud ip:port]')
     print ''
     print (('    (Output dir is: ' + g_output_dir) + ')')
     print ''
@@ -16,6 +16,9 @@ def usage():
     print '    --testlist    A file containing a list of tests to run (for example the'
     print "                  'failed.txt' file from the output directory)."
     print ''
+    print '    --usecloud    ip:port of cloud to send tests to instead of starting clouds.'
+    print '                  (When this is specified, numclouds is ignored.)'
+    print ''
     print '    If neither --test nor --testlist is specified, then the list of tests is'
     print "    discovered automatically as files matching '*runit*.R'."
     print ''
@@ -25,10 +28,10 @@ def usage():
     print '    Just accept the defaults and go (note: output dir must not exist):'
     print ('        ' + g_script_name)
     print ''
-    print '    On a powerful laptop with 8 cores:'
+    print '    For a powerful laptop with 8 cores:'
     print (('        ' + g_script_name) + ' --wipe --numclouds 5')
     print ''
-    print '    On a big server with 32 cores:'
+    print '    For a big server with 32 cores:'
     print (('        ' + g_script_name) + ' --wipe --numclouds 16')
     print ''
     print '    Run one specific test:'
@@ -38,5 +41,8 @@ def usage():
     print '        # Copy failures.txt, otherwise --wipe removes the directory with the list!'
     print (('        cp ' + os.path.join(g_output_dir, 'failures.txt')) + ' .')
     print (('        ' + g_script_name) + ' --wipe --numclouds 16 --testlist failures.txt')
+    print ''
+    print '    Run tests on a pre-existing cloud (e.g. in a debugger):'
+    print (('        ' + g_script_name) + ' --wipe --usecloud ip:port')
     print ''
     sys.exit(1)

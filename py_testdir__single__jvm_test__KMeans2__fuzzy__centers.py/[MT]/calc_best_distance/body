@@ -1,0 +1,17 @@
+def calc_best_distance(centers, dataset):
+    totalError = 0
+    clusterMembership = [0 for i in centers]
+    clusterVariance = [0 for i in centers]
+    for data in dataset:
+        smallestError = None
+        for (i, center) in enumerate(centers):
+            error = sum([((c - d) ** 2) for (c, d) in zip(center, data)])
+            if ((not smallestError) or (error < smallestError)):
+                smallestError = error
+                smallestI = i
+        totalError += smallestError
+        clusterMembership[smallestI] += 1
+        clusterVariance[smallestI] += smallestError
+    print 'clusterMembership:', clusterMembership
+    print 'clusterVariance:', clusterVariance
+    return totalError

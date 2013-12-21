@@ -1,0 +1,10 @@
+{
+  for (int i=0; i < inputs[0]._len; i++) {
+    for (int j=0; j < inputs.length; j++) {
+      int idx=(int)inputs[j].at0(i);
+      for (int k=0; k < (_offsets[j + 1] - _offsets[j]); k++) {
+        outputs[k + _offsets[j]].addNum(k == idx ? 1 : 0,0);
+      }
+    }
+  }
+}
