@@ -2,7 +2,7 @@
   _tree.init_tree();
   for (int l=_leaf; l < _tree._len; l++) {
     DTree.UndecidedNode udn=_tree.undecided(l);
-    DRealHistogram hs[]=_hcs[l - _leaf];
+    DHistogram hs[]=_hcs[l - _leaf];
     int sCols[]=udn._scoreCols;
     if (sCols != null) {
       for (int j=0; j < sCols.length; j++)       hs[sCols[j]].init();

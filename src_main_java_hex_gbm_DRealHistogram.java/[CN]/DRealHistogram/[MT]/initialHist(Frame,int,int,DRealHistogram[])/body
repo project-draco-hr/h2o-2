@@ -1,8 +1,0 @@
-{
-  Vec vecs[]=fr.vecs();
-  for (int c=0; c < ncols; c++) {
-    Vec v=vecs[c];
-    hs[c]=(v.naCnt() == v.length() || v.min() == v.max()) ? null : new DRealHistogram(fr._names[c],nbins,(byte)(v.isEnum() ? 2 : (v.isInt() ? 1 : 0)),(float)v.min(),(float)v.max(),v.length());
-  }
-  return hs;
-}
