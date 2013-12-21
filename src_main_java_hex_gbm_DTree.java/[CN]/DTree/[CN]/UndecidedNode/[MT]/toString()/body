@@ -23,7 +23,7 @@
   for (int j=0; j < ncols; j++)   if (_hs[j] != null && _hs[j].nbins() > nbins)   nbins=_hs[j].nbins();
   for (int i=0; i < nbins; i++) {
     for (int j=0; j < ncols; j++) {
-      DSharedHistogram h=_hs[j];
+      DRealHistogram h=_hs[j];
       if (h == null)       continue;
       if (i < h.nbins() && h._bins != null) {
         p(sb,h.bins(i),cntW).append('/');
