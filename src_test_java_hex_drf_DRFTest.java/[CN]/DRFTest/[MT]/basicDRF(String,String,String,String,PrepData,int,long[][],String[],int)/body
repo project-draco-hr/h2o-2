@@ -19,7 +19,7 @@
     drf.destination_key=Key.make("DRF_model_4_" + hexnametrain);
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
-    assertCM(expCM,model.cm);
+    assertCM(expCM,model.cms[model.cms.length - 1]);
     Assert.assertEquals("Number of trees differs!",ntree,model.errs.length - 1);
     String[] cmDom=model._domains[model._domains.length - 1];
     Assert.assertArrayEquals("CM domain differs!",expRespDom,cmDom);
