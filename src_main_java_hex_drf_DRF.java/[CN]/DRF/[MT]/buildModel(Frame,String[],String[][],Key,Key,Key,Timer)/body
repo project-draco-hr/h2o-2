@@ -13,7 +13,6 @@
     model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,validation == null,build_tree_per_node);
   }
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,validation == null,build_tree_per_node);
-  System.out.println("Avg depth=" + model.treeStats.meanDepth);
   if (classification && importance) {
     float varimp[]=doVarImp(model,fr);
     Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));

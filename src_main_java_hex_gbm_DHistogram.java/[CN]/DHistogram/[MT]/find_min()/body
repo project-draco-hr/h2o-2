@@ -1,11 +1,4 @@
 {
   if (_bins == null)   return Float.NaN;
-  int n=0;
-  while (n < _nbin && _bins[n] == 0)   n++;
-  if (n == _nbin)   return Float.NaN;
-  if (DRF._optflags == 0)   return _mins[n];
-  if (n == 0)   return _min;
-  float min=binAt(n);
-  if (_isInt > 0)   min=(float)Math.ceil(min);
-  return min;
+  return _min2;
 }
