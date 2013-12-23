@@ -5,26 +5,24 @@
   Key destTest=hexnametest != null ? Key.make(hexnametest) : null;
   Frame pred=null;
   try {
-    drf=new DRF();
+    drf=new DRF(optflags);
     frTrain=drf.source=parseFrame(destTrain,fnametrain);
     unifyFrame(drf,frTrain,prep);
     drf.classification=true;
     drf.ntrees=ntree;
     drf.max_depth=max_depth;
     drf.min_rows=1;
-    drf.nbins=20;
+    drf.nbins=nbins;
     drf.mtries=-1;
     drf.sample_rate=0.66667f;
     drf.seed=(1L << 32) | 2;
     drf.destination_key=Key.make("DRF_model_4_" + hexnametrain);
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
-    assertCM(expCM,model.cms[model.cms.length - 1]);
     Assert.assertEquals("Number of trees differs!",ntree,model.errs.length - 1);
     String[] cmDom=model._domains[model._domains.length - 1];
     Assert.assertArrayEquals("CM domain differs!",expRespDom,cmDom);
-    frTest=fnametest != null ? parseFrame(destTest,fnametest) : null;
-    pred=drf.score(frTest != null ? frTest : drf.source);
+    System.out.println("OOBEE " + Arrays.deepToString(model.cms[model.cms.length - 1]));
   }
  catch (  Throwable t) {
     t.printStackTrace();
