@@ -9,10 +9,10 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
             if (('Failed' in w) or ('failed' in w)):
                 raise Exception(w)
     if h2o.beta_features:
-        if ('cm' in rfv):
-            cm = rfv['cm']
+        if ('cms' in rfv):
+            cm = rfv['cms']
         else:
-            cm = rfv['drf_model']['cm']
+            cm = rfv['drf_model']['cms']
         scoresList = cm
     else:
         cm = rfv['confusion_matrix']
