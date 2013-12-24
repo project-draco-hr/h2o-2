@@ -10,9 +10,14 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
                 raise Exception(w)
     if h2o.beta_features:
         if ('cms' in rfv):
-            cm = rfv['cms'][5]
+            midpoint = (len(cms) / 2)
+            cm = rfv['cms'][(-1)]
         else:
-            cm = rfv['drf_model']['cms'][5]
+            cms = rfv['drf_model']['cms']
+            print 'number of cms:', len(cms)
+            print 'cms[0]:', cms[0]
+            midpoint = (len(cms) / 2)
+            cm = cms[(-1)]
         scoresList = cm
     else:
         cm = rfv['confusion_matrix']

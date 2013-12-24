@@ -8,7 +8,7 @@ def showGBMGridResults(GBMResult, expectedErrorMax, classification=True):
         gbmTrainView = h2o_cmd.runGBMView(model_key=model_key)
         print 'jobnum:', jobnum, h2o.dump_json(gbmTrainView)
         if classification:
-            cm = gbmTrainView['gbm_model']['cms'][5]
+            cm = gbmTrainView['gbm_model']['cms'][(-1)]
             pctWrongTrain = pp_cm_summary(cm)
             if (pctWrongTrain > expectedErrorMax):
                 raise Exception(('Should have < %s error here. pctWrongTrain: %s' % (expectedErrorMax, pctWrongTrain)))

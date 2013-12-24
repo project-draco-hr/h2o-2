@@ -62,7 +62,7 @@ def test_GBM_covtype_train_test(self):
             elapsed = (time.time() - start)
             print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
             gbmPredictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseTestResult['destination_key'], vactual=response, predict=predictKey, vpredict='predict')
-            cm = gbmPredictCMResult['cms'][5]
+            cm = gbmPredictCMResult['cms'][(-1)]
             pctWrong = h2o_gbm.pp_cm_summary(cm)
             print '\nTest\n==========\n'
             print h2o_gbm.pp_cm(cm)
