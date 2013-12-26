@@ -1,0 +1,4 @@
+{
+  float old=_max2;
+  while (max > old && !_unsafe.compareAndSwapInt(this,_max2Offset,Float.floatToRawIntBits(old),Float.floatToRawIntBits(max)))   old=_max2;
+}

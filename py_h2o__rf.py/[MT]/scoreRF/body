@@ -8,7 +8,7 @@ def scoreRF(scoreParseResult, trainResult, vactual=None, timeoutSecs=120, **kwar
         h2o_cmd.runInspect(key='Predict.hex', verbose=True)
         predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual=vactual, predict=predictKey, vpredict='predict', timeoutSecs=timeoutSecs, **kwargs)
         rftime = (time.time() - start)
-        cm = predictCMResult['cm']
+        cm = predictCMResult['cms'][5]
         pctWrong = h2o_gbm.pp_cm_summary(cm)
         print '\nTest\n==========\n'
         print h2o_gbm.pp_cm(cm)

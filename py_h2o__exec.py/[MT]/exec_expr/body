@@ -6,16 +6,17 @@ def exec_expr(node=None, execExpr=None, resultKey=None, timeoutSecs=10, ignoreH2
     resultExec = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
     h2o.verboseprint('exec took', (time.time() - start), 'seconds')
     h2o.verboseprint(resultExec)
-    if (resultKey is not None):
-        kwargs = {'str': resultKey, }
-        resultExec2 = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
-        h2o.verboseprint('resultExec2:', h2o.dump_json(resultExec2))
-        return (resultExec2, resultExec2['cols'][0]['min'])
-    else:
-        if ('scalar' in resultExec):
-            result = resultExec['scalar']
-        elif ('result' in resultExec):
-            result = resultExec['result']
+    if (('cols' in resultExec) and resultExec['cols']):
+        if (('funstr' in resultExec) and resultExec['funstr']):
+            raise Exception(("cols and funstr shouldn't both be in resultExec: %s" % h2o.dump_json(resultExec)))
         else:
-            result = None
-        return (resultExec, result)
+            if (resultKey is not None):
+                kwargs = {'str': resultKey, }
+                resultExec = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
+                h2o.verboseprint('resultExec2:', h2o.dump_json(resultExec))
+            result = resultExec['cols'][0]['min']
+    elif (('funstr' in resultExec) and resultExec['funstr']):
+        result = resultExec['funstr']
+    else:
+        result = resultExec['scalar']
+    return (resultExec, result)

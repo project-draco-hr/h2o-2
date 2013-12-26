@@ -78,7 +78,7 @@ def test_GLM2_mnist(self):
             start = time.time()
             predictResult = h2o_cmd.runPredict(data_key='B.hex', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
             predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='B.hex', vactual=('C' + str(y)), predict=predictKey, vpredict='predict')
-            cm = predictCMResult['cm']
+            cm = predictCMResult['cm'][5]
             pctWrong = h2o_gbm.pp_cm_summary(cm)
             self.assertLess(pctWrong, 9, 'Should see less than 9% error (class = 4)')
             print '\nTest\n==========\n'
