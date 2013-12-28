@@ -19,10 +19,12 @@
     drf.destination_key=Key.make("DRF_model_4_" + hexnametrain);
     drf.invoke();
     DRFModel model=UKV.get(drf.dest());
+    assertCM(expCM,model.cms[model.cms.length - 1]);
     Assert.assertEquals("Number of trees differs!",ntree,model.errs.length - 1);
     String[] cmDom=model._domains[model._domains.length - 1];
     Assert.assertArrayEquals("CM domain differs!",expRespDom,cmDom);
-    System.out.println("OOBEE " + Arrays.deepToString(model.cms[model.cms.length - 1]));
+    frTest=fnametest != null ? parseFrame(destTest,fnametest) : null;
+    pred=drf.score(frTest != null ? frTest : drf.source);
   }
  catch (  Throwable t) {
     t.printStackTrace();
