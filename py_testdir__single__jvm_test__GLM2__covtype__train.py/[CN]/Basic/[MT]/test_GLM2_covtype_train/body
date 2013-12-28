@@ -37,7 +37,7 @@ def test_GLM2_covtype_train(self):
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key=testDataKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
         predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=testDataKey, vactual=('C' + str(y)), predict=predictKey, vpredict='predict')
-        cm = predictCMResult['cm'][5]
+        cm = predictCMResult['cm']
         pctWrong = h2o_gbm.pp_cm_summary(cm)
         self.assertLess(pctWrong, 8, 'Should see less than 7% error (class = 4)')
         print '\nTest\n==========\n'
