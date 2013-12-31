@@ -1,0 +1,9 @@
+{
+  int x=E._x;
+  String id=E.isID();
+  if (id == null)   return null;
+  ASTOp op=PREFIX_OPS.get(id);
+  if (op != null)   return op.make();
+  E._x=x;
+  return ASTFunc.parseFcn(E);
+}
