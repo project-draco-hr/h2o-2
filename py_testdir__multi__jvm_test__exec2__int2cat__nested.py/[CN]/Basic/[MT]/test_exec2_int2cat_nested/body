@@ -1,7 +1,7 @@
 def test_exec2_int2cat_nested(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(1000, 10, 'cA', 100), (1000, 20, 'cB', 100), (1000, 30, 'cC', 100), (1000, 40, 'cD', 100), (1000, 10, 'cE', 100), (1000, 20, 'cF', 100), (1000, 30, 'cG', 100), (1000, 40, 'cH', 100)]
-    exprList = [((((('<keyX>[,<col2>] = factor(<keyX>[,<col1>]);' + '<keyX>[,<col1>] = factor(<keyX>[,1]);') + '<keyX>[,1] = factor(<keyX>[,<col2>]);') + '<keyX>[,<col2>] = factor(<keyX>[,<col1>]);') + '<keyX>[,<col1>] = factor(<keyX>[,1]);') + '<keyX>[,1] = factor(<keyX>[,<col2>]);')]
+    exprList = ['<keyX>[,<col2>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);', '<keyX>[,<col2>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);']
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
