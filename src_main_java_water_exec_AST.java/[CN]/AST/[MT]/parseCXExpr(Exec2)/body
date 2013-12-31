@@ -1,7 +1,7 @@
 {
   AST ast2, ast=ASTApply.parseInfix(E,null,0);
   if (ast == null)   return ASTAssign.parseNew(E);
-  if (ast instanceof ASTSlice)   if ((ast2=ASTAssign.parse(E,ast)) != null)   return ast2;
+  if (ast instanceof ASTSlice || ast instanceof ASTId)   if ((ast2=ASTAssign.parse(E,ast)) != null)   return ast2;
   if ((ast2=ASTIfElse.parse(E,ast)) != null)   return ast2;
   return ast;
 }
