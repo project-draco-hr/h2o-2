@@ -1,7 +1,6 @@
 {
   File file=new File(VM.h2oFolder(),"smalldata/iris/iris.csv");
-  Key fkey=NFSFileVec.make(file);
-  Frame frame=ParseDataset2.parse(Key.make(file.getName()),new Key[]{fkey});
+  Frame frame=Frames.parse(file);
   Sum sum=new Sum();
   sum.myInput="blah";
   sum.doAll(frame.vecs()[1]);
