@@ -29,7 +29,7 @@ def test_c5_KMeans_sphere_67MB(self):
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, fileMBS, elapsed)
         print ('\n' + l)
         h2o.cloudPerfH2O.message(l)
-        execExpr = ('apply(%s,2,function(x){ifelse(is.na(x),0,x)})' % hex_key)
+        execExpr = ('%s=apply(%s,2,function(x){ifelse(is.na(x),0,x)})' % (hex_key, hex_key))
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=10)
         inspect = h2o_cmd.runInspect(key=hex_key, timeoutSecs=500)
         h2o_cmd.infoFromInspect(inspect, csvPathname)
