@@ -1,4 +1,4 @@
-def build_test_list(self):
+def build_test_list(self, group=None):
     '\n        Recursively find the list of tests to run and store them in the object.\n        Fills in self.tests and self.tests_not_started.\n\n        @return:  none\n        '
     if self.terminated:
         return
@@ -8,4 +8,7 @@ def build_test_list(self):
         for f in files:
             if (not re.match('.*runit.*\\.[rR]', f)):
                 continue
+            if (group is not None):
+                if (group.lower() not in root):
+                    continue
             self.add_test(os.path.join(root, f))
