@@ -9,6 +9,7 @@
       if (rx >= _rows.length)       break;
       long r=_rows[rx++] - 1;
       if (r < 0) {
+        if (rx > 0 && _rows[rx - 1] < _rows[rx])         throw H2O.unimpl();
         long er=Math.abs(r) - 2;
         if (er < rstart)         continue;
         if (rx == 1 && ((int)(er + 1 - rstart)) > 0 && _ex) {
