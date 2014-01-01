@@ -11,14 +11,22 @@
       if (r < 0) {
         long er=Math.abs(r) - 2;
         if (er < rstart)         continue;
-        rlo=(int)(er + 1 - rstart);
-        while (rx < _rows.length && (_rows[rx] + 1 == _rows[rx - 1] && rlo < rlen)) {
-          if (rx < _rows.length - 1 && _rows[rx] < _rows[rx + 1])           throw H2O.unimpl();
-          rx++;
-          rlo++;
+        if (rx == 1 && ((int)(er + 1 - rstart)) > 0 && _ex) {
+          rlo=(int)rstart;
+          rhi=(int)(er - rstart);
+          _ex=false;
+          rx--;
         }
-        rhi=rx >= _rows.length ? rlen : (int)Math.abs(_rows[rx] - 1) - 2;
-        if (rx < _rows.length - 1 && _rows[rx] < _rows[rx + 1])         throw H2O.unimpl();
+ else {
+          rlo=(int)(er + 1 - rstart);
+          while (rx < _rows.length && (_rows[rx] + 1 == _rows[rx - 1] && rlo < rlen)) {
+            if (rx < _rows.length - 1 && _rows[rx] < _rows[rx + 1])             throw H2O.unimpl();
+            rx++;
+            rlo++;
+          }
+          rhi=rx >= _rows.length ? rlen : (int)Math.abs(_rows[rx] - 1) - 2;
+          if (rx < _rows.length - 1 && _rows[rx] < _rows[rx + 1])           throw H2O.unimpl();
+        }
       }
  else {
         if (r < rstart)         continue;
