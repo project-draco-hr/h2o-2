@@ -62,7 +62,7 @@ def test_GBM_params_rand2(self):
             print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
             if DO_PREDICT_CM:
                 gbmPredictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseTestResult['destination_key'], vactual='predict', predict=predictKey, vpredict='predict')
-                cm = gbmPredictCMResult['cms'][(-1)]
+                cm = gbmPredictCMResult['cm']
                 pctWrong = h2o_gbm.pp_cm_summary(cm)
                 print 'Last line of this cm is really NAs, not CM'
                 print '\nTest\n==========\n'
