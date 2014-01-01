@@ -15,8 +15,7 @@ def test_rf_change_data_key(self):
     inspect = h2o_cmd.runInspect(key=parseResultTest['destination_key'])
     dataKeyTest = parseResultTest['destination_key']
     print 'Parse end', dataKeyTest
-    print "RF with no_confusion_matrix=1, so we can 'time' the RFView separately after job completion?"
-    params = {'ntree': 6, 'out_of_bag_error_estimate': 0, 'no_confusion_matrix': 1, 'model_key': 'RF_model', }
+    params = {'ntree': 6, 'out_of_bag_error_estimate': 0, 'model_key': 'RF_model', }
     colX = h2o_rf.pickRandRfParams(paramDict, params)
     kwargs = params.copy()
     timeoutSecs = (30 + (kwargs['ntree'] * 60))
