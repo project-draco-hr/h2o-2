@@ -1,6 +1,7 @@
 {
   GBMModel model=new GBMModel(outputKey,dataKey,testKey,names,domains,ntrees,max_depth,min_rows,nbins,learn_rate);
   DKV.put(outputKey,model);
+  new ExcludeNAResponse().doAll(fr);
   int tid;
   DTree[] ktrees=null;
   TreeStats tstats=new TreeStats();

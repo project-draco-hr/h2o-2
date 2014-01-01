@@ -1,0 +1,14 @@
+{
+  Futures fs=new Futures();
+  Vec[] vecs=new Vec[rows[0].length];
+  Key keys[]=new Vec.VectorGroup().addVecs(vecs.length);
+  for (int c=0; c < vecs.length; c++) {
+    AppendableVec vec=new AppendableVec(keys[c]);
+    NewChunk chunk=new NewChunk(vec,0);
+    for (int r=0; r < rows.length; r++)     chunk.addNum(rows[r][c]);
+    chunk.close(0,fs);
+    vecs[c]=vec.close(fs);
+  }
+  fs.blockForPending();
+  return new Frame(headers,vecs);
+}

@@ -4,6 +4,7 @@ def parse_args(argv):
     global g_wipe_output_dir
     global g_test_to_run
     global g_test_list_file
+    global g_test_group
     global g_use_cloud
     global g_use_ip
     global g_use_port
@@ -32,6 +33,11 @@ def parse_args(argv):
             if (i > len(argv)):
                 usage()
             g_test_list_file = argv[i]
+        elif (s == '--testgroup'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            g_test_group = argv[i]
         elif (s == '--usecloud'):
             i += 1
             if (i > len(argv)):
@@ -42,8 +48,8 @@ def parse_args(argv):
                 unknown_arg(s)
             g_use_cloud = True
             g_use_ip = m.group(1)
-            portString = m.group(2)
-            g_use_port = int(portString)
+            port_string = m.group(2)
+            g_use_port = int(port_string)
         elif ((s == '-h') or (s == '--h') or (s == '-help') or (s == '--help')):
             usage()
         else:

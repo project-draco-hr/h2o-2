@@ -1,0 +1,10 @@
+def test_exec2_operators3(self):
+    bucket = 'smalldata'
+    csvPathname = 'iris/iris2.csv'
+    hexKey = 'i.hex'
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
+    for (resultKey, execExpr) in initList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=4)
+    for execExpr in exprList:
+        h2e.exec_expr(execExpr=execExpr, resultKey='r0.hex', timeoutSecs=10)
+    h2o.check_sandbox_for_errors()
