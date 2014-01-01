@@ -9,9 +9,8 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
             if (('Failed' in w) or ('failed' in w)):
                 raise Exception(w)
     if h2o.beta_features:
-        if ('cms' in rfv):
-            midpoint = (len(cms) / 2)
-            cm = rfv['cms'][(-1)]
+        if ('cm' in rfv):
+            cm = rfv['cm']
         else:
             cms = rfv['drf_model']['cms']
             print 'number of cms:', len(cms)

@@ -1,0 +1,11 @@
+def test_GBM_covtype_train_test(self):
+    h2o.beta_features = True
+    bucket = 'home-0xdiag-datasets'
+    importFolderPath = 'standard'
+    trainFilename = 'covtype.shuffled.90pct.data'
+    trainKey = 'covtype.train.hex'
+    modelKey = 'GBMModelKey'
+    timeoutSecs = 1800
+    parseTrainResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + trainFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs)
+    kwargs = {'max_depth': 7, 'ntrees': 2, 'response': 'C54', }
+    h2o_cmd.runGBM(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
