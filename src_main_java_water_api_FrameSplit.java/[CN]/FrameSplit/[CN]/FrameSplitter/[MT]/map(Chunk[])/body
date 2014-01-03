@@ -1,5 +1,5 @@
 {
-  Random random=new Random();
+  final Random random=(_seed != 0) ? new Random(_seed) : new Random();
   NewChunk[] new_chunks=new NewChunk[_num_columns * _splits.length];
   for (int i=0; i < _num_columns * _splits.length; i++)   new_chunks[i]=(NewChunk)cs[_num_columns + i];
   Vec[] vecs=_fr.vecs();

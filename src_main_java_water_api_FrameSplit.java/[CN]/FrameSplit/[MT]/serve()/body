@@ -1,5 +1,5 @@
 {
-  if (source == null || source.equals(""))   return Response.error("source is required");
+  if (source == null)   return Response.error("source is required");
   Key[] keys=new Key[fractions.length];
   if (this.destination_keys == null || "".equals(this.destination_keys)) {
     for (int i=0; i < keys.length; i++)     keys[i]=makeKey();
@@ -12,12 +12,13 @@
   StringBuilder sb=new StringBuilder();
   sb.append(String.format("framesplit: %s [%d,%d] to ",input("source"),source.numRows(),source.numCols()));
   for (int i=0; i < fractions.length; i++) {
-    sb.append(fractions[i] + " -> ");
+    sb.append(fractions[i]);
+    sb.append(" -> ");
     sb.append(keys[i]);
     sb.append(";");
   }
   Log.info(sb.toString());
-  Frame[] frames=splitFrame(source,fractions);
+  Frame[] frames=splitFrame(source,fractions,seed);
   for (int f=0; f < frames.length; f++)   DKV.put(keys[f],frames[f]);
   Results r=new Results();
   r.fractions=fractions;
