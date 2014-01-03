@@ -4,13 +4,16 @@
   if (ast == null) {
     ASTOp op1=ASTOp.parseUniInfixOp(E);
     if (op1 != null) {
-      if ((ast=parseInfix(E,null,op1._precedence)) == null)       E.throwErr("Missing expr or unknown ID",E._x);
-      ast=make(new AST[]{op1,ast},E,x);
+      if ((ast=parseInfix(E,null,op1._precedence)) != null)       ast=make(new AST[]{op1,ast},E,x);
+ else {
+        E._x=x;
+        ast=ASTSlice.parse(E);
+      }
     }
- else     if ((ast=ASTSlice.parse(E)) == null) {
-      E._x=x;
-      return null;
+ else {
+      ast=ASTSlice.parse(E);
     }
+    if (ast == null)     return null;
     inf=ast;
   }
   while (true) {
