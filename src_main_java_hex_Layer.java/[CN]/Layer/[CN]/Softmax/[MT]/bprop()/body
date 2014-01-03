@@ -5,8 +5,7 @@
   int label=target();
   for (int u=0; u < _a.length; u++) {
     float t=u == label ? 1 : 0;
-    float e=t - _a[u];
-    float g=e;
+    float g=t - _a[u];
     if (loss == Loss.MeanSquare)     g*=(1 - _a[u]) * _a[u];
     bprop(u,g,r,m);
   }
