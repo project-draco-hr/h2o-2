@@ -35,7 +35,8 @@
 );
   basicGBM("./smalldata/airlines/allyears2k_headers.zip","air.hex",new PrepData(){
     int prep(    Frame fr){
-      return fr.find("IsDepDelayed");
+      for (      String s : ignored_aircols)       UKV.remove(fr.remove(s)._key);
+      return fr.find("IsArrDelayed");
     }
   }
 );
