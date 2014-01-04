@@ -1,4 +1,4 @@
-def test_B_kmeans_benign(self):
+def notest_B_kmeans_benign(self):
     h2o.beta_features = True
     importFolderPath = 'logreg'
     csvFilename = 'benign.csv'
@@ -25,9 +25,9 @@ def test_B_kmeans_benign(self):
     h2o.verboseprint('KMeans2ModelView:', h2o.dump_json(modelView))
     model = modelView['model']
     clusters = model['clusters']
-    cluster_variances = model['cluster_variances']
-    error = model['error']
-    print 'cluster_variances:', cluster_variances
-    print 'error:', error
+    within_cluster_variances = model['within_cluster_variances']
+    total_within_SS = model['total_within_SS']
+    print 'within_cluster_variances:', within_cluster_variances
+    print 'total_within_SS:', total_within_SS
     (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
     h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=0)
