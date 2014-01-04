@@ -1,7 +1,9 @@
 {
   _cMeans=new double[_clusters.length][_clusters[0].length];
   _cSqrs=new double[_clusters.length][_clusters[0].length];
+  _betwnSqrs=new double[_clusters.length];
   _rows=new long[_clusters.length];
+  _gm=new double[_clusters[0].length];
   double[] values=new double[_clusters[0].length];
   ClusterDist cd=new ClusterDist();
   int[] clusters=new int[cs[0]._len];
@@ -14,7 +16,15 @@
     for (int col=0; col < values.length; col++)     _cMeans[clu][col]+=values[col];
     _rows[clu]++;
   }
-  for (int clu=0; clu < _cMeans.length; clu++)   for (int col=0; col < _cMeans[clu].length; col++)   _cMeans[clu][col]/=_rows[clu];
+  for (int clu=0; clu < _cMeans.length; clu++)   for (int col=0; col < _cMeans[clu].length; col++) {
+    _cMeans[clu][col]/=_rows[clu];
+    _gm[col]+=_cMeans[clu][col];
+  }
+  for (int col=0; col < _gm.length; col++)   _gm[col]/=_cMeans.length;
+  for (int clu=0; clu < _cMeans.length; clu++)   for (int col=0; col < _gm.length; col++) {
+    double mean_delta=_cMeans[clu][col] - _gm[col];
+    _betwnSqrs[clu]+=(double)_rows[clu] * mean_delta * mean_delta;
+  }
   for (int row=0; row < cs[0]._len; row++) {
     int clu=clusters[row];
     if (clu == -1)     continue;
