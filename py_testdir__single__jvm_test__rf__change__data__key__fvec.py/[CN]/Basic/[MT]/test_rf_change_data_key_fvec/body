@@ -1,24 +1,23 @@
-def test_rf_change_data_key(self):
+def test_rf_change_data_key_fvec(self):
+    h2o.beta_features = True
     importFolderPath = 'standard'
     csvFilenameTrain = 'covtype.data'
     csvPathname = ((importFolderPath + '/') + csvFilenameTrain)
     parseResultTrain = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=500)
-    print csvFilenameTrain, 'parse time:', parseResultTrain['response']['time']
     inspect = h2o_cmd.runInspect(key=parseResultTrain['destination_key'])
     dataKeyTrain = parseResultTrain['destination_key']
     print 'Parse end', dataKeyTrain
     csvFilenameTest = 'covtype20x.data'
     csvPathname = ((importFolderPath + '/') + csvFilenameTest)
     parseResultTest = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=500)
-    print csvFilenameTest, 'parse time:', parseResultTest['response']['time']
     print "Parse result['destination_key']:", parseResultTest['destination_key']
     inspect = h2o_cmd.runInspect(key=parseResultTest['destination_key'])
     dataKeyTest = parseResultTest['destination_key']
     print 'Parse end', dataKeyTest
-    params = {'ntree': 6, 'out_of_bag_error_estimate': 0, 'model_key': 'RF_model', }
+    params = {'ntrees': 6, 'destination_key': 'RF_model', }
     colX = h2o_rf.pickRandRfParams(paramDict, params)
     kwargs = params.copy()
-    timeoutSecs = (30 + (kwargs['ntree'] * 60))
+    timeoutSecs = (30 + (kwargs['ntrees'] * 60))
     start = time.time()
     rfv = h2o_cmd.runRF(parseResult=parseResultTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, noPoll=True, **kwargs)
     print 'rf job dispatch end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
@@ -26,17 +25,16 @@ def test_rf_change_data_key(self):
     h2o_jobs.pollWaitJobs(pattern='RF_model', timeoutSecs=180, pollTimeoutSecs=120, retryDelaySecs=5)
     print 'rf job end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
     print '\nRFView start after job completion'
-    model_key = kwargs['model_key']
-    ntree = kwargs['ntree']
+    model_key = kwargs['destination_key']
+    ntrees = kwargs['ntrees']
     start = time.time()
-    h2o_cmd.runRFView(None, dataKeyTrain, model_key, ntree, timeoutSecs)
+    h2o_cmd.runRFView(None, dataKeyTrain, model_key, ntrees, timeoutSecs)
     print 'First rfview end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
     for trial in range(3):
         start = time.time()
-        rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, out_of_bag_error_estimate=1, retryDelaySecs=1)
+        rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntrees, timeoutSecs, out_of_bag_error_estimate=1, retryDelaySecs=1)
         print 'rfview', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'
-        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
-        self.assertAlmostEqual(classification_error, 0.03, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntrees)
         start = time.time()
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
         print 'predict', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'

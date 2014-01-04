@@ -48,7 +48,7 @@
       clusters=Utils.append(clusters,sampler._sampled);
       if (cancelled())       return Status.Done;
       model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
-      model.error=sqr._sqr;
+      model.total_within_SS=sqr._sqr;
       model.iterations++;
       UKV.put(destination_key,model);
     }
@@ -61,10 +61,15 @@
     task._mults=mults;
     task.doAll(vecs);
     model.clusters=clusters=normalize ? denormalize(task._cMeans,vecs) : task._cMeans;
+    model.between_cluster_variances=task._betwnSqrs;
     double[] variances=new double[task._cSqrs.length];
     for (int clu=0; clu < task._cSqrs.length; clu++)     for (int col=0; col < task._cSqrs[clu].length; col++)     variances[clu]+=task._cSqrs[clu][col];
-    model.cluster_variances=variances;
-    model.error=task._sqr;
+    double between_cluster_SS=0.0;
+    for (int clu=0; clu < task._betwnSqrs.length; clu++)     between_cluster_SS+=task._betwnSqrs[clu];
+    model.between_cluster_SS=between_cluster_SS;
+    model.within_cluster_variances=variances;
+    model.total_within_SS=task._sqr;
+    model.total_SS=model.total_within_SS + model.between_cluster_SS;
     model.iterations++;
     UKV.put(destination_key,model);
     if (model.iterations >= max_iter)     break;
