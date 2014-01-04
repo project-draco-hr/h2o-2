@@ -1,16 +1,12 @@
 {
-  Frame ary=env.popAry();
-  String skey=env.key();
+  Frame ary=env.peekAry();
+  String skey=env.peekKey();
   if (ary.numCols() != 1)   throw new IllegalArgumentException("factor requires a single column");
   Vec v0=ary.vecs()[0];
-  if (!v0.isEnum()) {
-    Vec v1=v0.toEnum();
-    Vec vmaster=v1.masterVec();
-    Frame newary=env.addRef(new Frame(ary._names,new Vec[]{v1}));
-    env.subRef(ary,skey);
-    ary=newary;
+  Vec v1=v0.isEnum() ? null : v0.toEnum();
+  if (v1 != null) {
+    ary=new Frame(ary._names,new Vec[]{v1});
+    skey=null;
   }
-  env.pop();
-  env.push(1);
-  env._ary[env._sp - 1]=ary;
+  env.poppush(2,ary,skey);
 }
