@@ -1,6 +1,7 @@
 {
-  load();
-  System.out.println("Loaded data");
+  final double fraction=1.0;
+  final long seed=0xC0FFEE;
+  load(fraction,seed);
   final Vec trainLabels=train[train.length - 1];
   train=Utils.remove(train,train.length - 1);
   final Vec testLabels=test[test.length - 1];
@@ -37,7 +38,7 @@
       }
     }
   }
-,0,2000);
+,0,10000);
   startTraining(ls);
   return Status.Running;
 }
