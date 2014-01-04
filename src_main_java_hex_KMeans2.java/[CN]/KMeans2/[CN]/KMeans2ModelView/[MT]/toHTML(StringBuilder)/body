@@ -1,10 +1,16 @@
 {
   if (model != null) {
-    DocGen.HTML.section(sb,"Error: " + model.error);
+    DocGen.HTML.section(sb,"Cluster Centers: ");
     table(sb,"Clusters",model._names,model.clusters);
-    double[][] rows=new double[model.cluster_variances.length][1];
-    for (int i=0; i < rows.length; i++)     rows[i][0]=model.cluster_variances[i];
-    table(sb,"In-cluster variances",model._names,rows);
+    double[][] rows=new double[model.within_cluster_variances.length][1];
+    for (int i=0; i < rows.length; i++)     rows[i][0]=model.within_cluster_variances[i];
+    DocGen.HTML.section(sb,"Cluster Variances: ");
+    table(sb,"Clusters",new String[]{"Within Cluster Variances"},rows);
+    columnHTML(sb,"Between Cluster Variances",model.between_cluster_variances);
+    sb.append("<br />");
+    DocGen.HTML.section(sb,"Overall Totals: ");
+    double[] row=new double[]{model.total_SS,model.total_within_SS,model.between_cluster_SS};
+    rowHTML(sb,new String[]{"Total Sum of Squares","Total Within Cluster Sum of Squares","Between Cluster Sum of Squares"},row);
     return true;
   }
   return false;
