@@ -1,0 +1,27 @@
+def test_KMeansGrid_params_rand2_fvec(self):
+    h2o.beta_features = True
+    if localhost:
+        csvFilenameList = [('covtype.data', 800)]
+    else:
+        csvFilenameList = [('covtype.data', 800)]
+    importFolderPath = 'standard'
+    for (csvFilename, timeoutSecs) in csvFilenameList:
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=2000, pollTimeoutSecs=60)
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+        paramDict = define_params(SEED)
+        h2o.beta_features = True
+        for trial in range(3):
+            destinationKey = (((csvFilename + '_') + str(trial)) + '.hex')
+            params = {'k': '2,3', 'destination_key': destinationKey, }
+            h2o_kmeans.pickRandKMeansParams(paramDict, params)
+            kwargs = params.copy()
+            start = time.time()
+            kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=2, pollTimeoutSecs=60, noPoll=True, **kwargs)
+            h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
+            elapsed = (time.time() - start)
+            print 'FIX! how do we get results..need redirect_url'
+            print 'Have to inspect different models? (grid)'
+            print 'kmeans grid end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+            print 'Trial #', trial, 'completed\n'
