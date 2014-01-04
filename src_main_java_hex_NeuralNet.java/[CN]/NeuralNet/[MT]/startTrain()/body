@@ -5,7 +5,7 @@
   System.arraycopy(vecs,0,train,0,train.length);
   final Vec trainResp=classification ? vecs[vecs.length - 1].toEnum() : vecs[vecs.length - 1];
   final Layer[] ls=new Layer[hidden.length + 2];
-  ls[0]=new VecsInput(train,null);
+  ls[0]=new VecsInput(train,null,input_dropout_ratio);
   for (int i=0; i < hidden.length; i++) {
 switch (activation) {
 case Tanh:
@@ -46,7 +46,7 @@ model.training_errors=trainErrors0;
 model.validation_errors=validErrors0;
 UKV.put(destination_key,model);
 final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
-final Trainer trainer=new Trainer.MapReduce(ls,epochs,self());
+final Trainer trainer=new Trainer.Threaded(ls,epochs,self());
 Thread thread=new Thread(){
 Errors[] trainErrors=trainErrors0, validErrors=validErrors0;
 @Override public void run(){
