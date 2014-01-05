@@ -1,6 +1,13 @@
 {
   int cnt=0;
-  for (int i=0; i < _sp; i++)   if (_ary[i] != null && _ary[i].find(vec) != -1)   cnt++;
+  HashSet<Vec> refs=new HashSet<Vec>();
+  for (int i=0; i < _sp; i++)   if (_ary[i] != null) {
+    for (    Vec v : _ary[i].vecs()) {
+      Vec vm;
+      if (v.equals(vec))       cnt++;
+ else       if ((vm=v.masterVec()) != null && vm.equals(vec))       cnt++;
+    }
+  }
  else   if (_fcn[i] != null && (_fcn[i] instanceof ASTFunc))   cnt+=((ASTFunc)_fcn[i])._env.compute_refcnt(vec);
-  return cnt;
+  return cnt + refs.size();
 }
