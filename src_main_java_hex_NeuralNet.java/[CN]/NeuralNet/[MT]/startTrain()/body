@@ -46,7 +46,19 @@ model.training_errors=trainErrors0;
 model.validation_errors=validErrors0;
 UKV.put(destination_key,model);
 final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
-final Trainer trainer=new Trainer.Threaded(ls,epochs,self());
+final Trainer trainer;
+if (mode == ExecutionMode.Serial) {
+System.out.println("Serial execution mode");
+trainer=new Trainer.Direct(ls,epochs,self());
+}
+ else if (mode == ExecutionMode.Threaded_Hogwild) {
+System.out.println("Threaded (Hogwild) execution mode");
+trainer=new Trainer.Threaded(ls,epochs,self());
+}
+ else {
+System.out.println("MapReduce + Threaded (Hogwild) execution mode");
+trainer=new Trainer.MapReduce(ls,epochs,self());
+}
 Thread thread=new Thread(){
 Errors[] trainErrors=trainErrors0, validErrors=validErrors0;
 @Override public void run(){
