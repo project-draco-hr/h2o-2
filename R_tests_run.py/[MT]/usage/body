@@ -1,10 +1,16 @@
 def usage():
     print ''
-    print (('Usage:  ' + g_script_name) + ' [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file] [--usecloud ip:port] [--testgroup group]')
+    print (('Usage:  ' + g_script_name) + ' [--wipeall] [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file] [--testgroup group] [--usecloud ip:port] [--norun]')
     print ''
     print (('    (Output dir is: ' + g_output_dir) + ')')
+    print (('    (Default number of clouds is: ' + str(g_num_clouds)) + ')')
     print ''
-    print '    --wipe        Wipes the output dir before starting.'
+    print '    --wipeall     Remove all prior test state before starting, particularly'
+    print '                  random seeds.'
+    print '                  (Removes master_seed file and all Rsandbox directories.'
+    print '                  Also wipes the output dir before starting.)'
+    print ''
+    print '    --wipe        Wipes the output dir before starting.  Keeps old random seeds.'
     print ''
     print '    --baseport    The first port at which H2O starts searching for free ports.'
     print ''
@@ -16,11 +22,13 @@ def usage():
     print '    --testlist    A file containing a list of tests to run (for example the'
     print "                  'failed.txt' file from the output directory)."
     print ''
+    print '    --testgroup   Test a group of tests by function:'
+    print '                  pca, glm, kmeans, gbm, rf, algos, golden, munging'
+    print ''
     print '    --usecloud    ip:port of cloud to send tests to instead of starting clouds.'
     print '                  (When this is specified, numclouds is ignored.)'
     print ''
-    print '    --testgroup   Test a group of tests by function:'
-    print '                  pca, glm, kmeans, gbm, rf, algos, golden, munging'
+    print "    --norun       Perform side effects like wipe, but don't actually run tests."
     print ''
     print '    If neither --test nor --testlist is specified, then the list of tests is'
     print "    discovered automatically as files matching '*runit*.R'."
@@ -31,21 +39,21 @@ def usage():
     print '    Just accept the defaults and go (note: output dir must not exist):'
     print ('        ' + g_script_name)
     print ''
-    print '    For a powerful laptop with 8 cores:'
-    print (('        ' + g_script_name) + ' --wipe --numclouds 5')
+    print '    For a powerful laptop with 8 cores (keep default numclouds):'
+    print (('        ' + g_script_name) + ' --wipeall')
     print ''
     print '    For a big server with 32 cores:'
-    print (('        ' + g_script_name) + ' --wipe --numclouds 16')
+    print (('        ' + g_script_name) + ' --wipeall --numclouds 16')
     print ''
-    print '    Run one specific test:'
-    print (('        ' + g_script_name) + ' --wipe --numclouds 1 --test path/to/test.R')
+    print '    Run one specific test, keeping old random seeds:'
+    print (('        ' + g_script_name) + ' --wipe --test path/to/test.R')
     print ''
-    print '    Rerunning failures from a previous run:'
+    print '    Rerunning failures from a previous run, keeping old random seeds:'
     print '        # Copy failures.txt, otherwise --wipe removes the directory with the list!'
     print (('        cp ' + os.path.join(g_output_dir, 'failures.txt')) + ' .')
     print (('        ' + g_script_name) + ' --wipe --numclouds 16 --testlist failures.txt')
     print ''
-    print '    Run tests on a pre-existing cloud (e.g. in a debugger):'
+    print '    Run tests on a pre-existing cloud (e.g. in a debugger), keeping old random seeds:'
     print (('        ' + g_script_name) + ' --wipe --usecloud ip:port')
     print ''
     sys.exit(1)
