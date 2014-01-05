@@ -18,9 +18,9 @@ def test_C_kmeans_prostate(self):
     h2o.verboseprint('KMeans2ModelView:', h2o.dump_json(modelView))
     model = modelView['model']
     clusters = model['clusters']
-    cluster_variances = model['cluster_variances']
-    error = model['error']
-    print 'cluster_variances:', cluster_variances
-    print 'error:', error
+    within_cluster_variances = model['within_cluster_variances']
+    total_within_SS = model['total_within_SS']
+    print 'within_cluster_variances:', within_cluster_variances
+    print 'total_within_SS:', total_within_SS
     (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
     h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=0)
