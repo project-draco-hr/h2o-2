@@ -1,0 +1,19 @@
+{
+  float ulp_a=Math.ulp(a);
+  float ulp_b=Math.ulp(b);
+  float absdiff_a_b=Math.abs(a - b);
+  float absdiff_b_a=Math.abs(b - a);
+  if (absdiff_a_b <= ulp_a) {
+    return true;
+  }
+  if (absdiff_a_b <= ulp_b) {
+    return true;
+  }
+  if (absdiff_b_a <= ulp_a) {
+    return true;
+  }
+  if (absdiff_b_a <= ulp_b) {
+    return true;
+  }
+  return false;
+}
