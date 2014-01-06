@@ -21,7 +21,10 @@
   for (int i=offset; i < offset + _view.value(); i++) {
     if (i >= len)     break;
     Value val=H2O.get(keys[i]);
-    if (val != null)     ary.add(formatKeyRow(cloud,keys[i],val));
+    if (val != null) {
+      JsonObject jo=formatKeyRow(cloud,keys[i],val);
+      ary.add(jo);
+    }
   }
   result.add(KEYS,ary);
   result.addProperty(NUM_KEYS,len);
