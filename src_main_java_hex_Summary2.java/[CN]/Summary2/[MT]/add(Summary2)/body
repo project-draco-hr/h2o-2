@@ -2,6 +2,7 @@
   _zeros+=other._zeros;
   if (hcnt != null)   Utils.add(hcnt,other.hcnt);
   _rows+=other._rows;
+  System.arraycopy(other._samples,0,_samples,_samples.length,other._samples.length);
   if (_type == T_ENUM)   return this;
   double[] ds=MemoryManager.malloc8d(_mins.length);
   int i=0, j=0;
