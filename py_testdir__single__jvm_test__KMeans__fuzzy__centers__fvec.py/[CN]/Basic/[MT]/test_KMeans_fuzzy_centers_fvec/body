@@ -26,7 +26,7 @@ def test_KMeans_fuzzy_centers_fvec(self):
     for trial in range(10):
         seed = random.randint(0, sys.maxint)
         kwargs = {'k': len(genCenters), 'initialization': 'PlusPlus', 'destination_key': 'k.hex', 'max_iter': 1000, }
-        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=60, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         h2o.nodes[0].csv_download(src_key='d', csvPathname='kmeans_predict.csv')
         self.assertEqual(len(genCenters[0]), len(centers[0]), ("kmeans first center doesn't have same # of values as dataset row %s %s" % (len(genCenters[0]), len(centers[0]))))
