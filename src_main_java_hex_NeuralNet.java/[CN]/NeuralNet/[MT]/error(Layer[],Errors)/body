@@ -1,6 +1,6 @@
 {
   Linear linear=(Linear)ls[ls.length - 1];
-  for (int i=0; i < ls.length; i++)   ls[i].fprop(false);
+  for (  Layer l : ls)   l.fprop(false);
   float[] output=ls[ls.length - 1]._a;
   float[] target=linear.target();
   for (int o=0; o < output.length; o++) {
