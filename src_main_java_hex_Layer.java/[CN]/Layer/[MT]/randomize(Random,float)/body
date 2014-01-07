@@ -1,19 +1,19 @@
 {
-  if (weight_initialization == NeuralNet.WeightInitialization.Auto) {
+  if (initial_weight_distribution == NeuralNet.InitialWeightDistribution.UniformAdaptive) {
     final float range=prefactor * (float)Math.sqrt(6. / (_previous.units + units));
     for (int i=0; i < _w.length; i++)     _w[i]=(float)rand(rng,-range,range);
   }
- else   if (weight_initialization == NeuralNet.WeightInitialization.Uniform) {
-    for (int i=0; i < _w.length; i++)     _w[i]=(float)rand(rng,-initial_weight,initial_weight);
+ else   if (initial_weight_distribution == NeuralNet.InitialWeightDistribution.Uniform) {
+    for (int i=0; i < _w.length; i++)     _w[i]=(float)rand(rng,-initial_weight_scale,initial_weight_scale);
   }
- else   if (weight_initialization == NeuralNet.WeightInitialization.Normal) {
+ else   if (initial_weight_distribution == NeuralNet.InitialWeightDistribution.Normal) {
     for (int i=0; i < _w.length - _w.length % 2; ) {
-      final double[] normal=randn(rng,0,initial_weight);
+      final double[] normal=randn(rng,0,initial_weight_scale);
       _w[i++]=(float)normal[0];
       _w[i++]=(float)normal[1];
     }
     if (_w.length % 2 == 1) {
-      final double[] normal=randn(rng,0,initial_weight);
+      final double[] normal=randn(rng,0,initial_weight_scale);
       _w[_w.length - 1]=(float)normal[0];
     }
   }

@@ -1,0 +1,9 @@
+{
+  long processed=_training.processed();
+  float m=momentum(processed);
+  float r=rate(processed) * (1 - m);
+  for (int u=0; u < _a.length; u++) {
+    float g=_e[u] * (1 - _a[u] * _a[u]);
+    bprop(u,g,r,m);
+  }
+}

@@ -1,8 +1,8 @@
 {
   super.registered(ver);
-  for (  Argument a : _arguments) {
-    if (a._name.equals("activation") || a._name.equals("weight_initialization")) {
-      a.setRefreshOnChange();
+  for (  Argument arg : _arguments) {
+    if (arg._name.equals("activation") || arg._name.equals("initial_weight_distribution")) {
+      arg.setRefreshOnChange();
     }
   }
 }
