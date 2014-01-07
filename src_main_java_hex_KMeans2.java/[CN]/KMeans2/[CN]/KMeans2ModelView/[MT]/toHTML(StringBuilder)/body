@@ -1,9 +1,10 @@
 {
   if (model != null) {
     DocGen.HTML.section(sb,"Cluster Centers: ");
-    table(sb,"Clusters",model._names,model.clusters);
+    table(sb,"Clusters",model._names,model.centers);
     double[][] rows=new double[model.within_cluster_variances.length][1];
     for (int i=0; i < rows.length; i++)     rows[i][0]=model.within_cluster_variances[i];
+    columnHTMLlong(sb,"Cluster Size",model.size);
     DocGen.HTML.section(sb,"Cluster Variances: ");
     table(sb,"Clusters",new String[]{"Within Cluster Variances"},rows);
     columnHTML(sb,"Between Cluster Variances",model.between_cluster_variances);
@@ -11,6 +12,11 @@
     DocGen.HTML.section(sb,"Overall Totals: ");
     double[] row=new double[]{model.total_SS,model.total_within_SS,model.between_cluster_SS};
     rowHTML(sb,new String[]{"Total Sum of Squares","Total Within Cluster Sum of Squares","Between Cluster Sum of Squares"},row);
+    DocGen.HTML.section(sb,"Cluster Assignments by Observation: ");
+    RString rs=new RString("<a href='Inspect2.html?src_key=%$key'>%content</a>");
+    rs.replace("key","KMeansClusters_" + model._selfKey);
+    rs.replace("content","View the row-by-row cluster assignments");
+    sb.append(rs.toString());
     return true;
   }
   return false;

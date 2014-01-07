@@ -1,6 +1,6 @@
 {
-  double[][] cs=clusters;
-  if (normalized && _normClust == null)   cs=_normClust=normalize(clusters,chunks);
+  double[][] cs=centers;
+  if (normalized && _normClust == null)   cs=_normClust=normalize(centers,chunks);
   if (_means == null) {
     _means=new double[chunks.length];
     for (int i=0; i < chunks.length; i++)     _means[i]=chunks[i]._vec.mean();

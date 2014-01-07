@@ -12,7 +12,7 @@ def kmeans_doit(self, csvFilename, bucket, csvPathname, num_rows, timeoutSecs=30
     h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=0)
     inspect = h2o_cmd.runInspect(None, key=kmeans['destination_key'])
     KMeansModel = inspect['KMeansModel']
-    clusters = KMeansModel['clusters'][0]
+    clusters = KMeansModel['centers'][0]
     print 'clusters:', h2o.dump_json(clusters)
     if self.clusters1:
         h2o_kmeans.compareToFirstKMeans(self, clusters, self.clusters1)

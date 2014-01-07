@@ -11,7 +11,9 @@
   algo.invoke();
   Log.debug(Sys.KMEAN,"ms= " + t);
   KMeans2Model res=UKV.get(algo.destination_key);
-  Assert.assertEquals(algo.k,res.clusters.length);
+  Key clusterKey=Key.make(res._clustersKey);
+  Assert.assertEquals(algo.k,res.centers.length);
   UKV.remove(dest);
+  UKV.remove(clusterKey);
   if (algo != null && algo.destination_key != null)   UKV.remove(algo.destination_key);
 }
