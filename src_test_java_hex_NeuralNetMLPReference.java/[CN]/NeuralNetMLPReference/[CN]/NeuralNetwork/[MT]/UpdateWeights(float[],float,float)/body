@@ -5,7 +5,14 @@
     oGrads[i]=derivative * (tValues[i] - outputs[i]);
   }
   for (int i=0; i < hGrads.length; ++i) {
-    float derivative=(1 - hOutputs[i]) * (1 + hOutputs[i]);
+    float derivative=1;
+    if (activation == Activation.tanh) {
+      derivative=(1 - hOutputs[i]) * (1 + hOutputs[i]);
+    }
+ else     if (activation == Activation.rectifier) {
+      derivative=hOutputs[i] < 0 ? 0 : 1;
+    }
+ else     throw new RuntimeException("invalid activation.");
     float sum=0;
     for (int j=0; j < numOutput; ++j) {
       float x=oGrads[j] * hoWeights[i][j];
