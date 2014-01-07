@@ -1,4 +1,4 @@
-def test_KMeans_enum_fvec(self):
+def test_KMeans2_enum(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 11, 'cA', 5), (100, 10, 'cB', 5), (100, 9, 'cC', 5), (100, 8, 'cD', 5), (100, 7, 'cE', 5), (100, 6, 'cF', 5), (100, 5, 'cG', 5)]
@@ -12,6 +12,6 @@ def test_KMeans_enum_fvec(self):
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'))
         print "Parse result['destination_key']:", parseResult['destination_key']
-        kwargs = {'k': 2, 'initialization': 'Furthest', 'destination_key': 'benign_k.hex', 'max_iter': 20, }
+        kwargs = {'k': 2, 'initialization': 'Furthest', 'destination_key': 'benign_k.hex', 'max_iter': 10, }
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
         h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
