@@ -87,7 +87,10 @@ def test_GLM_predict3_fvec(self):
     else:
         kwargs.update({'case_mode': '=', 'case_val': 1, })
         aHack = {'destination_key': 'covtype.data.hex', }
-    kwargs.update({'alpha': 0.5, 'lambda': 1e-05, })
+    if DO_SWAP_LAMBA_ALPHA:
+        kwargs.update({'alpha': 1e-05, 'lambda': 0.5, })
+    else:
+        kwargs.update({'alpha': 0.5, 'lambda': 1e-05, })
     start = time.time()
     glm = h2o_cmd.runGLM(parseResult=aHack, timeoutSecs=timeoutSecs, **kwargs)
     print 'glm2 end on ', csvPathname, 'took', (time.time() - start), 'seconds'
