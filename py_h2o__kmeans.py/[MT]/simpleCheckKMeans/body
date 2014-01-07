@@ -22,8 +22,9 @@ def simpleCheckKMeans(self, kmeans, **kwargs):
         normalized = model['normalized']
         max_iter = model['max_iter']
     else:
+        h2o.verboseprint('kmeans result:', h2o.dump_json(kmeansResult))
         model = kmeansResult['KMeansModel']
-        clusters = model['centers']
+        clusters = model['clusters']
         error = model['error']
     for (i, c) in enumerate(clusters):
         for n in c:

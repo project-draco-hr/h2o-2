@@ -11,7 +11,6 @@ def test_KMeansGrid_params_rand2_fvec(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         paramDict = define_params(SEED)
-        h2o.beta_features = True
         for trial in range(3):
             destinationKey = (((csvFilename + '_') + str(trial)) + '.hex')
             params = {'k': '2,3', 'destination_key': destinationKey, }

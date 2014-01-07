@@ -10,6 +10,7 @@ def bigCheckResults(self, kmeans, csvPathname, parseResult, applyDestinationKey,
     else:
         model_key = kmeans['destination_key']
         kmeansResult = h2o_cmd.runInspect(key=model_key)
+        h2o.verboseprint('kmeans result:', h2o.dump_json(kmeansResult))
         model = kmeansResult['KMeansModel']
         centers = model['centers']
         error = model['error']
