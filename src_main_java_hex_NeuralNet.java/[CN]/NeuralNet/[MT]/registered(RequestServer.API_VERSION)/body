@@ -1,0 +1,8 @@
+{
+  super.registered(ver);
+  for (  Argument a : _arguments) {
+    if (a._name.equals("activation") || a._name.equals("weight_initialization")) {
+      a.setRefreshOnChange();
+    }
+  }
+}

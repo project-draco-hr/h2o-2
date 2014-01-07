@@ -1,0 +1,9 @@
+{
+  super.queryArgumentValueSet(arg,inputArgs);
+  if (arg._name.equals("input_dropout_ratio") && activation != Activation.RectifierWithDropout) {
+    arg.disable("Only with RectifierWithDropout",inputArgs);
+  }
+  if (arg._name.equals("initial_weight") && weight_initialization == WeightInitialization.Auto) {
+    arg.disable("Only with non-automatic weight initialization",inputArgs);
+  }
+}
