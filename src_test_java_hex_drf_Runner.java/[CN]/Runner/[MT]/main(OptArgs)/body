@@ -1,0 +1,20 @@
+{
+  TestUtil.stall_till_cloudsize(ARGS.clusterSize);
+  if (ARGS.ntrees <= 0 || ARGS.ntrees > 100000)   throw new RuntimeException("ntrees " + ARGS.ntrees + " out of bounds");
+  if (ARGS.sample < 0 || ARGS.sample > 1.0f)   throw new RuntimeException("sample " + ARGS.sample + " out of bounds");
+  if (ARGS.nbins < 2 || ARGS.nbins > 100000)   throw new RuntimeException("nbins " + ARGS.nbins + " out of bounds");
+  if (ARGS.depth <= 1)   throw new RuntimeException("depth " + ARGS.depth + " out of bounds");
+  String cs[]=ARGS.cols.split("[, \t]");
+  if (ARGS.mtries == 0)   ARGS.mtries=(int)Math.sqrt(cs.length);
+  if (ARGS.mtries <= 0 || ARGS.mtries > cs.length)   throw new RuntimeException("mtries " + ARGS.mtries + " out of bounds");
+  Timer t_start=new Timer();
+  Frame train=TestUtil.parseFrame(Key.make("train.hex"),ARGS.trainFile);
+  Frame test=TestUtil.parseFrame(Key.make("test.hex"),ARGS.testFile);
+  Log.info(Sys.RANDF,"Data loaded in " + t_start);
+  Vec response=train.subframe(new String[]{ARGS.response}).vecs()[0];
+  train=train.subframe(cs);
+  test=test.subframe(cs);
+  Log.info(Sys.RANDF,"Arguments used:\n" + ARGS.toString());
+  System.out.println(train);
+  System.out.println(test);
+}
