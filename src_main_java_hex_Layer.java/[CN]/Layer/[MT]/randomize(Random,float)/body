@@ -1,20 +1,18 @@
 {
-  if (initial_weight_distribution == NeuralNet.InitialWeightDistribution.UniformAdaptive) {
+  if (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive) {
     final float range=prefactor * (float)Math.sqrt(6. / (_previous.units + units));
     for (int i=0; i < _w.length; i++)     _w[i]=(float)rand(rng,-range,range);
   }
- else   if (initial_weight_distribution == NeuralNet.InitialWeightDistribution.Uniform) {
-    for (int i=0; i < _w.length; i++)     _w[i]=(float)rand(rng,-initial_weight_scale,initial_weight_scale);
-  }
- else   if (initial_weight_distribution == NeuralNet.InitialWeightDistribution.Normal) {
-    for (int i=0; i < _w.length - _w.length % 2; ) {
-      final double[] normal=randn(rng,0,initial_weight_scale);
-      _w[i++]=(float)normal[0];
-      _w[i++]=(float)normal[1];
+ else {
+    if (initial_weight_distribution == InitialWeightDistribution.Uniform) {
+      for (int i=0; i < _w.length; i++) {
+        _w[i]=(float)rand(rng,-initial_weight_scale,initial_weight_scale);
+      }
     }
-    if (_w.length % 2 == 1) {
-      final double[] normal=randn(rng,0,initial_weight_scale);
-      _w[_w.length - 1]=(float)normal[0];
+ else     if (initial_weight_distribution == InitialWeightDistribution.Normal) {
+      for (int i=0; i < _w.length; i++) {
+        _w[i]=(float)(0 + rng.nextGaussian() * initial_weight_scale);
+      }
     }
   }
 }

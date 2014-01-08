@@ -1,9 +1,9 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
-  if (arg._name.equals("input_dropout_ratio") && (activation != Activation.RectifierWithDropout && activation != Activation.TanhWithDropout)) {
+  if (arg._name.equals("input_dropout_ratio") && (activation != Layer.Activation.RectifierWithDropout && activation != Layer.Activation.TanhWithDropout)) {
     arg.disable("Only with Dropout",inputArgs);
   }
-  if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
+  if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == Layer.InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Only with Uniform or Normal initial weight distributions",inputArgs);
   }
 }

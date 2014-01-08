@@ -7,7 +7,7 @@
       long rows=vecs[0].length();
       Chunk cache=null;
       for (int split=0; split < splits; split++) {
-        long off=rows * (split + 0) / splits;
+        long off=rows * split / splits;
         long lim=rows * (split + 1) / splits;
         NewChunk chunk=new NewChunk(vec,split);
         for (long r=off; r < lim; r++) {
