@@ -1,6 +1,8 @@
 {
   _a=new float[units];
-  _e=new float[units];
+  if (!(this instanceof Output)) {
+    _e=new float[units];
+  }
   _previous=ls[index - 1];
   _input=(Input)ls[0];
   if (weights) {
