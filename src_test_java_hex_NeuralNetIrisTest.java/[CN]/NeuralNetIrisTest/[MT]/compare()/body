@@ -28,7 +28,7 @@
   ls[2]=new VecSoftmax(labels,null);
   for (int i=0; i < ls.length; i++) {
     ls[i].rate=rate;
-    ls[i].loss=Loss.MeanSquare;
+    ls[i].loss=(i == ls.length - 1) ? Loss.MeanSquare : Loss.CrossEntropy;
     ls[i].max_w2=Float.MAX_VALUE;
     ls[i].init(ls,i);
   }

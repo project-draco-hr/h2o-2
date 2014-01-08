@@ -6,10 +6,10 @@
   for (int j=0; j < numHidden; ++j)   for (int i=0; i < numInput; ++i)   hSums[j]+=this.inputs[i] * this.ihWeights[i][j];
   for (int i=0; i < numHidden; ++i)   hSums[i]+=this.hBiases[i];
   for (int i=0; i < numHidden; ++i)   if (activation == Activation.tanh) {
-    this.hOutputs[i]=HyperTanFunction(hSums[i]);
+    hOutputs[i]=HyperTanFunction(hSums[i]);
   }
  else   if (activation == Activation.rectifier) {
-    this.hOutputs[i]=Rectifier(hSums[i]);
+    hOutputs[i]=Rectifier(hSums[i]);
   }
  else   throw new RuntimeException("invalid activation.");
   for (int j=0; j < numOutput; ++j)   for (int i=0; i < numHidden; ++i)   oSums[j]+=hOutputs[i] * hoWeights[i][j];
