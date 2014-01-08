@@ -3,12 +3,5 @@
   float ulp_b=Math.ulp(b);
   float small_ulp=Math.min(ulp_a,ulp_b);
   float absdiff_a_b=Math.abs(a - b);
-  float absdiff_b_a=Math.abs(b - a);
-  if (absdiff_a_b <= small_ulp) {
-    return true;
-  }
-  if (absdiff_b_a <= small_ulp) {
-    return true;
-  }
-  return false;
+  return absdiff_a_b <= small_ulp;
 }

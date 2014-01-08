@@ -1,7 +1,6 @@
 {
   for (int k=0; k < _nclass; k++) {
     final DTree tree=_trees[k];
-    final int leaf=_leafs[k];
     if (tree == null)     continue;
     if (tree.root() instanceof LeafNode)     continue;
     final Chunk nids=chk_nids(chks,k);
@@ -12,7 +11,7 @@
         nid=oob2Nid(nid);
         if (tree.node(nid) instanceof UndecidedNode)         nid=tree.node(nid).pid();
         DecidedNode dn=tree.decided(nid);
-        if (dn._split.col() == -1)         dn=tree.decided(nid=tree.node(nid).pid());
+        if (dn._split.col() == -1)         dn=tree.decided(tree.node(nid).pid());
         int leafnid=dn.ns(chks,row);
         ct.set0(row,(float)(ct.at0(row) + ((LeafNode)tree.node(leafnid)).pred()));
       }
