@@ -1,0 +1,29 @@
+{
+  Layer[] pre=new Layer[index + 2];
+  VecsInput input=(VecsInput)ls[0];
+  pre[0]=new VecsInput(input.vecs,input);
+  for (int i=1; i < index; i++) {
+    pre[i]=new Layer.Tanh(ls[i].units);
+    pre[i].rate=0;
+    Layer.shareWeights(ls[i],pre[i]);
+  }
+  pre[index]=new Layer.Tanh(ls[index].units);
+  pre[index].rate=.00001f;
+  pre[index + 1]=new Layer.TanhPrime(ls[index - 1].units);
+  pre[index + 1].rate=.00001f;
+  Layer.shareWeights(ls[index],pre[index]);
+  Layer.shareWeights(ls[index],pre[index + 1]);
+  for (int i=0; i < pre.length; i++) {
+    pre[i].init(pre,i,false,0,null);
+  }
+  _trainer=new Trainer.Direct(pre,10,self());
+  JFrame frame=new JFrame("H2O");
+  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+  MnistCanvas canvas=new MnistCanvas(_trainer);
+  frame.setContentPane(canvas.init());
+  frame.pack();
+  frame.setLocationRelativeTo(null);
+  frame.setVisible(true);
+  _trainer.start();
+  _trainer.join();
+}
