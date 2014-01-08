@@ -15,6 +15,8 @@
   env.push(0.0);
   global.add(new ASTId(Type.DBL,"NA",0,global.size()));
   env.push(Double.NaN);
+  global.add(new ASTId(Type.DBL,"Inf",0,global.size()));
+  env.push(Double.POSITIVE_INFINITY);
   int argcnt=global.size();
   Exec2 ex=new Exec2(str,global);
   AST ast=ex.parse();

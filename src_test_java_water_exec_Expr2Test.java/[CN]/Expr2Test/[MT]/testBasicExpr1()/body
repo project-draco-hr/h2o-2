@@ -58,7 +58,14 @@
     checkStr("(1.23+h.hex)-h.hex");
     checkStr("min(h.hex,1+2)");
     checkStr("max(h.hex,1+2)");
+    checkStr("min.na.rm(h.hex,NA)");
+    checkStr("max.na.rm(h.hex,NA)");
+    checkStr("min.na.rm(c(NA, 1), -1)");
+    checkStr("max.na.rm(c(NA, 1), -1)");
+    checkStr("max(c(Inf,1),2)");
+    checkStr("min(c(Inf,1),-Inf)");
     checkStr("is.na(h.hex)");
+    checkStr("sum(is.na(h.hex))");
     checkStr("nrow(h.hex)*3");
     checkStr("h.hex[nrow(h.hex)-1,ncol(h.hex)-1]");
     checkStr("1=2");
