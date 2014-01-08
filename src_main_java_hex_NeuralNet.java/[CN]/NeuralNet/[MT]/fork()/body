@@ -1,6 +1,6 @@
 {
   init();
-  H2OCountedCompleter start=new H2OCountedCompleter(){
+  H2OCountedCompleter jobRemoval=new H2OCountedCompleter(){
     @Override public void compute2(){
       startTrain();
     }
@@ -11,7 +11,7 @@
     }
   }
 ;
-  start(start);
-  H2O.submitTask(start);
+  start(jobRemoval);
+  H2O.submitTask(jobRemoval);
   return this;
 }
