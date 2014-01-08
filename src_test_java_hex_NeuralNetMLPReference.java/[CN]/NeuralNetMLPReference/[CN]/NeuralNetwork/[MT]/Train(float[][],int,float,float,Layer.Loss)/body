@@ -10,7 +10,7 @@
       System.arraycopy(trainData[idx],0,xValues,0,numInput);
       System.arraycopy(trainData[idx],numInput,tValues,0,numOutput);
       ComputeOutputs(xValues);
-      UpdateWeights(tValues,learnRate,momentum);
+      UpdateWeights(tValues,learnRate,momentum,loss);
     }
     ++epoch;
   }

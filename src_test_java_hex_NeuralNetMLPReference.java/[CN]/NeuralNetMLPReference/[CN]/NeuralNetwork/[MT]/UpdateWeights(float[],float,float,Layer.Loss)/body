@@ -2,15 +2,21 @@
   if (tValues.length != numOutput)   throw new RuntimeException("target values not same length as output in UpdateWeights");
   for (int i=0; i < oGrads.length; ++i) {
     float derivative=(1 - outputs[i]) * outputs[i];
-    oGrads[i]=derivative * (tValues[i] - outputs[i]);
+    if (loss == Layer.Loss.CrossEntropy) {
+      oGrads[i]=tValues[i] - outputs[i];
+    }
+ else     if (loss == Layer.Loss.MeanSquare) {
+      oGrads[i]=derivative * (tValues[i] - outputs[i]);
+    }
+ else     throw new RuntimeException("invalid loss function");
   }
   for (int i=0; i < hGrads.length; ++i) {
     float derivative=1;
-    if (activation == Activation.tanh) {
+    if (activation == Layer.Activation.Tanh) {
       derivative=(1 - hOutputs[i]) * (1 + hOutputs[i]);
     }
- else     if (activation == Activation.rectifier) {
-      derivative=hOutputs[i] < 0 ? 0 : 1;
+ else     if (activation == Layer.Activation.Rectifier) {
+      derivative=hOutputs[i] <= 0 ? 0 : 1;
     }
  else     throw new RuntimeException("invalid activation.");
     float sum=0;
