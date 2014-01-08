@@ -1,4 +1,5 @@
 {
+  if (_w == null)   return;
   if (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive) {
     final float range=prefactor * (float)Math.sqrt(6. / (_previous.units + units));
     for (int i=0; i < _w.length; i++)     _w[i]=(float)rand(rng,-range,range);
