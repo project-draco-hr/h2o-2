@@ -1,0 +1,19 @@
+{
+  OptArgs ARGS=new Arguments(args).extract(new OptArgs());
+  String[] h2oArgs;
+  String as=ARGS.h2oArgs;
+  if (as == null) {
+    h2oArgs=new String[]{"-ip=127.0.0.1","-flatfile=" + Utils.writeFile("127.0.0.1:54321").getAbsolutePath()};
+  }
+ else {
+    if (as.startsWith("\"") && as.endsWith("\""))     as=as.substring(1,as.length() - 1);
+    h2oArgs=as.trim().split("[ \t]+");
+  }
+  H2O.main(h2oArgs);
+  try {
+    main(ARGS);
+  }
+  finally {
+    UDPRebooted.T.shutdown.broadcast();
+  }
+}
