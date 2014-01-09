@@ -39,8 +39,20 @@ def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=N
         log_rest(('EXCEPTION CAUGHT DOING REQUEST: ' + str(e.message)))
         raise exc_info[1], None, exc_info[2]
     log_rest('')
-    log_rest(('HTTP status code: ' + str(r.status_code)))
-    log_rest(r.text)
+    try:
+        if (r is None):
+            log_rest('r is None')
+        else:
+            log_rest(('HTTP status code: ' + str(r.status_code)))
+            if hasattr(r, 'text'):
+                if (r.text is None):
+                    log_rest('r.text is None')
+                else:
+                    log_rest(r.text)
+            else:
+                log_rest('r does not have attr text')
+    except Exception as e:
+        pass
     if ((not beta_features) and (not r)):
         raise Exception(('Maybe bad url? no r in __do_json_request in %s:' % inspect.stack()[1][3]))
     json_url_history.append(r.url)
