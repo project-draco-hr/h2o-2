@@ -3,8 +3,9 @@
   for (  Layer l : ls)   l.fprop(false);
   float[] output=ls[ls.length - 1]._a;
   float[] target=linear.target();
+  e.mean_square=0;
   for (int o=0; o < output.length; o++) {
-    float d=target[o] - output[o];
+    final float d=target[o] - output[o];
     e.mean_square+=d * d;
   }
 }
