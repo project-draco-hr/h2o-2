@@ -1,0 +1,16 @@
+{
+  double min=Double.POSITIVE_INFINITY;
+  int nacnt=0;
+  for (int i=0; i < argcnt - 1; i++)   if (env.isDbl()) {
+    double a=env.popDbl();
+    if (Double.isNaN(a))     nacnt++;
+ else     min=Math.min(min,a);
+  }
+ else {
+    Frame fr=env.peekAry();
+    for (    Vec v : fr.vecs())     min=Math.min(min,v.min());
+    env.pop();
+  }
+  if (nacnt > 0 && min == Double.POSITIVE_INFINITY)   min=Double.NaN;
+  env.poppush(min);
+}
