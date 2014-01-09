@@ -1,7 +1,7 @@
 {
   DescentEpoch epoch=new DescentEpoch();
   epoch._node=_node;
-  epoch._count=_epochs == 0 ? -1 : _epochs;
+  epoch._count=_epochs == 0. ? -1 : (int)Math.ceil(_epochs);
   H2O.submitTask(epoch);
   _ls=null;
   _ws=_bs=null;
