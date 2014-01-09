@@ -4,7 +4,7 @@
  else {
     Frame fr=env.popAry();
     String skey=env.key();
-    sum=op(sum,new RedOp(this).doAll(fr)._d);
+    sum=op(sum,_narm ? new NaRmRedOp(this).doAll(fr)._d : new RedOp(this).doAll(fr)._d);
     env.subRef(fr,skey);
   }
   env.poppush(sum);
