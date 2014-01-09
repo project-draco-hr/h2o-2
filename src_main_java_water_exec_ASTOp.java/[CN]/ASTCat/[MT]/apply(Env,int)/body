@@ -2,7 +2,13 @@
   Key key=Vec.VectorGroup.VG_LEN1.addVecs(1)[0];
   AppendableVec av=new AppendableVec(key);
   NewChunk nc=new NewChunk(av,0);
-  for (int i=0; i < argcnt - 1; i++)   nc.addNum(env.dbl(-argcnt + 1 + i));
+  for (int i=0; i < argcnt - 1; i++) {
+    if (env.isAry(i - argcnt + 1))     for (    Vec vec : env.ary(i - argcnt + 1).vecs()) {
+      if (vec.nChunks() > 1)       H2O.unimpl();
+      for (int r=0; r < vec.length(); r++)       nc.addNum(vec.at(r));
+    }
+ else     nc.addNum(env.dbl(i - argcnt + 1));
+  }
   nc.close(0,null);
   Vec v=av.close(null);
   env.pop(argcnt);
