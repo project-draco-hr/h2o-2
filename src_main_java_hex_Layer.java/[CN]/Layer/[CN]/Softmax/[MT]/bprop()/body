@@ -4,7 +4,7 @@
   float r=rate(processed) * (1 - m);
   int label=target();
   for (int u=0; u < _a.length; u++) {
-    float targetval=(u == label ? 1 : 0);
+    final float targetval=(u == label ? 1 : 0);
     float g=targetval - _a[u];
     bprop(u,g,r,m);
   }

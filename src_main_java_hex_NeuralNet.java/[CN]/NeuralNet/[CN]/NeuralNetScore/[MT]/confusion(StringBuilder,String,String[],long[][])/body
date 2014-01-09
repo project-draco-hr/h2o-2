@@ -36,7 +36,7 @@
     sumError+=error;
   }
   sb.append("<tr><th>Totals</th>");
-  for (  long total : totals)   sb.append("<td>" + total + "</td>");
+  for (int i=0; i < totals.length; ++i)   sb.append("<td>" + totals[i] + "</td>");
   sb.append("<td><b>");
   sb.append(String.format("%5.3f = %d / %d",(double)sumError / sumTotal,sumError,sumTotal));
   sb.append("</b></td></tr>");
