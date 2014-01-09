@@ -1,6 +1,6 @@
 {
   if (_rand == null) {
-    _rand=new MersenneTwisterRNG(MersenneTwisterRNG.SEEDS);
+    _rand=new Random(NeuralNet.seed);
     _bits=new byte[units / 8 + 1];
   }
   _rand.nextBytes(_bits);

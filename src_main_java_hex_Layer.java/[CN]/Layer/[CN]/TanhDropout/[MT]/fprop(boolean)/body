@@ -5,7 +5,7 @@
     _a[o]+=_b[o];
   }
   if (_rand == null) {
-    _rand=new MersenneTwisterRNG(MersenneTwisterRNG.SEEDS);
+    _rand=new Random(NeuralNet.seed);
     _bits=new byte[(units + 7) / 8];
   }
   _rand.nextBytes(_bits);
