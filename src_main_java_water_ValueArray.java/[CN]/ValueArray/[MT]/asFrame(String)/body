@@ -7,7 +7,6 @@ synchronized (conversionLock) {
       if (!v2.isFrame()) {
         throw new IllegalArgumentException(k2 + " is not a frame.");
       }
-      Log.info("Using existing cached Frame conversion (" + frameKeyString + ").");
       return v2.get();
     }
     int cn=conversionNumber.getAndIncrement();
