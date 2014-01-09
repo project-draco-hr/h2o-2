@@ -25,7 +25,7 @@
   double[][] clusters;
   if (initialization == Initialization.None) {
     clusters=new double[k][vecs.length];
-    for (int i=0; i < clusters.length; i++)     randomRow(vecs,rand,clusters[i],means,mults);
+    for (    double[] cluster : clusters)     randomRow(vecs,rand,cluster,means,mults);
   }
  else {
     clusters=new double[1][];
@@ -47,7 +47,7 @@
       sampler.doAll(vecs);
       clusters=Utils.append(clusters,sampler._sampled);
       if (cancelled())       return Status.Done;
-      model.clusters=normalize ? denormalize(clusters,vecs) : clusters;
+      model.centers=normalize ? denormalize(clusters,vecs) : clusters;
       model.total_within_SS=sqr._sqr;
       model.iterations++;
       UKV.put(destination_key,model);
@@ -60,7 +60,7 @@
     task._means=means;
     task._mults=mults;
     task.doAll(vecs);
-    model.clusters=clusters=normalize ? denormalize(task._cMeans,vecs) : task._cMeans;
+    model.centers=clusters=normalize ? denormalize(task._cMeans,vecs) : task._cMeans;
     model.between_cluster_variances=task._betwnSqrs;
     double[] variances=new double[task._cSqrs.length];
     for (int clu=0; clu < task._cSqrs.length; clu++)     for (int col=0; col < task._cSqrs[clu].length; col++)     variances[clu]+=task._cSqrs[clu][col];
@@ -70,9 +70,21 @@
     model.within_cluster_variances=variances;
     model.total_within_SS=task._sqr;
     model.total_SS=model.total_within_SS + model.between_cluster_SS;
+    model.size=task._rows;
     model.iterations++;
     UKV.put(destination_key,model);
-    if (model.iterations >= max_iter)     break;
+    if (model.iterations >= max_iter) {
+      Clusters cc=new Clusters();
+      cc._clusters=clusters;
+      cc._means=means;
+      cc._mults=mults;
+      cc.doAll(1,vecs);
+      Frame fr2=cc.outputFrame(new String[]{"Cluster ID"},new String[1][]);
+      Key clustersIDKey=Key.make(destination_key.toString() + "_clusters");
+      model._clustersKey=clustersIDKey.toString();
+      UKV.put(clustersIDKey,fr2);
+      break;
+    }
     if (cancelled())     break;
   }
   return Status.Done;

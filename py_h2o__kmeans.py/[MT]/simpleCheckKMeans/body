@@ -15,13 +15,14 @@ def simpleCheckKMeans(self, kmeans, **kwargs):
         kmeansResult = h2o_cmd.runInspect(key=destination_key)
     if h2o.beta_features:
         model = kmeansResult['model']
-        clusters = model['clusters']
+        clusters = model['centers']
         cluster_variances = model['within_cluster_variances']
         error = model['total_within_SS']
         iterations = model['iterations']
         normalized = model['normalized']
         max_iter = model['max_iter']
     else:
+        h2o.verboseprint('kmeans result:', h2o.dump_json(kmeansResult))
         model = kmeansResult['KMeansModel']
         clusters = model['clusters']
         error = model['error']

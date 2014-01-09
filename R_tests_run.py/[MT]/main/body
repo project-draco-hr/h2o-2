@@ -14,21 +14,10 @@ def main(argv):
     xmx = '1g'
     h2o_jar = os.path.abspath(os.path.join(os.path.join(os.path.join(os.path.join(test_root_dir, '..'), '..'), 'target'), 'h2o.jar'))
     parse_args(argv)
-    if (not os.path.exists(h2o_jar)):
-        print ''
-        print ('ERROR: H2O jar not found: ' + h2o_jar)
-        print ''
-        sys.exit(1)
     if g_wipe_output_dir:
-        try:
-            if os.path.exists(g_output_dir):
-                shutil.rmtree(g_output_dir)
-        except OSError as e:
-            print ''
-            print ('ERROR: Removing output directory failed: ' + g_output_dir)
-            print '       (errno {0}): {1}'.format(e.errno, e.strerror)
-            print ''
-            sys.exit(1)
+        wipe_output_dir()
+    if g_wipe_test_state:
+        wipe_test_state(test_root_dir)
     if (g_test_to_run is not None):
         g_num_clouds = 1
     g_runner = RUnitRunner(test_root_dir, g_use_cloud, g_use_ip, g_use_port, g_num_clouds, nodes_per_cloud, h2o_jar, g_base_port, xmx, g_output_dir)
@@ -40,8 +29,15 @@ def main(argv):
         g_runner.build_test_list(g_test_group)
     else:
         g_runner.build_test_list()
+    if g_no_run:
+        sys.exit(0)
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
+    if (not os.path.exists(h2o_jar)):
+        print ''
+        print ('ERROR: H2O jar not found: ' + h2o_jar)
+        print ''
+        sys.exit(1)
     g_runner.start_clouds()
     g_runner.run_tests()
     g_runner.stop_clouds()

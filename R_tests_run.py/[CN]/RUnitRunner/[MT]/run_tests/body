@@ -9,7 +9,7 @@ def run_tests(self):
         out = open(out_file_name, 'w')
         cloud = self.clouds[0]
         port = cloud.get_port()
-        cmd = ['R', '--quiet', '-f', os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Utils/runnerSetupPackage.R'), '--args', ('127.0.0.1:' + str(port))]
+        cmd = ['R', '--quiet', '-f', os.path.join(self.test_root_dir, 'Utils/runnerSetupPackage.R'), '--args', ('127.0.0.1:' + str(port))]
         child = subprocess.Popen(args=cmd, stdout=out, stderr=subprocess.STDOUT)
         rv = child.wait()
         if self.terminated:

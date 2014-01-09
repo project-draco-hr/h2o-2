@@ -63,51 +63,8 @@
       jcols[i]=col;
     }
   }
-  if (rows == -1) {
-    byte[] bits=Utils.getFirstUnzipedBytes(val);
-    PSetupGuess sguess=ParseDataset.guessSetup(bits);
-    if (sguess != null && sguess.valid() && sguess._data != null && sguess._data.length >= 4 && sguess._setup._ncols > 0) {
-      int zipped_len=val.getFirstBytes().length;
-      double bytes_per_row=(double)zipped_len / sguess._data.length;
-      rows=(long)(val.length() / bytes_per_row);
-      cols=sguess._setup._ncols;
-      result.addProperty(ROWS,"~" + rows);
-      result.addProperty(COLS,cols);
-      final int len=sguess._data.length;
-      for (int i=0; i < Math.min(cols,jcols.length); i++) {
-        JsonObject col=new JsonObject();
-        if (len > 0 && i < sguess._data[0].length)         col.addProperty(HEADER,sguess._data[0][i]);
-        if (len > 1 && i < sguess._data[1].length)         col.addProperty(MIN,sguess._data[1][i]);
-        if (len > 2 && i < sguess._data[2].length)         col.addProperty(MEAN,sguess._data[2][i]);
-        if (len > 3 && i < sguess._data[3].length)         col.addProperty(MAX,sguess._data[3][i]);
-        jcols[i]=col;
-      }
-    }
- else {
-      result.addProperty(ROWS,"");
-      result.addProperty(COLS,"");
-    }
-    StringBuilder sb=new StringBuilder();
-    byte[] b=bits;
-    int newlines=0;
-    int len=Math.min(b.length,100);
-    for (int i=0; i < len; i++) {
-      byte c=b[i];
-      if (c == '&')       sb.append("&amp;");
- else       if (c == '<')       sb.append("&lt;");
- else       if (c == '>')       sb.append("&gt;");
- else       if (c == '\r')       ;
- else       if (c == '\n') {
-        if (++newlines >= 4)         break;
-        sb.append("<br>");
-      }
- else       if (c == ',' && i + 1 < len && b[i + 1] != ' ')       sb.append(", ");
- else       if (c < 32)       sb.append('?');
- else       sb.append((char)c);
-    }
-    if (val.length() > len)     sb.append("...");
-    str=sb.toString();
-  }
+  result.addProperty(ROWS,"");
+  result.addProperty(COLS,"");
   for (int i=0; i < jcols.length; i++)   result.add("col_" + i,jcols[i]);
   result.addProperty(VALUE,str);
   return result;

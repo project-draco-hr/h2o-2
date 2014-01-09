@@ -23,7 +23,7 @@ def test_kmeans_sphere100_fvec(self):
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         kmeansResult = kmeans
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
-        clusters = kmeansResult['model']['clusters']
+        clusters = kmeansResult['model']['centers']
         clustersSorted = sorted(clusters, key=sum)
         centersSorted = sorted(centersList, key=sum)
         print '\ntrial #', trial, 'h2o result, centers (sorted by key=sum)'
