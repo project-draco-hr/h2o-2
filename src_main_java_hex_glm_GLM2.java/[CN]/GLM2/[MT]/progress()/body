@@ -1,5 +1,7 @@
 {
   if (DKV.get(dest()) == null)   return 0;
   GLMModel m=DKV.get(dest()).get();
-  return (float)m.iteration() / (float)max_iter;
+  float progress=(float)m.iteration() / (float)max_iter;
+  System.out.println("glm progress = " + progress);
+  return progress;
 }
