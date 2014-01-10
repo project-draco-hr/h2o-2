@@ -1,8 +1,10 @@
 {
   if (isClassifier()) {
-    bodyCtxSB.i().p("// Compute Probabilities").nl();
-    bodyCtxSB.i().p("float sum = 0;").nl();
-    bodyCtxSB.i().p("for(int i=1;i<preds.length; i++) sum += (preds[i]=(float) Math.exp(preds[i]));").nl();
+    bodyCtxSB.i().p("// Compute Probabilities for classifier").nl();
+    bodyCtxSB.i().p("float sum = 0, rescale = 0;").nl();
+    bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) rescale = Math.max(rescale,Math.abs(preds[i]));").nl();
+    bodyCtxSB.i().p("if (rescale < 1.0f) rescale = 1.0f;").nl();
+    bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) sum += (preds[i]=(float) Math.exp(preds[i]/rescale));").nl();
     bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) preds[i] = (float) preds[i] / sum;").nl();
   }
 }
