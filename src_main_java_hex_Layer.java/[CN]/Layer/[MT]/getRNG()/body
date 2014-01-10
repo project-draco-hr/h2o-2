@@ -1,3 +1,4 @@
 {
-  return java.util.concurrent.ThreadLocalRandom.current();
+  final long seed=new Random().nextLong();
+  return new MersenneTwisterRNG(new int[]{(int)(seed >> 32L),(int)seed});
 }
