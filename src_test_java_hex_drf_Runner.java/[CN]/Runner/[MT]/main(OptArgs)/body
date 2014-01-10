@@ -1,0 +1,44 @@
+{
+  TestUtil.stall_till_cloudsize(ARGS.clusterSize);
+  if (ARGS.ntrees <= 0 || ARGS.ntrees > 100000)   throw new RuntimeException("ntrees " + ARGS.ntrees + " out of bounds");
+  if (ARGS.sample < 0 || ARGS.sample > 1.0f)   throw new RuntimeException("sample " + ARGS.sample + " out of bounds");
+  if (ARGS.learn < 0 || ARGS.learn > 1.0f)   throw new RuntimeException("learn  " + ARGS.learn + " out of bounds");
+  if (ARGS.nbins < 2 || ARGS.nbins > 100000)   throw new RuntimeException("nbins " + ARGS.nbins + " out of bounds");
+  if (ARGS.depth <= 1)   throw new RuntimeException("depth " + ARGS.depth + " out of bounds");
+  if ((ARGS.trainFile != OptArgs.defaultTrainFile) ^ (ARGS.testFile != OptArgs.defaultTestFile))   throw new RuntimeException("Set both trainFile and testFile; a missing testFile will use OOBEE on train data");
+  Sys sys=ARGS.gbm ? Sys.GBM__ : Sys.DRF__;
+  String cs[]=(ARGS.cols + "," + ARGS.response).split("[, \t]");
+  if (ARGS.mtries == 0)   ARGS.mtries=(int)Math.sqrt(cs.length);
+  if (ARGS.mtries <= 0 || ARGS.mtries > cs.length)   throw new RuntimeException("mtries " + ARGS.mtries + " out of bounds");
+  Timer t_load=new Timer();
+  Frame train=TestUtil.parseFrame(Key.make("train.hex"),ARGS.trainFile);
+  Frame test=ARGS.testFile.length() == 0 ? null : TestUtil.parseFrame(Key.make("test.hex"),ARGS.testFile);
+  Log.info(sys,"Data loaded in " + t_load);
+  Vec response=train.subframe(new String[]{ARGS.response}).vecs()[0];
+  train=train.subframe(cs);
+  if (test != null)   test=test.subframe(cs);
+  for (  Vec v : train.vecs())   v.min();
+  for (int i=0; i < train.numCols(); i++)   Log.info(sys,train._names[i] + ", " + train.vecs()[i]);
+  Log.info(sys,"Arguments used:\n" + ARGS.toString());
+  Timer t_model=new Timer();
+  SharedTreeModelBuilder stmb=ARGS.gbm ? new GBM() : new DRF();
+  stmb.source=train;
+  stmb.validation=test;
+  stmb.response=response;
+  stmb.ntrees=ARGS.ntrees;
+  stmb.max_depth=ARGS.depth;
+  stmb.min_rows=ARGS.min_rows;
+  stmb.destination_key=Key.make("DRF_Model_" + ARGS.trainFile);
+  if (ARGS.gbm) {
+    GBM gbm=(GBM)stmb;
+    gbm.learn_rate=ARGS.learn;
+  }
+ else {
+    DRF drf=(DRF)stmb;
+    drf.mtries=ARGS.mtries;
+    drf.sample_rate=ARGS.sample;
+    drf.seed=ARGS.seed;
+  }
+  stmb.invoke();
+  Log.info(sys,"Model trained in " + t_model);
+}

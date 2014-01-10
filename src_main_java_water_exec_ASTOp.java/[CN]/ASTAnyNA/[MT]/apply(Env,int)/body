@@ -1,0 +1,18 @@
+{
+  if (!env.isAry()) {
+    env.poppush(0);
+    return;
+  }
+  Frame fr=env.popAry();
+  String skey=env.key();
+  double d=0;
+  Vec[] v=fr.vecs();
+  for (int i=0; i < v.length; i++) {
+    if (v[i].naCnt() > 0) {
+      d=1;
+      break;
+    }
+  }
+  env.subRef(fr,skey);
+  env.poppush(d);
+}
