@@ -6,6 +6,11 @@
   for (int u=0; u < _a.length; u++) {
     final float targetval=(u == label ? 1 : 0);
     float g=targetval - _a[u];
+    if (loss == Loss.CrossEntropy) {
+    }
+ else     if (loss == Loss.MeanSquare) {
+      g*=(1 - _a[u]) * _a[u];
+    }
     bprop(u,g,r,m);
   }
 }

@@ -4,7 +4,7 @@
   ls[1]=new Layer.RectifierDropout(1024);
   ls[2]=new Layer.RectifierDropout(1024);
   ls[3]=new Layer.RectifierDropout(2048);
-  ls[4]=new VecSoftmax(labels,outputStats);
+  ls[4]=new VecSoftmax(labels,outputStats,Layer.Loss.CrossEntropy);
   for (int i=0; i < ls.length; i++) {
     ls[i].initial_weight_distribution=Layer.InitialWeightDistribution.UniformAdaptive;
     ls[i].rate=.01f;
@@ -14,7 +14,6 @@
     ls[i].momentum_stable=.99f;
     ls[i].l1=.00001f;
     ls[i].max_w2=15;
-    ls[i].loss=Layer.Loss.CrossEntropy;
     ls[i].init(ls,i);
   }
   return ls;

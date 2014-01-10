@@ -35,10 +35,9 @@
  else       if (activation == Activation.Rectifier) {
         ls[1]=new Rectifier(7);
       }
-      ls[2]=new VecSoftmax(labels,null);
+      ls[2]=new VecSoftmax(labels,null,loss);
       for (int i=0; i < ls.length; i++) {
         ls[i].rate=rate;
-        ls[i].loss=(i == 2) ? loss : Loss.CrossEntropy;
         ls[i].max_w2=Float.MAX_VALUE;
         ls[i].init(ls,i);
       }

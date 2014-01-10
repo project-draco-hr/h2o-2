@@ -3,9 +3,8 @@
   final float m=momentum(processed);
   final float r=rate(processed) * (1 - m);
   for (int u=0; u < _a.length; u++) {
-    float g=0;
     if (_a[u] > 0) {
-      g=_e[u];
+      final float g=_e[u];
       bprop(u,g,r,m);
     }
  else     if (fast_mode || (l1 == 0 && l2 == 0 && _wm == null && _bm == null)) {

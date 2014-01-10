@@ -6,7 +6,7 @@
   Vec[] data=Utils.remove(frame.vecs(),frame.vecs().length - 1);
   Vec labels=frame.vecs()[frame.vecs().length - 1];
   VecsInput input=new VecsInput(data,null);
-  VecSoftmax output=new VecSoftmax(labels,null);
+  VecSoftmax output=new VecSoftmax(labels,null,Layer.Loss.MeanSquare);
   Layer[] ls=new Layer[3];
   ls[0]=input;
   ls[1]=new Layer.Tanh(50);
