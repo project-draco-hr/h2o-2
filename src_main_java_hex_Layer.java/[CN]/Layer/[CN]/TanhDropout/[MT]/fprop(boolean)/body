@@ -7,11 +7,11 @@
   if (_bits == null) {
     _bits=new byte[(units + 7) / 8];
   }
-  _rand.nextBytes(_bits);
+  getRNG().nextBytes(_bits);
   if (_previous.isInput() && training) {
     final double rate=((Input)_previous)._dropout_rate;
     for (int i=0; i < _previous._a.length; i++) {
-      if (_rand.nextFloat() < rate)       _previous._a[i]=0;
+      if (getRNG().nextFloat() < rate)       _previous._a[i]=0;
     }
   }
   for (int o=0; o < _a.length; o++) {
