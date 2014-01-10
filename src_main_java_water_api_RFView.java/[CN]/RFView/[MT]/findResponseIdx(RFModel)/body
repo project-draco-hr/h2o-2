@@ -1,0 +1,8 @@
+{
+  String nresponse=model.responseName();
+  ValueArray ary=UKV.get(model._dataKey);
+  int idx=0;
+  for (  ValueArray.Column cols : ary._cols)   if (nresponse.equals(cols._name))   return idx;
+ else   idx++;
+  return -1;
+}

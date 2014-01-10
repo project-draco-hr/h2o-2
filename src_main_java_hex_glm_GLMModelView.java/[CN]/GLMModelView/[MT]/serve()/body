@@ -1,9 +1,11 @@
 {
+  Job jjob=(job_key != null) ? Job.findJob(job_key) : null;
+  if (jjob != null && jjob.exception != null)   return Response.error(jjob.exception == null ? "cancelled" : jjob.exception);
   Value v=DKV.get(_modelKey);
-  if (v == null)   return Response.poll(this,0,100,"_modelKey",_modelKey.toString());
-  glm_model=v.get();
-  if (Double.isNaN(lambda))   lambda=glm_model.lambdas[glm_model.best_lambda_idx];
-  Job j;
-  if (DKV.get(glm_model.job_key) != null && (j=Job.findJob(glm_model.job_key)) != null)   return Response.poll(this,(int)(100 * j.progress()),100,"_modelKey",_modelKey.toString());
- else   return Response.done(this);
+  if (v != null) {
+    glm_model=v.get();
+    if (Double.isNaN(lambda))     lambda=glm_model.lambdas[glm_model.best_lambda_idx];
+  }
+  if (jjob == null || jjob.end_time > 0 || jjob.cancelled())   return Response.done(this);
+  return Response.poll(this,(int)(100 * jjob.progress()),100,"_modelKey",_modelKey.toString());
 }
