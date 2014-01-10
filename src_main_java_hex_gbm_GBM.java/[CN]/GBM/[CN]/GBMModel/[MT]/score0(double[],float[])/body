@@ -1,9 +1,12 @@
 {
-  float sum=0;
   float[] p=super.score0(data,preds);
   if (nclasses() > 1) {
-    for (int k=0; k < p.length; k++)     sum+=(p[k]=(float)Math.exp(p[k]));
-    div(p,sum);
+    float rescale=0;
+    for (int k=0; k < p.length; k++)     rescale=Math.max(rescale,Math.abs(p[k]));
+    if (rescale < 1.0f)     rescale=1.0f;
+    float dsum=0;
+    for (int k=0; k < p.length; k++)     dsum+=(p[k]=(float)Math.exp(p[k] / rescale));
+    div(p,dsum);
   }
  else {
   }

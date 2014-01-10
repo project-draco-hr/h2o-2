@@ -1,9 +1,0 @@
-{
-  new TAtomic<GLMModel>(){
-    @Override public GLMModel atomic(    GLMModel old){
-      if (old == null)       return GLMModel.this;
-      return GLMModel.this.iteration() > old.iteration() ? GLMModel.this : old;
-    }
-  }
-.fork(_selfKey);
-}
