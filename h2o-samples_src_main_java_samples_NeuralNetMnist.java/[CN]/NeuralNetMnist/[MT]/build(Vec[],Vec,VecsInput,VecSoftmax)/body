@@ -1,22 +1,25 @@
 {
-  Layer[] ls=new Layer[4];
+  Layer[] ls=new Layer[5];
   ls[0]=new VecsInput(data,inputStats);
-  ls[1]=new Layer.RectifierDropout(50);
-  ls[2]=new Layer.RectifierDropout(50);
-  ls[3]=new VecSoftmax(labels,outputStats,Layer.Loss.CrossEntropy);
+  ls[1]=new Layer.RectifierDropout(102);
+  ls[2]=new Layer.RectifierDropout(102);
+  ls[3]=new Layer.RectifierDropout(204);
+  ls[4]=new VecSoftmax(labels,outputStats,NeuralNetParams.Loss.CrossEntropy);
+  NeuralNetParams p=new NeuralNetParams();
+  p.rate=0.003f;
+  p.rate_annealing=1e-6f;
+  p.epochs=1000;
+  p.activation=NeuralNetParams.Activation.RectifierWithDropout;
+  p.max_w2=15;
+  p.momentum_start=0.5f;
+  p.momentum_ramp=1800000;
+  p.momentum_stable=0.99f;
+  p.l1=.00001f;
+  p.l2=.00f;
+  p.fast_mode=true;
+  p.initial_weight_distribution=NeuralNetParams.InitialWeightDistribution.UniformAdaptive;
   for (int i=0; i < ls.length; i++) {
-    ls[i].initial_weight_distribution=Layer.InitialWeightDistribution.Normal;
-    ls[i].initial_weight_scale=0.01;
-    ls[i].rate=.01f;
-    ls[i].rate_annealing=1 / 1e6f;
-    ls[i].l1=.001f;
-    ls[i].l2=.001f;
-    ls[i].fast_mode=true;
-    ls[i].max_w2=15;
-    ls[i].momentum_start=0.05f;
-    ls[i].momentum_ramp=100000;
-    ls[i].momentum_stable=0.10f;
-    ls[i].init(ls,i);
+    ls[i].init(ls,i,p);
   }
   return ls;
 }

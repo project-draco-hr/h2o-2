@@ -1,23 +1,7 @@
 {
   NeuralNet job=job_key == null ? null : (NeuralNet)Job.findJob(job_key);
   if (job != null) {
-    mode=job.mode;
-    activation=job.activation;
-    input_dropout_ratio=job.input_dropout_ratio;
-    hidden=job.hidden;
-    initial_weight_distribution=job.initial_weight_distribution;
-    initial_weight_scale=job.initial_weight_scale;
-    rate=job.rate;
-    rate_annealing=job.rate_annealing;
-    max_w2=job.max_w2;
-    momentum_start=job.momentum_start;
-    momentum_ramp=job.momentum_ramp;
-    momentum_stable=job.momentum_stable;
-    l1=job.l1;
-    l2=job.l2;
-    loss=job.loss;
-    fast_mode=job.fast_mode;
-    epochs=job.epochs;
+    _params=job._params;
   }
   NeuralNetModel model=UKV.get(destination_key);
   if (model != null) {

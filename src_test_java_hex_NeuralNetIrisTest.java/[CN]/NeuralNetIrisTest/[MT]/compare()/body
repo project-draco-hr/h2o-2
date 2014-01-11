@@ -1,8 +1,8 @@
 {
   NeuralNetMLPReference ref=new NeuralNetMLPReference();
-  Activation[] activations={Activation.Tanh,Activation.Rectifier};
-  Loss[] losses={Loss.MeanSquare,Loss.CrossEntropy};
-  for (  Activation activation : activations) {
+  NeuralNet.NeuralNetParams.Activation[] activations={NeuralNet.NeuralNetParams.Activation.Tanh,NeuralNet.NeuralNetParams.Activation.Rectifier};
+  Loss[] losses={NeuralNet.NeuralNetParams.Loss.MeanSquare,NeuralNet.NeuralNetParams.Loss.CrossEntropy};
+  for (  NeuralNet.NeuralNetParams.Activation activation : activations) {
     for (    Loss loss : losses) {
       Log.info("Testing " + activation.name() + " activation function with "+ loss.name()+ " loss function");
       ref.init(activation);
@@ -23,23 +23,24 @@
       _train=frame(null,Utils.subarray(rows,0,limit));
       _test=frame(null,Utils.subarray(rows,limit,(int)frame.numRows() - limit));
       UKV.remove(pars);
-      float rate=0.01f;
-      int epochs=1000;
       Vec[] data=Utils.remove(_train.vecs(),_train.vecs().length - 1);
       Vec labels=_train.vecs()[_train.vecs().length - 1];
+      NeuralNet.NeuralNetParams p=new NeuralNet.NeuralNetParams();
+      p.rate=0.01f;
+      p.epochs=1000;
+      p.activation=activation;
+      p.max_w2=Float.MAX_VALUE;
       Layer[] ls=new Layer[3];
       ls[0]=new VecsInput(data,null);
-      if (activation == Activation.Tanh) {
+      if (activation == NeuralNet.NeuralNetParams.Activation.Tanh) {
         ls[1]=new Tanh(7);
       }
- else       if (activation == Activation.Rectifier) {
+ else       if (activation == NeuralNet.NeuralNetParams.Activation.Rectifier) {
         ls[1]=new Rectifier(7);
       }
       ls[2]=new VecSoftmax(labels,null,loss);
       for (int i=0; i < ls.length; i++) {
-        ls[i].rate=rate;
-        ls[i].max_w2=Float.MAX_VALUE;
-        ls[i].init(ls,i);
+        ls[i].init(ls,i,p);
       }
       Layer l=ls[1];
       for (int o=0; o < l._a.length; o++) {
@@ -51,8 +52,8 @@
         for (int i=0; i < l._previous._a.length; i++)         ref._nn.hoWeights[i][o]=l._w[o * l._previous._a.length + i];
         ref._nn.oBiases[o]=l._b[o];
       }
-      ref.train(epochs,rate,loss);
-      Trainer.Direct trainer=new Trainer.Direct(ls,epochs,null);
+      ref.train((int)p.epochs,(float)p.rate,loss);
+      Trainer.Direct trainer=new Trainer.Direct(ls,p.epochs,null);
       trainer.run();
       float epsilon=1e-5f;
       for (int o=0; o < ls[2]._a.length; o++) {

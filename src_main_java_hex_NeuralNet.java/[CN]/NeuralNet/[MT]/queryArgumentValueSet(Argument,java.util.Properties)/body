@@ -1,9 +1,9 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
-  if (arg._name.equals("input_dropout_ratio") && (activation != Layer.Activation.RectifierWithDropout && activation != Layer.Activation.TanhWithDropout)) {
+  if (arg._name.equals("input_dropout_ratio") && (activation != NeuralNetParams.Activation.RectifierWithDropout && activation != NeuralNetParams.Activation.TanhWithDropout)) {
     arg.disable("Only with Dropout",inputArgs);
   }
-  if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == Layer.InitialWeightDistribution.UniformAdaptive)) {
+  if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == NeuralNetParams.InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Only with Uniform or Normal initial weight distributions",inputArgs);
   }
   if (arg._name.equals("fast_mode") && (l1 == 0 && l2 == 0 && momentum_start == 0 && momentum_stable == 0)) {

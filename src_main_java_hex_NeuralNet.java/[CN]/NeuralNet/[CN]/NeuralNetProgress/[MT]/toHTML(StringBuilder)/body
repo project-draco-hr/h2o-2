@@ -19,6 +19,11 @@
     DocGen.HTML.section(sb,"Validation classification error: " + validC);
     DocGen.HTML.section(sb,"Validation mean square error: " + validS);
     DocGen.HTML.section(sb,"Validation mean cross entropy: " + validCE);
+    DocGen.HTML.section(sb,"Layer 0 samples: " + train.training_samples);
+    for (int i=1; i < model.layers.length; ++i) {
+      final Layer l=model.layers[i];
+      DocGen.HTML.section(sb,"Layer " + i + " learning rate: "+ l.rate(train.training_samples)+ " momentum: "+ String.format(mse_format,l.momentum(train.training_samples)));
+    }
     if (nn != null) {
       long ps=train.training_samples * 1000 / nn.runTimeMs();
       DocGen.HTML.section(sb,"Training speed: " + ps + " samples/s");

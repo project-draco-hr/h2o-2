@@ -8,10 +8,6 @@
     final double[] ratios={fraction,1 - fraction};
     trainf=split.splitFrame(trainf,ratios,seed)[0];
     testf=split.splitFrame(testf,ratios,seed)[0];
-    if (false) {
-      UKV.put(water.Key.make("train" + fraction),trainf);
-      UKV.put(water.Key.make("test" + fraction),testf);
-    }
   }
   train=trainf.vecs();
   test=testf.vecs();

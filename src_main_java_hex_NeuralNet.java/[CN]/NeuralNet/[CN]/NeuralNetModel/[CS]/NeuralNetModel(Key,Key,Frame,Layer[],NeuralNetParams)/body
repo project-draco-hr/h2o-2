@@ -1,0 +1,11 @@
+{
+  super(selfKey,dataKey,fr);
+  layers=ls;
+  weights=new float[ls.length][];
+  biases=new float[ls.length][];
+  for (int y=1; y < layers.length; y++) {
+    weights[y]=layers[y]._w;
+    biases[y]=layers[y]._b;
+  }
+  _params=p;
+}
