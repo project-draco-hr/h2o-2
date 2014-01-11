@@ -1,4 +1,4 @@
-def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120, forRF=False, noPrint=False):
+def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120, forRF=False, noPrint=False, returnStringX=True):
     y = str(y)
     if (key is not None):
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(key, exceptionOnMissingValues=False, max_column_display=99999999, timeoutSecs=timeoutSecs)
@@ -46,9 +46,12 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
     if (not noPrint):
         print 'x has', len(x), 'cols'
         print 'ignore_x has', len(ignore_x), 'cols'
-    x = ','.join(map(str, x))
+    if returnStringX:
+        x = ','.join(map(str, x))
     if h2o.beta_features:
         ignore_x = ','.join(map((lambda x: ('C' + str(x))), ignore_x))
+    else:
+        ignore_x = ','.join(map((lambda x: str(x)), ignore_x))
     if (not noPrint):
         print '\nx:', x
         print '\nignore_x:', ignore_x

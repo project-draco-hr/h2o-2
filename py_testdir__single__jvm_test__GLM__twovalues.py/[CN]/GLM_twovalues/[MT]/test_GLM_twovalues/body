@@ -8,7 +8,7 @@ def test_GLM_twovalues(self):
     rowDataFalse = '0,            1,            0,            -1,            -2,            -1,            -1,            -4,            -1,            -4,            -1,            -4'
     twoValueList = [('A', 'B', 0, 14), ('A', 'B', 1, 14), (0, 1, 0, 12), (0, 1, 1, 12), (0, 1, 'NaN', 12), (1, 0, 'NaN', 12), ((-1), 1, 0, 12), ((-1), 1, 1, 12), ((-10.0), 10.0, 10.0, 12), ((-10.0), 10.0, (-10.0), 12)]
     trial = 0
-    for (outputTrue, outputFalse, case, coeffNum) in twoValueList:
+    for (outputTrue, outputFalse, case, expectedCoeffNum) in twoValueList:
         write_syn_dataset(csvPathname, 20, rowDataTrue, rowDataFalse, str(outputTrue), str(outputFalse))
         start = time.time()
         hex_key = ((csvFilename + '_') + str(trial))
@@ -17,9 +17,9 @@ def test_GLM_twovalues(self):
         print ('using outputTrue: %s outputFalse: %s' % (outputTrue, outputFalse))
         glm = h2o_cmd.runGLM(parseResult=parseResult, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 0, **kwargs)
-        coeffNum = len(glm['GLMModel']['coefficients'])
-        if (coeffNum != coeffNum):
-            raise Exception((('Should be ' + coeffNum) + (' coefficients in result. %s' % coeffNum)))
+        actualCoeffNum = len(glm['GLMModel']['coefficients'])
+        if (actualCoeffNum != expectedCoeffNum):
+            raise Exception((('Should be ' + expectedCoeffNum) + (' expected coefficients in result. %s' % expectedCoeffNum)))
         print 'trial #', trial, 'glm end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
         trial += 1
