@@ -1,9 +1,10 @@
 {
-  _trainers=new Base[Runtime.getRuntime().availableProcessors()];
-  _threads=new Thread[_trainers.length];
-  _stepsPerThread=(long)(epochs * ((Input)ls[0])._len / _threads.length);
-  _resume=new CyclicBarrier(_threads.length + 1);
-  for (int t=0; t < _trainers.length; t++) {
+  final int num_threads=Runtime.getRuntime().availableProcessors();
+  _trainers=new Base[num_threads];
+  _threads=new Thread[num_threads];
+  _stepsPerThread=(long)(epochs * ((Input)ls[0])._len / num_threads);
+  System.out.println("Starting " + num_threads + " threads.");
+  for (int t=0; t < num_threads; t++) {
     Layer[] clones=new Layer[ls.length];
     for (int y=0; y < clones.length; y++)     clones[y]=ls[y].clone();
     for (int y=0; y < clones.length; y++) {
@@ -16,24 +17,13 @@
 ;
     }
     final Input input=(Input)clones[0];
-    input._pos=input._len * t / _trainers.length;
+    input._pos=input._len * t / num_threads;
     _trainers[t]=new Base(clones);
     final Base trainer=_trainers[t];
     _threads[t]=new Thread("H2O Trainer " + t){
       @Override public void run(){
         for (long i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
-          CyclicBarrier b=_suspend;
-          if (b == DONE)           break;
           if (Job.cancelled(job))           break;
-          if (b != null) {
-            try {
-              b.await();
-              _resume.await();
-            }
- catch (            Exception e) {
-              throw new RuntimeException(e);
-            }
-          }
           trainer.step();
           input.move();
           _processed.incrementAndGet();
@@ -42,5 +32,4 @@
     }
 ;
   }
-  Log.info("Started " + _trainers.length + " neural network trainers");
 }
