@@ -1,13 +1,5 @@
 {
-  if (vec.length() - vec.naCnt() <= RESAMPLE_SZ) {
-    int rs=0;
-    _samples=new double[(int)(vec.length() - vec.naCnt())];
-    for (int r=0; r < vec.length(); r++) {
-      double v=vec.at(r);
-      if (!Double.isNaN(v))       _samples[rs++]=v;
-    }
-    _samples=Arrays.copyOf(_samples,rs);
-  }
+  nacnt=_stat0._nas;
   Arrays.sort(_samples);
   _pctile=new double[DEFAULT_PERCENTILES.length];
   for (int i=0; i < _pctile.length; i++)   _pctile[i]=quantile(DEFAULT_PERCENTILES[i]);
@@ -29,7 +21,7 @@
     _maxs[i]=_maxs[_maxs.length - 1 - i];
     _maxs[_maxs.length - 1 - i]=t;
   }
-  this.stats=_type == T_ENUM ? new EnumStats(vec.domain().length) : new NumStats(vec.mean(),vec.sigma(),_zeros,_mins,_maxs,_pctile);
+  this.stats=_type == T_ENUM ? new EnumStats(vec.domain().length) : new NumStats(vec.mean(),vec.sigma(),_stat0._zeros,_mins,_maxs,_pctile);
   if (_type == T_ENUM) {
     this.hstart=0;
     this.hstep=1;
