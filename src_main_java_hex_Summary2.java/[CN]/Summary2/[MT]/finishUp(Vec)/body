@@ -1,14 +1,9 @@
 {
-  if (vec.length() - vec.naCnt() <= RESAMPLE_SZ) {
-    int rs=0;
-    _samples=new double[(int)(vec.length() - vec.naCnt())];
-    for (int r=0; r < vec.length(); r++) {
-      double v=vec.at(r);
-      if (!Double.isNaN(v))       _samples[rs++]=v;
-    }
-    _samples=Arrays.copyOf(_samples,rs);
+  if (vec.length() - vec.naCnt() < 10 * RESAMPLE_SZ && _samples.length < RESAMPLE_SZ / 2) {
+    _samples=new FilterNA().doAll(new Frame(vec))._data;
   }
   Arrays.sort(_samples);
+  Log.info("resample size " + _samples.length);
   _pctile=new double[DEFAULT_PERCENTILES.length];
   for (int i=0; i < _pctile.length; i++)   _pctile[i]=quantile(DEFAULT_PERCENTILES[i]);
   computeMajorities();
