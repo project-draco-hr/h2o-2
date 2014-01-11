@@ -1,9 +1,7 @@
 {
   Value v=_key.value();
   try {
-    Futures fs=new Futures();
-    UKV.remove(v._key,fs);
-    fs.blockForPending();
+    UKV.remove(v._key);
   }
  catch (  Exception e) {
     return Response.error(e.getMessage());

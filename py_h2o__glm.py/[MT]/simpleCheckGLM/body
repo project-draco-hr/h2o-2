@@ -66,7 +66,6 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print ('%15s %s' % ('err:\t', validations['err']))
         print ('%15s %s' % ('nullDev:\t', validations['nullDev']))
         print ('%15s %s' % ('resDev:\t', validations['resDev']))
-    print 'kbn family:', family
     if (family == 'binomial'):
         print ('%15s %s' % ('auc:\t', validations['auc']))
         if h2o.beta_features:
@@ -88,25 +87,28 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         coefficients_names = GLMModel['coefficients_names']
         idxs = submodels0['idxs']
         column_names = coefficients_names
+        norm_beta = submodels0['norm_beta']
+        if (len(column_names) != len(norm_beta)):
+            print len(column_names), len(norm_beta)
+            raise Exception(('column_names and normalized_norm_beta from h2o json not same length. column_names: %s normalized_norm_beta: %s' % (column_names, norm_beta)))
+        beta = submodels0['beta']
+        if (len(column_names) != len(beta)):
+            print len(column_names), len(beta)
+            raise Exception(('column_names and beta from h2o json not same length. column_names: %s beta: %s' % (column_names, beta)))
         if doNormalized:
-            beta = submodels0['normalized_beta']
-            if (len(column_names) != len(beta)):
-                print len(column_names), len(beta)
-                raise Exception(('column_names and normalized_beta from h2o json not same length. column_names: %s normalized_beta: %s' % (column_names, beta)))
+            beta_used = norm_beta
         else:
-            beta = submodels0['beta']
-            if (len(column_names) != len(beta)):
-                print len(column_names), len(beta)
-                raise Exception(('column_names and beta from h2o json not same length. column_names: %s beta: %s' % (column_names, beta)))
+            beta_used = beta
         coefficients = {}
-        for (n, b) in zip(column_names, beta):
+        for (n, b) in zip(column_names, beta_used):
             coefficients[n] = b
         print 'coefficients:', coefficients
         print 'beta:', beta
-        print 'intercept demapping info:', 'column_names[-i]:', column_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficient_names[[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta[-1]:', beta[(-1)], "coefficients['Intercept']", coefficients['Intercept']
+        print 'norm_beta:', norm_beta
+        print 'intercept demapping info:', 'column_names[-i]:', column_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficient_names[[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta_used[-1]:', beta_used[(-1)], "coefficients['Intercept']", coefficients['Intercept']
         for i in idxs:
-            if (beta[i] == 0.0):
-                raise Exception("idxs shouldn't point to any 0 coefficients i: %s beta[i]:"(i, beta[i]))
+            if (beta_used[i] == 0.0):
+                raise Exception("idxs shouldn't point to any 0 coefficients i: %s beta_used[i]:"(i, beta_used[i]))
         intercept = coefficients.pop('Intercept', None)
         column_names.pop()
     else:
