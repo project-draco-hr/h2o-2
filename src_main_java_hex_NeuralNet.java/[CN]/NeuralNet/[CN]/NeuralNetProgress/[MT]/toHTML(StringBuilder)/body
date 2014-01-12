@@ -19,10 +19,30 @@
     DocGen.HTML.section(sb,"Validation classification error: " + validC);
     DocGen.HTML.section(sb,"Validation mean square error: " + validS);
     DocGen.HTML.section(sb,"Validation mean cross entropy: " + validCE);
-    DocGen.HTML.section(sb,"Layer 0 samples: " + train.training_samples);
-    for (int i=1; i < model.layers.length; ++i) {
-      final Layer l=model.layers[i];
-      DocGen.HTML.section(sb,"Layer " + i + " learning rate: "+ l.rate(train.training_samples)+ " momentum: "+ String.format(mse_format,l.momentum(train.training_samples)));
+    boolean unstable=false;
+    DocGen.HTML.arrayHead(sb);
+    sb.append("<tr>");
+    sb.append("<th>").append("Hidden layer").append("</th>");
+    sb.append("<th>").append("learning rate").append("</th>");
+    sb.append("<th>").append("momentum").append("</th>");
+    sb.append("<th>").append("mean activation").append("</th>");
+    sb.append("<th>").append("rms weight").append("</th>");
+    sb.append("<th>").append("mean bias").append("</th>");
+    sb.append("</tr>");
+    for (int i=1; i < model.layers.length - 1; ++i) {
+      sb.append("<tr>");
+      sb.append("<td>").append("<b>" + i + "</b>").append("</td>");
+      sb.append("<td>").append(model.layers[i].rate(train.training_samples)).append("</td>");
+      sb.append("<td>").append(String.format(mse_format,model.layers[i].momentum(train.training_samples))).append("</td>");
+      sb.append("<td>").append(String.format(mse_format,model.mean_activation[i])).append("</td>");
+      sb.append("<td>").append(String.format(mse_format,model.rms_weights[i])).append("</td>");
+      sb.append("<td>").append(String.format(mse_format,model.mean_bias[i])).append("</td>");
+      sb.append("</tr>");
+      unstable|=(Double.isNaN(model.mean_activation[i]) || Double.isNaN(model.rms_weights[i]) || Double.isNaN(model.mean_bias[i]));
+    }
+    DocGen.HTML.arrayTail(sb);
+    if (unstable) {
+      DocGen.HTML.section(sb,"===> Instability detected and job aborted.  Try a smaller learning rate and/or single-node mode.");
     }
     if (nn != null) {
       long ps=train.training_samples * 1000 / nn.runTimeMs();

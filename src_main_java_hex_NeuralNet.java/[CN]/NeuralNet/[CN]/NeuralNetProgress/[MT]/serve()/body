@@ -9,6 +9,10 @@
     validation_errors=model.validation_errors;
     class_names=model.classNames();
     confusion_matrix=model.confusion_matrix;
+    mean_activation=model.mean_activation;
+    mean_bias=model.mean_bias;
+    rms_weights=model.rms_weights;
+    if (model.unstable && job != null)     job.cancel();
   }
   return super.serve();
 }

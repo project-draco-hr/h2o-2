@@ -6,7 +6,4 @@
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == NeuralNetParams.InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Only with Uniform or Normal initial weight distributions",inputArgs);
   }
-  if (arg._name.equals("fast_mode") && (l1 == 0 && l2 == 0 && momentum_start == 0 && momentum_stable == 0)) {
-    arg.disable("Only needed if L1/L2 regularization or momentum is active.",inputArgs);
-  }
 }
