@@ -4,6 +4,7 @@
     int w=u * _previous._a.length + i;
     if (_previous._e != null)     _previous._e[i]+=g * _w[w];
     float d=g * _previous._a[i] - _w[w] * l2 - Math.signum(_w[w]) * l1;
+    unstable|=Float.isNaN(d);
     if (_wm != null) {
       _wm[w]*=m;
       _wm[w]=d=_wm[w] + d;
