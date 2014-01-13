@@ -10,9 +10,13 @@
     class_names=model.classNames();
     confusion_matrix=model.confusion_matrix;
     mean_activation=model.mean_activation;
+    rms_activation=model.rms_activation;
     mean_bias=model.mean_bias;
-    rms_weights=model.rms_weights;
-    mse=model.mse;
+    rms_bias=model.rms_bias;
+    mean_weight=model.mean_weight;
+    rms_weight=model.rms_weight;
+    mean_error=model.mean_error;
+    rms_error=model.rms_error;
     if (model.unstable && job != null)     job.cancel();
   }
   return super.serve();
