@@ -1,3 +1,8 @@
 {
-  return UNI_INFIX_OPS.containsKey(id) || BIN_INFIX_OPS.containsKey(id) || PREFIX_OPS.containsKey(id);
+  ASTOp op3=PREFIX_OPS.get(id);
+  if (op3 != null)   return op3;
+  ASTOp op2=BIN_INFIX_OPS.get(id);
+  if (op2 != null)   return op2;
+  ASTOp op1=UNI_INFIX_OPS.get(id);
+  return op1;
 }
