@@ -9,11 +9,13 @@
   if (arg._name.equals("mode")) {
     if (H2O.CLOUD._memary.length > 1) {
       arg.disable("Using MapReduce since cluster size > 1.",inputArgs);
+      mode=NeuralNetParams.ExecutionMode.MapReduce_Hogwild;
     }
   }
   if (arg._name.equals("warmup_samples")) {
     if (mode == NeuralNetParams.ExecutionMode.Serial) {
       arg.disable("Only for non-serial execution modes.");
+      assert(warmup_samples == 0);
     }
   }
 }
