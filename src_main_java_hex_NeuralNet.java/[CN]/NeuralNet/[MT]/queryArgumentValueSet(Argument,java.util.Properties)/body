@@ -1,19 +1,19 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
   if (arg._name.equals("input_dropout_ratio") && (activation != NeuralNetParams.Activation.RectifierWithDropout && activation != NeuralNetParams.Activation.TanhWithDropout)) {
-    arg.disable("Only with Dropout",inputArgs);
+    arg.disable("Only with Dropout.",inputArgs);
   }
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == NeuralNetParams.InitialWeightDistribution.UniformAdaptive)) {
-    arg.disable("Only with Uniform or Normal initial weight distributions",inputArgs);
+    arg.disable("Only with Uniform or Normal initial weight distributions.",inputArgs);
   }
   if (arg._name.equals("mode")) {
     if (H2O.CLOUD._memary.length > 1) {
       arg.disable("Using MapReduce since cluster size > 1.",inputArgs);
-      mode=NeuralNetParams.ExecutionMode.MapReduce_Hogwild;
+      mode=NeuralNetParams.ExecutionMode.MultiNode;
     }
   }
   if (arg._name.equals("warmup_samples")) {
-    if (mode == NeuralNetParams.ExecutionMode.Serial) {
+    if (mode == NeuralNetParams.ExecutionMode.SingleThread) {
       arg.disable("Only for non-serial execution modes.");
       assert(warmup_samples == 0);
     }
