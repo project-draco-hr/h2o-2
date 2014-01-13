@@ -1,9 +1,9 @@
 def test_B_putfile_files(self):
     timeoutSecs = 500
-    csvFilenameList = [('covtype.data', 'UCI/UCI-large/covtype/covtype.data', 1)]
+    csvFilenameList = [('covtype.data', 'standard/covtype.data', 1)]
     h2b.browseTheCloud()
     for (csvFilename, csvPathname, trees) in csvFilenameList:
-        parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, timeoutSecs=500, schema='put')
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=500, schema='put')
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect2 = h2o_cmd.runInspect(key=parseResult['destination_key'])
