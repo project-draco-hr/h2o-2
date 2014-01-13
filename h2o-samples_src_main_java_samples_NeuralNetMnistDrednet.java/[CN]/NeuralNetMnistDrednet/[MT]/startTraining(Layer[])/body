@@ -1,4 +1,8 @@
 {
+  System.out.println("Initial single-threaded training");
+  _trainer=new Trainer.Direct(ls,0.1,self());
+  _trainer.start();
+  _trainer.join();
   System.out.println("Main training");
   System.out.println("MapReduce");
   _trainer=new Trainer.MapReduce(ls,0,self());

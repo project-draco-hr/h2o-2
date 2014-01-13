@@ -6,8 +6,9 @@
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == NeuralNetParams.InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Only with Uniform or Normal initial weight distributions",inputArgs);
   }
-  if (arg._name.equals("mode") && (H2O.CLOUD._memary.length > 1)) {
-    mode=NeuralNetParams.ExecutionMode.MapReduce_Hogwild;
-    arg.disable("Using MapReduce since cluster size > 1.",inputArgs);
+  if (arg._name.equals("mode")) {
+    if (H2O.CLOUD._memary.length > 1) {
+      arg.disable("Using MapReduce since cluster size > 1.",inputArgs);
+    }
   }
 }

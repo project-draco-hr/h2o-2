@@ -9,7 +9,10 @@
     validation_errors=model.validation_errors;
     class_names=model.classNames();
     confusion_matrix=model.confusion_matrix;
-    if (model.unstable && job != null)     job.cancel();
+    if (model.unstable && job != null) {
+      System.out.println("Aborting job due to instability. Try a smaller learning rate and/or single-node mode.");
+      job.cancel();
+    }
   }
   return super.serve();
 }
