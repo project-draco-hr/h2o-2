@@ -34,10 +34,8 @@
       sb.append("<th>").append("L1").append("</th>");
       sb.append("<th>").append("L2").append("</th>");
       sb.append("<th>").append("Momentum").append("</th>");
-      sb.append("<th>").append("Activation (Mean, RMS)").append("</th>");
       sb.append("<th>").append("Weight (Mean, RMS)").append("</th>");
       sb.append("<th>").append("Bias (Mean, RMS)").append("</th>");
-      sb.append("<th>").append("Error (Mean, RMS)").append("</th>");
       sb.append("</tr>");
       for (int i=1; i < model.layers.length - 1; ++i) {
         sb.append("<tr>");
@@ -49,10 +47,8 @@
         sb.append("<td>").append(model.layers[i].l2).append("</td>");
         final String format="%g";
         sb.append("<td>").append(model.layers[i].momentum(train.training_samples)).append("</td>");
-        sb.append("<td>(").append(String.format(format,model.mean_activation[i])).append(", ").append(String.format(format,model.rms_activation[i])).append(")</td>");
         sb.append("<td>(").append(String.format(format,model.mean_weight[i])).append(", ").append(String.format(format,model.rms_weight[i])).append(")</td>");
         sb.append("<td>(").append(String.format(format,model.mean_bias[i])).append(", ").append(String.format(format,model.rms_bias[i])).append(")</td>");
-        sb.append("<td>(").append(String.format(format,model.mean_error[i])).append(", ").append(String.format(format,model.rms_error[i])).append(")</td>");
         sb.append("</tr>");
       }
       sb.append("</table>");
