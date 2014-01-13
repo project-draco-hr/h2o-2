@@ -3,33 +3,37 @@
   layers=ls;
   weights=new float[ls.length][];
   biases=new float[ls.length][];
-  for (int y=1; y < layers.length; y++) {
+  for (int y=1; y < layers.length - 1; y++) {
     weights[y]=layers[y]._w;
     biases[y]=layers[y]._b;
   }
   mean_activation=new double[ls.length];
   mean_bias=new double[ls.length];
   rms_weights=new double[ls.length];
-  for (int y=1; y < layers.length; y++) {
+  mse=new double[ls.length];
+  for (int y=1; y < layers.length - 1; y++) {
     int len=layers[y]._a.length;
     mean_activation[y]=0;
     mean_bias[y]=0;
     rms_weights[y]=0;
+    mse[y]=0;
     double mean_weight=0;
     for (int u=0; u < len; u++) {
       mean_activation[y]+=(double)layers[y]._a[u];
       mean_bias[y]+=(double)layers[y]._b[u];
+      mse[y]+=layers[y]._e[u] * layers[y]._e[u];
       mean_weight+=layers[y]._w[u];
     }
     mean_activation[y]/=len;
     mean_bias[y]/=len;
+    mse[y]/=len;
     mean_weight/=len;
     for (int u=0; u < len; ++u) {
       final double diff=layers[y]._w[u] - mean_weight;
       rms_weights[y]+=diff * diff;
     }
     rms_weights[y]=Math.sqrt(rms_weights[y] / len);
-    unstable=(Double.isNaN(mean_activation[y]) || Double.isNaN(mean_bias[y]) || Double.isNaN(rms_weights[y]));
+    unstable=(Double.isNaN(mean_activation[y]) || Double.isNaN(mean_bias[y]) || Double.isNaN(rms_weights[y])|| Double.isNaN(mse[y]));
   }
   _params=p;
 }

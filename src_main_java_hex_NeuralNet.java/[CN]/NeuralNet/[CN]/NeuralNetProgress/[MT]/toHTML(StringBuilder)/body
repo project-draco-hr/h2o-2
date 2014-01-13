@@ -19,34 +19,44 @@
     DocGen.HTML.section(sb,"Validation classification error: " + validC);
     DocGen.HTML.section(sb,"Validation mean square error: " + validS);
     DocGen.HTML.section(sb,"Validation mean cross entropy: " + validCE);
+    if (nn != null) {
+      long ps=train.training_samples * 1000 / nn.runTimeMs();
+      DocGen.HTML.section(sb,"Training speed: " + ps + " samples/s");
+    }
     boolean unstable=false;
-    DocGen.HTML.arrayHead(sb);
+    DocGen.HTML.section(sb,"Hidden Layer Status");
+    sb.append("<table class='table table-striped table-bordered table-condensed'>");
     sb.append("<tr>");
-    sb.append("<th>").append("Hidden layer").append("</th>");
-    sb.append("<th>").append("learning rate").append("</th>");
-    sb.append("<th>").append("momentum").append("</th>");
-    sb.append("<th>").append("mean activation").append("</th>");
-    sb.append("<th>").append("rms weight").append("</th>");
-    sb.append("<th>").append("mean bias").append("</th>");
+    sb.append("<th>").append("Layer").append("</th>");
+    sb.append("<th>").append("Activation").append("</th>");
+    sb.append("<th>").append("Rate").append("</th>");
+    sb.append("<th>").append("Momentum").append("</th>");
+    sb.append("<th>").append("L1").append("</th>");
+    sb.append("<th>").append("L2").append("</th>");
+    sb.append("<th>").append("Mean activation").append("</th>");
+    sb.append("<th>").append("RMS weight").append("</th>");
+    sb.append("<th>").append("Mean bias").append("</th>");
+    sb.append("<th>").append("Mean squared error").append("</th>");
     sb.append("</tr>");
     for (int i=1; i < model.layers.length - 1; ++i) {
       sb.append("<tr>");
       sb.append("<td>").append("<b>" + i + "</b>").append("</td>");
+      sb.append("<td>").append(model.layers[i].getClass().getCanonicalName().replace("hex.Layer.","")).append("</td>");
       sb.append("<td>").append(model.layers[i].rate(train.training_samples)).append("</td>");
-      sb.append("<td>").append(String.format(mse_format,model.layers[i].momentum(train.training_samples))).append("</td>");
-      sb.append("<td>").append(String.format(mse_format,model.mean_activation[i])).append("</td>");
-      sb.append("<td>").append(String.format(mse_format,model.rms_weights[i])).append("</td>");
-      sb.append("<td>").append(String.format(mse_format,model.mean_bias[i])).append("</td>");
+      final String format="%2.6f";
+      sb.append("<td>").append(String.format(format,model.layers[i].momentum(train.training_samples))).append("</td>");
+      sb.append("<td>").append(String.format(format,model.layers[i].l1)).append("</td>");
+      sb.append("<td>").append(String.format(format,model.layers[i].l2)).append("</td>");
+      sb.append("<td>").append(String.format(format,model.mean_activation[i])).append("</td>");
+      sb.append("<td>").append(String.format(format,model.rms_weights[i])).append("</td>");
+      sb.append("<td>").append(String.format(format,model.mean_bias[i])).append("</td>");
+      sb.append("<td>").append(String.format("%e",model.mse[i])).append("</td>");
       sb.append("</tr>");
       unstable|=(Double.isNaN(model.mean_activation[i]) || Double.isNaN(model.rms_weights[i]) || Double.isNaN(model.mean_bias[i]));
     }
     DocGen.HTML.arrayTail(sb);
     if (unstable) {
-      DocGen.HTML.section(sb,"===> Instability detected and job aborted.  Try a smaller learning rate and/or single-node mode.");
-    }
-    if (nn != null) {
-      long ps=train.training_samples * 1000 / nn.runTimeMs();
-      DocGen.HTML.section(sb,"Training speed: " + ps + " samples/s");
+      DocGen.HTML.section(sb,"### Note:  Instability detected and job aborted.  Try a smaller learning rate and/or single-node mode. ###");
     }
     if (model.confusion_matrix != null && model.confusion_matrix.length < 100) {
       String[] classes=model.classNames();
