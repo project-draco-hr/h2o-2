@@ -55,10 +55,10 @@
         sb.append("<td>(").append(String.format("%2.7f",model.mean_error[i])).append(", ").append(String.format("%2.7f",model.rms_error[i])).append(")</td>");
         sb.append("</tr>");
       }
-      DocGen.HTML.arrayTail(sb);
-      if (model.unstable) {
-        DocGen.HTML.section(sb,"### Note:  Instability detected and job aborted.  Try a smaller learning rate and/or single-node mode. ###");
-      }
+      sb.append("</table>");
+    }
+    if (model.unstable) {
+      DocGen.HTML.section(sb,"### Note:  Instability detected and job aborted.  Try a smaller learning rate and/or single-node mode. ###");
     }
     if (model.confusion_matrix != null && model.confusion_matrix.length < 100) {
       String[] classes=model.classNames();
