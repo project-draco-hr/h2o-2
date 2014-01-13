@@ -1,8 +1,8 @@
 {
   NeuralNetMLPReference ref=new NeuralNetMLPReference();
-  NeuralNet.NeuralNetParams.Activation[] activations={NeuralNet.NeuralNetParams.Activation.Tanh,NeuralNet.NeuralNetParams.Activation.Rectifier};
-  Loss[] losses={NeuralNet.NeuralNetParams.Loss.MeanSquare,NeuralNet.NeuralNetParams.Loss.CrossEntropy};
-  for (  NeuralNet.NeuralNetParams.Activation activation : activations) {
+  NeuralNet.Activation[] activations={NeuralNet.Activation.Tanh,NeuralNet.Activation.Rectifier};
+  Loss[] losses={NeuralNet.Loss.MeanSquare,NeuralNet.Loss.CrossEntropy};
+  for (  NeuralNet.Activation activation : activations) {
     for (    Loss loss : losses) {
       Log.info("Testing " + activation.name() + " activation function with "+ loss.name()+ " loss function");
       ref.init(activation);
@@ -25,17 +25,17 @@
       UKV.remove(pars);
       Vec[] data=Utils.remove(_train.vecs(),_train.vecs().length - 1);
       Vec labels=_train.vecs()[_train.vecs().length - 1];
-      NeuralNet.NeuralNetParams p=new NeuralNet.NeuralNetParams();
+      NeuralNet p=new NeuralNet();
       p.rate=0.01f;
       p.epochs=1000;
       p.activation=activation;
       p.max_w2=Float.MAX_VALUE;
       Layer[] ls=new Layer[3];
       ls[0]=new VecsInput(data,null);
-      if (activation == NeuralNet.NeuralNetParams.Activation.Tanh) {
+      if (activation == NeuralNet.Activation.Tanh) {
         ls[1]=new Tanh(7);
       }
- else       if (activation == NeuralNet.NeuralNetParams.Activation.Rectifier) {
+ else       if (activation == NeuralNet.Activation.Rectifier) {
         ls[1]=new Rectifier(7);
       }
       ls[2]=new VecSoftmax(labels,null,loss);
