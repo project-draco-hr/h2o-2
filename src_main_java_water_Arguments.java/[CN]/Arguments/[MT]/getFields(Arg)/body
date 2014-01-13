@@ -10,8 +10,7 @@
   }
   Field[] keep=new Field[fields.length];
   int num=0;
-  for (int i=0; i < fields.length; i++) {
-    Field field=fields[i];
+  for (  Field field : fields) {
     field.setAccessible(true);
     if (Modifier.isStatic(field.getModifiers()))     continue;
     if (field.getType().isPrimitive() || field.getType() == String.class)     keep[num++]=field;
