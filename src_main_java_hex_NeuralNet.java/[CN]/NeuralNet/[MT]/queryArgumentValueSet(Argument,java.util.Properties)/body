@@ -4,12 +4,12 @@
     arg.disable("Only with Dropout.",inputArgs);
   }
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
-    arg.disable("Only with Uniform or Normal initial weight distributions.",inputArgs);
+    arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
   }
   if (arg._name.equals("mode")) {
     if (H2O.CLOUD._memary.length > 1) {
-      arg.disable("Using MapReduce since cluster size > 1.",inputArgs);
-      mode=ExecutionMode.MultiNode;
+      arg.disable("Distributed MapReduce mode is not yet fully supported. Will run in single-node mode, wasting " + (H2O.CLOUD._memary.length - 1) + " cluster node(s).",inputArgs);
+      mode=ExecutionMode.SingleNode;
     }
   }
   if (arg._name.equals("warmup_samples")) {
@@ -17,5 +17,9 @@
       arg.disable("Only for non-serial execution modes.");
       assert(warmup_samples == 0);
     }
+  }
+  if (arg._name.equals("loss") && !classification) {
+    arg.disable("Using MeanSquare loss for regression.",inputArgs);
+    loss=Loss.MeanSquare;
   }
 }

@@ -3,13 +3,10 @@
   float m=momentum(processed);
   float r=rate(processed) * (1 - m);
   float[] v=target();
+  assert(loss == NeuralNet.Loss.MeanSquare);
   for (int u=0; u < _a.length; u++) {
     float g=v[u] - _a[u];
-    if (loss == NeuralNet.Loss.CrossEntropy) {
-    }
- else     if (loss == NeuralNet.Loss.MeanSquare) {
-      g*=(1 - _a[u]) * _a[u];
-    }
+    g*=(1 - _a[u]) * _a[u];
     bprop(u,g,r,m);
   }
 }
