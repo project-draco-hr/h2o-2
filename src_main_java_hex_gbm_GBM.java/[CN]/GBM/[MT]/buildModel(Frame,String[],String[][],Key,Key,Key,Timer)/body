@@ -6,12 +6,12 @@
   DTree[] ktrees=null;
   TreeStats tstats=new TreeStats();
   for (tid=0; tid < ntrees; tid++) {
+    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,false,false);
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
     ktrees=buildNextKTrees(fr);
     if (cancelled())     break;
     tstats.updateBy(ktrees);
-    model=doScoring(model,outputKey,fr,ktrees,tid,tstats,false,false,false);
   }
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,false,false);
   cleanUp(fr,t_build);
