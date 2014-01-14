@@ -1,8 +1,8 @@
 def test_GLM_tweedie(self):
     csvFilename = 'AutoClaim.csv'
-    csvPathname = ('tweedie/' + csvFilename)
+    csvPathname = ('standard/' + csvFilename)
     print '\nStarting', csvPathname
-    parseResult = h2i.import_parse(bucket='datasets', path=csvPathname, schema='put')
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put')
     y = '4'
     coefs = [7, 13, 20, 27, 21, 11]
     x = ','.join([str(x) for x in coefs])
