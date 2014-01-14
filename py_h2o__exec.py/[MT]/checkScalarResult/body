@@ -22,10 +22,7 @@ def checkScalarResult(resultInspect, resultKey):
         return scalar
     metaDict = cols[0]
     for (key, value) in metaDict.items():
-        if h2o.beta_features:
-            print 'Inspect metaDict:', key, value
-        else:
-            h2o.verboseprint('Inspect metaDict:', key, value)
+        print 'Inspect metaDict:', key, value
     min_value = metaDict['min']
     checkForBadFP(min_value)
     return min_value

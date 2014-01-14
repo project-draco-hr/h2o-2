@@ -1,10 +1,8 @@
 {
-  System.out.println(s);
   Env env=Exec2.exec(s);
   assertFalse(env.isAry());
   assertFalse(env.isFcn());
   double res=env.popDbl();
   assertEquals(d,res,d / 1e8);
-  System.out.println(Double.toString(res));
   env.remove();
 }
