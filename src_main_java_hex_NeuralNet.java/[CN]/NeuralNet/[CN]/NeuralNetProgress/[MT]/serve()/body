@@ -1,10 +1,8 @@
 {
   NeuralNet job=job_key == null ? null : (NeuralNet)Job.findJob(job_key);
-  if (job != null) {
-    _params=job;
-  }
   NeuralNetModel model=UKV.get(destination_key);
   if (model != null) {
+    _params=model._params;
     training_errors=model.training_errors;
     validation_errors=model.validation_errors;
     class_names=model.classNames();
