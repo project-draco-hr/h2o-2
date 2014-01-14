@@ -1,0 +1,11 @@
+{
+  Env env=null;
+  try {
+    env=Exec2.exec(s);
+    env.remove();
+    fail();
+  }
+ catch (  IllegalArgumentException e) {
+    assertEquals(err,e.getMessage());
+  }
+}
