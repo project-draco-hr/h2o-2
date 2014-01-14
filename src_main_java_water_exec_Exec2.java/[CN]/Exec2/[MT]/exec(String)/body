@@ -4,7 +4,7 @@
   for (  Value v : H2O.values()) {
     Frame fr;
     if (v.type() == TypeMap.VALUE_ARRAY)     fr=ValueArray.asFrame(v);
- else     if (v.type() == TypeMap.FRAME)     fr=(Frame)v.get();
+ else     if (v.type() == TypeMap.FRAME)     fr=v.get();
  else     continue;
     env.push(fr,v._key.toString());
     global.add(new ASTId(Type.ARY,v._key.toString(),0,global.size()));

@@ -9,7 +9,7 @@
   if ((ARGS.trainFile == OptArgs.defaultTrainFile) && (ARGS.testFile != OptArgs.defaultTestFile))   throw new RuntimeException("Cannot set test file unless also setting train file");
   if ((ARGS.testFile != OptArgs.defaultTestFile) && !Float.isNaN(ARGS.splitTestTrain))   throw new RuntimeException("Cannot have both testFile and splitTestTrain");
   Sys sys=ARGS.gbm ? Sys.GBM__ : Sys.DRF__;
-  String cs[]=(ARGS.cols + "," + ARGS.response).split("[, \t]");
+  String cs[]=(ARGS.cols + "," + ARGS.response).split("[,\t]");
   if (ARGS.mtries == 0)   ARGS.mtries=(int)Math.sqrt(cs.length);
   if (ARGS.mtries <= 0 || ARGS.mtries > cs.length)   throw new RuntimeException("mtries " + ARGS.mtries + " out of bounds");
   Timer t_load=new Timer();
@@ -37,6 +37,7 @@
   SharedTreeModelBuilder stmb=ARGS.gbm ? new GBM() : new DRF();
   stmb.source=train;
   stmb.validation=test;
+  stmb.classification=!ARGS.regression;
   stmb.response=response;
   stmb.ntrees=ARGS.ntrees;
   stmb.max_depth=ARGS.depth;

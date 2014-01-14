@@ -1,8 +1,8 @@
 {
   int startPosition=E._x;
   MyInteger charactersConsumed=new MyInteger();
-  Double D=parseNumberWithScientificNotationProperlyHandled(E._str,startPosition,charactersConsumed);
+  double d=parseNumberWithScientificNotationProperlyHandled(E._str,startPosition,charactersConsumed);
   if (charactersConsumed._val == 0)   return null;
   E._x=startPosition + charactersConsumed._val;
-  return new ASTNum(D.doubleValue());
+  return new ASTNum(d);
 }
