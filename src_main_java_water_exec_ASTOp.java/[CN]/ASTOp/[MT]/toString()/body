@@ -1,6 +1,6 @@
 {
   String s=_t._ts[0] + " " + opStr()+ "(";
-  int len=_vars.length;
-  for (int i=1; i < len - 1; i++)   s+=_t._ts[i] + " " + _vars[i]+ ", ";
-  return s + (len > 1 ? _t._ts[len - 1] + " " + _vars[len - 1] : "") + ")";
+  int len=_t._ts.length;
+  for (int i=1; i < len - 1; i++)   s+=_t._ts[i] + " " + (_vars == null ? "" : _vars[i])+ ", ";
+  return s + (len > 1 ? _t._ts[len - 1] + " " + (_vars == null ? "" : _vars[len - 1]) : "") + ")";
 }
