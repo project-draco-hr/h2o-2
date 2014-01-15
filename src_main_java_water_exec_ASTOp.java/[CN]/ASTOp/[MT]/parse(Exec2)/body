@@ -2,8 +2,8 @@
   int x=E._x;
   String id=E.isID();
   if (id == null)   return null;
-  ASTOp op;
-  if ((op=PREFIX_OPS.get(id)) != null || (op=BIN_INFIX_OPS.get(id)) != null || (op=UNI_INFIX_OPS.get(id)) != null)   return op.make();
+  ASTOp op=isOp(id);
+  if (op != null && !E.peek('='))   return op.make();
   E._x=x;
   return ASTFunc.parseFcn(E);
 }

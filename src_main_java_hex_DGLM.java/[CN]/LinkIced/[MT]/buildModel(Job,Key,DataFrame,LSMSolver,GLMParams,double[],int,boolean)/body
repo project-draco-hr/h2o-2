@@ -13,7 +13,7 @@
   int iter=1;
   long lsmSolveTime=0;
   long t=System.currentTimeMillis();
-  lsm.solve(gram,newBeta);
+  solve(lsm,gram,newBeta,warns);
   lsmSolveTime+=System.currentTimeMillis() - t;
   currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,null);
   if (params._family._family != Family.gaussian)   do {
@@ -25,7 +25,7 @@
     gram=gramF.apply(job,data);
     if (gram.hasNaNsOrInfs())     break;
     t=System.currentTimeMillis();
-    lsm.solve(gram,newBeta);
+    solve(lsm,gram,newBeta,warns);
     lsmSolveTime+=System.currentTimeMillis() - t;
     String[] warnings=new String[warns.size()];
     warns.toArray(warnings);

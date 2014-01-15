@@ -1,6 +1,7 @@
 {
   Vec[] vecs=_fr.vecs();
   Summary2 sums[]=new Summary2[vecs.length];
-  for (int i=0; i < vecs.length; i++)   sums[i]=new Summary2(vecs[i],_fr._names[i],vecs[i].min(),vecs[i].max());
+  BasicStat basics[]=new PrePass().doAll(_fr).finishUp()._basicStats;
+  for (int i=0; i < vecs.length; i++)   sums[i]=new Summary2(vecs[i],_fr._names[i],basics[i]);
   return new SummaryPerRow(_fr,sums);
 }

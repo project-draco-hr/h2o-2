@@ -1,0 +1,12 @@
+def test_GLM_weight_nan_fail(self):
+    csvPathname = 'covtype/covtype.20k.data'
+    hex_key = 'covtype.20k.hex'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hex_key, schema='put')
+    kwargs = {'case': 2, 'destination_key': 'GLM_model_python_0_default_0', 'weight': 2, 'family': 'tweedie', 'tweedie_power': 1.9999999, 'max_iter': 10, 'alpha': 0, 'y': 54, 'case_mode': '<', 'lambda': 0, }
+    for trial in range(3):
+        start = time.time()
+        glm = h2o_cmd.runGLM(timeoutSecs=70, parseResult=parseResult, **kwargs)
+        h2o.check_sandbox_for_errors()
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'Trial #', trial, 'completed\n'

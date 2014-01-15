@@ -3,7 +3,7 @@
   RFModel model=_modelKey.value();
   r.addProperty(DATA_KEY,_dataKey.originalValue());
   r.addProperty(MODEL_KEY,_modelKey.originalValue());
-  r.addProperty(CLASS,_classCol.value());
+  r.addProperty(CLASS,_classCol.specified() ? _classCol.value() : findResponseIdx(model));
   r.addProperty(NUM_TREES,model._totalTrees);
   r.addProperty(MTRY,model._splitFeatures);
   r.addProperty(MTRY_NODES,Arrays.toString(model._nodesSplitFeatures));

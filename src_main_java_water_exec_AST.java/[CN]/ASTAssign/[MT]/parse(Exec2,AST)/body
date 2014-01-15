@@ -10,9 +10,9 @@
   ASTSlice slice=null;
   if ((ast instanceof ASTSlice))   ast2=(slice=(ASTSlice)ast)._ast;
   if (!(ast2 instanceof ASTId))   E.throwErr("Can only assign to ID (or slice)",x);
-  AST eval=parseCXExpr(E);
-  if (eval == null)   E.throwErr("Missing RHS",x);
   ASTId id=(ASTId)ast2;
+  final AST eval=parseCXExpr(E);
+  if (eval == null)   E.throwErr("Missing RHS",x);
   boolean partial=slice != null && (slice._cols != null || slice._rows != null);
   if (partial) {
     if (eval._t.isFcn())     E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);

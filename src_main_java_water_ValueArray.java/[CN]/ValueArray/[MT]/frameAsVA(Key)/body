@@ -1,0 +1,18 @@
+{
+synchronized (conversionLock) {
+    String vaKeyString=DKV.calcConvertedVAKeyString(frKey.toString());
+    Key vaKey=Key.make(vaKeyString);
+    Value v=DKV.get(vaKey);
+    if (v != null) {
+      if (!v.isArray())       throw new IllegalArgumentException(vaKey + " is not a VA.");
+      Log.info("Using existing cached VA conversion (" + vaKeyString + ").");
+      return v.get();
+    }
+    int cn=conversionNumber.getAndIncrement();
+    Log.info("Converting Frame to ValueArray: node(" + H2O.SELF + ") convNum("+ cn+ ") key("+ vaKeyString+ ")...");
+    ValueArray va=convert((Frame)UKV.get(frKey),vaKey);
+    DKV.put(vaKey,va);
+    Log.info("Conversion " + cn + " complete.");
+    return va;
+  }
+}

@@ -1,12 +1,21 @@
 {
   Random r=new Random(chk._start);
-  int row=0;
-  int ns=0;
-  while ((row+=nextPoission(r,_lambda)) < chk._len) {
-    if (!chk.isNA0(row)) {
-      if (ns == _samples.length)       _samples=Arrays.copyOf(_samples,_samples.length * 2 + 1);
-      _samples[ns++]=chk.at0(row);
+  if (_stat0.len1() <= RESAMPLE_SZ)   return copy1(chk);
+  int ns=(int)(_len1 * RESAMPLE_SZ / _stat0.len1()) + 1;
+  double[] dbls=new double[ns];
+  if (ns << 3 < _len1 && ns << 3 < chk._len) {
+    int n=0;
+    while (n < ns) {
+      double val;
+      int i=r.nextInt(chk._len);
+      if (chk.isNA0(i))       continue;
+      if (Double.isNaN(val=chk.at0(i)))       continue;
+      dbls[n++]=val;
     }
+    return dbls;
   }
-  _samples=Arrays.copyOf(_samples,ns);
+  dbls=copy1(chk);
+  if (dbls.length <= ns)   return dbls;
+  for (int i=dbls.length - 1; i >= ns; i--)   dbls[r.nextInt(i + 1)]=dbls[i];
+  return Arrays.copyOf(dbls,ns);
 }

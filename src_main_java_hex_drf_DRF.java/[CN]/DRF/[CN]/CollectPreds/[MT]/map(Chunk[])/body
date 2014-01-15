@@ -5,6 +5,7 @@
     if (tree.root() instanceof LeafNode)     continue;
     final Chunk nids=chk_nids(chks,k);
     final Chunk ct=chk_tree(chks,k);
+    final Chunk oobt=chk_oobt(chks);
     for (int row=0; row < nids._len; row++) {
       int nid=(int)nids.at80(row);
       if (isOOBRow(nid)) {
@@ -14,6 +15,7 @@
         if (dn._split.col() == -1)         dn=tree.decided(tree.node(nid).pid());
         int leafnid=dn.ns(chks,row);
         ct.set0(row,(float)(ct.at0(row) + ((LeafNode)tree.node(leafnid)).pred()));
+        oobt.set0(row,_nclass > 1 ? 1 : oobt.at0(row) + 1);
       }
       nids.set0(row,0);
     }

@@ -1,0 +1,26 @@
+def test_GLM2_many_cols(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(10000, 1000, 'cB', 300), (10000, 3000, 'cC', 500)]
+    lenNodes = len(h2o.nodes)
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+        parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, schema='put', timeoutSecs=10)
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+        print ('\n' + csvFilename)
+        y = colCount
+        kwargs = {'response': ('C' + str(y)), 'max_iter': 10, 'n_folds': 1, 'alpha': 0.2, 'lambda': 1e-05, }
+        start = time.time()
+        x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300, returnStringX=False)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        expectedCoeffNum = len(x)
+        actualCoeffNum = (len(glm['glm_model']['submodels'][0]['beta']) - 1)
+        if (actualCoeffNum != expectedCoeffNum):
+            raise Exception(('Should be %s expected coefficients in result.' % expectedCoeffNum))

@@ -5,14 +5,18 @@
   int attempts=0;
   Cholesky chol=gram.cholesky(null);
   double rhoAdd=0;
-  while (!chol._isSPD && attempts < 10) {
+  if (!chol._isSPD && _autoHandleNonSPDMatrix)   while (!chol._isSPD && attempts < 10) {
     double rhoIncrement=_rho * (1 << ++attempts);
     gram.addDiag(rhoIncrement);
     rhoAdd+=rhoIncrement;
     gram.cholesky(chol);
   }
   if (!chol._isSPD)   throw new NonSPDMatrixException();
-  _rho+=rhoAdd;
+  if (_lambda == 0) {
+    _alpha=0;
+    _lambda=rhoAdd;
+  }
+ else   _rho+=rhoAdd;
   if (_alpha == 0 || _lambda == 0) {
     System.arraycopy(gram._xy,0,z,0,gram._xy.length);
     chol.solve(z);
