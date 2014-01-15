@@ -1,0 +1,12 @@
+{
+  try {
+    return solver.solve(gram,beta);
+  }
+ catch (  NonSPDMatrixException ex) {
+    DLSM.ADMMSolver admm=(DLSM.ADMMSolver)solver;
+    if (admm._autoHandleNonSPDMatrix)     throw ex;
+    admm._autoHandleNonSPDMatrix=true;
+    warns.add("Got Non-SPD Matrix, adding L2-regularization to get solution.");
+    return solver.solve(gram,beta);
+  }
+}
