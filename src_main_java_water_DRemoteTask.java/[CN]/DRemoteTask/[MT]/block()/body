@@ -7,6 +7,7 @@
       Throwable tex=eex.getCause();
       if (tex instanceof Error)       throw (Error)tex;
       if (tex instanceof DistributedException)       throw (DistributedException)tex;
+      if (tex instanceof JobCancelledException)       throw (JobCancelledException)tex;
       throw new RuntimeException(tex);
     }
 catch (    CancellationException cex) {

@@ -1,5 +1,5 @@
 {
   double d=0.1;
-  for (  Job job : jobs)   d+=job.progress();
+  for (  Job job : jobs)   if (job.start_time > 0)   d+=job.progress();
   return Math.min(1f,(float)(d / jobs.length));
 }

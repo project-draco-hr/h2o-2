@@ -1,7 +1,6 @@
 {
   UKV.remove(dest);
-  final ChunkProgressJob job=new ChunkProgressJob(ary.chunks());
-  job.destination_key=dest;
+  final ChunkProgressJob job=new ChunkProgressJob(ary.chunks(),dest);
   final H2OCountedCompleter fjtask=new H2OCountedCompleter(){
     @Override public void compute2(){
       KMeansApply kms=new KMeansApply();

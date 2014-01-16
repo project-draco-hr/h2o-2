@@ -12,11 +12,9 @@
       mode=ExecutionMode.SingleNode;
     }
   }
-  if (arg._name.equals("warmup_samples")) {
-    if (mode == ExecutionMode.SingleThread) {
-      arg.disable("Only for non-serial execution modes.");
-      assert(warmup_samples == 0);
-    }
+  if (arg._name.equals("warmup_samples") && mode == MapReduce && H2O.CLOUD._memary.length > 1) {
+    arg.disable("Not yet implemented for distributed MapReduce execution modes, using a value of 0.");
+    warmup_samples=0;
   }
   if (arg._name.equals("loss") && !classification) {
     arg.disable("Using MeanSquare loss for regression.",inputArgs);
