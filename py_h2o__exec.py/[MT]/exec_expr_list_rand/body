@@ -11,7 +11,8 @@ def exec_expr_list_rand(lenNodes, exprList, keyX, minCol=1, maxCol=55, minRow=1,
         execExpr = fill_in_expr_template(exprTemplate, colX, (((trial + 1) % 4) + 1), row, keyX)
         execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs, ignoreH2oError)
         checkScalarResult(execResultInspect, None)
-        vaInspect = h2o.nodes[0].inspect(key=keyX, useVA=True)
+        if keyX:
+            vaInspect = h2o.nodes[0].inspect(key=keyX, useVA=True)
         sys.stdout.write('.')
         sys.stdout.flush()
         if h2o.check_sandbox_for_errors():

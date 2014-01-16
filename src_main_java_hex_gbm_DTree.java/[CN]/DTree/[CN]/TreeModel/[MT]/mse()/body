@@ -1,3 +1,8 @@
 {
-  return errs == null || errs.length == 0 ? Double.NaN : errs[errs.length - 1];
+  if (errs != null && errs.length > 0) {
+    int n=errs.length - 1;
+    while (n > 0 && Double.isNaN(errs[n]))     --n;
+    return errs[n];
+  }
+ else   return Double.NaN;
 }

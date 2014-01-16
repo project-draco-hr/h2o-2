@@ -1,0 +1,19 @@
+def test_A_store_view(self):
+    store_size = 0
+    r = h2i.import_only(bucket='smalldata', path='iris/*')
+    store_size += len(r[0]['files'])
+    r = h2i.import_only(bucket='smalldata', path='covtype/*')
+    store_size += len(r[0]['files'])
+    r = h2o.nodes[0].store_view(view=store_size)
+    self.assertEqual(store_size, len(r['keys']))
+    items_per_page = 3
+    pages = (store_size / items_per_page)
+    if ((store_size % items_per_page) != 0):
+        pages += 1
+    offset = 0
+    cnt_items = 0
+    for p in range(0, pages):
+        r = h2o.nodes[0].store_view(offset=offset, view=items_per_page)
+        cnt_items += len(r['keys'])
+        offset += items_per_page
+    self.assertEqual(store_size, cnt_items)
