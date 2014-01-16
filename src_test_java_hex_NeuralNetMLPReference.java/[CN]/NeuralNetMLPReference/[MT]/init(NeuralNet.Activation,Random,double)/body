@@ -158,11 +158,11 @@
     allData[j][5]=(float)ds[j][5];
     allData[j][6]=(float)ds[j][4];
   }
-  int trainRows=(int)(allData.length * 0.80);
+  int trainRows=(int)(allData.length * holdout_ratio);
   int testRows=allData.length - trainRows;
   _trainData=new float[trainRows][];
   _testData=new float[testRows][];
-  MakeTrainTest(allData,_trainData,_testData);
+  MakeTrainTest(allData,_trainData,_testData,rand);
   for (int i=0; i < 4; i++) {
     double mean=0;
     for (int n=0; n < _trainData.length; n++)     mean+=_trainData[n][i];
