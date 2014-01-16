@@ -63,7 +63,10 @@
       sb.append("</table>");
     }
     if (model.unstable) {
-      DocGen.HTML.section(sb,"### Note:  Instability detected and job aborted.  Try a smaller learning rate and/or single-node mode. ###");
+      final String msg="Job was aborted due to observed numerical instability (exponential growth)." + "  Try a bounded activation function or regularization with L1, L2 or max_w2 and/or use a smaller learning rate or faster annealing.";
+      DocGen.HTML.section(sb,"============================================================================================================");
+      DocGen.HTML.section(sb,msg);
+      DocGen.HTML.section(sb,"============================================================================================================");
     }
     if (model.confusion_matrix != null && model.confusion_matrix.length < 100) {
       assert(classification);
