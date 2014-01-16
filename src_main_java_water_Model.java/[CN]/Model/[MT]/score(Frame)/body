@@ -10,7 +10,14 @@
   Vec v=adaptFrm.anyVec().makeZero();
   v._domain=_domains[_domains.length - 1];
   adaptFrm.add("predict",v);
-  if (nclasses() > 1)   for (int c=0; c < nclasses(); c++)   adaptFrm.add(classNames()[c],adaptFrm.anyVec().makeZero());
+  if (nclasses() > 1) {
+    String prefix="";
+    for (int c=0; c < nclasses(); c++)     if (contains(adaptFrm._names,classNames()[c])) {
+      prefix="class_";
+      break;
+    }
+    for (int c=0; c < nclasses(); c++)     adaptFrm.add(prefix + classNames()[c],adaptFrm.anyVec().makeZero());
+  }
   new MRTask2(){
     @Override public void map(    Chunk chks[]){
       double tmp[]=new double[_names.length];
