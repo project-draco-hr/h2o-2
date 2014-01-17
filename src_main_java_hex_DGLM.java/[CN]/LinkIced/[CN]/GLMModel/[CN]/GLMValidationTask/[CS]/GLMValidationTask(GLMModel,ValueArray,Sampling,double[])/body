@@ -1,0 +1,31 @@
+{
+  _m=m;
+  _sampling=s;
+  _adaptedModel=m.adapt(ary);
+  _thresholds=thresholds;
+  int response=-1;
+  final String responseName=m.responseName();
+  for (int i=0; i < ary._cols.length && response == -1; ++i)   if (ary._cols[i]._name.equalsIgnoreCase(responseName))   response=i;
+  if (response == -1)   throw new RuntimeException("Incompatible dataset, missing response '" + responseName + "' in '"+ ary._key+ "'");
+  _response=response;
+  double ymu=ary._cols[response]._mean;
+  if (Double.isNaN(ymu) || m._glmParams._caseMode != CaseMode.none) {
+    final CaseMode caseMode=m._glmParams._caseMode;
+    final double caseVal=m._glmParams._caseVal;
+    ymu=new RowFunc<YMUVal>(){
+      @Override public YMUVal newResult(){
+        return new YMUVal();
+      }
+      @Override public void processRow(      YMUVal res,      double[] x,      int[] indexes){
+        double y=x[0];
+        if (caseMode != CaseMode.none)         y=caseMode.isCase(y,caseVal) ? 1 : 0;
+        res.add(y);
+      }
+      @Override public YMUVal reduce(      YMUVal x,      YMUVal y){
+        return x.add(y);
+      }
+    }
+.apply(null,new DataFrame(ary,new int[]{response},null,false,false)).val();
+  }
+  _ymu=ymu;
+}

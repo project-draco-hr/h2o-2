@@ -5,8 +5,13 @@
   if (_glmp._caseMode != CaseMode.none)   yr=(_glmp._caseMode.isCase(yr,_glmp._caseVal)) ? 1 : 0;
   if (yr == 1)   ++res._caseCount;
   double ym=0;
-  for (int i=0; i < x.length; ++i)   ym+=_beta[indexes[i]] * x[i];
-  ym=_glmp._link.linkInv(ym);
+  if (_adaptedModel != null) {
+    ym=_adaptedModel.score(x);
+  }
+ else {
+    for (int i=0; i < x.length; ++i)     ym+=_beta[indexes[i]] * x[i];
+    ym=_glmp._link.linkInv(ym);
+  }
   res._deviance+=_glmp._family.deviance(yr,ym);
   res._nullDeviance+=_glmp._family.deviance(yr,_ymu);
   if (_glmp._family._family == Family.poisson) {

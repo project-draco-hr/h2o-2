@@ -1,36 +1,3 @@
 {
-  String s="link(";
-switch (this) {
-case identity:
-    s+="identity: ";
-  break;
-case logit:
-s+="logit: ";
-break;
-case log:
-s+="log: ";
-break;
-case inverse:
-s+="inverse: ";
-break;
-case tweedie:
-s+="tweedie: ";
-break;
-case familyDefault:
-s+="familyDefault: ";
-break;
-default :
-s+=" BAD DEFAULT: ";
-break;
-}
-s+=String.format("defaultBeta: %f",defaultBeta);
-switch (this) {
-case tweedie:
-s+=String.format("; tweedieLinkPower: %2.2f",tweedieLinkPower);
-break;
-default :
-break;
-}
-s+=")";
-return s;
+  return String.format("LinkIced link(%s; _tweedieLinkPower %f)",_link.toString2(),_tweedieLinkPower);
 }
