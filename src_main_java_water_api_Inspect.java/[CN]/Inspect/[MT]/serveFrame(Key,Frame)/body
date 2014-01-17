@@ -11,8 +11,10 @@
     Vec v=f.vecs()[i];
     JsonObject json=new JsonObject();
     json.addProperty(NAME,f._names[i]);
-    json.addProperty(MIN,v.min());
-    json.addProperty(MAX,v.max());
+    json.addProperty(TYPE,v.isEnum() ? ColType.Enum.toString() : v.isInt() ? ColType.Int.toString() : ColType.Real.toString());
+    json.addProperty(MIN,v.isEnum() ? Double.NaN : v.min());
+    json.addProperty(MAX,v.isEnum() ? Double.NaN : v.max());
+    json.addProperty(CARDINALITY,v.cardinality());
     cols.add(json);
   }
   if (_offset.value() != INFO_PAGE) {
