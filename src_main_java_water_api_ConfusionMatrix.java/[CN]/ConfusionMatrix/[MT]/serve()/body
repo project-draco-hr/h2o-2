@@ -1,5 +1,5 @@
 {
-  Vec va=null, vp=null;
+  Vec va=null, vp=null, avp=null;
   if (vactual == null || vpredict == null)   return Response.error("Missing actual or predict?");
   if (!vactual.isInt() || !vpredict.isInt())   return Response.error("Cannot provide confusion matrix for float vectors.");
   try {
@@ -7,6 +7,10 @@
     response_domain=va._domain;
     vp=vpredict.toEnum();
     predicted_domain=vp._domain;
+    if (!va.group().equals(vp.group())) {
+      avp=vp;
+      vp=va.align(vp);
+    }
     cm=new CM(va.domain().length,vp.domain().length).doAll(va,vp)._cm;
     return Response.done(this);
   }
@@ -17,5 +21,6 @@
  finally {
     if (va != null)     UKV.remove(va._key);
     if (vp != null)     UKV.remove(vp._key);
+    if (avp != null)     UKV.remove(avp._key);
   }
 }
