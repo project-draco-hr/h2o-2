@@ -18,13 +18,13 @@
     json.addProperty(SIZE,Math.abs(c._size));
     json.addProperty(BASE,c._base);
     json.addProperty(SCALE,(int)c._scale);
-    json.addProperty(MIN,c._min);
-    json.addProperty(MAX,c._max);
-    json.addProperty(MEAN,c._mean);
-    json.addProperty(VARIANCE,c._sigma);
+    json.addProperty(MIN,c.isEnum() ? Double.NaN : c._min);
+    json.addProperty(MAX,c.isEnum() ? Double.NaN : c._max);
+    json.addProperty(MEAN,c.isEnum() ? Double.NaN : c._mean);
+    json.addProperty(VARIANCE,c.isEnum() ? Double.NaN : c._sigma);
     json.addProperty(NUM_MISSING_VALUES,va._numrows - c._n);
-    json.addProperty(TYPE,c._domain != null ? "enum" : (c.isFloat() ? "float" : "int"));
-    json.addProperty(ENUM_DOMAIN_SIZE,c._domain != null ? c._domain.length : 0);
+    json.addProperty(TYPE,c.isEnum() ? "enum" : (c.isFloat() ? "float" : "int"));
+    json.addProperty(ENUM_DOMAIN_SIZE,c.isEnum() ? c._domain.length : 0);
     cols.add(json);
   }
   if (_offset.value() != INFO_PAGE) {
