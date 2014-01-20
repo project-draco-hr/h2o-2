@@ -1,7 +1,7 @@
 {
   if (dropout != null && training) {
     dropout.fillBytes();
-    if (_previous.isInput())     dropout.clearSomeInput();
+    if (_previous.isInput())     dropout.clearSomeInput(_previous);
   }
   float max=0;
   for (int o=0; o < _a.length; o++) {
