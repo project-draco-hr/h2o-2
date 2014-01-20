@@ -1,0 +1,40 @@
+{
+  GLMValidation res=new GLMValidation();
+  if (_m._glmParams._family._family == Family.binomial) {
+    res._cm=new ConfusionMatrix[_thresholds.length];
+    for (int i=0; i < _thresholds.length; ++i)     res._cm[i]=new ConfusionMatrix(2);
+  }
+  ValueArray ary=DKV.get(ValueArray.getArrayKey(key)).get();
+  ValueArray.Column response=ary._cols[_response];
+  AutoBuffer bits=ary.getChunk(key);
+  int nrows=bits.remaining() / ary.rowSize();
+  Sampling s=_sampling == null ? null : _sampling.clone();
+  for (int rid=0; rid < nrows; ++rid) {
+    if (s != null && s.skip(rid))     continue;
+    if (ary.isNA(bits,rid,response))     continue;
+    double yr=ary.datad(bits,rid,response);
+    double ym=_adaptedModel.score(ary,bits,rid);
+    if (Double.isNaN(ym))     continue;
+    ++res._n;
+    if (_m._glmParams._caseMode != CaseMode.none)     yr=_m._glmParams._caseMode.isCase(yr,_m._glmParams._caseVal) ? 1 : 0;
+    res._deviance+=_m._glmParams._family.deviance(yr,ym);
+    res._nullDeviance+=_m._glmParams._family.deviance(yr,_ymu);
+    if (_m._glmParams._family._family == Family.poisson) {
+      res._err+=(ym - yr) * (ym - yr);
+      long y=Math.round(yr);
+      double logfactorial=0;
+      for (long i=2; i <= y; ++i)       logfactorial+=Math.log(i);
+      res._aic+=(yr * Math.log(ym) - logfactorial - ym);
+    }
+ else     if (_m._glmParams._family._family == Family.binomial) {
+      if (yr < 0 || yr > 1)       throw new RuntimeException("response variable value out of range: " + yr);
+      int i=0;
+      for (      double t : _thresholds) {
+        int p=ym >= t ? 1 : 0;
+        res._cm[i++].add((int)yr,p);
+      }
+    }
+ else     res._err+=(ym - yr) * (ym - yr);
+  }
+  _res=res;
+}

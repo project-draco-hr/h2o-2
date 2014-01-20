@@ -7,4 +7,5 @@
   if (!(2 <= classes && classes <= 254))   throw new IllegalArgumentException("Found " + classes + " classes: "+ err);
   if (0.0f > _params._sample || _params._sample > 1.0f)   throw new IllegalArgumentException("Sampling rate must be in [0,1] but found " + _params._sample);
   if (_params._numSplitFeatures != -1 && (_params._numSplitFeatures < 1 || _params._numSplitFeatures > cs.length - 1))   throw new IllegalArgumentException("Number of split features exceeds available data. Should be in [1," + (cs.length - 1) + "]");
+  if (_params._useNonLocalData && !canLoadAll((ValueArray)UKV.get(_rfmodel._dataKey)))   throw new IllegalArgumentException("Cannot load all data from remote nodes. Please provide more memory for JVMs or un-check the option 'Use non local data' (however, it will affect resulting accuracy).");
 }

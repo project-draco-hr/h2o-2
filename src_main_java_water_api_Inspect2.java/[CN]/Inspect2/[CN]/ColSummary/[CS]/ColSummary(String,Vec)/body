@@ -1,8 +1,9 @@
 {
   this.name=name;
-  this.type=vec.isEnum() ? "Enum" : vec.isInt() ? "Int" : "Real";
-  this.min=vec.min();
-  this.max=vec.max();
-  this.mean=vec.mean();
+  this.type=vec.isEnum() ? ColType.Enum : vec.isInt() ? ColType.Int : ColType.Real;
+  this.min=vec.isEnum() ? Double.NaN : vec.min();
+  this.max=vec.isEnum() ? Double.NaN : vec.max();
+  this.mean=vec.isEnum() ? Double.NaN : vec.mean();
   this.naCnt=vec.naCnt();
+  this.cardinality=vec.cardinality();
 }

@@ -8,7 +8,7 @@
         int submitted=0, done=0;
         Future[] active=new GridTask[_parallelism];
         for (int job=0; job < _alphas.length; job++) {
-          GridTask t=new GridTask(GLMGrid.this,job,true);
+          GridTask t=new GridTask(GLMGrid.this,job,true,_standardize);
           if (submitted - done >= _parallelism) {
             try {
               active[done++ % _parallelism].get();
@@ -28,7 +28,7 @@ catch (            ExecutionException e) {
       }
  else {
         for (int a=0; a < _alphas.length; a++) {
-          GridTask t=new GridTask(GLMGrid.this,a,false);
+          GridTask t=new GridTask(GLMGrid.this,a,false,_standardize);
           t.compute2();
         }
         remove();

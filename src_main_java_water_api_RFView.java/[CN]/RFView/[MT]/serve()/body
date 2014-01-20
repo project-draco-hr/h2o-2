@@ -7,6 +7,10 @@
   int classCol=_classCol.specified() ? _classCol.value() : findResponseIdx(model);
   tasks=model._totalTrees;
   finished=model.size();
+  if (_job.value() != null) {
+    Job jjob=Job.findJob(_job.value());
+    if (jjob != null && jjob.cancelled())     return Response.error(jjob.exception == null ? "Job was cancelled by user!" : jjob.exception);
+  }
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value() && (finished == tasks || _iterativeCM.value()) && finished > 0) {
     int modelSize=tasks * _refreshThresholdCM.value() / 100;
