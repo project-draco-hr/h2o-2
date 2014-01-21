@@ -1,21 +1,7 @@
 {
   if (!(o instanceof ValueString))   return false;
   ValueString str=(ValueString)o;
-  if (_skips.isEmpty() && str._skips.isEmpty()) {
-    if (str.get_length() != get_length())     return false;
-    for (int i=0; i < get_length(); ++i)     if (get_buf()[get_off() + i] != str.get_buf()[str.get_off() + i])     return false;
-  }
- else   if (str._skips.isEmpty()) {
-    if (get_length() - _skips.size() != str.get_length())     return false;
-    int j=0;
-    int i=get_off();
-    for (    int n : _skips) {
-      for (; i < get_off() + n; ++i)       if (get_buf()[i] != str.get_buf()[j++])       return false;
-      ++i;
-    }
-    int n=get_off() + get_length();
-    for (; i < n; ++i)     if (get_buf()[i] != str.get_buf()[j++])     return false;
-  }
- else   return toString().equals(str.toString());
+  if (str.get_length() != get_length())   return false;
+  for (int i=0; i < get_length(); ++i)   if (get_buf()[get_off() + i] != str.get_buf()[str.get_off() + i])   return false;
   return true;
 }
