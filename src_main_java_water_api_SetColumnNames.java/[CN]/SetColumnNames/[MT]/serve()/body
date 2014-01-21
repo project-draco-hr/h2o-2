@@ -1,6 +1,10 @@
 {
   ValueArray tgt=_tgtKey.value();
-  tgt.setColumnNames(_srcKey.value().colNames());
+  String[] names;
+  if (_srcKey.value() != null)   names=_srcKey.value().colNames();
+ else   if (_srcStr.value() != null)   names=_srcStr.value().split(",");
+ else   throw new IllegalArgumentException("No column names given");
+  tgt.setColumnNames(names);
   Futures fs=new Futures();
   DKV.put(tgt._key,tgt,fs);
   fs.blockForPending();
