@@ -47,8 +47,7 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
         if conservative:
             for n in nodeList:
                 stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
-        else:
-            pass
+        verify_cloud_size(nodeList)
         check_sandbox_for_errors(python_test_name=python_test_name)
     except:
         if cleanup:

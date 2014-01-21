@@ -1,4 +1,4 @@
-def test_GBM_params_rand2(self):
+def test_GBM_regression_rand2(self):
     h2o.beta_features = True
     bucket = 'home-0xdiag-datasets'
     modelKey = 'GBMModelKey'
@@ -30,10 +30,6 @@ def test_GBM_params_rand2(self):
             gbmTrainView = h2o_cmd.runGBMView(model_key=modelKey)
             errsLast = gbmTrainView['gbm_model']['errs'][(-1)]
             print "GBM 'errsLast'", errsLast
-            cm = gbmTrainView['gbm_model']['cms'][(-1)]
-            pctWrongTrain = h2o_gbm.pp_cm_summary(cm)
-            print '\nTrain\n==========\n'
-            print h2o_gbm.pp_cm(cm)
             predictKey = 'Predict.hex'
             start = time.time()
             gbmTestResult = h2o_cmd.runPredict(data_key=testKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
