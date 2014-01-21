@@ -1,0 +1,29 @@
+{
+  double r2=0;
+  for (int i=0; i < _previous._a.length; i++) {
+    int w=u * _previous._a.length + i;
+    if (_previous._e != null)     _previous._e[i]+=g * _w[w];
+    double d=g * _previous._a[i] - _w[w] * l2 - Math.signum(_w[w]) * l1;
+    if (_wm != null) {
+      _wm[w]*=m;
+      _wm[w]+=d;
+      d=_wm[w];
+    }
+    _w[w]+=r * d;
+    r2+=_w[w] * _w[w];
+  }
+  if (r2 > max_w2) {
+    double scale=Math.sqrt(max_w2) / Math.sqrt(r2);
+    for (int i=0; i < _previous._a.length; i++) {
+      int w=u * _previous._a.length + i;
+      _w[w]*=scale;
+    }
+  }
+  double d=g;
+  if (_bm != null) {
+    _bm[u]*=m;
+    _bm[u]+=d;
+    d=_bm[u];
+  }
+  _b[u]+=r * d;
+}

@@ -5,8 +5,8 @@
   stats._categoricals_mins=categoricals_mins;
   stats.doAll(vecs);
   for (int i=0; i < vecs.length; i++) {
-    subs[i]=(float)stats._means[i];
+    subs[i]=stats._means[i];
     double sigma=Math.sqrt(stats._sigms[i] / (stats._rows - 1));
-    muls[i]=(float)(sigma > 1e-6 ? 1 / sigma : 1);
+    muls[i]=sigma > 1e-6 ? 1 / sigma : 1;
   }
 }
