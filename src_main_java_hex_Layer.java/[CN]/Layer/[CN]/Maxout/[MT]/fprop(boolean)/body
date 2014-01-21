@@ -3,7 +3,7 @@
     dropout.fillBytes();
     if (_previous.isInput())     dropout.clearSomeInput(_previous);
   }
-  float max=0;
+  double max=0;
   for (int o=0; o < _a.length; o++) {
     _a[o]=0;
     if (!training || dropout.unit_active(o)) {

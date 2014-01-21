@@ -1,16 +1,16 @@
 {
-  _a=new float[units];
+  _a=new double[units];
   if (!(this instanceof Output)) {
-    _e=new float[units];
+    _e=new double[units];
   }
   _previous=ls[index - 1];
   _input=(Input)ls[0];
   if (weights) {
     _w=new float[units * _previous.units];
-    _b=new float[units];
+    _b=new double[units];
     if (momentum_start != 0 || momentum_stable != 0) {
       _wm=new float[_w.length];
-      _bm=new float[_b.length];
+      _bm=new double[_b.length];
     }
   }
 }

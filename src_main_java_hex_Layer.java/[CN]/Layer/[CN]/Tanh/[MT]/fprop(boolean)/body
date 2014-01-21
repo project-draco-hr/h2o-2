@@ -10,7 +10,7 @@
         _a[o]+=_w[o * _previous._a.length + i] * _previous._a[i];
       }
       _a[o]+=_b[o];
-      _a[o]=(float)Math.tanh(_a[o]);
+      _a[o]=Math.tanh(_a[o]);
       if (!training && dropout != null) {
         _a[o]*=.5f;
       }
