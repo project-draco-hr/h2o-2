@@ -1,8 +1,9 @@
 {
   predictBody.i().p("// Call forest predicting class ").p(c).nl();
-  predictBody.i().p("preds[").p(c + 1).p("] +=").p(" Forest_").p(fidx).p("_class_").p(c).p(".predict(data);").nl();
+  predictBody.i().p("preds[").p(c + 1).p("] +=").p(" Forest_").p(fidx).p("_class_").p(c).p(".predict(data, maxIters);").nl();
   forest.i().p("// Forest representing a subset of trees scoring class ").p(c).nl();
   forest.i().p("class Forest_").p(fidx).p("_class_").p(c).p(" {").nl().ii(1);
-  forest.i().p("public static float predict(double[] data) {").nl().ii(1);
-  forest.i().p("float pred = 0;").nl();
+  forest.i().p("public static float predict(double[] data, int maxIters) {").nl().ii(1);
+  forest.i().p("float pred  = 0;").nl();
+  forest.i().p("int   iters = maxIters;").nl();
 }

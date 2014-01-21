@@ -23,9 +23,9 @@ def columnInfoFromInspect(key, exceptionOnMissingValues=True, **kwargs):
         printMsg = False
         if h2o.beta_features:
             if (c['type'] == 'Enum'):
-                enum_domain_size = ((c['max'] - c['min']) + 1)
-                msg += (' enum_domain_size: %d' % enum_domain_size)
-                enumSizeDict[k] = enum_domain_size
+                cardinality = c['cardinality']
+                msg += (' cardinality: %d' % cardinality)
+                enumSizeDict[k] = cardinality
                 printMsg = True
         elif (c['type'] == 'enum'):
             msg += (' enum_domain_size: %d' % c['enum_domain_size'])

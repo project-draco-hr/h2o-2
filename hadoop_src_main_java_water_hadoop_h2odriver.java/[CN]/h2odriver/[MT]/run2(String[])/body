@@ -41,7 +41,7 @@
     conf.set("mapreduce.job.ubertask.enable","false");
     String mapreduceMapMemoryMb=Long.toString(processTotalPhysicalMemoryMegabytes);
     conf.set("mapreduce.map.memory.mb",mapreduceMapMemoryMb);
-    String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx;
+    String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx+ (enableExceptions ? " -ea" : "");
     conf.set("mapred.child.java.opts",mapChildJavaOpts);
     conf.set("mapred.map.child.java.opts",mapChildJavaOpts);
     System.out.println("Memory Settings:");
@@ -61,6 +61,9 @@
   conf.set(h2omapper.H2O_NETWORK_KEY,network);
   if (nthreads >= 0) {
     conf.set(h2omapper.H2O_NTHREADS_KEY,Integer.toString(nthreads));
+  }
+  if (basePort >= 0) {
+    conf.set(h2omapper.H2O_BASE_PORT_KEY,Integer.toString(basePort));
   }
   if (beta) {
     conf.set(h2omapper.H2O_BETA_KEY,"-beta");

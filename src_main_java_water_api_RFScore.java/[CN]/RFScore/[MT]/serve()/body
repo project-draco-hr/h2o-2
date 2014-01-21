@@ -7,6 +7,6 @@
   response.addProperty(NUM_TREES,model._totalTrees);
   response.addProperty(OOBEE,0);
   if (_weights.specified())   response.addProperty(WEIGHTS,_weights.originalValue());
-  if (_clearCM.value())   clearCachedCM(false);
+  clearCachedCM();
   return RFView.redirect(response,null,_modelKey.value()._selfKey,_dataKey.value()._key,model._totalTrees,_classCol.value(),_weights.originalValue(),false,false);
 }

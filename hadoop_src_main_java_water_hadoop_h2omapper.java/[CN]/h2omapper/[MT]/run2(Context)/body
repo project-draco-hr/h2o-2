@@ -14,6 +14,7 @@
   String driverPortString=conf.get(H2O_DRIVER_PORT_KEY);
   String network=conf.get(H2O_NETWORK_KEY);
   String nthreadsString=conf.get(H2O_NTHREADS_KEY);
+  String basePortString=conf.get(H2O_BASE_PORT_KEY);
   String betaString=conf.get(H2O_BETA_KEY);
   ServerSocket ss=new ServerSocket();
   InetSocketAddress sa=new InetSocketAddress("127.0.0.1",0);
@@ -36,6 +37,13 @@
       argsList.add("-nthreads");
       int nthreads=Integer.parseInt(nthreadsString);
       argsList.add(Integer.toString(nthreads));
+    }
+  }
+  if (basePortString != null) {
+    if (basePortString.length() > 0) {
+      argsList.add("-baseport");
+      int basePort=Integer.parseInt(basePortString);
+      argsList.add(Integer.toString(basePort));
     }
   }
   if (betaString != null) {
