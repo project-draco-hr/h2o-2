@@ -2,10 +2,10 @@
   if (Double.compare(a,b) == 0) {
     return;
   }
- else   if (Math.abs(a - b) <= abseps) {
+ else   if (Math.abs(a - b) / Math.max(a,b) < releps) {
     return;
   }
- else   if (Math.abs(a - b) / Math.max(a,b) < releps) {
+ else   if (Math.abs(a - b) <= abseps) {
     return;
   }
  else   Assert.failNotEquals("Not equal: ",new Double(a),new Double(b));

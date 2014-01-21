@@ -1,5 +1,5 @@
 {
-  final int num_threads=Runtime.getRuntime().availableProcessors();
+  int num_threads=threads > 0 ? threads : Runtime.getRuntime().availableProcessors();
   _trainers=new Base[num_threads];
   _threads=new Thread[num_threads];
   _stepsPerThread=(long)(epochs * ((Input)ls[0])._len / num_threads);
@@ -23,10 +23,15 @@
     _threads[t]=new Thread("H2O Trainer " + t){
       @Override public void run(){
         for (long i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
-          if (Job.cancelled(job))           break;
-          trainer.step();
-          input.move();
-          _processed.incrementAndGet();
+          if (job != null && Job.cancelled(job))           break;
+          try {
+            trainer.step();
+            input.move();
+            _processed.incrementAndGet();
+          }
+ catch (          Exception e) {
+            e.getStackTrace();
+          }
         }
       }
     }
