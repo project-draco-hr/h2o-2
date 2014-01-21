@@ -1,12 +1,3 @@
 {
-  if (_skips.isEmpty())   return new String(get_buf(),get_off(),get_length());
-  StringBuilder sb=new StringBuilder();
-  int off=get_off();
-  for (  int next : _skips) {
-    int len=get_off() + next - off;
-    sb.append(new String(get_buf(),off,len));
-    off+=len + 1;
-  }
-  sb.append(new String(get_buf(),off,get_length() - off + get_off()));
-  return sb.toString();
+  return new String(_buf,_off,_len);
 }

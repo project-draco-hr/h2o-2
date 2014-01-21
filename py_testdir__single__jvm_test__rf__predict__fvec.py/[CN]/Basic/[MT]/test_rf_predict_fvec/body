@@ -15,7 +15,7 @@ def test_rf_predict_fvec(self):
     h2o.nodes[0].csv_download(src_key='predict.hex', csvPathname=csvPredictPathname)
     inspect = h2o_cmd.runInspect(key='predict.hex')
     print 'inspect:', h2o.dump_json(inspect)
-    expectedCols = {'max': 2.0, 'min': 0.0, 'naCnt': 0, }
+    expectedCols = {'naCnt': 0, }
     predictCols = inspect['cols'][0]
     diffKeys = [k for k in expectedCols if (predictCols[k] != expectedCols[k])]
     for k in diffKeys:

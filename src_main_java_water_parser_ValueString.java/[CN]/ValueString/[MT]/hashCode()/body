@@ -1,18 +1,6 @@
 {
   int hash=0;
-  if (_skips.isEmpty()) {
-    int n=get_off() + get_length();
-    for (int i=get_off(); i < n; ++i)     hash=31 * hash + get_buf()[i];
-    return hash;
-  }
- else {
-    int i=get_off();
-    for (    int n : _skips) {
-      for (; i < get_off() + n; ++i)       hash=31 * hash + get_buf()[i];
-      ++i;
-    }
-    int n=get_off() + get_length();
-    for (; i < n; ++i)     hash=31 * hash + get_buf()[i];
-    return hash;
-  }
+  int n=get_off() + get_length();
+  for (int i=get_off(); i < n; ++i)   hash=31 * hash + get_buf()[i];
+  return hash;
 }
