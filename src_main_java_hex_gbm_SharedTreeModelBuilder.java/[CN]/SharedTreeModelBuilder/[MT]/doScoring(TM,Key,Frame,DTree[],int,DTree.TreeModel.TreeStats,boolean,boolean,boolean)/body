@@ -8,7 +8,7 @@
     sc=new Score().doIt(model,fr,validation,oob,build_tree_per_node).report(logTag(),tid,ktrees);
     _timeLastScoreEnd=System.currentTimeMillis();
   }
-  model=makeModel(model,finalScoring ? null : ktrees,sc == null ? Double.NaN : sc.mse(),sc == null ? null : (_nclass > 1 ? sc._cm : null),tstats);
+  model=makeModel(model,ktrees,sc == null ? Double.NaN : sc.mse(),sc == null ? null : (_nclass > 1 ? sc._cm : null),tstats);
   DKV.put(outputKey,model);
   return model;
 }
