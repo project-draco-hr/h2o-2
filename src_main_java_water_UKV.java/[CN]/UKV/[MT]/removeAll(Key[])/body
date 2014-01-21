@@ -1,3 +1,6 @@
 {
-  for (  Key key : keys)   remove(key);
+  Futures fs=new Futures();
+  remove(key,fs);
+  for (  Key key : keys)   remove(key,fs);
+  fs.blockForPending();
 }
