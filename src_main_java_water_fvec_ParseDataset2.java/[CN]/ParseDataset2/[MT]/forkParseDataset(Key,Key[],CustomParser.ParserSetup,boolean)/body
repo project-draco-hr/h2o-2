@@ -1,4 +1,5 @@
 {
+  for (  Key k : keys)   if (dest.equals(k))   throw new IllegalArgumentException("Destination key " + dest + " must be different from all sources");
   ParseDataset2 job=new ParseDataset2(dest,keys);
   ParserFJTask fjt=new ParserFJTask(job,keys,setup,delete_on_done);
   job.start(fjt);
