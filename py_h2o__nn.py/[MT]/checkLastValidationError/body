@@ -1,4 +1,4 @@
-def simpleCheckValidationError(self, modelView, rows, expectedErr, relTol, **kwargs):
+def checkLastValidationError(self, modelView, rows, expectedErr, relTol, **kwargs):
     errsLast = modelView['validation_errors'][(-1)]
     h2o.verboseprint("NN 'Last scoring on test set:'", h2o.dump_json(errsLast))
     expectedSamples = (rows * kwargs['epochs'])

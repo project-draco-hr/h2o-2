@@ -8,13 +8,14 @@ def test_NN_mnist_1(self):
     parseResultV = h2i.import_parse(bucket='smalldata', path=csvPathname_test, schema='local', hex_key=validation_key, timeoutSecs=30)
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    response = (inspect['numCols'] - 1)
     modes = ['SingleThread', 'SingleNode']
     for mode in modes:
         identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
         model_key = (('nn_' + identifier) + '.hex')
-        kwargs = {'ignored_cols': None, 'response': '784', 'mode': mode, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '117,131,129', 'rate': 0.005, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 100000, 'momentum_stable': 0.9, 'l1': 1e-05, 'l2': 1e-07, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'warmup_samples': 0, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 2.0, 'destination_key': model_key, 'validation': validation_key, }
+        kwargs = {'ignored_cols': None, 'response': response, 'mode': mode, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '117,131,129', 'rate': 0.005, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 100000, 'momentum_stable': 0.9, 'l1': 1e-05, 'l2': 1e-07, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'warmup_samples': 0, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 2.0, 'destination_key': model_key, 'validation': validation_key, }
         expectedErr = 0.0655
-        timeoutSecs = 60
+        timeoutSecs = 300
         start = time.time()
         nnResult = h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
         h2o.verboseprint('\nnnResult:', h2o.dump_json(nnResult))
@@ -22,5 +23,8 @@ def test_NN_mnist_1(self):
         print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
         modelView = h2o_cmd.runNeuralView(model_key=model_key)
         relTol = (0.02 if (mode == 'SingleThread') else 0.05)
-        h2o_nn.simpleCheckValidationError(self, modelView, inspect['numRows'], expectedErr, relTol, **kwargs)
+        h2o_nn.checkLastValidationError(self, modelView, inspect['numRows'], expectedErr, relTol, **kwargs)
+        kwargs = {'source': validation_key, 'max_rows': 0, 'response': response, 'ignored_cols': None, 'classification': 1, 'destination_key': (('score_' + identifier) + '.hex'), 'model': model_key, }
+        nnScoreResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, **kwargs)
+        h2o_nn.checkScoreResult(self, nnScoreResult, expectedErr, relTol, **kwargs)
         h2o.beta_features = False
