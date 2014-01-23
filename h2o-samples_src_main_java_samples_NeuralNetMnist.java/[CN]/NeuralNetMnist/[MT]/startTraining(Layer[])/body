@@ -1,6 +1,6 @@
 {
   double epochs=1000.0;
-  System.out.println("MapReduce\n");
-  _trainer=new Trainer.MapReduce(ls,epochs,self());
+  System.out.println("Multi-threaded\n");
+  _trainer=new Trainer.Threaded(ls,epochs,self(),-1);
   _trainer.start();
 }
