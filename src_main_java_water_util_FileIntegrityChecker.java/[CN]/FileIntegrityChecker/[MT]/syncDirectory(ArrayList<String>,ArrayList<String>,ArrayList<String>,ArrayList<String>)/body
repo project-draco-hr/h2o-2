@@ -1,0 +1,32 @@
+{
+  Futures fs=new Futures();
+  for (  Key k : H2O.keySet())   if (k.toString().startsWith(_root)) {
+    dels.add(k.toString());
+    UKV.remove(k,fs);
+  }
+  fs.blockForPending();
+  Key k=null;
+  for (int i=0; i < _files.length; ++i) {
+    if (_ok[i] < H2O.CLOUD.size()) {
+      if (fails != null)       fails.add(_files[i]);
+    }
+ else {
+      File f=new File(_files[i]);
+      k=PersistNFS.decodeFile(f);
+      if (files != null)       files.add(_files[i]);
+      if (keys != null)       keys.add(k.toString());
+      if (_newApi) {
+        NFSFileVec nfs=DKV.get(NFSFileVec.make(f,fs)).get();
+        UKV.put(k,new Frame(new String[]{"0"},new Vec[]{nfs}),fs);
+      }
+ else {
+        long size=f.length();
+        Value val=(size < 2 * ValueArray.CHUNK_SZ) ? new Value(k,(int)size,Value.NFS) : new Value(k,new ValueArray(k,size),Value.NFS);
+        val.setdsk();
+        UKV.put(k,val,fs);
+      }
+    }
+  }
+  fs.blockForPending();
+  return k;
+}
