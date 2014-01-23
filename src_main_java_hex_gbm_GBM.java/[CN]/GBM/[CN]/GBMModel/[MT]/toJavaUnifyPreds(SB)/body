@@ -4,7 +4,14 @@
     bodyCtxSB.i().p("float sum = 0, rescale = 0;").nl();
     bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) rescale = Math.max(rescale,Math.abs(preds[i]));").nl();
     bodyCtxSB.i().p("if (rescale < 1.0f) rescale = 1.0f;").nl();
-    bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) sum += (preds[i]=(float) Math.exp(preds[i]/rescale));").nl();
+    if (nclasses() == 2) {
+      bodyCtxSB.i().p("preds[1] = (float)Math.exp(preds[1]/rescale);").nl();
+      bodyCtxSB.i().p("preds[2] = 1.0f/preds[1];").nl();
+      bodyCtxSB.i().p("sum = preds[1]+preds[2]; ").nl();
+    }
+ else {
+      bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) sum += (preds[i]=(float) Math.exp(preds[i]/rescale));").nl();
+    }
     bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) preds[i] = (float) preds[i] / sum;").nl();
   }
 }
