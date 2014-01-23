@@ -21,7 +21,7 @@
               final long seed=new Random().nextLong();
               Log.info("Using seed " + seed);
               ref.init(activation,water.util.Utils.getDeterRNG(seed),holdout_ratio);
-              Key file=NFSFileVec.make(new File(PATH));
+              Key file=NFSFileVec.make(find_test_file(PATH));
               Key pars=Key.make();
               Frame frame=ParseDataset2.parse(pars,new Key[]{file});
               UKV.remove(file);
@@ -42,11 +42,10 @@
               NeuralNet p=new NeuralNet();
               p.rate=0.01;
               p.activation=activation;
-              p.max_w2=Float.MAX_VALUE;
-              p.rate=0.01f;
+              p.max_w2=Double.MAX_VALUE;
+              p.rate=0.01;
               p.epochs=13 * 17;
               p.activation=activation;
-              p.max_w2=Float.MAX_VALUE;
               p.input_dropout_ratio=0;
               p.rate_annealing=0;
               p.l1=0;
