@@ -21,7 +21,7 @@
               final long seed=new Random().nextLong();
               Log.info("Using seed " + seed);
               ref.init(activation,water.util.Utils.getDeterRNG(seed),holdout_ratio);
-              Key file=NFSFileVec.make(new File(PATH));
+              Key file=NFSFileVec.make(find_test_file(PATH));
               Key pars=Key.make();
               Frame frame=ParseDataset2.parse(pars,new Key[]{file});
               UKV.remove(file);
