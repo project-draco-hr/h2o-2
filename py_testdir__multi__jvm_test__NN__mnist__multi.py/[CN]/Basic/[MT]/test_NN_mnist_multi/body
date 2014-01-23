@@ -23,7 +23,7 @@ def test_NN_mnist_multi(self):
         h2o_jobs.pollWaitJobs(pattern=None, timeoutSecs=timeoutSecs, pollTimeoutSecs=10, retryDelaySecs=5)
         print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
         modelView = h2o_cmd.runNeuralView(model_key=model_key)
-        relTol = (0.02 if (mode == 'SingleThread') else 0.05)
+        relTol = (0.02 if (mode == 'SingleThread') else 0.1)
         h2o_nn.checkLastValidationError(self, modelView, inspect['numRows'], expectedErr, relTol, **kwargs)
         kwargs = {'source': validation_key, 'max_rows': 0, 'response': response, 'ignored_cols': None, 'classification': 1, 'destination_key': (('score_' + identifier) + '.hex'), 'model': model_key, }
         nnScoreResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, **kwargs)

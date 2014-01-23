@@ -1,9 +1,9 @@
 {
   Layer[] ls=new Layer[5];
   ls[0]=new VecsInput(data,inputStats);
-  ls[1]=new Layer.RectifierDropout(102);
-  ls[2]=new Layer.RectifierDropout(102);
-  ls[3]=new Layer.RectifierDropout(204);
+  ls[1]=new Layer.RectifierDropout(128);
+  ls[2]=new Layer.RectifierDropout(128);
+  ls[3]=new Layer.RectifierDropout(256);
   ls[4]=new VecSoftmax(labels,outputStats,NeuralNet.Loss.CrossEntropy);
   NeuralNet p=new NeuralNet();
   p.rate=0.003f;
