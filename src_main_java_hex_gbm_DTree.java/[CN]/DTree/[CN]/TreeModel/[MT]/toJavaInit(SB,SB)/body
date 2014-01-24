@@ -15,6 +15,6 @@
   JCodeGen.toStaticVar(sb,"NTREES",numTrees(),"Number of trees in this model.");
   JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses(),"Number of internal trees in this model (= NTREES*NCLASSES).");
   JCodeGen.toStaticVar(sb,"DEFAULT_ITERATIONS",10000,"Default number of iterations.");
-  JCodeGen.toClass(fileContextSB,"//Sample of data used by benchmark\nclass DataSample","DATA",ValueArray.asFrame(DKV.get(_dataKey)).subframe(_names),10,"Sample test data.");
+  JCodeGen.toClass(fileContextSB,"// Sample of data used by benchmark\nclass DataSample","DATA",ValueArray.asFrame(DKV.get(_dataKey)).subframe(_names),10,"Sample test data.");
   return sb;
 }

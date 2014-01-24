@@ -1,11 +1,12 @@
 {
+  setup.checkColumnNames();
   long sum=0;
   for (  Key k : keys) {
     if (dest.equals(k))     throw new IllegalArgumentException("Destination key " + dest + " must be different from all sources");
     sum+=DKV.get(k).length();
   }
   long memsz=0;
-  for (  H2ONode h2o : H2O.CLOUD._memary)   memsz+=h2o._heartbeat.get_max_mem();
+  for (  H2ONode h2o : H2O.CLOUD._memary)   memsz+=h2o.get_max_mem();
   if (sum > memsz * 4)   throw new IllegalArgumentException("Total input file size of " + PrettyPrint.bytes(sum) + " is much larger than total cluster memory of "+ PrettyPrint.bytes(memsz)+ ", please use either a larger cluster or smaller data.");
   ParseDataset2 job=new ParseDataset2(dest,keys);
   ParserFJTask fjt=new ParserFJTask(job,keys,setup,delete_on_done);
