@@ -14,7 +14,7 @@
       JsonObject glm=computeGLM(family,lsms,va,null);
       JsonObject coefs=glm.get("coefficients").getAsJsonObject();
       assertEquals("tweedie test variance power = " + var_powers[test],beta0s[test],coefs.get("Intercept").getAsDouble(),0.001);
-      assertEquals("tweedie test variance power = " + var_powers[test],beta1s[test],coefs.get("0").getAsDouble(),0.001);
+      assertEquals("tweedie test variance power = " + var_powers[test],beta1s[test],coefs.get("C1").getAsDouble(),0.001);
       UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
     }
   }
