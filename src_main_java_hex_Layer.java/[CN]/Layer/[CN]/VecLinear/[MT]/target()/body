@@ -1,6 +1,6 @@
 {
   if (_values == null)   _values=new double[units];
-  double d=_vec.at(_input._pos);
-  _values[0]=Double.isNaN(d) ? 0 : d;
+  long pos=_input._pos;
+  _values[0]=_vec.isNA(pos) ? missing_double_value : _vec.at(pos);
   return _values;
 }
