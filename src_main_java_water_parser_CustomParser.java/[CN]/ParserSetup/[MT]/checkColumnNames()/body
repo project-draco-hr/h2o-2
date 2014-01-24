@@ -1,0 +1,15 @@
+{
+  if (_header) {
+    HashSet<String> uniqueNames=new HashSet<String>();
+    HashSet<String> conflictingNames=new HashSet<String>();
+    for (    String n : _columnNames) {
+      if (!uniqueNames.contains(n)) {
+        uniqueNames.add(n);
+      }
+ else {
+        conflictingNames.add(n);
+      }
+    }
+    if (!conflictingNames.isEmpty())     throw new ParseSetupGuessException("Invalid header. Got conflicting column names. " + conflictingNames.toString(),null,null);
+  }
+}
