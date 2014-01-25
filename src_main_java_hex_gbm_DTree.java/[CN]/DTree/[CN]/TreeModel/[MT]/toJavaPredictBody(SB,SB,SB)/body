@@ -1,25 +1,26 @@
 {
-  final int maxfsize=numTrees() * nclasses();
+  final int maxfsize=4000;
   int fidx=0;
   int treesInForest=0;
   SB forest=new SB();
   bodySb.i().p("// System.err.println(\"Row (gencode.predict): \" + java.util.Arrays.toString(data));");
   bodySb.i().p("java.util.Arrays.fill(preds,0f);").nl();
   for (int c=0; c < nclasses(); c++) {
-    toJavaForestBegin(bodySb,forest,c,fidx++);
+    toJavaForestBegin(bodySb,forest,c,fidx++,maxfsize);
     for (int i=0; i < treeBits.length; i++) {
       CompressedTree cts[]=treeBits[i];
       if (cts[c] == null)       continue;
       forest.i().p("if (iters-- > 0) pred").p(" +=").p(" Tree_").p(i).p("_class_").p(c).p(".predict(data);").nl();
       toJavaTreePredictFct(fileCtxSb,cts[c],i,c);
-      if (++treesInForest > maxfsize) {
+      if (++treesInForest == maxfsize) {
         toJavaForestEnd(bodySb,forest,c,fidx);
-        toJavaForestBegin(bodySb,forest,c,fidx++);
+        toJavaForestBegin(bodySb,forest,c,fidx++,maxfsize);
         treesInForest=0;
       }
     }
     toJavaForestEnd(bodySb,forest,c,fidx);
     treesInForest=0;
+    fidx=0;
   }
   fileCtxSb.p(forest);
   toJavaUnifyPreds(bodySb);

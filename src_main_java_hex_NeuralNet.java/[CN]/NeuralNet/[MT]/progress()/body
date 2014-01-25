@@ -2,7 +2,7 @@
   NeuralNetModel model=UKV.get(destination_key);
   if (model != null && source != null) {
     Errors e=model.training_errors[model.training_errors.length - 1];
-    return 0.1f + Math.min(1,e.training_samples / (float)(epochs * source.numRows()));
+    return Math.min(1f,0.1f + Math.min(1,e.training_samples / (float)(epochs * source.numRows())));
   }
   return 0;
 }
