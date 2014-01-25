@@ -19,6 +19,8 @@
       idx=o;
     }
   }
-  if (confusion != null)   confusion[output.target()][idx]++;
+  if (confusion != null) {
+    if (output.target() != Layer.missing_int_value)     confusion[output.target()][idx]++;
+  }
   return idx == output.target();
 }

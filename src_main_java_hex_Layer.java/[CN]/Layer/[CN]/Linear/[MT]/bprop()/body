@@ -5,6 +5,7 @@
   double[] v=target();
   assert(loss == NeuralNet.Loss.MeanSquare);
   for (int u=0; u < _a.length; u++) {
+    if (v[u] == missing_double_value)     continue;
     double g=v[u] - _a[u];
     g*=(1 - _a[u]) * _a[u];
     bprop(u,g,r,m);
