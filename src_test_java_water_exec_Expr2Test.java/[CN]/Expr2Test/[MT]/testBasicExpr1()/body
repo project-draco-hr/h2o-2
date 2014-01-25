@@ -168,6 +168,9 @@
     checkStr("3 < 4 |  F &  3 > 4",1);
     checkStr("3 < 4 || F && 3 > 4",1);
     checkStr("h.hex[,4] != 29 || h.hex[,2] < 305 && h.hex[,2] < 81",Double.NaN);
+    checkStr("quantile(seq_len(10),seq_len(10)/10)");
+    checkStr("quantile(runif(seq_len(10000)),seq_len(10)/10)");
+    checkStr("quantile(h.hex[,4],c(0,.05,0.3,0.55,0.7,0.95,0.99))");
     checkStr("a=0;x=0;y=0",0);
   }
   finally {
