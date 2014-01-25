@@ -25,6 +25,7 @@
   output.write("\n");
   int lineno=0;
   String line=null;
+  float[] preds=new float[model.getPredsSize()];
   while ((line=input.readLine()) != null) {
     lineno++;
     if (skipFirstLine > 0) {
@@ -39,7 +40,7 @@
     }
     String trimmedLine=line.trim();
     String[] inputColumnsArray=trimmedLine.split(",");
-    int numInputColumns=model.getNames().length;
+    int numInputColumns=model.getNames().length - 1;
     if (inputColumnsArray.length != numInputColumns) {
       System.out.println("WARNING: Line " + lineno + " has "+ inputColumnsArray.length+ " columns (expected "+ numInputColumns+ ")");
     }
@@ -69,10 +70,9 @@
         }
       }
     }
-    float[] preds=new float[model.getNumResponseClasses() + 1];
     model.predict(row,preds);
     for (int i=0; i < preds.length; i++) {
-      if (i == 0) {
+      if (i == 0 && model.isClassifier()) {
         String[] domainValues=model.getDomainValues(model.getResponseIdx());
         if (domainValues != null) {
           double value=preds[i];
@@ -84,13 +84,11 @@
           String predictedOutputClassLevel=domainValues[valueAsInt];
           output.write(predictedOutputClassLevel);
         }
- else {
-          output.write(Double.toString(preds[i]));
-        }
       }
  else {
-        output.write(",");
+        if (i > 0)         output.write(",");
         output.write(Double.toString(preds[i]));
+        if (!model.isClassifier())         break;
       }
     }
     output.write("\n");
