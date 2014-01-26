@@ -1,8 +1,5 @@
 {
-  ASTOp op3=PREFIX_OPS.get(id);
-  if (op3 != null)   return op3;
-  ASTOp op2=BIN_INFIX_OPS.get(id);
-  if (op2 != null)   return op2;
-  ASTOp op1=UNI_INFIX_OPS.get(id);
-  return op1;
+  ASTOp op4=UDF_OPS.get(id);
+  if (op4 != null)   return op4;
+  return isBuiltinOp(id);
 }

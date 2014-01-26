@@ -1,6 +1,9 @@
 {
   Futures fs=new Futures();
-  Vec[] res=closeVecs(fs);
+  _closedVecs=true;
+  Vec[] res=new Vec[_vecs.length];
+  for (int i=0; i < _vecs.length; ++i)   res[i]=_vecs[i].close(fs);
+  _vecs=null;
   fs.blockForPending();
   return res;
 }

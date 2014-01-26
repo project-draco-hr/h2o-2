@@ -1,11 +1,12 @@
 {
   long processed=_training.processed();
-  float m=momentum(processed);
-  float r=rate(processed) * (1 - m);
+  double m=momentum(processed);
+  double r=rate(processed) * (1 - m);
   int label=target();
+  if (label == missing_int_value)   return;
   for (int u=0; u < _a.length; u++) {
-    final float targetval=(u == label ? 1 : 0);
-    float g=targetval - _a[u];
+    final double targetval=(u == label ? 1 : 0);
+    double g=targetval - _a[u];
     if (loss == NeuralNet.Loss.CrossEntropy) {
     }
  else     if (loss == NeuralNet.Loss.MeanSquare) {

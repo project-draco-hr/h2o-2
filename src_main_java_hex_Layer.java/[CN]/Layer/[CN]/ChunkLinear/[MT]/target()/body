@@ -1,6 +1,6 @@
 {
-  if (_values == null)   _values=new float[units];
-  double d=_chunk.at0((int)_input._pos);
-  _values[0]=Double.isNaN(d) ? 0 : (float)d;
+  if (_values == null)   _values=new double[units];
+  int pos=(int)_input._pos;
+  _values[0]=_chunk.isNA0(pos) ? missing_double_value : _chunk.at0(pos);
   return _values;
 }

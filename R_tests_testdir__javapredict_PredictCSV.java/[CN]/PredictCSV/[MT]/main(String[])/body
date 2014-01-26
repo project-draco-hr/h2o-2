@@ -24,27 +24,34 @@
   }
   output.write("\n");
   int lineno=0;
-  String line=input.readLine();
-  while (line != null) {
+  String line=null;
+  float[] preds=new float[model.getPredsSize()];
+  while ((line=input.readLine()) != null) {
     lineno++;
     if (skipFirstLine > 0) {
       skipFirstLine=0;
-      line=input.readLine();
+      String[] names=line.trim().split(",");
+      String[] modelNames=model.getNames();
+      for (int i=0; i < Math.min(names.length,modelNames.length); i++)       if (!names[i].equals(modelNames[i])) {
+        System.out.println("ERROR: Column names does not match: input column " + i + ". "+ names[i]+ " != model column "+ modelNames[i]);
+        System.exit(1);
+      }
+      continue;
     }
     String trimmedLine=line.trim();
     String[] inputColumnsArray=trimmedLine.split(",");
-    int numInputColumns=model.getNames().length;
+    int numInputColumns=model.getNames().length - 1;
     if (inputColumnsArray.length != numInputColumns) {
       System.out.println("WARNING: Line " + lineno + " has "+ inputColumnsArray.length+ " columns (expected "+ numInputColumns+ ")");
     }
     double[] row=new double[inputColumnsArray.length];
     for (int i=0; i < inputColumnsArray.length; i++) {
       String cellString=inputColumnsArray[i];
-      if (cellString.equals("NA") || cellString.equals("N/A") || cellString.equals("")|| cellString.equals("-")) {
+      String[] domainValues=model.getDomainValues(i);
+      if (cellString.equals("") || (domainValues == null) && (cellString.equals("NA") || cellString.equals("N/A") || cellString.equals("-"))) {
         row[i]=Double.NaN;
       }
  else {
-        String[] domainValues=model.getDomainValues(i);
         if (domainValues != null) {
           HashMap m=(HashMap<String,Integer>)domainMap.get(i);
           assert(m != null);
@@ -63,10 +70,9 @@
         }
       }
     }
-    float[] preds=new float[model.getNumResponseClasses() + 1];
     model.predict(row,preds);
     for (int i=0; i < preds.length; i++) {
-      if (i == 0) {
+      if (i == 0 && model.isClassifier()) {
         String[] domainValues=model.getDomainValues(model.getResponseIdx());
         if (domainValues != null) {
           double value=preds[i];
@@ -78,17 +84,14 @@
           String predictedOutputClassLevel=domainValues[valueAsInt];
           output.write(predictedOutputClassLevel);
         }
- else {
-          output.write(Double.toString(preds[i]));
-        }
       }
  else {
-        output.write(",");
+        if (i > 0)         output.write(",");
         output.write(Double.toString(preds[i]));
+        if (!model.isClassifier())         break;
       }
     }
     output.write("\n");
-    line=input.readLine();
   }
   output.close();
   input.close();

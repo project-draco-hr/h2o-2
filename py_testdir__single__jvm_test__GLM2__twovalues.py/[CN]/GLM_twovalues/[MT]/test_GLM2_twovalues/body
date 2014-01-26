@@ -1,0 +1,28 @@
+def test_GLM2_twovalues(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_twovalues.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    rowDataTrueRaw = '<sp>1,            0<sp>,            <tab>65,            1<tab>,            <sp><tab>2,            1<sp><tab>,            <tab><sp>1,            4<tab><sp>,            <tab><tab>1,            4<tab><tab>,            <sp><sp>1,            4<sp><sp>'
+    rowDataTrue = re.sub('<sp>', ' ', rowDataTrueRaw)
+    rowDataTrue = re.sub('<tab>', '  ', rowDataTrue)
+    rowDataFalse = '0,            1,            0,            -1,            -2,            -1,            -1,            -4,            -1,            -4,            -1,            -4'
+    twoValueList = [((-1), 1, (-1), 12), ((-1), 1, 1, 12), ((-10.0), 10.0, 10.0, 12), ((-10.0), 10.0, (-10.0), 12)]
+    trial = 0
+    for (outputTrue, outputFalse, case, expectedCoeffNum) in twoValueList:
+        write_syn_dataset(csvPathname, 20, rowDataTrue, rowDataFalse, str(outputTrue), str(outputFalse))
+        hex_key = ((csvFilename + '_') + str(trial))
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key)
+        start = time.time()
+        kwargs = {'n_folds': 0, 'case_mode': '=', 'case_val': case, 'response': 'C12', 'family': 'binomial', 'alpha': 0.5, 'lambda': 0.0001, 'beta_epsilon': 0.0002, }
+        print ('using outputTrue: %s outputFalse: %s' % (outputTrue, outputFalse))
+        glm = h2o_cmd.runGLM(parseResult=parseResult, **kwargs)
+        (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        coefficients_names = glm['glm_model']['coefficients_names']
+        print 'coefficients_names:', coefficients_names
+        actualCoeffNum = (len(glm['glm_model']['submodels'][0]['beta']) - 1)
+        if (actualCoeffNum != expectedCoeffNum):
+            raise Exception(('Should be %s expected coefficients in result. actual: %s' % (expectedCoeffNum, actualCoeffNum)))
+        print 'trial #', trial, 'glm end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        h2o.check_sandbox_for_errors()
+        trial += 1

@@ -1,0 +1,38 @@
+def test_GBM_regression_rand2(self):
+    h2o.beta_features = True
+    bucket = 'home-0xdiag-datasets'
+    modelKey = 'GBMModelKey'
+    files = [('standard', 'covtype.shuffled.10pct.sorted.data', 'covtype.train.hex', 1800, 'C54', 'covtype.shuffled.10pct.data', 'covtype.test.hex')]
+    for (importFolderPath, trainFilename, trainKey, timeoutSecs, response, testFilename, testKey) in files:
+        start = time.time()
+        xList = []
+        eList = []
+        fList = []
+        parseTrainResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + trainFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs, doSummary=False)
+        elapsed = (time.time() - start)
+        print 'train parse end on ', trainFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'train parse result:', trainKey
+        parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, doSummary=False)
+        elapsed = (time.time() - start)
+        print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'test parse result:', testKey
+        paramsDict = define_gbm_params()
+        for trial in range(3):
+            print 'Regression!'
+            params = {'response': 'C54', 'ignored_cols_by_name': 'C5,C6,C7,C8,C9', 'ntrees': 2, 'classification': 0, }
+            h2o_gbm.pickRandGbmParams(paramsDict, params)
+            print 'Using these parameters for GBM: ', params
+            kwargs = params.copy()
+            trainStart = time.time()
+            gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
+            trainElapsed = (time.time() - trainStart)
+            print 'GBM training completed in', trainElapsed, 'seconds. On dataset: ', trainFilename
+            gbmTrainView = h2o_cmd.runGBMView(model_key=modelKey)
+            errsLast = gbmTrainView['gbm_model']['errs'][(-1)]
+            print "GBM 'errsLast'", errsLast
+            predictKey = 'Predict.hex'
+            start = time.time()
+            gbmTestResult = h2o_cmd.runPredict(data_key=testKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+            elapsed = (time.time() - start)
+            print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
+            print 'FIX! where do we get the summary info on the test data after predict?'

@@ -1,0 +1,32 @@
+def test_NN_twovalues(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_twovalues.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    rowDataTrue = '1, 0, 65, 1, 2, 1, 1, 4, 1, 4, 1, 4'
+    rowDataFalse = '0, 1, 0, -1, -2, -1, -1, -4, -1, -4, -1, -4'
+    twoValueList = [('A', 'B', 0, 14), ('A', 'B', 1, 14), (0, 1, 0, 12), (0, 1, 1, 12), (0, 1, 'NaN', 12), (1, 0, 'NaN', 12), ((-1), 1, 0, 12), ((-1), 1, 1, 12), ((-10.0), 10.0, 10.0, 12), ((-10.0), 10.0, (-10.0), 12)]
+    trial = 0
+    for (outputTrue, outputFalse, case, coeffNum) in twoValueList:
+        write_syn_dataset(csvPathname, 20, rowDataTrue, rowDataFalse, str(outputTrue), str(outputFalse))
+        start = time.time()
+        hex_key = ((csvFilename + '_') + str(trial))
+        model_key = (('trial_' + str(trial)) + '.hex')
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key)
+        print ('using outputTrue: %s outputFalse: %s' % (outputTrue, outputFalse))
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+        response = (inspect['numCols'] - 1)
+        kwargs = {'ignored_cols': None, 'response': ('C' + str(response)), 'classification': 1, 'mode': 'SingleThread', 'activation': 'Tanh', 'hidden': '500', 'rate': 0.01, 'rate_annealing': 1e-06, 'momentum_start': 0, 'momentum_ramp': 0, 'momentum_stable': 0, 'l1': 0.0, 'l2': 0.0001, 'seed': 80023842348, 'loss': 'CrossEntropy', 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 1.0, 'destination_key': model_key, 'validation': hex_key, }
+        timeoutSecs = 60
+        start = time.time()
+        h2o.beta_features = True
+        h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        print 'trial #', trial, 'NN end on ', csvFilename, ' took', (time.time() - start), 'seconds'
+        expectedErr = 0.0
+        relTol = 0.01
+        kwargs = {'source': hex_key, 'max_rows': 0, 'response': ('C' + str(response)), 'ignored_cols': None, 'classification': 1, 'destination_key': (('score' + str(trial)) + '.hex'), 'model': model_key, }
+        nnScoreResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, **kwargs)
+        h2o_nn.checkScoreResult(self, nnScoreResult, expectedErr, relTol, **kwargs)
+        h2o.check_sandbox_for_errors()
+        trial += 1
