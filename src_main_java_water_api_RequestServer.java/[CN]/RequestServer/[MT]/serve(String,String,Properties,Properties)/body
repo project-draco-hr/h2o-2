@@ -3,6 +3,7 @@
   if (uri.isEmpty() || uri.equals("/"))   uri="/Tutorials.html";
   Request.RequestType type=Request.RequestType.requestType(uri);
   String requestName=type.requestName(uri);
+  maybeLogRequest(uri,method,parms);
   try {
     Request request=_requests.get(requestName);
     if (request == null)     return getResource(uri);
