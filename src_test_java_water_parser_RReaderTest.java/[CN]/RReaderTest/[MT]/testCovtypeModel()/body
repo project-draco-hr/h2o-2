@@ -23,7 +23,7 @@
   long now=System.currentTimeMillis();
   long dt=now - start;
   System.err.println("Took " + dt + "msec/"+ pro._numrows+ " = "+ 1000 * dt / pro._numrows + " usec/row");
-  model.deleteKeys();
-  UKV.remove(key);
-  UKV.remove(prok);
+  M.delete();
+  model.delete();
+  pro.delete();
 }

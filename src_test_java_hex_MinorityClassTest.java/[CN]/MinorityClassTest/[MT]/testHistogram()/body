@@ -3,5 +3,5 @@
   ValueArray data=DKV.get(key).get();
   int[] h=MinorityClasses.globalHistogram(MinorityClasses.histogram(data,_classIdx));
   assertTrue(Arrays.equals(expectedHist,h));
-  UKV.remove(key);
+  data.delete();
 }

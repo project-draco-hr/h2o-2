@@ -4,7 +4,7 @@
     _xvals[i].finalize_AIC_AUC();
     _xvals[i].nobs=_nobs - _xvals[i].nobs;
     _xmodels[i].setAndTestValidation(0,_xvals[i]);
-    DKV.put(_xmodels[i]._selfKey,_xmodels[i],fs);
+    DKV.put(_xmodels[i]._key,_xmodels[i],fs);
   }
   _res=new GLMXValidation(_model,_xmodels,_lambdaIdx,_nobs);
   fs.blockForPending();

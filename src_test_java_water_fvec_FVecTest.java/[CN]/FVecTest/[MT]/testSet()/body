@@ -3,11 +3,10 @@
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make("air.hex");
   Frame fr=ParseDataset2.parse(dest,new Key[]{fkey});
-  UKV.remove(fkey);
   try {
     new SetDoubleInt().doAll(fr);
   }
   finally {
-    UKV.remove(dest);
+    fr.delete();
   }
 }

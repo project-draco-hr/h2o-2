@@ -1,7 +1,5 @@
 {
   Key okey=loadAndParseFile("credit.hex","smalldata/kaggle/creditsample-training.csv.gz");
-  UKV.remove(Key.make("smalldata/kaggle/creditsample-training.csv.gz_UNZIPPED"));
-  UKV.remove(Key.make("smalldata\\kaggle\\creditsample-training.csv.gz_UNZIPPED"));
   ValueArray val=DKV.get(okey).get();
   final int n=new int[]{4,2,1}[ValueArray.LOG_CHK - 20];
   assertEquals("Number of chunks",n,val.chunks());
@@ -18,7 +16,6 @@
   RFModel model=result.get();
   assertEquals("Number of classes",2,model.classes());
   assertEquals("Number of trees",ntrees,model.size());
-  model.deleteKeys();
-  UKV.remove(modelKey);
-  UKV.remove(okey);
+  model.delete();
+  val.delete();
 }

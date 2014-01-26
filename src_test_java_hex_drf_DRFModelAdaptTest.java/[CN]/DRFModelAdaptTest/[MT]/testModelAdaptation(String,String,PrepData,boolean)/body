@@ -29,11 +29,9 @@
     }
   }
   finally {
-    if (model != null)     UKV.remove(model._selfKey);
-    if (frTrain != null)     frTrain.remove();
-    UKV.remove(trainKey);
-    if (frTest != null)     frTest.remove();
-    UKV.remove(testKey);
-    if (frAdapted != null)     frAdapted[1].remove();
+    if (model != null)     model.delete();
+    if (frTrain != null)     frTrain.delete();
+    if (frTest != null)     frTest.delete();
+    if (frAdapted != null)     frAdapted[1].delete();
   }
 }

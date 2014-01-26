@@ -13,14 +13,12 @@
     algo.seed=SEED;
     algo.invoke();
     KMeans2Model res=UKV.get(algo.destination_key);
-    Key clusterKey=Key.make(res._clustersKey);
     double[][] clusters=res.centers;
     Assert.assertEquals(1.125,clusters[0][0],0.000001);
     Assert.assertEquals(4.65,clusters[1][0],0.000001);
-    UKV.remove(clusterKey);
+    res.delete();
   }
   finally {
-    frame.remove();
-    if (algo != null && algo.destination_key != null)     UKV.remove(algo.destination_key);
+    frame.delete();
   }
 }

@@ -2,8 +2,8 @@
   final String mse_format="%2.6f";
   final String cross_entropy_format="%2.6f";
   if (model != null) {
-    DocGen.HTML.paragraph(sb,"Model Key: " + model._selfKey);
-    sb.append("<div class='alert'>Actions: " + water.api.Predict.link(model._selfKey,"Score on dataset") + ", "+ NeuralNet.link(model._dataKey,"Compute new model")+ "</div>");
+    DocGen.HTML.paragraph(sb,"Model Key: " + model._key);
+    sb.append("<div class='alert'>Actions: " + water.api.Predict.link(model._key,"Score on dataset") + ", "+ NeuralNet.link(model._dataKey,"Compute new model")+ "</div>");
 {
       float[] train_err=new float[training_errors.length];
       float[] train_samples=new float[training_errors.length];
