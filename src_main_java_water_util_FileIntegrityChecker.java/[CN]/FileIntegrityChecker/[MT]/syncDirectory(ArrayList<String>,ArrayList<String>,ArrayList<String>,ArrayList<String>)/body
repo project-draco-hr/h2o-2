@@ -2,7 +2,8 @@
   Futures fs=new Futures();
   for (  Key k : H2O.keySet())   if (k.toString().startsWith(_root)) {
     dels.add(k.toString());
-    UKV.remove(k,fs);
+    if (DKV.get(k).isLockable())     ((Lockable)DKV.get(k).get()).delete(fs);
+ else     UKV.remove(k,fs);
   }
   fs.blockForPending();
   Key k=null;
@@ -23,7 +24,7 @@
         long size=f.length();
         Value val=(size < 2 * ValueArray.CHUNK_SZ) ? new Value(k,(int)size,Value.NFS) : new Value(k,new ValueArray(k,size),Value.NFS);
         val.setdsk();
-        UKV.put(k,val,fs);
+        DKV.put(k,val,fs);
       }
     }
   }
