@@ -6,6 +6,9 @@ def parse_args(argv):
     global g_test_to_run
     global g_test_list_file
     global g_test_group
+    global g_run_small
+    global g_run_medium
+    global g_run_large
     global g_use_cloud
     global g_use_ip
     global g_use_port
@@ -43,6 +46,20 @@ def parse_args(argv):
             if (i > len(argv)):
                 usage()
             g_test_group = argv[i]
+        elif (s == '--testsize'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            v = argv[i]
+            if re.match('(s)?(m)?(l)?', v):
+                if (not ('s' in v)):
+                    g_run_small = False
+                if (not ('m' in v)):
+                    g_run_medium = False
+                if (not ('l' in v)):
+                    g_run_large = False
+            else:
+                bad_arg(s)
         elif (s == '--usecloud'):
             i += 1
             if (i > len(argv)):
