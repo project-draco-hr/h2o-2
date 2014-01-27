@@ -1,0 +1,21 @@
+{
+  init();
+  Frame[] frs=model.adapt(source,false);
+  int classes=model.layers[model.layers.length - 1].units;
+  confusion_matrix=new long[classes][classes];
+  Layer[] clones=new Layer[model.layers.length];
+  for (int y=0; y < model.layers.length; y++) {
+    clones[y]=model.layers[y].clone();
+    clones[y]._w=model.weights[y];
+    clones[y]._b=model.biases[y];
+  }
+  Vec[] vecs=frs[0].vecs();
+  Vec[] data=Utils.remove(vecs,vecs.length - 1);
+  Vec resp=vecs[vecs.length - 1];
+  Errors e=eval(clones,data,resp,max_rows,confusion_matrix);
+  classification_error=e.classification;
+  mean_square_error=e.mean_square;
+  cross_entropy=e.cross_entropy;
+  if (frs[1] != null)   frs[1].remove();
+  return Response.done(this);
+}
