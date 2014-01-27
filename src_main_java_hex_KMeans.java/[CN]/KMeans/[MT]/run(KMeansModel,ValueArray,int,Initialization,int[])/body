@@ -61,6 +61,6 @@
     if (res._iteration >= res._maxIter)     break;
     if (cancelled())     break;
   }
-  res.unlock(new Futures()).blockForPending();
+  res.unlock(self());
   remove();
 }

@@ -2,7 +2,7 @@
   if (old != null) {
     Futures fs=new Futures();
     old.delete_impl(fs);
-    DKV.remove(_key,fs);
+    if (_key != null)     DKV.remove(_key,fs);
     fs.blockForPending();
   }
 }

@@ -1,3 +1,5 @@
 {
-  new WriteDeleteLock().invoke(_key);
+  WriteDeleteLock wl=new WriteDeleteLock();
+  if (_key == null)   wl.onSuccess(this);
+ else   wl.invoke(_key);
 }

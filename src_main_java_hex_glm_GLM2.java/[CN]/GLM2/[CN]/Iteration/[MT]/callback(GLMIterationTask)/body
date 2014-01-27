@@ -23,7 +23,7 @@
       H2OCallback fin=new H2OCallback<GLMValidationTask>(){
         @Override public void callback(        GLMValidationTask tsk){
           boolean improved=_model.setAndTestValidation(_lambdaIdx,tsk._res);
-          _model.unlock();
+          _model.unlock(self());
           if (!diverged && (improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
             _solver=new ADMMSolver(lambda[++_lambdaIdx],alpha[0]);
             glmt._val=null;
