@@ -1,2 +1,6 @@
 {
+  System.out.println("clear&Locking " + _key + " by "+ job_key);
+  Lockable old=((WriteUpdateLock)new WriteUpdateLock(job_key).invoke(_key))._old;
+  if (old != null)   old.delete_impl(new Futures()).blockForPending();
+  return (T)this;
 }
