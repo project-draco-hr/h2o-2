@@ -67,7 +67,7 @@ def test_GLM2_mnist(self):
             elapsed = (time.time() - start)
             print 'GLM completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
-            modelKey = glm['glm_model']['_selfKey']
+            modelKey = glm['glm_model']['_key']
             if (1 == 0):
                 cm = glm['glm_model']['submodels'][0]['validation']['_cms'][0]['_arr']
                 print 'cm:', cm
