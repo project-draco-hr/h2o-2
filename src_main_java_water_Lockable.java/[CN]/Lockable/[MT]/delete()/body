@@ -1,4 +1,5 @@
 {
+  if (_key != null)   System.out.println("Lock/Deleting " + _key);
   WriteDeleteLock wl=new WriteDeleteLock();
   if (_key == null)   wl.onSuccess(this);
  else   wl.invoke(_key);
