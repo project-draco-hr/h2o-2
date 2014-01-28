@@ -22,9 +22,7 @@
               Log.info("Using seed " + seed);
               ref.init(activation,water.util.Utils.getDeterRNG(seed),holdout_ratio);
               Key file=NFSFileVec.make(find_test_file(PATH));
-              Key pars=Key.make();
-              Frame frame=ParseDataset2.parse(pars,new Key[]{file});
-              UKV.remove(file);
+              Frame frame=ParseDataset2.parse(Key.make(),new Key[]{file});
               double[][] rows=new double[(int)frame.numRows()][frame.numCols()];
               for (int c=0; c < frame.numCols(); c++)               for (int r=0; r < frame.numRows(); r++)               rows[r][c]=frame.vecs()[c].at(r);
               Random rand=water.util.Utils.getDeterRNG(seed);
@@ -134,10 +132,10 @@
               }
               Log.info("H2O  training error : " + train.classification * 100 + "%, test error: " + test.classification * 100 + "%" + (trainAcc != train.classification || testAcc != test.classification ? " HOGWILD! " : ""));
               Log.info("REF  training error : " + trainAcc * 100 + "%, test error: " + testAcc * 100 + "%");
-              UKV.remove(pars);
+              frame.delete();
               for (int i=0; i < ls.length; i++)               ls[i].close();
-              _train.remove();
-              _test.remove();
+              _train.delete();
+              _test.delete();
               if (trainer != NeuralNet.ExecutionMode.SingleThread) {
                 hogwild_runs++;
               }

@@ -50,7 +50,7 @@
       model.centers=normalize ? denormalize(clusters,vecs) : clusters;
       model.total_within_SS=sqr._sqr;
       model.iterations++;
-      UKV.put(destination_key,model);
+      model.update();
     }
     clusters=recluster(clusters,k,rand,initialization);
   }
@@ -72,20 +72,20 @@
     model.total_SS=model.total_within_SS + model.between_cluster_SS;
     model.size=task._rows;
     model.iterations++;
-    UKV.put(destination_key,model);
+    model.update();
     if (model.iterations >= max_iter) {
       Clusters cc=new Clusters();
       cc._clusters=clusters;
       cc._means=means;
       cc._mults=mults;
       cc.doAll(1,vecs);
-      Frame fr2=cc.outputFrame(new String[]{"Cluster ID"},new String[1][]);
-      Key clustersIDKey=Key.make(destination_key.toString() + "_clusters");
-      model._clustersKey=clustersIDKey.toString();
-      UKV.put(clustersIDKey,fr2);
+      Frame fr2=cc.outputFrame(model._clustersKey,new String[]{"Cluster ID"},new String[1][]);
+      fr2.delete_and_lock(KMeans2.this);
+      fr2.unlock();
       break;
     }
     if (cancelled())     break;
   }
+  model.unlock();
   return Status.Done;
 }

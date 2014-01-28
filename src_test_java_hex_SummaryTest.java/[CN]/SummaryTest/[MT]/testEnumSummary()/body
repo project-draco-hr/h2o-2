@@ -1,7 +1,7 @@
 {
   Key vkey=loadAndParseFile("enum_test.hex","./smalldata/test/test_percentiles_distns.csv.gz");
+  ValueArray array=UKV.get(vkey);
   try {
-    ValueArray array=UKV.get(vkey);
     int[] cols=new int[2];
     String[] colnames=array.colNames();
     int found_count=0;
@@ -36,6 +36,6 @@
     assertEquals(331,csum._bins[2]);
   }
   finally {
-    if (vkey != null)     UKV.remove(vkey);
+    array.delete();
   }
 }

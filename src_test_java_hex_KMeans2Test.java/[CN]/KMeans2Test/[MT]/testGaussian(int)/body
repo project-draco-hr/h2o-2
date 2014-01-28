@@ -16,7 +16,6 @@
     Timer t=new Timer();
     algo.invoke();
     KMeans2Model res=UKV.get(algo.destination_key);
-    Key clusterKey=Key.make(res._clustersKey);
     Log.debug(Sys.KMEAN," testGaussian rows:" + rows + ", ms:"+ t);
     double[][] clusters=res.centers;
     for (    double[] goal : goals) {
@@ -29,10 +28,9 @@
       }
       Assert.assertTrue(found);
     }
-    UKV.remove(clusterKey);
+    res.delete();
   }
   finally {
-    frame.remove();
-    if (algo != null && algo.destination_key != null)     UKV.remove(algo.destination_key);
+    frame.delete();
   }
 }

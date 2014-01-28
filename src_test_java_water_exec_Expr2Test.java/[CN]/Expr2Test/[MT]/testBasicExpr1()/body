@@ -4,7 +4,6 @@
     File file=TestUtil.find_test_file("smalldata/tnc3_10.csv");
     Key fkey=NFSFileVec.make(file);
     ParseDataset2.parse(dest,new Key[]{fkey});
-    UKV.remove(fkey);
     checkStr("1.23",1.23);
     checkStr(" 1.23 + 2.34",3.57);
     checkStr(" 1.23 + 2.34 * 3",8.25);
@@ -174,6 +173,6 @@
     checkStr("a=0;x=0;y=0",0);
   }
   finally {
-    UKV.remove(dest);
+    Lockable.delete(dest);
   }
 }

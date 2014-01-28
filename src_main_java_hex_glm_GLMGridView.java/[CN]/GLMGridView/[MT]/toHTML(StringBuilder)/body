@@ -34,7 +34,7 @@
       if (m.glm.family == Family.binomial)       sb.append("<td>" + aucStr(m.auc()) + "</td>");
       if (m.glm.family != Family.gamma)       sb.append("<td>" + aicStr(m.aic()) + "</td>");
       sb.append("<td>" + devExplainedStr(m.devExplained()) + "</td>");
-      sb.append("<td>" + GLMModelView.link("View Model",m._selfKey) + "</td>");
+      sb.append("<td>" + GLMModelView.link("View Model",m._key) + "</td>");
       sb.append("</tr>");
     }
     DocGen.HTML.arrayTail(sb);

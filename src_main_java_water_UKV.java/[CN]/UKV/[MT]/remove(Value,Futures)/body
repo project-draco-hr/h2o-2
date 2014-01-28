@@ -1,9 +1,0 @@
-{
-  if (val == null)   return;
-  if (val.isArray()) {
-    ValueArray ary=val.get();
-    for (long i=0; i < ary.chunks(); i++)     DKV.remove(ary.getChunkKey(i),fs);
-  }
-  if (val.isVec())   ((Vec)val.get()).remove(fs);
-  if (val.isFrame())   ((Frame)val.get()).remove(fs);
-}

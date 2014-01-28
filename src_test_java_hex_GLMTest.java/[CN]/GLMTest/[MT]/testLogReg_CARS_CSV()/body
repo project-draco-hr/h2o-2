@@ -1,9 +1,9 @@
 {
-  Key k1=null, k2=null;
+  Key k1=loadAndParseFile("h.hex","smalldata/cars.csv");
+  ValueArray va=null;
   try {
-    k1=loadAndParseFile("h.hex","smalldata/cars.csv");
     int[] cols=new int[]{3,4,5,6,7,2};
-    ValueArray va=DKV.get(k1).get();
+    va=DKV.get(k1).get();
     LSMSolver lsmsx=new ADMMSolver(0,0.0);
     JsonObject glm=computeGLM(Family.binomial,lsmsx,va,cols);
     JsonObject coefs=glm.get("coefficients").getAsJsonObject();
@@ -21,10 +21,10 @@
       double cyl=va.data(ab,i,2);
       assertEquals(cyl,p,0.005);
     }
-    UKV.remove(Key.make(glm.get(Constants.MODEL_KEY).getAsString()));
+    GLMModel glmmodel=DKV.get(Key.make(glm.get(Constants.MODEL_KEY).getAsString())).get();
+    glmmodel.delete();
   }
   finally {
-    UKV.remove(k1);
-    if (k2 != null)     UKV.remove(k2);
+    if (va != null)     va.delete();
   }
 }
