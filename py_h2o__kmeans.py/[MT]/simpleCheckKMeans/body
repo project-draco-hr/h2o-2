@@ -8,7 +8,7 @@ def simpleCheckKMeans(self, kmeans, **kwargs):
             if re.search(x, w):
                 raise Exception(w)
     if h2o.beta_features:
-        destination_key = kmeans['model']['_selfKey']
+        destination_key = kmeans['model']['_key']
         kmeansResult = kmeans
     else:
         destination_key = kmeans['destination_key']

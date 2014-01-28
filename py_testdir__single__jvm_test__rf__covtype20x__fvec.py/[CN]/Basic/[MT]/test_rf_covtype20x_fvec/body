@@ -60,7 +60,7 @@ def test_rf_covtype20x_fvec(self):
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest2)
         print 'predict', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'
         parseKey = parseResultTrain['destination_key']
-        rfModelKey = rfView['drf_model']['_selfKey']
+        rfModelKey = rfView['drf_model']['_key']
         predictKey = 'Predict.hex'
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)

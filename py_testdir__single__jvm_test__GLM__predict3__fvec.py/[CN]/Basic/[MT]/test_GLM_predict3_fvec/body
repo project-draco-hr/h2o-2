@@ -110,5 +110,5 @@ def test_GLM_predict3_fvec(self):
     avg_errExpected = 0.2463
     self.assertAlmostEqual(avg_err, avg_errExpected, delta=(0.01 * avg_errExpected), msg=('avg_err %s is too different from %s' % (avg_err, avg_errExpected)))
     self.assertAlmostEqual(best_threshold, 0.35, delta=(0.01 * best_threshold), msg=('best_threshold %s is too different from %s' % (best_threshold, 0.35)))
-    modelKey = glm['glm_model']['_selfKey']
+    modelKey = glm['glm_model']['_key']
     predict_and_compare_csvs(model_key=modelKey)
