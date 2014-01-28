@@ -23,7 +23,7 @@
     _threads[t]=new Thread("H2O Trainer " + t){
       @Override public void run(){
         for (long i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
-          if (job != null && Job.cancelled(job))           break;
+          if (job != null && (Job.cancelled(job) || !NeuralNet.running))           break;
           try {
             trainer.step();
             input.move();

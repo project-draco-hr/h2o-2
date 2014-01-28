@@ -1,19 +1,19 @@
 {
-  File file1=TestUtil.find_test_file("..//classifcation1Train.txt");
+  File file1=TestUtil.find_test_file("smalldata/gbm_test/ecology_model.csv");
   if (file1 == null)   return;
   Key fkey1=NFSFileVec.make(file1);
   Key dest1=Key.make("train.hex");
-  File file2=TestUtil.find_test_file("..//classification1Test.txt");
+  File file2=TestUtil.find_test_file("smalldata/gbm_test/ecology_eval.csv");
   Key fkey2=NFSFileVec.make(file2);
   Key dest2=Key.make("test.hex");
   GBM gbm=null;
-  Frame fr=null, fpreds=null;
+  GBM.GBMModel gbmmodel=null;
+  Frame ftest=null, fpreds=null;
   try {
     gbm=new GBM();
-    fr=ParseDataset2.parse(dest1,new Key[]{fkey1});
-    UKV.remove(fkey1);
-    UKV.remove(fr.remove("agentId")._key);
-    gbm.response=fr.remove("outcome");
+    Frame fr=ParseDataset2.parse(dest1,new Key[]{fkey1});
+    UKV.remove(fr.remove("Site")._key);
+    gbm.response=fr.vecs()[fr.find("Angaus")];
     gbm.source=fr;
     gbm.ntrees=5;
     gbm.max_depth=10;
@@ -21,12 +21,12 @@
     gbm.min_rows=10;
     gbm.nbins=100;
     gbm.invoke();
-    Frame ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
-    UKV.remove(fkey2);
+    gbmmodel=UKV.get(gbm.dest());
+    ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
     fpreds=gbm.score(ftest);
     ConfusionMatrix CM=new ConfusionMatrix();
     CM.actual=ftest;
-    CM.vactual=ftest.vecs()[ftest.find("outcome")];
+    CM.vactual=ftest.vecs()[ftest.find("Angaus")];
     CM.predict=fpreds;
     CM.vpredict=fpreds.vecs()[fpreds.find("predict")];
     CM.serve();
@@ -41,8 +41,9 @@
       }
       acts[a]=sum;
     }
-    String adomain[]=ConfusionMatrix.show(acts,CM.vactual.domain());
-    String pdomain[]=ConfusionMatrix.show(preds,CM.vpredict.domain());
+    String[] tfs=new String[]{"False","True","NA"};
+    String adomain[]=ConfusionMatrix.show(acts,tfs);
+    String pdomain[]=ConfusionMatrix.show(preds,tfs);
     StringBuilder sb=new StringBuilder();
     sb.append("Act/Prd\t");
     for (    String s : pdomain)     if (s != null)     sb.append(s).append('\t');
@@ -67,15 +68,11 @@
     System.out.println(sb);
   }
   finally {
-    UKV.remove(dest1);
-    UKV.remove(fkey2);
-    UKV.remove(dest2);
-    if (gbm != null) {
-      UKV.remove(gbm.dest());
-      UKV.remove(gbm.response._key);
-      gbm.remove();
-    }
-    if (fr != null)     fr.remove();
-    if (fpreds != null)     fpreds.remove();
+    gbm.source.delete();
+    if (ftest != null)     ftest.delete();
+    if (fpreds != null)     fpreds.delete();
+    if (gbmmodel != null)     gbmmodel.delete();
+    UKV.remove(gbm.response._key);
+    gbm.remove();
   }
 }

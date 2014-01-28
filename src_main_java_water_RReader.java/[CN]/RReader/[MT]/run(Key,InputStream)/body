@@ -19,7 +19,7 @@
       DKV.put(key,new Value(key,buffer.buf()));
     }
     RFModel model=new RFModel(dest,headers,classes,keys,1,100.0f);
-    UKV.put(dest,model);
+    model.delete_and_lock(null).unlock();
   }
  catch (  Exception ex) {
     Log.err(ex);

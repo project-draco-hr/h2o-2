@@ -6,7 +6,19 @@
   DocGen.HTML.section(sb,"Mean square error: " + mean_square_error);
   if (classification) {
     DocGen.HTML.section(sb,"Mean cross entropy: " + cross_entropy);
-    confusion(sb,"Confusion Matrix",response.domain(),confusion_matrix);
+    String[] domain=null;
+    if (response.domain() != null) {
+      domain=response.domain();
+    }
+ else {
+      int idx=source.find(response);
+      if (idx == -1) {
+        Vec vm=response.masterVec();
+        if (vm != null)         idx=source.find(vm);
+      }
+      if (idx != -1)       domain=model._domains[idx];
+    }
+    confusion(sb,"Confusion Matrix",domain,confusion_matrix);
   }
   return true;
 }

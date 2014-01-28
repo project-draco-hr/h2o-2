@@ -4,7 +4,6 @@
     File file=TestUtil.find_test_file("smalldata/tnc3_10.csv");
     Key fkey=NFSFileVec.make(file);
     ParseDataset2.parse(dest,new Key[]{fkey});
-    UKV.remove(fkey);
     checkStr("1.23",1.23);
     checkStr(" 1.23 + 2.34",3.57);
     checkStr(" 1.23 + 2.34 * 3",8.25);
@@ -168,9 +167,12 @@
     checkStr("3 < 4 |  F &  3 > 4",1);
     checkStr("3 < 4 || F && 3 > 4",1);
     checkStr("h.hex[,4] != 29 || h.hex[,2] < 305 && h.hex[,2] < 81",Double.NaN);
+    checkStr("quantile(seq_len(10),seq_len(10)/10)");
+    checkStr("quantile(runif(seq_len(10000)),seq_len(10)/10)");
+    checkStr("quantile(h.hex[,4],c(0,.05,0.3,0.55,0.7,0.95,0.99))");
     checkStr("a=0;x=0;y=0",0);
   }
   finally {
-    UKV.remove(dest);
+    Lockable.delete(dest);
   }
 }

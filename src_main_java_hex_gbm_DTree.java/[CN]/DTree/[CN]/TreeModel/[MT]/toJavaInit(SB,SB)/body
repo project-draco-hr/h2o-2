@@ -1,6 +1,6 @@
 {
   sb=super.toJavaInit(sb,fileContextSB);
-  String modelName=JCodeGen.toJavaId(_selfKey.toString());
+  String modelName=JCodeGen.toJavaId(_key.toString());
   sb.ii(1);
   sb.i().p("/**").nl();
   sb.i().p(" * Sample program harness providing an example of how to call predict().").nl();
@@ -15,6 +15,6 @@
   JCodeGen.toStaticVar(sb,"NTREES",numTrees(),"Number of trees in this model.");
   JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses(),"Number of internal trees in this model (= NTREES*NCLASSES).");
   JCodeGen.toStaticVar(sb,"DEFAULT_ITERATIONS",10000,"Default number of iterations.");
-  JCodeGen.toClass(fileContextSB,"//Sample of data used by benchmark\nclass DataSample","DATA",ValueArray.asFrame(DKV.get(_dataKey)).subframe(_names),10,"Sample test data.");
+  JCodeGen.toClass(fileContextSB,"// Sample of data used by benchmark\nclass DataSample","DATA",ValueArray.asFrame(DKV.get(_dataKey)).subframe(_names),10,"Sample test data.");
   return sb;
 }

@@ -3,7 +3,13 @@
   String id=E.isID();
   if (id == null)   return null;
   ASTOp op=isOp(id);
-  if (op != null && !E.peek('='))   return op.make();
+  if (op != null) {
+    int x1=E._x;
+    if (!E.peek('=') && !(E.peek('<') && E.peek('-'))) {
+      E._x=x1;
+      return op.make();
+    }
+  }
   E._x=x;
   return ASTFunc.parseFcn(E);
 }

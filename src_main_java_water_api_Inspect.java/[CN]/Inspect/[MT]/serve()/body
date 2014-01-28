@@ -43,7 +43,7 @@
   if (f instanceof RFModel) {
     RFModel rfModel=(RFModel)f;
     JsonObject response=new JsonObject();
-    return RFView.redirect(response,rfModel._selfKey,rfModel._dataKey,true);
+    return RFView.redirect(response,rfModel._key,rfModel._dataKey,true);
   }
   if (f instanceof Job.Fail) {
     UKV.remove(val._key);
@@ -51,7 +51,7 @@
   }
   if (f instanceof hex.glm.GLMModel)   return GLMModelView.redirect(this,key);
   if (f instanceof GBMModel)   return GBMModelView.redirect(this,key);
-  if (f instanceof NeuralNetModel)   return ((NeuralNetModel)f).redirect(this);
+  if (f instanceof NeuralNetModel)   return NeuralNetModelView.redirect(this,key);
   if (f instanceof KMeans2Model)   return KMeans2ModelView.redirect(this,key);
   if (f instanceof GridSearch)   return ((GridSearch)f).redirect();
   if (f instanceof hex.pca.PCAModel)   return PCAModelView.redirect(this,key);

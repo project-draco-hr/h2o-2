@@ -1,15 +1,15 @@
 {
   Key datakey=Key.make("datakey");
+  ValueArray va=va_maker(datakey,new byte[]{0,1,2,3,4,5,6,7},new double[]{1.0,0.5,0.3333333,0.25,0.20,0.1666667,0.1428571,0.1250000});
   try {
-    ValueArray va=va_maker(datakey,new byte[]{0,1,2,3,4,5,6,7},new double[]{1.0,0.5,0.3333333,0.25,0.20,0.1666667,0.1428571,0.1250000});
     int cols[]=new int[]{0,1};
     DataFrame data=DGLM.getData(va,cols,null,false);
-    String[] coefs=new String[]{"Intercept","0"};
+    String[] coefs=new String[]{"Intercept","C1"};
     double[] vals=new double[]{1.0,1.0};
     runGLMTest(data,new ADMMSolver(0,0),new GLMParams(Family.gamma),1,coefs,vals,Double.NaN,Double.NaN,Double.NaN,Double.NaN);
     runGLMTest(data,new GeneralizedGradientSolver(0,0),new GLMParams(Family.gamma),1,coefs,vals,Double.NaN,Double.NaN,Double.NaN,Double.NaN);
   }
   finally {
-    UKV.remove(datakey);
+    va.delete();
   }
 }

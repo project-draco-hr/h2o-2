@@ -54,7 +54,7 @@ def test_rf_covtype_fvec(self):
             if (not lastOne):
                 time.sleep(1)
                 h2o_jobs.cancelAllJobs(timeoutSecs=2)
-        model_key = rfResult['drf_model']['_selfKey']
+        model_key = rfResult['drf_model']['_key']
         data_key = rfResult['drf_model']['_dataKey']
         ntrees = kwargs['ntrees']
         rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, retryDelaySecs=5, doSimpleCheck=False)
