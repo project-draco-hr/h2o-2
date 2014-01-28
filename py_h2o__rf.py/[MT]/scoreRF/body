@@ -1,7 +1,7 @@
 def scoreRF(scoreParseResult, trainResult, vactual=None, timeoutSecs=120, **kwargs):
     parseKey = scoreParseResult['destination_key']
     if h2o.beta_features:
-        rfModelKey = trainResult['drf_model']['_selfKey']
+        rfModelKey = trainResult['drf_model']['_key']
         predictKey = 'Predict.hex'
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs, **kwargs)

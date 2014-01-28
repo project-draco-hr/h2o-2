@@ -1,16 +1,36 @@
 {
-  if (source == null)   return RequestServer._http404.serve();
-  if (cols == null) {
-    cols=new int[Math.min(source.vecs().length,max_ncols)];
-    for (int i=0; i < cols.length; i++)     cols[i]=i;
+  int[] colIds=_columns.value();
+  ValueArray ary=_key.value();
+  final boolean did_trim_columns;
+  final int max_columns_to_display;
+  if (_max_column.value() >= 0)   max_columns_to_display=Math.min(_max_column.value(),colIds.length == 0 ? ary._cols.length : colIds.length);
+ else   max_columns_to_display=Math.min(MAX_COLUMNS_TO_DISPLAY,colIds.length == 0 ? ary._cols.length : colIds.length);
+  if (colIds.length == 0) {
+    did_trim_columns=ary._cols.length > max_columns_to_display;
+    colIds=new int[Math.min(ary._cols.length,max_columns_to_display)];
+    for (int i=0; i < colIds.length; ++i)     colIds[i]=i;
   }
-  Vec[] vecs=new Vec[cols.length];
-  String[] names=new String[cols.length];
-  for (int i=0; i < cols.length; i++) {
-    vecs[i]=source.vecs()[cols[i]];
-    names[i]=source._names[cols[i]];
+ else   if (colIds.length > max_columns_to_display) {
+    int[] cols2=new int[max_columns_to_display];
+    for (int j=0; j < max_columns_to_display; j++)     cols2[j]=colIds[j];
+    colIds=cols2;
+    did_trim_columns=true;
   }
-  levels=new String[cols.length][];
-  for (int i=0; i < cols.length; i++)   levels[i]=vecs[i].domain() == null ? null : vecs[i].domain().clone();
-  return Response.done(this);
+ else {
+    did_trim_columns=false;
+  }
+  JsonObject res=new JsonObject();
+  JsonArray levels=new JsonArray();
+  for (int i=0; i < colIds.length; i++) {
+    Column c=ary._cols[colIds[i]];
+    if (c.isEnum()) {
+      JsonArray level_names=new JsonArray();
+      for (int j=0; j < c._domain.length; j++)       level_names.add(new JsonPrimitive(c._domain[j]));
+      levels.add(level_names);
+    }
+ else     levels.add(null);
+  }
+  res.add("levels",levels);
+  res.add("trim_cols",new JsonPrimitive(did_trim_columns));
+  return Response.done(res);
 }
