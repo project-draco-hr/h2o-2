@@ -1,8 +1,9 @@
 {
+  System.out.println(s);
   Env env=null;
   try {
     env=Exec2.exec(s);
-    env.remove();
+    env.remove_and_unlock();
     fail();
   }
  catch (  IllegalArgumentException e) {
