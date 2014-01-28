@@ -1,0 +1,28 @@
+{
+  ((Neurons.Input)neurons[0]).fprop(nums,cats,dinfo);
+  for (int i=1; i < neurons.length - 1; ++i) {
+    neurons[i].fprop(training);
+  }
+  if (minfo.parameters.classification) {
+    ((Neurons.Softmax)neurons[neurons.length - 1]).fprop();
+    if (training) {
+      assert((double)(int)responses[0] == responses[0]);
+      final int target=(int)responses[0];
+      ((Neurons.Softmax)neurons[neurons.length - 1]).bprop(target);
+    }
+  }
+ else {
+    ((Neurons.Linear)neurons[neurons.length - 1]).fprop();
+    if (training) {
+      final double target=responses[0];
+      ((Neurons.Linear)neurons[neurons.length - 1]).bprop(target);
+    }
+  }
+  if (training) {
+    for (int i=neurons.length - 2; i > 0; --i) {
+      neurons[i].bprop();
+    }
+    minfo.processed++;
+    if (minfo.processed % 1000 == 0)     System.out.println("Processed: " + minfo.processed);
+  }
+}

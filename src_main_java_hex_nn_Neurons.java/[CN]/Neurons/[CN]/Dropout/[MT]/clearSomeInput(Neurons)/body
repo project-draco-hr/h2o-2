@@ -1,0 +1,8 @@
+{
+  if (_rand == null)   _rand=getRNG();
+  assert(previous.isInput());
+  final double rate=((Input)previous)._dropout_rate;
+  for (int i=0; i < previous._a.length; i++) {
+    if (_rand.nextFloat() < rate)     previous._a[i]=0;
+  }
+}

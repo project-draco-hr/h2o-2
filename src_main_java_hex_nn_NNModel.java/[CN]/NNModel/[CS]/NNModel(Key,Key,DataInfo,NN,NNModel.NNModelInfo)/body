@@ -1,0 +1,8 @@
+{
+  super(selfKey,null,dinfo._adaptedFrame);
+  job_key=jobKey;
+  data_info=dinfo;
+  run_time=0;
+  start_time=System.currentTimeMillis();
+  model_info=modelinfo != null ? modelinfo.deep_copy() : new NNModelInfo(params,data_info.fullN(),params.response.toEnum().cardinality());
+}

@@ -1,0 +1,16 @@
+{
+  long processed=_minfo.processed();
+  double m=momentum(processed);
+  double r=rate(processed) * (1 - m);
+  if (target == missing_int_value)   return;
+  for (int u=0; u < _a.length; u++) {
+    final double targetval=(u == target ? 1 : 0);
+    double g=targetval - _a[u];
+    if (loss == Loss.CrossEntropy) {
+    }
+ else     if (loss == Loss.MeanSquare) {
+      g*=(1 - _a[u]) * _a[u];
+    }
+    bprop(u,g,r,m);
+  }
+}

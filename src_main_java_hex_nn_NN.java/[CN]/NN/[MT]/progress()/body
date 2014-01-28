@@ -1,0 +1,6 @@
+{
+  if (DKV.get(dest()) == null)   return 0;
+  NNModel m=DKV.get(dest()).get();
+  float progress=(float)(m.epoch_counter / m.model_info.parameters.epochs);
+  return progress;
+}

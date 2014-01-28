@@ -1,0 +1,15 @@
+{
+  parameters=params;
+  final int layers=parameters.hidden.length;
+  if (!parameters.classification)   assert(num_output == 1);
+ else   assert(num_output > 1);
+  units=new int[layers + 2];
+  units[0]=num_input;
+  for (int i=1; i <= layers; ++i)   units[i]=parameters.hidden[i - 1];
+  units[layers + 1]=num_output;
+  weights=new float[layers + 1][];
+  for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];
+  biases=new double[layers + 2][];
+  for (int i=0; i <= layers + 1; ++i)   biases[i]=new double[units[i]];
+  randomize(getRNG());
+}
