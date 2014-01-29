@@ -1,3 +1,6 @@
 {
-  if (_key != null)   new Unlock(job_key).invoke(_key);
+  if (_key != null) {
+    Log.debug(Log.Tag.Sys.LOCKS,"unlock " + _key + " by job "+ job_key);
+    new Unlock(job_key).invoke(_key);
+  }
 }

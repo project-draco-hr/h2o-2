@@ -1,8 +1,10 @@
 {
-  Lockable old=this;
-  if (_key != null)   old=((WriteDeleteLock)new WriteDeleteLock().invoke(_key))._old;
+  if (_key != null) {
+    Log.debug(Log.Tag.Sys.LOCKS,"lock-then-delete " + _key);
+    new WriteDeleteLock().invoke(_key);
+  }
   Futures fs=new Futures();
-  if (old != null)   old.delete_impl(fs);
+  delete_impl(fs);
   if (_key != null)   DKV.remove(_key,fs);
   fs.blockForPending();
 }

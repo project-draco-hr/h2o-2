@@ -1,10 +1,7 @@
 {
   if (old == null)   return null;
   _old=old;
-  if (!old.is_unlocked()) {
-    System.out.println("lock/del fails because " + _key + " locked by : "+ Arrays.toString(old._lockers));
-    throw H2O.unimpl();
-  }
+  if (!old.is_unlocked())   throw new IllegalArgumentException("lock&delete fails because " + _key + " locked by : "+ Arrays.toString(old._lockers));
   old.set_write_lock(null);
   return old;
 }
