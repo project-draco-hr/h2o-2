@@ -2,7 +2,7 @@ def bigCheckResults(self, kmeans, csvPathname, parseResult, applyDestinationKey,
     simpleCheckKMeans(self, kmeans, **kwargs)
     if h2o.beta_features:
         model = kmeans['model']
-        model_key = model['_selfKey']
+        model_key = model['_key']
         centers = model['centers']
         cluster_variances = model['within_cluster_variances']
         error = model['total_within_SS']
