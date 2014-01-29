@@ -1,6 +1,6 @@
 {
   if (old == null)   throw new IllegalArgumentException("Nothing to lock!");
-  if (old.is_wlocked())   throw new IllegalArgumentException("Unable to read-lock " + _key + " by job "+ _job_key+ " because write_locked by job "+ _lockers[0]);
+  if (old.is_wlocked())   throw new IllegalArgumentException(old.errStr() + " " + _key+ " is being created;  Unable to read it now.");
   old.set_read_lock(_job_key);
   return old;
 }
