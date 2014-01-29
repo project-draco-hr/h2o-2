@@ -1,12 +1,11 @@
 {
-  DRF drf=null;
-  Frame frTrain=null, frTest=null;
+  DRF drf=new DRF();
   Key destTrain=Key.make(hexnametrain);
   Key destTest=hexnametest != null ? Key.make(hexnametest) : null;
-  Frame pred=null;
+  Frame frTest=null, pred=null;
+  DRFModel model=null;
   try {
-    drf=new DRF();
-    frTrain=drf.source=parseFrame(destTrain,fnametrain);
+    Frame frTrain=drf.source=parseFrame(destTrain,fnametrain);
     unifyFrame(drf,frTrain,prep);
     drf.classification=true;
     drf.ntrees=ntree;
@@ -18,7 +17,7 @@
     drf.seed=(1L << 32) | 2;
     drf.destination_key=Key.make("DRF_model_4_" + hexnametrain);
     drf.invoke();
-    DRFModel model=UKV.get(drf.dest());
+    model=UKV.get(drf.dest());
     assertCM(expCM,model.cms[model.cms.length - 1]);
     Assert.assertEquals("Number of trees differs!",ntree,model.errs.length - 1);
     String[] cmDom=model._domains[model._domains.length - 1];
@@ -31,17 +30,11 @@
     throw t;
   }
  finally {
-    frTrain.remove();
-    UKV.remove(destTrain);
-    if (frTest != null) {
-      frTest.remove();
-      UKV.remove(destTest);
-    }
-    if (drf != null) {
-      UKV.remove(drf.dest());
-      UKV.remove(drf.response._key);
-      drf.remove();
-      if (pred != null)       pred.remove();
-    }
+    drf.source.delete();
+    UKV.remove(drf.response._key);
+    drf.remove();
+    if (frTest != null)     frTest.delete();
+    if (model != null)     model.delete();
+    if (pred != null)     pred.delete();
   }
 }

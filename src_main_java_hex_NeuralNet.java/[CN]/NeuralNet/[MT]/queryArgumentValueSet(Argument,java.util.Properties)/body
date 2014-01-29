@@ -1,5 +1,9 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
+  if (arg._name.equals("classification")) {
+    classification=true;
+    arg.disable("Regression is not currently supported.");
+  }
   if (arg._name.equals("ignored_cols"))   arg.disable("Not currently supported.");
   if (arg._name.equals("input_dropout_ratio") && (activation != Activation.RectifierWithDropout && activation != Activation.TanhWithDropout)) {
     arg.disable("Only with Dropout.",inputArgs);
@@ -24,7 +28,7 @@
   if (arg._name.equals("score_validation") && validation == null) {
     arg.disable("Only if a validation set is specified.");
   }
-  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training")|| arg._name.equals("score_validation")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("score_interval")|| arg._name.equals("diagnostics")) {
+  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training")|| arg._name.equals("score_validation")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("score_interval")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")) {
     if (!expert_mode)     arg.disable("Only in expert mode.");
   }
 }

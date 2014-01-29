@@ -14,7 +14,7 @@
     rowHTML(sb,new String[]{"Total Sum of Squares","Total Within Cluster Sum of Squares","Between Cluster Sum of Squares"},row);
     DocGen.HTML.section(sb,"Cluster Assignments by Observation: ");
     RString rs=new RString("<a href='Inspect2.html?src_key=%$key'>%content</a>");
-    rs.replace("key",model._selfKey + "_clusters");
+    rs.replace("key",model._key + "_clusters");
     rs.replace("content","View the row-by-row cluster assignments");
     sb.append(rs.toString());
     return true;
