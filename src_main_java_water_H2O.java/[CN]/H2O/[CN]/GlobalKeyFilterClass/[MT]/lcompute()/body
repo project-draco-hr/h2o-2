@@ -1,0 +1,11 @@
+{
+  if (H2O.SELF != _self) {
+    Futures fs=new Futures();
+    for (    Key k : localKeySet()) {
+      Value val=H2O.get(k);
+      if (val != null && k.home() && k.user_allowed() && val.type() == _typeid)       fs.add(RPC.call(_self,new TaskSendKey(k,val)));
+    }
+    fs.blockForPending();
+  }
+  tryComplete();
+}
