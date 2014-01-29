@@ -1,5 +1,8 @@
 {
-  if (old.is_wlocked())   throw H2O.unimpl();
+  if (old.is_wlocked()) {
+    System.out.println("Unable to read-lock for job " + _job_key + " because "+ _key+ " is write_locked by "+ _lockers[0]);
+    throw H2O.unimpl();
+  }
   old.set_read_lock(_job_key);
   return old;
 }

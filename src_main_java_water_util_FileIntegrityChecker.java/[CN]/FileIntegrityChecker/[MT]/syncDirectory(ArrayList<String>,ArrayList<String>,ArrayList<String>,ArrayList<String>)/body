@@ -1,5 +1,5 @@
 {
-  for (  Key k : H2O.keySet())   if (k.toString().startsWith(_root)) {
+  for (  Key k : H2O.localKeySet())   if (k.toString().startsWith(_root)) {
     dels.add(k.toString());
     Lockable.delete(k);
   }

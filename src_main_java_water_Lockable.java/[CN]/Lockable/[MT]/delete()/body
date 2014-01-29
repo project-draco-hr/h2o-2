@@ -1,9 +1,6 @@
 {
   Lockable old=this;
-  if (_key != null) {
-    System.out.println("Lock/Deleting " + _key);
-    old=((WriteDeleteLock)new WriteDeleteLock().invoke(_key))._old;
-  }
+  if (_key != null)   old=((WriteDeleteLock)new WriteDeleteLock().invoke(_key))._old;
   Futures fs=new Futures();
   if (old != null)   old.delete_impl(fs);
   if (_key != null)   DKV.remove(_key,fs);

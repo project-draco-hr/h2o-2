@@ -5,6 +5,5 @@
   Value v1=DKV.get(arykey,Integer.MAX_VALUE,H2O.ARY_KEY_PRIORITY);
   if (v1 == null)   return null;
   if (!v1.isArray())   return null;
-  int i=v1._persist & BACKEND_MASK;
-  return Persist.I[i].lazyArrayChunk(key);
+  return Persist.I[v1.backend()].lazyArrayChunk(key);
 }

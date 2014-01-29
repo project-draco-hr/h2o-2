@@ -1,5 +1,4 @@
 {
   if (isPersisted())   return;
-  int i=_persist & BACKEND_MASK;
-  Persist.I[i].store(this);
+  Persist.I[backend()].store(this);
 }

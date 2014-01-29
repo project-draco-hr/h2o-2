@@ -1,5 +1,4 @@
 {
-  System.out.println("clear & write-lock" + _key + " by "+ job_key);
   Lockable old=write_lock(job_key);
   if (old != null)   old.delete_impl(new Futures()).blockForPending();
   return (T)this;

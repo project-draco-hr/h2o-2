@@ -1,6 +1,7 @@
 {
+  if (old == null)   return null;
   _old=old;
-  if (old != null && !old.is_unlocked()) {
+  if (!old.is_unlocked()) {
     System.out.println("lock/del fails because " + _key + " locked by : "+ Arrays.toString(old._lockers));
     throw H2O.unimpl();
   }

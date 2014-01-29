@@ -1,6 +1,5 @@
 {
   if (!isPersisted() || !onICE())   return;
   clrdsk();
-  int i=_persist & BACKEND_MASK;
-  Persist.I[i].delete(this);
+  Persist.I[backend()].delete(this);
 }
