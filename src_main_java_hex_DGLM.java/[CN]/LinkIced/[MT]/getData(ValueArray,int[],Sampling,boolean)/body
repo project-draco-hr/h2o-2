@@ -1,3 +1,6 @@
 {
-  return new DataFrame(ary,colIds,s,standardize,true);
+  int[] cols=new int[colIds.length];
+  int j=0;
+  for (  int i : colIds)   if (ary._cols[i]._min < ary._cols[i]._max)   cols[j++]=i;
+  return new DataFrame(ary,Arrays.copyOf(cols,j),s,standardize,true);
 }
