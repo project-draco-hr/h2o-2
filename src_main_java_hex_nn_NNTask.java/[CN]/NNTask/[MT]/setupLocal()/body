@@ -1,6 +1,5 @@
 {
-  System.out.println("setupLocal");
-  if (_input == null)   _input=new NNModel.NNModelInfo(_params,_dinfo.fullN(),_params.response.toEnum().cardinality());
+  if (_input == null)   _input=new NNModel.NNModelInfo(_params,_dinfo.fullN(),_dinfo._adaptedFrame.lastVec().domain().length);
   _output=_input.deep_copy();
   _input=null;
 }

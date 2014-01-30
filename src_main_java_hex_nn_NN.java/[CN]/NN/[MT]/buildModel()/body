@@ -11,8 +11,12 @@
     NNTask nntask=new NNTask(this,_dinfo,this,modelinfo,training).doAll(_dinfo._adaptedFrame);
     modelinfo=nntask._output;
     if (diagnostics)     modelinfo.computeDiagnostics();
-    doScoring(model,validation == null ? _dinfo._adaptedFrame : adapted[0]);
+    System.out.println("Scoring on " + (validation == null ? "training" : "validation") + " dataset.");
+    doScoring(model,validation == null ? _dinfo._adaptedFrame : adapted[0],epoch == epochs);
     model.epoch_counter=epoch;
     DKV.put(outputKey,model);
   }
+  if (_gen_enum)   UKV.remove(response._key);
+  remove();
+  System.out.println("Job finished.");
 }

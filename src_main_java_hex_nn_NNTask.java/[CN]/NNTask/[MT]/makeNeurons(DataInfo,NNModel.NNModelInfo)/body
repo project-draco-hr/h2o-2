@@ -2,7 +2,7 @@
   final NN params=minfo.parameters;
   final int[] h=params.hidden;
   Neurons[] neurons=new Neurons[h.length + 2];
-  neurons[0]=new Neurons.Input(dinfo.fullN());
+  neurons[0]=new Neurons.Input(dinfo.fullN(),dinfo);
   for (int i=0; i < h.length; i++) {
 switch (params.activation) {
 case Tanh:

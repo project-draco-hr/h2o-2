@@ -4,5 +4,5 @@
   data_info=dinfo;
   run_time=0;
   start_time=System.currentTimeMillis();
-  model_info=modelinfo != null ? modelinfo.deep_copy() : new NNModelInfo(params,data_info.fullN(),params.response.toEnum().cardinality());
+  model_info=modelinfo != null ? modelinfo.deep_copy() : new NNModelInfo(params,data_info.fullN(),data_info._adaptedFrame.lastVec().domain().length);
 }

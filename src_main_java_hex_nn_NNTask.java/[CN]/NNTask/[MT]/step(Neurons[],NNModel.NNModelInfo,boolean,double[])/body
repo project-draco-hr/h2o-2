@@ -1,5 +1,4 @@
 {
-  ((Neurons.Input)neurons[0]).fprop(nums,cats,dinfo);
   for (int i=1; i < neurons.length - 1; ++i) {
     neurons[i].fprop(training);
   }
@@ -23,6 +22,6 @@
       neurons[i].bprop();
     }
     minfo.processed++;
-    if (minfo.processed % 1000 == 0)     System.out.println("Processed: " + minfo.processed);
+    if (minfo.processed % 10000 == 0)     System.out.println("Processed: " + minfo.processed);
   }
 }
