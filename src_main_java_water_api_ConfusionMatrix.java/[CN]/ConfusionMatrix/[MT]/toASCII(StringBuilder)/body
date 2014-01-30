@@ -45,5 +45,5 @@
   sb.append(String.format(fmtS,"Totals"));
   for (int p=0; p < pdomain.length; p++)   if (pdomain[p] != null)   sb.append(String.format(fmt,preds[p]));
   sb.append("   " + String.format("%5.3f = %d / %d\n",(double)terr / vactual.length(),terr,vactual.length()));
-  return sb;
+  return (double)terr / vactual.length();
 }

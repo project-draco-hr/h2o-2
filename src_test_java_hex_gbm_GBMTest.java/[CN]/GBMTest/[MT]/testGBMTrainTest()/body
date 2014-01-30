@@ -30,7 +30,9 @@
     CM.predict=fpreds;
     CM.vpredict=fpreds.vecs()[fpreds.find("predict")];
     CM.serve();
-    System.out.println(CM.toASCII(new StringBuilder()));
+    StringBuilder sb=new StringBuilder();
+    CM.toASCII(sb);
+    System.out.println(sb);
   }
   finally {
     UKV.remove(dest1);
