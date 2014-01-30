@@ -24,6 +24,9 @@
     }
  catch (    IllegalArgumentException _) {
     }
+catch (    DException.DistributedException de) {
+      assertTrue(de.getMessage().indexOf("java.lang.IllegalArgumentException") != -1);
+    }
     GBM.GBMModel model=gbm.get();
     if (model != null)     model.delete();
   }
