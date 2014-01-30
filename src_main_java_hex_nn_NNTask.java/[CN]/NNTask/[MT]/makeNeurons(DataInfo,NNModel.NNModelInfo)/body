@@ -23,7 +23,7 @@ break;
 }
 }
 if (params.classification) {
-neurons[neurons.length - 1]=new Neurons.Softmax(params.response.toEnum().cardinality(),params.loss);
+neurons[neurons.length - 1]=new Neurons.Softmax(dinfo._adaptedFrame.lastVec().domain().length,params.loss);
 }
  else neurons[neurons.length - 1]=new Neurons.Linear(1);
 for (int i=0; i < neurons.length; i++) neurons[i].init(neurons,i,params,minfo);

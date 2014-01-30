@@ -27,9 +27,5 @@
     unstable|=Double.isNaN(mean_bias[y]) || Double.isNaN(rms_bias[y]) || Double.isNaN(mean_weight[y])|| Double.isNaN(rms_weight[y]);
     final double thresh=1e10;
     unstable|=mean_bias[y] > thresh || rms_bias[y] > thresh || mean_weight[y] > thresh || rms_weight[y] > thresh;
-    System.out.println("Layer " + y + " mean weight: "+ mean_weight[y]);
-    System.out.println("Layer " + y + " rms  weight: "+ rms_weight[y]);
-    System.out.println("Layer " + y + " mean   bias: "+ mean_bias[y]);
-    System.out.println("Layer " + y + " rms    bias: "+ rms_bias[y]);
   }
 }
