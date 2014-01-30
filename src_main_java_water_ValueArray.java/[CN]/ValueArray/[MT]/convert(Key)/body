@@ -1,0 +1,17 @@
+{
+  new Frame(k2,new String[0],new Vec[0]).delete_and_lock(null);
+  Futures fs=new Futures();
+  String[] names=new String[_cols.length];
+  Key keys[]=new Vec.VectorGroup().addVecs(_cols.length);
+  for (int i=0; i < _cols.length; ++i)   names[i]=_cols[i]._name;
+  AppendableVec[] avs=new Converter(_key,keys).invoke(_key)._vecs;
+  Vec[] vecs=new Vec[avs.length];
+  for (int i=0; i < avs.length; ++i) {
+    avs[i]._domain=_cols[i]._domain;
+    vecs[i]=avs[i].close(fs);
+  }
+  fs.blockForPending();
+  Frame fr=new Frame(k2,names,vecs);
+  fr.unlock(null);
+  return fr;
+}

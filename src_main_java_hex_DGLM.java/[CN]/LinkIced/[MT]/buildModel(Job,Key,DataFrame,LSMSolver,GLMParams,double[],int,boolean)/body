@@ -17,6 +17,7 @@
   solve(lsm,gram,newBeta,warns);
   lsmSolveTime+=System.currentTimeMillis() - t;
   currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,null);
+  currentModel.update(job.self());
   if (params._family._family != Family.gaussian)   do {
     if (oldBeta == null)     oldBeta=MemoryManager.malloc8d(data.expandedSz());
     if (job.cancelled())     throw new JobCancelledException();
@@ -35,12 +36,12 @@
     float progress=Math.max((float)iter / params._maxIter,Math.min((float)(params._betaEps / betaDiff),1.0f));
     currentModel=new GLMModel(Status.ComputingModel,progress,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,warnings);
     currentModel._lsmSolveTime=lsmSolveTime;
-    currentModel.store();
+    currentModel.store(job.self());
   }
  while (++iter < params._maxIter && !converged);
   currentModel._lsmSolveTime=lsmSolveTime;
   currentModel._status=Status.ComputingValidation;
-  currentModel.store();
+  currentModel.store(job.self());
   if (xval > 1)   currentModel.xvalidate(job,data._ary,xval,DEFAULT_THRESHOLDS,parallel);
  else   currentModel.validateOn(job,data._ary,data.getSamplingComplement(),DEFAULT_THRESHOLDS);
   currentModel._status=Status.Done;
@@ -48,7 +49,7 @@
   String[] warnings=new String[warns.size()];
   warns.toArray(warnings);
   currentModel._warnings=warnings;
-  currentModel.store();
+  currentModel.unlock(job.self());
   DKV.write_barrier();
   return currentModel;
 }

@@ -2,7 +2,7 @@
   JsonArray array=new JsonArray();
   Key[] keys=new Key[limit];
   int len=0;
-  for (  Key key : H2O.keySet()) {
+  for (  Key key : H2O.globalKeySet(null)) {
     if (filter != null && key.toString().indexOf(filter) == -1)     continue;
     if (!key.user_allowed())     continue;
     Value val=DKV.get(key);
