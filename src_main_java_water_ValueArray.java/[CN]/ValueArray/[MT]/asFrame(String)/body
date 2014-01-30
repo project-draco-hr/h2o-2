@@ -11,10 +11,7 @@ synchronized (conversionLock) {
     }
     int cn=conversionNumber.getAndIncrement();
     Log.info("Converting ValueArray to Frame: node(" + H2O.SELF + ") convNum("+ cn+ ") key("+ frameKeyString+ ")...");
-    Futures fs=new Futures();
-    Frame frame=convert(fs);
-    DKV.put(k2,frame,fs);
-    fs.blockForPending();
+    Frame frame=convert(k2);
     Log.info("Conversion " + cn + " complete.");
     return frame;
   }

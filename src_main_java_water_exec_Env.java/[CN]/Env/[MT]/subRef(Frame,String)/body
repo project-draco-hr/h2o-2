@@ -2,7 +2,6 @@
   if (fr == null)   return null;
   Futures fs=null;
   for (  Vec vec : fr.vecs())   fs=subRef(vec,fs);
-  if (key != null && fs != null)   fr.delete(fs);
   if (fs != null)   fs.blockForPending();
   return null;
 }

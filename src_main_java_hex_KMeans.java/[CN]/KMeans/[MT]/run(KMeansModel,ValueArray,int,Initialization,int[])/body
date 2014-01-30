@@ -35,7 +35,7 @@
       }
       res._iteration++;
       res._clusters=clusters;
-      res.update();
+      res.update(self());
     }
     clusters=recluster(clusters,k,rand,init);
   }
@@ -57,10 +57,11 @@
     }
     res._error=task._error;
     res._iteration++;
-    res.update();
+    res.update(self());
     if (res._iteration >= res._maxIter)     break;
     if (cancelled())     break;
   }
-  res.unlock(new Futures()).blockForPending();
+  res.unlock(self());
+  va.unlock(self());
   remove();
 }

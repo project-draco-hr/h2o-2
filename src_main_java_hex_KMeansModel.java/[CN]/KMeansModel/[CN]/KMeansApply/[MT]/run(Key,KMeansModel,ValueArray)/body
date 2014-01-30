@@ -1,6 +1,6 @@
 {
-  UKV.remove(dest);
   final ChunkProgressJob job=new ChunkProgressJob(ary.chunks(),dest);
+  new ValueArray(dest,0).delete_and_lock(job.self());
   final H2OCountedCompleter fjtask=new H2OCountedCompleter(){
     @Override public void compute2(){
       KMeansApply kms=new KMeansApply();
@@ -21,8 +21,7 @@
       c._domain=null;
       c._n=ary.numRows();
       ValueArray res=new ValueArray(dest,ary.numRows(),c._size,new Column[]{c});
-      DKV.put(dest,res);
-      DKV.write_barrier();
+      res.unlock(job.self());
       job.remove();
       tryComplete();
     }

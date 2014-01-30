@@ -24,7 +24,7 @@
     preds.delete();
   }
   finally {
-    gbmmodel.delete();
+    if (gbmmodel != null)     gbmmodel.delete();
     gbm.source.delete();
     UKV.remove(gbm.response._key);
     gbm.remove();

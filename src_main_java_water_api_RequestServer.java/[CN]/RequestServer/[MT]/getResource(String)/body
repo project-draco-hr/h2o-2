@@ -22,5 +22,7 @@
   String mime=NanoHTTPD.MIME_DEFAULT_BINARY;
   if (uri.endsWith(".css"))   mime="text/css";
  else   if (uri.endsWith(".html"))   mime="text/html";
-  return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK,mime,new ByteArrayInputStream(bytes));
+  NanoHTTPD.Response res=new NanoHTTPD.Response(NanoHTTPD.HTTP_OK,mime,new ByteArrayInputStream(bytes));
+  res.addHeader("Content-Length",Long.toString(bytes.length));
+  return res;
 }
