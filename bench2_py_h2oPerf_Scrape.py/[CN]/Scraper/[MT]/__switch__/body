@@ -1,0 +1,3 @@
+def __switch__(self):
+    '\n        Switch to scraper for the appropriate phase.\n        '
+    return {'parse': ParseScraper(self), 'model': ModelScraper(self), 'predict': PredictScraper(self), }[self.phase]

@@ -1,0 +1,11 @@
+def __did_complete__(self):
+    '\n        Check if a R subprocess finished.\n        '
+    child = self.child
+    if (child is None):
+        return False
+    child.poll()
+    if (child.returncode is None):
+        return False
+    self.pid = (-1)
+    self.returncode = child.returncode
+    return True

@@ -1,0 +1,16 @@
+def __init__(self, ip, port, test_dir, test_short_dir, output_dir, parse_file, model_file, predict_file):
+    self.ip = ip
+    self.port = port
+    self.test_dir = test_dir
+    self.test_short_dir = test_short_dir
+    self.output_dir = output_dir
+    self.parse_file = parse_file
+    self.model_file = model_file
+    self.predict_file = predict_file
+    self.test_is_complete = False
+    self.test_cancelled = False
+    self.test_terminated = False
+    self.start_seconds = (-1)
+    self.parse_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.parse_file)
+    self.model_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.model_file)
+    self.predict_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.predict_file)

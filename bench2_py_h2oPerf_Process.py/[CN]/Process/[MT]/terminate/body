@@ -1,0 +1,10 @@
+def terminate(self):
+    '\n        Terminate the process. (Due to a signal.)\n        '
+    self.terminated = True
+    if (self.pid > 0):
+        print 'Killing R process with PID {}'.format(self.pid)
+        try:
+            self.child.terminate()
+        except OSError:
+            pass
+    self.pid = (-1)
