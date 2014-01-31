@@ -1,5 +1,5 @@
 def test_c5_KMeans_sphere_26GB(self):
-    h2o.beta_features = True
+    h2o.beta_features = False
     h2o.setup_benchmark_log()
     csvFilename = 'syn_sphere_gen.csv'
     totalBytes = 183538602156
@@ -32,7 +32,7 @@ def test_c5_KMeans_sphere_26GB(self):
         if (not DO_KMEANS):
             continue
         print (('col 0 is enum in ' + csvFilename) + ' but KMeans should skip that automatically?? or no?')
-        kwargs = {'k': 15, 'max_iter': 3, 'normalize': 1, 'initialization': 'Furthest', 'destination_key': 'junk.hex', 'ignored_cols': 'C0', 'seed': 265211114317615310, }
+        kwargs = {'k': 15, 'max_iter': 3, 'normalize': 1, 'initialization': 'Furthest', 'destination_key': 'junk.hex', 'cols': 'C1, C2, C3, C4, C5, C6, C7', 'seed': 265211114317615310, }
         if ((trial % 3) == 0):
             kwargs['initialization'] = 'PlusPlus'
         elif ((trial % 3) == 1):

@@ -11,23 +11,20 @@ def test_four_billion_rows(self):
         print "Parse result['destination_key']:", parseResult['destination_key']
         print csvFilename, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
-        numCols = inspect['numCols']
-        numRows = inspect['numRows']
-        byteSize = inspect['byteSize']
-        print ('\n' + csvFilename), '    numRows:', '{:,}'.format(numRows), '    numCols:', '{:,}'.format(numCols), '    byteSize:', '{:,}'.format(byteSize)
-        expectedRowSize = (numCols * 1)
-        expectedValueSize = 8001271520
-        self.assertEqual(byteSize, expectedValueSize, msg=('byteSize %s is not expected: %s' % (byteSize, expectedValueSize)))
+        num_cols = inspect['num_cols']
+        num_rows = inspect['num_rows']
+        print ('\n' + csvFilename), '    num_rows:', '{:,}'.format(num_rows), '    num_cols:', '{:,}'.format(num_cols)
+        expectedRowSize = (num_cols * 1)
         summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'], timeoutSecs=timeoutSecs)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
-        self.assertEqual(2, numCols, msg=('generated %s cols (including output).  parsed to %s cols' % (2, numCols)))
-        self.assertEqual((4 * 1000000000), numRows, msg=('generated %s rows, parsed to %s rows' % ((4 * 1000000000), numRows)))
-        kwargs = {'k': 3, 'initialization': 'Furthest', 'max_iter': 4, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
+        self.assertEqual(2, num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % (2, num_cols)))
+        self.assertEqual((4 * 1000000000), num_rows, msg=('generated %s rows, parsed to %s rows' % ((4 * 1000000000), num_rows)))
+        kwargs = {'k': 3, 'cols': 'C1, C2', 'initialization': 'Furthest', 'max_iter': 4, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
         timeoutSecs = 900
         start = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print ('\n' + csvFilename)
-        kwargs = {'response': ('C' + str(1)), 'n_folds': 0, 'family': 'binomial', 'case_mode': '=', 'case_val': 1, }
+        kwargs = {'y': ('C' + str(1)), 'n_folds': 0, 'family': 'binomial', 'case': '=', 'case_val': 1, }
         colX = 0
         timeoutSecs = 900
         kwargs.update({'alpha': 0, 'lambda': 0, })
