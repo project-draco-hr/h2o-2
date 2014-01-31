@@ -1,5 +1,5 @@
 {
-  if (_node._job == null || (!Job.cancelled(_node._job) && NeuralNet.running)) {
+  if (_node._job == null || (Job.isRunning(_node._job) && NeuralNet.running)) {
     Layer[] clones=new Layer[_node._ls.length];
     ChunksInput input=new ChunksInput(Utils.remove(_cs,_cs.length - 1),(VecsInput)_node._ls[0]);
     clones[0]=input;
