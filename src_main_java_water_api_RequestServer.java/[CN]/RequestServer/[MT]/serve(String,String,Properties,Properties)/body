@@ -1,6 +1,6 @@
 {
   Thread.currentThread().setPriority(Thread.MAX_PRIORITY - 1);
-  if (uri.isEmpty() || uri.equals("/"))   uri="/Tutorials.html";
+  uri=maybeTransformRequest(uri);
   Request.RequestType type=Request.RequestType.requestType(uri);
   String requestName=type.requestName(uri);
   maybeLogRequest(uri,method,parms);
