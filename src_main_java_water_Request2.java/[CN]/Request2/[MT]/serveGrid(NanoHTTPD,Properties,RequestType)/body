@@ -18,6 +18,8 @@
     }
   }
   if (!gridSearch)   return superServeGrid(server,parms,type);
+  Lockable source=null;
+  if (_parms.containsKey("source"))   source=DKV.get(Key.make((String)_parms.get("source"))).get();
   _parms.remove("destination_key");
   for (int i=0; i < _arguments.size(); i++)   if (_arguments.get(i)._name.equals("destination_key"))   values[i]=null;
   int[] counters=new int[values.length];
@@ -38,7 +40,7 @@
     jobs.add(job);
     if (!increment(counters,values))     break;
   }
-  GridSearch grid=new GridSearch();
+  GridSearch grid=new GridSearch(source);
   grid.jobs=jobs.toArray(new Job[jobs.size()]);
   return grid.superServeGrid(server,parms,type);
 }
