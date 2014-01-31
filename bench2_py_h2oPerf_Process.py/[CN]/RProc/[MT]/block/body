@@ -1,0 +1,7 @@
+def block(self):
+    while True:
+        if self.terminated:
+            return None
+        if self.poll():
+            break
+        time.sleep(1)

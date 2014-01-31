@@ -1,0 +1,14 @@
+def do_test(self):
+    '\n        This call is blocking.\n\n        Perform the test. Each phase is started by passing the ip and port.\n        We block until a phase completes.\n\n        Once a phase is complete, the stdouterr is scraped and the database\n        tables are updated.\n        '
+    self.start_seconds = time.time()
+    self.parse_process.start(self.ip, self.port)
+    self.parse_process.block()
+    self.parse_process.scrape_phase()
+    self.model_process.start(self.ip, self.port)
+    self.model_process.block()
+    self.model_process.scrape_phase()
+    if self.predict_file:
+        self.predict_process.start(self.ip, self.port)
+        self.predict_process.block()
+        self.predict_process.scrape_phase()
+    self.test_is_complete = True

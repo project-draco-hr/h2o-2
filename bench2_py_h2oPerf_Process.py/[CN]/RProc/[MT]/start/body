@@ -1,0 +1,10 @@
+def start(self, ip, port):
+    ' \n        Start an R subproccess.\n        '
+    self.ip = ip
+    self.port = port
+    cmd = ['R', '-f', self.rfile, '--args', ((self.ip + ':') + str(self.port))]
+    short_dir = re.sub('[\\\\/]', '_', self.test_short_dir)
+    self.output_file_name = os.path.join(self.output_dir, (((short_dir + '_') + self.test_name) + '.out'))
+    f = open(self.output_file_name, 'w')
+    self.child = subprocess.Popen(args=cmd, stdout=f, stderr=subprocess.STDOUT, cwd=self.test_dir)
+    self.pid = self.child.pid

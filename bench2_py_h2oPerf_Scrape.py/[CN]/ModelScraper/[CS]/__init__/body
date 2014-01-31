@@ -1,0 +1,12 @@
+def __init__(self, object):
+    self.phase = object.phase
+    self.test_dir = object.test_dir
+    self.test_short_dir = object.test_short_dir
+    self.output_dir = object.output_dir
+    self.output_file_name = object.output_file_name
+    self.test_run_clustering_result = ''
+    self.contaminated = object.contaminated
+    self.contamination_message = ('No contamination.' if (not self.contaminated) else object.contamination_message)
+    self.test_run_model_result = TableRow('test_run_model_result')
+    self.test_run_phase_result = TableRow('test_run_phase_result')
+    Scraper.insert_phase_result(self)
