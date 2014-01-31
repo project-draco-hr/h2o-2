@@ -1,4 +1,4 @@
-def test_parse_covtype20x_s3n_thru_hdfs(self):
+def test_GLM_covtype20x_s3n_thru_hdfs(self):
     bucket = 'home-0xdiag-datasets'
     importFolderPath = 'standard'
     csvFilename = 'covtype20x.data'
@@ -11,7 +11,7 @@ def test_parse_covtype20x_s3n_thru_hdfs(self):
         start = time.time()
         parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='s3n', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
         elapsed = (time.time() - start)
-        print 'parse end on ', s3nKey, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse end on ', hex_key, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
         kwargs = {'y': 54, 'family': 'binomial', 'link': 'logit', 'n_folds': 2, 'case_mode': '=', 'case': 1, 'max_iter': 8, 'beta_epsilon': 0.001, }
         timeoutSecs = 720
