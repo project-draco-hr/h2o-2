@@ -10,6 +10,7 @@
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
     ktrees=buildNextKTrees(fr);
+    Log.info(Sys.GBM__,(tid + 1) + ". tree was built.");
     if (cancelled())     break;
     tstats.updateBy(ktrees);
   }
