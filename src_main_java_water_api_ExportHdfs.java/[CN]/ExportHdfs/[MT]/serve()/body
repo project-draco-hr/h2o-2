@@ -13,8 +13,7 @@
  else     throw new UnsupportedOperationException("Only models can be exported");
   }
  catch (  Exception e) {
-    Log.err(e);
-    return Response.error(e.getMessage());
+    return Response.error(e);
   }
   JsonObject json=new JsonObject();
   Response r=Response.done(json);

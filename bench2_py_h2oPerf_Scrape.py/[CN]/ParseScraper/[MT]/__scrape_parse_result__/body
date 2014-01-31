@@ -1,0 +1,12 @@
+def __scrape_parse_result__(self):
+    parse_r = ''
+    with open(self.output_file_name, 'r') as f:
+        flag = False
+        for line in f:
+            if flag:
+                parse_r = json.loads(line)
+                flag = False
+                break
+            if (('PARSE RESULT' in line) and ('print' not in line)):
+                flag = True
+    return parse_r['parse_result']

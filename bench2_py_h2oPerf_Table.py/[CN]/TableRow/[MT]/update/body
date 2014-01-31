@@ -1,0 +1,6 @@
+def update(self):
+    '\n        A function that will write the row to the database.\n        Passes self to the PerfDB object for processing.\n        Follows the schema rules (i.e. no nulls)\n        '
+    if self.__is_complete__():
+        self.perfdb_connection.insert(self)
+    else:
+        self.__test_fail__()

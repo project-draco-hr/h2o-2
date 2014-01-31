@@ -1,0 +1,11 @@
+def __scrape_regression_result__(self):
+    regression_r = ''
+    with open(self.output_file_name, 'r') as f:
+        flag = False
+        for line in f:
+            if flag:
+                regression_r = json.loads(line)
+                flag = False
+                break
+            if (('REGRESSION' in line) and ('print' not in line)):
+                flag = True

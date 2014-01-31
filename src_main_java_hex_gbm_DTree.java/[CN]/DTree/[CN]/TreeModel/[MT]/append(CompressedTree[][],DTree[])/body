@@ -1,0 +1,7 @@
+{
+  if (tree == null)   return prior;
+  prior=Arrays.copyOf(prior,prior.length + 1);
+  CompressedTree ts[]=prior[prior.length - 1]=new CompressedTree[tree.length];
+  for (int c=0; c < tree.length; c++)   if (tree[c] != null)   ts[c]=tree[c].compress();
+  return prior;
+}

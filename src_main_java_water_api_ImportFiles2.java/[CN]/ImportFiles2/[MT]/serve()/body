@@ -13,11 +13,6 @@
     return Response.done(this);
   }
  catch (  Exception e) {
-    StringBuilder sb=new StringBuilder();
-    PrintWriter pw=new PrintWriter(Streams.writerForAppendable(sb));
-    e.printStackTrace(pw);
-    Log.err(e);
-    String message="Got exception: " + e.getMessage();
-    return Response.error(message);
+    return Response.error(e);
   }
 }

@@ -1,5 +1,5 @@
 {
-  for (  Key key : H2O.localKeySet())   if (key.user_allowed() && H2O.get(key) != null)   env._sb.append(key.toString());
+  for (  Key key : H2O.globalKeySet(null))   if (key.user_allowed() && H2O.get(key) != null)   env._sb.append(key.toString());
   env.pop();
   env.push(0.0);
 }

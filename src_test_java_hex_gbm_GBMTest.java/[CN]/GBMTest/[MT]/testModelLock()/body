@@ -31,7 +31,7 @@ catch (    DException.DistributedException de) {
     if (model != null)     model.delete();
   }
   finally {
-    gbm.source.delete();
+    if (gbm.source != null)     gbm.source.delete();
     gbm.remove();
   }
 }

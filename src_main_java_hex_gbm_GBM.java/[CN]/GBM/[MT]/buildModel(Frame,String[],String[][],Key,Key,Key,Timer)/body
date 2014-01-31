@@ -10,7 +10,8 @@
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
     ktrees=buildNextKTrees(fr);
-    if (cancelled())     break;
+    Log.info(Sys.GBM__,(tid + 1) + ". tree was built.");
+    if (!Job.isRunning(self()))     break;
     tstats.updateBy(ktrees);
   }
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,false,false);
