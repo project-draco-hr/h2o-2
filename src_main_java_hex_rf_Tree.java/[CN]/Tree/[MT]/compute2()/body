@@ -1,5 +1,5 @@
 {
-  if (!_job.cancelled()) {
+  if (Job.isRunning(_job.self())) {
     Timer timer=new Timer();
     _stats[0]=new ThreadLocal<Statistic>();
     _stats[1]=new ThreadLocal<Statistic>();

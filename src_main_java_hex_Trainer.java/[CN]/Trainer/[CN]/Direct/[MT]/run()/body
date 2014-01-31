@@ -10,6 +10,6 @@
   for (; _limit == 0 || _processed < _limit; _processed++) {
     step();
     input.move();
-    if (_job != null && (Job.cancelled(_job) || !NeuralNet.running))     break;
+    if (_job != null && (!Job.isRunning(_job) || !NeuralNet.running))     break;
   }
 }

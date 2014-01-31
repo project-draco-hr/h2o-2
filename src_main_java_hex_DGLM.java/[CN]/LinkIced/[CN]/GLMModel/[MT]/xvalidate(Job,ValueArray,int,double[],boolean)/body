@@ -20,7 +20,7 @@
       tsk.reduce(child);
     }
   }
-  if (job.cancelled())   throw new JobCancelledException();
+  if (!Job.isRunning(job.self()))   throw new JobCancelledException();
   GLMValidation res=new GLMValidation(_key,tsk._models,ErrMetric.SUMC,thresholds,System.currentTimeMillis() - t1);
   if (_vals == null)   _vals=new GLMValidation[]{res};
  else {
