@@ -1,5 +1,5 @@
 {
-  if (!cancelled()) {
+  if (isRunning(self())) {
     double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
     double[] newBetaDeNorm=null;
     _solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
@@ -17,19 +17,22 @@
       newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
     }
     boolean done=false;
-    done=done || _glm.family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || cancelled();
+    done=done || _glm.family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || !isRunning(self());
     _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,glmt._iter + 1);
     if (done) {
       H2OCallback fin=new H2OCallback<GLMValidationTask>(){
         @Override public void callback(        GLMValidationTask tsk){
           boolean improved=_model.setAndTestValidation(_lambdaIdx,tsk._res);
-          _model.unlock(self());
           if (!diverged && (improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
+            _model.update(self());
             _solver=new ADMMSolver(lambda[++_lambdaIdx],alpha[0]);
             glmt._val=null;
             Iteration.this.callback(glmt);
           }
- else           _fjt.tryComplete();
+ else {
+            _model.unlock(self());
+            _fjt.tryComplete();
+          }
         }
         @Override public boolean onExceptionalCompletion(        Throwable ex,        CountedCompleter cc){
           _fjt.completeExceptionally(ex);
