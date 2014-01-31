@@ -1,7 +1,6 @@
 {
   logStart();
   NN.RNG.seed.set(seed);
-  UKV.remove(dest());
   NNModel model=new NNModel(dest(),self(),_dinfo,this);
-  DKV.put(dest(),model);
+  model.delete_and_lock(self());
 }
