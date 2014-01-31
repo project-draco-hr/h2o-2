@@ -10,12 +10,16 @@
     }
     acts[a]=sum;
   }
-  Vec vaE=null, vpE=null;
+  Vec vaE=null, vpE=null, avp=null;
   String adomain[]=null;
   String pdomain[]=null;
   try {
     vaE=vactual.toEnum();
     vpE=vpredict.toEnum();
+    if (!vaE.group().equals(vpE.group())) {
+      avp=vpE;
+      vpE=vaE.align(vpE);
+    }
     adomain=ConfusionMatrix.show(acts,vaE.domain());
     pdomain=ConfusionMatrix.show(preds,vpE.domain());
   }
@@ -26,6 +30,7 @@
  finally {
     if (vaE != null)     UKV.remove(vaE._key);
     if (vpE != null)     UKV.remove(vpE._key);
+    if (avp != null)     UKV.remove(avp._key);
   }
   int maxlen=0;
   for (  String s : pdomain)   if (s != null)   maxlen=Math.max(maxlen,s.length());
