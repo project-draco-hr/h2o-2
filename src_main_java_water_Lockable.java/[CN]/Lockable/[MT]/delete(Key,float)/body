@@ -1,0 +1,10 @@
+{
+  if (_key != null) {
+    Log.debug(Log.Tag.Sys.LOCKS,"lock-then-delete " + _key + " by job "+ job_key);
+    new PriorWriteLock(job_key).invoke(_key);
+  }
+  Futures fs=new Futures();
+  delete_impl(fs);
+  if (_key != null)   DKV.remove(_key,fs);
+  fs.blockForPending();
+}
