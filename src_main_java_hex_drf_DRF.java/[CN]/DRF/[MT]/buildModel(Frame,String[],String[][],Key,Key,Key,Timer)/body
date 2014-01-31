@@ -10,6 +10,7 @@
   for (tid=0; tid < ntrees; tid++) {
     model=doScoring(model,outputKey,fr,ktrees,tid,tstats,tid == 0,validation == null,build_tree_per_node);
     ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
+    Log.info(Sys.DRF__,(tid + 1) + ". tree was built.");
     if (!Job.isRunning(self()))     break;
     tstats.updateBy(ktrees);
   }

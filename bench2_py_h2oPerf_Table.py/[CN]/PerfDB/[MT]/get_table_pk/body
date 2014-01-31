@@ -1,0 +1,11 @@
+def get_table_pk(self, table_name):
+    '\n        Get the primary key for the table specified.\n        '
+    primary_key = (table_name + '_id')
+    last_row_sql = 'SELECT * FROM {} ORDER BY {}  DESC LIMIT 1;'.format(table_name, primary_key)
+    self.cursor.execute(last_row_sql)
+    last_row = self.cursor.fetchone()
+    cols = self.cursor.description
+    if (last_row is None):
+        last_row = [0 for i in range(len(cols))]
+    last_row_assoc = dict(((name[0], val) for (name, val) in zip(cols, last_row)))
+    return last_row_assoc[primary_key]
