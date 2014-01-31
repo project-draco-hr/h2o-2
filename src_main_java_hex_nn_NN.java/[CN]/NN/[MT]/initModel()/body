@@ -1,7 +1,7 @@
 {
+  logStart();
+  NN.RNG.seed.set(seed);
   UKV.remove(dest());
-  NNModel.NNModelInfo modelinfo=null;
-  NNModel model=new NNModel(dest(),self(),_dinfo,this,modelinfo);
+  NNModel model=new NNModel(dest(),self(),_dinfo,this);
   DKV.put(dest(),model);
-  assert(model.isClassifier() == classification);
 }

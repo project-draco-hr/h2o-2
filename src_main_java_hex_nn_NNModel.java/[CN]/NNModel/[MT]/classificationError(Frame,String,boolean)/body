@@ -1,0 +1,15 @@
+{
+  Frame fpreds;
+  fpreds=score(ftest);
+  water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
+  CM.actual=ftest;
+  CM.vactual=ftest.lastVec();
+  CM.predict=fpreds;
+  CM.vpredict=fpreds.vecs()[0];
+  CM.serve();
+  StringBuilder sb=new StringBuilder();
+  final double error=CM.toASCII(sb);
+  if (printCM)   System.out.println(label + "\n" + sb);
+  fpreds.remove();
+  return error;
+}
