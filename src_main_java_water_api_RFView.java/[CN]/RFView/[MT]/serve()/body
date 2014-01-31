@@ -9,7 +9,7 @@
   finished=model.size();
   if (_job.value() != null) {
     Job jjob=Job.findJob(_job.value());
-    if (jjob != null && jjob.cancelled())     return Response.error(jjob.exception == null ? "Job was cancelled by user!" : jjob.exception);
+    if (jjob != null && jjob.isCancelled())     return Response.error(jjob.exception == null ? "Job was cancelled by user!" : jjob.exception);
   }
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value() && (finished == tasks || _iterativeCM.value()) && finished > 0) {
@@ -57,7 +57,7 @@
   Response r;
   if (done) {
     r=jobDone(response);
-    r.addHeader("<div class='alert'>" + GeneratePredictionsPage.link(model._selfKey,"Predict!") + " </div>");
+    r.addHeader("<div class='alert'>" + GeneratePredictionsPage.link(model._key,"Predict!") + " </div>");
   }
  else {
     r=Response.poll(response,finished,tasks);

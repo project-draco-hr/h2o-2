@@ -1,5 +1,5 @@
 {
-  if (!cancelled()) {
+  if (isRunning(self())) {
     new TAtomic<ChunkProgress>(){
       @Override public ChunkProgress atomic(      ChunkProgress old){
         if (old == null)         return null;

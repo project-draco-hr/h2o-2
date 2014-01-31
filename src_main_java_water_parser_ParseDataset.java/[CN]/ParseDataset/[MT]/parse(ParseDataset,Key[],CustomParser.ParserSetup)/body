@@ -8,7 +8,7 @@
   }
   setup.checkColumnNames();
   int j=0;
-  UKV.remove(job.dest());
+  new ValueArray(job.dest(),0).delete_and_lock(job.self());
   Key[] nonEmptyKeys=new Key[keys.length];
   for (int i=0; i < keys.length; ++i) {
     Value v=DKV.get(keys[i]);
@@ -26,6 +26,7 @@
         DParseTask p2=p1.createPassTwo();
         p2.passTwo();
         p2.createValueArrayHeader();
+        Lockable.delete(keys[0]);
         job.remove();
         return;
       }
@@ -64,7 +65,9 @@
       throw new RuntimeException("The dataset format is not recognized/supported");
     }
     FileInfo finfo=fileInfo.get(keys[i]);
-    UKV.remove(finfo._okey);
+    Value val=DKV.get(finfo._okey);
+    if (val.isArray())     ((ValueArray)val.get()).delete();
+ else     DKV.remove(finfo._okey);
   }
   phaseTwo.normalizeSigma();
   phaseTwo._colNames=setup._columnNames;

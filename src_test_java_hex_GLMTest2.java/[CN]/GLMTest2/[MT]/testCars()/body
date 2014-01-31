@@ -1,11 +1,12 @@
 {
   Key parsed=Key.make("cars_parsed");
   Key modelKey=Key.make("cars_model");
+  Frame fr=null;
   GLMModel model=null;
   try {
     String[] ignores=new String[]{"name"};
     String response="power (hp)";
-    Frame fr=getFrameForFile(parsed,"smalldata/cars.csv",ignores,response);
+    fr=getFrameForFile(parsed,"smalldata/cars.csv",ignores,response);
     DataInfo dinfo=new DataInfo(fr,1,true);
     GLMParams glm=new GLMParams(Family.poisson,0,Family.poisson.defaultLink,0);
     new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
@@ -32,7 +33,7 @@
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls3[i],coefs.get(cfs1[i]),1e-4);
   }
   finally {
-    UKV.remove(parsed);
+    if (fr != null)     fr.delete();
     if (model != null)     model.delete();
   }
 }

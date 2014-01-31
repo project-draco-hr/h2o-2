@@ -9,6 +9,6 @@
     _timeLastScoreEnd=System.currentTimeMillis();
   }
   model=makeModel(model,ktrees,sc == null ? Double.NaN : sc.mse(),sc == null ? null : (_nclass > 1 ? sc._cm : null),tstats);
-  DKV.put(outputKey,model);
+  model.update(self());
   return model;
 }

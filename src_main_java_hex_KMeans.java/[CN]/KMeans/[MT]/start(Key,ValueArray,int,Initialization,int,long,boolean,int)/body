@@ -12,7 +12,8 @@
   res._randSeed=randSeed;
   res._maxIter=maxIter;
   res._initialization=init;
-  UKV.put(job.dest(),res);
+  res.delete_and_lock(job.self());
+  va.read_lock(job.self());
   final int[] filteredCols=res.columnMapping(va.colNames());
   H2OCountedCompleter task=new H2OCountedCompleter(){
     @Override public void compute2(){

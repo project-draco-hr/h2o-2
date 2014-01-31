@@ -1,0 +1,6 @@
+{
+  if (!(e instanceof IllegalAccessException))   Log.err(e);
+  String message=e.getMessage();
+  if (message == null)   message=e.getClass().toString();
+  return error(message);
+}

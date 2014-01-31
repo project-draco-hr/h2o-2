@@ -1,0 +1,11 @@
+{
+  Type[] ts=null;
+  if (_ts != null) {
+    ts=_ts.clone();
+    for (int i=0; i < ts.length; i++)     if (_ts[i] != null)     ts[i]=_ts[i].copy();
+  }
+  int vararg=_t & VARARGS;
+  Type copy=new Type(_t & ~VARARGS,ts);
+  copy._t|=vararg;
+  return copy;
+}

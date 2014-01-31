@@ -1,7 +1,7 @@
 {
   fr.add("OUT_BAG_TREES",response.makeZero());
   DRFModel model=new DRFModel(outputKey,dataKey,validation == null ? null : testKey,names,domains,ntrees,max_depth,min_rows,nbins,mtries,sample_rate,_seed);
-  DKV.put(outputKey,model);
+  model.delete_and_lock(self());
   Random rand=createRNG(_seed);
   new SetWrkTask().doAll(fr);
   int tid;
@@ -10,7 +10,7 @@
   for (tid=0; tid < ntrees; tid++) {
     model=doScoring(model,outputKey,fr,ktrees,tid,tstats,tid == 0,validation == null,build_tree_per_node);
     ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
-    if (cancelled())     break;
+    if (!Job.isRunning(self()))     break;
     tstats.updateBy(ktrees);
   }
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,validation == null,build_tree_per_node);
@@ -18,7 +18,7 @@
     float varimp[]=doVarImp(model,fr);
     Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));
     model.varimp=varimp;
-    DKV.put(outputKey,model);
   }
+  model.unlock(self());
   cleanUp(fr,t_build);
 }

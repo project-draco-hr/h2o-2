@@ -1,10 +1,11 @@
 {
   Value v=_key.value();
   try {
-    UKV.remove(v._key);
+    if (v.isLockable())     Lockable.delete(v._key);
+ else     UKV.remove(v._key);
   }
  catch (  Exception e) {
-    return Response.error(e.getMessage());
+    return Response.error(e);
   }
   JsonObject response=new JsonObject();
   response.addProperty(KEY,_key.toString());

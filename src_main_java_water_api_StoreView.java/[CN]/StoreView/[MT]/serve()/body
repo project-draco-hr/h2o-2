@@ -5,7 +5,7 @@
   Key[] keys=new Key[_view._max];
   int len=0;
   String filter=_filter.value();
-  for (  Key key : H2O.keySet()) {
+  for (  Key key : H2O.globalKeySet(null)) {
     if (filter != null && key.toString().indexOf(filter) == -1)     continue;
     if (!key.user_allowed())     continue;
     if (H2O.get(key) == null)     continue;
@@ -20,7 +20,7 @@
   JsonArray ary=new JsonArray();
   for (int i=offset; i < offset + _view.value(); i++) {
     if (i >= len)     break;
-    Value val=H2O.get(keys[i]);
+    Value val=DKV.get(keys[i]);
     if (val != null) {
       JsonObject jo=formatKeyRow(cloud,keys[i],val);
       ary.add(jo);

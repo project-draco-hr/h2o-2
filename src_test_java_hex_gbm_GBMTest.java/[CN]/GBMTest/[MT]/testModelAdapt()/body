@@ -6,28 +6,27 @@
   Key fkey2=NFSFileVec.make(file2);
   Key dest2=Key.make("KDDTest.hex");
   GBM gbm=null;
-  Frame fr=null;
+  GBM.GBMModel gbmmodel=null;
   try {
     gbm=new GBM();
     gbm.source=ParseDataset2.parse(dest1,new Key[]{fkey1});
-    UKV.remove(fkey1);
-    gbm.response=gbm.source.remove(41);
+    gbm.response=gbm.source.vecs()[41];
     gbm.ntrees=2;
     gbm.max_depth=8;
     gbm.learn_rate=0.2f;
     gbm.min_rows=10;
     gbm.nbins=50;
     gbm.invoke();
+    gbmmodel=UKV.get(gbm.dest());
     Frame ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
     Frame preds=gbm.score(ftest);
+    ftest.delete();
+    preds.delete();
   }
   finally {
-    UKV.remove(dest1);
-    if (gbm != null) {
-      UKV.remove(gbm.dest());
-      UKV.remove(gbm.response._key);
-      gbm.remove();
-      if (fr != null)       fr.remove();
-    }
+    if (gbmmodel != null)     gbmmodel.delete();
+    gbm.source.delete();
+    UKV.remove(gbm.response._key);
+    gbm.remove();
   }
 }

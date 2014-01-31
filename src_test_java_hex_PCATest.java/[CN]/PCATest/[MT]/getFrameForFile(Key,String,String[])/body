@@ -1,12 +1,7 @@
 {
   File f=TestUtil.find_test_file(path);
   Key k=NFSFileVec.make(f);
-  try {
-    Frame fr=ParseDataset2.parse(outputKey,new Key[]{k});
-    if (ignores != null)     for (    String s : ignores)     UKV.remove(fr.remove(s)._key);
-    return fr;
-  }
-  finally {
-    UKV.remove(k);
-  }
+  Frame fr=ParseDataset2.parse(outputKey,new Key[]{k});
+  if (ignores != null)   for (  String s : ignores)   UKV.remove(fr.remove(s)._key);
+  return fr;
 }

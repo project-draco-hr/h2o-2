@@ -6,10 +6,14 @@ def parse_args(argv):
     global g_test_to_run
     global g_test_list_file
     global g_test_group
+    global g_run_small
+    global g_run_medium
+    global g_run_large
     global g_use_cloud
     global g_use_ip
     global g_use_port
     global g_no_run
+    global g_jvm_xmx
     i = 1
     while (i < len(argv)):
         s = argv[i]
@@ -43,6 +47,20 @@ def parse_args(argv):
             if (i > len(argv)):
                 usage()
             g_test_group = argv[i]
+        elif (s == '--testsize'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            v = argv[i]
+            if re.match('(s)?(m)?(l)?', v):
+                if (not ('s' in v)):
+                    g_run_small = False
+                if (not ('m' in v)):
+                    g_run_medium = False
+                if (not ('l' in v)):
+                    g_run_large = False
+            else:
+                bad_arg(s)
         elif (s == '--usecloud'):
             i += 1
             if (i > len(argv)):
@@ -55,6 +73,11 @@ def parse_args(argv):
             g_use_ip = m.group(1)
             port_string = m.group(2)
             g_use_port = int(port_string)
+        elif (s == '--jvm.xmx'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            g_jvm_xmx = argv[i]
         elif (s == '--norun'):
             g_no_run = True
         elif ((s == '-h') or (s == '--h') or (s == '-help') or (s == '--help')):

@@ -12,7 +12,7 @@
     DKV.put(chunkKey,new Value(chunkKey,chunks[i].length,chunks[i],TypeMap.C1NCHUNK,Value.ICE),fs);
   }
   DKV.put(bv._key,bv,fs);
-  Frame fr=new Frame(bv);
+  Frame fr=new Frame(k,new String[]{"makeByteVec"},new Vec[]{bv});
   DKV.put(k,fr,fs);
   fs.blockForPending();
   return k;

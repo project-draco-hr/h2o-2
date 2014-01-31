@@ -5,12 +5,12 @@
     final Key _job=jobKey;
     boolean done=false;
     @Override public GLMModels atomic(    GLMModels old){
-      old._ms[idx]=model._selfKey;
+      old._ms[idx]=model._key;
       done=++old._count == old._ms.length;
       old._runTime=Math.max(runTime,old._runTime);
       return old;
     }
-    @Override public void onSuccess(){
+    @Override public void onSuccess(    Value old){
       if (done)       remove();
     }
   }

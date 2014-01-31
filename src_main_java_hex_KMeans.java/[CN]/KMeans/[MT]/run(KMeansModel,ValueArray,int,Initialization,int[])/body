@@ -29,13 +29,13 @@
       sampler._seed=res._randSeed;
       sampler.invoke(va._key);
       clusters=Utils.append(clusters,sampler._clust2);
-      if (cancelled()) {
+      if (!isRunning(self())) {
         remove();
         return;
       }
       res._iteration++;
       res._clusters=clusters;
-      UKV.put(dest(),res);
+      res.update(self());
     }
     clusters=recluster(clusters,k,rand,init);
   }
@@ -57,9 +57,11 @@
     }
     res._error=task._error;
     res._iteration++;
-    UKV.put(dest(),res);
+    res.update(self());
     if (res._iteration >= res._maxIter)     break;
-    if (cancelled())     break;
+    if (!isRunning(self()))     break;
   }
+  res.unlock(self());
+  va.unlock(self());
   remove();
 }

@@ -2,8 +2,8 @@
   final String mse_format="%2.6f";
   final String cross_entropy_format="%2.6f";
   DocGen.HTML.title(sb,title);
-  DocGen.HTML.paragraph(sb,"Model Key: " + _selfKey);
-  sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_selfKey,"Score on dataset") + ", "+ NeuralNet.link(_dataKey,"Compute new model")+ "</div>");
+  DocGen.HTML.paragraph(sb,"Model Key: " + _key);
+  sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NeuralNet.link(_dataKey,"Compute new model")+ "</div>");
 {
     float[] train_err=new float[training_errors.length];
     float[] train_samples=new float[training_errors.length];
@@ -77,7 +77,7 @@
     sb.append("</table>");
   }
   if (unstable) {
-    final String msg="Job was aborted due to observed numerical instability (exponential growth)." + "  Try a bounded activation function or regularization with L1, L2 or max_w2 and/or use a smaller learning rate or faster annealing.";
+    final String msg="Job was aborted due to observed numerical instability (exponential growth)." + " Try a bounded activation function or regularization with L1, L2 or max_w2 and/or use a smaller learning rate or faster annealing.";
     DocGen.HTML.section(sb,"=======================================================================================");
     DocGen.HTML.section(sb,msg);
     DocGen.HTML.section(sb,"=======================================================================================");

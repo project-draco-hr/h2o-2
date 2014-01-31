@@ -1,7 +1,7 @@
 {
   Key k=loadAndParseFile("h.hex","smalldata/cars.csv");
+  ValueArray ary=DKV.get(k).get();
   try {
-    ValueArray ary=DKV.get(k).get();
     String[] cfs1=new String[]{"Intercept","economy (mpg)","cylinders","displacement (cc)","weight (lb)","0-60 mph (s)","year"};
     int[] cols=ary.getColumnIds(new String[]{"economy (mpg)","cylinders","displacement (cc)","weight (lb)","0-60 mph (s)","year","power (hp)"});
     double[] vls1=new double[]{4.9504805,-0.0095859,-0.0063046,0.0004392,0.0001762,-0.0469810,0.0002891};
@@ -16,6 +16,6 @@
     runGLMTest(data,new GeneralizedGradientSolver(0,0),new GLMParams(Family.gaussian),1,cfs1,vls3,Double.NaN,Double.NaN,Double.NaN,3111,Double.NaN,5e-1,5e-1);
   }
   finally {
-    UKV.remove(k);
+    ary.delete();
   }
 }

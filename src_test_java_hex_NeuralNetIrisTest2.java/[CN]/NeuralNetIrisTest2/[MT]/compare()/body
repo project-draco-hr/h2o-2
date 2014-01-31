@@ -110,9 +110,9 @@
             Log.info("H2O  training error : " + myTrainAcc * 100 + "%, test error: " + myTestAcc * 100 + "%" + (trainAcc != myTrainAcc || testAcc != myTestAcc ? " HOGWILD! " : ""));
             Log.info("REF  training error : " + trainAcc * 100 + "%, test error: " + testAcc * 100 + "%");
             UKV.remove(pars);
-            _train.remove();
-            _test.remove();
-            fr.remove();
+            _train.delete();
+            _test.delete();
+            fr.delete();
             UKV.remove(p.dest());
             hogwild_runs++;
           }
