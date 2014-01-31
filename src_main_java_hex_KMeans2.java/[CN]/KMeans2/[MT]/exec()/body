@@ -48,7 +48,7 @@
       sampler._mults=mults;
       sampler.doAll(vecs);
       clusters=Utils.append(clusters,sampler._sampled);
-      if (cancelled())       return Status.Done;
+      if (!isRunning(self()))       return Status.Done;
       model.centers=normalize ? denormalize(clusters,vecs) : clusters;
       model.total_within_SS=sqr._sqr;
       model.iterations++;
@@ -85,7 +85,7 @@
       fr2.delete_and_lock(self()).unlock(self());
       break;
     }
-    if (cancelled())     break;
+    if (!isRunning(self()))     break;
   }
   model.unlock(self());
   source.unlock(self());

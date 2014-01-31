@@ -10,7 +10,7 @@
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
     ktrees=buildNextKTrees(fr);
-    if (cancelled())     break;
+    if (!Job.isRunning(self()))     break;
     tstats.updateBy(ktrees);
   }
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,false,false);

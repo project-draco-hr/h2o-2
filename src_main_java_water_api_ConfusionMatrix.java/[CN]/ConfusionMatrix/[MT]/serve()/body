@@ -15,8 +15,7 @@
     return Response.done(this);
   }
  catch (  Throwable t) {
-    Log.err(t);
-    return Response.error(t.getMessage());
+    return Response.error(t);
   }
  finally {
     if (va != null)     UKV.remove(va._key);
