@@ -1,7 +1,7 @@
 {
-  NN.Activation[] activations={NN.Activation.Tanh};
-  NN.Loss[] losses={NN.Loss.MeanSquare};
-  NN.InitialWeightDistribution[] dists={NN.InitialWeightDistribution.Normal};
+  NN.Activation[] activations={NN.Activation.Tanh,NN.Activation.Rectifier};
+  NN.Loss[] losses={NN.Loss.MeanSquare,NN.Loss.CrossEntropy};
+  NN.InitialWeightDistribution[] dists={NN.InitialWeightDistribution.Normal,NN.InitialWeightDistribution.UniformAdaptive};
   double[] initial_weight_scales={0.0258};
   double[] holdout_ratios={0.8};
   int hogwild_runs=0;
@@ -16,7 +16,7 @@
             Log.info("Running with " + activation.name() + " activation function and "+ loss.name()+ " loss function.");
             Log.info("Initialization with " + dist.name() + " distribution and "+ scale+ " scale, holdout ratio "+ holdout_ratio);
             NeuralNetMLPReference2 ref=new NeuralNetMLPReference2();
-            final long seed=0;
+            final long seed=new Random().nextLong();
             Log.info("Using seed " + seed);
             ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio);
             Key file=NFSFileVec.make(find_test_file(PATH));
@@ -79,7 +79,7 @@
               ref._nn.oBiases[o]=l._b[o];
             }
             ref.train((int)p.epochs,p.rate,loss);
-            p.trainModel();
+            p.trainModel(false);
             mymodel=UKV.get(p.dest());
             neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info);
             double abseps=1e-15;
@@ -94,21 +94,17 @@
               }
             }
             weight_mse/=l._a.length * l._previous._a.length;
-            for (int o=0; o < neurons[2]._a.length; o++) {
-              double a=ref._nn.outputs[o];
-              double b=neurons[2]._a[o];
-            }
-            double myTrainAcc=mymodel.classificationError(_train,"Final training error:",true);
-            double myTestAcc=mymodel.classificationError(_test,"Final testing error:",true);
-            mymodel.delete();
-            double trainAcc=ref._nn.Accuracy(ref._trainData);
-            double testAcc=ref._nn.Accuracy(ref._testData);
+            final double myTrainAcc=mymodel.classificationError(_train,"Final training error:",true);
+            final double myTestAcc=mymodel.classificationError(_test,"Final testing error:",true);
+            final double trainAcc=ref._nn.Accuracy(ref._trainData);
+            final double testAcc=ref._nn.Accuracy(ref._testData);
             final boolean hogwild_error=(trainAcc != myTrainAcc || testAcc != myTestAcc);
             Log.info("DONE. " + (hogwild_error ? "Multithreading resulted in errors due to race conditions (Hogwild!)." : ""));
             Log.info("MSE of H2O weights: " + weight_mse + ".");
             hogwild_errors+=hogwild_error == true ? 1 : 0;
             Log.info("H2O  training error : " + myTrainAcc * 100 + "%, test error: " + myTestAcc * 100 + "%" + (trainAcc != myTrainAcc || testAcc != myTestAcc ? " HOGWILD! " : ""));
             Log.info("REF  training error : " + trainAcc * 100 + "%, test error: " + testAcc * 100 + "%");
+            mymodel.delete();
             _train.delete();
             _test.delete();
             fr.delete();
