@@ -27,10 +27,10 @@ def test_rf_covtype20x_fvec(self):
     resultExec = h2o_cmd.runExec(**kwargs)
     if h2o.beta_features:
         paramDict = drf2ParamDict
-        params = {'ntrees': 6, 'destination_key': 'RF_model', }
+        params = {'ntrees': 20, 'destination_key': 'RF_model', }
     else:
         paramDict = drf1ParamDict
-        params = {'ntree': 6, 'out_of_bag_error_estimate': 0, 'model_key': 'RF_model', }
+        params = {'ntree': 20, 'out_of_bag_error_estimate': 1, 'model_key': 'RF_model', }
     colX = h2o_rf.pickRandRfParams(paramDict, params)
     kwargs = params.copy()
     if h2o.beta_features:

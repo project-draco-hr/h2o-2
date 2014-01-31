@@ -11,7 +11,7 @@ def parseFile(self, importFolderPath='datasets', csvFilename='airlines_all.csv',
     elapsed = (time.time() - start)
     print 'Inspect:', parseResult['destination_key'], 'took', elapsed, 'seconds'
     h2o_cmd.infoFromInspect(inspect, csvPathname)
-    numRows = inspect['numRows']
-    numCols = inspect['numCols']
-    print 'numRows:', numRows, 'numCols', numCols
+    num_rows = inspect['num_rows']
+    num_cols = inspect['num_cols']
+    print 'num_rows:', num_rows, 'num_cols', num_cols
     return parseResult
