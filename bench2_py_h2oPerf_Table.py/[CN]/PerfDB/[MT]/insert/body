@@ -1,0 +1,5 @@
+def insert(self, table_row):
+    '\n        Takes a TableRow object and writes to the db.\n        '
+    sql = 'INSERT INTO {} ({}) VALUES ({});'.format(table_row.table_name, ','.join([str(t) for t in table_row.row.keys()]), ','.join([(('"' + str(t)) + '"') for t in table_row.row.values()]))
+    self.cursor.execute(sql)
+    self.db.commit()

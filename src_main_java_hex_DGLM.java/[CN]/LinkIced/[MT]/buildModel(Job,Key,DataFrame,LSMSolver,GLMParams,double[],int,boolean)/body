@@ -19,7 +19,7 @@
   currentModel.delete_and_lock(job.self());
   if (params._family._family != Family.gaussian)   do {
     if (oldBeta == null)     oldBeta=MemoryManager.malloc8d(data.expandedSz());
-    if (job.cancelled())     throw new JobCancelledException();
+    if (!Job.isRunning(job.self()))     throw new JobCancelledException();
     double[] b=oldBeta;
     oldBeta=(gramF._beta=newBeta);
     newBeta=b;
