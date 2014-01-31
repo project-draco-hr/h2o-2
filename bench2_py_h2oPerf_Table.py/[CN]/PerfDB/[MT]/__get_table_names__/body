@@ -1,0 +1,5 @@
+def __get_table_names__(self):
+    "\n        Private method for getting the table names (all PerfDB objects\n        have access to table_names, but don't access this function\n        directly.)\n        "
+    sql = 'SHOW TABLES FROM PerfDB;'
+    self.cursor.execute(sql)
+    return [t[0] for t in self.cursor.fetchall()]

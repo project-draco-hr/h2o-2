@@ -1,0 +1,39 @@
+def test_GLM_covtype20x_s3n_thru_hdfs(self):
+    bucket = 'home-0xdiag-datasets'
+    importFolderPath = 'standard'
+    csvFilename = 'covtype20x.data'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    timeoutSecs = 500
+    trialMax = 3
+    for trial in range(trialMax):
+        trialStart = time.time()
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        start = time.time()
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='s3n', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
+        elapsed = (time.time() - start)
+        print 'parse end on ', hex_key, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print 'parse result:', parseResult['destination_key']
+        kwargs = {'y': 54, 'family': 'binomial', 'link': 'logit', 'n_folds': 2, 'case_mode': '=', 'case': 1, 'max_iter': 8, 'beta_epsilon': 0.001, }
+        timeoutSecs = 720
+        kwargs.update({'alpha': 0, 'lambda': 0, })
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, initialDelaySecs=15, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = time.time()
+        print 'glm (L2) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        h2o.check_sandbox_for_errors()
+        kwargs.update({'alpha': 0.5, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = time.time()
+        print 'glm (Elastic) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        h2o.check_sandbox_for_errors()
+        kwargs.update({'alpha': 1.0, 'lambda': 0.0001, })
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = time.time()
+        print 'glm (L1) end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, 13, **kwargs)
+        h2o.check_sandbox_for_errors()
+        print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.',

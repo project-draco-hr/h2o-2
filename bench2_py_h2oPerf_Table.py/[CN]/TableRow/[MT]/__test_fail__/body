@@ -1,0 +1,8 @@
+def __test_fail__(self):
+    '\n        Failure of attempted row write to db.\n        The row is logged along with a message \n        to the python_message table.\n\n        The row is then filled in with defaults\n        corresponding to a failed test.\n        '
+    message = 'ERROR: Could not write row to table {}.'.format(self.table_name)
+    py_table = TableRow('python_message')
+    py_table.row['message'] = message
+    py_table.row['row'] = str(self.row)
+    py_table.update()
+    print message

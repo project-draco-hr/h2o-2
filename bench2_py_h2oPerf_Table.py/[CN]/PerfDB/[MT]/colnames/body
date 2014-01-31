@@ -1,0 +1,8 @@
+def colnames(self, table_name):
+    '\n        Takes the table name and fetches the column names from the\n        corresponding table in PerfDB.\n        '
+    sql = 'SELECT * FROM {} LIMIT 1;'.format(table_name)
+    self.cursor.execute(sql)
+    self.cursor.fetchone()
+    table_desc = self.cursor.description
+    column_names = [name[0] for name in table_desc]
+    return column_names
