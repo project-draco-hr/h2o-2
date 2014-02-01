@@ -44,7 +44,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                 hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
                 print 'Loading', protocol, 'key:', src_key, 'to', hex_key
                 start = time.time()
-                parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=(importFolderPath + '/*'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=(csvFolder + '/*'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 if noPoll:
                     if ((i + 1) < len(csvFilenameList)):
                         time.sleep(1)
@@ -53,7 +53,7 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                         src_key = csvFilepattern
                         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
                         print 'Loading', protocol, 'key:', src_key, 'to', hex_key
-                        parse2Result = h2i.import_parse(bucket='home-0xdiag-datasets', path=(importFolderPath + '/*'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
+                        parse2Result = h2i.import_parse(bucket='home-0xdiag-datasets', path=(csvFolder + '/*'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                     if ((i + 2) < len(csvFilenameList)):
                         time.sleep(1)
                         h2o.check_sandbox_for_errors()

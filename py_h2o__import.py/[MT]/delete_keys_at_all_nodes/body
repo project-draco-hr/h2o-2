@@ -1,6 +1,9 @@
 def delete_keys_at_all_nodes(node=None, pattern=None, timeoutSecs=120):
     if (not node):
         node = h2o.nodes[0]
+    if (not pattern):
+        node.remove_all_keys()
+        return 0
     totalDeletedCnt = 0
     for node in reversed(h2o.nodes):
         deletedCnt = delete_keys(node, pattern=pattern, timeoutSecs=timeoutSecs)
