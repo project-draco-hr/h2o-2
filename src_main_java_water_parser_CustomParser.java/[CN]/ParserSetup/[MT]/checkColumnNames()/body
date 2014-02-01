@@ -10,6 +10,6 @@
         conflictingNames.add(n);
       }
     }
-    if (!conflictingNames.isEmpty())     throw new ParseSetupGuessException("Invalid header. Got conflicting column names. " + conflictingNames.toString(),null,null);
+    if (!conflictingNames.isEmpty())     throw new ParseSetupGuessException("Column labels must be unique but these labels are repeated:" + conflictingNames.toString(),null,null);
   }
 }
