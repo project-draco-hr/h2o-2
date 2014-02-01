@@ -9,11 +9,15 @@ def delete_keys(node=None, pattern=None, timeoutSecs=120):
         keys = storeViewResult['keys']
         if (not keys):
             break
+        deletedThisTime = 0
         for k in keys:
             if (k in triedKeys):
                 print ('Already tried to delete %s. Must have failed. Not trying again' % k)
             else:
                 node.remove_key(k['key'], timeoutSecs=timeoutSecs)
                 deletedCnt += 1
+                deletedThisTime += 1
             triedKeys.append(k)
+        if (deletedThisTime == 0):
+            break
     return deletedCnt
