@@ -9,6 +9,8 @@
   for (  H2ONode h2o : H2O.CLOUD._memary)   memsz+=h2o.get_max_mem();
   if (sum > memsz * 4)   throw new IllegalArgumentException("Total input file size of " + PrettyPrint.bytes(sum) + " is much larger than total cluster memory of "+ PrettyPrint.bytes(memsz)+ ", please use either a larger cluster or smaller data.");
   ParseDataset2 job=new ParseDataset2(dest,keys);
+  new Frame(job.dest(),new String[0],new Vec[0]).delete_and_lock(job.self());
+  for (  Key k : keys)   Lockable.read_lock(k,job.self());
   ParserFJTask fjt=new ParserFJTask(job,keys,setup,delete_on_done);
   job.start(fjt);
   H2O.submitTask(fjt);

@@ -1,6 +1,6 @@
 {
   if (str == null)   return RequestServer._http404.serve();
-  Exception e;
+  Throwable e;
   try {
     Env env=water.exec.Exec2.exec(str);
     StringBuilder sb=env._sb;
@@ -36,8 +36,8 @@
  catch (  IllegalArgumentException pe) {
     e=pe;
   }
-catch (  Exception e2) {
+catch (  Throwable e2) {
     Log.err(e=e2);
   }
-  return Response.error(e.getMessage());
+  return Response.error(e);
 }
