@@ -5,7 +5,7 @@ def invoke(self):
         flag = False
         for line in f:
             if flag:
-                predict_type = line.strip()
+                predict_type = self.__get_predict_type__(line.strip())[0]
                 flag = False
                 break
             if (('PREDICT TYPE' in line) and ('print' not in line)):

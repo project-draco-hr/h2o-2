@@ -5,5 +5,5 @@ def invoke(self):
         self.test_run_clustering_result = TableRow('test_run_clustering_result')
         self.test_run_clustering_result.row.update(kmeans_result)
         self.test_run_clustering_result.update()
-    self.test_run_model_result.row['model_json'] = str(self.__scrape_model_result__())
+    self.test_run_model_result.row['model_json'] = MySQLdb.escape_string(str(self.__scrape_model_result__()))
     self.test_run_model_result.update()
