@@ -1,7 +1,7 @@
 {
   if (_job != null && _job.self() != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
-  chunkInit();
   final int nrows=chunks[0]._len;
+  chunkInit(nrows);
   double[] nums=MemoryManager.malloc8d(_dinfo._nums);
   int[] cats=MemoryManager.malloc4(_dinfo._cats);
   double[] response=MemoryManager.malloc8d(_dinfo._responses);
