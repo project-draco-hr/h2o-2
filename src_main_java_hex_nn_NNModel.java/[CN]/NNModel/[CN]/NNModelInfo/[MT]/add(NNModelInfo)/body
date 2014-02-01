@@ -1,6 +1,9 @@
 {
   if (other == this)   return;
-  Utils.add(weights,other.weights);
-  Utils.add(biases,other.biases);
-  processed+=other.processed;
+  if (other.chunk_node_count != 0) {
+    Utils.add(weights,other.weights);
+    Utils.add(biases,other.biases);
+    chunk_processed_rows+=other.chunk_processed_rows;
+    chunk_node_count+=other.chunk_node_count;
+  }
 }

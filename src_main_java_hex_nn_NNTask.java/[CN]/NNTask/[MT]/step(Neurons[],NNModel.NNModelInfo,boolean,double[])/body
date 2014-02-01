@@ -19,7 +19,7 @@
   }
   if (training) {
     for (int i=neurons.length - 2; i > 0; --i)     neurons[i].bprop();
-    minfo.processed++;
-    if (minfo.processed % 10000 == 0)     System.out.println("Processed: " + minfo.processed);
+    minfo.chunk_processed_rows++;
+    if (minfo.chunk_processed_rows % 10000 == 0)     System.out.println("Processed: " + minfo.chunk_processed_rows);
   }
 }

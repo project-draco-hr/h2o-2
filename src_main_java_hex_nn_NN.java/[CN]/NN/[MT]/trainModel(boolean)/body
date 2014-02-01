@@ -5,7 +5,7 @@
   for (int epoch=1; epoch <= epochs; ++epoch) {
     boolean training=true;
     NNTask nntask=new NNTask(this,_dinfo,this,modelinfo,training).doAll(_dinfo._adaptedFrame);
-    modelinfo=nntask._minfo;
+    modelinfo=nntask._output;
     if (diagnostics)     modelinfo.computeDiagnostics();
     final String label=(validation == null ? "Training" : "Validation") + " error after training for " + epoch+ " epochs ("+ model.model_info.processed+ " samples):";
     if (scorewhiletraining)     doScoring(model,validation == null ? _dinfo._adaptedFrame : adapted[0],label,epoch == epochs);

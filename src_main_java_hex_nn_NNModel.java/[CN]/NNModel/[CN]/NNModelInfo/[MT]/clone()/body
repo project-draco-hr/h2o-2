@@ -1,9 +1,12 @@
 {
-  NNModelInfo n=new NNModelInfo(parameters,units[0],units[units.length - 1]);
-  n.processed=processed;
+  NNModelInfo n=new NNModelInfo();
+  n.units=units.clone();
   n.weights=weights.clone();
   n.biases=biases.clone();
-  for (int i=0; i < weights.length; ++i)   n.weights[i]=weights[i].clone();
-  for (int i=0; i < biases.length; ++i)   n.biases[i]=biases[i].clone();
+  n.parameters=parameters;
+  n.processed=processed;
+  n.chunk_node_count=chunk_node_count;
+  n.chunk_processed_rows=chunk_processed_rows;
+  n.unstable=unstable;
   return n;
 }
