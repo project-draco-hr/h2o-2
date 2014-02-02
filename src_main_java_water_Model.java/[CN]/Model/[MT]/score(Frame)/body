@@ -22,16 +22,17 @@
     @Override public void map(    Chunk chks[]){
       double tmp[]=new double[_names.length];
       float preds[]=new float[nclasses()];
+      int ties[]=new int[nclasses()];
       Chunk p=chks[_names.length - 1];
-      for (int i=0; i < p._len; i++) {
-        float[] out=score0(chks,i,tmp,preds);
+      for (int row=0; row < p._len; row++) {
+        float[] out=score0(chks,row,tmp,preds);
         if (nclasses() > 1) {
-          if (Float.isNaN(out[0]))           p.setNA0(i);
- else           p.set0(i,Utils.maxIndex(out));
-          for (int c=0; c < nclasses(); c++)           chks[_names.length + c].set0(i,out[c]);
+          if (Float.isNaN(out[0]))           p.setNA0(row);
+ else           p.set0(row,Model.getPrediction(out,ties,row));
+          for (int c=0; c < nclasses(); c++)           chks[_names.length + c].set0(row,out[c]);
         }
  else {
-          p.set0(i,out[0]);
+          p.set0(row,out[0]);
         }
       }
     }

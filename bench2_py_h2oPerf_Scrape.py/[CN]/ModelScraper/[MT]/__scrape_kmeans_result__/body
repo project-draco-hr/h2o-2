@@ -1,0 +1,12 @@
+def __scrape_kmeans_result__(self):
+    kmeans_r = ''
+    with open(self.output_file_name, 'r') as f:
+        flag = False
+        for line in f:
+            if flag:
+                kmeans_r = json.loads(line)
+                flag = False
+                break
+            if (('KMEANS RESULT' in line) and ('print' not in line)):
+                flag = True
+    return (None if (kmeans_r['kmeans_result']['k'] == 'None') else kmeans_r['kmeans_result'])

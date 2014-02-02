@@ -1,0 +1,22 @@
+{
+  long[] localChunks=new long[H2O.CLOUD.size()];
+  for (int i=0; i < ary.chunks(); i++) {
+    Key k=ary.getChunkKey(i);
+    localChunks[k.home(H2O.CLOUD)]++;
+  }
+  for (int i=0; i < localChunks.length; i++) {
+    long needToLoad=ary.chunks() - localChunks[i];
+    long memoryForChunks=needToLoad * ValueArray.CHUNK_SZ;
+    HeartBeat hb=H2O.CLOUD._memary[i]._heartbeat;
+    long nodeFreeMemory=(long)((hb.get_max_mem() - (hb.get_tot_mem() - hb.get_free_mem())) * OVERHEAD_MAGIC);
+    Log.debug(Sys.RANDF,i + ": computed available mem: " + PrettyPrint.bytes(nodeFreeMemory));
+    Log.debug(Sys.RANDF,i + ": remote chunks require: " + PrettyPrint.bytes(memoryForChunks));
+    if (nodeFreeMemory - memoryForChunks <= 0) {
+      cai.node=H2O.CLOUD._memary[i];
+      cai.availableMemory=nodeFreeMemory;
+      cai.requiredMemory=memoryForChunks;
+      return false;
+    }
+  }
+  return true;
+}

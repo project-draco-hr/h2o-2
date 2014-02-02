@@ -1,0 +1,10 @@
+def __init__(self, object):
+    self.phase = object.phase
+    self.test_dir = object.test_dir
+    self.test_short_dir = object.test_short_dir
+    self.output_dir = object.output_dir
+    self.output_file_name = object.output_file_name
+    self.contaminated = object.contaminated
+    self.contamination_message = ('No contamination.' if (not self.contaminated) else object.contamination_message)
+    self.test_run = {'dataset_name': '', 'dataset_source': '', 'train_dataset_url': '', 'test_dataset_url': '', }
+    Scraper.insert_phase_result(self)

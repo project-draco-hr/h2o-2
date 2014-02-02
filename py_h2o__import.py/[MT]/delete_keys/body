@@ -3,12 +3,21 @@ def delete_keys(node=None, pattern=None, timeoutSecs=120):
         node = h2o.nodes[0]
     kwargs = {'filter': pattern, }
     deletedCnt = 0
+    triedKeys = []
     while True:
         storeViewResult = h2o_cmd.runStoreView(node, timeoutSecs=timeoutSecs, **kwargs)
         keys = storeViewResult['keys']
         if (not keys):
             break
+        deletedThisTime = 0
         for k in keys:
-            node.remove_key(k['key'], timeoutSecs=timeoutSecs)
-        deletedCnt += len(keys)
+            if (k in triedKeys):
+                print ('Already tried to delete %s. Must have failed. Not trying again' % k)
+            else:
+                node.remove_key(k['key'], timeoutSecs=timeoutSecs)
+                deletedCnt += 1
+                deletedThisTime += 1
+            triedKeys.append(k)
+        if (deletedThisTime == 0):
+            break
     return deletedCnt

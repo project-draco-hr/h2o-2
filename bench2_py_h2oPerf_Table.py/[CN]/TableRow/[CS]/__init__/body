@@ -9,4 +9,4 @@ def __init__(self, table_name):
     else:
         self.pk = self.perfdb_connection.get_table_pk(table_name)
         self.row['test_run_id'] = self.perfdb_connection.this_test_run_id
-        self.row[(table_name + '_id')] = (self.pk + 1)
+        self.row[(table_name + '_id')] = (int(self.pk) + 1)
