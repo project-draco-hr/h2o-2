@@ -1,0 +1,26 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("description: " + description);
+  sb.append("\nActivation function: " + activation.toString());
+  sb.append("\nInput layer dropout ratio: " + input_dropout_ratio);
+  String h="" + hidden[0];
+  for (int i=1; i < hidden.length; ++i)   h+=", " + hidden[i];
+  sb.append("\nHidden layer sizes: " + h);
+  sb.append("\nLearning rate: " + rate);
+  sb.append("\nLearning rate annealing: " + rate_annealing);
+  sb.append("\nL1 regularization: " + l1);
+  sb.append("\nL2 regularization: " + l2);
+  sb.append("\nInitial momentum at the beginning of training: " + momentum_start);
+  sb.append("\nNumber of training samples for which momentum increases: " + momentum_ramp);
+  sb.append("\nFinal momentum after the ramp is over: " + momentum_stable);
+  sb.append("\nNumber of epochs: " + epochs);
+  sb.append("\nSeed for random numbers: " + seed);
+  sb.append("\nInitial weight distribution: " + initial_weight_distribution);
+  sb.append("\nInitial weight scale: " + initial_weight_scale);
+  sb.append("\nLoss function: " + loss.toString());
+  sb.append("\nLearning rate decay factor: " + rate_decay);
+  sb.append("\nConstraint for squared sum of incoming weights per unit: " + max_w2);
+  sb.append("\nNumber of training set samples for scoring: " + score_training);
+  sb.append("\nNumber of validation set samples for scoring: " + score_validation);
+  return sb.toString();
+}

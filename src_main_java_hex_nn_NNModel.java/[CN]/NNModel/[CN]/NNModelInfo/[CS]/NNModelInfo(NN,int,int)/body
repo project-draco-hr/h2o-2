@@ -5,7 +5,7 @@
  else   assert(num_output > 1);
   units=new int[layers + 2];
   units[0]=num_input;
-  for (int i=1; i <= layers; ++i)   units[i]=parameters.hidden[i - 1];
+  System.arraycopy(parameters.hidden,0,units,1,layers);
   units[layers + 1]=num_output;
   weights=new float[layers + 1][];
   for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];

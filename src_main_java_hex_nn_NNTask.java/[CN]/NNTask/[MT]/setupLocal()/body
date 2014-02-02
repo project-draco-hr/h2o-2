@@ -3,7 +3,7 @@
     _input=new NNModel.NNModelInfo(_params,_dinfo.fullN(),_dinfo._adaptedFrame.lastVec().domain().length);
     _input.initializeMembers();
   }
-  _output=_input.clone();
+  _output=new NNModel.NNModelInfo(_input);
   _output.processed=0;
   _input=null;
 }

@@ -1,12 +1,13 @@
 {
   NNModel model=UKV.get(dest());
-  NNModel.NNModelInfo modelinfo=model.model_info;
+  NNModel.NNModelInfo input=model.model_info;
   final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
   for (int epoch=1; epoch <= epochs; ++epoch) {
     boolean training=true;
-    NNTask nntask=new NNTask(this,_dinfo,this,modelinfo,training).doAll(_dinfo._adaptedFrame);
-    modelinfo=nntask._output;
-    if (diagnostics)     modelinfo.computeDiagnostics();
+    NNTask nntask=new NNTask(this,_dinfo,this,input,training).doAll(_dinfo._adaptedFrame);
+    model.model_info=nntask._output;
+    input=model.model_info;
+    if (diagnostics)     input.computeDiagnostics();
     final String label=(validation == null ? "Training" : "Validation") + " error after training for " + epoch+ " epochs ("+ model.model_info.processed+ " samples):";
     if (scorewhiletraining)     doScoring(model,validation == null ? _dinfo._adaptedFrame : adapted[0],label,epoch == epochs);
     model.epoch_counter=epoch;

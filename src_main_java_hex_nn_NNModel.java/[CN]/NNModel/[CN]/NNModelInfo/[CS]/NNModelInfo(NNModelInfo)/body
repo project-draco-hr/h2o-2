@@ -1,0 +1,9 @@
+{
+  this(other.parameters,other.units[0],other.units[other.units.length - 1]);
+  processed=other.processed;
+  chunk_node_count=other.chunk_node_count;
+  chunk_processed_rows=other.chunk_processed_rows;
+  for (int i=0; i < other.weights.length; ++i)   weights[i]=other.weights[i].clone();
+  for (int i=0; i < other.biases.length; ++i)   biases[i]=other.biases[i].clone();
+  unstable=other.unstable;
+}
