@@ -5,21 +5,20 @@
     if (training) {
       for (int i=1; i < neurons.length - 1; i++)       Arrays.fill(neurons[i]._e,0);
       assert((double)(int)responses[0] == responses[0]);
-      final int target=(int)responses[0];
-      ((Neurons.Softmax)neurons[neurons.length - 1]).bprop(target);
+      final int target_label=(int)responses[0];
+      ((Neurons.Softmax)neurons[neurons.length - 1]).bprop(target_label);
     }
   }
  else {
     ((Neurons.Linear)neurons[neurons.length - 1]).fprop();
     if (training) {
       for (int i=1; i < neurons.length - 1; i++)       Arrays.fill(neurons[i]._e,0);
-      final double target=responses[0];
-      ((Neurons.Linear)neurons[neurons.length - 1]).bprop(target);
+      final double target_value=responses[0];
+      ((Neurons.Linear)neurons[neurons.length - 1]).bprop(target_value);
     }
   }
   if (training) {
     for (int i=neurons.length - 2; i > 0; --i)     neurons[i].bprop();
     minfo.chunk_processed_rows++;
-    if (minfo.chunk_processed_rows % 10000 == 0)     System.out.println("Processed: " + minfo.chunk_processed_rows);
   }
 }
