@@ -1,0 +1,7 @@
+def main(argv):
+    '\n    Main program.\n\n    @return: none\n    '
+    global g_script_name
+    g_script_name = os.path.basename(argv[0])
+    parse_args(argv)
+    b = MinicranBuilder(g_print_only, g_output_dir, g_platform, g_rversion, g_branch, g_buildnum)
+    b.build()
