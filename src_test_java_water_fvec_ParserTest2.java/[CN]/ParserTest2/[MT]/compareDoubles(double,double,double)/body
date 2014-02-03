@@ -1,13 +1,6 @@
 {
-  int e1=0;
-  int e2=0;
-  while (a > 1) {
-    a/=10;
-    ++e1;
-  }
-  while (b > 1) {
-    b/=10;
-    ++e2;
-  }
-  return ((e1 == e2) && Math.abs(a - b) < threshold);
+  if (a == b)   return true;
+  if ((Double.isNaN(a) && !Double.isNaN(b)) || (!Double.isNaN(a) && Double.isNaN(b)))   return false;
+  if (Double.isInfinite(a) || Double.isInfinite(b))   return false;
+  return Math.abs(a - b) / Math.max(Math.abs(a),Math.abs(b)) < threshold;
 }
