@@ -1,0 +1,6 @@
+{
+  Lockable old=val == null ? null : (Lockable)(val.get().clone());
+  Lockable nnn=atomic(old);
+  if (nnn == null)   return null;
+  return val == null ? new Value(_key,nnn) : new Value(_key,nnn,val._persist);
+}
