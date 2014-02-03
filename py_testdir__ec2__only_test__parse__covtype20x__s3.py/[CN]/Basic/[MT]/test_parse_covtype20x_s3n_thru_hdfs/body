@@ -1,0 +1,15 @@
+def test_parse_covtype20x_s3n_thru_hdfs(self):
+    bucket = 'home-0xdiag-datasets'
+    csvFilename = 'covtype20x.data'
+    importFolderPath = 'standard'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    trialMax = 3
+    timeoutSecs = 500
+    for trial in range(trialMax):
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        start = time.time()
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='s3', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
+        elapsed = (time.time() - start)
+        print 'h2o reported parse time:', parseResult['response']['time']
+        print 'parse result:', parseResult['destination_key']
+        print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
