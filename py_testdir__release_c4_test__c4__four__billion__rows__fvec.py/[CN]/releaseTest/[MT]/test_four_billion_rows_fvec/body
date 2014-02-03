@@ -28,7 +28,7 @@ def test_four_billion_rows_fvec(self):
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print ('\n' + csvFilename)
         kwargs = {'response': ('C' + str(1)), 'n_folds': 0, 'family': 'binomial', 'case_mode': '=', 'case_val': 1, }
-        colX = 0
+        colX = 1
         timeoutSecs = 900
         kwargs.update({'alpha': 0, 'lambda': 0, })
         start = time.time()
