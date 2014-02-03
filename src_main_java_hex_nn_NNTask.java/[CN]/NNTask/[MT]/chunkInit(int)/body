@@ -1,6 +1,6 @@
 {
+  _nrows=nrows;
   _neurons=makeNeurons(_dinfo,_output);
-  _output.chunk_node_count=(nrows > 0 ? 1 : 0);
-  _output.chunk_processed_rows=0;
-  System.out.println("chunkInit: Working on " + nrows + " rows.");
+  _chunk_node_count=_nrows > 0 ? 1 : 0;
+  System.out.println("chunkInit: Working on " + _nrows + " rows.");
 }

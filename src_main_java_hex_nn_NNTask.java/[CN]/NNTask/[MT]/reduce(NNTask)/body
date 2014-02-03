@@ -1,3 +1,7 @@
 {
-  _output.add(other._output);
+  if (other._chunk_node_count > 0) {
+    _output.add(other._output);
+    _chunk_node_count+=other._chunk_node_count;
+    _nrows+=other._nrows;
+  }
 }

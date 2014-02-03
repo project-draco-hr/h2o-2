@@ -1,15 +1,9 @@
 {
-  if (other == this) {
-    System.out.println("reduce: locally shared matrix, already have added weights and biases.");
-    return;
-  }
-  if (other.chunk_node_count != 0) {
+  if (other != this) {
     System.out.println("reduce: adding remote weights and biases.");
     Utils.add(weights,other.weights);
     Utils.add(weights_momenta,other.weights_momenta);
     Utils.add(biases,other.biases);
     Utils.add(biases_momenta,other.biases_momenta);
-    chunk_processed_rows+=other.chunk_processed_rows;
-    chunk_node_count+=other.chunk_node_count;
   }
 }
