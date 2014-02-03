@@ -1,9 +1,9 @@
 {
-  if (other != this) {
-    System.out.println("reduce: adding remote weights and biases.");
-    Utils.add(weights,other.weights);
+  Utils.add(weights,other.weights);
+  Utils.add(biases,other.biases);
+  if (has_momenta()) {
+    assert(other.has_momenta());
     Utils.add(weights_momenta,other.weights_momenta);
-    Utils.add(biases,other.biases);
     Utils.add(biases_momenta,other.biases_momenta);
   }
 }

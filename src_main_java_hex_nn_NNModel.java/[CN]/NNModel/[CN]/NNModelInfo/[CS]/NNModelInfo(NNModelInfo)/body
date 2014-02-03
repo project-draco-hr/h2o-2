@@ -2,9 +2,11 @@
   this(other.parameters,other.units[0],other.units[other.units.length - 1]);
   set_processed(other.get_processed());
   for (int i=0; i < other.weights.length; ++i)   weights[i]=other.weights[i].clone();
-  for (int i=0; i < other.weights_momenta.length; ++i)   weights_momenta[i]=other.weights_momenta[i].clone();
   for (int i=0; i < other.biases.length; ++i)   biases[i]=other.biases[i].clone();
-  for (int i=0; i < other.biases_momenta.length; ++i)   biases_momenta[i]=other.biases_momenta[i].clone();
+  if (has_momenta()) {
+    for (int i=0; i < other.weights_momenta.length; ++i)     weights_momenta[i]=other.weights_momenta[i].clone();
+    for (int i=0; i < other.biases_momenta.length; ++i)     biases_momenta[i]=other.biases_momenta[i].clone();
+  }
   mean_bias=other.mean_bias.clone();
   rms_bias=other.rms_bias.clone();
   mean_weight=other.mean_weight.clone();
