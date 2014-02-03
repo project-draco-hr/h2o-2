@@ -1,0 +1,13 @@
+def stop_cloud(object):
+    '\n    Stop H2O cloud.\n    '
+    if object.terminated:
+        return
+    if object.use_cloud:
+        print ''
+        print 'All tests completed...'
+        print ''
+        return
+    print ''
+    print 'All tets completed; tearing down clouds...'
+    print ''
+    object.cloud.stop()

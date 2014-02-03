@@ -52,7 +52,7 @@ def test_parse_libsvm(self):
                     raise Exception(('testing %s, found unexpected mismatch in df.difference[%d]: %s' % (csvPathname, i, d)))
             if (DO_SIZE_CHECKS and enableSizeChecks):
                 print 'Comparing original inspect to the inspect after parsing the downloaded csv'
-                self.assertGreater(len(df.difference), 29, msg=('Want >=30 , not %d differences between the two rfView json responses. %s' % (len(df.difference), h2o.dump_json(df.difference))))
+                self.assertLess(len(df.difference), 3, msg=('Want < 3, not %d differences between the two rfView json responses. %s' % (len(df.difference), h2o.dump_json(df.difference))))
                 self.assertEqual(row_sizeA, row_sizeB, ('row_size mismatches after re-parse of downloadCsv result %d %d' % (row_sizeA, row_sizeB)))
                 self.assertEqual(value_size_bytesA, value_size_bytesB, ('value_size_bytes mismatches after re-parse of downloadCsv result %d %d' % (value_size_bytesA, value_size_bytesB)))
             print 'missingValuesListA:', missingValuesListA

@@ -1,0 +1,12 @@
+def wipe_output_dir(dir_to_wipe):
+    print ''
+    print 'Wiping output directory...'
+    try:
+        if os.path.exists(dir_to_wipe):
+            shutil.rmtree(dir_to_wipe)
+    except OSError as e:
+        print ''
+        print ('ERROR: Removing output directory failed: ' + dir_to_wipe)
+        print '       (errno {0}): {1}'.format(e.errno, e.strerror)
+        print ''
+        sys.exit(1)

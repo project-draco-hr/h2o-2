@@ -1,0 +1,28 @@
+def run_tests(self):
+    '\n        Run all tests.\n\n        @return: none\n        '
+    if self.terminated:
+        return
+    num_tests = len(self.tests)
+    num_nodes = self.nodes_in_cloud
+    self.__log__('')
+    if self.use_cloud:
+        self.__log__('Starting {} tests...'.format(num_tests))
+    else:
+        self.__log__('Starting {} tests on {} total H2O nodes...'.format(num_tests, num_nodes))
+    self.__log__('')
+    while (len(self.tests_not_started) > 0):
+        self.start_cloud()
+        test = self.tests_not_started.pop(0)
+        test.ip = self.cloud.get_ip()
+        test.port = self.cloud.get_port()
+        test.test_run = TableRow('test_run')
+        test.test_run.row.update(self.__scrape_h2o_sys_info__())
+        test.do_test()
+        test.test_run.row['start_epoch_ms'] = test.start_ms
+        test.test_run.row['end_epoch_ms'] = test.end_ms
+        test.test_run.row['total_hosts'] = self.__get_num_hosts__()
+        test.test_run.row['total_nodes'] = self.__get_num_nodes__()
+        test.test_run.row['test_name'] = test.test_name
+        test.test_run.row['instance_type'] = self.__get_instance_type__()
+        test.test_run.update(True)
+        self.stop_cloud()

@@ -6,6 +6,6 @@
   for (int i=0; i < files.length; i++)   sb.append("<tr><td><a href='" + parse() + "?source_key=").append(keys[i]).append("'>").append(files[i]).append("</a></td></tr>");
   DocGen.HTML.arrayTail(sb);
   if (fails.length > 0)   DocGen.HTML.array(DocGen.HTML.title(sb,"fails"),fails);
-  if (dels.length > 0)   DocGen.HTML.array(DocGen.HTML.title(sb,"Keys deleted before importing"),dels);
+  if (dels != null && dels.length > 0)   DocGen.HTML.array(DocGen.HTML.title(sb,"Keys deleted before importing"),dels);
   return true;
 }

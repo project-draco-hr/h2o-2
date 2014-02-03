@@ -1,0 +1,27 @@
+def __scrape_h2o_sys_info__(object):
+    '\n    Scrapes the following information from the jvm_output_file:\n        user_name, build_version, build_branch, build_sha, build_date,\n        cpus_per_host, heap_bytes_per_node\n    '
+    test_run_dict = {}
+    test_run_dict['product_name'] = 'h2o'
+    test_run_dict['component_name'] = 'None'
+    with open(object.jvm_output_file, 'r') as f:
+        for line in f:
+            line = line.replace('\n', '')
+            if ('Built by' in line):
+                test_run_dict['user_name'] = line.split(': ')[(-1)]
+            if ('Build git branch' in line):
+                test_run_dict['build_branch'] = line.split(': ')[(-1)]
+            if ('Build git hash' in line):
+                test_run_dict['build_sha'] = line.split(': ')[(-1)]
+            if ('Build project version' in line):
+                test_run_dict['build_version'] = line.split(': ')[(-1)]
+            if ('Built on' in line):
+                test_run_dict['build_date'] = line.split(': ')[(-1)]
+            if ('Java availableProcessors' in line):
+                test_run_dict['cpus_per_host'] = line.split(': ')[(-1)]
+            if ('Java heap maxMemory' in line):
+                test_run_dict['heap_bytes_per_node'] = str(((float(line.split(': ')[(-1)].split(' ')[0]) * 1024) * 1024))
+            if ('error' in line.lower()):
+                test_run_dict['error_message'] = line
+            else:
+                test_run_dict['error_message'] = 'No error'
+    return test_run_dict

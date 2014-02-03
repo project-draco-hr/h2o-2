@@ -1,9 +1,11 @@
 def invoke(self):
     '\n        Scrapes the stdouterr from the R phase. Inserts into results tables.\n        Additionally handles the KMeans clustering results table.\n        @return: None\n        '
+    self.insert_phase_result()
     kmeans_result = self.__scrape_kmeans_result__()
     if kmeans_result:
-        self.test_run_clustering_result = TableRow('test_run_clustering_result')
+        self.test_run_clustering_result = TableRow('test_run_clustering_result', self.perfdb)
         self.test_run_clustering_result.row.update(kmeans_result)
         self.test_run_clustering_result.update()
     self.test_run_model_result.row['model_json'] = MySQLdb.escape_string(str(self.__scrape_model_result__()))
     self.test_run_model_result.update()
+    return None
