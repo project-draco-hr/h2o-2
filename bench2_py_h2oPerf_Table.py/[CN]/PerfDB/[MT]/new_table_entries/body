@@ -1,4 +1,4 @@
 def new_table_entries(self):
     '\n        Create a new, empty row (to be filled in) for each table.\n        Return a dict of TableRow objects with keys being the table name.\n        '
-    table_rows = [TableRow(table_name) for table_name in self.table_names]
+    table_rows = [TableRow(table_name, self) for table_name in self.table_names]
     return dict(((name, table) for (name, table) in zip(self.table_names, table_rows)))

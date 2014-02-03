@@ -8,5 +8,13 @@ def start(self):
     self.output_file_name = os.path.join(self.output_dir, (((('java_' + str(self.cloud_num)) + '_') + str(self.node_num)) + '.out'))
     f = open(self.output_file_name, 'w')
     self.child = subprocess.Popen(args=cmd, stdout=f, stderr=subprocess.STDOUT, cwd=self.output_dir)
+
+    @atexit.register
+    def kill_process():
+        try:
+            self.terminate()
+            self.child.terminate()
+        except OSError:
+            pass
     self.pid = self.child.pid
     print ('+ CMD: ' + ' '.join(cmd))

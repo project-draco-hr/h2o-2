@@ -1,5 +1,6 @@
 def invoke(self):
-    '\n    Scrapes the stdouterr from the R phase. \n    This invoke method will pass off control to the appropriate result scraper\n    using the __switch__ override.\n  \n    Some preliminary scraping will be done here to obtain the correct result type.\n    @return: None\n    '
+    '\n        Scrapes the stdouterr from the R phase. \n        This invoke method will pass off control to the appropriate result scraper\n        using the __switch__ override.\n  \n        Some preliminary scraping will be done here to obtain the correct result type.\n        @return: None\n        '
+    self.insert_phase_result()
     predict_type = ''
     with open(self.output_file_name, 'r') as f:
         flag = False
@@ -12,3 +13,4 @@ def invoke(self):
                 flag = True
     self.result_type = predict_type
     self.__switch__()
+    return None
