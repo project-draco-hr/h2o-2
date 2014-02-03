@@ -77,8 +77,10 @@ def infoFromSummary(summaryResult, noPrint=False):
                     print 'mean:', mean
                     print 'sigma:', sigma
                 if (not smin):
+                    print h2o.dump_json(columns)
                     raise Exception(('Why is min[] empty for a %s col (%s) ? %s' % (smin, stype, N)))
                 if (not smax):
+                    print h2o.dump_json(columns)
                     raise Exception(('Why is max[] empty for a %s col? (%s) ? %s' % (smin, stype, N)))
                 if (len(bins) >= 2):
                     percentiles = columns['percentiles']
