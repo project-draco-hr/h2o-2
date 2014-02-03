@@ -1,14 +1,20 @@
 def __init__(self, object):
+    self.perfdb = object.perfdb
     self.phase = object.phase
     self.test_dir = object.test_dir
     self.test_short_dir = object.test_short_dir
     self.output_dir = object.output_dir
     self.output_file_name = object.output_file_name
-    self.contaminated = object.contaminated
-    self.contamination_message = ('No contamination.' if (not self.contaminated) else object.contamination_message)
+    self.contamination = os.path.join(self.output_dir, 'contamination_message')
+    self.contaminated = (1 if os.path.exists(self.contamination) else 0)
+    self.contamination_message = ''
+    if self.contaminated:
+        with open(self.contamination, 'r') as f:
+            self.contamination_message = MySQLdb.escape_string(f.read().replace('\n', ''))
+    self.did_correct_pass = 0
+    self.did_time_pass = 0
     self.test_run_binomial_classification_result = ''
     self.test_run_cm_result = ''
     self.test_run_phase_result = ''
     self.test_run_regression_result = ''
     self.test_run_multinomial_classification_result = ''
-    Scraper.insert_phase_result(self)

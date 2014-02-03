@@ -1,0 +1,32 @@
+def report_summary(object):
+    '\n    Report some summary information when the tests have finished running.\n\n    @return: none\n    '
+    global dash_line
+    passed = 0
+    failed = 0
+    notrun = 0
+    total = 0
+    for test in object.tests:
+        if test.get_passed():
+            passed += 1
+        elif test.get_completed():
+            failed += 1
+        else:
+            notrun += 1
+        total += 1
+    end_seconds = time.time()
+    delta_seconds = (end_seconds - object.start_seconds)
+    run = (total - notrun)
+    object.__log__(dash_line)
+    object.__log__('SUMMARY OF RESULTS')
+    object.__log__(dash_line)
+    object.__log__(('Total tests:          ' + str(total)))
+    object.__log__(('Passed:               ' + str(passed)))
+    object.__log__(('Did not pass:         ' + str(failed)))
+    object.__log__(('Did not complete:     ' + str(notrun)))
+    object.__log__('')
+    object.__log__(('Total time:           %.2f sec' % delta_seconds))
+    if (run > 0):
+        object.__log__(('Time/completed test:  %.2f sec' % (delta_seconds / run)))
+    else:
+        object.__log__('Time/completed test:  N/A')
+    object.__log__('')

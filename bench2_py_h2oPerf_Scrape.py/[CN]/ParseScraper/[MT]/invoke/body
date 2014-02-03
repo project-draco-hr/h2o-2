@@ -1,4 +1,5 @@
 def invoke(self):
-    '\n        Scrapes the stdouterr from the R phase. Inserts into results tables.\n        The phase result is handled in the __init__ of this object.\n        \n        The work be done here is on the self.test_run dictionary\n        @return: test_run dictionary\n        '
+    '\n        Scrapes the stdouterr from the R phase. Inserts into results tables.\n        The phase result is handled in the __init__ of this object.\n\n        The work be done here is on the self.test_run dictionary\n        @return: test_run dictionary\n        '
+    self.insert_phase_result()
     self.test_run.update(self.__scrape_parse_result__())
     return self.test_run

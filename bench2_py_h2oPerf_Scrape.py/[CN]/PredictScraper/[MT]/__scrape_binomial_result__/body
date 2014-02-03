@@ -9,7 +9,7 @@ def __scrape_binomial_result__(self):
                 break
             if (('BINOMIAL' in line) and ('print' not in line)):
                 flag = True
-    self.test_run_binomial_classification_result = TableRow('test_run_binomial_classification_result')
+    self.test_run_binomial_classification_result = TableRow('test_run_binomial_classification_result', self.perfdb)
     self.test_run_binomial_classification_result.row.update(binomial_r['binomial_result'])
     self.test_run_binomial_classification_result.update()
     return None
