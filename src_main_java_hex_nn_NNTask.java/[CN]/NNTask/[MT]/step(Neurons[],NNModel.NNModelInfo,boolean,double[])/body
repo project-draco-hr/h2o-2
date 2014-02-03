@@ -1,6 +1,6 @@
 {
   for (int i=1; i < neurons.length - 1; ++i)   neurons[i].fprop(training);
-  if (minfo.parameters.classification) {
+  if (minfo.get_params().classification) {
     ((Neurons.Softmax)neurons[neurons.length - 1]).fprop();
     if (training) {
       for (int i=1; i < neurons.length - 1; i++)       Arrays.fill(neurons[i]._e,0);

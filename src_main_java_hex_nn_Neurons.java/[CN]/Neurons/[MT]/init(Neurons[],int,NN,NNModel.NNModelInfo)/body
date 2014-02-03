@@ -8,7 +8,9 @@
   if (!isInput()) {
     _previous=neurons[index - 1];
     _minfo=minfo;
-    _w=minfo.weights[index - 1];
-    _b=minfo.biases[index];
+    _w=minfo.get_weights(index - 1);
+    _b=minfo.get_biases(index - 1);
+    _wm=minfo.get_weights_momenta(index - 1);
+    _bm=minfo.get_biases_momenta(index - 1);
   }
 }

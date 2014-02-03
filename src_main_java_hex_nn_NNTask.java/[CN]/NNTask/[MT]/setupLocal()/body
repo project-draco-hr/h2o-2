@@ -1,11 +1,7 @@
 {
-  if (_input == null) {
-    System.out.println("setupLocal: Initializing data structures.");
-    _input=new NNModel.NNModelInfo(_params,_dinfo.fullN(),_dinfo._adaptedFrame.lastVec().domain().length);
-    _input.initializeMembers();
-  }
+  assert(_input != null);
   System.out.println("setupLocal: Transferring ownership to local modelinfo.");
   _output=new NNModel.NNModelInfo(_input);
-  _output.processed=0;
+  _output.reset_processed();
   _input=null;
 }

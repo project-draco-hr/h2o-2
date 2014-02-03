@@ -1,4 +1,6 @@
 {
+  assert(num_input > 0);
+  assert(num_output > 0);
   parameters=params;
   final int layers=parameters.hidden.length;
   if (!parameters.classification)   assert(num_output == 1);
@@ -8,9 +10,13 @@
   System.arraycopy(parameters.hidden,0,units,1,layers);
   units[layers + 1]=num_output;
   weights=new float[layers + 1][];
+  weights_momenta=new float[layers + 1][];
   for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];
-  biases=new double[layers + 2][];
-  for (int i=0; i <= layers + 1; ++i)   biases[i]=new double[units[i]];
+  for (int i=0; i <= layers; ++i)   weights_momenta[i]=new float[units[i] * units[i + 1]];
+  biases=new double[layers + 1][];
+  biases_momenta=new double[layers + 1][];
+  for (int i=0; i <= layers; ++i)   biases[i]=new double[units[i + 1]];
+  for (int i=0; i <= layers; ++i)   biases_momenta[i]=new double[units[i + 1]];
   mean_bias=new double[units.length];
   rms_bias=new double[units.length];
   mean_weight=new double[units.length];
