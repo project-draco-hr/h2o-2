@@ -23,7 +23,7 @@ def test_RF_mnist_reals_fvec(self):
         print 'parse result:', parseResult['destination_key']
         ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300, forRF=True)
         ntrees = 10
-        params = {'response': 'C0', 'ignored_cols_by_name': ignore_x, 'ntrees': ntrees, 'mtries': 28, 'max_depth': 15, 'sample_rate': 0.67, 'destination_key': 'RF_model', 'nbins': 1024, 'seed': 784834182943470027, }
+        params = {'response': 0, 'ignored_cols_by_name': ignore_x, 'ntrees': ntrees, 'mtries': 28, 'max_depth': 15, 'sample_rate': 0.67, 'destination_key': 'RF_model', 'nbins': 1024, 'seed': 784834182943470027, }
         kwargs = params.copy()
         print 'Trying rf'
         timeoutSecs = 1800

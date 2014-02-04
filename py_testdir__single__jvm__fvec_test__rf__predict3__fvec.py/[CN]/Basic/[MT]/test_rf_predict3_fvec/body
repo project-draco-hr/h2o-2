@@ -47,7 +47,7 @@ def test_rf_predict3_fvec(self):
         translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
     else:
         y = 0
-        response = 'C0'
+        response = 'C1'
         skipSrcOutputHeader = 1
         skipPredictHeader = 1
         trees = 6
@@ -99,6 +99,7 @@ def test_rf_predict3_fvec(self):
         print 'wrong/Total * 100 ', pctWrong
         if (pctWrong > 2.0):
             raise Exception("pctWrong too high. Expect < 2% error because it's reusing training data")
+        return pctWrong
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     kwargs = {'destination_key': 'rf_model', 'response': response, 'ntrees': trees, }
     rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
@@ -108,4 +109,5 @@ def test_rf_predict3_fvec(self):
     print "don't you need one less column (the last is output?)"
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
     print 'y=', y
-    predict_and_compare_csvs(model_key='rf_model', hex_key=hexKey, translate=translate, y=y)
+    pctWrong = predict_and_compare_csvs(model_key='rf_model', hex_key=hexKey, translate=translate, y=y)
+    self.assertAlmostEqual(pctWrong, 0.7, delta=0.2, msg=("predicted pctWrong: %s should be small because we're predicting with training data" % pctWrong))
