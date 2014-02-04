@@ -1,0 +1,9 @@
+def contamination_message(self):
+    message = 'Contamination in phase {}. '
+    parse_m = (message.format('parse') if self.parse_process.contaminated else '')
+    model_m = (message.format('model') if self.model_process.contaminated else '')
+    contam = ('No contamination' if ((parse_m == '') and (model_m == '')) else (parse_m + model_m))
+    if self.predict_file:
+        predict_m = (message.format('predict') if self.predict_process.contaminated else '')
+        contam += predict_m
+    return MySQLdb.escape_string(contam)

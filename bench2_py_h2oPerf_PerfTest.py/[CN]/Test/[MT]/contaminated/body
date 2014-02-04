@@ -1,0 +1,5 @@
+def contaminated(self):
+    res = (self.parse_process.contaminated and self.model_process.contaminated)
+    if self.predict_file:
+        res = (res and self.predict_process.contaminated)
+    return (1 if res else 0)

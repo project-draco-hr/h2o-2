@@ -7,7 +7,7 @@ def __init__(self, object):
     self.output_file_name = object.output_file_name
     self.contamination = os.path.join(self.output_dir, 'contamination_message')
     self.contaminated = (1 if os.path.exists(self.contamination) else 0)
-    self.contamination_message = ''
+    self.contamination_message = 'No contamination.'
     if self.contaminated:
         with open(self.contamination, 'r') as f:
             self.contamination_message = MySQLdb.escape_string(f.read().replace('\n', ''))
