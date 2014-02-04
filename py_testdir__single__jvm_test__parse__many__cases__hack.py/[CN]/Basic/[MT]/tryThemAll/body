@@ -8,7 +8,13 @@ def tryThemAll(self, set, rows):
                 csvPathname = (((((((((SYNDATASETS_DIR + '/parsetmp_') + str(set)) + '_') + str(eolCase)) + '_') + str(tokenCase)) + '_') + str(sepCase)) + '.data')
                 self.writeRows(csvPathname, newRows2, eol)
                 parseResult = h2i.import_parse(path=csvPathname, schema='local', noPrint=(not h2o.verbose))
-                h2o_cmd.runRF(parseResult=parseResult, trees=1, timeoutSecs=10, retryDelaySecs=1.0, noPrint=True, print_params=True)
+                inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+                print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+                num_rows = inspect['num_rows']
+                num_cols = inspect['num_cols']
+                self.assertEqual(num_cols, 4, ('Parsed wrong number of cols: %s' % num_cols))
+                self.assertEqual(num_rows, 29, ('Parsed wrong number of rows: %s' % num_rows))
+                h2o_cmd.runRF(parseResult=parseResult, trees=1, timeoutSecs=10, retryDelaySecs=1.0, noPrint=True, print_params=False)
                 h2o.verboseprint('Set', set)
                 h2o.check_sandbox_for_errors()
                 sys.stdout.write('.')
