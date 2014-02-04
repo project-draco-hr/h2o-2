@@ -11,4 +11,6 @@ def flat_unzip(my_zip, my_dir):
                 with target:
                     shutil.copyfileobj(source, target)
                     resultList.append(target)
+            source.close()
+            target.close()
     return resultList
