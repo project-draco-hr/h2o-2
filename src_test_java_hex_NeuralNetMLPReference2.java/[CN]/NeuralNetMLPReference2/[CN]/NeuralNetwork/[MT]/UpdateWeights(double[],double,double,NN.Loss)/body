@@ -31,7 +31,7 @@
       double delta=learnRate * hGrads[j] * inputs[i];
       ihWeights[i][j]+=delta;
       ihWeights[i][j]+=momentum * ihPrevWeightsDelta[i][j];
-      ihPrevWeightsDelta[i][j]=delta;
+      ihPrevWeightsDelta[i][j]=(float)delta;
     }
   }
   for (int i=0; i < hBiases.length; ++i) {
@@ -45,7 +45,7 @@
       double delta=learnRate * oGrads[j] * hOutputs[i];
       hoWeights[i][j]+=delta;
       hoWeights[i][j]+=momentum * hoPrevWeightsDelta[i][j];
-      hoPrevWeightsDelta[i][j]=delta;
+      hoPrevWeightsDelta[i][j]=(float)delta;
     }
   }
   for (int i=0; i < oBiases.length; ++i) {
