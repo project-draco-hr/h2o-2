@@ -9,6 +9,6 @@ def __scrape_phase_result__(self):
                 break
             if (('PHASE RESULT' in line) and ('print' not in line)):
                 flag = True
-    self.did_correct_pass = phase_r['phase_result']['correctness_passed']
-    self.did_time_pass = phase_r['phase_result']['timing_passed']
+    self.did_correct_pass = int(phase_r['phase_result']['correctness_passed'])
+    self.did_time_pass = int(phase_r['phase_result']['timing_passed'])
     return phase_r['phase_result']

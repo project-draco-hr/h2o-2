@@ -1,0 +1,24 @@
+def do_test(self):
+    '\n        This call is blocking.\n\n        Perform the test. Each phase is started by passing the ip and port.\n        We block until a phase completes.\n\n        Once a phase is complete, the stdouterr is scraped and the database\n        tables are updated.\n        '
+    self.start_ms = int(round((time.time() * 1000)))
+    self.parse_process.start(self.ip, self.port)
+    self.parse_process.block()
+    res = self.parse_process.scrape_phase()
+    self.test_run.row.update(res)
+    self.model_process.start(self.ip, self.port)
+    self.model_process.block()
+    self.model_process.scrape_phase()
+    if self.predict_file:
+        self.predict_process.start(self.ip, self.port)
+        self.predict_process.block()
+        self.predict_process.scrape_phase()
+    self.end_ms = int(round((time.time() * 1000)))
+    self.test_run.row['timing_passed'] = self.did_time_pass()
+    self.test_run.row['correctness_passed'] = self.did_correct_pass()
+    self.test_run.row['passed'] = self.did_pass()
+    self.test_run.row['contaminated'] = self.contaminated()
+    self.test_run.row['contamination_message'] = self.contamination_message()
+    self.test_run.row['total_hosts'] = self.total_hosts
+    self.test_run.row['total_nodes'] = self.total_nodes
+    self.test_run.row['instance_type'] = self.instance_type
+    self.test_is_complete = True

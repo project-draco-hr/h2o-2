@@ -1,0 +1,27 @@
+def __init__(self, cfg, test_dir, test_short_dir, output_dir, parse_file, model_file, predict_file, perfdb):
+    self.ip = ''
+    self.port = (-1)
+    self.aws = False
+    self.heap_bytes_per_node = ''
+    self.total_hosts = 0
+    self.total_nodes = 0
+    self.instance_type = 'none'
+    self.hosts = []
+    self.cfg = cfg
+    self.__parse_config__()
+    self.perfdb = perfdb
+    self.test_dir = test_dir
+    self.test_short_dir = test_short_dir
+    self.output_dir = output_dir
+    self.parse_file = parse_file
+    self.model_file = model_file
+    self.predict_file = predict_file
+    self.test_run = ''
+    self.test_name = os.path.basename(test_dir)
+    self.test_is_complete = False
+    self.test_cancelled = False
+    self.test_terminated = False
+    self.start_ms = (-1)
+    self.parse_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.parse_file, self.perfdb)
+    self.model_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.model_file, self.perfdb)
+    self.predict_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.predict_file, self.perfdb)
