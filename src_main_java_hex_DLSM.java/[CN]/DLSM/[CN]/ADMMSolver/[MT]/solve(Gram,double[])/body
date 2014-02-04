@@ -3,13 +3,13 @@
   Arrays.fill(z,0);
   if (_lambda > 0)   gram.addDiag(_lambda * (1 - _alpha) * 0.5 + _rho);
   int attempts=0;
-  Cholesky chol=gram.cholesky(null);
+  Cholesky chol=gram.cholesky(null,_jobKey);
   double rhoAdd=0;
   if (!chol._isSPD && _autoHandleNonSPDMatrix)   while (!chol._isSPD && attempts < 10) {
     double rhoIncrement=_rho * (1 << ++attempts);
     gram.addDiag(rhoIncrement);
     rhoAdd+=rhoIncrement;
-    gram.cholesky(chol);
+    gram.cholesky(chol,_jobKey);
   }
   if (!chol._isSPD)   throw new NonSPDMatrixException();
   if (_lambda == 0) {
