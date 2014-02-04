@@ -1,10 +1,8 @@
 {
-  Frame x, probs;
-  double p[];
-  if ((probs=env.ary(-1)).vecs().length > 1)   throw new IllegalArgumentException("Argument #2 in Quantile contains more than 1 column.");
-  if ((x=env.ary(-2)).vecs().length > 1)   throw new IllegalArgumentException("Argument #1 in Quantile contains more than 1 column.");
-  Vec pv=probs.anyVec();
-  p=new double[(int)pv.length()];
+  Frame x=env.ary(-2);
+  Vec xv=x.theVec("Argument #1 in Quantile contains more than 1 column.");
+  Vec pv=env.ary(-1).theVec("Argument #2 in Quantile contains more than 1 column.");
+  double p[]=new double[(int)pv.length()];
   for (int i=0; i < pv.length(); i++)   if ((p[i]=pv.at((long)i)) < 0 || p[i] > 1)   throw new IllegalArgumentException("Quantile: probs must be in the range of [0, 1].");
   double samples[]=new Resample(10000).doAll(x)._local;
   Arrays.sort(samples);
@@ -14,8 +12,8 @@
   for (  double prob : p) {
     double value;
     int ix=(int)(samples.length * prob);
-    if (ix >= samples.length)     value=x.anyVec().max();
- else     if (prob == 0)     value=x.anyVec().min();
+    if (ix >= samples.length)     value=xv.max();
+ else     if (prob == 0)     value=xv.min();
  else     value=samples[ix];
     nc.addNum(value);
   }
