@@ -20,9 +20,8 @@
     }
   }
   int argcnt=vars.size();
-  E.xpeek('{',(x=E._x),null);
   E._env.push(vars);
-  AST body=E.xpeek('}',E._x,ASTStatement.parse(E));
+  AST body=E.peek('{') ? E.xpeek('}',E._x,ASTStatement.parse(E)) : parseCXExpr(E);
   if (body == null)   E.throwErr("Missing function body",x);
   E._env.pop();
   String xvars[]=new String[argcnt + 1];
