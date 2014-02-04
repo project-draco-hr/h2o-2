@@ -1,0 +1,15 @@
+def parse_args():
+    try:
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--wipe', action='store_true', help='Wipes the output dir before starting.')
+        parser.add_argument('--baseport', help='The first port at which H2O starts searching for free ports.')
+        parser.add_argument('--test', help='If you only want to run one test, specify it like this.')
+        parser.add_argument('--testlist', help="A file containing a list of tests to run (for example the 'failed.txt' file from the output directory).")
+        parser.add_argument('--testgroup', help='Test a group of tests by function: pca, glm, kmeans, gbm, rf, algos, golden, munging')
+        parser.add_argument('--usecloud', help='ip:port of cloud to send tests to instead of starting clouds.')
+        args = ''
+        args = vars(parser.parse_args())
+    except:
+        parser.print_help()
+        sys.exit(1)
+    return args

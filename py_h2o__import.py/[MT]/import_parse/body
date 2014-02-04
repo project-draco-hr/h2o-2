@@ -1,4 +1,4 @@
-def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None, hex_key=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, doSummary=True, **kwargs):
+def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None, hex_key=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, doSummary=True, noPrint=True, **kwargs):
     if (not node):
         node = h2o.nodes[0]
     (importResult, importPattern) = import_only(node, schema, bucket, path, timeoutSecs, retryDelaySecs, initialDelaySecs, pollTimeoutSecs, noise, benchmarkLogging, noPoll, doSummary, src_key, **kwargs)
@@ -8,7 +8,7 @@ def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None
     h2o.verboseprint('parseResult:', h2o.dump_json(parseResult))
     if (doSummary and (not noPoll)):
         h2o.check_sandbox_for_errors()
-        node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs)
+        node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs, noPrint=noPrint)
     else:
         h2o.check_sandbox_for_errors()
     return parseResult

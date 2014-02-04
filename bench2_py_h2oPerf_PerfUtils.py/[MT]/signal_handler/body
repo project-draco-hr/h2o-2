@@ -1,0 +1,11 @@
+def signal_handler(signum, stackframe):
+    global sig
+    global dash_line
+    use(stackframe)
+    if sig:
+        return
+    sig = True
+    print dash_line
+    print (('SIGNAL CAUGHT (' + str(signum)) + ').  STOPPING TESTS AND ROLLING BACK TRANSACTIONS.')
+    print dash_line
+    sys.exit(1)

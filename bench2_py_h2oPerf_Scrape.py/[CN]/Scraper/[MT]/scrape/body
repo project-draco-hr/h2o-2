@@ -1,4 +1,9 @@
 def scrape(self):
     '\n        Switches out to the phase scraper for scraping R output.\n        The subclass object is then invoked and an object with\n        table information is percolated back to the caller.\n        '
     phase_scraper = self.__switch__()
-    return phase_scraper.invoke()
+    res = phase_scraper.invoke()
+    self.did_time_pass = res.did_time_pass
+    self.did_correct_pass = res.did_correct_pass
+    self.contaminated = res.contaminated
+    self.contamination_message = res.contamination_message
+    return res

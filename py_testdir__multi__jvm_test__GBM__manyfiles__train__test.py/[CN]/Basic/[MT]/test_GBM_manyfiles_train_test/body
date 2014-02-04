@@ -28,7 +28,7 @@ def test_GBM_manyfiles_train_test(self):
         print 'test parse result:', parseTestResult['destination_key']
         execExpr = ('%s[,378+1]=%s[,378+1]>15' % (testKey, testKey))
         resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=60)
-        response = 378
+        response = 'C379'
         x = range(numCols)
         del x[response]
         ignored_cols_by_name = ','.join(map((lambda x: ('C' + str(x))), random.sample(x, 300)))

@@ -1,3 +1,8 @@
 def scrape_phase(self):
-    scraper = Scraper(self.rtype[0], self.test_dir, self.test_short_dir, self.output_dir, self.output_file_name)
-    return scraper.scrape()
+    scraper = Scraper(self.perfdb, self.rtype[0], self.test_dir, self.test_short_dir, self.output_dir, self.output_file_name)
+    res = scraper.scrape()
+    self.contaminated = scraper.contaminated
+    self.contamination_message = scraper.contamination_message
+    self.did_time_pass = scraper.did_time_pass
+    self.did_correct_pass = scraper.did_correct_pass
+    return res

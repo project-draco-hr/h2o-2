@@ -1,0 +1,8 @@
+def insert_phase_result(self):
+    trpr = TableRow('test_run_phase_result', self.perfdb)
+    with open(self.output_file_name, 'r') as f:
+        trpr.row['stdouterr'] = MySQLdb.escape_string(f.read().replace('\n', ''))
+    trpr.row['contaminated'] = self.contaminated
+    trpr.row['contamination_message'] = self.contamination_message
+    trpr.row.update(self.__scrape_phase_result__())
+    trpr.update()

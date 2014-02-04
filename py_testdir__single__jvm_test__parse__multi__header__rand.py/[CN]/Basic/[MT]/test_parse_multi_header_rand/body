@@ -4,9 +4,12 @@ def test_parse_multi_header_rand(self):
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     allowedLetters = 'abcdeABCDE01234[]'
     headerChoices = []
-    for n in range(20):
-        l = random.randint(1, 64)
-        headerName = ''.join([random.choice(allowedLetters) for _ in range(l)])
+    for n in range(500):
+        done = False
+        while (not done):
+            l = random.randint(1, 64)
+            headerName = ''.join([random.choice(allowedLetters) for _ in range(l)])
+            done = (headerName not in headerChoices)
         headerChoices.append(headerName)
     tryList = [(3, 5, 9, 'cA', 60, 0), (3, 5, 25, 'cA', 60, 0), (10, 100, 500, 'cA', 60, 0)]
     for trial in range(20):
@@ -57,7 +60,7 @@ def test_parse_multi_header_rand(self):
         print 'HEADER_SEP_CHAR_GEN:', HEADER_SEP_CHAR_GEN
         print 'GZIP_DATA:', GZIP_DATA
         print 'GZIP_HEADER:', GZIP_HEADER
-        hfhList = ([random.choice(headerChoices) for h in range(colCount)] + ['output'])
+        hfhList = (random.sample(headerChoices, colCount) + ['output'])
         headerForHeader = HEADER_SEP_CHAR_GEN.join(hfhList)
         hfdList = hfhList
         headerForData = SEP_CHAR_GEN.join(hfdList)
