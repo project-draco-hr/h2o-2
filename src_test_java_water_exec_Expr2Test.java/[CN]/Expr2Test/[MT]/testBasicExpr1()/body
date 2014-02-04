@@ -133,6 +133,7 @@
     checkStr("function(funy){function(x){funy(x)*funy(x)}}(sgn)(-2)",1);
     checkStr("h.hex[h.hex[,4]>30,]");
     checkStr("a=c(1,2,3);a[a[,1]>10,1]");
+    checkStr("sapply(a,sum)[1,1]",6);
     checkStr("apply(h.hex,2,sum)");
     checkStr("y=5;apply(h.hex,2,function(x){x[]+y})");
     checkStr("apply(h.hex,2,function(x){x=1;h.hex})","Arg 'fcn' typed as ary(ary) but passed ary(dbl)\napply(h.hex,2,function(x){x=1;h.hex})\n     ^-------------------------------^\n");
