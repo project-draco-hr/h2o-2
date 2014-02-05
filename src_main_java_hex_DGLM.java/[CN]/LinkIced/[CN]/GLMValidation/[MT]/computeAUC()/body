@@ -1,5 +1,7 @@
 {
   if (_cm == null)   return;
+  _tprs=new double[_cm.length];
+  _fprs=new double[_cm.length];
   double auc=0;
   double TPR_pre=1;
   double FPR_pre=1;
@@ -9,6 +11,8 @@
     auc+=trapeziod_area(FPR_pre,FPR,TPR_pre,TPR);
     TPR_pre=TPR;
     FPR_pre=FPR;
+    _tprs[t]=TPR;
+    _fprs[t]=FPR;
   }
   auc+=trapeziod_area(FPR_pre,0,TPR_pre,0);
   _auc=auc;
