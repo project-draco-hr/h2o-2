@@ -2,18 +2,16 @@ def start_cloud(object):
     ' \n    Start H2O Cloud\n    '
     if object.terminated:
         return
-    if object.use_cloud:
-        return
     print ''
     print 'Starting cloud...'
     print ''
     if object.terminated:
         return
-    object.cloud.start()
+    object.cloud[0].start()
     print ''
     print 'Waiting for H2O nodes to come up...'
     print ''
     if object.terminated:
         return
-    object.cloud.wait_for_cloud_to_be_up()
-    object.jvm_output_file = object.cloud.nodes[0].get_output_file_name()
+    object.cloud[0].wait_for_cloud_to_be_up()
+    object.jvm_output_file = object.cloud[0].nodes[0].get_output_file_name()

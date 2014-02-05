@@ -1,4 +1,5 @@
 {
+  long t=System.currentTimeMillis();
   if (chol == null) {
     double[][] xx=_xx.clone();
     for (int i=0; i < xx.length; ++i)     xx[i]=xx[i].clone();
@@ -27,6 +28,7 @@
 ;
   }
   ForkJoinTask.invokeAll(ras);
+  Log.info("GLM(" + jobKey + "): CHOL PRECOMPUTE TOOK "+ (System.currentTimeMillis() - t)+ "ms");
   if (jobKey != null && !Job.isRunning(jobKey))   throw new JobCancelledException();
   double[][] arr=new double[denseN][];
   for (int i=0; i < arr.length; ++i)   arr[i]=Arrays.copyOfRange(fchol._xx[i],sparseN,sparseN + denseN);

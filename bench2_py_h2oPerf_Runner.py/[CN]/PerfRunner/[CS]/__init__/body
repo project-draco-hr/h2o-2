@@ -1,0 +1,14 @@
+def __init__(self, test_root_dir, output_dir, h2o_jar, perfdb):
+    self.test_root_dir = test_root_dir
+    self.output_dir = output_dir
+    self.h2o_jar = h2o_jar
+    self.start_seconds = time.time()
+    self.jvm_output_file = ''
+    self.perfdb = perfdb
+    self.start_seconds = time.time()
+    self.terminated = False
+    self.cloud = []
+    self.tests = []
+    self.tests_not_started = []
+    self.tests_running = []
+    self.__create_output_dir__()

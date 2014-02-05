@@ -1,0 +1,19 @@
+{
+  final ASTOp op=env.fcn(-1);
+  Frame fr=env.ary(-3);
+  final int ncols=fr.numCols();
+  int cols[];
+  if (!env.isAry(-2))   cols=new int[]{(int)env.dbl(-2)};
+ else {
+    Frame cs=env.ary(-2);
+    if (cs.numCols() != 1)     throw new IllegalArgumentException("Only one column-of-columns for column selection");
+    if (cs.numRows() > 1000)     throw new IllegalArgumentException("Too many columns selected");
+    cols=new int[(int)cs.numRows()];
+    Vec vec=cs.vecs()[0];
+    for (int i=0; i < cols.length; i++)     if (vec.isNA(i))     throw new IllegalArgumentException("NA not a valid column");
+ else     cols[i]=(int)vec.at8(i);
+  }
+  for (  int c : cols)   if (c < 1 || c > fr.numCols())   throw new IllegalArgumentException("Column " + c + " out of range for frame columns "+ fr.numCols());
+  env.pop(4);
+  env.push(new Frame(new String[0],new Vec[0]));
+}

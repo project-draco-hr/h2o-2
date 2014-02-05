@@ -1,0 +1,8 @@
+def did_correct_pass(self):
+    parse_pass = self.parse_process.did_correct_pass
+    model_pass = self.model_process.did_correct_pass
+    correct_pass = (parse_pass and model_pass)
+    if self.predict_file:
+        predict_pass = self.predict_process.did_correct_pass
+        return (1 if (correct_pass and predict_pass) else 0)
+    return (1 if correct_pass else 0)

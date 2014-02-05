@@ -11,8 +11,10 @@ def main(argv):
         sys.exit(1)
     args = parse_args()
     if args['wipe']:
-        PerfUtils.wipe_output_dir()
+        PerfUtils.wipe_output_dir(output_dir)
+    perfdb = PerfDB()
+    perf_runner = PerfRunner(test_root_dir, output_dir, h2o_jar, perfdb)
+    perf_runner.build_test_list()
     signal.signal(signal.SIGINT, PerfUtils.signal_handler)
     signal.signal(signal.SIGTERM, PerfUtils.signal_handler)
-    while True:
-        time.sleep(4)
+    perf_runner.run_tests()

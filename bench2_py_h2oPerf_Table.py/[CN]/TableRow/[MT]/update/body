@@ -1,5 +1,6 @@
 def update(self, commit=False):
     '\n        A function that will write the row to the database.\n        Passes self to the PerfDB object for processing.\n        Follows the schema rules (i.e. no nulls)\n        '
+    pprint(self.row)
     if self.__is_complete__():
         self.perfdb_connection.insert(self, commit)
     else:

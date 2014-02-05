@@ -19,7 +19,7 @@
   }
   String[] err=psetup._setup._errors;
   boolean hasErrors=err != null && err.length > 0;
-  boolean parsedOk=psetup._setup.valid();
+  boolean parsedOk=psetup._setup._isValid;
   String parseMsgType=hasErrors ? parsedOk ? "warning" : "error" : "success";
   sb.append("<div class='alert alert-" + parseMsgType + "'><b>"+ psetup._setup.toString()+ "</b>");
   if (hasErrors)   for (  String s : err)   sb.append("<div>" + s + "</div>");
