@@ -11,7 +11,7 @@ def test_dead_node_status(self):
     time.sleep(120)
     for n in (0, 2):
         c = h2o.nodes[n].get_cloud()
-        self.assertEqual(c['cloud_healthy'], False)
         for i in range(3):
             expected = (c['nodes'][i]['name'] != badPort)
             self.assertEqual(c['nodes'][i]['node_healthy'], expected)
+        self.assertEqual(c['cloud_healthy'], False, msg=("node %s shouldn't think the cloud is healthy: %s" % (n, c['cloud_healthy'])))
