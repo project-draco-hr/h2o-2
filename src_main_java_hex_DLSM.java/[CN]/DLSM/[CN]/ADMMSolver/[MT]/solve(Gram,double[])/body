@@ -3,13 +3,19 @@
   Arrays.fill(z,0);
   if (_lambda > 0)   gram.addDiag(_lambda * (1 - _alpha) * 0.5 + _rho);
   int attempts=0;
+  long t=System.currentTimeMillis();
   Cholesky chol=gram.cholesky(null,_jobKey);
+  Log.info("GLM(" + _jobKey + ")"+ " cholesky decomp took "+ (System.currentTimeMillis() - t)+ "ms");
   double rhoAdd=0;
-  if (!chol._isSPD && _autoHandleNonSPDMatrix)   while (!chol._isSPD && attempts < 10) {
-    double rhoIncrement=_rho * (1 << ++attempts);
-    gram.addDiag(rhoIncrement);
-    rhoAdd+=rhoIncrement;
-    gram.cholesky(chol,_jobKey);
+  if (!chol._isSPD && _autoHandleNonSPDMatrix) {
+    Log.info("GLM(" + _jobKey + ")"+ " got non-spd matrix");
+    while (!chol._isSPD && attempts < 10) {
+      double rhoIncrement=_rho * (1 << ++attempts);
+      gram.addDiag(rhoIncrement);
+      rhoAdd+=rhoIncrement;
+      gram.cholesky(chol,_jobKey);
+    }
+    Log.info("GLM(" + _jobKey + ")"+ " cholesky decomp after nonSPD took "+ (System.currentTimeMillis() - t)+ "ms");
   }
   if (!chol._isSPD)   throw new NonSPDMatrixException();
   if (_lambda == 0) {
@@ -27,6 +33,7 @@
   double[] u=MemoryManager.malloc8d(N);
   double[] xyPrime=gram._xy.clone();
   double kappa=_lambda * _alpha / _rho;
+  t=System.currentTimeMillis();
   for (int i=0; i < 1000; ++i) {
     for (int j=0; j < N - 1; ++j)     xyPrime[j]=gram._xy[j] + _rho * (z[j] - u[j]);
     xyPrime[N - 1]=gram._xy[N - 1];
@@ -55,7 +62,11 @@
     s_norm=_rho * Math.sqrt(s_norm);
     eps_pri=ABSTOL + RELTOL * Math.sqrt(Math.max(x_norm,z_norm));
     eps_dual=ABSTOL + _rho * RELTOL * Math.sqrt(u_norm);
-    if (r_norm < eps_pri && s_norm < eps_dual)     return _converged=true;
+    if (r_norm < eps_pri && s_norm < eps_dual) {
+      Log.info("GLM(" + _jobKey + ")"+ " ADMM solve took "+ i+ "iterations and "+ (System.currentTimeMillis() - t)+ "ms");
+      return _converged=true;
+    }
   }
+  Log.info("GLM(" + _jobKey + ")"+ " ADMM solve DID NOT CONVERGE after 1000 iterations and "+ (System.currentTimeMillis() - t)+ "ms");
   return false;
 }
