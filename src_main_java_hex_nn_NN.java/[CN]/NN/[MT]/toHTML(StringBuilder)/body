@@ -1,0 +1,14 @@
+{
+  JsonObject jo=getJsonObject();
+  jo.remove("Request2");
+  jo.remove("response_info");
+  jo.remove("job_key");
+  jo.remove("destination_key");
+  jo.remove("description");
+  jo.remove("start_time");
+  jo.remove("end_time");
+  sb.append("<div class='pull-right'><a href='#' onclick='$(\"#parameters_box\").toggleClass(\"hide\");'" + " class='btn btn-inverse btn-mini'>Model Parameters</a></div>" + "<div class='hide' id='parameters_box'><pre><code class=\"language-json\">");
+  sb.append(new GsonBuilder().setPrettyPrinting().create().toJson(jo));
+  sb.append("</code></pre></div>");
+  return true;
+}

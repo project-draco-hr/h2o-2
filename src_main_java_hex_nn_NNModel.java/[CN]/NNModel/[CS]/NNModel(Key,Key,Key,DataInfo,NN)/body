@@ -1,9 +1,13 @@
 {
-  super(selfKey,null,dinfo._adaptedFrame);
+  super(selfKey,dataKey,dinfo._adaptedFrame);
   job_key=jobKey;
   data_info=dinfo;
   run_time=0;
   start_time=System.currentTimeMillis();
+  errors=new Errors[(int)params.epochs];
+  for (int i=0; i < errors.length; ++i) {
+    errors[i]=new Errors();
+  }
   model_info=new NNModelInfo(params,data_info.fullN(),data_info._adaptedFrame.lastVec().domain().length);
   model_info.initializeMembers();
 }
