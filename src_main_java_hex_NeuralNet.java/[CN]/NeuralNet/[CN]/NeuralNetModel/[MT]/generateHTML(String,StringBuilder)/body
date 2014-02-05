@@ -4,6 +4,7 @@
   DocGen.HTML.title(sb,title);
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
   sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NeuralNet.link(_dataKey,"Compute new model")+ "</div>");
+  parameters.toHTML(sb);
 {
     float[] train_err=new float[training_errors.length];
     float[] train_samples=new float[training_errors.length];
