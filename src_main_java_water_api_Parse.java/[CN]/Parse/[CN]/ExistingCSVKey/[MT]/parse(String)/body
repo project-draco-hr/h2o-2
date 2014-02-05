@@ -22,8 +22,15 @@
   }
   boolean checkHeader=!_header.specified();
   boolean hasHeader=_header.value();
+  CustomParser.ParserSetup userSetup=new CustomParser.ParserSetup(_parserType.value(),_separator.value(),hasHeader);
+  CustomParser.PSetupGuess setup=null;
   try {
-    CustomParser.PSetupGuess setup=ParseDataset.guessSetup(keys,hKey,new CustomParser.ParserSetup(_parserType.value(),_separator.value(),hasHeader),checkHeader);
+    setup=ParseDataset.guessSetup(keys,hKey,userSetup,checkHeader);
+  }
+ catch (  ParseDataset.ParseSetupGuessException e) {
+    throw new IllegalArgumentException(e.getMessage());
+  }
+  if (setup._isValid) {
     if (setup._hdrFromFile != null)     _hdrFrom.setValue(DKV.get(setup._hdrFromFile));
     if (!_header.specified())     _header.setValue(setup._setup._header);
  else     setup._setup._header=_header.value();
@@ -32,11 +39,9 @@
     _parserType.setValue(setup._setup._pType);
     _separator.setValue(setup._setup._separator);
     _hdrFrom._hideInQuery=_header._hideInQuery=_separator._hideInQuery=setup._setup._pType != CustomParser.ParserType.CSV;
-    setup.checkColumnNames();
+    Set<String> dups=setup.checkDupColumnNames();
+    if (!dups.isEmpty())     throw new IllegalArgumentException("Column labels must be unique but these labels are repeated: " + dups.toString());
     return res;
   }
- catch (  ParseSetupGuessException e) {
-    if (e._gSetup != null)     record()._value=new PSetup(keys,e._failed,e._gSetup);
-    throw new IllegalArgumentException(e.getMessage());
-  }
+ else   throw new IllegalArgumentException("Invalid parser setup. " + setup.toString());
 }
