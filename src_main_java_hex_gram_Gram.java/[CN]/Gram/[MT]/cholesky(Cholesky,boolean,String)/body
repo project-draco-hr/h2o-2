@@ -64,12 +64,14 @@
   ForkJoinTask.invokeAll(fjts);
   double[][] arr=new double[denseN][];
   for (int i=0; i < arr.length; ++i)   arr[i]=Arrays.copyOfRange(fchol._xx[i],sparseN,sparseN + denseN);
+  Log.info(id + ": CHOLESKY PRECOMPUTE TIME " + (System.currentTimeMillis() - start));
   start=System.currentTimeMillis();
-  if (parallelize == 1) {
+  if (parallelize) {
     int p=Runtime.getRuntime().availableProcessors();
     InPlaceCholesky d=InPlaceCholesky.decompose_2(arr,10,p);
     fchol.setSPD(d.isSPD());
     arr=d.getL();
+    Log.info(id + ": H2O CHOLESKY DECOMP TAKES: " + (System.currentTimeMillis() - start));
   }
  else {
     for (int i=0; i < arr.length; ++i)     for (int j=0; j < i; ++j)     arr[j][i]=arr[i][j];

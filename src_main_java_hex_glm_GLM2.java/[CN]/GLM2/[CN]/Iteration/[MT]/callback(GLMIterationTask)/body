@@ -26,6 +26,8 @@
           if (!diverged && (improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
             _model.update(self());
             _solver=new ADMMSolver(lambda[++_lambdaIdx],alpha[0]);
+            _solver._jobKey=self();
+            _solver._id=_jobName;
             glmt._val=null;
             Iteration.this.callback(glmt);
           }
