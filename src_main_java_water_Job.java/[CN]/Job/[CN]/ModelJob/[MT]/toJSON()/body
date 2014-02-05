@@ -1,0 +1,10 @@
+{
+  JsonObject jo=super.toJSON();
+  int idx=source.find(response);
+  if (idx == -1) {
+    Vec vm=response.masterVec();
+    if (vm != null)     idx=source.find(vm);
+  }
+  jo.getAsJsonObject("response").add("name",new JsonPrimitive(idx == -1 ? "null" : source._names[idx]));
+  return jo;
+}

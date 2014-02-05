@@ -1,0 +1,17 @@
+{
+  JsonObject jo=super.toJSON();
+  HashMap<String,int[]> map=new HashMap<String,int[]>();
+  map.put("cols",cols);
+  map.put("ignored_cols",ignored_cols);
+  for (  String key : map.keySet()) {
+    int[] val=map.get(key);
+    if (val != null)     if (val.length > 100)     jo.getAsJsonObject("source").add("selected_" + key,new JsonPrimitive(val.length));
+ else     if (val.length > 0) {
+      StringBuilder sb=new StringBuilder();
+      for (      int c : val)       sb.append(c + ",");
+      jo.getAsJsonObject("source").add(key,new JsonPrimitive(sb.toString().substring(0,sb.length() - 1)));
+    }
+ else     jo.getAsJsonObject("source").add(key,new JsonPrimitive("N/A"));
+  }
+  return jo;
+}

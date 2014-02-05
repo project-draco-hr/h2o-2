@@ -4,7 +4,6 @@
     classification=true;
     arg.disable("Regression is not currently supported.");
   }
-  if (arg._name.equals("ignored_cols"))   arg.disable("Not currently supported.");
   if (arg._name.equals("input_dropout_ratio") && (activation != Activation.RectifierWithDropout && activation != Activation.TanhWithDropout)) {
     arg.disable("Only with Dropout.",inputArgs);
   }

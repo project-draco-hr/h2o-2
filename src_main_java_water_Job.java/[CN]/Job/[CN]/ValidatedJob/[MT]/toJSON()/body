@@ -1,0 +1,8 @@
+{
+  JsonObject jo=super.toJSON();
+  if (validation != null) {
+    jo.getAsJsonObject("validation").add("num_cols",new JsonPrimitive(validation.numCols()));
+    jo.getAsJsonObject("validation").add("num_rows",new JsonPrimitive(validation.numRows()));
+  }
+  return jo;
+}

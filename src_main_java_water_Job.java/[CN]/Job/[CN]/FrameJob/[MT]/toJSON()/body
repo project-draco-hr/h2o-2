@@ -1,0 +1,8 @@
+{
+  JsonObject jo=super.toJSON();
+  if (source != null) {
+    jo.getAsJsonObject("source").add("num_cols",new JsonPrimitive(source.numCols()));
+    jo.getAsJsonObject("source").add("num_rows",new JsonPrimitive(source.numRows()));
+  }
+  return jo;
+}
