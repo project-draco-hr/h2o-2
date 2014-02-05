@@ -14,7 +14,7 @@
   cloud.clientRSyncExcludes.add("**/javadoc");
   cloud.clientRSyncExcludes.add("lib/javassist");
   cloud.clientRSyncExcludes.add("**/*-sources.jar");
-  String java="-ea -Xmx60G -Dh2o.debug";
+  String java="-ea -Xmx20G -Dh2o.debug";
   String node="-mainClass " + UserCode.class.getName() + " "+ (job != null ? job.getName() : null)+ " -beta";
   cloud.start(java.split(" "),node.split(" "));
 }
