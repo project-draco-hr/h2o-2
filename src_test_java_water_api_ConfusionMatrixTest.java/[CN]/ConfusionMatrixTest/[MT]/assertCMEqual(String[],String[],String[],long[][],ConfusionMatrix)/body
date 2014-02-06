@@ -1,0 +1,8 @@
+{
+  Assert.assertArrayEquals("Actual CM domain differs",expectedActualDomain,actualCM.actual_domain);
+  Assert.assertArrayEquals("Predicted CM domain differs",expectedPredictDomain,actualCM.predicted_domain);
+  Assert.assertArrayEquals("Expected domain differs",expectedDomain,actualCM.domain);
+  long[][] acm=actualCM.cm;
+  Assert.assertEquals("CM dimension differs",expectedCM.length,acm.length);
+  for (int i=0; i < acm.length; i++)   Assert.assertArrayEquals("CM row " + i + " differs!",expectedCM[i],acm[i]);
+}
