@@ -1,11 +1,10 @@
 {
-  final long seed=0xC0FFEE;
   Log.info("Parsing data.");
-  Frame trainf=TestUtil.parseFromH2OFolder("smalldata/mnist/train.csv.gz");
-  Frame testf=TestUtil.parseFromH2OFolder("smalldata/mnist/test.csv.gz");
+  Frame trainf=TestUtil.parseFromH2OFolder("smalldata/mnist/train.csv");
+  Frame testf=TestUtil.parseFromH2OFolder("smalldata/mnist/test.csv");
   Log.info("Done.");
   NN p=new NN();
-  p.seed=seed;
+  p.seed=0xC0FFEE;
   p.hidden=new int[]{128,128,256};
   p.rate=0.003;
   p.activation=NN.Activation.RectifierWithDropout;
@@ -27,9 +26,6 @@
   p.response=trainf.lastVec();
   p.ignored_cols=null;
   p.destination_key=Key.make("mnist.model");
-  Frame fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true);
-  p._dinfo=new FrameTask.DataInfo(fr,1,true);
-  p.initModel();
-  p.trainModel(true);
-  return Status.Running;
+  p._dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true),1,true);
+  return p.exec();
 }
