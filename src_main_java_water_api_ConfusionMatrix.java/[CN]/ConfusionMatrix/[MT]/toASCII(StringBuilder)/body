@@ -1,5 +1,5 @@
 {
-  assert(cm != null);
+  if (cm == null)   return 1.0;
   long acts[]=new long[cm.length];
   long preds[]=new long[cm[0].length];
   for (int a=0; a < cm.length; a++) {
@@ -10,28 +10,8 @@
     }
     acts[a]=sum;
   }
-  Vec vaE=null, vpE=null, avp=null;
-  String adomain[]=null;
-  String pdomain[]=null;
-  try {
-    vaE=vactual.toEnum();
-    vpE=vpredict.toEnum();
-    if (!vaE.group().equals(vpE.group())) {
-      avp=vpE;
-      vpE=vaE.align(vpE);
-    }
-    adomain=ConfusionMatrix.show(acts,vaE.domain());
-    pdomain=ConfusionMatrix.show(preds,vpE.domain());
-  }
- catch (  Throwable t) {
-    Log.err(t);
-    return Double.NaN;
-  }
- finally {
-    if (vaE != null)     UKV.remove(vaE._key);
-    if (vpE != null)     UKV.remove(vpE._key);
-    if (avp != null)     UKV.remove(avp._key);
-  }
+  String adomain[]=show(acts,domain);
+  String pdomain[]=show(preds,domain);
   int maxlen=0;
   for (  String s : pdomain)   if (s != null)   maxlen=Math.max(maxlen,s.length());
   long sum=0;
@@ -55,7 +35,8 @@
     long correct=0;
     for (int p=0; p < pdomain.length; p++) {
       if (pdomain[p] == null)       continue;
-      if (adomain[a].equals(pdomain[p]))       correct=cm[a][p];
+      boolean onDiag=adomain[a].equals(pdomain[p]);
+      if (onDiag)       correct=cm[a][p];
       sb.append(String.format(fmt,cm[a][p]));
     }
     long err=acts[a] - correct;
