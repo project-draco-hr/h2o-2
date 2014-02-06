@@ -1,0 +1,5 @@
+def get_completed(self):
+    res = (self.parse_process.get_completed() and self.model_process.get_completed())
+    if self.predict_file:
+        self.predict_process.get_completed()
+    return res

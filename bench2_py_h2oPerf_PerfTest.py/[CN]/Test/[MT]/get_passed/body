@@ -1,0 +1,5 @@
+def get_passed(self):
+    res = (self.parse_process.get_passed() and self.model_process.get_passed())
+    if self.predict_file:
+        return (res and self.predict_process.get_passed())
+    return res

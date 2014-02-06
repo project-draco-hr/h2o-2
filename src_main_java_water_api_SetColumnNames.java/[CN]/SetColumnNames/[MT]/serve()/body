@@ -4,7 +4,7 @@
   if (_srcKey.value() != null)   names=_srcKey.value().colNames();
  else   if (_srcStr.value() != null)   names=_srcStr.value().split(",");
  else   throw new IllegalArgumentException("No column names given");
-  tgt.setColumnNames(names);
+  tgt.setColumnNames(names,_cols.value());
   Futures fs=new Futures();
   DKV.put(tgt._key,tgt,fs);
   fs.blockForPending();

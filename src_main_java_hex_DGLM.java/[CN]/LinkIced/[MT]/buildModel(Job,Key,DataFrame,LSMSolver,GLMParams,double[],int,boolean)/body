@@ -1,5 +1,5 @@
 {
-  Log.info("running GLM on " + data._ary._key + " with "+ data.expandedSz()+ " predictors in total, "+ (data.expandedSz() - data._dense)+ " of which are categoricals.");
+  Log.info("running GLM on " + data._ary._key + " with "+ data.expandedSz()+ " predictors in total, "+ (data.expandedSz() - data._dense)+ " of which are categoricals. Largest categorical has "+ data.largestCatSz()+ " levels");
   ArrayList<String> warns=new ArrayList<String>();
   long t1=System.currentTimeMillis();
   int ycolId=data._modelDataMap[data._response];

@@ -35,7 +35,9 @@ def main(argv):
         print ('ERROR: H2O jar not found: ' + h2o_jar)
         print ''
         sys.exit(1)
-    g_runner.start_clouds()
-    g_runner.run_tests()
-    g_runner.stop_clouds()
-    g_runner.report_summary()
+    try:
+        g_runner.start_clouds()
+        g_runner.run_tests()
+    finally:
+        g_runner.stop_clouds()
+        g_runner.report_summary()

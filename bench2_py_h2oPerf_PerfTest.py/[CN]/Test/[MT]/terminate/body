@@ -1,0 +1,9 @@
+def terminate(self):
+    self.test_is_terminated = True
+    try:
+        self.parse_process.terminate()
+        self.model_process.terminate()
+        if self.predict_file:
+            self.predict_process.terminate()
+    except OSError:
+        pass

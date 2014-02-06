@@ -24,12 +24,11 @@ def test_four_billion_rows(self):
         start = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print ('\n' + csvFilename)
-        kwargs = {'y': ('C' + str(1)), 'n_folds': 0, 'family': 'binomial', 'case_mode': '=', 'case': 1, }
-        colX = 0
+        kwargs = {'y': 'C2', 'n_folds': 0, 'family': 'binomial', 'case_mode': '=', 'case': 1, }
         timeoutSecs = 900
         kwargs.update({'alpha': 0, 'lambda': 0, })
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'glm (L2) end on ', csvFilename, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
-        h2o_glm.simpleCheckGLM(self, glm, ('C' + str(colX)), **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, 'C1', **kwargs)

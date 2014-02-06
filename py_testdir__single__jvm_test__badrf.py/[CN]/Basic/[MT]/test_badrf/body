@@ -1,0 +1,10 @@
+def test_badrf(self):
+    h2o.beta_features = False
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvPathname = (SYNDATASETS_DIR + '/badrf.data')
+    dsf = open(csvPathname, 'w+')
+    dsf.write(datalines)
+    dsf.close()
+    for i in range(5):
+        parseResult = h2i.import_parse(path=csvPathname, schema='put')
+        h2o_cmd.runRF(parseResult=parseResult, trees=1, timeoutSecs=10, retryDelaySecs=0.1, noPrint=True, print_params=False)
