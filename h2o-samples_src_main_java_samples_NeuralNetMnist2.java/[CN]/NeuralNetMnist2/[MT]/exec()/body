@@ -1,12 +1,20 @@
 {
   Log.info("Parsing data.");
+  long seed=0xC0FFEE;
+  double fraction=1.0;
   Frame trainf=TestUtil.parseFromH2OFolder("smalldata/mnist/train.csv");
   Frame testf=TestUtil.parseFromH2OFolder("smalldata/mnist/test.csv");
+  if (fraction < 1) {
+    System.out.println("Sampling " + fraction * 100 + "% of data with random seed: " + seed + ".");
+    FrameSplit split=new FrameSplit();
+    final double[] ratios={fraction,1 - fraction};
+    trainf=split.splitFrame(trainf,ratios,seed)[0];
+  }
   Log.info("Done.");
   NN p=new NN();
-  p.seed=0xC0FFEE;
-  p.hidden=new int[]{128,128,256};
-  p.rate=0.003;
+  p.seed=seed;
+  p.hidden=new int[]{1024,1024,2048};
+  p.rate=0.01;
   p.activation=NN.Activation.RectifierWithDropout;
   p.loss=NN.Loss.CrossEntropy;
   p.input_dropout_ratio=0.2;
@@ -20,7 +28,10 @@
   p.momentum_ramp=1800000;
   p.initial_weight_distribution=NN.InitialWeightDistribution.UniformAdaptive;
   p.classification=true;
-  p.diagnostics=false;
+  p.diagnostics=true;
+  p.expert_mode=true;
+  p.score_training=1000;
+  p.score_validation=10000;
   p.validation=testf;
   p.source=trainf;
   p.response=trainf.lastVec();
