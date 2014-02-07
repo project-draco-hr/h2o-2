@@ -2,10 +2,8 @@
   JsonObject result=new JsonObject();
   result.addProperty(VERSION,H2O.VERSION);
   String info=Boot._init.loadContent("/R/info.txt");
-  String info_split[]=info.split("\\r?\\n");
-  if (info_split == null || info_split.length != 2)   throw new RuntimeException("md5 checksum file not found or written incorrectly");
-  result.addProperty("filename",info_split[0]);
-  result.addProperty("md5_hash",info_split[1]);
+  info=info.split("\\r?\\n")[0];
+  result.addProperty("filename",info);
   Response response=Response.done(result);
   response.addHeader("<a class='btn btn-primary' href='RDownload.html'>Download h2oRClient</a>");
   return response;
