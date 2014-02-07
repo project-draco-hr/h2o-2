@@ -9,6 +9,8 @@
     for (int i=0; i < biases_momenta.length; ++i)     sb.append("\nbiases_momenta[" + i + "][]="+ Arrays.toString(biases_momenta[i]));
   }
   sb.append("\nunits[]=" + Arrays.toString(units));
-  sb.append("\nprocessed: " + get_processed());
+  sb.append("\nprocessed global: " + get_processed_global());
+  sb.append("\nprocessed local:  " + get_processed_local());
+  sb.append("\nprocessed total:  " + get_processed_total());
   return sb.toString();
 }

@@ -1,0 +1,37 @@
+{
+  final NNModel model=UKV.get(dest());
+  final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
+  Frame train=_dinfo._adaptedFrame;
+  Frame valid=validation == null ? null : adapted[0];
+  Frame trainScoreFrame=sampleFrame(train,score_training_samples,seed);
+  Frame validScoreFrame=sampleFrame(valid,score_validation_samples,seed + 1);
+  final float sync_fraction=sync_samples == 0l ? 1.0f : (float)sync_samples / train.numRows();
+  long timeStart=System.currentTimeMillis();
+  long lastPrint=System.currentTimeMillis();
+  do {
+    final NNTask nntask=new NNTask(this,_dinfo,model.model_info(),true,sync_fraction).doAll(train);
+    model.set_model_info(nntask.model_info());
+    model.epoch_counter=(float)nntask.model_info().get_processed_total() / train.numRows();
+    long now=System.currentTimeMillis();
+    long sinceLastScore=now - lastPrint;
+    if ((sinceLastScore > 2000)) {
+      final long samples=model.model_info().get_processed_total();
+      Log.info("Trained on " + samples + " samples ("+ String.format("%.3f",model.epoch_counter)+ " epochs). Speed: "+ String.format("%.3f",(double)samples / ((now - timeStart) / 1000))+ " samples/sec.");
+      lastPrint=now;
+    }
+    doDiagnostics(model,trainScoreFrame,validScoreFrame,model.epoch_counter >= epochs,score_interval,diagnostics);
+    model.update(self());
+    if (model.model_info().unstable()) {
+      Log.err("Canceling job since the model is unstable (exponential growth observed).");
+      Log.err("Try using L1/L2/max_w2 regularization, a different activation function, or more synchronization in multi-node operation.");
+      break;
+    }
+  }
+ while (model.epoch_counter < epochs);
+  if (adapted != null)   adapted[1].delete();
+  model.unlock(self());
+  if (validScoreFrame != null && validScoreFrame != adapted[0])   validScoreFrame.delete();
+  if (trainScoreFrame != null && trainScoreFrame != train)   trainScoreFrame.delete();
+  Log.info("NN training finished.");
+  return model;
+}

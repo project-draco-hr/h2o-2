@@ -19,7 +19,6 @@
   }
   if (training) {
     for (int i=neurons.length - 2; i > 0; --i)     neurons[i].bprop();
-    minfo.add_processed(1);
-    if (minfo.get_processed() % 10000 == 0)     System.out.println(H2O.CLOUD.SELF + " processed: " + minfo.get_processed());
+    minfo.add_processed_local(1);
   }
 }

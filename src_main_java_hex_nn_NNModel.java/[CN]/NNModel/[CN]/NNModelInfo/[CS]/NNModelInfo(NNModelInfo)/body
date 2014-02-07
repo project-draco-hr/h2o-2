@@ -1,6 +1,7 @@
 {
   this(other.parameters,other.units[0],other.units[other.units.length - 1]);
-  set_processed(other.get_processed());
+  set_processed_local(other.get_processed_local());
+  set_processed_global(other.get_processed_global());
   for (int i=0; i < other.weights.length; ++i)   weights[i]=other.weights[i].clone();
   for (int i=0; i < other.biases.length; ++i)   biases[i]=other.biases[i].clone();
   if (has_momenta()) {
