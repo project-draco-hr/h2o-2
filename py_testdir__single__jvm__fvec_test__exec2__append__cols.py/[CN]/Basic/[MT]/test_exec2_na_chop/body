@@ -8,9 +8,13 @@ def test_exec2_na_chop(self):
     print '\nr.hex    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
     numRows = inspect['numRows']
     numCols = inspect['numCols']
-    for execExpr in exprList:
+    execExpr = ('s.hex = r.hex[,1]',)
+    h2e.exec_expr(h2o.nodes[0], execExpr, resultKey='s.hex', timeoutSecs=10)
+    for i in range(1, 10):
+        execExpr = (('s.hex[,%s] = r.hex[,%s]' % (i, i)),)
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey='s.hex', timeoutSecs=10)
-    start = time.time()
+    execExpr = (('s.hex[,%s] = r.hex[,%s]' % (101, 1)),)
+    h2e.exec_expr(h2o.nodes[0], execExpr, resultKey='s.hex', timeoutSecs=10)
     inspect = h2o_cmd.runInspect(key='s.hex')
     print '\ns.hex    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
     h2o.check_sandbox_for_errors()
