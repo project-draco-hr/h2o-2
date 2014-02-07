@@ -1,0 +1,21 @@
+def test_C_prostate(self):
+    print '\nStarting prostate.csv'
+    y = '1'
+    x = ''
+    csvFilename = 'prostate.csv'
+    csvPathname = (('logreg' + '/') + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    for maxx in [6]:
+        x = range(maxx)
+        x.remove(0)
+        x.remove(1)
+        x = ','.join(map(str, x))
+        print '\nx:', x
+        print 'y:', y
+        destination_key = 'GLM_model_$python_0_default_0'
+        kwargs = {'x': x, 'y': y, 'n_folds': 5, 'destination_key': destination_key, }
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+        h2o_destination_key = glm['destination_key']
+        print 'h2o_destination_key:', h2o_destination_key
+        self.assertEqual(h2o_destination_key, destination_key, msg=('I said to name the key %s, h2o used %s' % (destination_key, h2o_destination_key)))
+        h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
