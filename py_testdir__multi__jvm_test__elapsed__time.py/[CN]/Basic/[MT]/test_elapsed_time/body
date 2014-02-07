@@ -1,0 +1,23 @@
+def test_elapsed_time(self):
+    h2b.browseTheCloud()
+    print 'The reported time should increment for each node, on every node.'
+    for n in range(NODE_NUM):
+        c = h2o.nodes[n].get_cloud()
+        self.assertEqual(c['cloud_healthy'], True)
+    etime = [0 for i in range(NODE_NUM)]
+
+    def check_and_update_etime():
+        for n in range(NODE_NUM):
+            c = h2o.nodes[n].get_cloud()
+            for i in range(NODE_NUM):
+                t = c['nodes'][i]['elapsed_time']
+                n = c['nodes'][i]['name']
+                h = c['nodes'][i]['node_healthy']
+                print ('Current elapsed_time: %s for %s' % (t, n))
+                if (t < etime[i]):
+                    msg = ('Current elapsed_time: %s at %s is not > its last polled elapsed_time %s' % (t, n, etime[i]))
+                etime[i] = t
+                self.assertEqual(h, True)
+    for j in range(10):
+        time.sleep(2)
+        check_and_update_etime()

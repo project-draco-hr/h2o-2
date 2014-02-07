@@ -22,3 +22,5 @@ def download_h2o(self):
     desc_url = (((((self.s3_url_prefix + self.branch) + '/') + str(self.buildnum)) + '/R/src/contrib/') + desc_file_name)
     desc_path = os.path.join(self.tmp_dir, desc_file_name)
     download_file(desc_url, desc_path)
+    self.h2o_cran = CranDirectory(desc_path)
+    self.h2o_cran.emit()
