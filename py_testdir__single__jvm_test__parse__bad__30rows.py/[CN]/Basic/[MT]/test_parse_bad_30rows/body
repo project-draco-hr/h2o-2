@@ -6,7 +6,7 @@ def test_parse_bad_30rows(self):
     dsf.write(datalines)
     dsf.close()
     for i in range(20):
-        single_quotes = (i % 2)
+        single_quotes = 1
         parseResult = h2i.import_parse(path=csvPathname, schema='put', single_quotes=single_quotes, hex_key=(('trial' + str(i)) + '.hex'))
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
