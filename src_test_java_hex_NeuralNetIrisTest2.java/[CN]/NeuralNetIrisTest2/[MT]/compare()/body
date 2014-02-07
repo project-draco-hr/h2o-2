@@ -17,26 +17,24 @@
               for (              double momentum : momenta) {
                 for (                int hidden : hiddens) {
                   for (                  int epoch : epochs) {
+                    long seed=new Random().nextLong();
                     Log.info("");
                     Log.info("STARTING.");
                     Log.info("Running with " + activation.name() + " activation function and "+ loss.name()+ " loss function.");
                     Log.info("Initialization with " + dist.name() + " distribution and "+ scale+ " scale, holdout ratio "+ holdout_ratio);
                     Log.info("Using " + hidden + " hidden layers and momentum: "+ momentum);
+                    Log.info("Using seed " + seed);
                     Key file=NFSFileVec.make(find_test_file(PATH));
                     Frame frame=ParseDataset2.parse(Key.make("iris_nn2"),new Key[]{file});
                     Frame fr=null;
-                    Frame fr_test=null;
-                    FrameTask.DataInfo dinfo_test=null;
                     NN p;
                     Random rand;
-                    long seed;
                     int trial=0;
                     do {
                       Log.info("Trial #" + ++trial);
                       if (_train != null)                       _train.delete();
                       if (_test != null)                       _test.delete();
                       if (fr != null)                       fr.delete();
-                      if (fr_test != null)                       fr_test.delete();
                       seed=new Random().nextLong();
                       rand=Utils.getDeterRNG(seed);
                       double[][] rows=new double[(int)frame.numRows()][frame.numCols()];
@@ -60,13 +58,11 @@
                       p.ignored_cols=null;
                       fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true);
                       p._dinfo=new FrameTask.DataInfo(fr,1,true);
-                      fr_test=FrameTask.DataInfo.prepareFrame(_test,_test.lastVec(),p.ignored_cols,true);
-                      dinfo_test=new FrameTask.DataInfo(fr_test,1,true);
                     }
- while (p._dinfo._adaptedFrame.lastVec().domain().length < 3 || dinfo_test._adaptedFrame.lastVec().domain().length < 3);
-                    Log.info("Using seed " + seed);
+ while (p._dinfo._adaptedFrame.lastVec().domain().length < 3);
                     NeuralNetMLPReference2 ref=new NeuralNetMLPReference2();
                     ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio,hidden);
+                    p.destination_key=Key.make("iris_test.model");
                     p.seed=seed;
                     p.hidden=new int[]{hidden};
                     p.rate=0.01;
@@ -88,8 +84,8 @@
                     p.classification=true;
                     p.diagnostics=false;
                     p.validation=null;
-                    p.destination_key=Key.make("iris_test.model");
-                    p.initModel();
+                    p.fast_mode=false;
+                    p.init();
                     NNModel mymodel=UKV.get(p.dest());
                     Neurons[] neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info());
                     Neurons l=neurons[1];
@@ -103,8 +99,7 @@
                       ref._nn.oBiases[o]=l._b[o];
                     }
                     ref.train((int)p.epochs,p.rate,p.momentum_stable,loss);
-                    p.trainModel(false);
-                    mymodel=UKV.get(p.dest());
+                    mymodel=p.trainModel();
                     final double abseps=1e-13;
                     final double releps=1e-13;
                     neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info());
@@ -138,6 +133,10 @@
                       double[] xValues=new double[neurons[0]._a.length];
                       System.arraycopy(ref._testData[i],0,xValues,0,xValues.length);
                       double[] ref_preds=ref._nn.ComputeOutputs(xValues);
+                      float[] yValues_float=new float[ref_preds.length];
+                      for (int j=0; j < ref_preds.length; ++j)                       yValues_float[j]=(float)ref_preds[j];
+                      int maxIndex=NeuralNetMLPReference2.NeuralNetwork.MaxIndexWithTieBreaking(yValues_float,i);
+                      Assert.assertTrue(maxIndex == (int)fpreds.vecs()[0].at(i));
                       for (int j=0; j < ref_preds.length; ++j) {
                         compareVal((float)(ref_preds[j]),fpreds.vecs()[1 + j].at(i),abseps,releps);
                       }
@@ -150,15 +149,12 @@
                     final double myTestErr=mymodel.classificationError(_test,"Final testing error:",true);
                     Log.info("H2O  training error : " + myTrainErr * 100 + "%, test error: " + myTestErr * 100 + "%");
                     Log.info("REF  training error : " + trainErr * 100 + "%, test error: " + testErr * 100 + "%");
-                    compareVal(trainErr,myTrainErr,abseps,releps);
-                    compareVal(testErr,myTestErr,abseps,releps);
                     Log.info("Scoring: PASS");
                     mymodel.delete();
                     _train.delete();
                     _test.delete();
                     frame.delete();
                     fr.delete();
-                    fr_test.delete();
                     num_runs++;
                     Log.info("Parameters combination " + num_runs + ": PASS");
                   }
