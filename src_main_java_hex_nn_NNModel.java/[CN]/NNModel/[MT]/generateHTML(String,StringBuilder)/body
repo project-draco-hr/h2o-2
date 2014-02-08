@@ -9,7 +9,6 @@
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
   model_info.job().toHTML(sb);
   sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
-  DocGen.HTML.title(sb,"Epochs: " + epoch_counter);
   final Errors error=errors[errors.length - 1];
   if (isClassifier()) {
     float[] err=new float[errors.length];
@@ -41,11 +40,8 @@
     if (isClassifier()) {
       DocGen.HTML.section(sb,"Validation mean cross entropy: " + String.format(cross_entropy_format,error.valid_mce));
     }
-    if (error.training_time_ms > 0)     DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
   }
- else {
-    if (error.training_time_ms > 0)     DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
-  }
+  if (error.training_time_ms > 0)   DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
   if (model_info.parameters != null && model_info.parameters.diagnostics) {
     DocGen.HTML.section(sb,"Status of Hidden and Output Layers");
     sb.append("<table class='table table-striped table-bordered table-condensed'>");
@@ -85,39 +81,30 @@
   }
   final String cmTitle="Confusion Matrix on " + (error.validation ? " Validation Data" : " Training Data");
   DocGen.HTML.section(sb,cmTitle);
-  if (error.confusion_matrix != null)   error.confusion_matrix.toHTML(sb);
+  if (error.validation && error.valid_confusion_matrix != null)   error.valid_confusion_matrix.toHTML(sb);
+ else   if (error.train_confusion_matrix != null)   error.train_confusion_matrix.toHTML(sb);
+ else   sb.append("<h5>Not yet computed.</h5>");
   sb.append("<h3>" + "Progress" + "</h3>");
+  sb.append("<h4>" + "Epochs: " + String.format("%.3f",epoch_counter) + "</h4>");
   if (error.validation) {
   }
   sb.append("<table class='table table-striped table-bordered table-condensed'>");
   sb.append("<tr>");
   sb.append("<th>Training Time</th>");
   sb.append("<th>Training Samples</th>");
-  sb.append("<th>Training MSE</th>");
-  if (isClassifier()) {
-    sb.append("<th>Training MCE</th>");
-    sb.append("<th>Training Classification Error</th>");
-  }
-  sb.append("<th>Validation MSE</th>");
-  if (isClassifier()) {
-    sb.append("<th>Validation MCE</th>");
-    sb.append("<th>Validation Classification Error</th>");
-  }
+  sb.append("<th>Training Error</th>");
+  sb.append("<th>Validation Error</th>");
   sb.append("</tr>");
   for (int i=errors.length - 1; i >= 0; i--) {
     final Errors e=errors[i];
     sb.append("<tr>");
     sb.append("<td>" + PrettyPrint.msecs(e.training_time_ms,true) + "</td>");
     sb.append("<td>" + String.format("%,d",e.training_samples) + "</td>");
-    sb.append("<td>" + String.format(mse_format,e.train_mse) + "</td>");
     if (isClassifier()) {
-      sb.append("<td>" + String.format(cross_entropy_format,e.train_mce) + "</td>");
       sb.append("<td>" + formatPct(e.train_err) + "</td>");
     }
     if (e.validation) {
-      sb.append("<td>" + String.format(mse_format,e.valid_mse) + "</td>");
       if (isClassifier()) {
-        sb.append("<td>" + String.format(cross_entropy_format,e.valid_mce) + "</td>");
         sb.append("<td>" + formatPct(e.valid_err) + "</td>");
       }
     }
