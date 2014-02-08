@@ -2,7 +2,7 @@
   Entry e=new Entry(_cols.length);
   int len=chks[_cols[0]]._len;
   for (int row=0; row < len; row++) {
-    for (int c=0; c < _cols.length; c++)     e._ds[c]=chks[_cols[c]].at0(row);
+    e.fill(row,chks,_cols);
     if (_uniques.putIfAbsent(e,V) == null)     e=new Entry(_cols.length);
   }
 }

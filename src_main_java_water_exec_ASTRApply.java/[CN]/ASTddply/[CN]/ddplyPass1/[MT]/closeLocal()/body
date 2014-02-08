@@ -1,0 +1,11 @@
+{
+  int csz=H2O.CLOUD.size();
+  int grpcnt[]=new int[csz];
+  for (  Entry e : _uniques.keySet())   grpcnt[e.hashCode() % csz]++;
+  double dss[][][]=new double[csz][][];
+  for (int n=0; n < csz; n++)   dss[n]=new double[grpcnt[n]][];
+  for (  Entry e : _uniques.keySet()) {
+    int n=e.hashCode() % csz;
+    dss[n][--grpcnt[n]]=e._ds;
+  }
+}

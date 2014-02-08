@@ -1,0 +1,9 @@
+{
+  int sum=0;
+  for (int c=0; c < cols.length; c++) {
+    double d=_ds[c]=chks[cols[c]].at0(row);
+    sum+=Double.doubleToRawLongBits(d);
+  }
+  if (sum == 0)   sum=1;
+  _ds[_ds.length - 1]=sum;
+}
