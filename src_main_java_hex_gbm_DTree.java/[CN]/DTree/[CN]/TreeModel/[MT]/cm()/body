@@ -1,9 +1,9 @@
 {
-  long cms[][][]=this.cms;
+  ConfusionMatrix[] cms=this.cms;
   if (cms != null && cms.length > 0) {
     int n=cms.length - 1;
     while (n > 0 && cms[n] == null)     --n;
-    return cms[n] == null ? null : new ConfusionMatrix(cms[n]);
+    return cms[n] == null ? null : cms[n];
   }
  else   return null;
 }
