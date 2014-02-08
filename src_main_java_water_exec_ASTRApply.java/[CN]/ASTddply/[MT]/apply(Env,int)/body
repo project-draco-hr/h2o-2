@@ -19,6 +19,9 @@
   for (  int c : cols)   if (c < 0 || c >= fr.numCols())   throw new IllegalArgumentException("Column " + (c + 1) + " out of range for frame columns "+ fr.numCols());
   ddplyPass1 p1=new ddplyPass1(cols).doAll(fr);
   System.out.print(p1.toString());
+  Futures fs=new Futures();
+  for (  Group g : p1._uniques.keySet())   g.call(fs);
+  fs.blockForPending();
   env.pop(4);
   env.push(new Frame(new String[0],new Vec[0]));
 }
