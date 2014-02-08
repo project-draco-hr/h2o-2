@@ -1,0 +1,8 @@
+{
+  final long numrows=_dinfo._adaptedFrame.numRows();
+  final long start=_start % numrows;
+  final long end=(_start + _num_points) % numrows;
+  if (start < end && start <= row && row < end)   return false;
+  if (start > end && (row < end || start <= row))   return false;
+  return true;
+}

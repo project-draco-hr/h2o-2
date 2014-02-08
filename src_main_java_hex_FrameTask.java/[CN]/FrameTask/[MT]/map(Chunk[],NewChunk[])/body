@@ -1,16 +1,13 @@
 {
   if (_job != null && _job.self() != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
   final int nrows=chunks[0]._len;
-  chunkInit(nrows);
+  final long off=chunks[0]._start;
+  chunkInit();
   double[] nums=MemoryManager.malloc8d(_dinfo._nums);
   int[] cats=MemoryManager.malloc4(_dinfo._cats);
   double[] response=MemoryManager.malloc8d(_dinfo._responses);
-  Random _random=null;
-  if (_useFraction < 1.0) {
-    _random=water.util.Utils.getDeterRNG(new Random().nextLong());
-  }
   OUTER:   for (int r=0; r < nrows; ++r) {
-    if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || (_random != null && _random.nextFloat() > _useFraction))     continue;
+    if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || skip(off + r))     continue;
     for (    Chunk c : chunks)     if (c.isNA0(r))     continue OUTER;
     int i=0, ncats=0;
     for (; i < _dinfo._cats; ++i) {

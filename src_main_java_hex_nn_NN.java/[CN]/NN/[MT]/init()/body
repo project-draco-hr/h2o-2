@@ -1,6 +1,8 @@
 {
   logStart();
   NN.RNG.seed.set(seed);
+  source.read_lock(self());
+  if (validation != null && !source._key.equals(validation._key))   validation.read_lock(self());
   if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,true),1,true);
   new NNModel(dest(),self(),source._key,_dinfo,this).delete_and_lock(self());
 }
