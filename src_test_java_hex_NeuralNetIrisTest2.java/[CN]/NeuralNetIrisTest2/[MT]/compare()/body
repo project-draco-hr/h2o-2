@@ -85,7 +85,8 @@
                     p.diagnostics=false;
                     p.validation=null;
                     p.fast_mode=false;
-                    p.init();
+                    p.sync_samples=100000;
+                    p.initModel();
                     NNModel mymodel=UKV.get(p.dest());
                     Neurons[] neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info());
                     Neurons l=neurons[1];
@@ -99,7 +100,7 @@
                       ref._nn.oBiases[o]=l._b[o];
                     }
                     ref.train((int)p.epochs,p.rate,p.momentum_stable,loss);
-                    mymodel=p.trainModel();
+                    mymodel=p.buildModel();
                     final double abseps=1e-13;
                     final double releps=1e-13;
                     neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info());

@@ -7,7 +7,7 @@
   final String cross_entropy_format="%2.6f";
   DocGen.HTML.title(sb,title);
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
-  model_info.parameters.toHTML(sb);
+  model_info.job().toHTML(sb);
   sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   DocGen.HTML.title(sb,"Epochs: " + epoch_counter);
   final Errors error=errors[errors.length - 1];

@@ -6,10 +6,10 @@
   Frame trainScoreFrame=sampleFrame(train,score_training_samples,seed);
   Frame validScoreFrame=sampleFrame(valid,score_validation_samples,seed + 1);
   if (sync_samples > train.numRows()) {
-    sync_samples=train.numRows();
-    Log.warn("Setting sync_samples to the number of rows of the training data (" + sync_samples + ").");
+    Log.warn("Setting sync_samples (" + sync_samples + ") to the number of rows of the training data ("+ (sync_samples=train.numRows())+ ").");
   }
   final float sync_fraction=sync_samples == 0l ? 1.0f : (float)sync_samples / train.numRows();
+  Log.info("Starting to train the Neural Net.");
   long timeStart=System.currentTimeMillis();
   do {
     final NNTask nntask=new NNTask(_dinfo,model.model_info(),true,sync_fraction).doAll(train);
@@ -20,6 +20,6 @@
   model.unlock(self());
   if (validScoreFrame != null && validScoreFrame != adapted[0])   validScoreFrame.delete();
   if (trainScoreFrame != null && trainScoreFrame != train)   trainScoreFrame.delete();
-  Log.info("NN training finished.");
+  Log.info("Neural Net training finished.");
   return model;
 }

@@ -12,8 +12,10 @@
   if (!keep_running || (now - timeStart < 30000) || (sinceLastScore > model_info().parameters.score_interval * 1000)) {
     if (model_info.parameters.diagnostics)     computeDiagnostics();
     _timeLastScoreStart=now;
+    long timeStart2=System.currentTimeMillis();
     classificationError(ftrain,"Classification error on training data:",true);
     if (ftest != null)     classificationError(ftest,"Classification error on validation data:",true);
+    Log.info("scoring time: " + PrettyPrint.msecs(System.currentTimeMillis() - timeStart2,true));
   }
   if (model_info().unstable()) {
     Log.err("Canceling job since the model is unstable (exponential growth observed).");
