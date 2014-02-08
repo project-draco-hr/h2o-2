@@ -1,6 +1,7 @@
 {
   Frame fpreds;
   fpreds=score(ftest);
+  if (CM == null)   CM=new ConfusionMatrix();
   CM.actual=ftest;
   CM.vactual=ftest.lastVec();
   CM.predict=fpreds;
