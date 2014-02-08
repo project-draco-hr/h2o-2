@@ -1,8 +1,8 @@
 {
-  Entry e=new Entry(_cols.length);
+  Group g=new Group(_cols.length);
   int len=chks[_cols[0]]._len;
   for (int row=0; row < len; row++) {
-    e.fill(row,chks,_cols);
-    if (_uniques.putIfAbsent(e,V) == null)     e=new Entry(_cols.length);
+    g.fill(row,chks,_cols);
+    if (_uniques.putIfAbsent(g,V) == null)     g=new Group(_cols.length);
   }
 }
