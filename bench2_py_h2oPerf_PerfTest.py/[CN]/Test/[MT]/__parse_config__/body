@@ -2,6 +2,7 @@ def __parse_config__(self):
     cfg = ConfigParser.RawConfigParser()
     cfg.read(self.cfg)
     self.aws = cfg.getboolean('H2OBuildInformation', 'aws')
+    self.remote_hosts = cfg.getboolean('H2OBuildInformation', 'remote_hosts')
     self.heap_bytes_per_node = cfg.get('H2OBuildInformation', 'heap_bytes_per_node')
     self.total_hosts = cfg.getint('H2OBuildInformation', 'total_hosts')
     self.total_nodes = cfg.getint('H2OBuildInformation', 'total_nodes')
