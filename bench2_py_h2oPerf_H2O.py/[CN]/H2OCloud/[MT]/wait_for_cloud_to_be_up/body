@@ -1,0 +1,6 @@
+def wait_for_cloud_to_be_up(self):
+    '  \n        Blocking call ensuring the cloud is available.\n\n        @return: none\n        '
+    if self.remote_hosts:
+        self._scrape_port_from_stdout_remote()
+    else:
+        self._scrape_port_from_stdout_local()
