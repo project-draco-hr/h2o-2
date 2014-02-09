@@ -12,16 +12,16 @@
   }
   if (!keep_running || (now - timeStart < 30000) || (sinceLastScore > model_info().parameters.score_interval * 1000)) {
     _timeLastScoreStart=now;
-    if (model_info().parameters.diagnostics)     model_info.computeStats();
+    boolean printCM=false;
     Errors err=new Errors();
     err.training_time_ms=now - timeStart;
     err.validation=ftest != null;
     err.training_samples=model_info().get_processed_total();
     err.train_confusion_matrix=new ConfusionMatrix();
-    err.train_err=classificationError(ftrain,"Classification error on training data:",true,err.train_confusion_matrix);
+    err.train_err=classificationError(ftrain,"Classification error on training data:",printCM,err.train_confusion_matrix);
     if (ftest != null) {
       err.valid_confusion_matrix=new ConfusionMatrix();
-      err.valid_err=classificationError(ftest,"Classification error on validation data:",true,err.valid_confusion_matrix);
+      err.valid_err=classificationError(ftest,"Classification error on validation data:",printCM,err.valid_confusion_matrix);
     }
     if (errors == null) {
       errors=new Errors[]{err};
@@ -32,7 +32,9 @@
       err2[err2.length - 1]=err;
       errors=err2;
     }
+    if (model_info().parameters.diagnostics)     model_info.computeStats();
     Log.info("scoring time: " + PrettyPrint.msecs(System.currentTimeMillis() - now,true));
+    for (    String s : toString().split("\n"))     Log.info(s);
   }
   if (model_info().unstable()) {
     Log.err("Canceling job since the model is unstable (exponential growth observed).");

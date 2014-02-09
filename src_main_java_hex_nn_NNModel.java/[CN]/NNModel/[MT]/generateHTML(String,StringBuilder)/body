@@ -10,6 +10,7 @@
   model_info.job().toHTML(sb);
   sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   final Errors error=errors[errors.length - 1];
+  assert(error != null);
   if (isClassifier()) {
     float[] err=new float[errors.length];
     float[] samples=new float[errors.length];
@@ -28,17 +29,9 @@
   if (isClassifier()) {
     DocGen.HTML.section(sb,"Training classification error: " + formatPct(error.train_err));
   }
-  DocGen.HTML.section(sb,"Training mean square error: " + String.format(mse_format,error.train_mse));
   if (isClassifier()) {
-    DocGen.HTML.section(sb,"Training cross entropy: " + String.format(cross_entropy_format,error.train_mce));
     if (error.validation) {
       DocGen.HTML.section(sb,"Validation classification error: " + formatPct(error.valid_err));
-    }
-  }
-  if (error.validation) {
-    DocGen.HTML.section(sb,"Validation mean square error: " + String.format(mse_format,error.valid_mse));
-    if (isClassifier()) {
-      DocGen.HTML.section(sb,"Validation mean cross entropy: " + String.format(cross_entropy_format,error.valid_mce));
     }
   }
   if (error.training_time_ms > 0)   DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
@@ -61,7 +54,7 @@
       sb.append("<tr>");
       sb.append("<td>").append("<b>").append(i).append("</b>").append("</td>");
       sb.append("<td>").append("<b>").append(neurons[i].units).append("</b>").append("</td>");
-      sb.append("<td>").append(neurons[i].getClass().getSimpleName().replace("Vec","").replace("Chunk","")).append("</td>");
+      sb.append("<td>").append(neurons[i].getClass().getSimpleName()).append("</td>");
       sb.append("<td>").append(String.format("%.5g",neurons[i].rate(error.training_samples))).append("</td>");
       sb.append("<td>").append(neurons[i].l1).append("</td>");
       sb.append("<td>").append(neurons[i].l2).append("</td>");
@@ -81,12 +74,14 @@
   }
   final String cmTitle="Confusion Matrix on " + (error.validation ? " Validation Data" : " Training Data");
   DocGen.HTML.section(sb,cmTitle);
-  if (error.train_confusion_matrix.cm.length < 100) {
-    if (error.validation && error.valid_confusion_matrix != null)     error.valid_confusion_matrix.toHTML(sb);
- else     if (error.train_confusion_matrix != null)     error.train_confusion_matrix.toHTML(sb);
- else     sb.append("<h5>Not yet computed.</h5>");
+  if (error.train_confusion_matrix != null) {
+    if (error.train_confusion_matrix.cm.length < 100) {
+      if (error.validation && error.valid_confusion_matrix != null)       error.valid_confusion_matrix.toHTML(sb);
+ else       if (error.train_confusion_matrix != null)       error.train_confusion_matrix.toHTML(sb);
+    }
+ else     sb.append("<h5>Not shown here (too large).</h5>");
   }
- else   sb.append("<h5>Not shown here (too large).</h5>");
+ else   sb.append("<h5>Not yet computed.</h5>");
   sb.append("<h3>" + "Progress" + "</h3>");
   sb.append("<h4>" + "Epochs: " + String.format("%.3f",epoch_counter) + "</h4>");
   if (error.validation) {

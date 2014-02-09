@@ -1,16 +1,21 @@
 {
   StringBuilder sb=new StringBuilder();
-  for (int i=0; i < weights.length; ++i)   sb.append("\nweights[" + i + "][]="+ Arrays.toString(weights[i]));
-  for (int i=0; i < biases.length; ++i)   sb.append("\nbiases[" + i + "][]="+ Arrays.toString(biases[i]));
-  if (weights_momenta != null) {
-    for (int i=0; i < weights_momenta.length; ++i)     sb.append("\nweights_momenta[" + i + "][]="+ Arrays.toString(weights_momenta[i]));
+  if (parameters.diagnostics) {
+    Neurons[] neurons=NNTask.makeNeurons(parameters._dinfo,this);
+    sb.append("Status of Hidden and Output Layers:\n");
+    sb.append("#  Units      Activation      Rate     L1       L2    Momentum     Weight (Mean, RMS)      Bias (Mean,RMS)\n");
+    final String format="%7g";
+    for (int i=1; i < neurons.length; ++i) {
+      sb.append(i + " " + String.format("%6d",neurons[i].units)+ " "+ String.format("%15s",neurons[i].getClass().getSimpleName())+ " "+ String.format("%10g",neurons[i].rate(get_processed_total()))+ " "+ String.format("%5f",neurons[i].l1)+ " "+ String.format("%5f",neurons[i].l2)+ " "+ String.format("%5f",neurons[i].momentum(get_processed_total()))+ " ("+ String.format(format,mean_weight[i])+ ", "+ String.format(format,rms_weight[i])+ ")"+ " ("+ String.format(format,mean_bias[i])+ ", "+ String.format(format,rms_bias[i])+ ")\n");
+    }
   }
-  if (biases_momenta != null) {
-    for (int i=0; i < biases_momenta.length; ++i)     sb.append("\nbiases_momenta[" + i + "][]="+ Arrays.toString(biases_momenta[i]));
+  long siz=0;
+  for (int i=0; i < weights.length; ++i)   siz+=weights[i].length * Float.SIZE;
+  for (int i=0; i < biases.length; ++i)   siz+=biases[i].length * Double.SIZE;
+  if (has_momenta()) {
+    for (int i=0; i < weights_momenta.length; ++i)     siz+=weights_momenta.length * Float.SIZE;
+    for (int i=0; i < biases_momenta.length; ++i)     siz+=biases_momenta.length * Double.SIZE;
   }
-  sb.append("\nunits[]=" + Arrays.toString(units));
-  sb.append("\nprocessed global: " + get_processed_global());
-  sb.append("\nprocessed local:  " + get_processed_local());
-  sb.append("\nprocessed total:  " + get_processed_total());
+  sb.append("Size of the model: " + String.format("%.3f",(double)siz / (1 << 23)) + " MB.");
   return sb.toString();
 }
