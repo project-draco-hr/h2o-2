@@ -10,11 +10,11 @@
     }
  else {
       System.out.println(env.resultString());
+      fail("Not a Frame result");
     }
   }
  catch (  IllegalArgumentException iae) {
-    System.out.println(iae.getMessage());
+    fail(iae.getMessage());
   }
   if (env != null)   env.remove_and_unlock();
-  debug_print(s);
 }
