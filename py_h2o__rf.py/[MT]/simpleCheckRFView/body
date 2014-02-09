@@ -15,7 +15,9 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
             cms = rfv['drf_model']['cms']
             print 'number of cms:', len(cms)
             print "FIX! need to add reporting of h2o's _perr per class error"
-            print 'cms[-1][_arr]:', cms[(-1)]['_arr']
+            print "cms[-1]['_arr']:", cms[(-1)]['_arr']
+            print "cms[-1]['_predErr']:", cms[(-1)]['_predErr']
+            print "cms[-1]['_classErr']:", cms[(-1)]['_classErr']
             cm = cms[(-1)]['_arr']
         scoresList = cm
         if (not checkScoringOnly):

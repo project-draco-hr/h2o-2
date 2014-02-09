@@ -1,4 +1,4 @@
-def start_cloud(object):
+def start_cloud(object, use_remote):
     ' \n    Start H2O Cloud\n    '
     if object.terminated:
         return
@@ -7,7 +7,10 @@ def start_cloud(object):
     print ''
     if object.terminated:
         return
-    object.cloud[0].start()
+    if use_remote:
+        object.cloud[0].start_remote()
+    else:
+        object.cloud[0].start_local()
     print ''
     print 'Waiting for H2O nodes to come up...'
     print ''
