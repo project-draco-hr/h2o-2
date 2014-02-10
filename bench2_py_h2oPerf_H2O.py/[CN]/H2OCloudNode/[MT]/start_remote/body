@@ -15,9 +15,16 @@ def start_remote(self):
     @atexit.register
     def kill_process():
         try:
-            self.stop()
-            self.channel.exec_command('exit')
-            self.ssh.close()
+            try:
+                self.stop_remote()
+                self.channel.exec_command('exit')
+                self.ssh.close()
+            except:
+                pass
+            try:
+                self.stop_local()
+            except:
+                pass
         except OSError:
             pass
     print ('+ CMD: ' + cmd)
