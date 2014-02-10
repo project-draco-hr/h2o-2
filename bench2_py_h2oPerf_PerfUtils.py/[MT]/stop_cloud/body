@@ -1,8 +1,11 @@
-def stop_cloud(object):
+def stop_cloud(object, use_remote):
     '\n    Stop H2O cloud.\n    '
     if object.terminated:
         return
     print ''
     print 'All tets completed; tearing down clouds...'
     print ''
-    object.cloud[0].stop()
+    if use_remote:
+        object.cloud[0].stop_remote()
+    else:
+        object.cloud[0].stop_local()

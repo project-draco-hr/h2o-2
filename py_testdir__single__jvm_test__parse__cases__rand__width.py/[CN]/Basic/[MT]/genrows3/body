@@ -1,0 +1,7 @@
+def genrows3(self):
+    rows = ['FirstName|MiddleInitials|LastName|DateofBirth', 'Kalyn|A.|Dalton|1967-04-01', '', 'Gwendolyn||Burton|1947-10-26', '', 'Elodia|G.|Ali|1983-10-31', 'Elodia|G.|Ali|1983-10-31', 'Elodia|G.|Ali|1983-10-31', 'Elodia|G.|Ali|1983-10-31', 'Elodia|G.|Ali|1983-10-31', 'Elodia|G.|Ali|1983-10-31', 'Elodia|G.|Ali|1983-10-31']
+    newRows = []
+    for r in rows:
+        newLength = random.randint(1, len(r))
+        newRows.append(((((random.choice(['0', '1']) + '|') + random.choice(['0', '1'])) + '|') + r[:newLength]))
+    return newRows
