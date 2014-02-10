@@ -15,6 +15,7 @@
     boolean printCM=false;
     Errors err=new Errors();
     err.training_time_ms=now - timeStart;
+    err.epoch_counter=epoch_counter;
     err.validation=ftest != null;
     err.training_samples=model_info().get_processed_total();
     err.train_confusion_matrix=new ConfusionMatrix();

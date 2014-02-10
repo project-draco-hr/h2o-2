@@ -1,6 +1,7 @@
 {
-  if (H2O.CLOUD.size() > 1)   Log.info("Synchronizing between " + _chunk_node_count + " (out of "+ H2O.CLOUD.size()+ ") nodes.");
+  if (H2O.CLOUD.size() > 1 && _chunk_node_count < H2O.CLOUD.size())   Log.warn("Only " + _chunk_node_count + " nodes (out of "+ H2O.CLOUD.size()+ ") are contributing to model updates.");
   _output.div(_chunk_node_count);
   _output.add_processed_global(_output.get_processed_local());
   _output.set_processed_local(0l);
+  assert(_input == null);
 }

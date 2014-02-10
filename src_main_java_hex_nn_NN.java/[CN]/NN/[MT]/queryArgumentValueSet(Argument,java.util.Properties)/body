@@ -18,6 +18,7 @@
     arg.disable("Only if a validation set is specified.");
   }
   if (arg._name.equals("sync_samples") && H2O.CLOUD.size() == 1) {
+    sync_samples=0;
     arg.disable("Only for multi-node operation.");
   }
   if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("score_interval")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("sync_samples")|| arg._name.equals("fast_mode")) {
