@@ -7,7 +7,7 @@
   final String cross_entropy_format="%2.6f";
   DocGen.HTML.title(sb,title);
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
-  DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + model_info().size()[0]);
+  DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + String.format("%,d",model_info().size()[0]));
   model_info.job().toHTML(sb);
   sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   final Errors error=errors[errors.length - 1];
@@ -60,7 +60,7 @@
       sb.append("<td>").append(neurons[i].l1).append("</td>");
       sb.append("<td>").append(neurons[i].l2).append("</td>");
       final String format="%g";
-      sb.append("<td>").append(neurons[i].momentum(error.training_samples)).append("</td>");
+      sb.append("<td>").append(String.format("%.5f",neurons[i].momentum(error.training_samples))).append("</td>");
       sb.append("<td>(").append(String.format(format,model_info.mean_weight[i])).append(", ").append(String.format(format,model_info.rms_weight[i])).append(")</td>");
       sb.append("<td>(").append(String.format(format,model_info.mean_bias[i])).append(", ").append(String.format(format,model_info.rms_bias[i])).append(")</td>");
       sb.append("</tr>");
@@ -116,7 +116,7 @@
     sb.append("<tr>");
     sb.append("<td>" + PrettyPrint.msecs(e.training_time_ms,true) + "</td>");
     sb.append("<td>" + String.format("%g",e.epoch_counter) + "</td>");
-    sb.append("<td>" + String.format("%d",e.training_samples) + "</td>");
+    sb.append("<td>" + String.format("%,d",e.training_samples) + "</td>");
     if (isClassifier()) {
       sb.append("<td>" + formatPct(e.train_err) + "</td>");
     }

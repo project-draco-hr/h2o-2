@@ -1,9 +1,0 @@
-{
-  init();
-  Frame fr=DataInfo.prepareFrame(source,response,ignored_cols,true);
-  _dinfo=new DataInfo(fr,1,true);
-  if (destination_key == null)   destination_key=Key.make("NNModel_" + Key.make());
-  if (job_key == null)   job_key=Key.make("NNJob_" + Key.make());
-  fork();
-  return NNModelView.redirect(this,dest());
-}
