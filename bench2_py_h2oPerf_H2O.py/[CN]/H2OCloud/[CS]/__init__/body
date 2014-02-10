@@ -1,0 +1,20 @@
+def __init__(self, cloud_num, hosts_in_cloud, nodes_per_cloud, h2o_jar, base_port, output_dir, isEC2, remote_hosts):
+    '  \n        Create a cloud.\n        See node definition above for argument descriptions.\n\n        @return: The cloud object.\n        '
+    self.cloud_num = cloud_num
+    self.nodes_per_cloud = nodes_per_cloud
+    self.h2o_jar = h2o_jar
+    self.base_port = base_port
+    self.output_dir = output_dir
+    self.isEC2 = isEC2
+    self.remote_hosts = remote_hosts
+    self.hosts_in_cloud = hosts_in_cloud
+    n = random.randint(10000, 99999)
+    user = getpass.getuser()
+    user = ''.join(user.split())
+    self.cloud_name = 'H2O_perfTest_{}_{}'.format(user, n)
+    self.nodes = []
+    self.jobs_run = 0
+    for (node_num, node_) in enumerate(self.hosts_in_cloud):
+        node = H2OCloudNode(self.cloud_num, self.nodes_per_cloud, node_num, self.cloud_name, self.h2o_jar, node_['ip'], self.base_port, node_['memory_bytes'], self.output_dir, isEC2)
+        self.nodes.append(node)
+    self.distribute_h2o()

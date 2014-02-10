@@ -1,0 +1,11 @@
+{
+  Key dest=Key.make("covtype.hex");
+  try {
+    Frame fr=parseFrame(dest,"../datasets/UCI/UCI-large/covtype/covtype.data");
+    System.out.println(fr);
+    checkStr("ddply(covtype.hex,c(11,12,13),sum)");
+  }
+  finally {
+    Lockable.delete(dest);
+  }
+}

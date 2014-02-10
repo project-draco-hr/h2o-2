@@ -34,7 +34,7 @@ def test_GLM2_mnist(self):
         ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTrainResult['destination_key'], timeoutSecs=300, forRF=True)
         print 'ignoreX:', ignoreX
         modelKey = 'GLM_model'
-        params = {'ignored_cols': ignoreX, 'response': ('C' + str(y)), 'family': 'binomial', 'lambda': 0.5, 'alpha': 0.0001, 'max_iter': 15, 'n_folds': 1, 'beta_epsilon': 0.0001, 'destination_key': modelKey, }
+        params = {'ignored_cols': ignoreX, 'response': ('C' + str((y + 1))), 'family': 'binomial', 'lambda': 0.5, 'alpha': 0.0001, 'max_iter': 15, 'n_folds': 1, 'beta_epsilon': 0.0001, 'destination_key': modelKey, }
         if DO_ALL_DIGITS:
             cases = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         else:
@@ -69,7 +69,7 @@ def test_GLM2_mnist(self):
             h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
             modelKey = glm['glm_model']['_key']
             if (1 == 0):
-                cm = glm['glm_model']['submodels'][0]['validation']['_cms'][0]['_arr']
+                cm = glm['glm_model']['submodels'][0]['validation']['_cms'][(-1)]
                 print 'cm:', cm
                 pctWrong = h2o_gbm.pp_cm_summary(cm)
                 print '\nTrain\n==========\n'

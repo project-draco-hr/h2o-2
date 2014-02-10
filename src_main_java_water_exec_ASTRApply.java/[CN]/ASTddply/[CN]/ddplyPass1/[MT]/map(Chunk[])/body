@@ -1,0 +1,8 @@
+{
+  Group g=new Group(_cols.length);
+  int len=chks[_cols[0]]._len;
+  for (int row=0; row < len; row++) {
+    g.fill(row,chks,_cols);
+    if (_uniques.putIfAbsent(g,V) == null)     g=new Group(_cols.length);
+  }
+}

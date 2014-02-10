@@ -59,7 +59,7 @@ def test_rf_covtype_fvec(self):
         ntrees = kwargs['ntrees']
         rfView = h2o_cmd.runRFView(None, model_key=model_key, timeoutSecs=60, retryDelaySecs=5, doSimpleCheck=False)
         rf_model = rfView['drf_model']
-        cm = rf_model['cms']
+        cms = rf_model['cms']
         ntrees = rf_model['N']
         errs = rf_model['errs']
         N = rf_model['N']

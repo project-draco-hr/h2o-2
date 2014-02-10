@@ -1,0 +1,20 @@
+{
+  Env env=null;
+  try {
+    env=Exec2.exec(s);
+    if (env.isAry()) {
+      Frame res=env.popAry();
+      String skey=env.key();
+      System.out.println(res.toStringAll());
+      env.subRef(res,skey);
+    }
+ else {
+      System.out.println(env.resultString());
+      fail("Not a Frame result");
+    }
+  }
+ catch (  IllegalArgumentException iae) {
+    fail(iae.getMessage());
+  }
+  if (env != null)   env.remove_and_unlock();
+}

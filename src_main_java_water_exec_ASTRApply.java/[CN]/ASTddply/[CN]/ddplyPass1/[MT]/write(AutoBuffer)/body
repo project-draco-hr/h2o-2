@@ -1,0 +1,8 @@
+{
+  super.write(ab);
+  ab.putA4(_cols);
+  if (_uniques == null)   return ab.put4(0);
+  ab.put4(_uniques.size());
+  for (  Group g : _uniques.keySet())   ab.put(g);
+  return ab;
+}

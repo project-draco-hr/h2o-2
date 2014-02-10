@@ -19,7 +19,7 @@ def test_NN_covtype(self):
         start = time.time()
         nn = h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
-        relTol = (0.03 if (mode == 'SingleThread') else 0.15)
+        relTol = (0.03 if (mode == 'SingleThread') else 0.2)
         h2o_nn.checkLastValidationError(self, nn['neuralnet_model'], inspect['numRows'], expectedErr, relTol, **kwargs)
         kwargs = {'source': validation_key, 'max_rows': 0, 'response': response, 'ignored_cols': None, 'classification': 1, 'destination_key': (('score_' + identifier) + '.hex'), 'model': model_key, }
         nnScoreResult = h2o_cmd.runNNetScore(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, **kwargs)
