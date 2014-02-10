@@ -1,0 +1,13 @@
+{
+  Frame v1=null, v2=null;
+  Vec vv=null;
+  try {
+    v1=parseFrame(Key.make("v1.hex"),find_test_file("smalldata/test/cm/v1.csv"));
+    v2=parseFrame(Key.make("v2.hex"),find_test_file("smalldata/test/cm/v4.csv"));
+  }
+  finally {
+    if (v1 != null)     v1.delete();
+    if (v2 != null)     v2.delete();
+    if (vv != null)     UKV.remove(vv._key);
+  }
+}

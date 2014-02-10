@@ -1,2 +1,25 @@
 {
+  int emap[]=new int[modelDom.length];
+  boolean bmap[]=new boolean[modelDom.length];
+  HashMap<String,Integer> md=new HashMap<String,Integer>();
+  for (int i=0; i < colDom.length; i++)   md.put(colDom[i],i);
+  for (int i=0; i < modelDom.length; i++) {
+    Integer I=md.get(modelDom[i]);
+    if (I == null && exact)     Log.warn(Sys.SCORM,"Column " + colName + " was trained with factor '"+ modelDom[i]+ "' which DOES NOT appear in column data");
+    if (I != null) {
+      emap[i]=I;
+      bmap[i]=true;
+    }
+  }
+  if (exact) {
+    for (int i=0; i < colDom.length; i++) {
+      boolean found=false;
+      for (int j=0; j < emap.length; j++)       if (emap[j] == i) {
+        found=true;
+        break;
+      }
+      if (!found)       Log.warn(Sys.SCORM,"Column " + colName + " WAS NOT trained with factor '"+ colDom[i]+ "' which appears in column data");
+    }
+  }
+  return Utils.pack(emap,bmap);
 }

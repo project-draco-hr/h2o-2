@@ -1,4 +1,5 @@
 {
   Chunk c=masterVec().elem2BV(cidx);
-  return new TransfChunk(c,_domMap,_domMin,this);
+  if (_indexes != null)   return new TransfChunk(c,this);
+ else   return new FlatTransfChunk(c,this);
 }

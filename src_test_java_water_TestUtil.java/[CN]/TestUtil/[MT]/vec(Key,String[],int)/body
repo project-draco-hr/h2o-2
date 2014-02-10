@@ -1,0 +1,12 @@
+{
+  k=(k == null) ? new Vec.VectorGroup().addVec() : k;
+  Futures fs=new Futures();
+  AppendableVec avec=new AppendableVec(k);
+  NewChunk chunk=new NewChunk(avec,0);
+  for (int r=0; r < rows.length; r++)   chunk.addNum(rows[r]);
+  chunk.close(0,fs);
+  Vec vec=avec.close(fs);
+  fs.blockForPending();
+  vec._domain=domain;
+  return vec;
+}
