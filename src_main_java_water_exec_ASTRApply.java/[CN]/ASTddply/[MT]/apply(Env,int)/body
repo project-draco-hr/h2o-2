@@ -18,9 +18,19 @@
   }
   for (  int c : cols)   if (c < 0 || c >= fr.numCols())   throw new IllegalArgumentException("Column " + (c + 1) + " out of range for frame columns "+ fr.numCols());
   ddplyPass1 p1=new ddplyPass1(cols).doAll(fr);
+  ddplyPass2 p2=new ddplyPass2(p1).invokeOnAllNodes();
+  Vec vecs[]=p2.close();
+  int i=0;
+  for (  Group g : p1._groups.keySet()) {
+    long row=vecs[i].at8(0);
+    System.out.println("Group " + g + ", rows="+ vecs[i]+ ", orig_row0="+ row+ ", row="+ fr.toString(row));
+    i++;
+  }
+  int csz=H2O.CLOUD.size();
   Futures fs=new Futures();
-  for (  Group g : p1._groups.keySet())   g.call(fs);
+  for (  Group g : p1._groups.keySet())   fs.add(RPC.call(H2O.CLOUD._memary[g.hashCode() % csz],g));
   fs.blockForPending();
+  for (  Vec v : vecs)   UKV.remove(v._key);
   env.pop(4);
   env.push(new Frame(new String[0],new Vec[0]));
 }

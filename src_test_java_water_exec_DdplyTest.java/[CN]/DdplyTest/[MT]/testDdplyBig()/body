@@ -1,11 +1,16 @@
 {
-  Key dest=Key.make("orange.hex");
+  Key k1=Key.make("orange.hex");
+  Key k2=Key.make("covtype.hex");
   try {
-    Frame fr=parseFrame(dest,"smalldata/unbalanced/orange_small_train.data.zip");
-    System.out.println(fr);
+    Frame fr1=parseFrame(k1,"smalldata/unbalanced/orange_small_train.data.zip");
+    System.out.println(fr1);
     checkStr("ddply(orange.hex,c(7),sum)");
+    Frame fr2=parseFrame(k2,"../datasets/UCI/UCI-large/covtype/covtype.data");
+    System.out.println(fr2);
+    checkStr("ddply(covtype.hex,c(11),sum)");
   }
   finally {
-    Lockable.delete(dest);
+    Lockable.delete(k1);
+    Lockable.delete(k2);
   }
 }
