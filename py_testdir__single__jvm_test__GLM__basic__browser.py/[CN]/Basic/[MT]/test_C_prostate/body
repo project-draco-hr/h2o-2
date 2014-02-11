@@ -19,6 +19,7 @@ def test_C_prostate(self):
         h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
         sys.stdout.write('.')
         sys.stdout.flush()
-    h2b.browseJsonHistoryAsUrl()
+    for i in range(3):
+        h2b.browseJsonHistoryAsUrl()
     h2o.nodes[0].log_view()
     namelist = h2o.nodes[0].log_download()
