@@ -1,16 +1,13 @@
 def browseJsonHistoryAsUrl():
     if (not h2o.browse_disable):
-        ignoring = 'Cloud'
-        i = (-1)
         tabCount = 0
-        while ((tabCount < 50) and ((len_history + i) != 0)):
-            i = (i - 1)
-            if (not re.search(ignoring, h2o.json_url_history[i])):
-                url = h2o.json_url_history[i]
-                url = re.sub('GLMGridProgress', 'GLMGridProgress.html', url)
-                url = re.sub('Progress', 'Progress.html', url)
+        for url in h2o.json_url_history:
+            if (not re.search('Cloud', url)):
                 url = re.sub('.json', '.html', url)
                 print 'browseJsonHistoryAsUrl:', url
                 print 'same, decoded:', urllib.unquote(url)
+                h2o.log(url, comment='From browseJsonHistoryAsUrl')
                 webbrowser.open(url)
                 tabCount += 1
+            if (tabCount == 50):
+                break
