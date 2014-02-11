@@ -6,7 +6,7 @@
     sb.append("#  Units       Activation     Rate      L1       L2    Momentum     Weight (Mean, RMS)      Bias (Mean,RMS)\n");
     final String format="%7g";
     for (int i=1; i < neurons.length; ++i) {
-      sb.append(i + " " + String.format("%6d",neurons[i].units)+ " "+ String.format("%16s",neurons[i].getClass().getSimpleName())+ " "+ String.format("%10g",neurons[i].rate(get_processed_total()))+ " "+ String.format("%5f",neurons[i].l1)+ " "+ String.format("%5f",neurons[i].l2)+ " "+ String.format("%5f",neurons[i].momentum(get_processed_total()))+ " ("+ String.format(format,mean_weight[i])+ ", "+ String.format(format,rms_weight[i])+ ")"+ " ("+ String.format(format,mean_bias[i])+ ", "+ String.format(format,rms_bias[i])+ ")\n");
+      sb.append(i + " " + String.format("%6d",neurons[i].units)+ " "+ String.format("%16s",neurons[i].getClass().getSimpleName())+ " "+ String.format("%10g",neurons[i].rate(get_processed_total()))+ " "+ String.format("%5f",neurons[i].params.l1)+ " "+ String.format("%5f",neurons[i].params.l2)+ " "+ String.format("%5f",neurons[i].momentum(get_processed_total()))+ " ("+ String.format(format,mean_weight[i])+ ", "+ String.format(format,rms_weight[i])+ ")"+ " ("+ String.format(format,mean_bias[i])+ ", "+ String.format(format,rms_bias[i])+ ")\n");
     }
   }
   return sb.toString();

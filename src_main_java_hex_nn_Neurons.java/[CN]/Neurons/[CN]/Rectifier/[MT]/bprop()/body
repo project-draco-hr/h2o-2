@@ -3,7 +3,7 @@
   final double m=momentum(processed);
   final double r=rate(processed);
   for (int u=0; u < _a.length; u++) {
-    if (fast_mode || (_wm == null && l1 == 0.0 && l2 == 0.0)) {
+    if (params.fast_mode || (_wm == null && params.l1 == 0.0 && params.l2 == 0.0)) {
       if (_a[u] > 0) {
         final double g=_e[u];
         bprop(u,g,r,m);

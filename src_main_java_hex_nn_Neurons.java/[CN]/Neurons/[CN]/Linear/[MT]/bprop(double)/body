@@ -4,7 +4,6 @@
   double r=rate(processed);
   assert(loss == Loss.MeanSquare);
   int u=0;
-  if (target == missing_double_value)   return;
   double g=target - _a[u];
   g*=(1 - _a[u]) * _a[u];
   bprop(u,g,r,m);
