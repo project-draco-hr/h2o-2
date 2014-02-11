@@ -1,13 +1,4 @@
 {
-  Frame v1=null, v2=null;
-  try {
-    v1=frame("v1",vec(ar("A","B","C"),ari(0,0,1,1,2)));
-    v2=frame("v2",vec(ar("A","B","C"),ari(1,1,2,2,2)));
-    ConfusionMatrix cm=computeCM(v1,v2);
-    assertCMEqual(ar("A","B","C"),ar("A","B","C"),ar("A","B","C"),ar(ar(0L,2L,0L,0L),ar(0L,0L,2L,0L),ar(0L,0L,1L,0L),ar(0L,0L,0L,0L)),cm);
-  }
-  finally {
-    if (v1 != null)     v1.delete();
-    if (v2 != null)     v2.delete();
-  }
+  simpleCMTest(frame("v1",vec(ar("A","B","C"),ari(0,0,1,1,2))),frame("v2",vec(ar("A","B","C"),ari(1,1,2,2,2))),ar("A","B","C"),ar("A","B","C"),ar("A","B","C"),ar(ar(0L,2L,0L,0L),ar(0L,0L,2L,0L),ar(0L,0L,1L,0L),ar(0L,0L,0L,0L)),false);
+  simpleCMTest(frame("v1",vec(ar("B","C"),ari(0,0,1,1))),frame("v2",vec(ar("A","B"),ari(1,1,0,0))),ar("B","C"),ar("A","B"),ar("A","B","C"),ar(ar(0L,0L,0L,0L),ar(0L,2L,0L,0L),ar(2L,0L,0L,0L),ar(0L,0L,0L,0L)),false);
 }
