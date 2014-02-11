@@ -33,5 +33,7 @@
   p.sync_samples=50000;
   p.score_interval=30;
   p.destination_key=Key.make("mnist.model");
+  p.job_key=Key.make("mnist.job");
+  DKV.put(p.job_key,new Value(p.job_key,new byte[0]),null);
   return p.exec();
 }
