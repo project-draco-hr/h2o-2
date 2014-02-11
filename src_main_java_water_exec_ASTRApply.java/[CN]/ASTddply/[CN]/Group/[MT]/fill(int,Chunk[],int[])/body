@@ -1,11 +1,4 @@
 {
-  long sum=0;
-  for (int c=0; c < cols.length; c++) {
-    double d=_ds[c]=chks[cols[c]].at0(row);
-    sum+=Double.doubleToRawLongBits(d);
-  }
-  long h=sum;
-  h^=(h >>> 20) ^ (h >>> 12);
-  h^=(h >>> 7) ^ (h >>> 4);
-  _hash=(int)((h ^ (h >> 32)) & 0x7FFFFFFF);
+  for (int c=0; c < cols.length; c++)   _ds[c]=chks[cols[c]].at0(row);
+  _hash=hash();
 }
