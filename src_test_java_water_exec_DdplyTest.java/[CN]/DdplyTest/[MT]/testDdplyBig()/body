@@ -1,0 +1,11 @@
+{
+  Key dest=Key.make("orange.hex");
+  try {
+    Frame fr=parseFrame(dest,"smalldata/unbalanced/orange_small_train.data.zip");
+    System.out.println(fr);
+    checkStr("ddply(orange.hex,c(7),sum)");
+  }
+  finally {
+    Lockable.delete(dest);
+  }
+}

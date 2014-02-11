@@ -1,8 +1,18 @@
 {
-  Entry e=new Entry(_cols.length);
-  int len=chks[_cols[0]]._len;
+  _groups=new NonBlockingHashMap<Group,NewChunk>();
+  Group g=new Group(_cols.length);
+  Chunk C=chks[_cols[0]];
+  NewChunk nc=makeNC(C);
+  int len=C._len;
+  long start=C._start;
   for (int row=0; row < len; row++) {
-    for (int c=0; c < _cols.length; c++)     e._ds[c]=chks[_cols[c]].at0(row);
-    if (_uniques.putIfAbsent(e,V) == null)     e=new Entry(_cols.length);
+    g.fill(row,chks,_cols);
+    NewChunk nc_old=_groups.putIfAbsent(g,nc);
+    if (nc_old == null) {
+      nc_old=nc;
+      g=new Group(_cols.length);
+      nc=makeNC(C);
+    }
+    nc_old.addNum(start + row,0);
   }
 }

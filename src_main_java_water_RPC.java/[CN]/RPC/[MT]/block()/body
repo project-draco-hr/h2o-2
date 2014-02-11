@@ -1,9 +1,17 @@
 {
   while (!isDone()) {
     try {
-      wait();
+      if (_target == H2O.SELF) {
+        _dt.get();
+        notifyAll();
+        _done=true;
+      }
+ else       wait();
     }
  catch (    InterruptedException e) {
+    }
+catch (    ExecutionException e) {
+      return true;
     }
   }
   return true;

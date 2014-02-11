@@ -1,0 +1,7 @@
+def stop_remote(self):
+    '\n        Normal node shutdown.\n        Ignore failures for now.\n\n        @return: none\n        '
+    try:
+        requests.get((((self.ip + ':') + self.port) + '/Shutdown.html'))
+    except Exception as e:
+        pass
+    self.pid = (-1)
