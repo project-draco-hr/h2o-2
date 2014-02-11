@@ -10,10 +10,14 @@ def kmeans_doit(self, csvFilename, bucket, csvPathname, num_rows, timeoutSecs=30
     expected = [([(-0.0006628900000000158), (-0.0004671200060434639), 0.0009330300069879741, 0.0007883800000000272, 0.0007548200000000111, 0.0005617899864856153, 0.0013246499999999897, 0.0004036299999999859, (-0.0014307100000000314), 0.0021324000161308796, 0.00154], num_rows, None)]
     allowedDelta = (0.01, 0.01, 0.01)
     h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=0)
-    inspect = h2o_cmd.runInspect(None, key=kmeans['model']['_key'])
-    KMeansModel = inspect['KMeansModel']
-    clusters = KMeansModel['centers'][0]
-    print 'clusters:', h2o.dump_json(clusters)
+    modelView = h2o.nodes[0].kmeans_model_view(model='KMeansModel.hex')
+    h2o.verboseprint('KMeans2ModelView:', h2o.dump_json(modelView))
+    model = modelView['model']
+    clusters = model['centers']
+    within_cluster_variances = model['within_cluster_variances']
+    total_within_SS = model['total_within_SS']
+    print 'within_cluster_variances:', within_cluster_variances
+    print 'total_within_SS:', total_within_SS
     if self.clusters1:
         h2o_kmeans.compareToFirstKMeans(self, clusters, self.clusters1)
     else:
