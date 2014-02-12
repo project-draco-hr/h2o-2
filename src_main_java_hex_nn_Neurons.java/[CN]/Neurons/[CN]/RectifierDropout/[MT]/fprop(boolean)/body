@@ -1,0 +1,9 @@
+{
+  if (training) {
+    if (dropout == null)     dropout=createDropout(units);
+    dropout.fillBytes();
+    if (_previous.isInput())     dropout.clearSomeInput(_previous);
+  }
+  super.fprop(training);
+  if (!training)   Utils.div(_a,2.f);
+}

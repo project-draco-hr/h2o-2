@@ -5,7 +5,7 @@
     NN.InitialWeightDistribution[] dists={NN.InitialWeightDistribution.Normal,NN.InitialWeightDistribution.Uniform,NN.InitialWeightDistribution.UniformAdaptive};
     double[] initial_weight_scales={1e-4 + new Random().nextDouble()};
     double[] holdout_ratios={0.1 + new Random().nextDouble() * 0.8};
-    double[] momenta={0,new Random().nextDouble() * 0.99};
+    double[] momenta={0};
     int[] hiddens={1,new Random().nextInt(50)};
     int[] epochs={1,new Random().nextInt(50)};
     int num_runs=0;
@@ -35,7 +35,6 @@
                       if (_train != null)                       _train.delete();
                       if (_test != null)                       _test.delete();
                       if (fr != null)                       fr.delete();
-                      seed=new Random().nextLong();
                       rand=Utils.getDeterRNG(seed);
                       double[][] rows=new double[(int)frame.numRows()][frame.numCols()];
                       String[] names=new String[frame.numCols()];
@@ -69,9 +68,7 @@
                     p.rate=0.01;
                     p.activation=activation;
                     p.max_w2=Double.MAX_VALUE;
-                    p.rate=0.01;
                     p.epochs=epoch;
-                    p.activation=activation;
                     p.input_dropout_ratio=0;
                     p.rate_annealing=0;
                     p.l1=0;
@@ -83,7 +80,7 @@
                     p.initial_weight_distribution=dist;
                     p.initial_weight_scale=scale;
                     p.classification=true;
-                    p.diagnostics=false;
+                    p.diagnostics=true;
                     p.validation=null;
                     p.fast_mode=false;
                     p.sync_samples=100000;
@@ -93,12 +90,16 @@
                     Neurons[] neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info());
                     Neurons l=neurons[1];
                     for (int o=0; o < l._a.length; o++) {
-                      for (int i=0; i < l._previous._a.length; i++)                       ref._nn.ihWeights[i][o]=l._w[o * l._previous._a.length + i];
+                      for (int i=0; i < l._previous._a.length; i++) {
+                        ref._nn.ihWeights[i][o]=l._w[o * l._previous._a.length + i];
+                      }
                       ref._nn.hBiases[o]=l._b[o];
                     }
                     l=neurons[2];
                     for (int o=0; o < l._a.length; o++) {
-                      for (int i=0; i < l._previous._a.length; i++)                       ref._nn.hoWeights[i][o]=l._w[o * l._previous._a.length + i];
+                      for (int i=0; i < l._previous._a.length; i++) {
+                        ref._nn.hoWeights[i][o]=l._w[o * l._previous._a.length + i];
+                      }
                       ref._nn.oBiases[o]=l._b[o];
                     }
                     ref.train((int)p.epochs,p.rate,p.momentum_stable,loss);

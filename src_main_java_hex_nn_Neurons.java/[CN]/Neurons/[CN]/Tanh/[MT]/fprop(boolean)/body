@@ -1,8 +1,4 @@
 {
-  if (dropout != null && training) {
-    dropout.fillBytes();
-    if (_previous.isInput())     dropout.clearSomeInput(_previous);
-  }
   for (int o=0; o < _a.length; o++) {
     _a[o]=0;
     final int off=o * _previous._a.length;
@@ -12,9 +8,6 @@
       }
       _a[o]+=_b[o];
       _a[o]=-1 + (2 / (1 + Math.exp(-2 * _a[o])));
-      if (!training && dropout != null) {
-        _a[o]*=.5f;
-      }
     }
   }
 }

@@ -13,11 +13,6 @@
   long timeStart=System.currentTimeMillis();
   do {
     NNTask nntask=new NNTask(_dinfo,model.model_info(),true,sync_fraction).doAll(train);
-{
-      AutoBuffer bb=new AutoBuffer();
-      nntask.write(bb);
-      Log.info("Size of the (serialized) NNTask: " + String.format("%.3f",(double)bb.buf().length / (1 << 20)) + " MB.");
-    }
     model.set_model_info(nntask.model_info());
   }
  while (model.doDiagnostics(trainScoreFrame,validScoreFrame,timeStart,self()));

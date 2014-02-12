@@ -5,6 +5,7 @@
       if (parameters.initial_weight_distribution == NN.InitialWeightDistribution.UniformAdaptive) {
         final double range=Math.sqrt(6. / (units[i] + units[i + 1]));
         weights[i][j]=(float)uniformDist(rng,-range,range);
+        if (i == weights.length - 1 && parameters.classification)         weights[i][j]*=4;
       }
  else       if (parameters.initial_weight_distribution == NN.InitialWeightDistribution.Uniform) {
         weights[i][j]=(float)uniformDist(rng,-parameters.initial_weight_scale,parameters.initial_weight_scale);
