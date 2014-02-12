@@ -6,10 +6,12 @@
   ls[3]=new Layer.RectifierDropout(256);
   ls[4]=new VecSoftmax(labels,outputStats,NeuralNet.Loss.CrossEntropy);
   NeuralNet p=new NeuralNet();
-  p.rate=0.003f;
+  p.rate=0.01f;
   p.rate_annealing=1e-6f;
   p.epochs=1000;
   p.activation=NeuralNet.Activation.RectifierWithDropout;
+  p.input_dropout_ratio=0.4;
+  p.seed=0xC0FFEE;
   p.max_w2=15;
   p.momentum_start=0.5f;
   p.momentum_ramp=1800000;
@@ -17,6 +19,7 @@
   p.l1=.00001f;
   p.l2=.00f;
   p.initial_weight_distribution=NeuralNet.InitialWeightDistribution.UniformAdaptive;
+  p.diagnostics=true;
   for (int i=0; i < ls.length; i++) {
     ls[i].init(ls,i,p);
   }
