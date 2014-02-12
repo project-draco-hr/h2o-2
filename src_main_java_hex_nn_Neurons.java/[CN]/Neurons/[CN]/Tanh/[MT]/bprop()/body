@@ -1,7 +1,7 @@
 {
   long processed=_minfo.get_processed_total();
   double m=momentum(processed);
-  double r=rate(processed);
+  double r=rate(processed) * (1 - m);
   for (int u=0; u < _a.length; u++) {
     double g=_e[u] * (1 - _a[u]) * (1 + _a[u]);
     bprop(u,g,r,m);
