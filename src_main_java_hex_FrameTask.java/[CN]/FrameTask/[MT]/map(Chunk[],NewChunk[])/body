@@ -1,7 +1,8 @@
 {
   if (_job != null && _job.self() != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
   final int nrows=chunks[0]._len;
-  chunkInit();
+  final long offset=chunks[0]._start;
+  chunkInit(offset);
   double[] nums=MemoryManager.malloc8d(_dinfo._nums);
   int[] cats=MemoryManager.malloc4(_dinfo._cats);
   double[] response=MemoryManager.malloc8d(_dinfo._responses);
@@ -10,17 +11,17 @@
   boolean contiguous=false;
   Random _random=null;
   if (_useFraction < 1.0) {
+    _random=water.util.Utils.getDeterRNG(_seed + chunks[0]._start);
     if (contiguous) {
       final int howmany=(int)Math.ceil(_useFraction * nrows);
       if (howmany > 0) {
-        start=new Random().nextInt(nrows - howmany);
+        start=_random.nextInt(nrows - howmany);
         end=start + howmany;
       }
       assert(start < nrows);
       assert(end <= nrows);
     }
  else {
-      _random=water.util.Utils.getDeterRNG(new Random().nextLong());
       start=0;
       end=nrows;
     }
