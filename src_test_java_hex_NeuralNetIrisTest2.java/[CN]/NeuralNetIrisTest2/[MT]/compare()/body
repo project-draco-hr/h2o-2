@@ -63,8 +63,6 @@
  while (p._dinfo._adaptedFrame.lastVec().domain().length < 3);
                       NeuralNetMLPReference2 ref=new NeuralNetMLPReference2();
                       ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio,hidden);
-                      p.job_key=Key.make("iris_test.job");
-                      p.destination_key=Key.make("iris_test.model");
                       p.seed=seed;
                       p.hidden=new int[]{hidden};
                       p.rate=rate / (1 - momentum);
@@ -86,7 +84,6 @@
                       p.validation=null;
                       p.fast_mode=false;
                       p.sync_samples=100000;
-                      DKV.put(p.job_key,new Value(p.job_key,new byte[0]),null);
                       p.initModel();
                       NNModel mymodel=UKV.get(p.dest());
                       Neurons[] neurons=NNTask.makeNeurons(p._dinfo,mymodel.model_info());
@@ -163,7 +160,6 @@
                       _test.delete();
                       frame.delete();
                       fr.delete();
-                      UKV.remove(p.job_key);
                       num_runs++;
                       Log.info("Parameters combination " + num_runs + ": PASS");
                     }
