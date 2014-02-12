@@ -39,7 +39,6 @@
               Vec labels=_train.vecs()[_train.vecs().length - 1];
               NeuralNet p=new NeuralNet();
               p.seed=seed;
-              NeuralNet.RNG.seed=new AtomicLong(seed);
               p.rate=0.01;
               p.activation=activation;
               p.max_w2=Double.MAX_VALUE;
@@ -88,7 +87,6 @@
                 ref._nn.oBiases[o]=l._b[o];
               }
               ref.train((int)p.epochs,p.rate,loss);
-              NeuralNet.RNG.seed=new AtomicLong(seed);
               if (trainer == NeuralNet.ExecutionMode.SingleThread) {
                 new Trainer.Direct(ls,p.epochs,null).run();
               }

@@ -1,7 +1,7 @@
 {
   checkParams();
   logStart();
-  NN.RNG.seed=new AtomicLong(seed);
+  Utils.setUsedRNGKind(H2ORandomRNG.RNGKind.value("deter"));
   source.read_lock(self());
   if (validation != null && source._key != null && validation._key != null && !source._key.equals(validation._key))   validation.read_lock(self());
   if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,true),1,true);

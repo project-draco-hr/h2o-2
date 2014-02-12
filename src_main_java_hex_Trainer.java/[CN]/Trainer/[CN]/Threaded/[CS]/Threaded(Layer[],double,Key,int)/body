@@ -25,7 +25,7 @@
         for (long i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
           if (job != null && (!Job.isRunning(job) || !NeuralNet.running))           break;
           try {
-            trainer.step();
+            trainer.step(input._pos + i);
             input.move();
             _processed.incrementAndGet();
           }

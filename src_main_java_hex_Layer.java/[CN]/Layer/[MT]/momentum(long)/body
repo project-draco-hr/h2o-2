@@ -1,8 +1,8 @@
 {
-  double m=momentum_start;
-  if (momentum_ramp > 0) {
-    if (n >= momentum_ramp)     m=momentum_stable;
- else     m+=(momentum_stable - momentum_start) * n / momentum_ramp;
+  double m=params.momentum_start;
+  if (params.momentum_ramp > 0) {
+    if (n >= params.momentum_ramp)     m=params.momentum_stable;
+ else     m+=(params.momentum_stable - params.momentum_start) * n / params.momentum_ramp;
   }
   return m;
 }

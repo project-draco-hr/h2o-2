@@ -1,6 +1,6 @@
 {
   if (training) {
-    if (dropout == null)     dropout=createDropout(units);
+    assert(dropout != null);
     dropout.fillBytes();
     if (_previous.isInput())     dropout.clearSomeInput(_previous);
   }

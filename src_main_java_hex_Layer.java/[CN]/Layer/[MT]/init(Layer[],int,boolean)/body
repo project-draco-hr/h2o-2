@@ -1,5 +1,5 @@
 {
-  rate*=Math.pow(rate_decay,index - 1);
+  params.rate*=Math.pow(params.rate_decay,index - 1);
   _a=new double[units];
   if (!(this instanceof Output)) {
     _e=new double[units];
@@ -9,7 +9,7 @@
   if (weights) {
     _w=new float[units * _previous.units];
     _b=new double[units];
-    if (momentum_start != 0 || momentum_stable != 0) {
+    if (params.momentum_start != 0 || params.momentum_stable != 0) {
       _wm=new float[_w.length];
       _bm=new double[_b.length];
     }

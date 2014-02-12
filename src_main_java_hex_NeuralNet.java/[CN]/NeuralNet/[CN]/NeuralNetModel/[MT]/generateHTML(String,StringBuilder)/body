@@ -67,8 +67,8 @@
       sb.append("<td>").append("<b>").append(layers[i].units).append("</b>").append("</td>");
       sb.append("<td>").append(layers[i].getClass().getSimpleName().replace("Vec","").replace("Chunk","")).append("</td>");
       sb.append("<td>").append(String.format("%.5g",layers[i].rate(train.training_samples))).append("</td>");
-      sb.append("<td>").append(layers[i].l1).append("</td>");
-      sb.append("<td>").append(layers[i].l2).append("</td>");
+      sb.append("<td>").append(layers[i].params.l1).append("</td>");
+      sb.append("<td>").append(layers[i].params.l2).append("</td>");
       final String format="%g";
       sb.append("<td>").append(layers[i].momentum(train.training_samples)).append("</td>");
       sb.append("<td>(").append(String.format(format,mean_weight[i])).append(", ").append(String.format(format,rms_weight[i])).append(")</td>");

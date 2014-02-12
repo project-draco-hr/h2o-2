@@ -1,0 +1,27 @@
+{
+  for (int i=1; i < neurons.length - 1; ++i) {
+    if (training && gid >= 0)     neurons[i].setTrainingRow(gid);
+    neurons[i].fprop(training);
+  }
+  if (minfo.get_params().classification) {
+    ((Neurons.Softmax)neurons[neurons.length - 1]).fprop();
+    if (training) {
+      for (int i=1; i < neurons.length - 1; i++)       Arrays.fill(neurons[i]._e,0);
+      assert((double)(int)responses[0] == responses[0]);
+      final int target_label=(int)responses[0];
+      ((Neurons.Softmax)neurons[neurons.length - 1]).bprop(target_label);
+    }
+  }
+ else {
+    ((Neurons.Linear)neurons[neurons.length - 1]).fprop();
+    if (training) {
+      for (int i=1; i < neurons.length - 1; i++)       Arrays.fill(neurons[i]._e,0);
+      final double target_value=responses[0];
+      ((Neurons.Linear)neurons[neurons.length - 1]).bprop(target_value);
+    }
+  }
+  if (training) {
+    for (int i=neurons.length - 2; i > 0; --i)     neurons[i].bprop();
+    minfo.add_processed_local(1);
+  }
+}

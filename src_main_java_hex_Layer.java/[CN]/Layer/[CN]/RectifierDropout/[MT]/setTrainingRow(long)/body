@@ -1,0 +1,9 @@
+{
+  super.setTrainingRow(row);
+  long seed=params.seed + 0x3C71F1ED + row;
+  if ((seed >>> 32) < 0x0000ffffL)   seed|=0x5b93000000000000L;
+  if (((seed << 32) >>> 32) < 0x0000ffffL)   seed|=0xdb910000L;
+  if (dropout == null)   dropout=createDropout(units);
+  if (dropout._rand == null)   dropout._rand=new Random(seed);
+ else   dropout._rand.setSeed(seed);
+}

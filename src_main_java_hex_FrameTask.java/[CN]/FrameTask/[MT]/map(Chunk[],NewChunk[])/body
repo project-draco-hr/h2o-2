@@ -2,7 +2,7 @@
   if (_job != null && _job.self() != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
   final int nrows=chunks[0]._len;
   final long offset=chunks[0]._start;
-  chunkInit(offset);
+  chunkInit();
   double[] nums=MemoryManager.malloc8d(_dinfo._nums);
   int[] cats=MemoryManager.malloc4(_dinfo._cats);
   double[] response=MemoryManager.malloc8d(_dinfo._responses);
@@ -11,7 +11,7 @@
   boolean contiguous=false;
   Random _random=null;
   if (_useFraction < 1.0) {
-    _random=water.util.Utils.getDeterRNG(_seed + chunks[0]._start);
+    _random=water.util.Utils.getDeterRNG(_seed + 0x600D5EED + offset);
     if (contiguous) {
       final int howmany=(int)Math.ceil(_useFraction * nrows);
       if (howmany > 0) {
@@ -20,10 +20,6 @@
       }
       assert(start < nrows);
       assert(end <= nrows);
-    }
- else {
-      start=0;
-      end=nrows;
     }
   }
   OUTER:   for (int r=start; r < end; ++r) {
@@ -41,8 +37,8 @@
       nums[i - _dinfo._cats]=d;
     }
     for (i=0; i < _dinfo._responses; ++i)     response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
-    if (outputs != null && outputs.length > 0)     processRow(nums,ncats,cats,response,outputs);
- else     processRow(nums,ncats,cats,response);
+    if (outputs != null && outputs.length > 0)     processRow(offset + r,nums,ncats,cats,response,outputs);
+ else     processRow(offset + r,nums,ncats,cats,response);
   }
   chunkDone();
 }

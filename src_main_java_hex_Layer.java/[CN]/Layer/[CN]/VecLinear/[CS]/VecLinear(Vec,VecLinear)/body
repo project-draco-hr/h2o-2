@@ -2,5 +2,5 @@
   assert(stats == null || stats.units == 1);
   units=1;
   _vec=vec;
-  if (stats != null)   transferParams(stats);
+  params=stats != null ? (NeuralNet)stats.params.clone() : null;
 }
