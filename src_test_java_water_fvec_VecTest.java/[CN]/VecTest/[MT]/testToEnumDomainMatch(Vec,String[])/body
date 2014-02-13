@@ -1,0 +1,12 @@
+{
+  Vec ef=null;
+  try {
+    ef=f.toEnum();
+    String[] actualDomain=ef.domain();
+    assertArrayEquals("toEnum call returns wrong domain!",expectedDomain,actualDomain);
+  }
+  finally {
+    if (f != null)     UKV.remove(f._key);
+    if (ef != null)     UKV.remove(ef._key);
+  }
+}
