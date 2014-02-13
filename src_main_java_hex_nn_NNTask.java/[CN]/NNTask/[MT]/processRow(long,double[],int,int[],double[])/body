@@ -1,4 +1,5 @@
 {
-  ((Neurons.Input)_neurons[0]).setInput(row,nums,numcats,cats);
-  step(row,_neurons,_output,_training,responses);
+  final long processed=model_info().get_processed_total() + row;
+  ((Neurons.Input)_neurons[0]).setInput(processed,nums,numcats,cats);
+  step(processed,_neurons,_output,_training,responses);
 }
