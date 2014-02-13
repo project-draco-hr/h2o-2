@@ -48,7 +48,7 @@ def test_rf_mnist_both_fvec(self):
         elapsed = (time.time() - start)
         print 'RF completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         h2o_rf.simpleCheckRFView(None, rfView, **params)
-        modelKey = rfView['drf_model']['_selfKey']
+        modelKey = rfView['drf_model']['_key']
         start = time.time()
         kwargs = {'response': y, }
         rfView = h2o_cmd.runRFView(data_key=testKey2, model_key=modelKey, ntree=ntree, out_of_bag_error_estimate=0, timeoutSecs=60, pollTimeoutSecs=60, noSimpleCheck=False, **kwargs)
