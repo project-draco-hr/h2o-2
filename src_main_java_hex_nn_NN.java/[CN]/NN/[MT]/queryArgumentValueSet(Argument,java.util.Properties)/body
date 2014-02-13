@@ -4,9 +4,6 @@
     classification=true;
     arg.disable("Regression is not currently supported.");
   }
-  if (arg._name.equals("input_dropout_ratio") && (activation != Activation.RectifierWithDropout && activation != Activation.TanhWithDropout)) {
-    arg.disable("Only with Dropout.",inputArgs);
-  }
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
   }

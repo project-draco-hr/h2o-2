@@ -1,8 +1,0 @@
-{
-  if (training) {
-    dropout.fillBytes();
-    if (_previous.isInput())     dropout.clearSomeInput(_previous);
-  }
-  super.fprop(training);
-  if (!training)   Utils.div(_a,2.f);
-}

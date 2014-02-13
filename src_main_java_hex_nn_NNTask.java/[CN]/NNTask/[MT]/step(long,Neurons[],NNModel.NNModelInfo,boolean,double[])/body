@@ -1,7 +1,6 @@
 {
   for (int i=1; i < neurons.length - 1; ++i) {
-    if (training && gid >= 0)     neurons[i].setTrainingRow(gid);
-    neurons[i].fprop(training);
+    neurons[i].fprop(row,training);
   }
   if (minfo.get_params().classification) {
     ((Neurons.Softmax)neurons[neurons.length - 1]).fprop();
