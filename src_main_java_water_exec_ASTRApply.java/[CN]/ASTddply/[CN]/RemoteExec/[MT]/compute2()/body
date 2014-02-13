@@ -1,4 +1,14 @@
 {
-  System.out.println("ddply on group " + Arrays.toString(_ds) + " rows="+ _fr.numRows());
+  System.out.println("ddply on group " + Arrays.toString(_ds) + " rows="+ _fr.numRows()+ ", env="+ _env+ ", op="+ _op);
+  _env=_env.capture(true);
+  _env.push(_op);
+  _env.push(_fr);
+  _op.apply(_env,2);
+  System.out.println("ddply on group " + Arrays.toString(_ds) + ", env="+ _env);
+  _fr.delete();
+  _fr=null;
+  _ds=null;
+  _op=null;
+  _env=null;
   tryComplete();
 }
