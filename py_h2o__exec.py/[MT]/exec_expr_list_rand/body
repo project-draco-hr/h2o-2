@@ -13,7 +13,7 @@ def exec_expr_list_rand(lenNodes, exprList, keyX, minCol=1, maxCol=55, minRow=1,
         checkScalarResult(execResultInspect, None)
         if keyX:
             inspect = h2o_cmd.runInspect(key=keyX)
-            print '\ns.hex    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+            print keyX, '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         sys.stdout.write('.')
         sys.stdout.flush()
         if h2o.check_sandbox_for_errors():
