@@ -3,6 +3,7 @@
   if (IS_SYSTEM_RUNNING)   return;
   IS_SYSTEM_RUNNING=true;
   VERSION=getVersion();
+  START_TIME_MILLIS=System.currentTimeMillis();
   Arguments arguments=new Arguments(args);
   arguments.extract(OPT_ARGS);
   ARGS=arguments.toStringArray();
