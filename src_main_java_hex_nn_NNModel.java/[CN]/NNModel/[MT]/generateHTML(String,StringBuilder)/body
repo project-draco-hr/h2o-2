@@ -96,8 +96,8 @@
   if (error.validation) {
     String validation="Number of validation set samples for scoring: " + (score_valid == 0 ? "all" : score_valid);
     if (score_valid > 0) {
-      if (score_train < 1000)       training+=" (low, scoring might be inaccurate -> consider increasing this number in the expert mode)";
-      if (score_train > 10000)       training+=" (large, scoring can be slow -> consider reducing this number in the expert mode or scoring manually)";
+      if (score_valid < 1000)       validation+=" (low, scoring might be inaccurate -> consider increasing this number in the expert mode)";
+      if (score_valid > 10000)       validation+=" (large, scoring can be slow -> consider reducing this number in the expert mode or scoring manually)";
     }
     DocGen.HTML.section(sb,validation);
   }

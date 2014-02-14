@@ -9,13 +9,13 @@
   int start=0;
   int end=nrows;
   boolean contiguous=false;
-  Random _random=null;
+  Random skip_rng=null;
   if (_useFraction < 1.0) {
-    _random=water.util.Utils.getDeterRNG(_seed + 0x600D5EED + offset);
+    skip_rng=water.util.Utils.getDeterRNG(_seed++ + 0x600D5EED + offset);
     if (contiguous) {
       final int howmany=(int)Math.ceil(_useFraction * nrows);
       if (howmany > 0) {
-        start=_random.nextInt(nrows - howmany);
+        start=skip_rng.nextInt(nrows - howmany);
         end=start + howmany;
       }
       assert(start < nrows);
@@ -23,7 +23,7 @@
     }
   }
   OUTER:   for (int r=start; r < end; ++r) {
-    if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || (_random != null && _random.nextFloat() > _useFraction))     continue;
+    if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))     continue;
     for (    Chunk c : chunks)     if (c.isNA0(r))     continue OUTER;
     int i=0, ncats=0;
     for (; i < _dinfo._cats; ++i) {

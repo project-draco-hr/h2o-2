@@ -1,21 +1,21 @@
 {
   long[] siz=new long[2];
-  for (int i=0; i < weights.length; ++i) {
-    siz[0]+=weights[i].length;
-    siz[1]+=weights[i].length * Float.SIZE;
+  for (  float[] w : weights) {
+    siz[0]+=w.length;
+    siz[1]+=w.length * Float.SIZE;
   }
-  for (int i=0; i < biases.length; ++i) {
-    siz[0]+=biases[i].length;
-    siz[1]+=biases[i].length * Double.SIZE;
+  for (  double[] b : biases) {
+    siz[0]+=b.length;
+    siz[1]+=b.length * Double.SIZE;
   }
   if (has_momenta()) {
-    for (int i=0; i < weights_momenta.length; ++i) {
-      siz[0]+=weights_momenta.length;
-      siz[1]+=weights_momenta.length * Float.SIZE;
+    for (    float[] wm : weights_momenta) {
+      siz[0]+=wm.length;
+      siz[1]+=wm.length * Float.SIZE;
     }
-    for (int i=0; i < biases_momenta.length; ++i) {
-      siz[0]+=biases_momenta.length;
-      siz[1]+=biases_momenta.length * Double.SIZE;
+    for (    double[] bm : biases_momenta) {
+      siz[0]+=bm.length;
+      siz[1]+=bm.length * Double.SIZE;
     }
   }
   siz[1]/=8;

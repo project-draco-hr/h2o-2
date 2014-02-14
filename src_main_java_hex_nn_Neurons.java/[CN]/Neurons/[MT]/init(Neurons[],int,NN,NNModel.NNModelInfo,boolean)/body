@@ -8,7 +8,7 @@
   if (training && (this instanceof Maxout || this instanceof TanhDropout || this instanceof RectifierDropout|| this instanceof Input)) {
     dropout=new Dropout(units);
   }
-  if (!isInput()) {
+  if (!(this instanceof Input)) {
     _previous=neurons[index - 1];
     _minfo=minfo;
     _w=minfo.get_weights(index - 1);

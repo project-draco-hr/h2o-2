@@ -3,11 +3,11 @@
   logStart();
   source.read_lock(self());
   if (validation != null && source._key != null && validation._key != null && !source._key.equals(validation._key))   validation.read_lock(self());
-  if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,true),1,true);
+  if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,true,ignore_const_cols),1,true);
   NNModel model=new NNModel(dest(),self(),source._key,_dinfo,this);
-  model.delete_and_lock(self());
   model.model_info().initializeMembers();
   final long[] model_size=model.model_info().size();
   Log.info("Number of model parameters (weights/biases): " + String.format("%g",(double)model_size[0]));
   Log.info("Memory usage of the model: " + String.format("%g",(double)model_size[1] / (1 << 20)) + " MB.");
+  model.delete_and_lock(self());
 }
