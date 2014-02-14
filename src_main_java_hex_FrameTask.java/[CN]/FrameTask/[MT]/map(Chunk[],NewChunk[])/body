@@ -22,7 +22,14 @@
       assert(end <= nrows);
     }
   }
-  OUTER:   for (int r=start; r < end; ++r) {
+  long[] shuf_map=null;
+  if (_shuffle) {
+    shuf_map=new long[end - start];
+    for (int i=0; i < shuf_map.length; ++i)     shuf_map[i]=start + i;
+    Utils.shuffleArray(shuf_map,_seed++ + 0xD0650F1E + offset);
+  }
+  OUTER:   for (int rr=start; rr < end; ++rr) {
+    final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
     if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))     continue;
     for (    Chunk c : chunks)     if (c.isNA0(r))     continue OUTER;
     int i=0, ncats=0;

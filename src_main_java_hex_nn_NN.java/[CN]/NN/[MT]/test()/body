@@ -12,14 +12,11 @@
   p.ignore_const_cols=true;
   DataInfo dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true,p.ignore_const_cols),1,true);
   NNModel.NNModelInfo model_info=new NNModel.NNModelInfo(p,p.source.numCols() - 1,10);
-  NNTask nnt=new NNTask(dinfo,model_info,true,1.0f);
-  int numcats=0;
-  int[] cats=null;
   Neurons[] neurons=NNTask.makeNeuronsForTraining(dinfo,model_info);
   for (long row=0; row < 100; ++row) {
     double[] nums=new double[dinfo._nums];
     for (int i=0; i < dinfo._nums; ++i)     nums[i]=fr.vecs()[i].at(row);
-    ((Neurons.Input)neurons[0]).setInput(row,nums,0,cats);
+    ((Neurons.Input)neurons[0]).setInput(row,nums,0,null);
     final double[] responses=new double[]{fr.vecs()[p.source.numCols() - 1].at(row)};
     NNTask.step(row,neurons,model_info,true,responses);
   }
