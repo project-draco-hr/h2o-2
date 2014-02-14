@@ -1,7 +1,7 @@
 {
   if (vec.masterVec() != null)   subRef(vec.masterVec(),fs);
-  int cnt=_refcnt.get(vec) - 1;
-  if (cnt > 0)   _refcnt.put(vec,cnt);
+  int cnt=_refcnt.get(vec)._val - 1;
+  if (cnt > 0)   _refcnt.put(vec,new IcedInt(cnt));
  else {
     if (fs == null)     fs=new Futures();
     UKV.remove(vec._key,fs);

@@ -1,7 +1,5 @@
 {
-  final ASTOp op=env.fcn(-1);
   Frame fr=env.ary(-3);
-  final int ncols=fr.numCols();
   int cols[];
   if (!env.isAry(-2)) {
     if (Double.isNaN(env.dbl(-2)))     throw new IllegalArgumentException("NA not a valid column");
@@ -36,6 +34,7 @@
   }
   fs.blockForPending();
   for (  Vec v : vecs)   UKV.remove(v._key);
+  UKV.remove(envkey);
   env.pop(4);
   env.push(new Frame(new String[0],new Vec[0]));
 }

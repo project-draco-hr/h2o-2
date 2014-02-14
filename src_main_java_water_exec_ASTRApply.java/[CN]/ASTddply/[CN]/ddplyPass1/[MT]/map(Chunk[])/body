@@ -1,8 +1,8 @@
 {
   _groups=new NonBlockingHashMap<Group,NewChunk>();
   Group g=new Group(_cols.length);
+  NewChunk nc=makeNC();
   Chunk C=chks[_cols[0]];
-  NewChunk nc=makeNC(C);
   int len=C._len;
   long start=C._start;
   for (int row=0; row < len; row++) {
@@ -11,7 +11,7 @@
     if (nc_old == null) {
       nc_old=nc;
       g=new Group(_cols.length);
-      nc=makeNC(C);
+      nc=makeNC();
     }
     nc_old.addNum(start + row,0);
   }
