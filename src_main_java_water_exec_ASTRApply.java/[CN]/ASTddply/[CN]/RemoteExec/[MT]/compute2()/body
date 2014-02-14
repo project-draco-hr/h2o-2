@@ -1,14 +1,15 @@
 {
-  System.out.println("ddply on group " + Arrays.toString(_ds) + " rows="+ _fr.numRows()+ ", env="+ _env+ ", op="+ _op);
-  _env=_env.capture(true);
-  _env.push(_op);
-  _env.push(_fr);
-  _op.apply(_env,2);
-  System.out.println("ddply on group " + Arrays.toString(_ds) + ", env="+ _env);
+  Env shared_env=UKV.get(_envkey);
+  Env env=shared_env.capture(true);
+  ASTOp op=env.fcn(-1);
+  System.out.println("ddply on group " + Arrays.toString(_ds) + " rows="+ _fr.numRows()+ ", env="+ env+ ", op="+ op);
+  env.push(op);
+  env.push(_fr);
+  op.apply(env,2);
+  System.out.println("ddply on group " + Arrays.toString(_ds) + ", env="+ env);
   _fr.delete();
   _fr=null;
   _ds=null;
-  _op=null;
-  _env=null;
+  _envkey=null;
   tryComplete();
 }
