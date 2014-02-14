@@ -5,6 +5,7 @@
   _now=System.currentTimeMillis();
   _sinceLastScore=_now - _timeLastScoreStart;
   if (!keep_running || (_now - timeStart < 30000) || (_sinceLastScore > model_info().parameters.score_interval * 1000)) {
+    Log.info("Scoring the model.");
     _timeLastScoreStart=_now;
     boolean printCM=false;
     Errors err=new Errors();
@@ -27,10 +28,9 @@
       err2[err2.length - 1]=err;
       errors=err2;
     }
-    if (model_info().parameters.diagnostics)     model_info.computeStats();
-    Log.info("scoring time: " + PrettyPrint.msecs(System.currentTimeMillis() - _now,true));
-    for (    String s : toString().split("\n"))     Log.info(s);
+    Log.info("Scoring time: " + PrettyPrint.msecs(System.currentTimeMillis() - _now,true));
   }
+  for (  String s : toString().split("\n"))   Log.info(s);
   if (model_info().unstable()) {
     Log.err("Canceling job since the model is unstable (exponential growth observed).");
     Log.err("Try using L1/L2/max_w2 regularization, a different activation function, or more synchronization in multi-node operation.");
