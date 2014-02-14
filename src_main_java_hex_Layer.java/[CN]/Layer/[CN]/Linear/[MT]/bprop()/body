@@ -3,7 +3,7 @@
   double m=momentum(processed);
   double r=rate(processed) * (1 - m);
   double[] v=target();
-  assert(loss == NeuralNet.Loss.MeanSquare);
+  assert(params.loss == NeuralNet.Loss.MeanSquare);
   for (int u=0; u < _a.length; u++) {
     if (v[u] == missing_double_value)     continue;
     double g=v[u] - _a[u];

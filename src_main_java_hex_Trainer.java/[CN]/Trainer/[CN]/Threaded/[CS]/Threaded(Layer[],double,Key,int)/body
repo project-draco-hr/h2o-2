@@ -20,12 +20,13 @@
     input._pos=input._len * t / num_threads;
     _trainers[t]=new Base(clones);
     final Base trainer=_trainers[t];
+    final int thread_num=t;
     _threads[t]=new Thread("H2O Trainer " + t){
       @Override public void run(){
         for (long i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
           if (job != null && (!Job.isRunning(job) || !NeuralNet.running))           break;
           try {
-            trainer.step(input._pos + i);
+            trainer.step(thread_num * _stepsPerThread + input._pos);
             input.move();
             _processed.incrementAndGet();
           }
