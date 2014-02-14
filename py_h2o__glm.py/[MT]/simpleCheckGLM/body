@@ -72,6 +72,19 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print ('%15s %s' % ('auc:\t', validations['auc']))
         if h2o.beta_features:
             print ('%15s %s' % ('best_threshold:\t', validations['best_threshold']))
+            print "We're just going to print the middle '_cms' ..that must be threshold 0.5?. this isn't above best_threshold"
+            cms = glm['glm_model']['submodels'][0]['validation']['_cms']
+            mid = (len(cms) / 2)
+            cm = cms[mid]
+            print 'cm:', h2o.dump_json(cm['_arr'])
+            predErr = cm['_predErr']
+            classErr = cm['_classErr']
+            pctWrong = h2o_gbm.pp_cm_summary(cm['_arr'])
+            print 'predErr:', predErr
+            print 'calculated pctWrong from cm:', pctWrong
+            print 'classErr:', classErr
+            print '\nTrain\n==========\n'
+            print h2o_gbm.pp_cm(cm['_arr'])
         else:
             print ('%15s %s' % ('threshold:\t', validations['threshold']))
     if ((family == 'poisson') or (family == 'gaussian')):

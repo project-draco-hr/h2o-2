@@ -1,6 +1,6 @@
 {
-  Integer I=_refcnt.get(vec);
-  int cnt0=I == null ? 0 : I;
+  IcedInt I=_refcnt.get(vec);
+  int cnt0=I == null ? 0 : I._val;
   int cnt1=compute_refcnt(vec);
   if (cnt0 == cnt1)   return true;
   System.out.println("Refcnt is " + cnt0 + " but computed as "+ cnt1);
