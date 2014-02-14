@@ -1,6 +1,11 @@
 {
   checkParams();
   logStart();
+  if (shuffle_training_data) {
+    Log.info("Shuffling training data.");
+    source=shuffleFramePerChunk(source,seed);
+    response=source.lastVec();
+  }
   source.read_lock(self());
   if (validation != null && source._key != null && validation._key != null && !source._key.equals(validation._key))   validation.read_lock(self());
   if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,true,ignore_const_cols),1,true);
