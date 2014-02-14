@@ -57,7 +57,8 @@
                         p.source=_train;
                         p.response=_train.lastVec();
                         p.ignored_cols=null;
-                        fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true);
+                        p.ignore_const_cols=true;
+                        fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true,p.ignore_const_cols);
                         p._dinfo=new FrameTask.DataInfo(fr,1,true);
                       }
  while (p._dinfo._adaptedFrame.lastVec().domain().length < 3);
