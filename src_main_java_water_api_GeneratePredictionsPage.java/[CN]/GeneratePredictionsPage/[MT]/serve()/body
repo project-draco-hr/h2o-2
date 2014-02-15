@@ -3,7 +3,7 @@
     JsonObject res=new JsonObject();
     ValueArray ary=_dataKey.value();
     OldModel m=(OldModel)_modelKey.value();
-    Key dest=_dest.value();
+    Key dest=_dest.value() != null ? _dest.value() : Key.make("__Prediction_" + Key.make());
     return Inspect.redirect(res,ScoreTask.score(m,ary,dest));
   }
  catch (  Throwable t) {
