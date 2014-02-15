@@ -15,7 +15,7 @@ def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None
         else:
             numRows = inspect['num_rows']
             numCols = inspect['num_cols']
-        node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs, noPrint=noPrint, numRow=numRows, numCols=numCols)
+        node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs, noPrint=noPrint, numRows=numRows, numCols=numCols)
     else:
         h2o.check_sandbox_for_errors()
     return parseResult
