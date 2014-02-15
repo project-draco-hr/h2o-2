@@ -24,5 +24,6 @@ def checkScalarResult(resultInspect, resultKey):
     for (key, value) in metaDict.items():
         print 'Inspect metaDict:', key, value
     min_value = metaDict['min']
-    checkForBadFP(min_value)
+    stype = metaDict['type']
+    checkForBadFP(min_value, nanOkay=(stype == 'Enum'))
     return min_value
