@@ -18,7 +18,7 @@ def test_parse_summary_manyfiles_1(self):
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         goodX = h2o_glm.goodXFromColumnInfo(y=54, key=parseResult['destination_key'], timeoutSecs=300)
         summaryResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=360)
-        h2o_cmd.infoFromSummary(summaryResult)
+        h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         print '\nTrying StoreView after the parse'
         h2o_cmd.runStoreView(timeoutSecs=120)
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
