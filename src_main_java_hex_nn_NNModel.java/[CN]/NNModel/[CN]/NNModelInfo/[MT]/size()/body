@@ -8,16 +8,6 @@
     siz[0]+=b.length;
     siz[1]+=b.length * Double.SIZE;
   }
-  if (has_momenta()) {
-    for (    float[] wm : weights_momenta) {
-      siz[0]+=wm.length;
-      siz[1]+=wm.length * Float.SIZE;
-    }
-    for (    double[] bm : biases_momenta) {
-      siz[0]+=bm.length;
-      siz[1]+=bm.length * Double.SIZE;
-    }
-  }
   siz[1]/=8;
   return siz;
 }
