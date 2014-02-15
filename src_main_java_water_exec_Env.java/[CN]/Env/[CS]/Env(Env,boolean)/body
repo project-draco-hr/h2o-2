@@ -6,7 +6,11 @@
   _fcn=Arrays.copyOf(e._fcn,_sp);
   _tod=e._tod;
   _display=Arrays.copyOf(e._display,_tod + 1);
-  _refcnt=cntrefs ? new HashMap<Vec,Integer>() : null;
+  if (cntrefs) {
+    _refcnt=new IcedHashMap<Vec,IcedInt>();
+    _refcnt.putAll(e._refcnt);
+  }
+ else   _refcnt=null;
   _sb=null;
   _locked=null;
 }

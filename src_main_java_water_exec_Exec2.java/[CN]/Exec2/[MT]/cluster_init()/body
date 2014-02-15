@@ -1,0 +1,13 @@
+{
+  if (_inited)   return;
+  new DRemoteTask(){
+    @Override public void lcompute(){
+      new ASTPlus();
+      tryComplete();
+    }
+    @Override public void reduce(    DRemoteTask dt){
+    }
+  }
+.invokeOnAllNodes();
+  _inited=true;
+}
