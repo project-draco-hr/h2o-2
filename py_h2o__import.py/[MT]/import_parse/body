@@ -8,7 +8,14 @@ def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None
     h2o.verboseprint('parseResult:', h2o.dump_json(parseResult))
     if (doSummary and (not noPoll)):
         h2o.check_sandbox_for_errors()
-        node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs, noPrint=noPrint)
+        inspect = node.inspect(parseResult['destination_key'], timeoutSecs=timeoutSecs)
+        if h2o.beta_features:
+            numRows = inspect['numRows']
+            numCols = inspect['numCols']
+        else:
+            numRows = inspect['num_rows']
+            numCols = inspect['num_cols']
+        node.summary_page(parseResult['destination_key'], timeoutSecs=timeoutSecs, noPrint=noPrint, numRow=numRows, numCols=numCols)
     else:
         h2o.check_sandbox_for_errors()
     return parseResult

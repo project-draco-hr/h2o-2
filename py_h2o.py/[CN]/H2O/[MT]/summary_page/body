@@ -1,4 +1,4 @@
-def summary_page(self, key, timeoutSecs=60, noPrint=True, useVA=False, **kwargs):
+def summary_page(self, key, timeoutSecs=60, noPrint=True, useVA=False, numRows=None, numCols=None, **kwargs):
     if (beta_features and (not useVA)):
         params_dict = {'source': key, 'cols': None, 'max_ncols': 1000, }
     else:
@@ -7,5 +7,5 @@ def summary_page(self, key, timeoutSecs=60, noPrint=True, useVA=False, **kwargs)
     check_params_update_kwargs(params_dict, kwargs, 'summary_page', print_params=True)
     a = self.__do_json_request(('2/SummaryPage2.json' if (beta_features and (not useVA)) else 'SummaryPage.json'), timeout=timeoutSecs, params=params_dict)
     verboseprint('\nsummary_page result:', dump_json(a))
-    h2o_cmd.infoFromSummary(a, noPrint=noPrint)
+    h2o_cmd.infoFromSummary(a, noPrint=noPrint, numRows=numRows, numCols=numCols)
     return a
