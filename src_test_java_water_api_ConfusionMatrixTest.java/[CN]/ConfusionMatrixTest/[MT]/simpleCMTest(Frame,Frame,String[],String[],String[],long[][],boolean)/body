@@ -1,0 +1,18 @@
+{
+  try {
+    ConfusionMatrix cm=computeCM(v1,v2);
+    if (true) {
+      System.err.println(Arrays.toString(cm.actual_domain));
+      System.err.println(Arrays.toString(cm.predicted_domain));
+      for (int i=0; i < cm.cm.length; i++)       System.err.println(Arrays.toString(cm.cm[i]));
+      StringBuilder sb=new StringBuilder();
+      cm.toASCII(sb);
+      System.err.println(sb.toString());
+    }
+    assertCMEqual(expectedActualDomain,expectedPredictDomain,expectedDomain,expectedCM,cm);
+  }
+  finally {
+    if (v1 != null)     v1.delete();
+    if (v2 != null)     v2.delete();
+  }
+}

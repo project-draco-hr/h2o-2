@@ -6,7 +6,7 @@ def test_exec2_na2mean(self):
     hexKey = 'r.hex'
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     execExprList = ['rcnt = c(0)', 'total = c(0)', 'mean = c(0)', 's.hex = r.hex', 'x=r.hex[,1]; rcnt=nrow(x)-sum(is.na(x))', 'x=r.hex[,1]; total=sum(ifelse(is.na(x),0,x)); rcnt=nrow(x)-sum(is.na(x))', 'x=r.hex[,1]; total=sum(ifelse(is.na(x),0,x)); rcnt=nrow(x)-sum(is.na(x)); mean=total / rcnt', 'x=r.hex[,1]; total=sum(ifelse(is.na(x),0,x)); rcnt=nrow(x)-sum(is.na(x)); mean=total / rcnt; x=ifelse(is.na(x),mean,x)']
-    execExprList2 = [((((('s.hex = apply(r.hex,2,' + 'function(x){total=sum(ifelse(is.na(x),0,x)); ') + 'rcnt=nrow(x)-sum(is.na(x)); ') + 'mean=total / rcnt; ') + 'ifelse(is.na(x),mean,x)} ') + ')')]
+    execExprList2 = [((((('s.hex = apply(r.hex,2,' + 'function(x){total=sum(ifelse(is.na(x),0,x)); ') + 'rcnt=nrow(x)-sum(is.na(x)); ') + 'mean=total / rcnt; ') + 'ifelse(is.na(x),mean,x)} ') + ')'), 's=r.hex[,1]; s.hex[,1]=ifelse(is.na(x),0,x)', 'x=r.hex[,1]; s.hex[,1]=ifelse(is.na(x),0,x)']
     execExprList += execExprList2
     results = []
     for execExpr in execExprList:
@@ -27,4 +27,4 @@ def test_exec2_na2mean(self):
     self.assertLess(len(df.difference), 2)
     print 'results from the individual exec expresssions (ignore last which was an apply)'
     print 'results:', results
-    self.assertEqual(results, [0.0, 0.0, 0.0, 1859.0, 581012.0, 581012.0, 2959.365300544567, 1859.0, 1859.0])
+    self.assertEqual(results, [0.0, 0.0, 0.0, 1859.0, 581012.0, 581012.0, 2959.365300544567, 1859.0, 1859.0, 1859.0, 1859.0])
