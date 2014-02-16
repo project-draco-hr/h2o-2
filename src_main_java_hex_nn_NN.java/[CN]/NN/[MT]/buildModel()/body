@@ -1,8 +1,8 @@
 {
   final NNModel model=UKV.get(dest());
-  final Frame[] adapted=validation == null ? null : model.adapt(validation,false);
+  final Frame[] valid_adapted=validation == null ? null : model.adapt(validation,false);
   Frame train=_dinfo._adaptedFrame;
-  Frame valid=validation == null ? null : adapted[0];
+  Frame valid=validation == null ? null : valid_adapted[0];
   Frame trainScoreFrame=sampleFrame(train,score_training_samples,seed);
   Frame validScoreFrame=sampleFrame(valid,score_validation_samples,seed + 1);
   if (sync_samples > train.numRows()) {
@@ -16,10 +16,12 @@
     model.set_model_info(nntask.model_info());
   }
  while (model.doDiagnostics(trainScoreFrame,validScoreFrame,timeStart,self()));
-  if (adapted != null)   adapted[1].delete();
   model.unlock(self());
-  if (validScoreFrame != null && validScoreFrame != adapted[0])   validScoreFrame.delete();
+  source.unlock(self());
+  if (validation != null && !source._key.equals(validation._key))   validation.unlock(self());
+  if (validScoreFrame != null && validScoreFrame != valid)   validScoreFrame.delete();
   if (trainScoreFrame != null && trainScoreFrame != train)   trainScoreFrame.delete();
+  if (validation != null)   valid_adapted[1].delete();
   UKV.remove(self());
   Log.info("Neural Net training finished.");
   return model;

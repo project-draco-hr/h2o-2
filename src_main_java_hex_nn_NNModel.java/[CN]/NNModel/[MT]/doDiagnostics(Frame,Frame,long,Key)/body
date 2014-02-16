@@ -1,5 +1,5 @@
 {
-  epoch_counter=(float)model_info().get_processed_total() / data_info._adaptedFrame.numRows();
+  epoch_counter=(float)model_info().get_processed_total() / model_info().data_info._adaptedFrame.numRows();
   run_time=(System.currentTimeMillis() - start_time);
   boolean keep_running=(epoch_counter < model_info().parameters.epochs);
   _now=System.currentTimeMillis();
@@ -21,7 +21,7 @@
     err.training_samples=model_info().get_processed_total();
     err.train_confusion_matrix=new ConfusionMatrix();
     err.train_err=classificationError(ftrain,"Classification error on training data:",printCM,err.train_confusion_matrix);
-    if (ftest != null) {
+    if (err.validation) {
       err.valid_confusion_matrix=new ConfusionMatrix();
       err.valid_err=classificationError(ftest,"Classification error on validation data:",printCM,err.valid_confusion_matrix);
     }

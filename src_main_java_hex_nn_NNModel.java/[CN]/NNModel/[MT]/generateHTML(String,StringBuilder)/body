@@ -7,7 +7,8 @@
   final String cross_entropy_format="%2.6f";
   DocGen.HTML.title(sb,title);
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
-  DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + String.format("%,d",model_info().size()[0]));
+  DocGen.HTML.paragraph(sb,"Job Key: " + jobKey);
+  DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + String.format("%,d",model_info().size()));
   model_info.job().toHTML(sb);
   sb.append("<div class='alert'>Actions: " + water.api.Predict.link(_key,"Score on dataset") + ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   final Errors error=errors[errors.length - 1];
@@ -50,7 +51,7 @@
     sb.append("<th>").append("Weight (Mean, RMS)").append("</th>");
     sb.append("<th>").append("Bias (Mean, RMS)").append("</th>");
     sb.append("</tr>");
-    Neurons[] neurons=NNTask.makeNeuronsForTesting(model_info.parameters._dinfo,model_info());
+    Neurons[] neurons=NNTask.makeNeuronsForTesting(model_info());
     for (int i=1; i < neurons.length; ++i) {
       sb.append("<tr>");
       sb.append("<td>").append("<b>").append(i).append("</b>").append("</td>");

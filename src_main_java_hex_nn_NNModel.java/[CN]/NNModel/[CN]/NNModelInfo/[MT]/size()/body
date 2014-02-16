@@ -1,13 +1,6 @@
 {
-  long[] siz=new long[2];
-  for (  float[] w : weights) {
-    siz[0]+=w.length;
-    siz[1]+=w.length * Float.SIZE;
-  }
-  for (  double[] b : biases) {
-    siz[0]+=b.length;
-    siz[1]+=b.length * Double.SIZE;
-  }
-  siz[1]/=8;
+  long siz=0;
+  for (  float[] w : weights)   siz+=w.length;
+  for (  double[] b : biases)   siz+=b.length;
   return siz;
 }

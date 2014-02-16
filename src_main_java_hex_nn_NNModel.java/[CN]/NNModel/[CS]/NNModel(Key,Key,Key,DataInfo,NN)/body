@@ -1,9 +1,9 @@
 {
   super(selfKey,dataKey,dinfo._adaptedFrame);
-  data_info=dinfo;
+  this.jobKey=jobKey;
   run_time=0;
   start_time=System.currentTimeMillis();
-  model_info=new NNModelInfo(params,data_info.fullN(),data_info._adaptedFrame.lastVec().domain().length);
+  model_info=new NNModelInfo(params,dinfo);
   errors=new Errors[1];
   errors[0]=new Errors();
   errors[0].validation=(params.validation != null);

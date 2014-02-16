@@ -1,4 +1,7 @@
 {
+  data_info=dinfo;
+  final int num_input=dinfo.fullN();
+  final int num_output=dinfo._adaptedFrame.lastVec().domain().length;
   assert(num_input > 0);
   assert(num_output > 0);
   parameters=params;
@@ -14,12 +17,7 @@
   for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];
   biases=new double[layers + 1][];
   for (int i=0; i <= layers; ++i)   biases[i]=new double[units[i + 1]];
-  if (has_momenta()) {
-    weights_momenta=new float[weights.length][];
-    for (int i=0; i < weights_momenta.length; ++i)     weights_momenta[i]=new float[units[i] * units[i + 1]];
-    biases_momenta=new double[biases.length][];
-    for (int i=0; i < biases_momenta.length; ++i)     biases_momenta[i]=new double[units[i + 1]];
-  }
+  createMomenta();
   mean_bias=new double[units.length];
   rms_bias=new double[units.length];
   mean_weight=new double[units.length];
