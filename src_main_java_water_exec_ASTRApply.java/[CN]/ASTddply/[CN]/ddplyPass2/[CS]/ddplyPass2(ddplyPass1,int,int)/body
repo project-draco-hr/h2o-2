@@ -1,10 +1,12 @@
 {
   _p1key=p1._uniq;
-  _avs=new AppendableVec[p1._groups.size()];
-  _dss=new double[p1._groups.size()][];
+  _avs=new AppendableVec[numgrps];
+  _dss=new double[numgrps][];
+  _nlocals=new int[csz];
   int i=0;
   for (  Group g : p1._groups.keySet()) {
     _dss[i]=g._ds;
     _avs[i++]=new AppendableVec(new Vec.VectorGroup().addVec());
+    _nlocals[g.hashCode() % csz]++;
   }
 }

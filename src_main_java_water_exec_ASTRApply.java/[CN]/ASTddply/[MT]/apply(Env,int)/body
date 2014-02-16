@@ -16,13 +16,16 @@
   }
   for (  int c : cols)   if (c < 0 || c >= fr.numCols())   throw new IllegalArgumentException("Column " + (c + 1) + " out of range for frame columns "+ fr.numCols());
   ddplyPass1 p1=new ddplyPass1(cols).doAll(fr);
-  ddplyPass2 p2=new ddplyPass2(p1).invokeOnAllNodes();
+  int numgrps=p1._groups.size();
+  int csz=H2O.CLOUD.size();
+  ddplyPass2 p2=new ddplyPass2(p1,numgrps,csz).invokeOnAllNodes();
   Vec vecs[]=p2.close();
   Key envkey=Key.make();
   UKV.put(envkey,env);
-  int csz=H2O.CLOUD.size();
   Futures fs=new Futures();
   int grpnum=0;
+  int nlocals[]=new int[csz];
+  RemoteExec re=null;
   for (  Group g : p1._groups.keySet()) {
     Vec rows=vecs[grpnum++];
     Vec[] data=fr.vecs();
@@ -30,11 +33,17 @@
     Key[] keys=rows.group().addVecs(data.length);
     for (int c=0; c < data.length; c++)     gvecs[c]=new SubsetVec(rows._key,data[c]._key,keys[c],rows._espc);
     Frame fg=new Frame(fr._names,gvecs);
-    fs.add(RPC.call(H2O.CLOUD._memary[g.hashCode() % csz],new RemoteExec(g._ds,fg,envkey)));
+    final int nidx=g.hashCode() % csz;
+    fs.add(RPC.call(H2O.CLOUD._memary[nidx],(re=new RemoteExec(nlocals[nidx]++,p2._nlocals[nidx],g._ds,fg,envkey))));
   }
   fs.blockForPending();
+  Vec vres[]=new ddplyPass4(envkey,cols.length,re._ncols).invokeOnAllNodes().close();
+  String[] names=new String[cols.length + re._ncols];
+  for (int i=0; i < cols.length; i++)   names[i]=fr._names[cols[i]];
+  for (int i=cols.length; i < names.length; i++)   names[i]="C" + (i - cols.length + 1);
+  Frame res=new Frame(names,vres);
   for (  Vec v : vecs)   UKV.remove(v._key);
   UKV.remove(envkey);
   env.pop(4);
-  env.push(new Frame(new String[0],new Vec[0]));
+  env.push(res);
 }
