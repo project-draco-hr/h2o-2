@@ -21,7 +21,10 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=30, pollTimeo
                 msg = ("ERROR: pollWaitJobs found a job with a exception result when it shouldn't have:\n %s" % h2o.dump_json(j))
                 raise Exception(msg)
             if result:
-                print 'non-empty result: %s for %s', (result, key)
+                if (('val' in result) and (result['val'] == 'OK')):
+                    pass
+                else:
+                    print ('non-empty result: %s for %s' % (result, key))
             if (errorIfCancelled and cancelled):
                 h2o.check_sandbox_for_errors()
                 print ("ERROR: not stopping, but: pollWaitJobs found a cancelled job when it shouldn't have:\n %s" % h2o.dump_json(j))
