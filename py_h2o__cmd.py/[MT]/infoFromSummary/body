@@ -1,7 +1,7 @@
 def infoFromSummary(summaryResult, noPrint=False, numCols=None, numRows=None):
     if h2o.beta_features:
         summaries = summaryResult['summaries']
-        if (numCols and (len(summaries) != numCols)):
+        if ((1 == 0) and numCols and (len(summaries) != numCols)):
             raise Exception(('Expected numCols: %s cols in summary. Got %s' % (numCols, len(summaries))))
         for column in summaries:
             colname = column['colname']
@@ -60,7 +60,7 @@ def infoFromSummary(summaryResult, noPrint=False, numCols=None, numRows=None):
     else:
         summary = summaryResult['summary']
         columnList = summary['columns']
-        if (numCols and (len(columnList) != numCols)):
+        if ((1 == 0) and numCols and (len(columnList) != numCols)):
             raise Exception(('Expected numCols: %s cols in summary. Got %s' % (numCols, len(columnList))))
         for column in columnList:
             N = column['N']

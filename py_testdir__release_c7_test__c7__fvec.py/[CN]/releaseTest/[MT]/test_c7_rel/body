@@ -12,7 +12,7 @@ def test_c7_rel(self):
         importFolderPath = '/mnt/0xcustomer-datasets/c2'
     csvPathname = ((importFolderPath + '/') + csvFilename)
     start = time.time()
-    parseResult = h2i.import_parse(path=csvPathname, schema='local', timeoutSecs=500, separator=9, doSummary=True)
+    parseResult = h2i.import_parse(path=csvPathname, schema='local', timeoutSecs=500, separator=9, doSummary=False)
     print 'Parse of', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
     print "Parse result['destination_key']:", parseResult['destination_key']
     start = time.time()
@@ -21,8 +21,8 @@ def test_c7_rel(self):
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     numRows = inspect['numRows']
     numCols = inspect['numCols']
-    summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'], max_ncols=2500)
-    h2o_cmd.infoFromSummary(summaryResult, noPrint=False, numCols=numCols, numRows=numRows)
+    summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'])
+    h2o_cmd.infoFromSummary(summaryResult, noPrint=False, numRows=numRows)
     keepPattern = 'oly_|mt_|b_'
     y = 'is_purchase'
     print 'y:', y
