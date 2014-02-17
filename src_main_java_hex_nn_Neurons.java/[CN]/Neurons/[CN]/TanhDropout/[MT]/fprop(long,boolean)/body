@@ -1,7 +1,7 @@
 {
   if (training) {
-    dropout.setSeed(params.seed + 0xDA7A6000 + seed);
-    dropout.fillBytes();
+    seed+=params.seed + 0xDA7A6000;
+    dropout.fillBytes(seed);
     super.fprop(seed,true);
   }
  else {

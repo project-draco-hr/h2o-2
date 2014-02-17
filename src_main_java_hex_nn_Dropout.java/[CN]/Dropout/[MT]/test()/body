@@ -5,17 +5,17 @@
   final int loops=10000;
   for (int l=0; l < loops; ++l) {
     Dropout d=new Dropout(units);
-    d.setSeed(new Random().nextLong());
+    long seed=new Random().nextLong();
     Arrays.fill(a,1.);
-    d.randomlySparsifyActivation(a,0.3);
+    d.randomlySparsifyActivation(a,0.3,seed);
     sum1+=water.util.Utils.sum(a);
     Arrays.fill(a,1.);
-    d.randomlySparsifyActivation(a,0.0);
+    d.randomlySparsifyActivation(a,0.0,seed + 1);
     sum2+=water.util.Utils.sum(a);
     Arrays.fill(a,1.);
-    d.randomlySparsifyActivation(a,1.0);
+    d.randomlySparsifyActivation(a,1.0,seed + 2);
     sum3+=water.util.Utils.sum(a);
-    d.fillBytes();
+    d.fillBytes(seed + 3);
     for (int i=0; i < units; ++i)     if (d.unit_active(i))     sum4++;
   }
   sum1/=loops;

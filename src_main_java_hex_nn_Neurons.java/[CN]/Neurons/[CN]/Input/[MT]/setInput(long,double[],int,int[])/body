@@ -4,6 +4,6 @@
   System.arraycopy(nums,0,_a,_dinfo.numStart(),nums.length);
   final double rate=params.input_dropout_ratio;
   if (rate == 0 || seed < 0)   return;
-  dropout.setSeed(params.seed + 0x1337B4BE + seed);
-  dropout.randomlySparsifyActivation(_a,rate);
+  seed+=params.seed + 0x1337B4BE;
+  dropout.randomlySparsifyActivation(_a,rate,seed);
 }
