@@ -71,16 +71,15 @@ def test_GLM2_mnist(self):
             print 'GLM completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
             h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
             modelKey = glm['glm_model']['_key']
-            if (1 == 0):
-                cm = glm['glm_model']['submodels'][0]['validation']['_cms'][(-1)]
-                print 'cm:', cm
-                pctWrong = h2o_gbm.pp_cm_summary(cm)
-                print '\nTrain\n==========\n'
-                print h2o_gbm.pp_cm(cm)
+            cm = glm['glm_model']['submodels'][0]['validation']['_cms'][(-1)]['_arr']
+            print 'cm:', cm
+            pctWrong = h2o_gbm.pp_cm_summary(cm)
+            print '\nTrain\n==========\n'
+            print h2o_gbm.pp_cm(cm)
             predictKey = 'Predict.hex'
             start = time.time()
             predictResult = h2o_cmd.runPredict(data_key='B.hex', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-            predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='B.hex', vactual=('C' + str(y)), predict=predictKey, vpredict='predict')
+            predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='B.hex', vactual=('C' + str((y + 1))), predict=predictKey, vpredict='predict')
             cm = predictCMResult['cm']
             pctWrong = h2o_gbm.pp_cm_summary(cm)
             self.assertLess(pctWrong, 9, 'Should see less than 9% error (class = 4)')
