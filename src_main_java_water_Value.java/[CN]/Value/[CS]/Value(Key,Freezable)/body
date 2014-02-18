@@ -5,5 +5,6 @@
   _mem=pojo.write(new AutoBuffer()).buf();
   _max=_mem.length;
   _persist=ICE;
-  _replicas=new AtomicLong(0);
+  _rwlock=new AtomicInteger(0);
+  _replicas=k.home() ? new NonBlockingSetInt() : null;
 }
