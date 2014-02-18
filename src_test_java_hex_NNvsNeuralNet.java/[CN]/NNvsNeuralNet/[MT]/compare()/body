@@ -1,22 +1,23 @@
 {
-  NN.Activation[] activations={NN.Activation.Tanh};
-  NN.Loss[] losses={NN.Loss.CrossEntropy};
-  NN.InitialWeightDistribution[] dists={NN.InitialWeightDistribution.UniformAdaptive};
-  double[] initial_weight_scales={0.01};
-  double[] holdout_ratios={0.8};
-  int[][] hiddens={{20,20}};
-  double[] rates={0.01};
-  String[] files={"smalldata/iris/iris.csv"};
-  int[] epochs={1};
+  NN.Activation[] activations={NN.Activation.RectifierWithDropout,NN.Activation.Tanh,NN.Activation.Rectifier,NN.Activation.TanhWithDropout};
+  NN.Loss[] losses={NN.Loss.MeanSquare,NN.Loss.CrossEntropy};
+  NN.InitialWeightDistribution[] dists={NN.InitialWeightDistribution.Normal,NN.InitialWeightDistribution.Uniform,NN.InitialWeightDistribution.UniformAdaptive};
+  double[] initial_weight_scales={1e-3 + 1e-2 * new Random().nextFloat()};
+  double[] holdout_ratios={0.7 + 0.1 * new Random().nextFloat()};
+  int[][] hiddens={{1},{1 + new Random().nextInt(50)},{17,13},{20,10,5}};
+  double[] rates={0.005 + 1e-2 * new Random().nextFloat()};
+  int[] epochs={10 + new Random().nextInt(5)};
+  boolean threaded=false;
   int num_repeats=1;
-  double p0=0.5;
-  long pR=100000;
-  double p1=0.9;
-  double l1=1e-5;
-  double l2=0;
-  double max_w2=15;
-  double input_dropout=0.3;
-  double rate_annealing=1e-6;
+  String[] files={"smalldata/iris/iris.csv"};
+  double p0=0;
+  long pR=0;
+  double p1=0;
+  double l1=1e-5 * new Random().nextFloat();
+  double l2=1e-5 * new Random().nextFloat();
+  double max_w2=new Random().nextInt(50);
+  double input_dropout=new Random().nextFloat() * 0.5;
+  double rate_annealing=1e-7 + new Random().nextFloat() * 1e-6;
   for (  NN.Activation activation : activations) {
     for (    NN.Loss loss : losses) {
       for (      NN.InitialWeightDistribution dist : dists) {
@@ -43,9 +44,8 @@
                       Frame frame=ParseDataset2.parse(Key.make(),new Key[]{kfile});
                       _train=sampleFrame(frame,(long)(frame.numRows() * holdout_ratio),seed);
                       _test=sampleFrame(frame,(long)(frame.numRows() * (1 - holdout_ratio)),seed + 1);
-                      if (input_dropout > 0 && activation != NN.Activation.RectifierWithDropout)                       input_dropout=0;
-                      Neurons[] neurons=null;
-                      NNModel mymodel=null;
+                      Neurons[] neurons;
+                      NNModel mymodel;
 {
                         NN p=new NN();
                         p.source=(Frame)_train.clone();
@@ -111,7 +111,6 @@
                         for (int i=0; i < hidden.length; ++i) {
                           if (activation == NN.Activation.Tanh) {
                             p.activation=NeuralNet.Activation.Tanh;
-                            assert(p.input_dropout_ratio == 0);
                             ls[1 + i]=new Layer.Tanh(hidden[i]);
                           }
  else                           if (activation == NN.Activation.TanhWithDropout) {
@@ -120,7 +119,6 @@
                           }
  else                           if (activation == NN.Activation.Rectifier) {
                             p.activation=Activation.Rectifier;
-                            assert(p.input_dropout_ratio == 0);
                             ls[1 + i]=new Layer.Rectifier(hidden[i]);
                           }
  else                           if (activation == NN.Activation.RectifierWithDropout) {
@@ -132,7 +130,9 @@
                         for (int i=0; i < ls.length; i++) {
                           ls[i].init(ls,i,p);
                         }
-                        Trainer trainer=new Trainer.Direct(ls,p.epochs,null);
+                        Trainer trainer;
+                        if (threaded)                         trainer=new Trainer.Threaded(ls,p.epochs,null,-1);
+ else                         trainer=new Trainer.Direct(ls,p.epochs,null);
                         trainer.start();
                         trainer.join();
                         refmodel=new NeuralNetModel(null,null,_train,ls,p);
@@ -165,6 +165,7 @@
                         fpreds.delete();
                       }
 {
+                        Log.info("\nNeuralNet Scoring:");
                         final Frame[] adapted=refmodel.adapt(_test,false);
                         Vec[] data=Utils.remove(_test.vecs(),_test.vecs().length - 1);
                         Vec labels=_test.vecs()[_test.vecs().length - 1];
@@ -172,7 +173,12 @@
                         input.vecs=data;
                         input._len=data[0].length();
                         ((Layer.VecSoftmax)ls[ls.length - 1]).vec=labels;
-                        NeuralNet.Errors test=NeuralNet.eval(ls,0,null);
+                        long[][] cm;
+                        int classes=ls[ls.length - 1].units;
+                        cm=new long[classes][classes];
+                        NeuralNet.Errors test=NeuralNet.eval(ls,0,cm);
+                        Log.info("\nNeuralNet Confusion Matrix:");
+                        Log.info(new ConfusionMatrix(cm).toString());
                         referror+=test.classification;
                         adapted[1].delete();
                       }
@@ -184,8 +190,8 @@
                     }
                     myerror/=(double)num_repeats;
                     referror/=(double)num_repeats;
-                    final double abseps=0.01;
-                    final double releps=0.01;
+                    final double abseps=threaded ? 1e-3 : 1e-13;
+                    final double releps=threaded ? 1e-3 : 1e-13;
                     Log.info("NeuralNet test error " + referror);
                     Log.info("NN        test error " + myerror);
                     compareVal(referror,myerror,abseps,releps);
@@ -194,6 +200,8 @@
                       Log.info("NN        mean weight for layer " + n + ": "+ b[n] / numweights);
                       Log.info("NeuralNet mean bias for layer " + n + ": "+ ba[n] / numbiases);
                       Log.info("NN        mean bias for layer " + n + ": "+ bb[n] / numbiases);
+                      compareVal(a[n] / numweights,b[n] / numweights,abseps,releps);
+                      compareVal(ba[n] / numbiases,bb[n] / numbiases,abseps,releps);
                     }
                   }
                 }
