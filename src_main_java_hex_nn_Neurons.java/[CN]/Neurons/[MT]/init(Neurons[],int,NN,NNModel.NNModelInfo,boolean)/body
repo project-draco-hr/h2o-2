@@ -5,8 +5,8 @@
   if (!(this instanceof Output) && !(this instanceof Input)) {
     _e=new double[units];
   }
-  if (training && (this instanceof Maxout || this instanceof TanhDropout || this instanceof RectifierDropout|| this instanceof Input)) {
-    dropout=new Dropout(units);
+  if (training && (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout|| this instanceof Input)) {
+    _dropout=new Dropout(units);
   }
   if (!(this instanceof Input)) {
     _previous=neurons[index - 1];
@@ -18,4 +18,5 @@
       _bm=minfo.get_biases_momenta(index - 1);
     }
   }
+  sanityCheck(training);
 }

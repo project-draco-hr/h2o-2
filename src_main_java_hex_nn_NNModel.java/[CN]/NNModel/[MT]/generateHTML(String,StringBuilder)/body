@@ -38,12 +38,13 @@
   }
   if (error.training_time_ms > 0)   DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
   if (model_info.parameters != null && model_info.parameters.diagnostics) {
-    DocGen.HTML.section(sb,"Status of Hidden and Output Layers");
+    DocGen.HTML.section(sb,"Status of Neuron Layers");
     sb.append("<table class='table table-striped table-bordered table-condensed'>");
     sb.append("<tr>");
     sb.append("<th>").append("#").append("</th>");
     sb.append("<th>").append("Units").append("</th>");
     sb.append("<th>").append("Activation").append("</th>");
+    sb.append("<th>").append("Dropout").append("</th>");
     sb.append("<th>").append("Rate").append("</th>");
     sb.append("<th>").append("L1").append("</th>");
     sb.append("<th>").append("L2").append("</th>");
@@ -52,11 +53,21 @@
     sb.append("<th>").append("Bias (Mean, RMS)").append("</th>");
     sb.append("</tr>");
     Neurons[] neurons=NNTask.makeNeuronsForTesting(model_info());
-    for (int i=1; i < neurons.length; ++i) {
+    for (int i=0; i < neurons.length; ++i) {
       sb.append("<tr>");
-      sb.append("<td>").append("<b>").append(i).append("</b>").append("</td>");
+      sb.append("<td>").append("<b>").append(i + 1).append("</b>").append("</td>");
       sb.append("<td>").append("<b>").append(neurons[i].units).append("</b>").append("</td>");
       sb.append("<td>").append(neurons[i].getClass().getSimpleName()).append("</td>");
+      sb.append("<td>").append((i == 0 ? String.format("%g",neurons[i].params.input_dropout_ratio * 100) : (neurons[i] instanceof Neurons.TanhDropout || neurons[i] instanceof Neurons.RectifierDropout || neurons[i] instanceof Neurons.MaxoutDropout ? 50 : 0)) + "%</td>");
+      if (i == 0) {
+        sb.append("<td></td>");
+        sb.append("<td></td>");
+        sb.append("<td></td>");
+        sb.append("<td></td>");
+        sb.append("<td></td>");
+        sb.append("<td></td>");
+        continue;
+      }
       sb.append("<td>").append(String.format("%.5g",neurons[i].rate(error.training_samples))).append("</td>");
       sb.append("<td>").append(neurons[i].params.l1).append("</td>");
       sb.append("<td>").append(neurons[i].params.l2).append("</td>");

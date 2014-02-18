@@ -2,7 +2,7 @@
   for (int o=0; o < _a.length; o++) {
     _a[o]=0;
     final int off=o * _previous._a.length;
-    if (!training || dropout == null || dropout.unit_active(o)) {
+    if (!training || _dropout == null || _dropout.unit_active(o)) {
       for (int i=0; i < _previous._a.length; i++) {
         _a[o]+=_w[off + i] * _previous._a[i];
       }

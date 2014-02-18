@@ -1,12 +1,12 @@
 {
   params.rate*=Math.pow(params.rate_decay,index - 1);
   _a=new double[units];
-  if (!(this instanceof Output)) {
+  if (!(this instanceof Output) && !(this instanceof Input)) {
     _e=new double[units];
   }
   _previous=ls[index - 1];
   _input=(Input)ls[0];
-  if (this instanceof Maxout || this instanceof TanhDropout || this instanceof RectifierDropout) {
+  if (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout) {
     dropout=new Dropout(units);
   }
   if (weights) {

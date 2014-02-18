@@ -2,6 +2,6 @@
   super.init(ls,index,weights);
   if (weights) {
     randomize(params.seed + 0xBAD5EED + index,1.0f);
-    for (int i=0; i < _b.length; i++)     _b[i]=1;
+    for (int i=0; i < _b.length; i++)     _b[i]=index == 1 ? 0.5 : 1;
   }
 }
