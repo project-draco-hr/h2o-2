@@ -3,6 +3,8 @@
   logStart();
   source.read_lock(self());
   if (validation != null && source._key != null && validation._key != null && !source._key.equals(validation._key))   validation.read_lock(self());
+  Log.info("Number of chunks of the training data: " + source.anyVec().nChunks());
+  if (validation != null)   Log.info("Number of chunks of the validation data: " + validation.anyVec().nChunks());
   if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,true,ignore_const_cols),1,true);
   NNModel model=new NNModel(dest(),self(),source._key,_dinfo,this);
   model.model_info().initializeMembers();
