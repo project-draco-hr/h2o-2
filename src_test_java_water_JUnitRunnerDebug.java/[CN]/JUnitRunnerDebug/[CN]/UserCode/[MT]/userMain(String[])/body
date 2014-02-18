@@ -3,12 +3,6 @@
   TestUtil.stall_till_cloudsize(NODES);
   List<Class> tests=new ArrayList<Class>();
   tests.add(NNvsNeuralNet.class);
-  tests.add(NeuralNetSpiralsTest.class);
-  tests.add(NeuralNetSpiralsTest2.class);
-  tests.add(NeuralNetIrisTest.class);
-  tests.add(NeuralNetIrisTest2.class);
-  tests.add(Dropout.class);
-  tests.add(NN.class);
   JUnitCore junit=new JUnitCore();
   junit.addListener(new LogListener());
   Result result=junit.run(tests.toArray(new Class[0]));

@@ -26,7 +26,8 @@
         for (long i=0; _stepsPerThread == 0 || i < _stepsPerThread; i++) {
           if (job != null && (!Job.isRunning(job) || !NeuralNet.running))           break;
           try {
-            trainer.step(thread_num * _stepsPerThread + input._pos);
+            long seed=new Random().nextLong();
+            trainer.step(seed);
             input.move();
             _processed.incrementAndGet();
           }

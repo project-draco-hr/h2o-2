@@ -6,6 +6,9 @@
   }
   _previous=ls[index - 1];
   _input=(Input)ls[0];
+  if (this instanceof Maxout || this instanceof TanhDropout || this instanceof RectifierDropout) {
+    dropout=new Dropout(units);
+  }
   if (weights) {
     _w=new float[units * _previous.units];
     _b=new double[units];

@@ -1,7 +1,7 @@
 {
   Softmax output=(Softmax)ls[ls.length - 1];
   if (output.target() == -1)   return false;
-  for (  Layer l : ls)   l.fprop(false);
+  for (  Layer l : ls)   l.fprop(-1,false);
   double[] out=ls[ls.length - 1]._a;
   int target=output.target();
   for (int o=0; o < out.length; o++) {

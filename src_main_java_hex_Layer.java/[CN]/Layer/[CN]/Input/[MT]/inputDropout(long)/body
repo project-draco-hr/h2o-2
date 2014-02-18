@@ -1,0 +1,6 @@
+{
+  double rate=params.input_dropout_ratio;
+  if (rate == 0 || dropout == null)   return;
+  seed+=params.seed + 0x1337B4BE;
+  dropout.randomlySparsifyActivation(_a,rate,seed);
+}

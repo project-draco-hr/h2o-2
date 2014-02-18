@@ -1,6 +1,6 @@
 {
   for (int i=1; i < neurons.length - 1; ++i) {
-    neurons[i].fprop(row,training);
+    neurons[i].fprop(seed,training);
   }
   if (minfo.get_params().classification) {
     ((Neurons.Softmax)neurons[neurons.length - 1]).fprop();
