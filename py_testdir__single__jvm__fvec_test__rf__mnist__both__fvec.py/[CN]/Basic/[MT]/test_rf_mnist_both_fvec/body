@@ -55,17 +55,15 @@ def test_rf_mnist_both_fvec(self):
         elapsed = (time.time() - start)
         print 'RFView in', elapsed, 'secs', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(None, rfView, **params)
-        print 'classification error is expected to be low because we included the test data in with the training!'
-        self.assertAlmostEqual(classification_error, 0.0003, delta=0.0003, msg=('Classification error %s differs too much' % classification_error))
-        leaves = rfView['trees']['leaves']
-        leavesExpected = {'min': 4996, 'mean': 5064.1, 'max': 5148, }
+        leaves = {'min': rfView['drf_model']['treeStats']['minLeaves'], 'mean': rfView['drf_model']['treeStats']['meanLeaves'], 'max': rfView['drf_model']['treeStats']['maxLeaves'], }
+        leavesExpected = {'min': 537, 'mean': 1118.05, 'max': 1701, }
         for l in leaves:
             delta = (((leaves[l] - leavesExpected[l]) / leaves[l]) * 100)
             d = ('seed: %s leaves %s %s %s pct. different %s' % (params['seed'], l, leaves[l], leavesExpected[l], delta))
             print d
             allDelta.append(d)
-        depth = rfView['trees']['depth']
-        depthExpected = {'min': 21, 'mean': 23.8, 'max': 25, }
+        depth = {'min': rfView['drf_model']['treeStats']['minDepth'], 'mean': rfView['drf_model']['treeStats']['meanDepth'], 'max': rfView['drf_model']['treeStats']['maxDepth'], }
+        depthExpected = {'min': 20, 'mean': 20, 'max': 20, }
         for l in depth:
             delta = (((depth[l] - depthExpected[l]) / leaves[l]) * 100)
             d = ('seed: %s depth %s %s %s pct. different %s' % (params['seed'], l, depth[l], depthExpected[l], delta))
