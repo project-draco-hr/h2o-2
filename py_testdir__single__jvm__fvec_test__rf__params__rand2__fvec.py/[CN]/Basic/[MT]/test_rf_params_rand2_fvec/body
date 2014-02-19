@@ -1,6 +1,7 @@
 def test_rf_params_rand2_fvec(self):
     h2o.beta_features = True
     csvPathname = 'standard/covtype.data'
+    hex_key = 'covtype.data.hex'
     for trial in range(10):
         params = {'ntrees': 13, 'mtries': 7, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
@@ -13,7 +14,7 @@ def test_rf_params_rand2_fvec(self):
         kwargs = params.copy()
         timeoutSecs = (30 + ((kwargs['ntrees'] * 80) * max(1, (kwargs['mtries'] / 60))))
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put')
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', hex_key=hex_key)
         h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=1, **kwargs)
         elapsed = (time.time() - start)
         print 'Trial #', trial, 'completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))

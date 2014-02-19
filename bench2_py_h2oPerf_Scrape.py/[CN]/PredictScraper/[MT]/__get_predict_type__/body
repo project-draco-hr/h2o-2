@@ -1,5 +1,7 @@
 def __get_predict_type__(self, type_candidate):
     " \n        Returns the type: 'parse', 'model', 'predict'\n        "
+    print ('TYPE CANDIDATE:   ' + type_candidate)
     types = ['binomial', 'regression', 'multinomial', 'cm']
     rf = type_candidate.lower()
+    print ('RETURNING TYPE:    ' + str([t for t in types if (t in rf)]))
     return [t for t in types if (t in rf)]

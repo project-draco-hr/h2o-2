@@ -16,9 +16,8 @@
   }
   model=doScoring(model,outputKey,fr,ktrees,tid,tstats,true,validation == null,build_tree_per_node);
   if (classification && importance) {
-    float varimp[]=doVarImp(model,fr);
-    Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(varimp));
-    model.varimp=varimp;
+    model=doVarImp(model,fr);
+    Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(model.varimp));
   }
   model.unlock(self());
   cleanUp(fr,t_build);

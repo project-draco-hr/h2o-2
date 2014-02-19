@@ -1,14 +1,14 @@
 {
   _fjtask=fjtask;
   Futures fs=new Futures();
-  DKV.put(job_key,new Value(job_key,new byte[0]),fs);
+  DKV.put(job_key,this,fs);
   start_time=System.currentTimeMillis();
   new TAtomic<List>(){
     @Override public List atomic(    List old){
       if (old == null)       old=new List();
-      Job[] jobs=old._jobs;
+      Key[] jobs=old._jobs;
       old._jobs=Arrays.copyOf(jobs,jobs.length + 1);
-      old._jobs[jobs.length]=Job.this;
+      old._jobs[jobs.length]=job_key;
       return old;
     }
   }
