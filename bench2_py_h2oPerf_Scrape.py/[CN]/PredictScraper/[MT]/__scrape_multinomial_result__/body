@@ -9,3 +9,7 @@ def __scrape_multinomial_result__(self):
                 break
             if (('MULTINOMIAL' in line) and ('print' not in line)):
                 flag = True
+    for level in multinomial_r['multinomial_result']:
+        self.test_run_multinomial_classification_result = TableRow('test_run_multinomial_classification_result', self.perfdb)
+        self.test_run_multinomial_classification_result.row.update(level)
+        self.test_run_multinomial_classification_result.update()
