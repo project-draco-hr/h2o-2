@@ -6,9 +6,9 @@
   new TAtomic<List>(){
     @Override public List atomic(    List old){
       if (old == null)       old=new List();
-      Job[] jobs=old._jobs;
+      Key[] jobs=old._jobs;
       old._jobs=Arrays.copyOf(jobs,jobs.length + 1);
-      old._jobs[jobs.length]=Job.this;
+      old._jobs[jobs.length]=job_key;
       return old;
     }
   }

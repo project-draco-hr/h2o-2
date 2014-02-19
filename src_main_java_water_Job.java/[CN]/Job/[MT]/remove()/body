@@ -4,10 +4,10 @@
   new TAtomic<List>(){
     @Override public List atomic(    List old){
       if (old == null)       return null;
-      Job[] jobs=old._jobs;
+      Key[] jobs=old._jobs;
       for (int i=0; i < jobs.length; i++) {
-        if (jobs[i].job_key.equals(job_key)) {
-          if (jobs[i].end_time != CANCELLED_END_TIME)           jobs[i].end_time=System.currentTimeMillis();
+        if (jobs[i].equals(job_key)) {
+          if (end_time != CANCELLED_END_TIME)           end_time=System.currentTimeMillis();
           break;
         }
       }
@@ -16,8 +16,9 @@
         long min=Long.MAX_VALUE;
         int n=-1;
         for (int i=0; i < jobs.length; i++) {
-          if (jobs[i].end_time != 0 && jobs[i].start_time < min) {
-            min=jobs[i].start_time;
+          Job job=UKV.get(jobs[i]);
+          if (job.end_time != 0 && job.start_time < min) {
+            min=job.start_time;
             n=i;
           }
         }

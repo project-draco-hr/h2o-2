@@ -1,4 +1,11 @@
 {
   List list=UKV.get(LIST);
-  return list != null ? list._jobs : new Job[0];
+  Job[] jobs=new Job[list == null ? 0 : list._jobs.length];
+  int j=0;
+  for (int i=0; i < jobs.length; i++) {
+    Job job=UKV.get(list._jobs[i]);
+    if (job != null)     jobs[j++]=job;
+  }
+  if (j < jobs.length)   jobs=Arrays.copyOf(jobs,j);
+  return jobs;
 }
