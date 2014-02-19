@@ -17,9 +17,12 @@ def test_parse_summary_manyfiles_1_fvec(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=360)
         print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         h2o_cmd.infoFromInspect(inspect, csvPathname)
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
+        self.assertEqual(numCols, 542)
+        self.assertEqual(numRows, 100000)
         goodX = h2o_glm.goodXFromColumnInfo(y=54, key=parseResult['destination_key'], timeoutSecs=300)
-        summaryResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=360)
-        h2o_cmd.infoFromSummary(summaryResult)
+        summaryResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=360, numRows=numRows, numCols=numCols)
         print '\nTrying StoreView after the parse'
         h2o_cmd.runStoreView(timeoutSecs=120)
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
