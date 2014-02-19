@@ -5,6 +5,7 @@
   try {
     Frame fr0=parseFrame(k0,"smalldata/cars.csv");
     checkStr("ddply(cars.hex,c(3),nrow)");
+    checkStr("ddply(cars.hex,c(3),function(x) {c(mean(x[,2]),mean(x[,3]))})");
     Frame fr1=parseFrame(k1,"smalldata/unbalanced/orange_small_train.data.zip");
     checkStr("ddply(orange.hex,c(7),nrow)");
   }
