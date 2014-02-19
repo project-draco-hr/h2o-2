@@ -10,7 +10,7 @@
   Timer t=new Timer();
   algo.invoke();
   Log.debug(Sys.KMEAN,"ms= " + t);
-  KMeans2Model res=UKV.get(algo.destination_key);
+  KMeans2Model res=UKV.get(algo.dest());
   Assert.assertEquals(algo.k,res.centers.length);
   frame.delete();
   res.delete();
