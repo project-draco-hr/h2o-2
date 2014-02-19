@@ -1,0 +1,14 @@
+{
+  int[] order=new int[minHeap.size()];
+  double[] vals=new double[minHeap.size()];
+  int x=0;
+  for (  SampleItem item : minHeap) {
+    order[x]=item.getRandomOrder();
+    vals[x]=item.getValue();
+    x++;
+  }
+  bb.put4(reservoirSize);
+  bb.putA4(order);
+  bb.putA8d(vals);
+  return (bb);
+}
