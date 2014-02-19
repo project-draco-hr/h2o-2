@@ -1,0 +1,22 @@
+{
+  fr.add("OUT_BAG_TREES",response.makeZero());
+  Random rand=createRNG(_seed);
+  new SetWrkTask().doAll(fr);
+  int tid;
+  DTree[] ktrees=null;
+  TreeStats tstats=new TreeStats();
+  for (tid=0; tid < ntrees; tid++) {
+    model=doScoring(model,fr,ktrees,tid,tstats,tid == 0,validation == null,build_tree_per_node);
+    Timer kb_timer=new Timer();
+    ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand);
+    Log.info(Sys.DRF__,(tid + 1) + ". tree was built " + kb_timer.toString());
+    if (!Job.isRunning(self()))     break;
+    tstats.updateBy(ktrees);
+  }
+  model=doScoring(model,fr,ktrees,tid,tstats,true,validation == null,build_tree_per_node);
+  if (classification && importance) {
+    model=doVarImp(model,fr);
+    Log.info(Sys.DRF__,"Var. importance: " + Arrays.toString(model.varimp));
+  }
+  return model;
+}
