@@ -1,6 +1,6 @@
 {
   state=msg == null ? JobState.CANCELLED : JobState.CRASHED;
-  UKV.put(self(),jobHandle());
+  replaceByJobHandle();
   DKV.write_barrier();
   final Job job=this;
   H2O.submitTask(new H2OCountedCompleter(){

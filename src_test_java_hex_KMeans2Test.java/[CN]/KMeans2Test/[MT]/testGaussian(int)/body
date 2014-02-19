@@ -15,7 +15,7 @@
     algo.seed=SEED;
     Timer t=new Timer();
     algo.invoke();
-    KMeans2Model res=UKV.get(algo.destination_key);
+    KMeans2Model res=UKV.get(algo.dest());
     Log.debug(Sys.KMEAN," testGaussian rows:" + rows + ", ms:"+ t);
     double[][] clusters=res.centers;
     for (    double[] goal : goals) {

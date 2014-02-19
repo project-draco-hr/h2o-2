@@ -5,7 +5,7 @@
   destination_key=Key.make(_dest.value());
   try {
     Key[] keys=p._keys.toArray(new Key[p._keys.size()]);
-    job_key=ParseDataset2.forkParseDataset(destination_key,keys,setup,delete_on_done.value()).job_key;
+    job_key=ParseDataset2.forkParseDataset(destination_key,keys,setup,delete_on_done.value()).self();
     if (_blocking.value())     Job.waitUntilJobEnded(job_key);
     return Progress2.redirect(this,job_key,destination_key);
   }

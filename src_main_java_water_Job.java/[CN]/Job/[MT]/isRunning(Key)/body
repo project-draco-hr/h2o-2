@@ -1,4 +1,4 @@
 {
   Job j=UKV.get(job_key);
-  return j == null || j.state != JobState.RUNNING;
+  return j != null && j.state == JobState.RUNNING;
 }

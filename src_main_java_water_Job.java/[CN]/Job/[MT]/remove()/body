@@ -1,5 +1,5 @@
 {
   end_time=System.currentTimeMillis();
   state=state == JobState.RUNNING ? JobState.DONE : state;
-  UKV.put(self(),jobHandle());
+  replaceByJobHandle();
 }
