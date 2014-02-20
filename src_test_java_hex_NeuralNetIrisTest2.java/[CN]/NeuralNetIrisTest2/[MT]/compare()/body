@@ -139,10 +139,10 @@
                         double[] xValues=new double[neurons[0]._a.length];
                         System.arraycopy(ref._testData[i],0,xValues,0,xValues.length);
                         double[] ref_preds=ref._nn.ComputeOutputs(xValues);
-                        float[] yValues_float=new float[ref_preds.length];
-                        for (int j=0; j < ref_preds.length; ++j)                         yValues_float[j]=(float)ref_preds[j];
-                        int maxIndex=NeuralNetMLPReference2.NeuralNetwork.MaxIndexWithTieBreaking(yValues_float,i);
-                        Assert.assertTrue(maxIndex == (int)fpreds.vecs()[0].at(i));
+                        float[] preds=new float[ref_preds.length + 1];
+                        for (int j=0; j < ref_preds.length; ++j)                         preds[j + 1]=(float)ref_preds[j];
+                        preds[0]=Model.getPrediction(preds,i);
+                        Assert.assertTrue(preds[0] == (int)fpreds.vecs()[0].at(i));
                         for (int j=0; j < ref_preds.length; ++j) {
                           compareVal((float)(ref_preds[j]),fpreds.vecs()[1 + j].at(i),abseps,releps);
                         }

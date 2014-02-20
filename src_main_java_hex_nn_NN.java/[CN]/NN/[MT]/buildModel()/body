@@ -17,12 +17,13 @@
   }
  while (model.doDiagnostics(trainScoreFrame,validScoreFrame,timeStart,self()));
   model.unlock(self());
-  source.unlock(self());
-  if (validation != null && !source._key.equals(validation._key))   validation.unlock(self());
   if (validScoreFrame != null && validScoreFrame != valid)   validScoreFrame.delete();
   if (trainScoreFrame != null && trainScoreFrame != train)   trainScoreFrame.delete();
   if (validation != null)   valid_adapted[1].delete();
-  UKV.remove(self());
+  source.unlock(self());
+  if (validation != null && !source._key.equals(validation._key))   validation.unlock(self());
+  if (_fakejob)   UKV.remove(job_key);
+  remove();
   Log.info("Neural Net training finished.");
   return model;
 }

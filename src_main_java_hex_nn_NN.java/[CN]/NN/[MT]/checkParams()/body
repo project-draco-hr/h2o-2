@@ -7,11 +7,16 @@
     Log.warn("Setting sync_samples to 0 for single-node operation.");
     sync_samples=0;
   }
-  if (dest() == null)   destination_key=Key.make("NN_model");
+  if (dest() == null) {
+    destination_key=Key.make("NN_model");
+  }
   if (self() == null) {
     job_key=Key.make("NN_job");
   }
-  if (DKV.get(self()) == null) {
-    DKV.put(self(),new Value(self(),new byte[0]),null);
+  if (UKV.get(self()) == null) {
+    start_time=System.currentTimeMillis();
+    state=JobState.RUNNING;
+    UKV.put(self(),this);
+    _fakejob=true;
   }
 }
