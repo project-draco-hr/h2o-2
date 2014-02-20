@@ -21,6 +21,7 @@
       }
       _w[w]+=r * d;
     }
+    if (Double.isInfinite(_w[w]))     _minfo.set_unstable();
     if (params.max_w2 != Double.POSITIVE_INFINITY)     r2+=_w[w] * _w[w];
   }
   if (params.max_w2 != Double.POSITIVE_INFINITY && r2 > params.max_w2) {
@@ -44,4 +45,5 @@
     }
     _b[u]+=r * d;
   }
+  if (Double.isInfinite(_b[u]))   _minfo.set_unstable();
 }
