@@ -1,3 +1,12 @@
 {
-  Utils.add(_cm,cm._cm);
+  if (_cm != null && cm._cm != null) {
+    assert(_mse == Double.NaN && cm._mse == Double.NaN);
+    Utils.add(_cm,cm._cm);
+  }
+ else {
+    assert(_mse != Double.NaN && cm._mse != Double.NaN);
+    assert(_cm == null && cm._cm == null);
+    _mse+=cm._mse;
+    _count+=cm._count;
+  }
 }

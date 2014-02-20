@@ -1,5 +1,9 @@
 {
-  if (cm == null)   return 1.0;
+  if (cm == null && classification)   return 1.0;
+  if (!classification) {
+    sb.append("MSE: " + mse);
+    return mse;
+  }
   long acts[]=new long[cm.length];
   long preds[]=new long[cm[0].length];
   for (int a=0; a < cm.length; a++) {
