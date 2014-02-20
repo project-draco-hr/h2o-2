@@ -17,7 +17,7 @@
     response.add("GLMModel",m.toJson());
   }
   Response r=null;
-  if (_job.value() == null || DKV.get(_job.value()) == null)   r=Response.done(response);
+  if (_job.value() == null || !Job.isRunning(_job.value()))   r=Response.done(response);
  else   if (p != null)   r=Response.poll(response,p.progress());
  else   r=Response.poll(response,0);
   r.setBuilder("",new GLMBuilder(m,_job.value()));
