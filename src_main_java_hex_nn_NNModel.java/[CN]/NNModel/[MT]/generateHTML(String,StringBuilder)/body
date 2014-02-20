@@ -6,6 +6,7 @@
   final String mse_format="%2.6f";
   final String cross_entropy_format="%2.6f";
   DocGen.HTML.title(sb,title);
+  DocGen.HTML.paragraph(sb,"Model type: " + (model_info().parameters.classification ? " Classification" : " Regression"));
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
   DocGen.HTML.paragraph(sb,"Job Key: " + jobKey);
   Inspect2 is2=new Inspect2();
@@ -18,27 +19,48 @@
   sb.append("<div class='alert'>Actions: " + is2.link("Inspect training data",_dataKey) + ", "+ (model_info().parameters.validation != null ? (is2.link("Inspect validation data",model_info().parameters.validation._key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   final Errors error=errors[errors.length - 1];
   assert(error != null);
-  if (isClassifier()) {
-    float[] err=new float[errors.length];
-    float[] samples=new float[errors.length];
-    for (int i=0; i < err.length; ++i) {
-      err[i]=(float)errors[i].train_err;
-      samples[i]=errors[i].training_samples;
-    }
-    new D3Plot(samples,err,"training samples","classification error","Classification Error on Training Set").generate(sb);
-    if (model_info.parameters.validation != null) {
+  if (errors.length > 1) {
+    if (isClassifier()) {
+      float[] err=new float[errors.length];
+      float[] samples=new float[errors.length];
       for (int i=0; i < err.length; ++i) {
-        err[i]=(float)errors[i].valid_err;
+        err[i]=(float)errors[i].train_err;
+        samples[i]=errors[i].training_samples;
       }
-      new D3Plot(samples,err,"training samples","classification error","Classification Error on Validation Set").generate(sb);
+      new D3Plot(samples,err,"training samples","classification error","Classification Error on Training Set").generate(sb);
+      if (model_info.parameters.validation != null) {
+        for (int i=0; i < err.length; ++i) {
+          err[i]=(float)errors[i].valid_err;
+        }
+        new D3Plot(samples,err,"training samples","classification error","Classification Error on Validation Set").generate(sb);
+      }
+    }
+ else {
+      float[] err=new float[errors.length];
+      float[] samples=new float[errors.length];
+      for (int i=0; i < err.length; ++i) {
+        err[i]=(float)errors[i].train_mse;
+        samples[i]=errors[i].training_samples;
+      }
+      new D3Plot(samples,err,"training samples","mean squared error","Regression Error on Training Set").generate(sb);
+      if (model_info.parameters.validation != null) {
+        for (int i=0; i < err.length; ++i) {
+          err[i]=(float)errors[i].valid_mse;
+        }
+        new D3Plot(samples,err,"training samples","mean squared error","Regression Error on Validation Set").generate(sb);
+      }
     }
   }
   if (isClassifier()) {
     DocGen.HTML.section(sb,"Training classification error: " + formatPct(error.train_err));
-  }
-  if (isClassifier()) {
     if (error.validation) {
       DocGen.HTML.section(sb,"Validation classification error: " + formatPct(error.valid_err));
+    }
+  }
+ else {
+    DocGen.HTML.section(sb,"Training mean square error: " + String.format(mse_format,error.train_mse));
+    if (error.validation) {
+      DocGen.HTML.section(sb,"Validation mean square error: " + String.format(mse_format,error.valid_mse));
     }
   }
   if (error.training_time_ms > 0)   DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
@@ -48,7 +70,7 @@
     sb.append("<tr>");
     sb.append("<th>").append("#").append("</th>");
     sb.append("<th>").append("Units").append("</th>");
-    sb.append("<th>").append("Activation").append("</th>");
+    sb.append("<th>").append("Type").append("</th>");
     sb.append("<th>").append("Dropout").append("</th>");
     sb.append("<th>").append("Rate").append("</th>");
     sb.append("<th>").append("L1").append("</th>");
@@ -63,8 +85,10 @@
       sb.append("<td>").append("<b>").append(i + 1).append("</b>").append("</td>");
       sb.append("<td>").append("<b>").append(neurons[i].units).append("</b>").append("</td>");
       sb.append("<td>").append(neurons[i].getClass().getSimpleName()).append("</td>");
-      sb.append("<td>").append((i == 0 ? neurons[i].params.input_dropout_ratio * 100 : (neurons[i] instanceof Neurons.TanhDropout || neurons[i] instanceof Neurons.RectifierDropout || neurons[i] instanceof Neurons.MaxoutDropout ? 50 : 0)) + "%</td>");
       if (i == 0) {
+        sb.append("<td>");
+        sb.append(formatPct(neurons[i].params.input_dropout_ratio));
+        sb.append("</td>");
         sb.append("<td></td>");
         sb.append("<td></td>");
         sb.append("<td></td>");
@@ -72,6 +96,14 @@
         sb.append("<td></td>");
         sb.append("<td></td>");
         continue;
+      }
+ else       if (i < neurons.length - 1) {
+        sb.append("<td>");
+        sb.append(neurons[i] instanceof Neurons.TanhDropout || neurons[i] instanceof Neurons.RectifierDropout || neurons[i] instanceof Neurons.MaxoutDropout ? "50%" : "0%");
+        sb.append("</td>");
+      }
+ else {
+        sb.append("<td></td>");
       }
       sb.append("<td>").append(String.format("%.5g",neurons[i].rate(error.training_samples))).append("</td>");
       sb.append("<td>").append(neurons[i].params.l1).append("</td>");
@@ -92,7 +124,7 @@
   }
   long score_valid=model_info().get_params().score_validation_samples;
   long score_train=model_info().get_params().score_training_samples;
-  final String cmTitle="Confusion Matrix on " + (error.validation ? "Validation Data" + (score_valid == 0 ? "" : " (" + score_valid + " samples)") : "Training Data" + (score_train == 0 ? "" : " (" + score_train + " samples)"));
+  final String cmTitle="Confusion Matrix on " + (error.validation ? "Validation Data" + (score_valid == 0 ? "" : " (~" + score_valid + " samples)") : "Training Data" + (score_train == 0 ? "" : " (~" + score_train + " samples)"));
   DocGen.HTML.section(sb,cmTitle);
   if (error.train_confusion_matrix != null) {
     if (error.train_confusion_matrix.cm.length < 100) {
@@ -125,8 +157,20 @@
   sb.append("<th>Training Time</th>");
   sb.append("<th>Training Epochs</th>");
   sb.append("<th>Training Samples</th>");
-  sb.append("<th>Training Error</th>");
-  sb.append("<th>Validation Error</th>");
+  if (isClassifier()) {
+    sb.append("<th>Training Error</th>");
+  }
+ else {
+    sb.append("<th>Training MSE</th>");
+  }
+  if (error.validation) {
+    if (isClassifier()) {
+      sb.append("<th>Validation Error</th>");
+    }
+ else {
+      sb.append("<th>Validation MSE</th>");
+    }
+  }
   sb.append("</tr>");
   for (int i=errors.length - 1; i >= 0; i--) {
     final Errors e=errors[i];
@@ -137,12 +181,17 @@
     if (isClassifier()) {
       sb.append("<td>" + formatPct(e.train_err) + "</td>");
     }
+ else {
+      sb.append("<td>" + String.format(mse_format,e.train_mse) + "</td>");
+    }
     if (e.validation) {
       if (isClassifier()) {
         sb.append("<td>" + formatPct(e.valid_err) + "</td>");
       }
+ else {
+        sb.append("<td>" + String.format(mse_format,e.valid_mse) + "</td>");
+      }
     }
- else     sb.append("<td></td>");
     sb.append("</tr>");
   }
   sb.append("</table>");

@@ -1,14 +1,12 @@
 {
   data_info=dinfo;
   final int num_input=dinfo.fullN();
-  final int num_output=dinfo._adaptedFrame.lastVec().domain().length;
+  final int num_output=params.classification ? dinfo._adaptedFrame.lastVec().domain().length : 1;
   assert(num_input > 0);
   assert(num_output > 0);
   parameters=params;
   _has_momenta=(parameters.momentum_start != 0 || parameters.momentum_stable != 0);
   final int layers=parameters.hidden.length;
-  if (!parameters.classification)   assert(num_output == 1);
- else   assert(num_output > 1);
   units=new int[layers + 2];
   units[0]=num_input;
   System.arraycopy(parameters.hidden,0,units,1,layers);

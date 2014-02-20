@@ -20,10 +20,10 @@
     err.validation=ftest != null;
     err.training_samples=model_info().get_processed_total();
     err.train_confusion_matrix=new ConfusionMatrix();
-    err.train_err=classificationError(ftrain,"Classification error on training data:",printCM,err.train_confusion_matrix);
+    err.train_err=calcError(ftrain,"Error on training data:",printCM,err.train_confusion_matrix);
     if (err.validation) {
       err.valid_confusion_matrix=new ConfusionMatrix();
-      err.valid_err=classificationError(ftest,"Classification error on validation data:",printCM,err.valid_confusion_matrix);
+      err.valid_err=calcError(ftest,"Error on validation data:",printCM,err.valid_confusion_matrix);
     }
     if (errors == null) {
       errors=new Errors[]{err};
@@ -42,11 +42,11 @@
     Log.err("Try a bounded activation function or regularization with L1, L2 or max_w2 and/or use a smaller learning rate or faster annealing.");
     keep_running=false;
   }
- else   if (ftest == null && errors[errors.length - 1].train_err == 0) {
+ else   if (ftest == null && (model_info().parameters.classification && errors[errors.length - 1].train_err == 0)) {
     Log.info("Achieved 100% classification accuracy on the training data. We are done here.");
     keep_running=false;
   }
- else   if (ftest != null && errors[errors.length - 1].valid_err == 0) {
+ else   if (ftest != null && (model_info().parameters.classification && errors[errors.length - 1].valid_err == 0)) {
     Log.info("Achieved 100% classification accuracy on the validation data. We are done here.");
     keep_running=false;
   }
