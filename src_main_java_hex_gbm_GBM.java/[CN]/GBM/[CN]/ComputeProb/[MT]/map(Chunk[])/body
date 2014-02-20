@@ -1,11 +1,11 @@
 {
   Chunk ys=chk_resp(chks);
   if (_nclass > 1) {
-    double ds[]=new double[_nclass];
+    float fs[]=new float[_nclass + 1];
     for (int row=0; row < ys._len; row++) {
-      double sum=score0(chks,ds,row);
-      if (Double.isInfinite(sum))       for (int k=0; k < _nclass; k++)       chk_work(chks,k).set0(row,Double.isInfinite(ds[k]) ? 1.0f : 0.0f);
- else       for (int k=0; k < _nclass; k++)       chk_work(chks,k).set0(row,(float)(ds[k] / sum));
+      float sum=score1(chks,fs,row);
+      if (Float.isInfinite(sum))       for (int k=0; k < _nclass; k++)       chk_work(chks,k).set0(row,Float.isInfinite(fs[k + 1]) ? 1.0f : 0.0f);
+ else       for (int k=0; k < _nclass; k++)       chk_work(chks,k).set0(row,fs[k + 1] / sum);
     }
   }
  else {
