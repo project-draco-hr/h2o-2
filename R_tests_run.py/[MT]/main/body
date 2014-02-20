@@ -41,3 +41,5 @@ def main(argv):
     finally:
         g_runner.stop_clouds()
         g_runner.report_summary()
+    if (not g_runner.get_regression_passed()):
+        sys.exit(1)

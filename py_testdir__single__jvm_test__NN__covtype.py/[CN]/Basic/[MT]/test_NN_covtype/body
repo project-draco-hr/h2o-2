@@ -5,7 +5,7 @@ def test_NN_covtype(self):
     hex_key = 'covtype.hex'
     validation_key = hex_key
     timeoutSecs = 30
-    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
     inspect = h2o_cmd.runInspect(None, hex_key)
     print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
     response = (inspect['numCols'] - 1)
@@ -14,7 +14,7 @@ def test_NN_covtype(self):
         identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
         model_key = (('nn_' + identifier) + '.hex')
         kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'mode': mode, 'activation': 'Tanh', 'hidden': '200,200', 'rate': 0.005, 'rate_annealing': 1e-05, 'momentum_start': 0.1, 'momentum_ramp': 100000, 'momentum_stable': 0.3, 'l1': 0.0, 'l2': 0.0, 'seed': 28372348842, 'loss': 'CrossEntropy', 'warmup_samples': 0, 'initial_weight_distribution': 'Normal', 'initial_weight_scale': 1, 'epochs': 2.0, 'destination_key': model_key, 'validation': validation_key, }
-        expectedErr = (0.3413 if (mode == 'SingleThread') else 0.3)
+        expectedErr = (0.35195 if (mode == 'SingleThread') else 0.3)
         timeoutSecs = 600
         start = time.time()
         nn = h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)

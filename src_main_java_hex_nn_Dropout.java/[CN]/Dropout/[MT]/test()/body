@@ -1,0 +1,29 @@
+{
+  final int units=1000;
+  double[] a=new double[units];
+  double sum1=0, sum2=0, sum3=0, sum4=0;
+  final int loops=10000;
+  for (int l=0; l < loops; ++l) {
+    Dropout d=new Dropout(units);
+    long seed=new Random().nextLong();
+    Arrays.fill(a,1.);
+    d.randomlySparsifyActivation(a,0.3,seed);
+    sum1+=water.util.Utils.sum(a);
+    Arrays.fill(a,1.);
+    d.randomlySparsifyActivation(a,0.0,seed + 1);
+    sum2+=water.util.Utils.sum(a);
+    Arrays.fill(a,1.);
+    d.randomlySparsifyActivation(a,1.0,seed + 2);
+    sum3+=water.util.Utils.sum(a);
+    d.fillBytes(seed + 3);
+    for (int i=0; i < units; ++i)     if (d.unit_active(i))     sum4++;
+  }
+  sum1/=loops;
+  sum2/=loops;
+  sum3/=loops;
+  sum4/=loops;
+  Assert.assertTrue(Math.abs(sum1 - 700) < 1);
+  Assert.assertTrue(sum2 == units);
+  Assert.assertTrue(sum3 == 0);
+  Assert.assertTrue(Math.abs(sum4 - 500) < 1);
+}

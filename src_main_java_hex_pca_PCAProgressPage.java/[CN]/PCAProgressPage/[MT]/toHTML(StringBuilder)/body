@@ -1,5 +1,6 @@
 {
   Job jjob=Job.findJob(job_key);
+  if (jjob == null)   return true;
   Value v=DKV.get(jjob.dest());
   if (v != null) {
     PCAModel m=v.get();

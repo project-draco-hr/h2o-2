@@ -1,0 +1,8 @@
+{
+  super.registered(ver);
+  for (  Argument arg : _arguments) {
+    if (arg._name.equals("activation") || arg._name.equals("initial_weight_distribution") || arg._name.equals("expert_mode")) {
+      arg.setRefreshOnChange();
+    }
+  }
+}

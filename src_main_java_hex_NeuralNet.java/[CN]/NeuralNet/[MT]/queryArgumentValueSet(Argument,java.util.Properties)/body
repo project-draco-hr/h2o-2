@@ -5,16 +5,15 @@
     arg.disable("Regression is not currently supported.");
   }
   if (arg._name.equals("ignored_cols"))   arg.disable("Not currently supported.");
-  if (arg._name.equals("input_dropout_ratio") && (activation != Activation.RectifierWithDropout && activation != Activation.TanhWithDropout)) {
-    arg.disable("Only with Dropout.",inputArgs);
-  }
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
   }
   if (arg._name.equals("mode")) {
     if (H2O.CLOUD._memary.length > 1) {
-      arg.disable("Distributed MapReduce mode is not yet fully supported. Will run in single-node mode, wasting " + (H2O.CLOUD._memary.length - 1) + " cluster node(s).",inputArgs);
-      mode=ExecutionMode.SingleNode;
+      if (mode == ExecutionMode.MapReduce) {
+        arg.disable("Distributed MapReduce mode is not yet fully supported. Will run in single-node mode, wasting " + (H2O.CLOUD._memary.length - 1) + " cluster node(s).",inputArgs);
+        mode=ExecutionMode.SingleNode;
+      }
     }
   }
   if (arg._name.equals("warmup_samples") && mode == MapReduce && H2O.CLOUD._memary.length > 1) {

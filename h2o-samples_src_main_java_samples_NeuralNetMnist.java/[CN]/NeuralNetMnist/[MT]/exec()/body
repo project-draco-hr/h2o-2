@@ -1,7 +1,8 @@
 {
-  final double fraction=1.0;
-  final long seed=0xC0FFEE;
-  load(fraction,seed);
+  Frame trainf=TestUtil.parseFromH2OFolder("smalldata/mnist/train.csv.gz");
+  Frame testf=TestUtil.parseFromH2OFolder("smalldata/mnist/test.csv.gz");
+  train=trainf.vecs();
+  test=testf.vecs();
   final Vec trainLabels=train[train.length - 1];
   train=Utils.remove(train,train.length - 1);
   final Vec testLabels=test[test.length - 1];

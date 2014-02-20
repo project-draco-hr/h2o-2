@@ -1,0 +1,23 @@
+{
+  data_info=dinfo;
+  final int num_input=dinfo.fullN();
+  final int num_output=params.classification ? dinfo._adaptedFrame.lastVec().domain().length : 1;
+  assert(num_input > 0);
+  assert(num_output > 0);
+  parameters=params;
+  _has_momenta=(parameters.momentum_start != 0 || parameters.momentum_stable != 0);
+  final int layers=parameters.hidden.length;
+  units=new int[layers + 2];
+  units[0]=num_input;
+  System.arraycopy(parameters.hidden,0,units,1,layers);
+  units[layers + 1]=num_output;
+  weights=new float[layers + 1][];
+  for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];
+  biases=new double[layers + 1][];
+  for (int i=0; i <= layers; ++i)   biases[i]=new double[units[i + 1]];
+  createMomenta();
+  mean_bias=new double[units.length];
+  rms_bias=new double[units.length];
+  mean_weight=new double[units.length];
+  rms_weight=new double[units.length];
+}

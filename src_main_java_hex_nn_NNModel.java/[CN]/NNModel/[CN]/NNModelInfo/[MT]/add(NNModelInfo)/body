@@ -1,0 +1,10 @@
+{
+  Utils.add(weights,other.weights);
+  Utils.add(biases,other.biases);
+  if (has_momenta()) {
+    assert(other.has_momenta());
+    Utils.add(weights_momenta,other.weights_momenta);
+    Utils.add(biases_momenta,other.biases_momenta);
+  }
+  add_processed_local(other.get_processed_local());
+}

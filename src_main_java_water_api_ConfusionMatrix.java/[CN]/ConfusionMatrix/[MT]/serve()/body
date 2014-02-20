@@ -1,26 +1,35 @@
 {
   Vec va=null, vp=null, avp=null;
+  classification=vactual.isInt() && vpredict.isInt();
+  final boolean regression=!vactual.isInt() && !vpredict.isInt();
   if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing actual or predict!");
-  if (!vactual.isInt() || !vpredict.isInt())   throw new IllegalArgumentException("Cannot provide confusion matrix for float vectors!");
+  if (!classification && !regression)   throw new IllegalArgumentException("Both arguments must either be floating point or integer.");
   if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
   try {
-    va=vactual.toEnum();
-    actual_domain=va._domain;
-    vp=vpredict.toEnum();
-    predicted_domain=vp._domain;
-    if (!Arrays.equals(actual_domain,predicted_domain)) {
-      domain=Utils.union(actual_domain,predicted_domain);
-      int[][] vamap=Model.getDomainMapping(domain,actual_domain,true);
-      va=TransfVec.compose((TransfVec)va,vamap,domain,false);
-      int[][] vpmap=Model.getDomainMapping(domain,predicted_domain,true);
-      vp=TransfVec.compose((TransfVec)vp,vpmap,domain,false);
+    if (classification) {
+      va=vactual.toEnum();
+      actual_domain=va._domain;
+      vp=vpredict.toEnum();
+      predicted_domain=vp._domain;
+      if (!Arrays.equals(actual_domain,predicted_domain)) {
+        domain=Utils.union(actual_domain,predicted_domain);
+        int[][] vamap=Model.getDomainMapping(domain,actual_domain,true);
+        va=TransfVec.compose((TransfVec)va,vamap,domain,false);
+        int[][] vpmap=Model.getDomainMapping(domain,predicted_domain,true);
+        vp=TransfVec.compose((TransfVec)vp,vpmap,domain,false);
+      }
+ else       domain=actual_domain;
+      if (!va.group().equals(vp.group())) {
+        avp=vp;
+        vp=va.align(vp);
+      }
+      cm=new CM(domain.length).doAll(va,vp)._cm;
     }
- else     domain=actual_domain;
-    if (!va.group().equals(vp.group())) {
-      avp=vp;
-      vp=va.align(vp);
+ else {
+      assert(!vactual.isEnum());
+      assert(!vpredict.isEnum());
+      mse=new CM(1).doAll(vactual,vpredict).mse();
     }
-    cm=new CM(domain.length).doAll(va,vp)._cm;
     return Response.done(this);
   }
  catch (  Throwable t) {

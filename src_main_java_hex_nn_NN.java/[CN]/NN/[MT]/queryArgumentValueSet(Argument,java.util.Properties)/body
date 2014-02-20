@@ -1,0 +1,24 @@
+{
+  super.queryArgumentValueSet(arg,inputArgs);
+  if (arg._name.equals("classification")) {
+    classification=true;
+    arg.disable("Regression is not currently supported.");
+  }
+  if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
+    arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
+  }
+  if (arg._name.equals("loss") && !classification) {
+    arg.disable("Using MeanSquare loss for regression.",inputArgs);
+    loss=Loss.MeanSquare;
+  }
+  if (arg._name.equals("score_validation_samples") && validation == null) {
+    arg.disable("Only if a validation set is specified.");
+  }
+  if (arg._name.equals("sync_samples") && H2O.CLOUD.size() == 1) {
+    sync_samples=0;
+    arg.disable("Only for multi-node operation.");
+  }
+  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("score_interval")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("sync_samples")|| arg._name.equals("fast_mode")) {
+    if (!expert_mode)     arg.disable("Only in expert mode.");
+  }
+}

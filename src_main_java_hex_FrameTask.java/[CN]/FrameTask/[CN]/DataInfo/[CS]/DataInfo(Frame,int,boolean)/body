@@ -38,7 +38,7 @@
     names[i + ncats]=fr._names[nums[i]];
     if (standardize) {
       _normSub[i]=v.mean();
-      _normMul[i]=1.0 / v.sigma();
+      _normMul[i]=v.sigma() != 0 ? 1.0 / v.sigma() : 1.0;
     }
   }
   _adaptedFrame=new Frame(names,vecs2);

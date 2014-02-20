@@ -8,8 +8,10 @@
     System.arraycopy(testData[i],0,xValues,0,numInput);
     System.arraycopy(testData[i],numInput,tValues,0,numOutput);
     yValues=this.ComputeOutputs(xValues);
-    int maxIndex=MaxIndex(yValues);
-    if (tValues[maxIndex] == 1.0)     ++numCorrect;
+    float[] preds=new float[yValues.length + 1];
+    for (int j=0; j < yValues.length; ++j)     preds[j + 1]=(float)yValues[j];
+    preds[0]=Model.getPrediction(preds,i);
+    if (tValues[(int)preds[0]] == 1.0)     ++numCorrect;
  else     ++numWrong;
   }
   return (double)numWrong / (numCorrect + numWrong);
