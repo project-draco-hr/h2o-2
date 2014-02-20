@@ -16,7 +16,7 @@
   }
   DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + String.format("%,d",model_info().size()));
   model_info.job().toHTML(sb);
-  sb.append("<div class='alert'>Actions: " + Cancel.link(jobKey,"Cancel job") + ", "+ is2.link("Inspect training data",_dataKey)+ ", "+ (model_info().parameters.validation != null ? (is2.link("Inspect validation data",model_info().parameters.validation._key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
+  sb.append("<div class='alert'>Actions: " + (Job.isRunning(jobKey) ? Cancel.link(jobKey,"Cancel job") + ", " : "") + is2.link("Inspect training data",_dataKey)+ ", "+ (model_info().parameters.validation != null ? (is2.link("Inspect validation data",model_info().parameters.validation._key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   final Errors error=errors[errors.length - 1];
   assert(error != null);
   if (errors.length > 1) {
