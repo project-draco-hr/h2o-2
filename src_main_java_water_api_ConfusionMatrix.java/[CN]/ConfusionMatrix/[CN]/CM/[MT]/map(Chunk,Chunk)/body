@@ -17,8 +17,8 @@
     int len=ca._len;
     for (int i=0; i < len; i++) {
       if (ca.isNA0(i) || cp.isNA0(i))       continue;
-      final float a=ca.at80(i);
-      final float p=cp.at80(i);
+      final double a=ca.at0(i);
+      final double p=cp.at0(i);
       _mse+=(p - a) * (p - a);
       _count++;
     }
