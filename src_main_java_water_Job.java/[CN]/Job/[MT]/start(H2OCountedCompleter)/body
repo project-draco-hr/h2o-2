@@ -1,8 +1,8 @@
 {
   _fjtask=fjtask;
-  Futures fs=new Futures();
-  DKV.put(job_key,this,fs);
   start_time=System.currentTimeMillis();
+  state=JobState.RUNNING;
+  UKV.put(self(),this);
   new TAtomic<List>(){
     @Override public List atomic(    List old){
       if (old == null)       old=new List();
@@ -13,6 +13,5 @@
     }
   }
 .invoke(LIST);
-  fs.blockForPending();
   return this;
 }
