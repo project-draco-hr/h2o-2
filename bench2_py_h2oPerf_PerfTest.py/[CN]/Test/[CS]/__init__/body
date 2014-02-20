@@ -25,4 +25,7 @@ def __init__(self, cfg, test_dir, test_short_dir, output_dir, parse_file, model_
     self.start_ms = (-1)
     self.parse_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.parse_file, self.perfdb)
     self.model_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.model_file, self.perfdb)
-    self.predict_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.predict_file, self.perfdb)
+    if predict_file:
+        self.predict_process = RProc(self.test_dir, self.test_short_dir, self.output_dir, self.predict_file, self.perfdb)
+    else:
+        self.predict_process = None

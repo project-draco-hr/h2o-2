@@ -49,7 +49,7 @@
       sampler._mults=mults;
       sampler.doAll(vecs);
       clusters=Utils.append(clusters,sampler._sampled);
-      if (!isRunning(self()))       return Status.Done;
+      if (!isRunning(self()))       return JobState.DONE;
       model.centers=normalize ? denormalize(clusters,vecs) : clusters;
       model.total_within_SS=sqr._sqr;
       model.iterations++;
@@ -90,5 +90,5 @@
   }
   model.unlock(self());
   source.unlock(self());
-  return Status.Done;
+  return JobState.DONE;
 }

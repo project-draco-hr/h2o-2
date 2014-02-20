@@ -1,3 +1,7 @@
 def __switch__(self):
     '\n        Overrides the __switch__ method of the parent class.\n\n        This switch method handles the different types of math\n        results: regression, multionomial classification, CM result,\n                 binomial classification\n\n        Multinomial classification is the only case where there will\n        be multiple rows inserted, all other results constitute a single row\n        in their respective tables.\n\n        One important note is that the scrapers in this case handle the\n        database insertions.\n        '
-    return {'regression': self.__scrape_regression_result__(), 'cm': self.__scrape_cm_result__(), 'binomial': self.__scrape_binomial_result__(), 'multinomial': self.__scrape_multinomial_result__(), }[self.result_type]
+    print ('SWITCHING TO     ' + self.result_type)
+    obj = {'regression': self.__scrape_regression_result__, 'cm': self.__scrape_cm_result__, 'multinomial': self.__scrape_multinomial_result__, 'binomial': self.__scrape_binomial_result__, }.get(self.result_type, 'bad key')
+    if (self.result_type in ['multinomial', 'binomial']):
+        self.__scrape_cm_result__()
+    return obj()
