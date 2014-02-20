@@ -10,6 +10,11 @@
     fr.add(fr._names[i],fr.remove(i));
     break;
   }
+  if (!response.isEnum() && response.isInt() && family == Family.binomial) {
+    response=response.toEnum();
+    fr.replace(vecs.length - 1,response);
+    _gen_enum=true;
+  }
   for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i].min() == vecs[i].max() || vecs[i].naCnt() > vecs[i].length() * 0.2)   constantOrNAs.add(i);
   if (!constantOrNAs.isEmpty()) {
     int[] cols=new int[constantOrNAs.size()];
@@ -22,7 +27,7 @@
     if (destination_key == null)     destination_key=Key.make("GLMGridModel_" + Key.make());
     if (job_key == null)     job_key=Key.make("GLMGridJob_" + Key.make());
     Job j=gridSearch(self(),destination_key,_dinfo,_glm,lambda,alpha,n_folds);
-    return GLMGridView.redirect(this,j.destination_key);
+    return GLMGridView.redirect(this,j.dest());
   }
  else {
     if (destination_key == null)     destination_key=Key.make("GLMModel_" + Key.make());
