@@ -5,7 +5,7 @@ def test_NN_covtype(self):
     hex_key = 'covtype.hex'
     validation_key = hex_key
     timeoutSecs = 30
-    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
     inspect = h2o_cmd.runInspect(None, hex_key)
     print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
     response = (inspect['numCols'] - 1)

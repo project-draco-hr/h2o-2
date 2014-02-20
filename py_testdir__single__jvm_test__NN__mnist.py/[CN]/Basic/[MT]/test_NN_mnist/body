@@ -5,8 +5,8 @@ def test_NN_mnist(self):
     hex_key = 'mnist_train.hex'
     validation_key = 'mnist_test.hex'
     timeoutSecs = 30
-    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs)
-    parseResultV = h2i.import_parse(bucket='smalldata', path=csvPathname_test, schema='local', hex_key=validation_key, timeoutSecs=timeoutSecs)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
+    parseResultV = h2i.import_parse(bucket='smalldata', path=csvPathname_test, schema='put', hex_key=validation_key, timeoutSecs=timeoutSecs)
     inspect = h2o_cmd.runInspect(None, hex_key)
     print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
     response = (inspect['numCols'] - 1)

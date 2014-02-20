@@ -5,8 +5,8 @@ def test_NN_mnist(self):
     hex_key = 'mnist_train.hex'
     validation_key = 'mnist_test.hex'
     timeoutSecs = 30
-    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs)
-    parseResultV = h2i.import_parse(bucket='smalldata', path=csvPathname_test, schema='local', hex_key=validation_key, timeoutSecs=timeoutSecs)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname_train, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
+    parseResultV = h2i.import_parse(bucket='smalldata', path=csvPathname_test, schema='put', hex_key=validation_key, timeoutSecs=timeoutSecs)
     inspect = h2o_cmd.runInspect(None, hex_key)
     print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
     response = (inspect['numCols'] - 1)
@@ -14,7 +14,7 @@ def test_NN_mnist(self):
     model_key = (('nn_' + identifier) + '.hex')
     kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '117,131,129', 'rate': 0.005, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 100000, 'momentum_stable': 0.9, 'l1': 1e-05, 'l2': 1e-07, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 2.0, 'destination_key': model_key, 'validation': validation_key, 'score_interval': 10000, }
     expectedErr = 0.057
-    relTol = 0.1
+    relTol = 0.2
     timeoutSecs = 600
     start = time.time()
     nn = h2o_cmd.runNNet2(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
