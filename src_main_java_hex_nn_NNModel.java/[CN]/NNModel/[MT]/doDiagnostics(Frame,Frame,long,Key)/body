@@ -19,9 +19,11 @@
     err.epoch_counter=epoch_counter;
     err.validation=ftest != null;
     err.training_samples=model_info().get_processed_total();
+    err.score_training_samples=ftrain.numRows();
     err.train_confusion_matrix=new ConfusionMatrix();
     err.train_err=calcError(ftrain,"Error on training data:",printCM,err.train_confusion_matrix);
     if (err.validation) {
+      err.score_validation_samples=ftest.numRows();
       err.valid_confusion_matrix=new ConfusionMatrix();
       err.valid_err=calcError(ftest,"Error on validation data:",printCM,err.valid_confusion_matrix);
     }
