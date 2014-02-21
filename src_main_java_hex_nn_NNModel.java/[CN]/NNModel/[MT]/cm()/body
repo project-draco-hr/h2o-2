@@ -1,6 +1,6 @@
 {
   if (errors == null)   return null;
   water.api.ConfusionMatrix cm=errors[errors.length - 1].validation ? errors[errors.length - 1].valid_confusion_matrix : errors[errors.length - 1].train_confusion_matrix;
-  if (cm == null)   return null;
+  if (cm == null || cm.cm == null)   return null;
   return new hex.ConfusionMatrix(cm.cm);
 }
