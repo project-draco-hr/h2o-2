@@ -5,10 +5,10 @@
   for (int i=0; i < xValues.length; ++i)   this.inputs[i]=xValues[i];
   for (int j=0; j < numHidden; ++j)   for (int i=0; i < numInput; ++i)   hSums[j]+=this.inputs[i] * this.ihWeights[i][j];
   for (int i=0; i < numHidden; ++i)   hSums[i]+=this.hBiases[i];
-  for (int i=0; i < numHidden; ++i)   if (activation == NeuralNet.Activation.Tanh) {
+  for (int i=0; i < numHidden; ++i)   if (activation == NeuralNet.Activation.Tanh || activation == NeuralNet.Activation.TanhWithDropout) {
     hOutputs[i]=HyperTanFunction(hSums[i]);
   }
- else   if (activation == NeuralNet.Activation.Rectifier) {
+ else   if (activation == NeuralNet.Activation.Rectifier || activation == NeuralNet.Activation.RectifierWithDropout) {
     hOutputs[i]=Rectifier(hSums[i]);
   }
  else   throw new RuntimeException("invalid activation.");

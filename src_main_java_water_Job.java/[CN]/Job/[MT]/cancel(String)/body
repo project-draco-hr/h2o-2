@@ -1,32 +1,12 @@
 {
-  DKV.remove(self());
+  state=msg == null ? JobState.CANCELLED : JobState.CRASHED;
+  replaceByJobHandle();
   DKV.write_barrier();
-  new TAtomic<List>(){
-    transient private Job _job;
-    @Override public List atomic(    List old){
-      if (old == null)       old=new List();
-      Key[] jobs=old._jobs;
-      for (int i=0; i < jobs.length; i++) {
-        if (jobs[i].equals(self())) {
-          _job=Job.this;
-          end_time=CANCELLED_END_TIME;
-          exception=msg;
-          break;
-        }
-      }
-      return old;
-    }
-    @Override public void onSuccess(    Value old){
-      if (_job != null) {
-        final Job job=_job;
-        H2O.submitTask(new H2OCountedCompleter(){
-          @Override public void compute2(){
-            job.onCancelled();
-          }
-        }
-);
-      }
+  final Job job=this;
+  H2O.submitTask(new H2OCountedCompleter(){
+    @Override public void compute2(){
+      job.onCancelled();
     }
   }
-.invoke(LIST);
+);
 }

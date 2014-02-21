@@ -1,12 +1,36 @@
 {
-  if (_job != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
-  chunkInit();
+  if (_job != null && _job.self() != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
   final int nrows=chunks[0]._len;
+  final long offset=chunks[0]._start;
+  chunkInit();
   double[] nums=MemoryManager.malloc8d(_dinfo._nums);
   int[] cats=MemoryManager.malloc4(_dinfo._cats);
   double[] response=MemoryManager.malloc8d(_dinfo._responses);
-  OUTER:   for (int r=0; r < nrows; ++r) {
-    if (_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId)     continue;
+  int start=0;
+  int end=nrows;
+  boolean contiguous=false;
+  Random skip_rng=null;
+  if (_useFraction < 1.0) {
+    skip_rng=water.util.Utils.getDeterRNG(_seed++ + 0x600D5EED + offset);
+    if (contiguous) {
+      final int howmany=(int)Math.ceil(_useFraction * nrows);
+      if (howmany > 0) {
+        start=skip_rng.nextInt(nrows - howmany);
+        end=start + howmany;
+      }
+      assert(start < nrows);
+      assert(end <= nrows);
+    }
+  }
+  long[] shuf_map=null;
+  if (_shuffle) {
+    shuf_map=new long[end - start];
+    for (int i=0; i < shuf_map.length; ++i)     shuf_map[i]=start + i;
+    Utils.shuffleArray(shuf_map,_seed++ + 0xD0650F1E + offset);
+  }
+  OUTER:   for (int rr=start; rr < end; ++rr) {
+    final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
+    if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))     continue;
     for (    Chunk c : chunks)     if (c.isNA0(r))     continue OUTER;
     int i=0, ncats=0;
     for (; i < _dinfo._cats; ++i) {
@@ -19,9 +43,12 @@
       if (_dinfo._normMul != null)       d=(d - _dinfo._normSub[i - _dinfo._cats]) * _dinfo._normMul[i - _dinfo._cats];
       nums[i - _dinfo._cats]=d;
     }
-    for (i=0; i < _dinfo._responses; ++i)     response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
-    if (outputs != null && outputs.length > 0)     processRow(nums,ncats,cats,response,outputs);
- else     processRow(nums,ncats,cats,response);
+    for (i=0; i < _dinfo._responses; ++i) {
+      response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
+      if (_dinfo._normRespMul != null)       response[i]=(response[i] - _dinfo._normRespSub[i]) * _dinfo._normRespMul[i];
+    }
+    if (outputs != null && outputs.length > 0)     processRow(offset + r,nums,ncats,cats,response,outputs);
+ else     processRow(offset + r,nums,ncats,cats,response);
   }
   chunkDone();
 }

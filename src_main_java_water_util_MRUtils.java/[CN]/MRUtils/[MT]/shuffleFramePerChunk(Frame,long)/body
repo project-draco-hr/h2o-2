@@ -1,0 +1,16 @@
+{
+  Frame r=new MRTask2(){
+    @Override public void map(    Chunk[] cs,    NewChunk[] ncs){
+      long[] idx=new long[cs[0]._len];
+      for (int r=0; r < idx.length; ++r)       idx[r]=r;
+      Utils.shuffleArray(idx,seed);
+      for (int r=0; r < idx.length; ++r) {
+        for (int i=0; i < ncs.length; i++) {
+          ncs[i].addNum(cs[i].at0((int)idx[r]));
+        }
+      }
+    }
+  }
+.doAll(fr.numCols(),fr).outputFrame(fr.names(),fr.domains());
+  return r;
+}

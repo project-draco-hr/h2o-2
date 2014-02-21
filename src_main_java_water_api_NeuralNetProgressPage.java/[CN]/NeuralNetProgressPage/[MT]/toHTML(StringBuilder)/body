@@ -1,5 +1,6 @@
 {
   Job jjob=Job.findJob(job_key);
+  if (jjob == null)   return true;
   NeuralNet.NeuralNetModel m=UKV.get(jjob.dest());
   if (m != null)   m.generateHTML("NeuralNet Model",sb);
  else   DocGen.HTML.paragraph(sb,"Pending...");

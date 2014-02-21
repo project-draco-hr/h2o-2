@@ -1,0 +1,179 @@
+{
+  for (int repeat=0; repeat < 1; ++repeat) {
+    NN.Activation[] activations={NN.Activation.Tanh,NN.Activation.Rectifier};
+    NN.Loss[] losses={NN.Loss.MeanSquare,NN.Loss.CrossEntropy};
+    NN.InitialWeightDistribution[] dists={NN.InitialWeightDistribution.Normal,NN.InitialWeightDistribution.Uniform,NN.InitialWeightDistribution.UniformAdaptive};
+    double[] initial_weight_scales={1e-4 + new Random().nextDouble()};
+    double[] holdout_ratios={0.1 + new Random().nextDouble() * 0.8};
+    double[] momenta={new Random().nextDouble() * 0.99};
+    int[] hiddens={1,new Random().nextInt(50)};
+    int[] epochs={1,new Random().nextInt(50)};
+    double[] rates={0.01,1e-5 + new Random().nextDouble() * .1};
+    int num_runs=0;
+    for (    NN.Activation activation : activations) {
+      for (      NN.Loss loss : losses) {
+        for (        NN.InitialWeightDistribution dist : dists) {
+          for (          double scale : initial_weight_scales) {
+            for (            double holdout_ratio : holdout_ratios) {
+              for (              double momentum : momenta) {
+                for (                int hidden : hiddens) {
+                  for (                  int epoch : epochs) {
+                    for (                    double rate : rates) {
+                      long seed=new Random().nextLong();
+                      Log.info("");
+                      Log.info("STARTING.");
+                      Log.info("Running with " + activation.name() + " activation function and "+ loss.name()+ " loss function.");
+                      Log.info("Initialization with " + dist.name() + " distribution and "+ scale+ " scale, holdout ratio "+ holdout_ratio);
+                      Log.info("Using " + hidden + " hidden layers and momentum: "+ momentum);
+                      Log.info("Using seed " + seed);
+                      Key file=NFSFileVec.make(find_test_file(PATH));
+                      Frame frame=ParseDataset2.parse(Key.make("iris_nn2"),new Key[]{file});
+                      Frame fr=null;
+                      NN p;
+                      Random rand;
+                      int trial=0;
+                      do {
+                        Log.info("Trial #" + ++trial);
+                        if (_train != null)                         _train.delete();
+                        if (_test != null)                         _test.delete();
+                        if (fr != null)                         fr.delete();
+                        rand=Utils.getDeterRNG(seed);
+                        double[][] rows=new double[(int)frame.numRows()][frame.numCols()];
+                        String[] names=new String[frame.numCols()];
+                        for (int c=0; c < frame.numCols(); c++) {
+                          names[c]="ColumnName" + c;
+                          for (int r=0; r < frame.numRows(); r++)                           rows[r][c]=frame.vecs()[c].at(r);
+                        }
+                        for (int i=rows.length - 1; i >= 0; i--) {
+                          int shuffle=rand.nextInt(i + 1);
+                          double[] row=rows[shuffle];
+                          rows[shuffle]=rows[i];
+                          rows[i]=row;
+                        }
+                        int limit=(int)(frame.numRows() * holdout_ratio);
+                        _train=frame(names,Utils.subarray(rows,0,limit));
+                        _test=frame(names,Utils.subarray(rows,limit,(int)frame.numRows() - limit));
+                        p=new NN();
+                        p.source=_train;
+                        p.response=_train.lastVec();
+                        p.ignored_cols=null;
+                        p.ignore_const_cols=true;
+                        fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true,p.ignore_const_cols);
+                        p._dinfo=new FrameTask.DataInfo(fr,1,true);
+                      }
+ while (p._dinfo._adaptedFrame.lastVec().domain().length < 3);
+                      NeuralNetMLPReference2 ref=new NeuralNetMLPReference2();
+                      ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio,hidden);
+                      p.seed=seed;
+                      p.hidden=new int[]{hidden};
+                      p.rate=rate / (1 - momentum);
+                      p.activation=activation;
+                      p.max_w2=Double.MAX_VALUE;
+                      p.epochs=epoch;
+                      p.input_dropout_ratio=0;
+                      p.rate_annealing=0;
+                      p.l1=0;
+                      p.loss=loss;
+                      p.l2=0;
+                      p.momentum_stable=momentum;
+                      p.momentum_start=p.momentum_stable;
+                      p.momentum_ramp=0;
+                      p.initial_weight_distribution=dist;
+                      p.initial_weight_scale=scale;
+                      p.classification=true;
+                      p.diagnostics=true;
+                      p.validation=null;
+                      p.fast_mode=false;
+                      p.nesterov_accelerated_gradient=false;
+                      p.sync_samples=100000;
+                      p.ignore_const_cols=false;
+                      p.shuffle_training_data=false;
+                      p.classification_stop=-1;
+                      p.initModel();
+                      NNModel mymodel=UKV.get(p.dest());
+                      Neurons[] neurons=NNTask.makeNeuronsForTraining(mymodel.model_info());
+                      Neurons l=neurons[1];
+                      for (int o=0; o < l._a.length; o++) {
+                        for (int i=0; i < l._previous._a.length; i++) {
+                          ref._nn.ihWeights[i][o]=l._w[o * l._previous._a.length + i];
+                        }
+                        ref._nn.hBiases[o]=l._b[o];
+                      }
+                      l=neurons[2];
+                      for (int o=0; o < l._a.length; o++) {
+                        for (int i=0; i < l._previous._a.length; i++) {
+                          ref._nn.hoWeights[i][o]=l._w[o * l._previous._a.length + i];
+                        }
+                        ref._nn.oBiases[o]=l._b[o];
+                      }
+                      ref.train((int)p.epochs,rate,p.momentum_stable,loss);
+                      mymodel=p.buildModel();
+                      final double abseps=1e-13;
+                      final double releps=1e-13;
+                      neurons=NNTask.makeNeuronsForTesting(mymodel.model_info());
+                      l=neurons[1];
+                      for (int o=0; o < l._a.length; o++) {
+                        for (int i=0; i < l._previous._a.length; i++) {
+                          double a=ref._nn.ihWeights[i][o];
+                          double b=l._w[o * l._previous._a.length + i];
+                          compareVal(a,b,abseps,releps);
+                        }
+                        double ba=ref._nn.hBiases[o];
+                        double bb=l._b[o];
+                        compareVal(ba,bb,abseps,releps);
+                      }
+                      Log.info("Weights and biases for hidden layer: PASS");
+                      l=neurons[2];
+                      for (int o=0; o < l._a.length; o++) {
+                        for (int i=0; i < l._previous._a.length; i++) {
+                          double a=ref._nn.hoWeights[i][o];
+                          double b=l._w[o * l._previous._a.length + i];
+                          compareVal(a,b,abseps,releps);
+                        }
+                        double ba=ref._nn.oBiases[o];
+                        double bb=l._b[o];
+                        compareVal(ba,bb,abseps,releps);
+                      }
+                      Log.info("Weights and biases for output layer: PASS");
+                      Frame fpreds=mymodel.score(_test);
+                      for (int i=0; i < _test.numRows(); ++i) {
+                        double[] xValues=new double[neurons[0]._a.length];
+                        System.arraycopy(ref._testData[i],0,xValues,0,xValues.length);
+                        double[] ref_preds=ref._nn.ComputeOutputs(xValues);
+                        float[] preds=new float[ref_preds.length + 1];
+                        for (int j=0; j < ref_preds.length; ++j)                         preds[j + 1]=(float)ref_preds[j];
+                        preds[0]=Model.getPrediction(preds,i);
+                        Assert.assertTrue(preds[0] == (int)fpreds.vecs()[0].at(i));
+                        for (int j=0; j < ref_preds.length; ++j) {
+                          compareVal((float)(ref_preds[j]),fpreds.vecs()[1 + j].at(i),abseps,releps);
+                        }
+                      }
+                      fpreds.delete();
+                      Log.info("Predicted values: PASS");
+                      final double trainErr=ref._nn.Accuracy(ref._trainData);
+                      final double testErr=ref._nn.Accuracy(ref._testData);
+                      final double myTrainErr=mymodel.calcError(_train,"Final training error:",true,null);
+                      final double myTestErr=mymodel.calcError(_test,"Final testing error:",true,null);
+                      Log.info("H2O  training error : " + myTrainErr * 100 + "%, test error: " + myTestErr * 100 + "%");
+                      Log.info("REF  training error : " + trainErr * 100 + "%, test error: " + testErr * 100 + "%");
+                      compareVal(trainErr,myTrainErr,abseps,releps);
+                      compareVal(testErr,myTestErr,abseps,releps);
+                      Log.info("Scoring: PASS");
+                      mymodel.delete();
+                      _train.delete();
+                      _test.delete();
+                      frame.delete();
+                      fr.delete();
+                      num_runs++;
+                      Log.info("Parameters combination " + num_runs + ": PASS");
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

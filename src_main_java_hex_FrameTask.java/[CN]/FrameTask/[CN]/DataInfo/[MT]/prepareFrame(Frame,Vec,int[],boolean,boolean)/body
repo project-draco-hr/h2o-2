@@ -1,0 +1,27 @@
+{
+  Frame fr=new Frame(source._names.clone(),source.vecs().clone());
+  if (ignored_cols != null)   fr.remove(ignored_cols);
+  final Vec[] vecs=fr.vecs();
+  for (int i=0; i < vecs.length - 1; ++i) {
+    if (vecs[i] == response) {
+      final String n=fr._names[i];
+      if (toEnum && !vecs[i].isEnum())       fr.add(n,fr.remove(i).toEnum());
+ else       fr.add(n,fr.remove(i));
+      break;
+    }
+  }
+  if (toEnum && !response.isEnum() && vecs[vecs.length - 1] == response) {
+    final String n=fr._names[vecs.length - 1];
+    fr.add(n,fr.remove(vecs.length - 1).toEnum());
+  }
+  ArrayList<Integer> constantOrNAs=new ArrayList<Integer>();
+  for (int i=0; i < vecs.length - 1; ++i) {
+    if ((dropConstantCols && vecs[i].min() == vecs[i].max()) || vecs[i].naCnt() > vecs[i].length() * 0.2)     constantOrNAs.add(i);
+  }
+  if (!constantOrNAs.isEmpty()) {
+    int[] cols=new int[constantOrNAs.size()];
+    for (int i=0; i < cols.length; ++i)     cols[i]=constantOrNAs.get(i);
+    fr.remove(cols);
+  }
+  return fr;
+}

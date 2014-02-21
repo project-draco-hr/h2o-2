@@ -7,9 +7,9 @@
   for (int u=0; u < _a.length; u++) {
     final double targetval=(u == label ? 1 : 0);
     double g=targetval - _a[u];
-    if (loss == NeuralNet.Loss.CrossEntropy) {
+    if (params.loss == NeuralNet.Loss.CrossEntropy) {
     }
- else     if (loss == NeuralNet.Loss.MeanSquare) {
+ else     if (params.loss == NeuralNet.Loss.MeanSquare) {
       g*=(1 - _a[u]) * _a[u];
     }
     bprop(u,g,r,m);
