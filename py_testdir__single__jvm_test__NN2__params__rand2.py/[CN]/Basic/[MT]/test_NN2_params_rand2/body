@@ -1,0 +1,15 @@
+def test_NN2_params_rand2(self):
+    csvPathname = 'covtype/covtype.20k.data'
+    hex_key = 'covtype.20k.hex'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hex_key, schema='put')
+    paramDict = define_params()
+    for trial in range(5):
+        params = {'response': 'C55', }
+        h2o_nn.pickRandNNParams(paramDict, params)
+        kwargs = params.copy()
+        start = time.time()
+        nn = h2o_cmd.runNNet2(timeoutSecs=70, parseResult=parseResult, **kwargs)
+        print 'nn result:', h2o.dump_json(nn)
+        h2o.check_sandbox_for_errors()
+        print 'NN2 end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'Trial #', trial, 'completed\n'
