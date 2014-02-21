@@ -1,0 +1,17 @@
+def test_kmeans_iris_fvec(self):
+    h2o.beta_features = True
+    csvFilename = 'iris.csv'
+    csvPathname = ('iris/' + csvFilename)
+    print '\nStarting', csvFilename
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'))
+    for trial in range(10):
+        kwargs = {'ignored_cols': 'C5', 'k': 3, 'max_iter': 25, 'initialization': 'Furthest', 'destination_key': 'iris.hex', 'seed': 0, }
+        timeoutSecs = 90
+        start = time.time()
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        elapsed = (time.time() - start)
+        print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
+        expected = [([5.005999999999999, 3.4180000000000006, 1.464, 0.2439999999999999], 50, 15.240400000000003), ([5.901612903225807, 2.748387096774194, 4.393548387096775, 1.4338709677419357], 62, 39.82096774193549), ([6.8500000000000005, 3.073684210526315, 5.742105263157894, 2.0710526315789473], 38, 23.87947368421053)]
+        allowedDelta = (0.01, 0.01, 0.01)
+        h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=trial)
