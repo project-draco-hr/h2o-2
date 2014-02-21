@@ -90,8 +90,7 @@
                       p.ignore_const_cols=false;
                       p.shuffle_training_data=false;
                       p.classification_stop=-1;
-                      p.initModel();
-                      NNModel mymodel=UKV.get(p.dest());
+                      NNModel mymodel=p.initModel();
                       Neurons[] neurons=NNTask.makeNeuronsForTraining(mymodel.model_info());
                       Neurons l=neurons[1];
                       for (int o=0; o < l._a.length; o++) {
@@ -108,7 +107,7 @@
                         ref._nn.oBiases[o]=l._b[o];
                       }
                       ref.train((int)p.epochs,rate,p.momentum_stable,loss);
-                      mymodel=p.buildModel();
+                      mymodel=p.buildModel(mymodel);
                       final double abseps=1e-13;
                       final double releps=1e-13;
                       neurons=NNTask.makeNeuronsForTesting(mymodel.model_info());
