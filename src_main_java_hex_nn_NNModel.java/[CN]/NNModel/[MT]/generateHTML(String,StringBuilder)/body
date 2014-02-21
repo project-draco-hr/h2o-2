@@ -3,7 +3,7 @@
     DocGen.HTML.title(sb,"No model yet");
     return true;
   }
-  final String mse_format="%2.6f";
+  final String mse_format="%g";
   final String cross_entropy_format="%2.6f";
   DocGen.HTML.title(sb,title);
   DocGen.HTML.paragraph(sb,"Model type: " + (model_info().parameters.classification ? " Classification" : " Regression"));
@@ -51,6 +51,7 @@
       }
     }
   }
+  DocGen.HTML.section(sb,"Predicting: " + responseName());
   if (isClassifier()) {
     DocGen.HTML.section(sb,"Training classification error: " + formatPct(error.train_err));
     if (error.validation) {
@@ -58,9 +59,9 @@
     }
   }
  else {
-    DocGen.HTML.section(sb,"Training mean square error: " + String.format(mse_format,error.train_mse));
+    DocGen.HTML.section(sb,"Training mean squared error: " + String.format(mse_format,error.train_mse));
     if (error.validation) {
-      DocGen.HTML.section(sb,"Validation mean square error: " + String.format(mse_format,error.valid_mse));
+      DocGen.HTML.section(sb,"Validation mean squared error: " + String.format(mse_format,error.valid_mse));
     }
   }
   if (error.training_time_ms > 0)   DocGen.HTML.section(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
