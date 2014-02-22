@@ -74,10 +74,13 @@
                           p.classification=true;
                           p.diagnostics=true;
                           p.validation=null;
+                          p.quiet_mode=true;
                           p.fast_mode=true;
                           p.sync_samples=0;
                           p.ignore_const_cols=false;
                           p.shuffle_training_data=false;
+                          p.nesterov_accelerated_gradient=true;
+                          p.classification_stop=-1;
                           p.exec();
                           mymodel=UKV.get(p.dest());
                           neurons=NNTask.makeNeuronsForTesting(mymodel.model_info());
