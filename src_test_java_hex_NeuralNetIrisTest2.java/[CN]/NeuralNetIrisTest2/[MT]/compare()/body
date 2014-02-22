@@ -32,6 +32,7 @@
                       NN p;
                       Random rand;
                       int trial=0;
+                      FrameTask.DataInfo dinfo;
                       do {
                         Log.info("Trial #" + ++trial);
                         if (_train != null)                         _train.delete();
@@ -59,9 +60,9 @@
                         p.ignored_cols=null;
                         p.ignore_const_cols=true;
                         fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true,p.ignore_const_cols);
-                        p._dinfo=new FrameTask.DataInfo(fr,1,true);
+                        dinfo=new FrameTask.DataInfo(fr,1,true);
                       }
- while (p._dinfo._adaptedFrame.lastVec().domain().length < 3);
+ while (dinfo._adaptedFrame.lastVec().domain().length < 3);
                       NeuralNetMLPReference2 ref=new NeuralNetMLPReference2();
                       ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio,hidden);
                       p.seed=seed;
@@ -90,8 +91,7 @@
                       p.ignore_const_cols=false;
                       p.shuffle_training_data=false;
                       p.classification_stop=-1;
-                      p.initModel();
-                      NNModel mymodel=UKV.get(p.dest());
+                      NNModel mymodel=p.initModel();
                       Neurons[] neurons=NNTask.makeNeuronsForTraining(mymodel.model_info());
                       Neurons l=neurons[1];
                       for (int o=0; o < l._a.length; o++) {
@@ -108,7 +108,7 @@
                         ref._nn.oBiases[o]=l._b[o];
                       }
                       ref.train((int)p.epochs,rate,p.momentum_stable,loss);
-                      mymodel=p.buildModel();
+                      mymodel=p.buildModel(mymodel);
                       final double abseps=1e-13;
                       final double releps=1e-13;
                       neurons=NNTask.makeNeuronsForTesting(mymodel.model_info());
@@ -165,6 +165,7 @@
                       _test.delete();
                       frame.delete();
                       fr.delete();
+                      p.delete();
                       num_runs++;
                       Log.info("Parameters combination " + num_runs + ": PASS");
                     }

@@ -1,15 +1,10 @@
 {
   checkParams();
-  logStart();
-  source.read_lock(self());
-  if (validation != null && source._key != null && validation._key != null && !source._key.equals(validation._key))   validation.read_lock(self());
-  Log.info("Number of chunks of the training data: " + source.anyVec().nChunks());
-  if (validation != null)   Log.info("Number of chunks of the validation data: " + validation.anyVec().nChunks());
-  if (_dinfo == null)   _dinfo=new FrameTask.DataInfo(FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,classification,ignore_const_cols),1,true,!classification);
-  NNModel model=new NNModel(dest(),self(),source._key,_dinfo,this);
+  lock_data();
+  final Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,classification,ignore_const_cols);
+  final DataInfo dinfo=new FrameTask.DataInfo(train,1,true,!classification);
+  final NNModel model=new NNModel(dest(),self(),source._key,dinfo,this);
+  unlock_data();
   model.model_info().initializeMembers();
-  final long model_size=model.model_info().size();
-  Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
-  Log.info("Memory usage of the model: " + String.format("%.2f",(double)model_size * Float.SIZE / (1 << 23)) + " MB.");
-  model.delete_and_lock(self());
+  return model;
 }
