@@ -5,15 +5,13 @@
   for (  char separator : SEPARATORS) {
     String[] dataset=getDataForSeparator(separator,data);
     Key key=FVecTest.makeByteVec("NondecimalColumns",dataset);
-    Key r=Key.make();
-    ParseDataset2.parse(r,new Key[]{key});
-    Frame fr=DKV.get(r).get();
+    Frame fr=ParseDataset2.parse(Key.make(),new Key[]{key});
     String[] cd=fr.vecs()[2]._domain;
     Assert.assertEquals(" four",cd[0]);
     Assert.assertEquals("one",cd[1]);
     Assert.assertEquals("three",cd[2]);
     Assert.assertEquals("two",cd[3]);
-    testParsed(r,expDouble,key);
+    testParsed(fr,expDouble,expDouble.length);
   }
   checkLeakedKeys();
 }
