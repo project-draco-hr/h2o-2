@@ -5,8 +5,7 @@
     String[] dataset=getDataForSeparator(separator,data);
     Key key=FVecTest.makeByteVec("MultipleNondecimalColumns",dataset);
     Key r=Key.make();
-    ParseDataset2.parse(r,new Key[]{key});
-    Frame fr=DKV.get(r).get();
+    Frame fr=ParseDataset2.parse(r,new Key[]{key});
     String[] cd=fr.vecs()[2]._domain;
     Assert.assertEquals("one",cd[0]);
     Assert.assertEquals("three",cd[1]);
@@ -15,6 +14,6 @@
     Assert.assertEquals("bar",cd[0]);
     Assert.assertEquals("foo",cd[1]);
     Assert.assertEquals("foobar",cd[2]);
-    testParsed(r,expDouble,key);
+    testParsed(fr,expDouble,expDouble.length);
   }
 }

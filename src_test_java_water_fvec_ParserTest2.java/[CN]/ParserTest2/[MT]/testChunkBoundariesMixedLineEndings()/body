@@ -4,9 +4,7 @@
   for (  char separator : SEPARATORS) {
     String[] dataset=getDataForSeparator(separator,data);
     Key k=FVecTest.makeByteVec("ChunkBoundariesMixedLineEndings",dataset);
-    Key r4=Key.make();
-    ParseDataset2.parse(r4,new Key[]{k});
-    testParsed(r4,exp,k);
+    testParsed(k,exp);
     checkLeakedKeys();
   }
 }

@@ -1,0 +1,14 @@
+{
+  try {
+    Assert.assertEquals(len,fr.numRows());
+    Assert.assertEquals(expected[0].length,fr.numCols());
+    for (int i=0; i < expected.length; ++i)     for (int j=0; j < fr.numCols(); ++j) {
+      double parsedVal=fr.vecs()[j].at(i);
+      Assert.assertTrue((Double.isNaN(parsedVal) == Double.isNaN(expected[i][j])));
+      Assert.assertTrue("Frame " + fr._key + ", row="+ i+ ", col="+ j+ ", expect="+ expected[i][j]+ ", found="+ parsedVal,Double.isNaN(expected[i][j]) || compareDoubles(expected[i][j],parsedVal,1e-5));
+    }
+  }
+  finally {
+    fr.delete();
+  }
+}
