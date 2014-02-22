@@ -1,5 +1,13 @@
 {
-  final NNModel model=UKV.get(dest());
+  logStart();
+  lock();
+  Log.info("Number of chunks of the training data: " + source.anyVec().nChunks());
+  if (validation != null)   Log.info("Number of chunks of the validation data: " + validation.anyVec().nChunks());
+  if (model == null)   model=UKV.get(dest());
+  final long model_size=model.model_info().size();
+  Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
+  Log.info("Memory usage of the model: " + String.format("%.2f",(double)model_size * Float.SIZE / (1 << 23)) + " MB.");
+  model.delete_and_lock(self());
   final Frame[] valid_adapted=validation == null ? null : model.adapt(validation,false);
   Frame train=_dinfo._adaptedFrame;
   Frame valid=validation == null ? null : valid_adapted[0];
@@ -20,10 +28,8 @@
   if (validScoreFrame != null && validScoreFrame != valid)   validScoreFrame.delete();
   if (trainScoreFrame != null && trainScoreFrame != train)   trainScoreFrame.delete();
   if (validation != null)   valid_adapted[1].delete();
-  source.unlock(self());
-  if (validation != null && !source._key.equals(validation._key))   validation.unlock(self());
-  if (_fakejob)   UKV.remove(job_key);
-  remove();
+  unlock();
+  delete();
   Log.info("Finished training the Neural Net model.");
   return model;
 }
