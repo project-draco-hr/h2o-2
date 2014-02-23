@@ -1,4 +1,5 @@
 {
+  if (source.numCols() <= 1)   throw new IllegalArgumentException("Training data must have at least 2 features (incl. response).");
   if (!classification && loss != Loss.MeanSquare) {
     Log.warn("Setting loss to MeanSquare for regression.");
     loss=Loss.MeanSquare;
