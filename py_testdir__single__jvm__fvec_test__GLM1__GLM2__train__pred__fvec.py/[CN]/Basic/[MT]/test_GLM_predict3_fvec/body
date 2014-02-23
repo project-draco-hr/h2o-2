@@ -62,52 +62,71 @@ def test_GLM_predict3_fvec(self):
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     trainKey = parseResult['destination_key']
     y = 54
+    CLASS = 1
+    max_iter = 50
+    h2o.beta_features = False
+    kwargs = {'standardize': 0, 'y': ('C' + str((y + 1))), 'family': 'binomial', 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
     if USE_EXEC:
-        CLASS = 1
         execExpr = ('A.hex=%s' % trainKey)
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
         execExpr = ('A.hex[,%s]=(A.hex[,%s]==%s)' % ((y + 1), (y + 1), CLASS))
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-    max_iter = 50
-    h2o.beta_features = False
-    kwargs = {'standardize': 0, 'y': y, 'family': 'binomial', 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
+        aHack = {'destination_key': 'A.hex', }
+    else:
+        kwargs.update({'case_mode': '=', 'case': 1, })
+        aHack = {'destination_key': 'covtype.data.hex', }
     timeoutSecs = 120
     kwargs.update({'case_mode': '=', 'case': 1, })
     kwargs.update({'alpha': 0.5, 'lambda': 1e-05, })
     kwargs.update({'alpha': 0.0, 'lambda': 0.0001, })
+    kwargs.update({'alpha': 0.0, 'lambda': 0, })
     start = time.time()
-    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+    glm = h2o_cmd.runGLM(parseResult=aHack, timeoutSecs=timeoutSecs, **kwargs)
     glm['GLMModel']['GLMParams']['family'] = 'binomial'
     print 'glm1 end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     (warnings, coefficients1, intercept1) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+    err1 = glm['GLMModel']['validations'][0]['err']
+    classErr1 = glm['GLMModel']['validations'][0]['classErr']
+    auc1 = glm['GLMModel']['validations'][0]['auc']
+    nullDev1 = glm['GLMModel']['validations'][0]['nullDev']
+    resDev1 = glm['GLMModel']['validations'][0]['resDev']
     h2o.beta_features = True
-    kwargs = {'standardize': 0, 'classification': 1, 'response': y, 'family': 'binomial', 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
+    kwargs = {'standardize': 0, 'classification': 1, 'response': ('C' + str((y + 1))), 'family': 'binomial', 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
     timeoutSecs = 120
     if USE_EXEC:
-        aHack = {'destination_key': 'A.hex', }
+        execExpr = ('B.hex=%s' % trainKey)
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = ('B.hex[,%s]=(B.hex[,%s]==%s)' % ((y + 1), (y + 1), CLASS))
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        bHack = {'destination_key': 'B.hex', }
     else:
         kwargs.update({'case_mode': '=', 'case_val': 1, })
-        aHack = {'destination_key': 'covtype.data.hex', }
+        bHack = {'destination_key': 'covtype.data.hex', }
     kwargs.update({'alpha': 0.5, 'lambda': 1e-05, })
     kwargs.update({'alpha': 0, 'lambda': 0.0001, })
+    kwargs.update({'alpha': 0.0, 'lambda': 0, })
     start = time.time()
-    glm = h2o_cmd.runGLM(parseResult=aHack, timeoutSecs=timeoutSecs, **kwargs)
+    glm = h2o_cmd.runGLM(parseResult=bHack, timeoutSecs=timeoutSecs, **kwargs)
     print 'glm2 end on ', csvPathname, 'took', (time.time() - start), 'seconds'
     (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+    modelKey = glm['glm_model']['_key']
     avg_err = glm['glm_model']['submodels'][0]['validation']['avg_err']
     auc = glm['glm_model']['submodels'][0]['validation']['auc']
     best_threshold = glm['glm_model']['submodels'][0]['validation']['best_threshold']
-    C34 = coefficients[34]
-    C34expected = coefficients1[34]
-    print 'C34 pct delta:', ('%0.2f' % ((100.0 * (abs(C34) - abs(C34expected))) / abs(C34expected)))
-    self.assertAlmostEqual(C34, C34expected, delta=(0.001 * C34expected), msg=('coefficient 34 %s is too different from %s' % (C34, C34expected)))
-    aucExpected = 0.8428
-    self.assertAlmostEqual(auc, aucExpected, delta=0.001, msg=('auc %s is too different from %s' % (auc, aucExpected)))
+    coeff0 = coefficients[0]
+    coeff0expected = coefficients1[0]
+    print 'coeff0 pct delta:', ('%0.2f' % ((100.0 * (abs(coeff0) - abs(coeff0expected))) / abs(coeff0expected)))
+    self.assertAlmostEqual(coeff0, coeff0expected, delta=(0.001 * coeff0expected), msg=('GLM2 coefficient 0 %s is too different from GLM1 %s' % (coeff0, coeff0expected)))
+    coeff34 = coefficients[34]
+    coeff34expected = coefficients1[34]
+    print 'coeff34 pct delta:', ('%0.2f' % ((100.0 * (abs(coeff34) - abs(coeff34expected))) / abs(coeff34expected)))
+    self.assertAlmostEqual(coeff34, coeff34expected, delta=(0.001 * coeff34expected), msg=('GLM2 coefficient 34 %s is too different from GLM1 %s' % (coeff34, coeff34expected)))
+    aucExpected = auc1
+    self.assertAlmostEqual(auc, aucExpected, delta=0.001, msg=('GLM2 auc %s is too different from GLM1 %s' % (auc, aucExpected)))
     interceptExpected = intercept1
     print 'intercept pct delta:', ((100.0 * (abs(intercept) - abs(interceptExpected))) / abs(interceptExpected))
-    self.assertAlmostEqual(intercept, interceptExpected, delta=0.01, msg=('intercept %s is too different from %s' % (intercept, interceptExpected)))
-    avg_errExpected = 0.2463
-    self.assertAlmostEqual(avg_err, avg_errExpected, delta=(0.01 * avg_errExpected), msg=('avg_err %s is too different from %s' % (avg_err, avg_errExpected)))
-    self.assertAlmostEqual(best_threshold, 0.35, delta=(0.01 * best_threshold), msg=('best_threshold %s is too different from %s' % (best_threshold, 0.35)))
-    modelKey = glm['glm_model']['_key']
+    self.assertAlmostEqual(intercept, interceptExpected, delta=0.01, msg=('GLM2 intercept %s is too different from GLM1 %s' % (intercept, interceptExpected)))
+    avg_errExpected = err1
+    self.assertAlmostEqual(avg_err, avg_errExpected, delta=(0.01 * avg_errExpected), msg=('GLM2 avg_err %s is too different from GLM1 %s' % (avg_err, avg_errExpected)))
+    self.assertAlmostEqual(best_threshold, 0.35, delta=(0.01 * best_threshold), msg=('GLM2 best_threshold %s is too different from GLM1 %s' % (best_threshold, 0.35)))
     predict_and_compare_csvs(model_key=modelKey)
