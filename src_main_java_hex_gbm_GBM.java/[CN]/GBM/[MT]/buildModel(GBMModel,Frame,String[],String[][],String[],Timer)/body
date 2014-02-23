@@ -4,7 +4,7 @@
   DTree[] ktrees=null;
   TreeStats tstats=new TreeStats();
   for (tid=0; tid < ntrees; tid++) {
-    model=doScoring(model,fr,ktrees,tid,tstats,false,false,false);
+    model=doScoring(model,fr,ktrees,tid,cmDomain,tstats,false,false,false);
     new ComputeProb().doAll(fr);
     new ComputeRes().doAll(fr);
     Timer kb_timer=new Timer();
@@ -13,6 +13,6 @@
     if (!Job.isRunning(self()))     break;
     tstats.updateBy(ktrees);
   }
-  model=doScoring(model,fr,ktrees,tid,tstats,true,false,false);
+  model=doScoring(model,fr,ktrees,tid,cmDomain,tstats,true,false,false);
   return model;
 }
