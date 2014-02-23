@@ -11,7 +11,7 @@
   boolean contiguous=false;
   Random skip_rng=null;
   if (_useFraction < 1.0) {
-    skip_rng=water.util.Utils.getDeterRNG(_seed++ + 0x600D5EED + offset);
+    skip_rng=water.util.Utils.getDeterRNG(new Random().nextLong());
     if (contiguous) {
       final int howmany=(int)Math.ceil(_useFraction * nrows);
       if (howmany > 0) {
@@ -26,7 +26,7 @@
   if (_shuffle) {
     shuf_map=new long[end - start];
     for (int i=0; i < shuf_map.length; ++i)     shuf_map[i]=start + i;
-    Utils.shuffleArray(shuf_map,_seed++ + 0xD0650F1E + offset);
+    Utils.shuffleArray(shuf_map,new Random().nextLong());
   }
   OUTER:   for (int rr=start; rr < end; ++rr) {
     final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
