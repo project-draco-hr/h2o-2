@@ -15,7 +15,7 @@ def test_GLM_enums_unbalanced(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         csvScoreFilename = (((('syn_enums_score_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvScorePathname = ((SYNDATASETS_DIR + '/') + csvScoreFilename)
-        enumList = create_enum_list(listSize=10)
+        enumList = create_enum_list()
         enumListForScore = random.sample(enumList, 5)
         print 'Creating random', csvPathname, 'for glm model building'
         write_syn_dataset(csvPathname, enumList, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
