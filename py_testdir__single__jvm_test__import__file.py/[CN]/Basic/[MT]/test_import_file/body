@@ -1,0 +1,21 @@
+def test_import_file(self):
+    timeoutSecs = 500
+    cAll = ['smalldata/jira/v-3.csv', 'smalldata/jira/v-3.csv', 'smalldata/jira/v-3.csv', 'smalldata/jira/v-3.csv']
+    for c in cAll:
+        for i in range(10):
+            csvPathname = h2o.find_file('smalldata/jira/v-3.csv')
+            h2o.nodes[0].remove_all_keys()
+            importResult = h2o.nodes[0].import_files(csvPathname, timeoutSecs=15)
+            h2o.verboseprint(h2o.dump_json(importResult))
+            files = importResult['files']
+            keys = importResult['keys']
+            fails = importResult['fails']
+            dels = importResult['dels']
+            if (len(files) == 0):
+                raise Exception(('empty files: %s after import' % files))
+            if (len(keys) == 0):
+                raise Exception(('empty keys: %s after import' % keys))
+            if (len(fails) != 0):
+                raise Exception(('non-empty fails: %s after import' % fails))
+            if (len(dels) != 0):
+                raise Exception(('non-empty dels: %s after import' % dels))
