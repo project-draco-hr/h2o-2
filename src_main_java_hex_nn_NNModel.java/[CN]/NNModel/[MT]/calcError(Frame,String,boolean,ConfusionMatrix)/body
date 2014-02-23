@@ -9,7 +9,7 @@
   CM.serve();
   StringBuilder sb=new StringBuilder();
   final double error=CM.toASCII(sb);
-  if (printCM && CM.cm.length < 30) {
+  if (printCM && (CM.cm == null || CM.cm.length < 20)) {
     Log.info(label);
     for (    String s : sb.toString().split("\n"))     Log.info(s);
   }

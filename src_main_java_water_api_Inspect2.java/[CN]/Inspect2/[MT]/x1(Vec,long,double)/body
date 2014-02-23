@@ -1,6 +1,13 @@
 {
   if ((row >= 0 && v.isNA(row)) || Double.isNaN(d))   return "-";
   if (v.isEnum())   return row >= 0 ? v.domain(v.at8(row)) : Long.toString((long)d);
+  if (v.isTime()) {
+    String tpat=v.timeParse();
+    DateTime dt=new DateTime(row >= 0 ? v.at8(row) : (long)d);
+    DateTimeFormatter fmt=DateTimeFormat.forPattern(tpat);
+    String str=fmt.print(dt);
+    return str;
+  }
   if (v.isInt())   return Long.toString(row >= 0 ? v.at8(row) : (long)d);
   Chunk c=v.elem2BV(0);
   Class Cc=c.getClass();
