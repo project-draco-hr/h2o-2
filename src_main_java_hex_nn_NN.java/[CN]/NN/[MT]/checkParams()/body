@@ -3,10 +3,6 @@
     Log.warn("Setting loss to MeanSquare for regression.");
     loss=Loss.MeanSquare;
   }
-  if (H2O.CLOUD.size() == 1 && sync_samples != 0) {
-    Log.warn("Setting sync_samples to 0 for single-node operation.");
-    sync_samples=0;
-  }
   if (dest() == null) {
     destination_key=Key.make();
   }

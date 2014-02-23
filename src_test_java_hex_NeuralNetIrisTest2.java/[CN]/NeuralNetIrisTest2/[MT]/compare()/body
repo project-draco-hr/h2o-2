@@ -32,6 +32,7 @@
                       NN p;
                       Random rand;
                       int trial=0;
+                      FrameTask.DataInfo dinfo;
                       do {
                         Log.info("Trial #" + ++trial);
                         if (_train != null)                         _train.delete();
@@ -59,9 +60,9 @@
                         p.ignored_cols=null;
                         p.ignore_const_cols=true;
                         fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true,p.ignore_const_cols);
-                        p._dinfo=new FrameTask.DataInfo(fr,1,true);
+                        dinfo=new FrameTask.DataInfo(fr,1,true);
                       }
- while (p._dinfo._adaptedFrame.lastVec().domain().length < 3);
+ while (dinfo._adaptedFrame.lastVec().domain().length < 3);
                       NeuralNetMLPReference2 ref=new NeuralNetMLPReference2();
                       ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio,hidden);
                       p.seed=seed;
@@ -86,7 +87,7 @@
                       p.quiet_mode=true;
                       p.fast_mode=false;
                       p.nesterov_accelerated_gradient=false;
-                      p.sync_samples=100000;
+                      p.mini_batch=0;
                       p.ignore_const_cols=false;
                       p.shuffle_training_data=false;
                       p.classification_stop=-1;
@@ -164,6 +165,7 @@
                       _test.delete();
                       frame.delete();
                       fr.delete();
+                      p.delete();
                       num_runs++;
                       Log.info("Parameters combination " + num_runs + ": PASS");
                     }

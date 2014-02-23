@@ -6,6 +6,7 @@
     naCnt+=cols[i].naCnt;
     enumCol|=cols[i].type == ColType.Enum;
   }
+  Vec svecs[]=src_key.vecs();
   DocGen.HTML.title(sb,skey.toString());
   DocGen.HTML.section(sb,"" + String.format("%,d",numCols) + " columns, "+ String.format("%,d",numRows)+ " rows, "+ PrettyPrint.bytes(byteSize)+ " bytes (compressed), "+ (naCnt == 0 ? "no" : PrettyPrint.bytes(naCnt))+ " missing elements");
   sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(skey,"Distributed Random Forest") + ", "+ GBM.link(skey,"Distributed GBM")+ ", "+ GLM2.link(skey,"Generalized Linear Modeling (beta)")+ ", "+ NN.link(skey,"Neural Net (beta)")+ ", "+ hex.LR2.link(skey,"Linear Regression")+ ",<br>"+ SummaryPage2.link(skey,"Summary")+ ", "+ DownloadDataset.link(skey,"Download as CSV")+ "</div>");
@@ -24,15 +25,15 @@
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Min").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(cols[i].type == ColType.Enum ? NA : x1(src_key.vecs()[i],-1,cols[i].min)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(cols[i].type == ColType.Enum ? NA : x1(svecs[i],-1,cols[i].min)).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Max").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(cols[i].type == ColType.Enum ? NA : x1(src_key.vecs()[i],-1,cols[i].max)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(cols[i].type == ColType.Enum ? NA : x1(svecs[i],-1,cols[i].max)).append("</td>");
   sb.append("</tr>");
   sb.append("<tr class='warning'>");
   sb.append("<td>").append("Mean").append("</td>");
-  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(cols[i].type == ColType.Enum ? NA : String.format("%5.3g",cols[i].mean)).append("</td>");
+  for (int i=0; i < cols.length; i++)   sb.append("<td>").append(cols[i].type == ColType.Enum ? NA : x1(svecs[i],-1,cols[i].mean)).append("</td>");
   sb.append("</tr>");
   if (enumCol) {
     sb.append("<tr class='warning'>");
@@ -49,7 +50,7 @@
   if (offset == -1) {
     sb.append("<tr class='warning'>");
     sb.append("<td>").append("Size").append("</td>");
-    for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(src_key.vecs()[i].byteSize())).append("</td>");
+    for (int i=0; i < cols.length; i++)     sb.append("<td>").append(PrettyPrint.bytes(svecs[i].byteSize())).append("</td>");
     sb.append("</tr>");
     Vec c0=src_key.anyVec();
     int N=c0.nChunks();
@@ -57,7 +58,7 @@
       sb.append("<tr>");
       sb.append("<td>").append(c0.chunkKey(j).home_node()).append(", ").append(c0.chunk2StartElem(j)).append("</td>");
       for (int i=0; i < cols.length; i++) {
-        String clazz=src_key.vecs()[i].elem2BV(j).getClass().getSimpleName();
+        String clazz=svecs[i].elem2BV(j).getClass().getSimpleName();
         String trim=clazz.replaceAll("Chunk","");
         sb.append("<td>").append(trim).append("</td>");
       }
@@ -69,7 +70,7 @@
     for (int j=0; j < N; j++) {
       sb.append("<tr id='row_" + String.valueOf(offset + j) + "'>");
       sb.append("<td>").append(offset + j).append("</td>");
-      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(src_key.vecs()[i],offset + j)).append("</td>");
+      for (int i=0; i < cols.length; i++)       sb.append("<td>").append(x0(svecs[i],offset + j)).append("</td>");
       sb.append("</tr>");
     }
   }
