@@ -4,13 +4,13 @@
       addInvalidCol(colIdx);
       return;
     }
-    if (_ctypes[colIdx] == UCOL && Utils.attemptTimeParse(str) > 0)     _ctypes[colIdx]=TCOL;
+    if (_ctypes[colIdx] == UCOL && ParseTime.attemptTimeParse(str) > 0)     _ctypes[colIdx]=TCOL;
     if (_ctypes[colIdx] == TCOL) {
-      long l=Utils.attemptTimeParse(str);
+      long l=ParseTime.attemptTimeParse(str);
       if (l == Long.MIN_VALUE)       addInvalidCol(colIdx);
  else {
-        int time_pat=Utils.decodePat(l);
-        l=Utils.decodeTime(l);
+        int time_pat=ParseTime.decodePat(l);
+        l=ParseTime.decodeTime(l);
         addNumCol(colIdx,l,0);
         _nvs[_col]._timCnt[time_pat]++;
       }
