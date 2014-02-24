@@ -1,4 +1,6 @@
 def infoFromInspect(inspect, csvPathname):
+    if (not inspect):
+        raise Exception('inspect is empty for infoFromInspect')
     cols = inspect['cols']
     if h2o.beta_features:
         keyNA = 'naCnt'
