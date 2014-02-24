@@ -7,6 +7,7 @@ def test_GBM_cancel_model_reuse(self):
     csvFilenameList = csvFilenameAll
     for (importFolderPath, csvFilename, response) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
+        print "FIX! is this guy getting cancelled because he's reusing a key name? but it should be okay?"
         (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=50)
         parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=False, doSummary=False)
         h2o.check_sandbox_for_errors()
@@ -30,7 +31,7 @@ def test_GBM_cancel_model_reuse(self):
             jobids = []
             for j in range(5):
                 kwargs['destination_key'] = ('GBMBad' + str(j))
-                GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
+                GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, ignoreH2oError=True, **kwargs)
                 jobids.append(GBMFirstResult['job_key'])
                 h2o.check_sandbox_for_errors()
             h2o_jobs.cancelAllJobs()
