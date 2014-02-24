@@ -75,9 +75,8 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     trainKey = parseResult['destination_key']
     CLASS = 1
     ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
-    max_iter = 50
     h2o.beta_features = False
-    kwargs = {'standardize': 0, 'y': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
+    kwargs = {'lsm_solver': LSM_SOLVER, 'standardize': STANDARDIZE, 'y': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 1, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
     if USE_EXEC:
         execExpr = ('A.hex=%s' % trainKey)
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
@@ -105,7 +104,7 @@ def test_GLM1_GLM2_train_pred_fvec(self):
         classErr1 = glm['GLMModel']['validations'][0]['classErr']
         auc1 = glm['GLMModel']['validations'][0]['auc']
     h2o.beta_features = True
-    kwargs = {'standardize': 0, 'classification': (1 if (FAMILY == 'binomial') else 0), 'response': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 1, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
+    kwargs = {'standardize': STANDARDIZE, 'classification': (1 if (FAMILY == 'binomial') else 0), 'response': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 1, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
     timeoutSecs = 120
     if USE_EXEC:
         execExpr = ('B.hex=%s' % trainKey)
@@ -131,6 +130,8 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     nullDev = glm['glm_model']['submodels'][0]['validation']['null_deviance']
     if (FAMILY == 'binomial'):
         auc = glm['glm_model']['submodels'][0]['validation']['auc']
+    self.assertLess(iterations1, (MAX_ITER - 1), msg=("GLM1: Too many iterations, didn't converge %s" % iterations1))
+    self.assertLess(iteration, (MAX_ITER - 1), msg=("GLM2: Too many iterations, didn't converge %s" % iteration))
     nullDevExpected = nullDev1
     self.assertAlmostEqual(nullDev, nullDevExpected, delta=2, msg=('GLM2 nullDev %s is too different from GLM1 %s' % (nullDev, nullDevExpected)))
     iterationExpected = iterations1
