@@ -1,0 +1,13 @@
+{
+  int ridx=fr.find(_names[_names.length - 1]);
+  if (ridx != -1) {
+    fr=new Frame(fr);
+    fr.remove(ridx);
+  }
+  Frame[] adaptFrms=adapt ? adapt(fr,false) : null;
+  Frame adaptFrm=adapt ? adaptFrms[0] : fr;
+  Frame onlyAdaptFrm=adapt ? adaptFrms[1] : null;
+  Frame output=scoreImpl(adaptFrm);
+  if (adapt)   onlyAdaptFrm.delete();
+  return output;
+}
