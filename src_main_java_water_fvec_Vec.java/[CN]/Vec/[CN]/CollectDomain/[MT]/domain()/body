@@ -1,8 +1,5 @@
 {
-  long[] dom=new long[_uniques.size()];
-  NonBlockingHashMapLong.IteratorLong i=(NonBlockingHashMapLong.IteratorLong)_uniques.keySet().iterator();
-  int j=0;
-  while (i.hasNext())   dom[j++]=i.nextLong();
+  long[] dom=_uniques.keySetLong();
   Arrays.sort(dom);
   return dom;
 }
