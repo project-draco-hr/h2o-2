@@ -1,8 +1,8 @@
 {
-  int cnt=0;
-  for (int i=0; i < _dom.length; i++)   if (_dom[i] > 0)   cnt++;
-  int[] dom=new int[cnt];
-  cnt=0;
-  for (int i=0; i < _dom.length; i++)   if (_dom[i] > 0)   dom[cnt++]=i + _ymin;
+  long[] dom=new long[_uniques.size()];
+  NonBlockingHashMapLong.IteratorLong i=(NonBlockingHashMapLong.IteratorLong)_uniques.keySet().iterator();
+  int j=0;
+  while (i.hasNext())   dom[j++]=i.nextLong();
+  Arrays.sort(dom);
   return dom;
 }
