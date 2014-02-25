@@ -1,24 +1,34 @@
-def checkScalarResult(resultInspect, resultKey):
-    h2o.verboseprint('checkScalarResult resultInspect:', h2o.dump_json(resultInspect))
-    resultInspect0 = resultInspect[0]
-    if ('num_rows' not in resultInspect0):
-        emsg = "Inspect response: 'num_rows' missing. Look at the json just printed"
-    elif ('cols' not in resultInspect0):
-        emsg = "Inspect response: 'cols' missing. Look at the json just printed"
+def checkScalarResult(resultExec, resultKey, allowEmptyResult=False):
+    h2o.verboseprint('checkScalarResult resultExec:', h2o.dump_json(resultExec))
+    if ('funstr' not in resultExec):
+        emsg = "checkScalarResult: 'funstr' missing"
+    if ('result' not in resultExec):
+        emsg = "checkScalarResult: 'result' missing"
+    if ('scalar' not in resultExec):
+        emsg = "checkScalarResult: 'scalar' missing"
+    if ('num_cols' not in resultExec):
+        emsg = "checkScalarResult: 'num_cols' missing"
+    if ('num_rows' not in resultExec):
+        emsg = "checkScalarResult: 'num_rows' missing"
+    elif ('cols' not in resultExec):
+        emsg = "checkScalarResult: 'cols' missing"
     else:
         emsg = None
-        num_cols = resultInspect0['num_cols']
-        num_rows = resultInspect0['num_rows']
-        cols = resultInspect0['cols']
+        num_cols = resultExec['num_cols']
+        num_rows = resultExec['num_rows']
+        cols = resultExec['cols']
     if emsg:
-        print (("\nKey: '" + str(resultKey)) + "' inspect result:\n"), h2o.dump_json(resultInspect)
+        print (("\nKey: '" + str(resultKey)) + "' resultExec:\n"), h2o.dump_json(resultExec)
         sys.stdout.flush()
-        raise Exception(('Inspect problem:' + emsg))
+        raise Exception(('exec result (resultExec) missing what we expected. Look at json above. ' + emsg))
+    if ((cols and ((not num_rows) or (num_rows == 0))) and (not allowEmptyResult)):
+        print 'resultExec[0]:', h2o.dump_json(resultExec)
+        raise Exception(('checkScalarResult says cols, but num_rows is 0 or None %s' % num_rows))
     if (not cols):
-        scalar = resultInspect0['scalar']
+        scalar = resultExec['scalar']
         if (scalar is None):
             raise Exception(('both cols and scalar are null: %s %s' % (cols, scalar)))
-        checkForBadFP(scalar, json=resultInspect0)
+        checkForBadFP(scalar, json=resultExec)
         return scalar
     metaDict = cols[0]
     for (key, value) in metaDict.items():
