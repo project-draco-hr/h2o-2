@@ -20,7 +20,7 @@ def test_parse_time(self):
         summaryResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=100, numCols=numColsA, numRows=numRowsA, noPrint=True)
         print summaryResult
         h2o_cmd.infoFromSummary(summaryResult)
-        (missingValuesDictA, constantValuesDictA, enumSizeDictA, colTypeDictA, colNameDictA) = h2o_cmd.columnInfoFromInspect(hex_key)
+        (missingValuesDictA, constantValuesDictA, enumSizeDictA, colTypeDictA, colNameDictA) = h2o_cmd.columnInfoFromInspect(hex_key, exceptionOnMissingValues=False)
         if (constantValuesDictA or enumSizeDictA):
             raise Exception(('Should be empty?  constantValuesDictA %s enumSizeDictA %s' % (constantValuesDictA, enumSizeDictA)))
         print 'missingValuesListA', missingValuesListA
@@ -37,7 +37,7 @@ def test_parse_time(self):
         numColsB = inspect['numCols']
         print 'missingValuesListB', missingValuesListB
         summaryResult = h2o_cmd.runSummary(key=hex_key, timeoutSecs=100, numCols=numColsB, numRows=numRowsB, noPrint=True)
-        (missingValuesDictB, constantValuesDictB, enumSizeDictB, colTypeDictB, colNameDictB) = h2o_cmd.columnInfoFromInspect(hex_key)
+        (missingValuesDictB, constantValuesDictB, enumSizeDictB, colTypeDictB, colNameDictB) = h2o_cmd.columnInfoFromInspect(hex_key, exceptionOnMissingValues=False)
         if (constantValuesDictB or enumSizeDictB):
             raise Exception(('Should be empty?  constantValuesDictB %s enumSizeDictB %s' % (constantValuesDictB, enumSizeDictB)))
         self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')

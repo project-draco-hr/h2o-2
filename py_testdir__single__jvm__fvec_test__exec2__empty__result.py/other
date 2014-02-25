@@ -1,0 +1,15 @@
+import unittest, random, sys, time
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_browse as h2b, h2o_exec as h2e, h2o_hosts, h2o_import as h2i
+initList = [('r', 'r=i.hex')]
+exprListFull = ['r[r[,1]>2,1]', 'r[r[,1]>10,1]', 'a=c(1,2,3); a[a[,1]>2,1]', 'a=c(1,2,3); a[a[,1]>10,1]']
+if (1 == 0):
+    exprList = []
+    for i in range(10):
+        expr = ''
+        for j in range(1):
+            expr += (('z.hex=' + random.choice(exprListFull)) + ';')
+        exprList.append(expr)
+exprList = exprListFull
+if (__name__ == '__main__'):
+    h2o.unit_main()
