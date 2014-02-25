@@ -1,5 +1,6 @@
 {
   if (model != null) {
+    model.parameters.makeJsonBox(sb);
     DocGen.HTML.section(sb,"Cluster Centers: ");
     table(sb,"Clusters",model._names,model.centers);
     double[][] rows=new double[model.within_cluster_variances.length][1];
