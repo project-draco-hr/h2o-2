@@ -1,0 +1,11 @@
+{
+  if (training) {
+    seed+=params.seed + 0x51C8D00D;
+    dropout.fillBytes(seed);
+    super.fprop(seed,true);
+  }
+ else {
+    super.fprop(seed,false);
+    Utils.div(_a,2.f);
+  }
+}

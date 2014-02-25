@@ -6,7 +6,7 @@ def test_exec2_covtype_cols(self):
     start = time.time()
     suffix = '.hex'
     for i in range(54):
-        execExpr = ((((('Result' + str(i)) + suffix) + ' = c.hex[,') + str((i + 1))) + ']')
+        execExpr = ((((('Result' + str(i)) + suffix) + ' = c.hex[,c(') + str((i + 1))) + ')]')
         print 'execExpr:', execExpr
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=(('Result' + str(i)) + suffix), timeoutSecs=4)
     h2o.check_sandbox_for_errors()

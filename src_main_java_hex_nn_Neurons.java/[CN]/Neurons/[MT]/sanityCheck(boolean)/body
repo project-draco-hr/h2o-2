@@ -1,0 +1,19 @@
+{
+  if (this instanceof Input) {
+    assert(_previous == null);
+    assert(!training || _dropout != null);
+  }
+ else {
+    assert(_previous != null);
+    if (params.momentum_stable != params.momentum_start) {
+      assert(_minfo.has_momenta());
+      assert(_minfo.has_momenta());
+      assert(params.momentum_ramp > 0);
+      assert(_wm != null);
+      assert(_bm != null);
+    }
+    if (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout) {
+      assert(!training || _dropout != null);
+    }
+  }
+}

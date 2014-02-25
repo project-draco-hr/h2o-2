@@ -1,0 +1,10 @@
+{
+  checkParams();
+  lock_data();
+  final Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,classification,ignore_const_cols);
+  final DataInfo dinfo=new FrameTask.DataInfo(train,1,true,!classification);
+  final NNModel model=new NNModel(dest(),self(),source._key,dinfo,this);
+  unlock_data();
+  model.model_info().initializeMembers();
+  return model;
+}

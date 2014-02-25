@@ -8,7 +8,7 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=30, pollTimeo
         jobs = a['jobs']
         busy = 0
         for j in jobs:
-            cancelled = j['cancelled']
+            cancelled = (j['cancelled'] or (j['result'].get('val', None) == 'CANCELLED'))
             description = j['description']
             destination_key = j['destination_key']
             end_time = j['end_time']
@@ -29,7 +29,7 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=30, pollTimeo
                 h2o.check_sandbox_for_errors()
                 print ("ERROR: not stopping, but: pollWaitJobs found a cancelled job when it shouldn't have:\n %s" % h2o.dump_json(j))
                 print 'Continuing so maybe a json response will give more info'
-            if (end_time == ''):
+            elif ((end_time == '') and (not cancelled)):
                 if (not pattern):
                     print 'time:', time.strftime('%I:%M:%S'), 'progress:', progress, destination_key
                     h2o.verboseprint('description:', description, 'end_time:', end_time)

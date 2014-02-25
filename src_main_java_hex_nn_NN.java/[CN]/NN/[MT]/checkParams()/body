@@ -1,0 +1,19 @@
+{
+  if (source.numCols() <= 1)   throw new IllegalArgumentException("Training data must have at least 2 features (incl. response).");
+  if (!classification && loss != Loss.MeanSquare) {
+    Log.warn("Setting loss to MeanSquare for regression.");
+    loss=Loss.MeanSquare;
+  }
+  if (dest() == null) {
+    destination_key=Key.make();
+  }
+  if (self() == null) {
+    job_key=Key.make();
+  }
+  if (UKV.get(self()) == null) {
+    start_time=System.currentTimeMillis();
+    state=JobState.RUNNING;
+    UKV.put(self(),this);
+    _fakejob=true;
+  }
+}

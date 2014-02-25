@@ -8,8 +8,9 @@
   double mu=glm.linkInv(eta);
   preds[0]=(float)mu;
   if (glm.family == Family.binomial) {
-    if (preds.length > 1)     preds[1]=preds[0];
-    preds[0]=preds[0] >= threshold ? 1 : 0;
+    preds[0]=(mu >= threshold ? 1 : 0);
+    preds[1]=1.0f - (float)mu;
+    preds[2]=(float)mu;
   }
   return preds;
 }

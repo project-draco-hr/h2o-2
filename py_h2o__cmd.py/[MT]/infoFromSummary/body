@@ -1,4 +1,6 @@
 def infoFromSummary(summaryResult, noPrint=False, numCols=None, numRows=None):
+    if (not summaryResult):
+        raise Exception('summaryResult is empty for infoFromSummary')
     if h2o.beta_features:
         summaries = summaryResult['summaries']
         if ((1 == 0) and numCols and (len(summaries) != numCols)):

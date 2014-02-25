@@ -2,8 +2,11 @@
   H2O.main(args);
   TestUtil.stall_till_cloudsize(NODES);
   List<Class> tests=new ArrayList<Class>();
-  tests.add(hex.NeuralNetSpiralsTest.class);
-  tests.add(hex.NeuralNetIrisTest.class);
+  tests.add(NeuralNetSpiralsTest.class);
+  tests.add(NeuralNetIrisTest.class);
+  tests.add(NeuralNetSpiralsTest2.class);
+  tests.add(NeuralNetIrisTest2.class);
+  tests.add(Dropout.class);
   JUnitCore junit=new JUnitCore();
   junit.addListener(new LogListener());
   Result result=junit.run(tests.toArray(new Class[0]));

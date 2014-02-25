@@ -1,32 +1,5 @@
 {
   end_time=System.currentTimeMillis();
-  DKV.remove(job_key);
-  new TAtomic<List>(){
-    @Override public List atomic(    List old){
-      if (old == null)       return null;
-      Job[] jobs=old._jobs;
-      for (int i=0; i < jobs.length; i++) {
-        if (jobs[i].job_key.equals(job_key)) {
-          if (jobs[i].end_time != CANCELLED_END_TIME)           jobs[i].end_time=System.currentTimeMillis();
-          break;
-        }
-      }
-      int count=jobs.length;
-      while (count > KEEP_LAST_COUNT) {
-        long min=Long.MAX_VALUE;
-        int n=-1;
-        for (int i=0; i < jobs.length; i++) {
-          if (jobs[i].end_time != 0 && jobs[i].start_time < min) {
-            min=jobs[i].start_time;
-            n=i;
-          }
-        }
-        if (n < 0)         break;
-        jobs[n]=jobs[--count];
-      }
-      if (count < jobs.length)       old._jobs=Arrays.copyOf(jobs,count);
-      return old;
-    }
-  }
-.fork(LIST);
+  state=state == JobState.RUNNING ? JobState.DONE : state;
+  replaceByJobHandle();
 }

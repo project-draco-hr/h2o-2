@@ -12,7 +12,7 @@
     algo.max_iter=100;
     algo.seed=SEED;
     algo.invoke();
-    KMeans2Model res=UKV.get(algo.destination_key);
+    KMeans2Model res=UKV.get(algo.dest());
     double[][] clusters=res.centers;
     Assert.assertEquals(1.125,clusters[0][0],0.000001);
     Assert.assertEquals(4.65,clusters[1][0],0.000001);

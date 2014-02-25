@@ -8,7 +8,6 @@ def test_from_import_fvec(self):
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'], verbose=True)
         h2o_cmd.infoFromInspect(inspect, parseResult['destination_key'])
         summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'])
-        h2o_cmd.infoFromSummary(summaryResult)
         trees = 2
         start = time.time()
         rfView = h2o_cmd.runRF(trees=trees, max_depth=20, parseResult=parseResult, timeoutSecs=timeoutSecs)

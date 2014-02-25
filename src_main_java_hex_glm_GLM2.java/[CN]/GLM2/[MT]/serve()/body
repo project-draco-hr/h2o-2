@@ -2,27 +2,14 @@
   init();
   link=family.defaultLink;
   tweedie_link_power=1 - tweedie_variance_power;
-  Frame fr=new Frame(source._names.clone(),source.vecs().clone());
-  fr.remove(ignored_cols);
-  final Vec[] vecs=fr.vecs();
-  ArrayList<Integer> constantOrNAs=new ArrayList<Integer>();
-  for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i] == response) {
-    fr.add(fr._names[i],fr.remove(i));
-    break;
-  }
-  for (int i=0; i < vecs.length - 1; ++i)   if (vecs[i].min() == vecs[i].max() || vecs[i].naCnt() > vecs[i].length() * 0.2)   constantOrNAs.add(i);
-  if (!constantOrNAs.isEmpty()) {
-    int[] cols=new int[constantOrNAs.size()];
-    for (int i=0; i < cols.length; ++i)     cols[i]=constantOrNAs.get(i);
-    fr.remove(cols);
-  }
+  Frame fr=DataInfo.prepareFrame(source,response,ignored_cols,family == Family.binomial,true);
   _dinfo=new DataInfo(fr,1,standardize);
   _glm=new GLMParams(family,tweedie_variance_power,link,tweedie_link_power);
   if (alpha.length > 1) {
     if (destination_key == null)     destination_key=Key.make("GLMGridModel_" + Key.make());
     if (job_key == null)     job_key=Key.make("GLMGridJob_" + Key.make());
     Job j=gridSearch(self(),destination_key,_dinfo,_glm,lambda,alpha,n_folds);
-    return GLMGridView.redirect(this,j.destination_key);
+    return GLMGridView.redirect(this,j.dest());
   }
  else {
     if (destination_key == null)     destination_key=Key.make("GLMModel_" + Key.make());

@@ -15,7 +15,7 @@ def test_NN_mnist_multi(self):
         identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
         model_key = (('nn_' + identifier) + '.hex')
         kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'mode': mode, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '117,131,129', 'rate': 0.005, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 100000, 'momentum_stable': 0.9, 'l1': 1e-05, 'l2': 1e-07, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'warmup_samples': 0, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 20.0, 'destination_key': model_key, 'validation': validation_key, }
-        expectedErr = 0.0331
+        expectedErr = 0.03
         timeoutSecs = 600
         start = time.time()
         nn = h2o_cmd.runNNet(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
