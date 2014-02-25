@@ -3,9 +3,9 @@
   ValueArray.Column dataCol=va._cols[_classCol.value()];
   if (_modelKey != null) {
     ValueArray.Column modelCol=_modelKey.value().response();
-    return vaCategoryNames(modelCol,dataCol,maxClasses);
+    return vaCategoryNames(this,modelCol,dataCol,maxClasses);
   }
  else {
-    return vaCategoryNames(dataCol,maxClasses);
+    return vaCategoryNames(this,dataCol,maxClasses);
   }
 }

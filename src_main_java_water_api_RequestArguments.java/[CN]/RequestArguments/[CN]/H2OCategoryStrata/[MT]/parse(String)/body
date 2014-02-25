@@ -23,7 +23,7 @@
     }
     start=end;
     while (start < bsource.length && bsource[start] == ' ')     ++start;
-    if (bsource[start] != JS_SEP)     throw new IllegalArgumentException("Expected = after the class name.");
+    if (bsource[start] != JS_SEP)     throw new H2OIllegalArgumentException(this,"Expected = after the class name.");
     ++start;
     end=input.indexOf(',',start);
     try {
@@ -37,9 +37,9 @@
       }
     }
  catch (    NumberFormatException e) {
-      throw new IllegalArgumentException("Invalid integer format for strata value");
+      throw new H2OIllegalArgumentException(this,"Invalid integer format for strata value");
     }
-    if (!classNames.containsKey(className))     throw new IllegalArgumentException("Category " + className + " not found!");
+    if (!classNames.containsKey(className))     throw new H2OIllegalArgumentException(this,"Category " + className + " not found!");
     result[classNames.get(className)]=classWeight;
   }
   return result;
