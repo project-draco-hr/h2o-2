@@ -1,5 +1,6 @@
 {
   state=msg == null ? JobState.CANCELLED : JobState.CRASHED;
+  exception=msg;
   replaceByJobHandle();
   DKV.write_barrier();
   final Job job=this;

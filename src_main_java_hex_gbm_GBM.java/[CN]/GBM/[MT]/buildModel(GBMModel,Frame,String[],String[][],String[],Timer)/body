@@ -1,0 +1,18 @@
+{
+  new ExcludeNAResponse().doAll(fr);
+  int tid;
+  DTree[] ktrees=null;
+  TreeStats tstats=new TreeStats();
+  for (tid=0; tid < ntrees; tid++) {
+    model=doScoring(model,fr,ktrees,tid,cmDomain,tstats,false,false,false);
+    new ComputeProb().doAll(fr);
+    new ComputeRes().doAll(fr);
+    Timer kb_timer=new Timer();
+    ktrees=buildNextKTrees(fr);
+    Log.info(Sys.GBM__,(tid + 1) + ". tree was built in " + kb_timer.toString());
+    if (!Job.isRunning(self()))     break;
+    tstats.updateBy(ktrees);
+  }
+  model=doScoring(model,fr,ktrees,tid,cmDomain,tstats,true,false,false);
+  return model;
+}

@@ -5,9 +5,9 @@
  else   if (input.equals("0"))   b=false;
  else   if (input.equals("true"))   b=true;
  else   if (input.equals("false"))   b=false;
- else   throw new IllegalArgumentException(input + " is not valid boolean value. Only 1 and 0 are allowed.");
+ else   throw new H2OIllegalArgumentException(this,input + " is not valid boolean value. Only 1 and 0 are allowed.");
   Vec vec=_fcv.value();
-  if (!vec.isInt() && b)   throw new IllegalArgumentException("Float response allows only regression!");
-  if (vec.isEnum() && !b)   throw new IllegalArgumentException("Categorical response allows only classification!");
+  if (!vec.isInt() && b)   throw new H2OIllegalArgumentException(this,"Float response allows only regression!");
+  if (vec.isEnum() && !b)   throw new H2OIllegalArgumentException(this,"Categorical response allows only classification!");
   return b;
 }

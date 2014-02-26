@@ -11,15 +11,15 @@ def exec_expr_list_across_cols(lenNodes, exprList, keyX, minCol=0, maxCol=54, ti
                 resultKey = ('Result' + str(colX))
             else:
                 resultKey = keyX
-            execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs)
+            (resultExec, result) = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs)
             print '\nexecResult:', h2o.dump_json(execResultInspect)
-            execResultKey = execResultInspect[0]['key']
+            execResultKey = resultExec[0]['key']
             if execResultKey:
                 resultInspect = h2o_cmd.runInspect(None, execResultKey)
             else:
                 resultInspect = h2o_cmd.runInspect(None, keyX)
             if incrementingResult:
-                min_value = checkScalarResult(execResultInspect, resultKey)
+                min_value = checkScalarResult(resultExec, resultKey)
                 h2o.verboseprint('min_value: ', min_value, 'col:', colX)
                 print 'min_value: ', min_value, 'col:', colX
             else:
