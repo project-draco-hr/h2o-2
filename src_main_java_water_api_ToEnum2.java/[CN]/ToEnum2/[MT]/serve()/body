@@ -1,0 +1,11 @@
+{
+  try {
+    Log.info("Factorizing column " + column_index);
+    Vec nv=src_key.vecs()[column_index - 1].toEnum();
+    src_key.replace(column_index - 1,nv);
+  }
+ catch (  Throwable e) {
+    return Response.error(e);
+  }
+  return Inspect2.redirect(this,src_key._key.toString());
+}
