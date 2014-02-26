@@ -1,15 +1,15 @@
 {
   int cores=0;
   for (  H2ONode node : H2O.CLOUD._memary)   cores+=node._heartbeat._num_cpus;
-  final int splits=4 * cores;
-  long[] idx=null;
-  if (shuffle) {
-    idx=new long[(int)fr.numRows()];
-    for (int r=0; r < idx.length; ++r)     idx[r]=r;
-    Utils.shuffleArray(idx,seed);
-  }
+  final int splits=cores;
   Vec[] vecs=fr.vecs();
   if (vecs[0].nChunks() < splits || shuffle) {
+    long[] idx=null;
+    if (shuffle) {
+      idx=new long[(int)fr.numRows()];
+      for (int r=0; r < idx.length; ++r)       idx[r]=r;
+      Utils.shuffleArray(idx,seed);
+    }
     Key keys[]=new Vec.VectorGroup().addVecs(vecs.length);
     for (int v=0; v < vecs.length; v++) {
       AppendableVec vec=new AppendableVec(keys[v]);

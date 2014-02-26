@@ -33,6 +33,10 @@
       if (err.classification)       err.valid_err=validErr;
  else       err.valid_mse=validErr;
     }
+    if (err.train_confusion_matrix.cm != null && err.train_confusion_matrix.cm.length >= model_info().get_params().max_confusion_matrix_size) {
+      err.train_confusion_matrix=null;
+      err.valid_confusion_matrix=null;
+    }
     if (errors == null) {
       errors=new Errors[]{err};
     }

@@ -109,7 +109,7 @@
                         ref._nn.oBiases[o]=l._b[o];
                       }
                       ref.train((int)p.epochs,rate,p.momentum_stable,loss);
-                      mymodel=p.buildModel(mymodel);
+                      mymodel=p.trainModel(mymodel);
                       final double abseps=1e-13;
                       final double releps=1e-13;
                       neurons=NNTask.makeNeuronsForTesting(mymodel.model_info());
