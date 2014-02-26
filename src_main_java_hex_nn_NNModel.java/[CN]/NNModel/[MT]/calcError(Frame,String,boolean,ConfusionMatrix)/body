@@ -1,5 +1,5 @@
 {
-  Frame fpreds=score(ftest,false);
+  final Frame fpreds=score(ftest,false);
   if (CM == null)   CM=new ConfusionMatrix();
   CM.actual=ftest;
   CM.vactual=ftest.lastVec();
@@ -12,6 +12,13 @@
     Log.info(label);
     for (    String s : sb.toString().split("\n"))     Log.info(s);
   }
-  fpreds.delete();
+  Thread thread=new Thread(){
+    @Override public void run(){
+      fpreds.delete();
+    }
+  }
+;
+  thread.setDaemon(true);
+  thread.start();
   return error;
 }
