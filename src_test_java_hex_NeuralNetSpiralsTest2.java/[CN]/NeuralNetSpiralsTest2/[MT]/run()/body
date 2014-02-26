@@ -7,7 +7,7 @@
     p.seed=new Random().nextLong();
     p.rate=0.007;
     p.rate_annealing=0;
-    p.epochs=20000;
+    p.epochs=30000;
     p.hidden=new int[]{100};
     p.activation=NN.Activation.Tanh;
     p.max_w2=Double.MAX_VALUE;
@@ -34,8 +34,8 @@
     p.expert_mode=true;
     p.score_training_samples=1000;
     p.score_validation_samples=10000;
-    p.shuffle_training_data=true;
-    p.force_load_balance=true;
+    p.shuffle_training_data=false;
+    p.force_load_balance=false;
     p.destination_key=dest;
     p.exec();
   }
