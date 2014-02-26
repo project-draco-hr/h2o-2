@@ -4,7 +4,7 @@
   if ((ncol=fr.vecs().length) > 2)   throw new IllegalArgumentException("table does not apply to more than two cols.");
   for (int i=0; i < ncol; i++)   if (!fr.vecs()[i].isInt())   throw new IllegalArgumentException("table only applies to integer vectors.");
   String[][] domains=new String[ncol][];
-  int[][] levels=new int[ncol][];
+  long[][] levels=new long[ncol][];
   for (int i=0; i < ncol; i++) {
     Vec v=fr.vecs()[i];
     levels[i]=new Vec.CollectDomain(v).doAll(new Frame(v)).domain();
@@ -30,7 +30,7 @@
     c.close(0,null);
     vecs[level1 + 1]=v.close(null);
     if (ncol > 1) {
-      colnames[level1 + 1]=domains[1] == null ? Integer.toString(levels[1][level1]) : domains[1][levels[1][level1]];
+      colnames[level1 + 1]=domains[1] == null ? Long.toString(levels[1][level1]) : domains[1][(int)(levels[1][level1])];
     }
   }
   env.pop(2);

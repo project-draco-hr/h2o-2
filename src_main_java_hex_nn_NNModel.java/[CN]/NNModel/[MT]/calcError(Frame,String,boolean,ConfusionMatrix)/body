@@ -1,6 +1,5 @@
 {
-  Frame fpreds;
-  fpreds=score(ftest);
+  final Frame fpreds=score(ftest,false);
   if (CM == null)   CM=new ConfusionMatrix();
   CM.actual=ftest;
   CM.vactual=ftest.lastVec();
@@ -9,10 +8,17 @@
   CM.serve();
   StringBuilder sb=new StringBuilder();
   final double error=CM.toASCII(sb);
-  if (printCM && (CM.cm == null || CM.cm.length < 20)) {
+  if (printCM && (CM.cm == null || CM.cm.length <= model_info().get_params().max_confusion_matrix_size)) {
     Log.info(label);
     for (    String s : sb.toString().split("\n"))     Log.info(s);
   }
-  fpreds.delete();
+  Thread thread=new Thread(){
+    @Override public void run(){
+      fpreds.delete();
+    }
+  }
+;
+  thread.setDaemon(true);
+  thread.start();
   return error;
 }
