@@ -17,6 +17,9 @@
   if (arg._name.equals("regression_stop") && classification) {
     arg.disable("Only for regression.",inputArgs);
   }
+  if (arg._name.equals("max_confusion_matrix_size") && !classification) {
+    arg.disable("Only for classification.",inputArgs);
+  }
   if (arg._name.equals("score_validation_samples") && validation == null) {
     arg.disable("Only if a validation set is specified.",inputArgs);
   }
