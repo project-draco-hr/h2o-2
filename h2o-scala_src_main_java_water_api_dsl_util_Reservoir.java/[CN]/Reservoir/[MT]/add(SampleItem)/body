@@ -1,0 +1,14 @@
+{
+  if (item != null) {
+    if (minHeap.size() < reservoirSize) {
+      minHeap.add(item);
+    }
+ else {
+      SampleItem head=minHeap.peek();
+      if (item.getRandomOrder() > head.getRandomOrder()) {
+        minHeap.poll();
+        minHeap.add(item);
+      }
+    }
+  }
+}
