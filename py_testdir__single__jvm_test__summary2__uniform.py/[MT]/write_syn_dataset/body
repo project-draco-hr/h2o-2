@@ -1,7 +1,7 @@
 def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEED):
     r1 = random.Random(SEED)
     dsf = open(csvPathname, 'w+')
-    expectedRange = ((expectedMax - expectedMin) + 1)
+    expectedRange = (expectedMax - expectedMin)
     for i in range(rowCount):
         rowData = []
         ri = (expectedMin + (random.uniform(0, 1) * expectedRange))
