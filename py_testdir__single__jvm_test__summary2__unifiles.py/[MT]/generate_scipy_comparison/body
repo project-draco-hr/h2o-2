@@ -1,22 +1,24 @@
-def generate_scipy_comparison(csvPathname):
-    from numpy import loadtxt, genfromtxt, savetxt
-    dataset = loadtxt(open(csvPathname, 'r'), delimiter=',')
+def generate_scipy_comparison(csvPathname, dtype):
+    import numpy as np
+    import scipy as sp
+    dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=1, dtype=None)
     print 'csv read for training, done'
     NUMCLASSES = 10
     print 'csv read for training, done'
     print dataset.shape
-    if (1 == 1):
+    target = [x[1] for x in dataset]
+    targetFP = np.array(target, np.float)
+    if (1 == 0):
         n_features = (len(dataset[0]) - 1)
         print 'n_features:', n_features
-        target = [x[1] for x in dataset]
         print 'histogram of target'
-        from scipy import histogram
-        print histogram(target, bins=NUMCLASSES)
+        print target
+        print sp.histogram(target, bins=NUMCLASSES)
         print target[0]
         print target[1]
-    from scipy import stats
     thresholds = [0.01, 0.05, 0.1, 0.25, 0.33, 0.5, 0.66, 0.75, 0.9, 0.95, 0.99]
-    per = [(100 * t) for t in thresholds]
-    print 'scipy per:', per
-    a = stats.scoreatpercentile(dataset, per=per)
-    print 'scipy percentiles:', a
+    per = [(1 * t) for t in thresholds]
+    print 'sp per:', per
+    from scipy import stats
+    a = stats.mstats.mquantiles(targetFP, prob=per)
+    print 'sp percentiles:', a
