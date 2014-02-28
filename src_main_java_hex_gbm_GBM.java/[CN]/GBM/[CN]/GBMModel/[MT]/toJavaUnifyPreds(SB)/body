@@ -7,6 +7,6 @@
     }
     bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) maxval = Math.max(maxval, preds[i]);").nl();
     bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) dsum += (preds[i]=(float) Math.exp(preds[i] - maxval));").nl();
-    bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) preds[i] /= dsum;").nl();
+    bodyCtxSB.i().p("for(int i=1; i<preds.length; i++) preds[i] = preds[i] / dsum;").nl();
   }
 }
