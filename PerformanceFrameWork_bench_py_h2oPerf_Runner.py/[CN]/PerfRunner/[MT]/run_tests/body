@@ -29,3 +29,4 @@ def run_tests(self):
         test.test_run.row['test_name'] = test.test_name
         test.test_run.update(True)
         PerfUtils.stop_cloud(self, test.remote_hosts)
+        self.perfdb.this_test_run_id += 1
