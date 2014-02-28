@@ -1,0 +1,14 @@
+{
+  Frame todelete=new Frame();
+  try {
+    Frame ff=new Frame(f);
+    Vec fr=ff.remove(ff.numCols() - 1);
+    Vec efr=fr.toEnum();
+    ff.add("__response__",efr);
+    todelete.add("__response__",efr);
+    return new TreeVotes(tmodel,rate,variable).doAll(ff);
+  }
+  finally {
+    todelete.delete();
+  }
+}

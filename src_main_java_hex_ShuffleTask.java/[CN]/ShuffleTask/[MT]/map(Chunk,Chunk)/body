@@ -1,6 +1,6 @@
 {
   if (ic._len == 0)   return;
-  Random rng=Utils.getRNG(0xe031e74f321f7e29L + (ic.cidx() << 32L));
+  Random rng=Utils.getRNG(seed(ic.cidx()));
   oc.set0(0,ic.at0(0));
   for (int row=1; row < ic._len; row++) {
     int j=rng.nextInt(row + 1);
