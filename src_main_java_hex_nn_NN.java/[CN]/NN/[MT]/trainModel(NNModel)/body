@@ -13,10 +13,10 @@
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
     train=reBalance(train,seed);
-    float[] trainSamplingFactors=null;
+    float[] trainSamplingFactors;
     if (classification && balance_classes) {
       trainSamplingFactors=new float[train.lastVec().domain().length];
-      train=sampleFrameStratified(train,train.lastVec(),trainSamplingFactors,(long)(max_balance_growth * train.numRows()),seed,false);
+      train=sampleFrameStratified(train,train.lastVec(),trainSamplingFactors,(long)(max_after_balance_size * train.numRows()),seed,true,false);
       model.setClassSamplingFactors(trainSamplingFactors);
     }
     trainScoreFrame=sampleFrame(train,score_training_samples,seed);
@@ -24,10 +24,12 @@
     if (validation != null) {
       valid_adapted=model.adapt(validation,false);
       valid=reBalance(valid_adapted[0],seed + 1);
-      if (classification && balance_classes) {
-        valid=sampleFrameStratified(valid,valid.lastVec(),trainSamplingFactors,(long)(max_balance_growth * valid.numRows()),seed + 1,false);
+      if (classification && balance_classes && score_validation_sampling == ClassSamplingMethod.Stratified) {
+        validScoreFrame=sampleFrameStratified(valid,valid.lastVec(),null,score_validation_samples > 0 ? score_validation_samples : valid.numRows(),seed + 1,false,false);
       }
-      validScoreFrame=sampleFrame(valid,score_validation_samples,seed + 1);
+ else {
+        validScoreFrame=sampleFrame(valid,score_validation_samples,seed + 1);
+      }
       Log.info("Number of chunks of the validation data: " + valid.anyVec().nChunks());
     }
     if (mini_batch > train.numRows()) {
