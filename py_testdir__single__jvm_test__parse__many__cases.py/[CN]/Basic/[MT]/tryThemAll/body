@@ -1,8 +1,12 @@
-def tryThemAll(self, set, rows):
+def tryThemAll(self, set, rows, enumsOnly=False):
     for eolCase in range(len(self.eolDict)):
         eol = self.eolDict[eolCase]
-        for tokenCase in range(len(self.tokenChangeDict)):
-            newRows1 = self.changeTokens(rows, tokenCase)
+        if enumsOnly:
+            tcd = self.tokenChangeDict
+        else:
+            tcd = self.tokenChangeDictEnumsOnly
+        for tokenCase in range(len(tcd)):
+            newRows1 = self.changeTokens(rows, tokenCase, tcd)
             for sepCase in range(len(self.sepChangeDict)):
                 newRows2 = self.changeSep(newRows1, sepCase)
                 csvPathname = (((((((((SYNDATASETS_DIR + '/parsetmp_') + str(set)) + '_') + str(eolCase)) + '_') + str(tokenCase)) + '_') + str(sepCase)) + '.data')
