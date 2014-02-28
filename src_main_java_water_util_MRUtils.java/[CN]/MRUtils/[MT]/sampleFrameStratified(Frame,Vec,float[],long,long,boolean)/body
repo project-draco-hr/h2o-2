@@ -1,0 +1,34 @@
+{
+  if (fr == null)   return null;
+  assert(label.isEnum());
+  if (sampling_ratios == null || (Utils.minValue(sampling_ratios) == 0 && Utils.maxValue(sampling_ratios) == 0)) {
+    long[] dist=new ClassDist(label).doAll(label).dist();
+    assert(dist.length > 0);
+    Log.info("Stratified sampling of data set containing " + fr.numRows() + " rows from "+ dist.length+ " classes.");
+    if (debug) {
+      for (int i=0; i < dist.length; ++i) {
+        Log.info("Class " + label.domain(i) + ": count: "+ dist[i]+ " prior: "+ (float)dist[i] / fr.numRows());
+      }
+    }
+    if (sampling_ratios == null) {
+      sampling_ratios=new float[dist.length];
+    }
+    assert(sampling_ratios.length == dist.length);
+    for (int i=0; i < dist.length; ++i) {
+      sampling_ratios[i]=((float)fr.numRows() / label.domain().length) / dist[i];
+    }
+    final float inv_scale=Utils.minValue(sampling_ratios);
+    Utils.div(sampling_ratios,inv_scale);
+    final long numrows=(long)((float)fr.numRows() / inv_scale + 0.5f);
+    assert(numrows >= fr.numRows());
+    final long actualnumrows=Math.min(maxrows,numrows);
+    Log.info("Balancing class counts by sampling to a total of " + String.format("%,d",actualnumrows) + " rows.");
+    if (actualnumrows != numrows) {
+      Utils.mult(sampling_ratios,(float)actualnumrows / numrows);
+      if (debug)       Log.info("Downsampling majority class by " + (float)actualnumrows / numrows + " to limit number of rows to " + String.format("%,d",maxrows));
+    }
+    Log.info("Majority class (" + label.domain()[Utils.minIndex(sampling_ratios)].toString() + ") sampling ratio: "+ Utils.minValue(sampling_ratios));
+    Log.info("Minority class (" + label.domain()[Utils.maxIndex(sampling_ratios)].toString() + ") sampling ratio: "+ Utils.maxValue(sampling_ratios));
+  }
+  return sampleFrameStratified(fr,label,sampling_ratios,seed,debug);
+}

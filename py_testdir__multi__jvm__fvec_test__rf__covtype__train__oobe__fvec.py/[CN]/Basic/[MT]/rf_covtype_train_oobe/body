@@ -43,7 +43,7 @@ def rf_covtype_train_oobe(self, csvFilename, checkExpectedResults=True):
         used_trees = rf_model['N']
         data_key = rf_model['_dataKey']
         model_key = rf_model['_key']
-        rfvScoring = h2o_cmd.runRFView(None, dataKeyTest, model_key, used_trees, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
+        rfvScoring = h2o_cmd.runRFView(None, dataKeyTest, model_key, used_trees, timeoutSecs, retryDelaySecs=1, **kwargs)
         (error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfvScoring)
         fullScorePctRight = (100 - error)
         h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)

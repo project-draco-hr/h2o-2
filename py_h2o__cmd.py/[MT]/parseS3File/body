@@ -1,4 +1,4 @@
-def parseS3File(node=None, bucket=None, filename=None, keyForParseResult=None, timeoutSecs=20, retryDelaySecs=2, pollTimeoutSecs=30, noise=None, noPoll=None, **kwargs):
+def parseS3File(node=None, bucket=None, filename=None, keyForParseResult=None, timeoutSecs=20, retryDelaySecs=2, pollTimeoutSecs=30, **kwargs):
     ' Parse a file stored in S3 bucket'
     if (not bucket):
         raise Exception('No S3 bucket')
@@ -12,6 +12,6 @@ def parseS3File(node=None, bucket=None, filename=None, keyForParseResult=None, t
         myKeyForParseResult = (s3_key + '.hex')
     else:
         myKeyForParseResult = keyForParseResult
-    p = node.parse(s3_key, myKeyForParseResult, timeoutSecs, retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, noPoll=noPoll, **kwargs)
+    p = node.parse(s3_key, myKeyForParseResult, timeoutSecs, retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, **kwargs)
     node.summary_page(myKeyForParseResult)
     return p
