@@ -1,2 +1,9 @@
 {
+  if (key.isVec()) {
+    Value val=DKV.get(key);
+    if (val == null)     return fs;
+    ((Vec)val.get()).remove(fs);
+  }
+  DKV.remove(key,fs);
+  return fs;
 }

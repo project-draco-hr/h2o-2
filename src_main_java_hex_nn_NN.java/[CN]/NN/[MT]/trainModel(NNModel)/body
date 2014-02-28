@@ -11,12 +11,23 @@
     model.write_lock(self());
     final long model_size=model.model_info().size();
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
-    train=reBalance(model.model_info().data_info()._adaptedFrame,seed);
+    train=model.model_info().data_info()._adaptedFrame;
+    train=reBalance(train,seed);
+    float[] trainSamplingFactors=new float[train.lastVec().domain().length];
+    if (classification && balance_classes) {
+      train=sampleFrameStratified(train,train.lastVec(),trainSamplingFactors,train.numRows(),(long)(max_balance_growth * train.numRows()),seed,false);
+      model.setClassSamplingFactors(trainSamplingFactors);
+    }
     trainScoreFrame=sampleFrame(train,score_training_samples,seed);
     Log.info("Number of chunks of the training data: " + train.anyVec().nChunks());
+    float[] validSamplingFactors=null;
     if (validation != null) {
       valid_adapted=model.adapt(validation,false);
       valid=reBalance(valid_adapted[0],seed + 1);
+      validSamplingFactors=new float[valid.lastVec().domain().length];
+      if (classification && balance_classes) {
+        valid=sampleFrameStratified(valid,valid.lastVec(),validSamplingFactors,valid.numRows(),(long)(max_balance_growth * valid.numRows()),seed + 1,false);
+      }
       validScoreFrame=sampleFrame(valid,score_validation_samples,seed + 1);
       Log.info("Number of chunks of the validation data: " + valid.anyVec().nChunks());
     }
@@ -40,7 +51,7 @@
     if (model != null)     model.unlock(self());
     if (validScoreFrame != null && validScoreFrame != valid)     validScoreFrame.delete();
     if (trainScoreFrame != null && trainScoreFrame != train)     trainScoreFrame.delete();
-    if (validation != null)     valid_adapted[1].delete();
+    if (validation != null && valid_adapted != null && valid_adapted.length > 1)     valid_adapted[1].delete();
     unlock_data();
   }
 }

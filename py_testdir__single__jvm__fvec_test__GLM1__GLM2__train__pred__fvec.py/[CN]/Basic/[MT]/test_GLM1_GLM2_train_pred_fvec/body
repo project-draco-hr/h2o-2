@@ -139,17 +139,17 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     coeff0 = coefficients[0]
     coeff0Expected = coefficients1[0]
     print 'coeff0 pct delta:', ('%0.3f' % ((100.0 * (abs(coeff0) - abs(coeff0Expected))) / abs(coeff0Expected)))
-    self.assertTrue(h2o_util.approx_equal(coeff0, coeff0Expected, 0.01), msg=('GLM2 coefficient 0 %s is too different from GLM1 %s' % (coeff0, coeff0Expected)))
+    self.assertTrue(h2o_util.fp_approx_equal(coeff0, coeff0Expected, rel=0.01), msg=('GLM2 coefficient 0 %s is too different from GLM1 %s' % (coeff0, coeff0Expected)))
     coeff2 = coefficients[2]
     coeff2Expected = coefficients1[2]
     print 'coeff2 pct delta:', ('%0.3f' % ((100.0 * (abs(coeff2) - abs(coeff2Expected))) / abs(coeff2Expected)))
-    self.assertTrue(h2o_util.approx_equal(coeff2, coeff2Expected, 0.01), msg=('GLM2 coefficient 2 %s is too different from GLM1 %s' % (coeff2, coeff2Expected)))
+    self.assertTrue(h2o_util.fp_approx_equal(coeff2, coeff2Expected, rel=0.01), msg=('GLM2 coefficient 2 %s is too different from GLM1 %s' % (coeff2, coeff2Expected)))
     if (FAMILY == 'binomial'):
         aucExpected = auc1
         self.assertAlmostEqual(auc, aucExpected, delta=10, msg=('GLM2 auc %s is too different from GLM1 %s' % (auc, aucExpected)))
     interceptExpected = intercept1
     print 'intercept pct delta:', ((100.0 * (abs(intercept) - abs(interceptExpected))) / abs(interceptExpected))
-    self.assertTrue(h2o_util.approx_equal(intercept, interceptExpected, 0.01), msg=('GLM2 intercept %s is too different from GLM1 %s' % (intercept, interceptExpected)))
+    self.assertTrue(h2o_util.fp_approx_equal(intercept, interceptExpected, rel=0.01), msg=('GLM2 intercept %s is too different from GLM1 %s' % (intercept, interceptExpected)))
     avg_errExpected = err1
     self.assertAlmostEqual(avg_err, avg_errExpected, delta=(0.05 * avg_errExpected), msg=('GLM2 avg_err %s is too different from GLM1 %s' % (avg_err, avg_errExpected)))
     self.assertAlmostEqual(best_threshold, 0.35, delta=(0.01 * best_threshold), msg=('GLM2 best_threshold %s is too different from GLM1 %s' % (best_threshold, 0.35)))

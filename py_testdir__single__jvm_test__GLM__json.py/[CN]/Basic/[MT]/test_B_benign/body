@@ -1,0 +1,27 @@
+def test_B_benign(self):
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()
+    print '\nStarting benign.csv'
+    csvFilename = 'benign.csv'
+    csvPathname = (('logreg' + '/') + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    y = '4'
+    for maxx in range(11, 14):
+        x = range(maxx)
+        x.remove(4)
+        x = ','.join(map(str, x))
+        print '\nx:', x
+        print 'y:', y
+        kwargs = {'x': x, 'y': y, 'alpha': 0.5, 'lambda': 0.001, 'max_iter': 30, }
+        startime = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+        elapsedtime = (time.time() - startime)
+        print ('ELAPSED TIME ', elapsedtime)
+        pprint(glm['GLMModel']['coefficients'])
+        pprint(glm['GLMModel']['normalized_coefficients'])
+        pprint(glm['GLMModel']['nCols'])
+        pprint(glm['GLMModel']['nLines'])
+        pprint(glm['GLMModel']['iterations'])
+        pprint(glm['GLMModel']['coefficients']['Intercept'])
+        sys.stdout.write('.')
+        sys.stdout.flush()

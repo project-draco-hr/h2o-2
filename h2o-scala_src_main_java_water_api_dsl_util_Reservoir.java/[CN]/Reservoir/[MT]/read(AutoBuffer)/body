@@ -1,0 +1,10 @@
+{
+  int rSize=bb.get4();
+  int[] order=bb.getA4();
+  double[] vals=bb.getA8d();
+  Reservoir reservoir=new Reservoir(rSize);
+  for (int x=0; x < order.length; x++) {
+    reservoir.minHeap.add(new SampleItem(order[x],vals[x]));
+  }
+  return (reservoir);
+}

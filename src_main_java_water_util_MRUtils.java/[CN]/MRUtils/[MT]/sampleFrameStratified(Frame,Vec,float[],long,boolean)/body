@@ -1,0 +1,37 @@
+{
+  if (fr == null)   return null;
+  assert(label.isEnum());
+  assert(sampling_ratios != null && sampling_ratios.length == label.domain().length);
+  final int labelidx=fr.find(label);
+  assert(labelidx >= 0);
+  Frame r=new MRTask2(){
+    @Override public void map(    Chunk[] cs,    NewChunk[] ncs){
+      final Random rng=getDeterRNG(seed + cs[0].cidx());
+      for (int r=0; r < cs[0]._len; r++) {
+        int label=(int)cs[labelidx].at80(r);
+        assert(sampling_ratios.length > label && label >= 0);
+        final int sampling_reps=Utils.getPoisson(sampling_ratios[label],rng);
+        for (int i=0; i < ncs.length; i++) {
+          for (int j=0; j < sampling_reps; ++j) {
+            ncs[i].addNum(cs[i].at0(r));
+          }
+        }
+      }
+    }
+  }
+.doAll(fr.numCols(),fr).outputFrame(fr.names(),fr.domains());
+  long[] dist=new ClassDist(r.vecs()[labelidx]).doAll(r.vecs()[labelidx]).dist();
+  if (debug) {
+    long sumdist=Utils.sum(dist);
+    Log.info("After stratified sampling: " + sumdist + " rows.");
+    for (int i=0; i < dist.length; ++i) {
+      Log.info("Class " + r.vecs()[labelidx].domain(i) + ": count: "+ dist[i]+ " sampling ratio: "+ sampling_ratios[i]+ " actual relative frequency: "+ (float)dist[i] / sumdist * dist.length);
+    }
+  }
+  if (Utils.minValue(dist) == 0) {
+    Log.info("Re-doing stratified sampling because not all classes were represented (unlucky draw).");
+    return sampleFrameStratified(fr,label,sampling_ratios,seed + 1,debug);
+  }
+  r=shuffleFramePerChunk(r,seed + 0x580FF13);
+  return r;
+}
