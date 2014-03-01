@@ -1,0 +1,23 @@
+{
+  Vec va=null, vp=null;
+  if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing actual or predict!");
+  if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
+  if (!vactual.isInt())   throw new IllegalArgumentException("Actual column must be integer class labels!");
+  if (vpredict.isInt())   throw new IllegalArgumentException("Predicted column must be a floating point probability!");
+  try {
+    va=vactual.toEnum();
+    actual_domain=va._domain;
+    vp=vpredict;
+    if (!va.group().equals(vp.group())) {
+      vp=va.align(vp);
+    }
+    auc=new AUCTask(100).doAll(va,vp).auc();
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+ finally {
+    if (va != null)     UKV.remove(va._key);
+  }
+}
