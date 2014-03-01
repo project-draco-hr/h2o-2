@@ -1,0 +1,14 @@
+{
+  try {
+    int column_index=_col_index.value();
+    boolean to_enum=_to_enum.value();
+    String colname=_col_index.toString();
+    Log.info("Factorizing column " + colname);
+    new TypeChange(column_index,to_enum,_key.value()._key).invoke();
+  }
+ catch (  Throwable e) {
+    return Response.error(e);
+  }
+  JsonObject response=new JsonObject();
+  return Response.done(response);
+}
