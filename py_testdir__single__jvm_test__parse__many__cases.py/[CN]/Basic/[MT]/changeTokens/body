@@ -1,5 +1,5 @@
-def changeTokens(self, rows, tokenCase):
-    [cOpen, cClose] = self.tokenChangeDict[tokenCase]
+def changeTokens(self, rows, tokenCase, tokenChangeDict):
+    [cOpen, cClose] = tokenChangeDict[tokenCase]
     newRows = []
     for r in rows:
         comment = re.match('^[ \\t]*#', r)

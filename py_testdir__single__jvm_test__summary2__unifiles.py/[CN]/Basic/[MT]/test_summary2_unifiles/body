@@ -1,14 +1,14 @@
 def test_summary2_unifiles(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3750.0), (-2445), (-1200.0), 99), ('E', (-100000.0), (-50000.0), 1613.0, 50000.0, 100000.0), ('F', (-1.0), (-0.48), 0.0087, 0.5, 1.0)], ['string', 'float', 'float', 'float']), ('runifA.csv', 'A.hex', [('', 1.0, 26.0, 51.0, 76.0, 100.0), ('x', (-99.0), (-43.0), 6.9, 58.0, 91.7)], ['string', 'float']), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.85, 51.7, 100, 0)], ['string', 'float']), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.18), 49.28, 100.0)], ['string', 'float'])]
-    tryList = [('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3735.0), (-2443), (-1187.0), 99.8), ('E', (-100000.0), (-49208.0), 1783.8, 50621.9, 100000.0), ('F', (-1.0), (-0.4886), 0.00868, 0.5048, 1.0)], ['string', 'float', 'float', 'float']), ('runifA.csv', 'A.hex', [('', 1.0, 26.0, 51.0, 76.0, 100.0), ('x', (-99.0), (-44.7), 7.8, 58.0, 91.7)], ['string', 'float']), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.987, 51.7, 100, 0)], ['string', 'float']), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.135), 49.28, 100.0)], ['string', 'float'])]
+    tryList = [('cars.csv', 'c.hex', [('name', None), ('economy (mpg)', None), ('cylinders', None)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3750.0), (-2445), (-1200.0), 99), ('E', (-100000.0), (-50000.0), 1775.0, 50000.0, 100000.0), ('F', (-1.0), (-0.48), 0.0087, 0.5, 1.0)]), ('runifA.csv', 'A.hex', [('', 1.0, 25.0, 50.0, 75.0, 100.0), ('x', (-99.0), (-45.0), 7.43, 58.0, 91.7)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.98, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.13), 49.28, 100.0)])]
+    tryList = [('cars.csv', 'c.hex', [('name', None), ('economy (mpg)', None), ('cylinders', None)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3735.0), (-2443), (-1187.0), 99.8), ('E', (-100000.0), (-49208.0), 1783.8, 50621.9, 100000.0), ('F', (-1.0), (-0.4886), 0.00868, 0.5048, 1.0)]), ('runifA.csv', 'A.hex', [('', 1.0, 25.0, 50.0, 75.0, 100.0), ('x', (-99.0), (-44.7), 7.43, 58.0, 91.7)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.987, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.135), 49.28, 100.0)])]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
     lenNodes = len(h2o.nodes)
     x = 0
     timeoutSecs = 60
-    for (csvFilename, hex_key, expectedCols, dtype) in tryList:
+    for (csvFilename, hex_key, expectedCols) in tryList:
         h2o.beta_features = False
         csvPathname = csvFilename
         parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
@@ -24,48 +24,50 @@ def test_summary2_unifiles(self):
         summaries = summaryResult['summaries']
         for (expected, column) in zip(expectedCols, summaries):
             colname = column['colname']
-            self.assertEqual(colname, expected[0])
+            if expected:
+                self.assertEqual(colname, expected[0])
             coltype = column['type']
             nacnt = column['nacnt']
             stats = column['stats']
             stattype = stats['type']
-            mean = stats['mean']
-            sd = stats['sd']
-            print 'colname:', colname, 'mean (2 places): %s', twoDecimals(mean)
-            print 'colname:', colname, 'std dev. (2 places): %s', twoDecimals(sd)
-            zeros = stats['zeros']
-            mins = stats['mins']
-            maxDelta = (((expected[5] - expected[1]) / 20.0) / 2.0)
-            maxDelta = (1.05 * maxDelta)
-            maxDelta = (0.5 * maxDelta)
-            h2o_util.assertApproxEqual(mins[0], expected[1], rel=0.008, msg='min is not approx. expected')
-            maxs = stats['maxs']
-            h2o_util.assertApproxEqual(maxs[0], expected[5], rel=0.008, msg='max is not approx. expected')
-            pct = stats['pct']
-            expectedPct = [0.01, 0.05, 0.1, 0.25, 0.33, 0.5, 0.66, 0.75, 0.9, 0.95, 0.99]
-            pctile = stats['pctile']
-            h2o_util.assertApproxEqual(pctile[3], expected[2], rel=maxDelta, msg='25th percentile is not approx. expected')
-            h2o_util.assertApproxEqual(pctile[5], expected[3], rel=maxDelta, msg='50th percentile (median) is not approx. expected')
-            h2o_util.assertApproxEqual(pctile[7], expected[4], rel=maxDelta, msg='75th percentile is not approx. expected')
+            print stattype
+            if (stattype != 'Enum'):
+                mean = stats['mean']
+                sd = stats['sd']
+                zeros = stats['zeros']
+                mins = stats['mins']
+                maxs = stats['maxs']
+                print 'colname:', colname, 'mean (2 places): %s', twoDecimals(mean)
+                print 'colname:', colname, 'std dev. (2 places): %s', twoDecimals(sd)
+                pct = stats['pct']
+                print 'pct:', pct
+                print ''
+                expectedPct = [0.01, 0.05, 0.1, 0.25, 0.33, 0.5, 0.66, 0.75, 0.9, 0.95, 0.99]
+                pctile = stats['pctile']
+            if expected[1]:
+                h2o_util.assertApproxEqual(mins[0], expected[1], rel=0.02, msg='min is not approx. expected')
+                h2o_util.assertApproxEqual(pctile[3], expected[2], rel=0.02, msg='25th percentile is not approx. expected')
+                h2o_util.assertApproxEqual(pctile[5], expected[3], rel=0.02, msg='50th percentile (median) is not approx. expected')
+                h2o_util.assertApproxEqual(pctile[7], expected[4], rel=0.02, msg='75th percentile is not approx. expected')
+                h2o_util.assertApproxEqual(maxs[0], expected[5], rel=0.02, msg='max is not approx. expected')
             hstart = column['hstart']
             hstep = column['hstep']
             hbrk = column['hbrk']
             hcnt = column['hcnt']
-            print 'pct:', pct
-            print ''
             for b in hcnt:
                 e = (0.1 * numRows)
-            pt = twoDecimals(pctile)
-            mx = twoDecimals(maxs)
-            mn = twoDecimals(mins)
-            print 'colname:', colname, 'pctile (2 places):', pt
-            print 'colname:', colname, 'maxs: (2 places):', mx
-            print 'colname:', colname, 'mins: (2 places):', mn
-            compareActual = (mn[0], pt[3], pt[5], pt[7], mx[0])
-            print 'min/25/50/75/max colname:', colname, '(2 places):', compareActual
-            print 'maxs colname:', colname, '(2 places):', mx
-            print 'mins colname:', colname, '(2 places):', mn
+            if (stattype != 'Enum'):
+                pt = twoDecimals(pctile)
+                print 'colname:', colname, 'pctile (2 places):', pt
+                mx = twoDecimals(maxs)
+                mn = twoDecimals(mins)
+                print 'colname:', colname, 'maxs: (2 places):', mx
+                print 'colname:', colname, 'mins: (2 places):', mn
+                actual = (mn[0], pt[3], pt[5], pt[7], mx[0])
+                print 'min/25/50/75/max colname:', colname, '(2 places):', actual
+                print 'maxs colname:', colname, '(2 places):', mx
+                print 'mins colname:', colname, '(2 places):', mn
         trial += 1
         if DO_TRY_SCIPY:
             csvPathname1 = h2i.find_folder_and_filename('smalldata', csvPathname, returnFullPath=True)
-            generate_scipy_comparison(csvPathname1, dtype=dtype)
+            generate_scipy_comparison(csvPathname1)

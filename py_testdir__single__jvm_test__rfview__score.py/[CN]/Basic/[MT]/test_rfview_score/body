@@ -19,7 +19,7 @@ def test_rfview_score(self):
         kwargs.pop('data_key', None)
         ntree = rfv['ntree']
         kwargs.pop('ntree', None)
-        rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, print_params=True, **kwargs)
+        rfView = h2o_cmd.runRFView(None, dataKeyTest, model_key, ntree, timeoutSecs, retryDelaySecs=1, **kwargs)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
         if (('sampling_strategy' in kwargs) and (kwargs['sampling_strategy'] != 'STRATIFIED_LOCAL')):
             check_err = True
