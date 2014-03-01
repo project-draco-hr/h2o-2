@@ -14,7 +14,7 @@ def test_rf_covtype_train_full_fvec(self):
         print 'RF end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         job_key = rfv['job_key']
         model_key = rfv['destination_key']
-        rfv = h2o_cmd.runRFView(data_key=parseResult['destination_key'], model_key=model_key, timeoutSecs=timeoutSecs, retryDelaySecs=1, print_params=True)
+        rfv = h2o_cmd.runRFView(data_key=parseResult['destination_key'], model_key=model_key, timeoutSecs=timeoutSecs, retryDelaySecs=1)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfv)
         self.assertLess(classification_error, 4.8, ('train.csv should have full classification error: %s < 4.8' % classification_error))
         print 'Trial #', trial, 'completed'

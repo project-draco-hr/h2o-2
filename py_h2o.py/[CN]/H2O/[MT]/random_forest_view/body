@@ -1,4 +1,4 @@
-def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, print_params=False, noPoll=False, useRFScore=False, **kwargs):
+def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, print_params=False, noPoll=False, noPrint=False, useRFScore=False, **kwargs):
     if beta_features:
         print 'random_forest_view not supported in H2O fvec yet. hacking done response'
         r = {'response': {'status': 'done', }, 'trees': {'number_built': 0, }, }
@@ -32,7 +32,7 @@ def random_forest_view(self, data_key=None, model_key=None, timeoutSecs=300, ret
     if noPoll:
         return a
     if beta_features:
-        rfView = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+        rfView = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPrint=noPrint, noise=noise, benchmarkLogging=benchmarkLogging)
     else:
         fake_a = a
         fake_a['response'] = a['response']
