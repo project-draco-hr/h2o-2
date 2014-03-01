@@ -1,6 +1,7 @@
 {
+  E.skipWS(EOS);
   AST ast;
-  if (E.peek('('))   return E.xpeek(')',E._x,parseCXExpr(E));
+  if (E.peek('(',EOS))   return E.xpeek(')',E._x,parseCXExpr(E,false));
   if ((ast=ASTId.parse(E)) != null)   return ast;
   if ((ast=ASTNum.parse(E)) != null)   return ast;
   if ((ast=ASTOp.parse(E)) != null)   return ast;

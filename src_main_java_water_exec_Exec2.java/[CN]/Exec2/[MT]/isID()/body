@@ -1,5 +1,4 @@
 {
-  skipWS();
   if (_x >= _buf.length)   return null;
   char c=_buf[_x];
   if (isReserved(c))   return null;
@@ -23,7 +22,7 @@
     _x--;
     return null;
   }
-  if (c == '+' || c == '-')   return _str.substring(_x - 1,_x);
+  if (c == '+' || c == '-' || c == '*' || c == '/')   return _str.substring(_x - 1,_x);
   if (c == '=' || c == '!' || c == '<' || c == '>')   if (c2 == '=')   return _str.substring(++_x - 2,_x);
  else   return _str.substring(_x - 1,_x);
   _x++;

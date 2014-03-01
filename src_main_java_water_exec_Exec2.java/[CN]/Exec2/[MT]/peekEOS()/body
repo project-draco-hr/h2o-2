@@ -1,0 +1,11 @@
+{
+  while (_x < _buf.length) {
+    char d=_buf[_x++];
+    if (d == ';' || d == '\n')     return true;
+    if (!isWS(d)) {
+      _x--;
+      return false;
+    }
+  }
+  return false;
+}
