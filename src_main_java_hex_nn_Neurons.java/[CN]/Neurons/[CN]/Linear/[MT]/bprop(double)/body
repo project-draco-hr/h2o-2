@@ -5,6 +5,5 @@
   assert(params.loss == Loss.MeanSquare);
   int u=0;
   double g=target - _a[u];
-  g*=(1 - _a[u]) * _a[u];
   bprop(u,g,r,m);
 }

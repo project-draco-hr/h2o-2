@@ -1,9 +1,5 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
-  if (arg._name.equals("classification")) {
-    classification=true;
-    arg.disable("Regression is not currently supported.");
-  }
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
   }
@@ -11,14 +7,27 @@
     arg.disable("Using MeanSquare loss for regression.",inputArgs);
     loss=Loss.MeanSquare;
   }
+  if (expert_mode && arg._name.equals("force_load_balance") && H2O.CLOUD.size() > 1) {
+    force_load_balance=false;
+    arg.disable("Only for single-node operation.");
+  }
+  if (classification) {
+    if (arg._name.equals("regression_stop")) {
+      arg.disable("Only for regression.",inputArgs);
+    }
+    if (arg._name.equals("max_balance_growth") && !balance_classes) {
+      arg.disable("Requires balance_classes.",inputArgs);
+    }
+  }
+ else {
+    if (arg._name.equals("classification_stop") || arg._name.equals("max_confusion_matrix_size") || arg._name.equals("max_balance_growth")|| arg._name.equals("balance_classes")) {
+      arg.disable("Only for classification.",inputArgs);
+    }
+  }
   if (arg._name.equals("score_validation_samples") && validation == null) {
-    arg.disable("Only if a validation set is specified.");
+    arg.disable("Only if a validation set is specified.",inputArgs);
   }
-  if (arg._name.equals("sync_samples") && H2O.CLOUD.size() == 1) {
-    sync_samples=0;
-    arg.disable("Only for multi-node operation.");
-  }
-  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("score_interval")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("sync_samples")|| arg._name.equals("fast_mode")) {
-    if (!expert_mode)     arg.disable("Only in expert mode.");
+  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("score_interval")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("mini_batch")|| arg._name.equals("score_duty_cycle")|| arg._name.equals("fast_mode")|| arg._name.equals("balance_classes")|| arg._name.equals("max_balance_growth")|| arg._name.equals("ignore_const_cols")|| arg._name.equals("force_load_balance")|| arg._name.equals("shuffle_training_data")|| arg._name.equals("nesterov_accelerated_gradient")|| arg._name.equals("classification_stop")|| arg._name.equals("regression_stop")|| arg._name.equals("quiet_mode")|| arg._name.equals("max_confusion_matrix_size")) {
+    if (!expert_mode)     arg.disable("Only in expert mode.",inputArgs);
   }
 }

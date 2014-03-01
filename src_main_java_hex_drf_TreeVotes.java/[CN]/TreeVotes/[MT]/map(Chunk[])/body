@@ -1,21 +1,34 @@
 {
   int ntrees=_tmodel.numTrees();
   double[] data=new double[chks.length - 1];
-  float[] preds=new float[_tmodel.nclasses()];
+  float[] preds=new float[_tmodel.nclasses() + 1];
+  Chunk cresp=chk_resp(chks);
+  int nrows=cresp._len;
+  int[] oob=new int[(int)((1f - _rate) * nrows * 1.2f)];
+  int[] soob=null;
   _nrows=new long[ntrees];
   _treeCVotes=new long[ntrees];
+  long seedForOob=ShuffleTask.seed(cresp.cidx());
   for (int tidx=0; tidx < ntrees; tidx++) {
-    Chunk cresp=chk_resp(chks);
     Random rng=rngForTree(_tmodel.treeBits[tidx],cresp.cidx());
-    for (int row=0; row < cresp._len; row++) {
+    int oobcnt=0;
+    Arrays.fill(oob,0);
+    for (int row=0; row < nrows; row++) {
       if (rng.nextFloat() >= _rate) {
-        for (int i=0; i < chks.length - 1; i++)         data[i]=chks[i].at0(row);
-        Arrays.fill(preds,0);
-        _tmodel.score0(data,preds,tidx);
-        int pred=Utils.maxIndex(preds);
-        if (pred == cresp.at80(row))         _treeCVotes[tidx]++;
-        _nrows[tidx]++;
+        oob[oobcnt++]=row;
+        if (oobcnt >= oob.length)         oob=Arrays.copyOf(oob,(int)(1.2f * oob.length));
       }
+    }
+    if (soob == null || soob.length < oobcnt)     soob=new int[oobcnt];
+    Utils.shuffleArray(oob,oobcnt,soob,seedForOob);
+    for (int row=0; row < oobcnt; row++) {
+      for (int i=0; i < chks.length - 1; i++)       data[i]=chks[i].at0(oob[row]);
+      if (_var >= 0)       data[_var]=chks[_var].at0(soob[row]);
+      Arrays.fill(preds,0);
+      _tmodel.score0(data,preds,tidx);
+      int pred=ModelUtils.getPrediction(preds,data);
+      if (pred == cresp.at80(row))       _treeCVotes[tidx]++;
+      _nrows[tidx]++;
     }
   }
 }

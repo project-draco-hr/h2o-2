@@ -1,6 +1,6 @@
-def runSummary(node=None, key=None, timeoutSecs=30, numRows=None, numCols=None, **kwargs):
+def runSummary(node=None, key=None, timeoutSecs=30, **kwargs):
     if (not key):
         raise Exception('No key for Summary')
     if (not node):
         node = h2o.nodes[0]
-    return node.summary_page(key, timeoutSecs=timeoutSecs, numRows=numRows, numCols=numCols, **kwargs)
+    return node.summary_page(key, timeoutSecs=timeoutSecs, **kwargs)

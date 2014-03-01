@@ -8,8 +8,13 @@ def test_exec2_operators2(self):
     start = time.time()
     h2e.exec_expr_list_rand(len(h2o.nodes), exprList, None, maxTrials=200, timeoutSecs=10)
     bigExecExpr = ''
+    expCnt = 0
     for execExpr in exprList:
         bigExecExpr += (execExpr + ';')
         h2e.exec_expr(h2o.nodes[0], bigExecExpr, resultKey=None, timeoutSecs=4)
+        expCnt += 1
+        if (expCnt > 2):
+            bigExecExpr = ''
+            expCnt = 0
     h2o.check_sandbox_for_errors()
     print 'exec end on ', 'operators', 'took', (time.time() - start), 'seconds'

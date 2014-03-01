@@ -53,8 +53,6 @@
                           p.source=(Frame)_train.clone();
                           p.response=_train.lastVec();
                           p.ignored_cols=null;
-                          Frame fr=FrameTask.DataInfo.prepareFrame(p.source,p.response,p.ignored_cols,true,p.ignore_const_cols);
-                          p._dinfo=new FrameTask.DataInfo(fr,1,true);
                           p.seed=seed;
                           p.hidden=hidden;
                           p.rate=rate;
@@ -74,10 +72,14 @@
                           p.classification=true;
                           p.diagnostics=true;
                           p.validation=null;
+                          p.quiet_mode=true;
                           p.fast_mode=true;
-                          p.sync_samples=0;
+                          p.mini_batch=0;
                           p.ignore_const_cols=false;
                           p.shuffle_training_data=false;
+                          p.nesterov_accelerated_gradient=true;
+                          p.classification_stop=-1;
+                          p.force_load_balance=false;
                           p.exec();
                           mymodel=UKV.get(p.dest());
                           neurons=NNTask.makeNeuronsForTesting(mymodel.model_info());

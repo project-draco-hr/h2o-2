@@ -34,7 +34,7 @@ def test_rf_log_fvec(self):
         expectTrainPctRight = 94
         self.assertAlmostEqual(oobeTrainPctRight, expectTrainPctRight, msg=('OOBE: pct. right for training not close enough %6.2f %6.2f' % (oobeTrainPctRight, expectTrainPctRight)), delta=5)
         print 'Now score with the 2nd random dataset'
-        rfv = h2o_cmd.runRFView(data_key=dataKeyTest, model_key=model_key, timeoutSecs=timeoutSecs, retryDelaySecs=1, print_params=True)
+        rfv = h2o_cmd.runRFView(data_key=dataKeyTest, model_key=model_key, timeoutSecs=timeoutSecs, retryDelaySecs=1)
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfv, ntree=used_trees)
         self.assertAlmostEqual(classification_error, 5.0, delta=2.0, msg=('Classification error %s differs too much' % classification_error))
         predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)

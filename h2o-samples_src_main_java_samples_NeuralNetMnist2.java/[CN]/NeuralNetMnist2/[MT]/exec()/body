@@ -2,8 +2,8 @@
   Log.info("Parsing data.");
   long seed=new Random().nextLong();
   double fraction=1.0;
-  Frame trainf=sampleFrame(TestUtil.parseFromH2OFolder("smalldata/mnist/train10x.csv"),(long)(600000 * fraction),seed);
-  Frame testf=sampleFrame(TestUtil.parseFromH2OFolder("smalldata/mnist/test.csv"),(long)(10000 * fraction),seed + 1);
+  Frame trainf=sampleFrame(TestUtil.parseFromH2OFolder("smalldata/mnist/train.csv.gz"),(long)(60000 * fraction),seed);
+  Frame testf=sampleFrame(TestUtil.parseFromH2OFolder("smalldata/mnist/test.csv.gz"),(long)(10000 * fraction),seed + 1);
   Log.info("Done.");
   NN p=new NN();
   p.seed=seed;
@@ -14,7 +14,7 @@
   p.loss=NN.Loss.CrossEntropy;
   p.input_dropout_ratio=0.2;
   p.max_w2=15;
-  p.epochs=10;
+  p.epochs=10000;
   p.l1=1e-5;
   p.l2=0;
   p.momentum_start=0.5;
@@ -30,10 +30,12 @@
   p.source=trainf;
   p.response=trainf.lastVec();
   p.ignored_cols=null;
-  p.sync_samples=120000;
-  p.score_interval=600;
+  p.mini_batch=240000;
+  p.score_interval=60;
   p.fast_mode=true;
   p.ignore_const_cols=true;
-  p.shuffle_training_data=true;
+  p.shuffle_training_data=false;
+  p.force_load_balance=true;
+  p.quiet_mode=false;
   return p.exec();
 }

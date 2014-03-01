@@ -5,13 +5,13 @@
   for (int i=0; i < colDom.length; i++)   md.put(colDom[i],i);
   for (int i=0; i < modelDom.length; i++) {
     Integer I=md.get(modelDom[i]);
-    if (I == null && exact)     Log.warn(Sys.SCORM,"Column " + colName + " was trained with factor '"+ modelDom[i]+ "' which DOES NOT appear in column data");
+    if (I == null && logNonExactMapping)     Log.warn(Sys.SCORM,"Column " + colName + " was trained with factor '"+ modelDom[i]+ "' which DOES NOT appear in column data");
     if (I != null) {
       emap[i]=I;
       bmap[i]=true;
     }
   }
-  if (exact) {
+  if (logNonExactMapping) {
     for (int i=0; i < colDom.length; i++) {
       boolean found=false;
       for (int j=0; j < emap.length; j++)       if (emap[j] == i) {

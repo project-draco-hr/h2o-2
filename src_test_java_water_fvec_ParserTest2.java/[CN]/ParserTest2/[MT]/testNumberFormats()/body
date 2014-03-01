@@ -4,8 +4,6 @@
   for (  char separator : SEPARATORS) {
     String[] dataset=getDataForSeparator(separator,data);
     Key key=FVecTest.makeByteVec("NumberFormats",dataset);
-    Key r=Key.make();
-    ParseDataset2.parse(r,new Key[]{key});
-    testParsed(r,expDouble,key);
+    testParsed(key,expDouble);
   }
 }

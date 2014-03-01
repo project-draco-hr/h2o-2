@@ -11,23 +11,10 @@ def exec_expr_list_across_cols(lenNodes, exprList, keyX, minCol=0, maxCol=54, ti
                 resultKey = ('Result' + str(colX))
             else:
                 resultKey = keyX
-            execResultInspect = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs)
-            print '\nexecResult:', h2o.dump_json(execResultInspect)
-            execResultKey = execResultInspect[0]['key']
-            if execResultKey:
-                resultInspect = h2o_cmd.runInspect(None, execResultKey)
-            else:
-                resultInspect = h2o_cmd.runInspect(None, keyX)
-            if incrementingResult:
-                min_value = checkScalarResult(execResultInspect, resultKey)
-                h2o.verboseprint('min_value: ', min_value, 'col:', colX)
-                print 'min_value: ', min_value, 'col:', colX
-            else:
-                min_value = None
-            sys.stdout.write('.')
-            sys.stdout.flush()
+            (resultExec, result) = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs)
+            print '\nexecResult:', h2o.dump_json(resultExec)
             if h2o.check_sandbox_for_errors():
                 raise Exception(('Found errors in sandbox stdout or stderr, on trial #%s.' % trial))
         print 'Column #', colX, 'completed\n'
-        colResultList.append(min_value)
+        colResultList.append(result)
     return colResultList

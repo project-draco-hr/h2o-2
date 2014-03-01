@@ -11,7 +11,7 @@
   boolean contiguous=false;
   Random skip_rng=null;
   if (_useFraction < 1.0) {
-    skip_rng=water.util.Utils.getDeterRNG(_seed++ + 0x600D5EED + offset);
+    skip_rng=water.util.Utils.getDeterRNG(new Random().nextLong());
     if (contiguous) {
       final int howmany=(int)Math.ceil(_useFraction * nrows);
       if (howmany > 0) {
@@ -26,7 +26,7 @@
   if (_shuffle) {
     shuf_map=new long[end - start];
     for (int i=0; i < shuf_map.length; ++i)     shuf_map[i]=start + i;
-    Utils.shuffleArray(shuf_map,_seed++ + 0xD0650F1E + offset);
+    Utils.shuffleArray(shuf_map,new Random().nextLong());
   }
   OUTER:   for (int rr=start; rr < end; ++rr) {
     final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
@@ -43,7 +43,10 @@
       if (_dinfo._normMul != null)       d=(d - _dinfo._normSub[i - _dinfo._cats]) * _dinfo._normMul[i - _dinfo._cats];
       nums[i - _dinfo._cats]=d;
     }
-    for (i=0; i < _dinfo._responses; ++i)     response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
+    for (i=0; i < _dinfo._responses; ++i) {
+      response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
+      if (_dinfo._normRespMul != null)       response[i]=(response[i] - _dinfo._normRespSub[i]) * _dinfo._normRespMul[i];
+    }
     if (outputs != null && outputs.length > 0)     processRow(offset + r,nums,ncats,cats,response,outputs);
  else     processRow(offset + r,nums,ncats,cats,response);
   }
