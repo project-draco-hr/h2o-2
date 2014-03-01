@@ -1,7 +1,7 @@
 {
   if (!(isRunning(self())))   throw new JobCancelledException();
   boolean converged=false;
-  if (_glm.family != Family.gaussian && _glm.family != Family.tweedie && glmt._val != null) {
+  if (_glm.family == Family.binomial && glmt._beta != null && glmt._val != null) {
     glmt._val.finalize_AIC_AUC();
     _model.setAndTestValidation(_lambdaIdx,glmt._val);
     _model.clone().update(self());
