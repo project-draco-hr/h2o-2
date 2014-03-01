@@ -1,0 +1,10 @@
+def __init__(self):
+    db_host = '192.168.1.171'
+    self.host = db_host
+    if (socket.gethostbyname_ex(socket.gethostname())[2][0] == db_host):
+        self.host = 'localhost'
+    self.db = MySQLdb.connect(host=self.host, user='spencer', passwd='spencer', db='PerfDB', port=3306)
+    self.cursor = self.db.cursor()
+    self.prev_test_run_id = self.get_table_pk('test_run')
+    self.this_test_run_id = (self.prev_test_run_id + 1)
+    self.table_names = self.__get_table_names__()

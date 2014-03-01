@@ -4,7 +4,6 @@
     return true;
   }
   final String mse_format="%g";
-  final String cross_entropy_format="%2.6f";
   final Errors error=errors[errors.length - 1];
   DocGen.HTML.title(sb,title);
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
@@ -92,26 +91,31 @@
     DocGen.HTML.paragraph(sb,"Training time: " + PrettyPrint.msecs(error.training_time_ms,true));
     if (!model_info.get_params().isDone())     DocGen.HTML.paragraph(sb,"Estimated time left: " + PrettyPrint.msecs((long)(error.training_time_ms * (1 - progress) / progress),true));
   }
-  long score_valid=error.score_validation_samples;
   long score_train=error.score_training_samples;
+  long score_valid=error.score_validation_samples;
   final boolean fulltrain=score_train == 0 || score_train == model_info().data_info()._adaptedFrame.numRows();
   final boolean fullvalid=score_valid == 0 || score_valid == model_info().get_params().validation.numRows();
+  final String toolarge=" Not shown here - too large: number of classes (" + model_info.units[model_info.units.length - 1] + ") is greater than the specified limit of "+ model_info().get_params().max_confusion_matrix_size+ ".";
+  boolean smallenough=model_info.units[model_info.units.length - 1] <= model_info().get_params().max_confusion_matrix_size;
   if (isClassifier()) {
-    final String cmTitle="<br/>Confusion matrix reported on " + (error.validation ? "validation data" + (fullvalid ? "" : " (" + score_valid + " samples)") + ":" : "training data" + (fulltrain ? "" : " (" + score_train + " samples)") + ":");
+    String cmTitle="<br/>Confusion matrix reported on training data" + (fulltrain ? "" : " (" + score_train + " samples)") + ":";
     sb.append("<h5>" + cmTitle);
-    if (error.train_confusion_matrix != null) {
-      if (error.train_confusion_matrix.cm != null && error.train_confusion_matrix.cm.length <= model_info().get_params().max_confusion_matrix_size) {
-        if (error.validation && error.valid_confusion_matrix != null && error.valid_confusion_matrix.cm != null)         error.valid_confusion_matrix.toHTML(sb);
- else         if (error.train_confusion_matrix != null)         error.train_confusion_matrix.toHTML(sb);
+    if (error.train_confusion_matrix != null && smallenough) {
+      sb.append("</h5>");
+      error.train_confusion_matrix.toHTML(sb);
+    }
+ else     if (smallenough)     sb.append(" Not yet computed.</h5>");
+ else     sb.append(toolarge + "</h5>");
+    if (error.validation) {
+      cmTitle="<br/>Confusion matrix reported on validation data" + (fullvalid ? "" : " (" + score_valid + " samples)") + ":";
+      sb.append("<h5>" + cmTitle);
+      if (error.valid_confusion_matrix != null && smallenough) {
+        sb.append("</h5>");
+        error.valid_confusion_matrix.toHTML(sb);
       }
+ else       if (smallenough)       sb.append(" Not yet computed.</h5>");
+ else       sb.append("Too large." + "</h5>");
     }
- else     if (model_info.units[model_info.units.length - 1] > model_info().get_params().max_confusion_matrix_size) {
-      sb.append(" Not shown here - too large: number of classes (" + model_info.units[model_info.units.length - 1] + ") is greater than the specified limit of "+ model_info().get_params().max_confusion_matrix_size+ ".");
-    }
- else {
-      sb.append(" Not yet computed.");
-    }
-    sb.append("</h5>");
   }
   DocGen.HTML.title(sb,"Scoring history");
   if (errors.length > 1) {
