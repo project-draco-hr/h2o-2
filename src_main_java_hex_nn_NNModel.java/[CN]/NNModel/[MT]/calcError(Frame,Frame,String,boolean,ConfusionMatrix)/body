@@ -1,5 +1,4 @@
 {
-  final Frame fpreds=score(ftest,false);
   if (CM == null)   CM=new ConfusionMatrix();
   CM.actual=ftest;
   CM.vactual=ftest.lastVec();
@@ -12,6 +11,5 @@
     Log.info(label);
     for (    String s : sb.toString().split("\n"))     Log.info(s);
   }
-  fpreds.delete();
   return error;
 }
