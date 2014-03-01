@@ -1,0 +1,10 @@
+{
+  if (!E.peek('?',true))   return null;
+  int x=E._x;
+  AST tru=E.xpeek(':',E._x,parseCXExpr(E,false));
+  if (tru == null)   E.throwErr("Missing expression in trinary",x);
+  x=E._x;
+  AST fal=parseCXExpr(E,EOS);
+  if (fal == null)   E.throwErr("Missing expression in trinary",x);
+  return ASTApply.make(new AST[]{new ASTIfElse(),tst,tru,fal},E,x);
+}

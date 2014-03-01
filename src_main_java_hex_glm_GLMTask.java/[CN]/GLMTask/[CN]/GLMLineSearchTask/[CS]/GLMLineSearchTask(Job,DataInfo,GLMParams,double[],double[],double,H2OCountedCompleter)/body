@@ -1,0 +1,14 @@
+{
+  super(job,dinfo,glm,cmp);
+  ArrayList<double[]> betas=new ArrayList<double[]>();
+  double step=0.5;
+  while (step >= minStep) {
+    double[] b=MemoryManager.malloc8d(oldBeta.length);
+    for (int i=0; i < oldBeta.length; ++i)     b[i]=0.5 * (oldBeta[i] + newBeta[i]);
+    betas.add(b);
+    newBeta=b;
+    step*=0.5;
+  }
+  _betas=new double[betas.size()][];
+  betas.toArray(_betas);
+}

@@ -1,6 +1,6 @@
 def summary_page(self, key, timeoutSecs=60, noPrint=True, useVA=False, numRows=None, numCols=None, **kwargs):
     if (beta_features and (not useVA)):
-        params_dict = {'source': key, 'cols': None, 'max_ncols': 1000, }
+        params_dict = {'source': key, 'cols': None, 'max_ncols': 1000, 'max_qbins': None, }
     else:
         params_dict = {'key': key, 'x': None, 'max_column_display': 1000, }
     browseAlso = kwargs.pop('browseAlso', False)

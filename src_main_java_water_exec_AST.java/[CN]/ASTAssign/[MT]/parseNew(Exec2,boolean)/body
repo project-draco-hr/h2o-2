@@ -1,0 +1,16 @@
+{
+  int x=E._x;
+  String var=ASTId.parseNew(E);
+  if (var == null)   return null;
+  if (!E.peek('=',EOS)) {
+    if (!(E.peek('<',EOS) && E.peek('-',EOS))) {
+      if (Exec2.isLetter(var.charAt(0)))       E.throwErr("Unknown var " + var,x);
+      E._x=x;
+      return null;
+    }
+  }
+  x=E._x;
+  AST eval=parseCXExpr(E,EOS);
+  if (eval == null)   E.throwErr("Missing RHS",x);
+  return new ASTAssign(extend_local(E,eval._t,var),eval);
+}

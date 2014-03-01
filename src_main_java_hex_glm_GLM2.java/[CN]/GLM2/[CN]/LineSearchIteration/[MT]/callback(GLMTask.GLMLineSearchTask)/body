@@ -1,0 +1,13 @@
+{
+  double step=0.5;
+  for (int i=0; i < glmt._objvals.length; ++i) {
+    if (!needLineSearch(glmt._betas[i],glmt._objvals[i],step)) {
+      _lastResult=null;
+      new GLMIterationTask(GLM2.this,_dinfo,_glm,case_mode,case_val,glmt._betas[i],_ymu,_reg,new Iteration()).dfork(_dinfo._adaptedFrame);
+      return;
+    }
+    step*=0.5;
+  }
+  Log.info("GLM: line search failed to find feasible step. Forcibly converged.");
+  nextLambda(_lastResult._glmt);
+}
