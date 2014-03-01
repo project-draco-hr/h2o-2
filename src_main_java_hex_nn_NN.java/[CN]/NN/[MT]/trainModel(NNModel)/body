@@ -17,7 +17,7 @@
     if (classification && balance_classes) {
       trainSamplingFactors=new float[train.lastVec().domain().length];
       train=sampleFrameStratified(train,train.lastVec(),trainSamplingFactors,(long)(max_after_balance_size * train.numRows()),seed,true,false);
-      model.setClassSamplingFactors(trainSamplingFactors);
+      model.setModelClassDistribution(new MRUtils.ClassDist(train.lastVec()).doAll(train.lastVec()).rel_dist());
     }
     trainScoreFrame=sampleFrame(train,score_training_samples,seed);
     Log.info("Number of chunks of the training data: " + train.anyVec().nChunks());

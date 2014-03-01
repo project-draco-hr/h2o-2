@@ -1,0 +1,27 @@
+{
+  assert(prior_fraction != null && model_fraction != null);
+  assert(prior_fraction.length == model_fraction.length);
+  assert(fr.numCols() == 1 + prior_fraction.length);
+  new MRTask2(){
+    @Override public void map(    Chunk[] cs){
+      for (int r=0; r < cs[0]._len; r++) {
+        double prob=0;
+        for (int i=0; i < cs.length - 1; i++) {
+          final double scoring_result=cs[i + 1].at0(r);
+          assert(!Double.isNaN(scoring_result));
+          final double original_fraction=prior_fraction[i];
+          assert(original_fraction > 0);
+          final double oversampled_fraction=model_fraction[i];
+          assert(oversampled_fraction > 0);
+          final double corrected_prob=1 / (1 + ((1 / original_fraction) - 1) / ((1 / oversampled_fraction) - 1) * ((1 / scoring_result) - 1));
+          assert(!Double.isNaN(corrected_prob));
+          assert(corrected_prob >= 0 && corrected_prob <= 1.);
+          cs[i + 1].set0(r,corrected_prob);
+          prob+=corrected_prob;
+        }
+        if (prior_fraction.length == 2)         assert(Math.abs(prob - 1.0) < 1e-6);
+      }
+    }
+  }
+.doAll(fr);
+}
