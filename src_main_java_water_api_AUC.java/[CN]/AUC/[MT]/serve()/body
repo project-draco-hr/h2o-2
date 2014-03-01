@@ -11,7 +11,18 @@
     if (!va.group().equals(vp.group())) {
       vp=va.align(vp);
     }
-    auc=new AUCTask(100).doAll(va,vp).auc();
+    final int bins=100;
+    _cms=new hex.ConfusionMatrix[bins];
+    _thresh=new double[bins];
+    _tprs=new double[bins];
+    _fprs=new double[bins];
+    for (int i=0; i < bins; ++i) {
+      _cms[i]=new hex.ConfusionMatrix(2);
+      _thresh[i]=(0.5f + i) / bins;
+    }
+    AUCTask at=new AUCTask(_cms,_thresh,_tprs,_fprs).doAll(va,vp);
+    auc=at.getAUC();
+    best_threshold=at.getBestThreshold();
     return Response.done(this);
   }
  catch (  Throwable t) {

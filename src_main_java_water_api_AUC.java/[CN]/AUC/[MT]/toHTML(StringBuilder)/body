@@ -1,7 +1,11 @@
 {
-  DocGen.HTML.section(sb,"AUC");
   DocGen.HTML.arrayHead(sb);
-  sb.append("<tr class='warning'><td>" + auc + "</td></tr>");
+  DocGen.HTML.section(sb,"Predicting class " + actual.names()[actual.find(vactual)] + " from probabilities "+ predict.names()[predict.find(vpredict)]);
+  sb.append("<th>AUC</th><th>Best threshold</th>");
+  sb.append("<tr class='warning'>");
+  sb.append("<td>" + String.format("%4f",auc) + "</td><td>"+ String.format("%4f",best_threshold)+ "</td>");
+  sb.append("</tr>");
   DocGen.HTML.arrayTail(sb);
+  plotROC(sb);
   return true;
 }

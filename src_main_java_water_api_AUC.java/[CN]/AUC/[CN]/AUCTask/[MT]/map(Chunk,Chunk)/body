@@ -1,6 +1,11 @@
 {
-  int len=Math.min(ca._len,cp._len);
-  for (int i=0; i < _bins; i++) {
-    _auc=0;
+  final int len=Math.min(ca._len,cp._len);
+  for (int i=0; i < len; i++) {
+    for (int t=0; t < _cms.length; t++) {
+      final int a=(int)ca.at80(i);
+      if (a != 0 && a != 1)       throw new InvalidArgumentException("Invalid vactual: must be binary (0 or 1).");
+      final int p=cp.at0(i) >= _thresh[t] ? 1 : 0;
+      _cms[t].add(a,p);
+    }
   }
 }
