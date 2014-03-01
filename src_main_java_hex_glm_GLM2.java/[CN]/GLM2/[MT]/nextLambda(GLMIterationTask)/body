@@ -8,10 +8,7 @@
         ++_lambdaIdx;
         new Iteration().callback(glmt);
       }
- else {
-        _model.unlock(self());
-        GLM2.this.complete();
-      }
+ else       GLM2.this.complete();
     }
     @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter cc){
       GLM2.this.cancel(ex);
