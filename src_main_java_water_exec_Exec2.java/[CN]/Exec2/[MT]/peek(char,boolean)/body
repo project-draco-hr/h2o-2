@@ -1,0 +1,7 @@
+{
+  if (_x == _buf.length)   return false;
+  while (isWS(_buf[_x]) && (!EOS || _buf[_x] != '\n'))   if (++_x == _buf.length)   return false;
+  if (_buf[_x] != c)   return false;
+  _x++;
+  return true;
+}

@@ -1,0 +1,38 @@
+{
+  int x=E._x;
+  if (!E.peek('=',EOS)) {
+    if (!(E.peek('<',EOS) && E.peek('-',EOS))) {
+      E._x=x;
+      return null;
+    }
+  }
+  AST ast2=ast;
+  ASTSlice slice=null;
+  if ((ast instanceof ASTSlice))   ast2=(slice=(ASTSlice)ast)._ast;
+  if (!(ast2 instanceof ASTId))   E.throwErr("Can only assign to ID (or slice)",x);
+  ASTId id=(ASTId)ast2;
+  final AST eval=parseCXExpr(E,false);
+  if (eval == null)   E.throwErr("Missing RHS",x);
+  boolean partial=slice != null && (slice._cols != null || slice._rows != null);
+  if (partial) {
+    if (eval._t.isFcn())     E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);
+    if (E.lexical_depth() > 0)     throw H2O.unimpl();
+  }
+  if (id._depth > 0) {
+    ast=id=extend_local(E,eval._t,id._id);
+  }
+ else {
+    if (E.lexical_depth() > 0) {
+      if (!ast._t.union(eval._t))       E.throwErr("Assigning a " + eval._t + " into '"+ id._id+ "' which is a "+ id._t,x);
+    }
+ else {
+      if (!partial && !ast._t.union(eval._t)) {
+        ArrayList<ASTId> vars=E._env.get(0);
+        ASTId id2=new ASTId(eval._t,id._id,0,id._num);
+        vars.set(id2._num,id2);
+        ast=id2;
+      }
+    }
+  }
+  return new ASTAssign(ast,eval);
+}

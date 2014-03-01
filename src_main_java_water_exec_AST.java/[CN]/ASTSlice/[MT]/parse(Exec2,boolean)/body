@@ -1,0 +1,14 @@
+{
+  int x=E._x;
+  AST ast=ASTApply.parsePrefix(E,EOS);
+  if (ast == null)   return null;
+  if (!E.peek('[',true))   return ast;
+  if (!Type.ARY.union(ast._t))   E.throwErr("Not an ary",x);
+  if (E.peek(']',false))   return ast;
+  AST rows=E.xpeek(',',(x=E._x),parseCXExpr(E,false));
+  if (rows != null && !rows._t.union(Type.dblary()))   E.throwErr("Must be scalar or array",x);
+  AST cols=E.xpeek(']',(x=E._x),parseCXExpr(E,false));
+  if (cols != null && !cols._t.union(Type.dblary()))   E.throwErr("Must be scalar or array",x);
+  Type t=rows != null && rows.isPosConstant() && cols != null && cols.isPosConstant() ? Type.DBL : Type.ARY;
+  return new ASTSlice(t,ast,cols,rows);
+}
