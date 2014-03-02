@@ -18,7 +18,7 @@ def test_summary2_uniform(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEEDPERFILE)
         h2o.beta_features = False
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
@@ -71,6 +71,7 @@ def test_summary2_uniform(self):
         print 'maxs colname:', colname, '(2 places):', mx
         print 'mins colname:', colname, '(2 places):', mn
         trial += 1
+        h2o.nodes[0].remove_all_keys()
         if DO_TRY_SCIPY:
             csvPathname1 = h2i.find_folder_and_filename('smalldata', csvPathname, returnFullPath=True)
             generate_scipy_comparison(csvPathname1, dtype=dtype)
