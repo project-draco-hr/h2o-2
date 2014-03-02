@@ -8,6 +8,7 @@
       }
       _a[o]+=_b[o];
       _a[o]=-1 + (2 / (1 + Math.exp(-2 * _a[o])));
+      if (Double.isNaN(_a[o]))       throw new RuntimeException("Numerical instability, predicted NaN.");
     }
   }
 }
