@@ -7,7 +7,7 @@ def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None):
     print 'csv read for training, done'
     print dataset.shape
     target = [x[col] for x in dataset]
-    targetFP = target
+    targetFP = np.array(target, np.float)
     if (1 == 0):
         n_features = (len(dataset[0]) - 1)
         print 'n_features:', n_features
@@ -24,10 +24,11 @@ def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None):
     a2 = [('%.2f' % v) for v in a]
     h2p.red_print('scipy stats.mstats.mquantiles:', a2)
     targetFP.sort()
-    b = h2o_summ.percentileOnSortedList(targetFP, 0.5)
-    h2p.blue_print('median from sort:', b)
-    h2p.blue_print('median from scipy:', a[5])
-    h2p.blue_print('median from h2o:', h2oMedian)
+    b = h2o_summ.percentileOnSortedList(targetFP, (0.5 if DO_MEDIAN else 0.999))
+    label = ('50%' if DO_MEDIAN else '99.9%')
+    h2p.blue_print(label, 'from sort:', b)
+    h2p.blue_print(label, 'from scipy:', a[(5 if DO_MEDIAN else 10)])
+    h2p.blue_print(label, 'from h2o:', h2oMedian)
     if (1 == 0):
         a = stats.mstats.mquantiles(targetFP, prob=per)
         a2 = [('%.2f' % v) for v in a]
