@@ -18,6 +18,7 @@ def test_summary2_uniform(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEEDPERFILE)
         h2o.beta_features = False
+        csvPathnameFull = h2i.find_folder_and_filename(None, csvPathname, returnFullPath=True)
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
@@ -25,7 +26,7 @@ def test_summary2_uniform(self):
         numRows = inspect['num_rows']
         numCols = inspect['num_cols']
         h2o.beta_features = True
-        summaryResult = h2o_cmd.runSummary(key=hex_key)
+        summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
         column = summaryResult['summaries'][0]
         colname = column['colname']
@@ -72,6 +73,7 @@ def test_summary2_uniform(self):
         print 'mins colname:', colname, '(2 places):', mn
         trial += 1
         h2o.nodes[0].remove_all_keys()
-        if DO_TRY_SCIPY:
-            csvPathname1 = h2i.find_folder_and_filename('smalldata', csvPathname, returnFullPath=True)
-            generate_scipy_comparison(csvPathname1, dtype=dtype)
+        scipyCol = 0
+        if (DO_TRY_SCIPY and (colname != '')):
+            print scipyCol, pctile[10]
+            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)])
