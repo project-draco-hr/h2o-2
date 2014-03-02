@@ -11,11 +11,17 @@
     if (!va.group().equals(vp.group())) {
       vp=va.align(vp);
     }
+    final int bins=100;
+    _thresh=new double[bins];
+    for (int i=0; i < bins; ++i) {
+      _thresh[i]=(i + 1.) / bins;
+    }
     AUCTask at=new AUCTask(_thresh).doAll(va,vp);
     auc=at.getAUC();
     best_threshold=at.getBestThreshold();
-    _tprs=at._tprs;
-    _fprs=at._fprs;
+    _tprs=at.getTPRs();
+    _fprs=at.getFPRs();
+    _cms=at.getCMs();
     return Response.done(this);
   }
  catch (  Throwable t) {
