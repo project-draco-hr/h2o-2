@@ -1,5 +1,6 @@
 {
-  super.postGlobal();
+  _tprs=new double[_cms.length];
+  _fprs=new double[_cms.length];
   double TPR_pre=1;
   double FPR_pre=1;
   _auc=0;
@@ -13,6 +14,7 @@
     _fprs[t]=FPR;
   }
   _auc+=trapezoid_area(FPR_pre,0,TPR_pre,0);
+  assert(_auc >= 0. && _auc <= 1.0);
   int best=0;
   for (int i=1; i < _cms.length; ++i) {
     if (Math.max(_cms[i].classErr(0),_cms[i].classErr(1)) < Math.max(_cms[best].classErr(0),_cms[best].classErr(1)))     best=i;

@@ -11,9 +11,11 @@
     if (!va.group().equals(vp.group())) {
       vp=va.align(vp);
     }
-    AUCTask at=new AUCTask(_cms,_thresh,_tprs,_fprs).doAll(va,vp);
+    AUCTask at=new AUCTask(_thresh).doAll(va,vp);
     auc=at.getAUC();
     best_threshold=at.getBestThreshold();
+    _tprs=at._tprs;
+    _fprs=at._fprs;
     return Response.done(this);
   }
  catch (  Throwable t) {

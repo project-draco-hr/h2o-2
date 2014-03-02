@@ -1,11 +1,7 @@
 {
   final int bins=100;
-  _cms=new hex.ConfusionMatrix[bins];
   _thresh=new double[bins];
-  _tprs=new double[bins];
-  _fprs=new double[bins];
   for (int i=0; i < bins; ++i) {
-    _cms[i]=new hex.ConfusionMatrix(2);
     _thresh[i]=(0.5f + i) / bins;
   }
 }
