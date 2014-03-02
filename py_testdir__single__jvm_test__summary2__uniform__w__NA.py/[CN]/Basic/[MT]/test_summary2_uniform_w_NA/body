@@ -62,7 +62,7 @@ def test_summary2_uniform_w_NA(self):
         self.assertEqual(((1 + NA_ROW_RATIO) * rowCount), numRows, msg=('numRows %s should be %s' % (numRows, ((1 + NA_ROW_RATIO) * rowCount))))
         for b in hcnt[1:(-1)]:
             e = (rowCount / len(hcnt))
-            self.assertAlmostEqual(b, e, delta=(0.15 * e), msg=('Bins not right. b: %s e: %s' % (b, e)))
+            self.assertAlmostEqual(b, e, delta=(2 * e), msg=('Bins not right. b: %s e: %s' % (b, e)))
         pt = twoDecimals(pctile)
         mx = twoDecimals(maxs)
         mn = twoDecimals(mins)
@@ -78,3 +78,4 @@ def test_summary2_uniform_w_NA(self):
         if (DO_TRY_SCIPY and (colname != '')):
             print scipyCol, pctile[10]
             generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)])
+        h2i.delete_keys_at_all_nodes()
