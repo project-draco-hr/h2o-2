@@ -15,7 +15,7 @@
   for (  Vec vec : vecs)   vec.rollupStats(fs);
   fs.blockForPending();
   Summary2.BasicStat basicStats[]=new Summary2.PrePass().doAll(fr).finishUp()._basicStats;
-  summaries=new Summary2.SummaryTask2(basicStats).doAll(fr)._summaries;
+  summaries=new Summary2.SummaryTask2(basicStats,max_qbins).doAll(fr)._summaries;
   if (summaries != null)   for (int i=0; i < cols.length; i++)   summaries[i].finishUp(vecs[i]);
   return Response.done(this);
 }

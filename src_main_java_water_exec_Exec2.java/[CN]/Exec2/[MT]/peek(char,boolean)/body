@@ -1,0 +1,9 @@
+{
+  char d;
+  while (_x < _buf.length && isWS(_buf[_x]) && _buf[_x] != '\n')   _x++;
+  int nx=_x;
+  if (!EOS)   while (nx < _buf.length && isWS(_buf[nx]))   nx++;
+  if (nx == _buf.length || _buf[nx] != c)   return false;
+  _x=nx + 1;
+  return true;
+}

@@ -1,0 +1,30 @@
+{
+  int x=E._x;
+  AST ast;
+  E.skipWS(EOS);
+  ASTOp op1=ASTOp.parseUniInfixOp(E);
+  if (op1 != null) {
+    if ((ast=parseInfix(E,op1._precedence,EOS)) != null)     ast=make(new AST[]{op1,ast},E,x);
+ else {
+      E._x=x;
+      ast=ASTSlice.parse(E,EOS);
+    }
+  }
+ else {
+    ast=ASTSlice.parse(E,EOS);
+  }
+  if (ast == null)   return null;
+  while (true) {
+    int op_x=E._x;
+    E.skipWS(EOS);
+    ASTOp op=ASTOp.parseBinInfixOp(E);
+    if (op == null || op._precedence < curr_prec || (op.leftAssociate() && op._precedence == curr_prec)) {
+      E._x=op_x;
+      return ast;
+    }
+    op_x=E._x;
+    AST rite=parseInfix(E,op._precedence,false);
+    if (rite == null)     E.throwErr("Missing expr or unknown ID",op_x);
+    ast=make(new AST[]{op,ast,rite},E,x);
+  }
+}

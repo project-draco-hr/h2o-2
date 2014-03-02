@@ -1,0 +1,8 @@
+{
+  if (!E.peek('$',true))   return ast;
+  int x=E._x;
+  E.skipWS(EOS);
+  String colname=E.isID();
+  if (colname == null)   E.throwErr("Missing column name after $",x);
+  return new ASTNamedCol(Type.ARY,ast,colname);
+}
