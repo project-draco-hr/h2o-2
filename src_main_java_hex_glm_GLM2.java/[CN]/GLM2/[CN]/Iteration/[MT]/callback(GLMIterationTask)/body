@@ -1,5 +1,5 @@
 {
-  if (!(isRunning(self())))   throw new JobCancelledException();
+  if (!isRunning(self()))   throw new JobCancelledException();
   boolean converged=false;
   if (_glm.family == Family.binomial && glmt._beta != null && glmt._val != null) {
     glmt._val.finalize_AIC_AUC();
