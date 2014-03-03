@@ -11,6 +11,8 @@
     sc=new Score().doIt(model,fr,validationFrame,_adaptedValidationResponse,_modelMap,cmDomain,oob,build_tree_per_node).report(logTag(),tid,ktrees);
     _timeLastScoreEnd=System.currentTimeMillis();
   }
+  double[] varimp=null;
+  double[] varimpSD=null;
   model=makeModel(model,sc == null ? Double.NaN : sc.mse(),sc == null ? null : (_nclass > 1 ? new ConfusionMatrix(sc._cm) : null));
   model.update(self());
   return model;
