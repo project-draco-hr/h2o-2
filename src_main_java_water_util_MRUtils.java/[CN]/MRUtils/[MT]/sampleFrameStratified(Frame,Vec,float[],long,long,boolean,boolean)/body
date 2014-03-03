@@ -1,0 +1,43 @@
+{
+  if (fr == null)   return null;
+  assert(label.isEnum());
+  assert(maxrows >= label.domain().length);
+  long[] dist=new ClassDist(label).doAll(label).dist();
+  assert(dist.length > 0);
+  Log.info("Doing stratified sampling for data set containing " + fr.numRows() + " rows from "+ dist.length+ " classes. Oversampling: "+ (allowOversampling ? "on" : "off"));
+  if (debug) {
+    for (int i=0; i < dist.length; ++i) {
+      Log.info("Class " + label.domain(i) + ": count: "+ dist[i]+ " prior: "+ (float)dist[i] / fr.numRows());
+    }
+  }
+  if (sampling_ratios == null || (Utils.minValue(sampling_ratios) == 0 && Utils.maxValue(sampling_ratios) == 0)) {
+    if (sampling_ratios == null) {
+      sampling_ratios=new float[dist.length];
+    }
+    assert(sampling_ratios.length == dist.length);
+    for (int i=0; i < dist.length; ++i) {
+      sampling_ratios[i]=((float)fr.numRows() / label.domain().length) / dist[i];
+    }
+    final float inv_scale=Utils.minValue(sampling_ratios);
+    Utils.div(sampling_ratios,inv_scale);
+  }
+  if (!allowOversampling) {
+    for (int i=0; i < sampling_ratios.length; ++i) {
+      sampling_ratios[i]=Math.min(1.0f,sampling_ratios[i]);
+    }
+  }
+  float numrows=0;
+  for (int i=0; i < sampling_ratios.length; ++i) {
+    numrows+=sampling_ratios[i] * dist[i];
+  }
+  final long actualnumrows=Math.min(maxrows,Math.round(numrows));
+  assert(actualnumrows > 0);
+  Log.info("Stratified sampling to a total of " + String.format("%,d",actualnumrows) + " rows.");
+  if (actualnumrows != numrows) {
+    Utils.mult(sampling_ratios,(float)actualnumrows / numrows);
+    if (debug)     Log.info("Downsampling majority class by " + (float)actualnumrows / numrows + " to limit number of rows to " + String.format("%,d",maxrows));
+  }
+  Log.info("Majority class (" + label.domain()[Utils.minIndex(sampling_ratios)].toString() + ") sampling ratio: "+ Utils.minValue(sampling_ratios));
+  Log.info("Minority class (" + label.domain()[Utils.maxIndex(sampling_ratios)].toString() + ") sampling ratio: "+ Utils.maxValue(sampling_ratios));
+  return sampleFrameStratified(fr,label,sampling_ratios,seed,debug);
+}

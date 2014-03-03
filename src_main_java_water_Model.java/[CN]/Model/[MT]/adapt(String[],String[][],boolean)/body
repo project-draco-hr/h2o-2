@@ -6,10 +6,10 @@
     String ds[]=domains[c];
     if (ms == ds) {
     }
- else     if (ms == null && ds != null) {
+ else     if (ms == null) {
       throw new IllegalArgumentException("Incompatible column: '" + _names[c] + "', expected (trained on) numeric, was passed a categorical");
     }
- else     if (ms != null && ds == null) {
+ else     if (ds == null) {
       if (exact)       throw new IllegalArgumentException("Incompatible column: '" + _names[c] + "', expected (trained on) categorical, was passed a numeric");
       throw H2O.unimpl();
     }
