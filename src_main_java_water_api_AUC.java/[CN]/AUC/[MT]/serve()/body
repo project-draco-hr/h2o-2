@@ -11,18 +11,20 @@
     if (!va.group().equals(vp.group())) {
       vp=va.align(vp);
     }
-    HashSet hs=new HashSet();
-    final int bins=(int)Math.min(vpredict.length(),200l);
-    final long stride=Math.max(vpredict.length() / bins,1);
-    for (int i=0; i < bins; ++i)     hs.add(new Float(vpredict.at(i * stride)));
-    for (int i=0; i < 51; ++i)     hs.add(new Float(i / 50.));
-    _thresh=new float[hs.size()];
-    int i=0;
-    for (    Object h : hs) {
-      _thresh[i++]=(Float)h;
+    if (thresholds == null) {
+      HashSet hs=new HashSet();
+      final int bins=(int)Math.min(vpredict.length(),200l);
+      final long stride=Math.max(vpredict.length() / bins,1);
+      for (int i=0; i < bins; ++i)       hs.add(new Float(vpredict.at(i * stride)));
+      for (int i=0; i < 51; ++i)       hs.add(new Float(i / 50.));
+      thresholds=new float[hs.size()];
+      int i=0;
+      for (      Object h : hs) {
+        thresholds[i++]=(Float)h;
+      }
+      sort(thresholds);
     }
-    sort(_thresh);
-    AUCTask at=new AUCTask(_thresh).doAll(va,vp);
+    AUCTask at=new AUCTask(thresholds).doAll(va,vp);
     _cms=at.getCMs();
     idx_bestF1=at.getBestIdxF1();
     _tprs=at.getTPRs();
