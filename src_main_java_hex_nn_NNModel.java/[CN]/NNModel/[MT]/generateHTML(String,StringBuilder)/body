@@ -6,13 +6,13 @@
   final String mse_format="%g";
   final Errors error=errors[errors.length - 1];
   DocGen.HTML.title(sb,title);
+  model_info.job().toHTML(sb);
+  Inspect2 is2=new Inspect2();
+  sb.append("<div class='alert'>Actions: " + (Job.isRunning(jobKey) ? Cancel.link(jobKey,"Stop training") + ", " : "") + is2.link("Inspect training data (" + _dataKey + ")",_dataKey)+ ", "+ (model_info().parameters.validation != null ? (is2.link("Inspect validation data (" + model_info().parameters.validation._key + ")",model_info().parameters.validation._key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
   DocGen.HTML.paragraph(sb,"Job Key: " + jobKey);
   DocGen.HTML.paragraph(sb,"Model type: " + (model_info().parameters.classification ? " Classification" : " Regression") + ", predicting: "+ responseName());
   DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + String.format("%,d",model_info().size()));
-  model_info.job().toHTML(sb);
-  Inspect2 is2=new Inspect2();
-  sb.append("<div class='alert'>Actions: " + (Job.isRunning(jobKey) ? Cancel.link(jobKey,"Stop training") + ", " : "") + is2.link("Inspect training data (" + _dataKey + ")",_dataKey)+ ", "+ (model_info().parameters.validation != null ? (is2.link("Inspect validation data (" + model_info().parameters.validation._key + ")",model_info().parameters.validation._key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ NN.link(_dataKey,"Compute new model")+ "</div>");
   if (model_info.unstable()) {
     final String msg="Job was aborted due to observed numerical instability (exponential growth)." + " Try a bounded activation function or regularization with L1, L2 or max_w2 and/or use a smaller learning rate or faster annealing.";
     DocGen.HTML.section(sb,"=======================================================================================");
@@ -98,23 +98,33 @@
   final String toolarge=" Not shown here - too large: number of classes (" + model_info.units[model_info.units.length - 1] + ") is greater than the specified limit of "+ model_info().get_params().max_confusion_matrix_size+ ".";
   boolean smallenough=model_info.units[model_info.units.length - 1] <= model_info().get_params().max_confusion_matrix_size;
   if (isClassifier()) {
-    String cmTitle="<br/>Confusion matrix reported on training data" + (fulltrain ? "" : " (" + score_train + " samples)") + ":";
-    sb.append("<h5>" + cmTitle);
-    if (error.train_confusion_matrix != null && smallenough) {
-      sb.append("</h5>");
-      error.train_confusion_matrix.toHTML(sb);
+    if (error.validAUC != null) {
+      error.validAUC.toHTML(sb);
     }
- else     if (smallenough)     sb.append(" Not yet computed.</h5>");
- else     sb.append(toolarge + "</h5>");
-    if (error.validation) {
-      cmTitle="<br/>Confusion matrix reported on validation data" + (fullvalid ? "" : " (" + score_valid + " samples)") + ":";
-      sb.append("<h5>" + cmTitle);
-      if (error.valid_confusion_matrix != null && smallenough) {
-        sb.append("</h5>");
-        error.valid_confusion_matrix.toHTML(sb);
+ else     if (error.trainAUC != null) {
+      error.trainAUC.toHTML(sb);
+    }
+ else {
+      if (error.validation) {
+        String cmTitle="Confusion matrix reported on validation data" + (fullvalid ? "" : " (" + score_valid + " samples)") + ":";
+        sb.append("<h5>" + cmTitle);
+        if (error.valid_confusion_matrix != null && smallenough) {
+          sb.append("</h5>");
+          error.valid_confusion_matrix.toHTML(sb);
+        }
+ else         if (smallenough)         sb.append(" Not yet computed.</h5>");
+ else         sb.append(" Too large." + "</h5>");
       }
- else       if (smallenough)       sb.append(" Not yet computed.</h5>");
- else       sb.append("Too large." + "</h5>");
+ else {
+        String cmTitle="Confusion matrix reported on training data" + (fulltrain ? "" : " (" + score_train + " samples)") + ":";
+        sb.append("<h5>" + cmTitle);
+        if (error.train_confusion_matrix != null && smallenough) {
+          sb.append("</h5>");
+          error.train_confusion_matrix.toHTML(sb);
+        }
+ else         if (smallenough)         sb.append(" Not yet computed.</h5>");
+ else         sb.append(toolarge + "</h5>");
+      }
     }
   }
   DocGen.HTML.title(sb,"Scoring history");
@@ -173,6 +183,7 @@
   sb.append("<th>Training Samples</th>");
   if (isClassifier()) {
     sb.append("<th>Training Error</th>");
+    if (nclasses() == 2)     sb.append("<th>Training AUC</th>");
   }
  else {
     sb.append("<th>Training MSE</th>");
@@ -180,6 +191,7 @@
   if (error.validation) {
     if (isClassifier()) {
       sb.append("<th>Validation Error</th>");
+      if (nclasses() == 2)       sb.append("<th>Validation AUC</th>");
     }
  else {
       sb.append("<th>Validation MSE</th>");
@@ -194,6 +206,10 @@
     sb.append("<td>" + String.format("%,d",e.training_samples) + "</td>");
     if (isClassifier()) {
       sb.append("<td>" + formatPct(e.train_err) + "</td>");
+      if (nclasses() == 2) {
+        if (e.trainAUC != null)         sb.append("<td>" + formatPct(e.trainAUC.auc()) + "</td>");
+ else         sb.append("<td>" + "N/A" + "</td>");
+      }
     }
  else {
       sb.append("<td>" + String.format(mse_format,e.train_mse) + "</td>");
@@ -201,6 +217,10 @@
     if (e.validation) {
       if (isClassifier()) {
         sb.append("<td>" + formatPct(e.valid_err) + "</td>");
+        if (nclasses() == 2) {
+          if (e.validAUC != null)           sb.append("<td>" + formatPct(e.validAUC.auc()) + "</td>");
+ else           sb.append("<td>" + "N/A" + "</td>");
+        }
       }
  else {
         sb.append("<td>" + String.format(mse_format,e.valid_mse) + "</td>");
