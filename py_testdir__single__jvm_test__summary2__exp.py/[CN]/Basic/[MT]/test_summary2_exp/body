@@ -1,6 +1,7 @@
 def test_summary2_exp(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(1000000, 1, 'x.hex', 1, 20000, ('C1', None, None, None, None, None)), (1000000, 1, 'x.hex', (-5000), 0, ('C1', None, None, None, None, None)), (1000000, 1, 'x.hex', (-100000), 100000, ('C1', None, None, None, None, None)), (1000000, 1, 'x.hex', (-1), 1, ('C1', None, None, None, None, None)), (1000000, 1, 'A.hex', 1, 100, ('C1', None, None, None, None, None)), (1000000, 1, 'A.hex', (-99), 99, ('C1', None, None, None, None, None)), (1000000, 1, 'B.hex', 1, 10000, ('C1', None, None, None, None, None)), (1000000, 1, 'B.hex', (-100), 100, ('C1', None, None, None, None, None)), (1000000, 1, 'C.hex', 1, 100000, ('C1', None, None, None, None, None)), (1000000, 1, 'C.hex', (-101), 101, ('C1', None, None, None, None, None))]
+    LAMBD = random.uniform(0.005, 0.5)
+    tryList = [(10, 1, 'x.hex', 1, 20000, ('C1', None, None, None, None, None)), (100, 1, 'x.hex', 1, 20000, ('C1', None, None, None, None, None)), (1000, 1, 'x.hex', (-5000), 0, ('C1', None, None, None, None, None)), (10000, 1, 'x.hex', (-100000), 100000, ('C1', None, None, None, None, None)), (100000, 1, 'x.hex', (-1), 1, ('C1', None, None, None, None, None)), (1000000, 1, 'A.hex', 1, 100, ('C1', None, None, None, None, None))]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -26,9 +27,17 @@ def test_summary2_exp(self):
         print ('\n' + csvFilename)
         numRows = inspect['num_rows']
         numCols = inspect['num_cols']
+        h2o.beta_features = False
+        summary1Result = h2o_cmd.runSummary(key=hex_key)
+        h2o.verboseprint('Summary1 summary1Result:', h2o.dump_json(summary1Result))
+        percentiles1 = summary1Result['summary']['columns'][0]['percentiles']
+        thresholds1 = percentiles1['thresholds']
+        values1 = percentiles1['values']
+        print 'Summary1 thresholds', twoDecimals(thresholds1)
+        print 'Summary1 values', twoDecimals(values1)
         h2o.beta_features = True
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
-        h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
+        h2o.verboseprint('Summary2 summaryResult:', h2o.dump_json(summaryResult))
         column = summaryResult['summaries'][0]
         colname = column['colname']
         coltype = column['type']
@@ -81,4 +90,4 @@ def test_summary2_exp(self):
         scipyCol = 0
         if (DO_TRY_SCIPY and (colname != '')):
             print scipyCol, pctile[10]
-            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)])
+            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)], h2o1Median=values1[(5 if DO_MEDIAN else 10)])
