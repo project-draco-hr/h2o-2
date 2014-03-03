@@ -8,6 +8,7 @@
   Frame adaptFrm=adapt ? adaptFrms[0] : fr;
   Frame onlyAdaptFrm=adapt ? adaptFrms[1] : null;
   Frame output=scoreImpl(adaptFrm);
+  if (isClassifier())   water.util.MRUtils.correctProbabilities(output,_priorClassDist,_modelClassDist);
   if (adapt)   onlyAdaptFrm.delete();
   return output;
 }

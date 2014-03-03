@@ -2,7 +2,7 @@
   int x=E._x;
   AST ast=ASTApply.parsePrefix(E,EOS);
   if (ast == null)   return null;
-  if (!E.peek('[',true))   return ast;
+  if (!E.peek('[',EOS))   return ASTNamedCol.parse(E,ast,EOS);
   if (!Type.ARY.union(ast._t))   E.throwErr("Not an ary",x);
   if (E.peek(']',false))   return ast;
   AST rows=E.xpeek(',',(x=E._x),parseCXExpr(E,false));
