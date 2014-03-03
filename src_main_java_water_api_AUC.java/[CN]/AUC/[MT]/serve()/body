@@ -1,0 +1,47 @@
+{
+  Vec va=null, vp;
+  if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing actual or predict!");
+  if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
+  if (!vactual.isInt())   throw new IllegalArgumentException("Actual column must be integer class labels!");
+  if (vpredict.isInt())   throw new IllegalArgumentException("Predicted column must be a floating point probability!");
+  try {
+    va=vactual.toEnum();
+    actual_domain=va._domain;
+    vp=vpredict;
+    if (!va.group().equals(vp.group())) {
+      vp=va.align(vp);
+    }
+    final int bins=(int)Math.min(vpredict.length(),200l);
+    _thresh=new float[bins];
+    long stride=Math.max(vpredict.length() / bins,1);
+    for (int i=0; i < bins; ++i) {
+      _thresh[i]=(float)vpredict.at(i * stride);
+    }
+    sort(_thresh);
+    ArrayList al=new ArrayList();
+    for (int i=0; i < _thresh.length; ++i)     al.add(new Float(_thresh[i]));
+    LinkedHashSet hs=new LinkedHashSet();
+    hs.addAll(al);
+    al.clear();
+    al.addAll(hs);
+    _thresh=new float[hs.size()];
+    int i=0;
+    for (    Object h : hs) {
+      _thresh[i++]=(Float)h;
+    }
+    AUCTask at=new AUCTask(_thresh).doAll(va,vp);
+    auc=at.getAUC();
+    best_threshold=at.getBestThreshold();
+    best=at.getBestIdx();
+    _tprs=at.getTPRs();
+    _fprs=at.getFPRs();
+    _cms=at.getCMs();
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+ finally {
+    if (va != null)     UKV.remove(va._key);
+  }
+}
