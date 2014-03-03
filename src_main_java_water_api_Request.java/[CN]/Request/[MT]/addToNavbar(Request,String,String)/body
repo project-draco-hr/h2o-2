@@ -1,10 +1,4 @@
 {
-  ArrayList<MenuItem> arl=_navbar.get(category);
-  if (arl == null) {
-    arl=new ArrayList();
-    _navbar.put(category,arl);
-    _navbarOrdering.add(category);
-  }
-  arl.add(new MenuItem(r,name));
-  return r;
+  boolean useNewTab=false;
+  return addToNavbar(r,name,category,useNewTab);
 }
