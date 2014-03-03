@@ -15,12 +15,12 @@
   }
   _auc+=trapezoid_area(FPR_pre,0,TPR_pre,0);
   assert(_auc >= 0. && _auc <= 1.0);
-  _best=0;
-  _best_threshold=_thresh[0];
+  _best_idxF1=0;
+  _best_thresholdF1=_thresh[0];
   for (int i=1; i < _cms.length; ++i) {
-    if (Math.max(_cms[i].classErr(0),_cms[i].classErr(1)) < Math.max(_cms[_best].classErr(0),_cms[_best].classErr(1))) {
-      _best=i;
-      _best_threshold=_thresh[i];
+    if (_cms[i].precisionAndRecall() > _cms[_best_idxF1].precisionAndRecall()) {
+      _best_idxF1=i;
+      _best_thresholdF1=_thresh[i];
     }
   }
 }
