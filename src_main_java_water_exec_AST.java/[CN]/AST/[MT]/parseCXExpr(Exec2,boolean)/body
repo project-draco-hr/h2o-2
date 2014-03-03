@@ -1,4 +1,8 @@
 {
+  if (EOS && E.peekEOS()) {
+    E._x--;
+    return new ASTNop();
+  }
   AST ast2, ast=ASTApply.parseInfix(E,0,EOS);
   if (ast == null)   return ASTAssign.parseNew(E,EOS);
   if (ast instanceof ASTSlice || ast instanceof ASTId)   if ((ast2=ASTAssign.parse(E,ast,EOS)) != null)   return ast2;
