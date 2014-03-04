@@ -6,7 +6,7 @@
   new MRTask2(){
     @Override public void map(    Chunk[] cs){
       for (int r=0; r < cs[0]._len; r++) {
-        double prob=0;
+        double[] probs=new double[cs.length - 1];
         for (int i=0; i < cs.length - 1; i++) {
           final double scoring_result=cs[i + 1].at0(r);
           assert(!Double.isNaN(scoring_result));
@@ -14,13 +14,13 @@
           assert(original_fraction > 0);
           final double oversampled_fraction=model_fraction[i];
           assert(oversampled_fraction > 0);
-          final double corrected_prob=1 / (1 + ((1 / original_fraction) - 1) / ((1 / oversampled_fraction) - 1) * ((1 / scoring_result) - 1));
-          assert(!Double.isNaN(corrected_prob));
-          assert(corrected_prob >= 0 && corrected_prob <= 1.);
-          cs[i + 1].set0(r,corrected_prob);
-          prob+=corrected_prob;
+          probs[i]=scoring_result * original_fraction / oversampled_fraction;
+          assert(!Double.isNaN(probs[i]));
         }
-        if (prior_fraction.length == 2)         assert(Math.abs(prob - 1.0) < 1e-4);
+        final double probsum=Utils.sum(probs);
+        for (int i=0; i < cs.length - 1; i++) {
+          cs[i + 1].set0(r,probs[i] / probsum);
+        }
       }
     }
   }
