@@ -1,14 +1,42 @@
 {
   try {
-    int column_index=_col_index.value();
-    boolean to_enum=_to_enum.value();
+    final int column_index=_col_index.value();
+    final boolean to_enum=_to_enum.value();
     String colname=_col_index.toString();
     Log.info("Factorizing column " + colname);
-    new TypeChange(column_index,to_enum,_key.value()._key).invoke();
+    final ValueArray ary=_key.value();
+    final ValueArray.Column col=ary._cols[column_index];
+    final Key key=ary._key;
+    H2O.H2OCountedCompleter fjt=new H2O.H2OCountedCompleter(){
+      @Override public void compute2(){
+        int[] dom;
+        if (to_enum) {
+          CollectIntDomain domtsk=new CollectIntDomain(column_index);
+          domtsk.invoke(key);
+          dom=domtsk._dom;
+          String[] strdom=new String[dom.length];
+          for (int i=0; i < strdom.length; ++i)           strdom[i]=String.valueOf(dom[i]);
+          col._domain=strdom;
+        }
+ else {
+          String[] strdom=ary._cols[column_index]._domain;
+          dom=new int[strdom.length];
+          for (int i=0; i < dom.length; ++i)           dom[i]=Integer.valueOf(strdom[i]);
+          col._domain=null;
+        }
+        EnumIntSwapTask etsk=new EnumIntSwapTask(column_index,dom,true);
+        etsk.invoke(key);
+        col._base=to_enum ? 0 : dom[0];
+        DKV.put(key,ary);
+        tryComplete();
+      }
+    }
+;
+    H2O.submitTask(fjt);
+    fjt.get();
+    return Inspect.redirect(new JsonObject(),null,key);
   }
  catch (  Throwable e) {
     return Response.error(e);
   }
-  JsonObject response=new JsonObject();
-  return Response.done(response);
 }

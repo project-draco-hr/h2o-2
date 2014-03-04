@@ -1,0 +1,20 @@
+{
+  if (_dom == null)   _dom=other._dom;
+ else   if (other._dom != null && !Arrays.equals(_dom,other._dom)) {
+    int[] res=new int[_n + other._n];
+    Arrays.fill(res,Integer.MAX_VALUE);
+    int i=0, j=0, k=0;
+    while (i < _n && j < other._n) {
+      if (_dom[i] < other._dom[j])       res[k++]=_dom[i++];
+ else       if (_dom[i] == other._dom[j]) {
+        res[k++]=_dom[i++];
+        j++;
+      }
+ else       res[k++]=other._dom[j++];
+    }
+    assert(i == _dom.length || j == _dom.length);
+    for (int ii=i; ii < _dom.length; ++ii)     res[k++]=_dom[ii];
+    for (int jj=j; jj < _dom.length; ++jj)     res[k++]=_dom[jj];
+    _dom=res;
+  }
+}

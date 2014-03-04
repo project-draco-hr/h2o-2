@@ -1,0 +1,22 @@
+{
+  Key aryKey=ValueArray.getArrayKey(k);
+  ValueArray ary=DKV.get(aryKey).get();
+  int[] dom=new int[256];
+  int n=0;
+  AutoBuffer ab=new AutoBuffer(DKV.get(k).getBytes());
+  int nrows=ab.remaining() / ary._rowsize;
+  final ValueArray.Column col=ary._cols[_col];
+  for (int i=0; i < nrows; ++i) {
+    int val=(int)ary.data(ab,i,col);
+    int id=Arrays.binarySearch(dom,0,n,val);
+    if (id < 0) {
+      if (n == dom.length)       dom=Arrays.copyOf(dom,n + (n >> 1));
+      id=-id - 1;
+      for (int j=n; j > id; --j)       dom[j]=dom[j - 1];
+      dom[id]=val;
+      ++n;
+    }
+  }
+  _n=n;
+  _dom=Arrays.copyOf(dom,n);
+}
