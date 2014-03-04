@@ -1,0 +1,133 @@
+def findQuantile(d, dmin, dmax, drows, threshold):
+    binCount = 50
+    maxIterations = 30
+    newValStart = dmin
+    newValEnd = dmax
+    newValRange = (newValEnd - newValStart)
+    newBinCount = binCount
+    newBinSize = (newValRange / (newBinCount + 0.0))
+    newLowCount = 0
+    targetCount = math.floor((threshold * drows))
+    minK = 0
+    maxK = (binCount - 1)
+    iteration = 0
+    done = False
+    hcnt = [None for b in range((binCount + 1))]
+    hcnt_min = [None for b in range((binCount + 1))]
+    hcnt_max = [None for b in range((binCount + 1))]
+    hcnt_low = 0
+    hcnt_high = 0
+    best_result = []
+
+    def htot2():
+        return ((sum(hcnt) + hcnt_low) + hcnt_high)
+    while ((iteration < maxIterations) and (not done)):
+        h2p.green_print('newValStart', newValStart)
+        h2p.green_print('newValEnd', newValEnd)
+        h2p.green_print('newValRange', newValRange)
+        h2p.green_print('newBinSize', newBinSize)
+        h2p.green_print('newLowCount', newLowCount)
+        valStart = newValStart
+        valEnd = newValEnd
+        valRange = newValRange
+        binSize = newBinSize
+        lowCount = newLowCount
+        for b in range((binCount + 1)):
+            hcnt[b] = 0.0
+        hcnt_low = 0
+        hcnt_high = 0
+        for val in d:
+            valOffset = (val - valStart)
+            if (valOffset < 0):
+                hcnt_low += 1
+            elif (val > valEnd):
+                hcnt_high += 1
+            else:
+                hcntIdx = int((round(((valOffset * 1000000.0) / binSize)) / 1000000.0))
+                assert ((hcntIdx >= 0) and (hcntIdx <= binCount)), ('val %s %s %s %s hcntIdx: %s binCount: %s binSize: %s' % (val, valStart, valEnd, valOffset, hcntIdx, binCount, binSize))
+                if (hcnt[hcntIdx] == 0):
+                    hcnt_min[hcntIdx] = val
+                    hcnt_max[hcntIdx] = val
+                else:
+                    hcnt_min[hcntIdx] = min(hcnt_min[hcntIdx], val)
+                    hcnt_max[hcntIdx] = max(hcnt_max[hcntIdx], val)
+                hcnt[hcntIdx] += 1
+        ht = htot2()
+        assert (drows == ht), ('drows: %s htot2() %s not equal' % (drows, ht))
+        s = 0
+        k = 0
+        prevK = 0
+        currentCnt = newLowCount
+        targetCnt = int(math.floor((threshold * drows)))
+        if DO_TO_BEFORE:
+            e = (lambda x, y: (x < y))
+        else:
+            e = (lambda x, y: (x <= y))
+        while e((currentCnt + hcnt[k]), targetCnt):
+            currentCnt += hcnt[k]
+            if (hcnt[k] != 0):
+                prevK = k
+            k += 1
+            assert (k <= binCount), ('k too large, k: %s binCount %s' % (k, binCount))
+        assert (((k == 0) and (prevK == 0)) or (prevK < k)), ('prevK should be before k except if both are zero %s %s' % (prevK, k))
+        if ((s == targetCnt) or (hcnt[k] == 0)):
+            if (hcnt[k] != 0):
+                guess = hcnt_min[k]
+                h2p.red_print('Guess A', guess, currentCnt, targetCnt)
+            elif (k == 0):
+                assert (hcnt[(k + 1)] != 0)
+                guess = hcnt_min[(k + 1)]
+                h2p.red_print('Guess B', guess, currentCnt, targetCnt)
+            elif (hcnt[(k - 1)] != 0):
+                guess = hcnt_max[(k - 1)]
+                h2p.red_print('Guess C', guess, currentCnt, targetCnt)
+            else:
+                assert false
+        else:
+            h2p.red_print('hcnt_max[k]', hcnt_max[k], 'hcnt_min[k]', hcnt_min[k])
+            actualBinWidth = (hcnt_max[k] - hcnt_min[k])
+            assert (actualBinWidth <= binSize)
+            guess = (hcnt_min[k] + (actualBinWidth * ((targetCnt - currentCnt) / hcnt[k])))
+            print 'Guess D:', guess, k, hcnt_min[k], actualBinWidth, currentCnt, targetCnt, hcnt[k]
+        print 'checking for done, hcnt_min[k]', hcnt_min[k], 'hcnt_max[k]', hcnt_max[k]
+        if DO_TO_BEFORE:
+            done = ((hcnt_min[k] == hcnt_max[k]) and ((currentCnt + hcnt[k]) == targetCnt))
+        else:
+            done = ((hcnt_min[k] == hcnt_max[k]) and (currentCnt == targetCnt))
+        assert (((hcnt[k] == 1) and (hcnt_min[k] == hcnt_max[k])) or (hcnt[k] > 1))
+        if ((not done) and (hcnt[k] == 1)):
+            if (k < binCount):
+                nextK = (k + 1)
+            else:
+                nextK = k
+            while ((nextK < binCount) and (hcnt[nextK] == 0)):
+                nextK += 1
+            if (nextK >= binCount):
+                print 'k must be the last non-zero bin. set nextK to last bin'
+                nextK = (binCount - 1)
+            assert (nextK < binCount), ('%s %s' % (nextK, binCount))
+            if (hcnt[nextK] == 0):
+                nextK = k
+            nextCnt = int((nextK * binSize))
+            assert (nextK < (binCount + 1)), ('nextK too large, nextK: %s binCount %s' % (nextK, binCount))
+            if (k != nextK):
+                guess = ((hcnt_max[k] + hcnt_min[nextK]) / 2.0)
+                print '\nInterpolating result'
+                print 'Guess E:', guess, k, nextK, hcnt_max[k], hcnt_min[nextK], actualBinWidth, currentCnt, targetCnt, hcnt[k]
+            assert (hcnt[nextK] != 0), hcnt[nextK]
+            assert (hcnt[k] != 0), hcnt[k]
+            assert (hcnt[prevK] != 0), hcnt[prevK]
+            done = True
+        newValStart = hcnt_min[k]
+        newValEnd = hcnt_max[k]
+        newValRange = (newValEnd - newValStart)
+        newBinSize = (newValRange / binCount)
+        newLowCount = currentCnt
+        best_result.append(guess)
+        print ('Compare these two, should be identical? %s %s' % (guess, best_result[(-1)]))
+        iteration += 1
+        h2p.blue_print('Ending Pass', iteration, 'best_result:', best_result, 'done:', done, 'hcnt[k]', hcnt[k])
+        print 'currentCnt', currentCnt, 'targetCnt', targetCnt
+        print 'was', valStart, valEnd, valRange, binSize
+        print 'next', newValStart, newValEnd, newValRange, newBinSize
+    return best_result[(-1)]

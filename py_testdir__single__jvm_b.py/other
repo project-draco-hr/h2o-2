@@ -1,12 +1,12 @@
 import sys
 import math
+DO_MEDIAN = True
+DO_TO_BEFORE = False
 sys.path.extend(['.', '..', 'py'])
 import h2o_print as h2p, h2o_summ
-DO_MEDIAN = True
 import numpy as np
 import scipy as sp
-csvPathname = './syn_binary_100x1.csv'
-csvPathname = './syn_binary_1000000x1.csv'
+csvPathname = './syn_binary_100000x1.csv'
 col = 0
 print 'Reading csvPathname'
 dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=1, dtype=None)
@@ -19,10 +19,19 @@ print 'histogram of target'
 print target
 print sp.histogram(target)
 thresholds = [0.001, 0.01, 0.1, 0.25, 0.33, 0.5, 0.66, 0.75, 0.9, 0.99, 0.999]
+d = target
+dmin = min(d)
+dmax = max(d)
+drows = len(d)
+if DO_MEDIAN:
+    thresholdList = [0.5]
+else:
+    thresholdList = [0.999]
+quantiles = findQuantileList(d, dmin, dmax, drows, thresholdList)
 per = [(1 * t) for t in thresholds]
 print 'scipy per:', per
 from scipy import stats
-a1 = stats.scoreatpercentile(target, per=0.5)
+a1 = stats.scoreatpercentile(target, per=(100 * (0.5 if DO_MEDIAN else 0.999)), interpolation_method='fraction')
 h2p.red_print('stats.scoreatpercentile:', a1)
 a2 = stats.mstats.mquantiles(targetFP, prob=per)
 h2p.red_print('scipy stats.mstats.mquantiles:', [('%.2f' % v) for v in a2])
@@ -33,126 +42,3 @@ h2p.blue_print(label, 'from scipy:', a2[(5 if DO_MEDIAN else 10)])
 a3 = stats.mstats.mquantiles(targetFP, prob=per)
 h2p.red_print('after sort')
 h2p.red_print('scipy stats.mstats.mquantiles:', [('%.2f' % v) for v in a3])
-d = target
-binCount = 1000
-dmin = min(d)
-dmax = max(d)
-drows = len(d)
-maxIterations = 10
-threshold = 0.5
-newValStart = dmin
-newValEnd = dmax
-newValRange = (newValEnd - newValStart)
-newBinCount = binCount
-newBinSize = (newValRange / (newBinCount + 0.0))
-newLowCount = 0
-targetCount = math.floor((threshold * drows))
-minK = 0
-maxK = (binCount - 1)
-iteration = 0
-done = False
-hcnt = [None for b in range((binCount + 1))]
-hcnt_min = [None for b in range((binCount + 1))]
-hcnt_max = [None for b in range((binCount + 1))]
-hcnt_low = 0
-hcnt_high = 0
-best_result = []
-while ((iteration < maxIterations) and (not done)):
-    h2p.green_print('newValStart', newValStart)
-    h2p.green_print('newValEnd', newValEnd)
-    h2p.green_print('newValRange', newValRange)
-    h2p.green_print('newBinSize', newBinSize)
-    h2p.green_print('newLowCount', newLowCount)
-    valStart = newValStart
-    valEnd = newValEnd
-    valRange = newValRange
-    binSize = newBinSize
-    lowCount = newLowCount
-    for b in range((binCount + 1)):
-        hcnt[b] = 0.0
-    hcnt_low = 0
-    hcnt_high = 0
-    for val in d:
-        if (val < valStart):
-            hcnt_low += 1
-        elif (val > valEnd):
-            hcnt_high += 1
-        else:
-            valOffset = (val - valStart)
-            hcntIdx = int((round(((valOffset * 1000000.0) / binSize)) / 1000000))
-            assert ((hcntIdx >= 0) and (hcntIdx <= binCount))
-            if (hcnt[hcntIdx] == 0):
-                hcnt_min[hcntIdx] = val
-                hcnt_max[hcntIdx] = val
-            else:
-                hcnt_min[hcntIdx] = min(hcnt_min[hcntIdx], val)
-                hcnt_max[hcntIdx] = max(hcnt_max[hcntIdx], val)
-            hcnt[hcntIdx] += 1
-    ht = htot2()
-    assert (drows == ht), ('drows: %s htot2() %s not equal' % (drows, htot2))
-    s = 0
-    k = 0
-    prevK = 0
-    currentCnt = newLowCount
-    targetCnt = int(math.floor((threshold * drows)))
-    while ((currentCnt + hcnt[k]) < targetCnt):
-        currentCnt += hcnt[k]
-        if (hcnt[k] != 0):
-            prevK = k
-        k += 1
-        assert (k <= binCount), ('k too large, k: %s binCount %s' % (k, binCount))
-    if ((s == targetCnt) or (hcnt[k] == 0)):
-        if (hcnt[k] != 0):
-            guess = hcnt_min[k]
-            h2p.red_print('Guess A', guess, currentCnt, targetCnt)
-        elif (k == 0):
-            assert (hcnt[(k + 1)] != 0)
-            guess = hcnt_min[(k + 1)]
-            h2p.red_print('Guess B', guess, currentCnt, targetCnt)
-        elif (hcnt[(k - 1)] != 0):
-            guess = hcnt_max[(k - 1)]
-            h2p.red_print('Guess C', guess, currentCnt, targetCnt)
-        else:
-            assert false
-    else:
-        h2p.red_print('hcnt_max[k]', hcnt_max[k], 'hcnt_min[k]', hcnt_min[k])
-        actualBinWidth = (hcnt_max[k] - hcnt_min[k])
-        guess = (hcnt_min[k] + (actualBinWidth * ((targetCnt - currentCnt) / hcnt[k])))
-        print 'Guess D:', guess, k, hcnt_min[k], actualBinWidth, currentCnt, targetCnt, hcnt[k]
-    print 'checking for done, hcnt_min[k]', hcnt_min[k], 'hcnt_max[k]', hcnt_max[k]
-    done = ((hcnt_min[k] == hcnt_max[k]) and ((currentCnt + hcnt[k]) == targetCnt))
-    if (k < binCount):
-        nextK = (k + 1)
-    else:
-        nextK = k
-    while ((nextK < binCount) and (hcnt[nextK] == 0)):
-        nextK += 1
-    if (nextK >= binCount):
-        print 'k must be the last non-zero bin. set nextK to last bin'
-        nextK = (binCount - 1)
-    assert (nextK < binCount), ('%s %s' % (nextK, binCount))
-    if (hcnt[nextK] == 0):
-        nextK = k
-    nextCnt = int((nextK * binSize))
-    assert (nextK < (binCount + 1)), ('nextK too large, nextK: %s binCount %s' % (nextK, binCount))
-    if (k != nextK):
-        guess = ((hcnt_max[k] + hcnt_min[nextK]) / 2.0)
-    best_result.append(guess)
-    assert (hcnt[nextK] != 0), hcnt[nextK]
-    assert (hcnt[k] != 0), hcnt[k]
-    if (k == minK):
-        newValStart = hcnt_min[k]
-    else:
-        newValStart = hcnt_min[k]
-    if (k == maxK):
-        newValEnd = hcnt_max[k]
-    else:
-        newValEnd = hcnt_max[k]
-    newValRange = (newValEnd - newValStart)
-    newBinSize = (newValRange / binCount)
-    newLowCount = currentCnt
-    iteration += 1
-    print 'Starting Iteration', iteration, 'best_result:', best_result, 'done:', done, 'hcnt[k]', hcnt[k]
-    print 'currentCnt', currentCnt, 'targetCnt', targetCnt
-    print 'was', valStart, valEnd, valRange, binSize
-    print 'next', newValStart, newValEnd, newValRange, newBinSize
