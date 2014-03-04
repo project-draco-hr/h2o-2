@@ -1,0 +1,12 @@
+def percentileOnSortedList(N, percent, key=(lambda x: x)):
+    '\n    Find the percentile of a list of values.\n\n    @parameter N - is a list of values. Note N MUST BE already sorted.\n    @parameter percent - a float value from 0.0 to 1.0.\n    @parameter key - optional key function to compute value from each element of N.\n\n    @return - the percentile of the values\n    '
+    if (N is None):
+        return None
+    k = ((len(N) - 1) * percent)
+    f = math.floor(k)
+    c = math.ceil(k)
+    if (f == c):
+        return key(N[int(k)])
+    d0 = (key(N[int(f)]) * (c - k))
+    d1 = (key(N[int(c)]) * (k - f))
+    return (d0 + d1)

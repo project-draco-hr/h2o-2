@@ -1,0 +1,21 @@
+{
+  H2OCallback fin=new H2OCallback<GLMValidationTask>(){
+    @Override public void callback(    GLMValidationTask tsk){
+      boolean improved=_model.setAndTestValidation(_lambdaIdx,tsk._res);
+      _model.clone().update(self());
+      if ((improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
+        glmt._val=null;
+        ++_lambdaIdx;
+        new Iteration().callback(glmt);
+      }
+ else       GLM2.this.complete();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter cc){
+      GLM2.this.cancel(ex);
+      return true;
+    }
+  }
+;
+  if (GLM2.this.n_folds >= 2)   xvalidate(_model.clone(),_lambdaIdx,fin);
+ else   new GLMValidationTask(_model.clone(),_lambdaIdx,fin).dfork(_dinfo._adaptedFrame);
+}

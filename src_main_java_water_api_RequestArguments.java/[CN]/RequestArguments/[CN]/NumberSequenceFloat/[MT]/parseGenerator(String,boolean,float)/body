@@ -1,0 +1,23 @@
+{
+  String str=input.trim().toLowerCase();
+  String[] parts=str.split(":");
+  if (parts.length != 2 && parts.length != 3)   throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+  float step=defaultStep;
+  if (parts.length == 3) {
+    step=Float.parseFloat(parts[2]);
+  }
+  float from=Float.parseFloat(parts[0]);
+  float to=Float.parseFloat(parts[1]);
+  if (to == from)   return new float[]{from};
+  if (to < from)   throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+  if (mul ? (step <= 1) : (step <= 0))   throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+  float[] res=new float[1024];
+  int i=0;
+  while (from <= to) {
+    res[i++]=from;
+    if (i == res.length)     res=Arrays.copyOf(res,res.length + Math.max(1,res.length >> 1));
+    if (mul)     from*=step;
+ else     from+=step;
+  }
+  return Arrays.copyOf(res,i);
+}

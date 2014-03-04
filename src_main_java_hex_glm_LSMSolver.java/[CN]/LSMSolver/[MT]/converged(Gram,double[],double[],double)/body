@@ -1,0 +1,24 @@
+{
+  double[] grad=gram.mul(beta);
+  double l1pen=_alpha * _lambda;
+  double l2pen=(1 - _alpha) * _lambda;
+  boolean converged=true;
+  for (int j=0; j < grad.length - 1; ++j) {
+    grad[j]=grad[j] - xy[j] + (1 - _alpha) * _lambda * beta[j];
+    double g=grad[j];
+    if (beta[j] == 0) {
+      g=Math.abs(g);
+      if (g > l1pen && (l1pen - g) > eps) {
+        converged=false;
+      }
+    }
+ else     if (beta[j] < 0 && Math.abs(g - l1pen) > eps) {
+      converged=false;
+    }
+ else     if (beta[j] > 0 && Math.abs(g + l1pen) > eps) {
+      converged=false;
+    }
+  }
+  _converged=converged && Math.abs(grad[grad.length - 1]-=xy[grad.length - 1]) < eps;
+  return _converged;
+}

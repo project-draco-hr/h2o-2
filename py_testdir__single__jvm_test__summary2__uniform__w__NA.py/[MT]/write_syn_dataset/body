@@ -9,10 +9,11 @@ def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax,
             rowData.append(ri)
         rowDataCsv = ','.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
-        rowData = []
-        for j in range(colCount):
-            rowData.append('NA')
-        rowDataCsv = ','.join(map(str, rowData))
-        for k in range(5):
-            dsf.write((rowDataCsv + '\n'))
+        if (1 == 1):
+            rowData = []
+            for j in range(colCount):
+                rowData.append(',,')
+            rowDataCsv = ','.join(map(str, rowData))
+            for k in range(NA_ROW_RATIO):
+                dsf.write((rowDataCsv + '\n'))
     dsf.close()

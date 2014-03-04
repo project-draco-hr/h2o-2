@@ -1,6 +1,7 @@
 {
   _gram=new Gram(_dinfo.fullN(),_dinfo.largestCat(),_dinfo._nums,_dinfo._cats,true);
   _xy=MemoryManager.malloc8d(_dinfo.fullN() + 1);
+  _grad=MemoryManager.malloc8d(_dinfo.fullN() + 1);
   int rank=0;
   if (_beta != null)   for (  double d : _beta)   if (d != 0)   ++rank;
   _val=new GLMValidation(null,_ymu,_glm,rank);

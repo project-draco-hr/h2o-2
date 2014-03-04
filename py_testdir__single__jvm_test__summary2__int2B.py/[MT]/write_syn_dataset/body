@@ -1,0 +1,15 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEED):
+    r1 = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    expectedRange = (expectedMax - expectedMin)
+    for i in range(rowCount):
+        rowData = []
+        if DO_REAL:
+            ri = (expectedMin + (random.random() * expectedRange))
+        else:
+            ri = random.randint(expectedMin, expectedMax)
+        for j in range(colCount):
+            rowData.append(ri)
+        rowDataCsv = ','.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()

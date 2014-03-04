@@ -1,7 +1,8 @@
 {
   assert(!_navbar.containsKey(name));
   ArrayList<MenuItem> arl=new ArrayList();
-  arl.add(new MenuItem(r,name));
+  boolean useNewTab=false;
+  arl.add(new MenuItem(r,name,useNewTab));
   _navbar.put(name,arl);
   _navbarOrdering.add(name);
   return r;

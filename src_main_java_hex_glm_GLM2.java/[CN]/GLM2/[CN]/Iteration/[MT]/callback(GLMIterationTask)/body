@@ -1,10 +1,35 @@
 {
-  if (isRunning(self())) {
-    double[] newBeta=MemoryManager.malloc8d(glmt._xy.length);
-    double[] newBetaDeNorm=null;
-    _solver.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
-    final boolean diverged=Utils.hasNaNsOrInfs(newBeta);
-    if (diverged)     newBeta=glmt._beta == null ? newBeta : glmt._beta;
+  if (!isRunning(self()))   throw new JobCancelledException();
+  boolean converged=false;
+  if (glmt._beta != null && glmt._val != null && _glm.family != Family.tweedie) {
+    glmt._val.finalize_AIC_AUC();
+    _model.setAndTestValidation(_lambdaIdx,glmt._val);
+    _model.clone().update(self());
+    converged=true;
+    double l1pen=alpha[0] * lambda[_lambdaIdx] * glmt._n;
+    double l2pen=(1 - alpha[0]) * lambda[_lambdaIdx] * glmt._n;
+    final double eps=1e-2;
+    for (int i=0; i < glmt._grad.length - 1; ++i) {
+      glmt._grad[i]+=l2pen * glmt._beta[i];
+      if (glmt._beta[i] < 0)       converged&=Math.abs(glmt._grad[i] - l1pen) < eps;
+ else       if (glmt._beta[i] > 0)       converged&=Math.abs(glmt._grad[i] + l1pen) < eps;
+ else       converged&=LSMSolver.shrinkage(glmt._grad[i],l1pen + eps) == 0;
+    }
+    if (converged)     Log.info("GLM converged by reaching 0 gradient/subgradient.");
+    double objval=glmt._val.residual_deviance + 0.5 * l2pen * l2norm(glmt._beta);
+    if (!converged && _lastResult != null && needLineSearch(glmt._beta,objval,1)) {
+      new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,new LineSearchIteration()).dfork(_dinfo._adaptedFrame);
+      return;
+    }
+    _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
+  }
+  double[] newBeta=glmt._beta != null ? glmt._beta.clone() : MemoryManager.malloc8d(glmt._xy.length);
+  double[] newBetaDeNorm=null;
+  new ADMMSolver(lambda[_lambdaIdx],alpha[0]).solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
+  if (Utils.hasNaNsOrInfs(newBeta)) {
+    Log.info("GLM forcibly converged by getting NaNs and/or Infs in beta");
+  }
+ else {
     if (_dinfo._standardize) {
       newBetaDeNorm=newBeta.clone();
       double norm=0.0;
@@ -16,46 +41,16 @@
       }
       newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
     }
-    boolean done=false;
-    done=done || _glm.family == Family.gaussian || (glmt._iter + 1) == max_iter || beta_diff(glmt._beta,newBeta) < beta_epsilon || !isRunning(self());
-    _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,glmt._iter + 1);
-    if (done) {
-      H2OCallback fin=new H2OCallback<GLMValidationTask>(){
-        @Override public void callback(        GLMValidationTask tsk){
-          boolean improved=_model.setAndTestValidation(_lambdaIdx,tsk._res);
-          if (!diverged && (improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
-            _model.update(self());
-            _solver=new ADMMSolver(lambda[++_lambdaIdx],alpha[0]);
-            _solver._jobKey=self();
-            _solver._id=_jobName;
-            glmt._val=null;
-            Iteration.this.callback(glmt);
-          }
- else {
-            _model.unlock(self());
-            _fjt.tryComplete();
-          }
-        }
-        @Override public boolean onExceptionalCompletion(        Throwable ex,        CountedCompleter cc){
-          _fjt.completeExceptionally(ex);
-          return true;
-        }
-      }
-;
-      if (GLM2.this.n_folds >= 2)       xvalidate(_model,_lambdaIdx,fin);
- else       new GLMValidationTask(_model,_lambdaIdx,fin).dfork(_dinfo._adaptedFrame);
+    _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,_iter);
+    if (beta_diff(glmt._beta,newBeta) < beta_epsilon) {
+      Log.info("GLM converged by reaching fixed-point.");
+      converged=true;
     }
- else {
-      if (glmt._val != null) {
-        glmt._val.finalize_AIC_AUC();
-        _model.setAndTestValidation(_lambdaIdx,glmt._val);
-        _model.update(self());
-      }
-      int iter=glmt._iter + 1;
-      GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,case_mode,case_val,newBeta,iter,glmt._ymu,glmt._reg);
-      nextIter.setCompleter(new Iteration(_model,_solver,_dinfo,_fjt));
-      nextIter.dfork(_dinfo._adaptedFrame);
+    if (!converged && _glm.family != Family.gaussian && _iter < max_iter) {
+      ++_iter;
+      GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,case_mode,case_val,newBeta,_ymu,_reg,new Iteration()).dfork(_dinfo._adaptedFrame);
+      return;
     }
   }
- else   throw new JobCancelledException();
+  nextLambda(glmt);
 }

@@ -1,7 +1,11 @@
 {
   sb.append("<li><a href='");
   sb.append(_request.href() + _request.hrefType()._suffix);
-  sb.append("'>");
+  sb.append("'");
+  if (_useNewTab) {
+    sb.append(" target='_blank'");
+  }
+  sb.append(">");
   sb.append(_name);
   sb.append("</a></li>");
 }
