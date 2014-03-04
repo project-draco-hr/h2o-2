@@ -92,7 +92,7 @@
   }
   final long time_so_far=System.currentTimeMillis() - model_info.parameters.start_time;
   DocGen.HTML.paragraph(sb,"Training time: " + PrettyPrint.msecs(time_so_far,true));
-  if (!model_info.get_params().isDone())   DocGen.HTML.paragraph(sb,"Estimated time left: " + PrettyPrint.msecs((long)(time_so_far * (1 - progress) / progress),true));
+  if (progress > 0 && !model_info.get_params().isDone())   DocGen.HTML.paragraph(sb,"Estimated time left: " + PrettyPrint.msecs((long)(time_so_far * (1 - progress) / progress),true));
   long score_train=error.score_training_samples;
   long score_valid=error.score_validation_samples;
   final boolean fulltrain=score_train == 0 || score_train == model_info().data_info()._adaptedFrame.numRows();
