@@ -1,4 +1,5 @@
 {
+  if (Double.isNaN(objval))   return true;
   double f_hat=0;
   double l2=0;
   for (int i=0; i < beta.length; ++i) {
@@ -7,5 +8,6 @@
     l2+=diff * diff;
   }
   f_hat=_lastResult._objval + f_hat + 0.001 * l2 / step;
+  System.out.println("objval = " + objval + ", old = "+ _lastResult._objval+ ", f_hat = "+ f_hat);
   return objval > f_hat;
 }
