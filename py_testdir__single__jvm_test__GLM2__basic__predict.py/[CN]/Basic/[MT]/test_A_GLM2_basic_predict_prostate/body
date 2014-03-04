@@ -1,20 +1,14 @@
-def test_C_prostate_w_predict(self):
+def test_A_GLM2_basic_predict_prostate(self):
+    h2o.beta_features = True
     h2o.nodes[0].log_view()
     namelist = h2o.nodes[0].log_download()
     print '\nStarting prostate.csv'
-    y = '1'
-    x = ''
+    y = 1
     csvFilename = 'prostate.csv'
     csvPathname = ('logreg/' + csvFilename)
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
-    for maxx in range(2, 6):
-        x = range(maxx)
-        x.remove(0)
-        x.remove(1)
-        x = ','.join(map(str, x))
-        print '\nx:', x
-        print 'y:', y
-        kwargs = {'x': x, 'y': y, 'n_folds': 5, }
+    for maxx in range(1):
+        kwargs = {'response': y, 'family': 'binomial', 'ignored_cols': '0', 'n_folds': 0, 'alpha': 0, 'lambda': 1e-08, }
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
         h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
         GLMModel = glm['GLMModel']
