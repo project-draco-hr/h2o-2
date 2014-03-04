@@ -17,13 +17,18 @@
           String[] strdom=new String[dom.length];
           for (int i=0; i < strdom.length; ++i)           strdom[i]=String.valueOf(dom[i]);
           col._domain=strdom;
+          col._min=0;
+          col._max=strdom.length - 1;
         }
  else {
           String[] strdom=ary._cols[column_index]._domain;
           dom=new int[strdom.length];
           for (int i=0; i < dom.length; ++i)           dom[i]=Integer.valueOf(strdom[i]);
           col._domain=null;
+          col._min=dom[0];
+          col._max=dom[dom.length - 1];
         }
+        System.out.println("domain = " + Arrays.toString(dom));
         EnumIntSwapTask etsk=new EnumIntSwapTask(column_index,dom,true);
         etsk.invoke(key);
         col._base=to_enum ? 0 : dom[0];
