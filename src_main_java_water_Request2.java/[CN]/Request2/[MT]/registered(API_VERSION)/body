@@ -71,6 +71,10 @@
           double[] val=(double[])defaultValue;
           arg=new RSeq(f.getName(),api.required(),new NumberSequence(val,null,false),false,api.help());
         }
+ else         if (f.getType() == float[].class) {
+          float[] val=(float[])defaultValue;
+          arg=new RSeqFloat(f.getName(),api.required(),new NumberSequenceFloat(val,null,false),false,api.help());
+        }
  else         if (f.getType() == boolean.class && api.filter() == Default.class) {
           boolean val=(Boolean)defaultValue;
           arg=new Bool(f.getName(),val,api.help());

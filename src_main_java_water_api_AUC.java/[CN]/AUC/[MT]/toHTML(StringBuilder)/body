@@ -30,7 +30,7 @@
   sb.append("}\n");
   sb.append("</script>\n");
   sb.append("\n<div><b>Confusion Matrix at decision threshold:</b></div><select id=\"select\" onchange='show_cm(this.value)'>\n");
-  for (int i=0; i < _cms.length; ++i)   sb.append("\t<option value='" + i + "'"+ (_thresh[i] == best_thresholdF1() ? "selected='selected'" : "")+ ">"+ _thresh[i]+ "</option>\n");
+  for (int i=0; i < _cms.length; ++i)   sb.append("\t<option value='" + i + "'"+ (thresholds[i] == best_thresholdF1() ? "selected='selected'" : "")+ ">"+ thresholds[i]+ "</option>\n");
   sb.append("</select>\n");
   sb.append("</div>");
   return true;
