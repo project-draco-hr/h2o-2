@@ -1,6 +1,6 @@
 {
   if (jobs == null)   return;
-  errors=new double[jobs.length];
+  prediction_errors=new double[jobs.length];
   int i=0;
   for (  Job job : jobs) {
     JobInfo info=new JobInfo();
@@ -15,6 +15,6 @@
     }
     if (info._cm != null)     info._error=info._cm.err();
     if (infos != null)     infos.add(info);
-    errors[i++]=info._error;
+    prediction_errors[i++]=info._error;
   }
 }
