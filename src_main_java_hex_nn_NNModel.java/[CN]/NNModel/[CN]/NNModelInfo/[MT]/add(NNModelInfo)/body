@@ -6,5 +6,10 @@
     Utils.add(weights_momenta,other.weights_momenta);
     Utils.add(biases_momenta,other.biases_momenta);
   }
+  if (adaDelta()) {
+    assert(other.adaDelta());
+    Utils.add(E_dx2,other.E_dx2);
+    Utils.add(E_g2,other.E_g2);
+  }
   add_processed_local(other.get_processed_local());
 }

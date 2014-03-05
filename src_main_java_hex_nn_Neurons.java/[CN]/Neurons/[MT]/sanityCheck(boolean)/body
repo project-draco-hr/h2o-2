@@ -5,12 +5,21 @@
   }
  else {
     assert(_previous != null);
-    if (params.momentum_stable != params.momentum_start) {
+    if (params.momentum_stable != 0 || params.momentum_start != 0) {
       assert(_minfo.has_momenta());
-      assert(_minfo.has_momenta());
-      assert(params.momentum_ramp > 0);
       assert(_wm != null);
       assert(_bm != null);
+      assert(_E_dx2 == null);
+      assert(_E_g2 == null);
+    }
+    if (params.rho > 0 || params.epsilon > 0) {
+      if (params.rho == 0)       throw new InvalidArgumentException("rho must be > 0 if epsilon is >0.");
+      if (params.epsilon == 0)       throw new InvalidArgumentException("epsilon must be > 0 if rho is >0.");
+      assert(_minfo.adaDelta());
+      assert(_E_dx2 != null);
+      assert(_E_g2 != null);
+      assert(_wm == null);
+      assert(_bm == null);
     }
     if (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout) {
       assert(!training || _dropout != null);
