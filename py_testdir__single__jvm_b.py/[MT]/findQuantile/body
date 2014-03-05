@@ -1,5 +1,5 @@
 def findQuantile(d, dmin, dmax, drows, threshold):
-    binCount = 50
+    binCount = BIN_COUNT
     maxIterations = 30
     newValStart = dmin
     newValEnd = dmax
@@ -7,9 +7,7 @@ def findQuantile(d, dmin, dmax, drows, threshold):
     newBinCount = binCount
     newBinSize = (newValRange / (newBinCount + 0.0))
     newLowCount = 0
-    targetCount = math.floor((threshold * drows))
-    minK = 0
-    maxK = (binCount - 1)
+    assert (newBinSize != 0)
     iteration = 0
     done = False
     hcnt = [None for b in range((binCount + 1))]
@@ -27,11 +25,16 @@ def findQuantile(d, dmin, dmax, drows, threshold):
         h2p.green_print('newValRange', newValRange)
         h2p.green_print('newBinSize', newBinSize)
         h2p.green_print('newLowCount', newLowCount)
+        h2p.green_print('threshold', threshold)
         valStart = newValStart
         valEnd = newValEnd
         valRange = newValRange
         binSize = newBinSize
         lowCount = newLowCount
+        NUDGE = 0.001
+        NUDGE = ((1000 * (valEnd - valStart)) / 1000000)
+        NUDGE = (binSize / binCount)
+        NUDGE = 0
         for b in range((binCount + 1)):
             hcnt[b] = 0.0
         hcnt_low = 0
@@ -41,8 +44,11 @@ def findQuantile(d, dmin, dmax, drows, threshold):
             if (valOffset < 0):
                 hcnt_low += 1
             elif (val > valEnd):
+                if (hcnt_high == 0):
+                    print 'First addition to hcnt_high this pass val:', val, 'valEnd:', valEnd
                 hcnt_high += 1
             else:
+                print valOffset, binSize
                 hcntIdx = int((round(((valOffset * 1000000.0) / binSize)) / 1000000.0))
                 assert ((hcntIdx >= 0) and (hcntIdx <= binCount)), ('val %s %s %s %s hcntIdx: %s binCount: %s binSize: %s' % (val, valStart, valEnd, valOffset, hcntIdx, binCount, binSize))
                 if (hcnt[hcntIdx] == 0):
@@ -59,6 +65,9 @@ def findQuantile(d, dmin, dmax, drows, threshold):
         prevK = 0
         currentCnt = newLowCount
         targetCnt = int(math.floor((threshold * drows)))
+        targetCntExact = ((threshold + 0.0) * drows)
+        exactGoal = (targetCnt == targetCntExact)
+        print 'targetCnt:', targetCnt, 'targetCntExact', targetCntExact
         if DO_TO_BEFORE:
             e = (lambda x, y: (x < y))
         else:
@@ -67,6 +76,7 @@ def findQuantile(d, dmin, dmax, drows, threshold):
             currentCnt += hcnt[k]
             if (hcnt[k] != 0):
                 prevK = k
+                print 'setting prevK:', prevK
             k += 1
             assert (k <= binCount), ('k too large, k: %s binCount %s' % (k, binCount))
         assert (((k == 0) and (prevK == 0)) or (prevK < k)), ('prevK should be before k except if both are zero %s %s' % (prevK, k))
@@ -92,10 +102,20 @@ def findQuantile(d, dmin, dmax, drows, threshold):
         print 'checking for done, hcnt_min[k]', hcnt_min[k], 'hcnt_max[k]', hcnt_max[k]
         if DO_TO_BEFORE:
             done = ((hcnt_min[k] == hcnt_max[k]) and ((currentCnt + hcnt[k]) == targetCnt))
+            if done:
+                print 'Done:', hcnt[k], hcnt_min[k], hcnt_max[k], currentCnt, targetCnt
+            else:
+                print 'Not Done:', hcnt[k], hcnt_min[k], hcnt_max[k], currentCnt, targetCnt
         else:
             done = ((hcnt_min[k] == hcnt_max[k]) and (currentCnt == targetCnt))
+            if done:
+                print 'Done:', hcnt_min[k], hcnt_max[k], currentCnt, targetCnt, targetCntExact
+            else:
+                print 'Not Done:', hcnt_min[k], hcnt_max[k], currentCnt, targetCnt, targetCntExact
         assert (((hcnt[k] == 1) and (hcnt_min[k] == hcnt_max[k])) or (hcnt[k] > 1))
         if ((not done) and (hcnt[k] == 1)):
+            assert (not exactGoal)
+            print ('Trying to find nextK for possibly interpolating k: %s' % k)
             if (k < binCount):
                 nextK = (k + 1)
             else:
@@ -110,24 +130,31 @@ def findQuantile(d, dmin, dmax, drows, threshold):
                 nextK = k
             nextCnt = int((nextK * binSize))
             assert (nextK < (binCount + 1)), ('nextK too large, nextK: %s binCount %s' % (nextK, binCount))
-            if (k != nextK):
+            print 'k:', k, 'nextK', nextK
+            if ((1 == 0) and (k != nextK)):
                 guess = ((hcnt_max[k] + hcnt_min[nextK]) / 2.0)
-                print '\nInterpolating result'
-                print 'Guess E:', guess, k, nextK, hcnt_max[k], hcnt_min[nextK], actualBinWidth, currentCnt, targetCnt, hcnt[k]
+                print '\nInterpolating result using nextK'
+                print 'Guess E with nextK:', guess, k, nextK, hcnt_max[k], hcnt_min[nextK], actualBinWidth, currentCnt, targetCnt, hcnt[k]
+            if ((1 == 1) and (k != prevK)):
+                guess = ((hcnt_max[k] + hcnt_min[prevK]) / 2.0)
+                print ('\nInterpolating result using prevK %s' % prevK)
+                print 'Guess E with prevK:', guess, prevK, k, hcnt_max[k], hcnt_min[prevK], actualBinWidth, currentCnt, targetCnt, hcnt[k]
             assert (hcnt[nextK] != 0), hcnt[nextK]
             assert (hcnt[k] != 0), hcnt[k]
             assert (hcnt[prevK] != 0), hcnt[prevK]
             done = True
-        newValStart = hcnt_min[k]
-        newValEnd = hcnt_max[k]
+        newValStart = (hcnt_min[k] - NUDGE)
+        newValEnd = (hcnt_max[k] + NUDGE)
         newValRange = (newValEnd - newValStart)
         newBinSize = (newValRange / binCount)
+        if (not done):
+            done = (newBinSize == 0)
         newLowCount = currentCnt
         best_result.append(guess)
         print ('Compare these two, should be identical? %s %s' % (guess, best_result[(-1)]))
         iteration += 1
         h2p.blue_print('Ending Pass', iteration, 'best_result:', best_result, 'done:', done, 'hcnt[k]', hcnt[k])
-        print 'currentCnt', currentCnt, 'targetCnt', targetCnt
+        print 'currentCnt', currentCnt, 'targetCnt', targetCnt, 'hcnt_low', hcnt_low, 'hcnt_high', hcnt_high
         print 'was', valStart, valEnd, valRange, binSize
         print 'next', newValStart, newValEnd, newValRange, newBinSize
     return best_result[(-1)]
