@@ -1,2 +1,8 @@
 {
+  super.init();
+  if (source.numRows() == 0)   throw new IllegalArgumentException("Cannot build a model on empty dataset!");
+  Vec[] vecs=source.vecs();
+  for (int i=cols.length - 1; i >= 0; i--)   if (vecs[cols[i]] == response)   cols=Utils.remove(cols,i);
+  final boolean has_constant_response=response.isEnum() ? response.domain().length <= 1 : response.min() == response.max();
+  if (has_constant_response)   throw new IllegalArgumentException("Constant response column!");
 }
