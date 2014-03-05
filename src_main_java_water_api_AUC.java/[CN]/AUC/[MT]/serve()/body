@@ -24,15 +24,12 @@
       }
       sort(thresholds);
     }
-    AUCTask at=new AUCTask(thresholds).doAll(va,vp);
-    _cms=at.getCMs();
-    idx_bestF1=at.getBestIdxF1();
-    _tprs=at.getTPRs();
-    _fprs=at.getFPRs();
-    AUC=at.getAUC();
-    F1=_cms[idx_bestF1].precisionAndRecall();
-    cm=_cms[idx_bestF1]._arr;
-    threshold_maxF1=at.getBestThresholdF1();
+    if (_cms == null) {
+      AUCTask at=new AUCTask(thresholds).doAll(va,vp);
+      _cms=at.getCMs();
+    }
+    computeAUC();
+    findBestThreshold();
     return Response.done(this);
   }
  catch (  Throwable t) {
