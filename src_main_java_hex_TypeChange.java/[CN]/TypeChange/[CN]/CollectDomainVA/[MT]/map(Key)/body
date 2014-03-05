@@ -1,0 +1,9 @@
+{
+  ValueArray ary=DKV.get(ValueArray.getArrayKey(key)).get();
+  AutoBuffer bits=ary.getChunk(key);
+  int nrows=bits.remaining() / ary.rowSize();
+  for (int r=0; r < nrows; r++)   if (!_ary.isNA(bits,r,_col_index)) {
+    long l=_ary.data(bits,r,_col_index);
+    _uniques.put(l,"");
+  }
+}
