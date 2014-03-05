@@ -28,8 +28,7 @@
           col._min=dom[0];
           col._max=dom[dom.length - 1];
         }
-        System.out.println("domain = " + Arrays.toString(dom));
-        EnumIntSwapTask etsk=new EnumIntSwapTask(column_index,dom,true);
+        EnumIntSwapTask etsk=new EnumIntSwapTask(column_index,dom,to_enum);
         etsk.invoke(key);
         col._base=to_enum ? 0 : dom[0];
         DKV.put(key,ary);
