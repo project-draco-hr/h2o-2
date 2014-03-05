@@ -5,7 +5,7 @@
   assert(num_input > 0);
   assert(num_output > 0);
   parameters=params;
-  _has_momenta=(parameters.momentum_start != 0 || parameters.momentum_stable != 0);
+  if (has_momenta() && adaDelta())   throw new InvalidArgumentException("Cannot have non-zero momentum and non-zero AdaDelta parameters at the same time.");
   final int layers=parameters.hidden.length;
   units=new int[layers + 2];
   units[0]=num_input;
@@ -15,7 +15,9 @@
   for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];
   biases=new double[layers + 1][];
   for (int i=0; i <= layers; ++i)   biases[i]=new double[units[i + 1]];
-  createMomenta();
+  fillHelpers();
+  mean_rate=new double[units.length];
+  rms_rate=new double[units.length];
   mean_bias=new double[units.length];
   rms_bias=new double[units.length];
   mean_weight=new double[units.length];

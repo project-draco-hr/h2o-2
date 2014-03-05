@@ -5,4 +5,8 @@
     for (    float[] weight_momenta : weights_momenta)     Utils.div(weight_momenta,(float)N);
     for (    double[] bias_momenta : biases_momenta)     Utils.div(bias_momenta,N);
   }
+  if (adaDelta()) {
+    for (    float[] dx2 : E_dx2)     Utils.div(dx2,(float)N);
+    for (    double[] g2 : E_g2)     Utils.div(g2,N);
+  }
 }
