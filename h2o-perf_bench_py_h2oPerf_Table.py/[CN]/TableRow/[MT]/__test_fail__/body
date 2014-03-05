@@ -7,3 +7,6 @@ def __test_fail__(self):
     py_table.row['row'] = MySQLdb.escape_string(str(self.row))
     py_table.update(True)
     print message
+    print 'Some entries were missing and the row could not be written.'
+    print "Here's the incomplete row: "
+    print self.row

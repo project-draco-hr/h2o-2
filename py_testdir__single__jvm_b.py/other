@@ -1,14 +1,12 @@
 import sys
 import math
-DO_MEDIAN = True
 OTHER_T = 0.5
-DO_TO_BEFORE = False
-BIN_COUNT = 5
+BIN_COUNT = 1000
 sys.path.extend(['.', '..', 'py'])
 import h2o_print as h2p, h2o_summ
 import numpy as np
 import scipy as sp
-csvPathname = './d.csv'
+csvPathname = './syn_binary_1000000x1.csv'
 col = 0
 print 'Reading csvPathname'
 dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', dtype=None)
@@ -25,22 +23,13 @@ d = target
 dmin = min(d)
 dmax = max(d)
 drows = len(d)
-if DO_MEDIAN:
-    thresholdList = [0.5]
-else:
-    thresholdList = [OTHER_T]
+thresholdList = [OTHER_T]
 quantiles = findQuantileList(d, dmin, dmax, drows, thresholdList)
-per = [(1 * t) for t in thresholds]
-print 'scipy per:', per
 from scipy import stats
-a1 = stats.scoreatpercentile(target, per=(100 * (0.5 if DO_MEDIAN else OTHER_T)), interpolation_method='fraction')
+a1 = stats.scoreatpercentile(target, per=(100 * OTHER_T), interpolation_method='fraction')
 h2p.red_print('stats.scoreatpercentile:', a1)
-a2 = stats.mstats.mquantiles(targetFP, prob=per)
+a2 = stats.mstats.mquantiles(targetFP, prob=[OTHER_T])
 h2p.red_print('scipy stats.mstats.mquantiles:', [('%.2f' % v) for v in a2])
 targetFP.sort()
-b = h2o_summ.percentileOnSortedList(targetFP, (0.5 if DO_MEDIAN else OTHER_T))
-label = ('50%' if DO_MEDIAN else '99.9%')
-h2p.blue_print(label, 'from scipy:', a2[(5 if DO_MEDIAN else 10)])
-a3 = stats.mstats.mquantiles(targetFP, prob=per)
-h2p.red_print('after sort')
-h2p.red_print('scipy stats.mstats.mquantiles:', [('%.2f' % v) for v in a3])
+b = h2o_summ.percentileOnSortedList(targetFP, OTHER_T)
+h2p.blue_print('from scipy:', a2)

@@ -1,14 +1,28 @@
 {
   super.init();
+  _toDeleteFrame=new Frame();
   int rIndex=0;
   for (int i=0; i < source.vecs().length; i++)   if (source.vecs()[i] == response)   rIndex=i;
   _responseName=source._names != null && rIndex >= 0 ? source._names[rIndex] : "response";
   _train=selectVecs(source);
   _names=new String[cols.length];
   for (int i=0; i < cols.length; i++)   _names[i]=source._names[cols[i]];
+  if (classification)   _sourceResponseDomain=getVectorDomain(response);
   if (validation != null) {
     int idx=validation.find(source.names()[rIndex]);
     if (idx == -1)     throw new IllegalArgumentException("Validation set does not have a response column called " + _responseName);
     _validResponse=validation.vecs()[idx];
+    if (classification) {
+      _validResponseDomain=getVectorDomain(_validResponse);
+      if (_validResponseDomain != null) {
+        _cmDomain=Utils.union(_sourceResponseDomain,_validResponseDomain);
+        if (!Arrays.deepEquals(_sourceResponseDomain,_validResponseDomain)) {
+          _fromModel2CM=Model.getDomainMapping(_cmDomain,_sourceResponseDomain,false);
+          _fromValid2CM=Model.getDomainMapping(_cmDomain,_validResponseDomain,false);
+        }
+      }
+ else       _cmDomain=_sourceResponseDomain;
+    }
   }
+ else   if (classification)   _cmDomain=_sourceResponseDomain;
 }

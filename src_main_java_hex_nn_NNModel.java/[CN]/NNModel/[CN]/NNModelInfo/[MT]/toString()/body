@@ -5,7 +5,7 @@
     if (!parameters.quiet_mode) {
       Neurons[] neurons=NNTask.makeNeuronsForTesting(this);
       sb.append("Status of Neuron Layers:\n");
-      sb.append("#  Units         Type      Dropout      Rate      L1       L2    Momentum     Weight (Mean, RMS)      Bias (Mean,RMS)\n");
+      sb.append("#  Units         Type      Dropout    L1       L2    " + (parameters.adaptive_rate ? "  Rate (Mean,RMS)   " : "  Rate      Momentum") + "   Weight (Mean, RMS)      Bias (Mean,RMS)\n");
       final String format="%7g";
       for (int i=0; i < neurons.length; ++i) {
         sb.append((i + 1) + " " + String.format("%6d",neurons[i].units)+ " "+ String.format("%16s",neurons[i].getClass().getSimpleName()));
@@ -19,7 +19,7 @@
  else {
           sb.append("          ");
         }
-        sb.append(" " + String.format("%10g",neurons[i].rate(get_processed_total())) + " "+ String.format("%5f",neurons[i].params.l1)+ " "+ String.format("%5f",neurons[i].params.l2)+ " "+ String.format("%5f",neurons[i].momentum(get_processed_total()))+ " ("+ String.format(format,mean_weight[i])+ ", "+ String.format(format,rms_weight[i])+ ")"+ " ("+ String.format(format,mean_bias[i])+ ", "+ String.format(format,rms_bias[i])+ ")\n");
+        sb.append(" " + String.format("%5f",neurons[i].params.l1) + " "+ String.format("%5f",neurons[i].params.l2)+ " "+ (parameters.adaptive_rate ? (" (" + String.format(format,mean_rate[i]) + ", "+ String.format(format,rms_rate[i])+ ")") : (String.format("%10g",neurons[i].rate(get_processed_total())) + " " + String.format("%5f",neurons[i].momentum(get_processed_total()))))+ " ("+ String.format(format,mean_weight[i])+ ", "+ String.format(format,rms_weight[i])+ ")"+ " ("+ String.format(format,mean_bias[i])+ ", "+ String.format(format,rms_bias[i])+ ")\n");
       }
     }
   }

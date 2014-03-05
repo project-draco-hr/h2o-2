@@ -4,10 +4,10 @@
   Key dest=Key.make("spirals2");
 {
     NN p=new NN();
-    p.seed=new Random().nextLong();
+    p.seed=0xDADAAAA;
     p.rate=0.007;
     p.rate_annealing=0;
-    p.epochs=30000;
+    p.epochs=3000;
     p.hidden=new int[]{100};
     p.activation=NN.Activation.Tanh;
     p.max_w2=Double.MAX_VALUE;
@@ -37,7 +37,10 @@
     p.shuffle_training_data=false;
     p.force_load_balance=false;
     p.destination_key=dest;
-    p.exec();
+    p.adaptive_rate=true;
+    p.rho=0.99;
+    p.epsilon=5e-3;
+    p.execImpl();
   }
 {
     NNModel mymodel=UKV.get(dest);
