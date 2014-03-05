@@ -1,0 +1,19 @@
+def test_B_GLM2_basic_predict_benign(self):
+    h2o.beta_features = True
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()
+    print '\nStarting benign.csv'
+    csvFilename = 'benign.csv'
+    csvPathname = ('logreg/' + csvFilename)
+    hexKey = (csvFilename + '.hex')
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hexKey, schema='put')
+    y = 3
+    for maxx in range(1):
+        kwargs = {'response': y, 'family': 'binomial', 'alpha': 0, 'lambda': 0.0001, 'n_folds': 0, }
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        GLMModel = glm['glm_model']
+        modelKey = GLMModel['_key']
+        print 'Doing predict with same dataset, and the GLM model'
+        h2o.nodes[0].generate_predictions(model_key=modelKey, data_key=parseResult['destination_key'])
+        h2o.nodes[0].generate_auc(thresholds=None, actual=hexKey, predict='Predict.hex', vactual=y, vpredict=1)

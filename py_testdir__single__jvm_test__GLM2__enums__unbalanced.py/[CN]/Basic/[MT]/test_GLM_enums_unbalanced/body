@@ -76,7 +76,7 @@ def test_GLM_enums_unbalanced(self):
             predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=testDataKey, vactual=('C' + str(y)), predict=predictKey, vpredict='predict')
             cm = predictCMResult['cm']
             pctWrong = h2o_gbm.pp_cm_summary(cm)
-            self.assertLess(pctWrong, 8, 'Should see less than 7% error (class = 4)')
+            self.assertLess(pctWrong, 8, ('Should see less than 7 pct error (class = 4): %s' % pctWrong))
             print '\nTest\n==========\n'
             print h2o_gbm.pp_cm(cm)
             if (1 == 0):
