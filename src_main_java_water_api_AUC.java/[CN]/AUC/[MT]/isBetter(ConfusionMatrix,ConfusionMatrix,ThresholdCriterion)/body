@@ -12,7 +12,7 @@
     return a.accuracy() > b.accuracy();
   }
  else   if (criter == ThresholdCriterion.minimizing_max_per_class_Error) {
-    return (Math.max(a.classErr(0),a.classErr(1)) < Math.max(b.classErr(0),b.classErr(1)));
+    return a.max_per_class_error() < b.max_per_class_error();
   }
  else   if (criter == ThresholdCriterion.maximum_Specificity) {
     return (!Double.isNaN(a.specificity()) && (Double.isNaN(b.specificity()) || a.specificity() > b.specificity()));

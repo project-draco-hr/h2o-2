@@ -1,4 +1,25 @@
 {
-  Quantiles qq=new Quantiles(frm,vec,quantiles);
+  if (source_key == null)   return RequestServer._http404.serve();
+  if (column == null)   return RequestServer._http404.serve();
+  if (column.isEnum()) {
+    throw new IllegalArgumentException("Column is an enum");
+  }
+  Vec[] vecs=new Vec[1];
+  String[] names=new String[1];
+  vecs[0]=column;
+  names[0]=source_key.names()[source_key.find(column)];
+  Frame fr=new Frame(names,vecs);
+  Futures fs=new Futures();
+  for (  Vec vec : vecs)   vec.rollupStats(fs);
+  fs.blockForPending();
+  Quantiles.BasicStat basicStats[]=new Quantiles.PrePass().doAll(fr).finishUp()._basicStats;
+  Quantiles[] summaries;
+  summaries=new Quantiles.SummaryTask2(basicStats,quantile,max_qbins).doAll(fr)._summaries;
+  if (summaries != null) {
+    summaries[0].finishUp(vecs[0]);
+    column_name=summaries[0].colname;
+    quantile_requested=summaries[0].DEFAULT_PERCENTILES[0];
+    result=summaries[0]._pctile[0];
+  }
   return Response.done(this);
 }

@@ -15,7 +15,7 @@
   for (  String c : threshold_criteria)   sb.append("\"" + c + "\",");
   sb.append(" ];\n");
   sb.append("var thresholds = [");
-  for (  double t : optimal_thresholds)   sb.append((float)t + ",");
+  for (  double t : threshold_for_criteria)   sb.append((float)t + ",");
   sb.append(" ];\n");
   sb.append("var F1_values = [");
   for (int i=0; i < _cms.length; ++i)   sb.append((float)_cms[i].F1() + ",");
@@ -31,6 +31,9 @@
   sb.append(" ];\n");
   sb.append("var specificity = [");
   for (int i=0; i < _cms.length; ++i)   sb.append((float)_cms[i].specificity() + ",");
+  sb.append(" ];\n");
+  sb.append("var max_per_class_error = [");
+  for (int i=0; i < _cms.length; ++i)   sb.append((float)_cms[i].max_per_class_error() + ",");
   sb.append(" ];\n");
   sb.append("var idxCriter = [");
   for (  int i : idxCriter)   sb.append(i + ",");
@@ -49,8 +52,9 @@
   sb.append("<th>Precision  </th>");
   sb.append("<th>Recall     </th>");
   sb.append("<th>Specificity</th>");
+  sb.append("<th>Max per class Error</th>");
   sb.append("<tr class='warning'>");
-  sb.append("<td>" + String.format("%.5f",AUC()) + "</td>"+ "<td>"+ String.format("%.5f",Gini())+ "</td>"+ "<td id='threshold'>"+ String.format("%g",threshold())+ "</td>"+ "<td id='F1_value'>"+ String.format("%.7f",F1())+ "</td>"+ "<td id='accuracy'>"+ String.format("%.7f",accuracy())+ "</td>"+ "<td id='precision'>"+ String.format("%.7f",precision())+ "</td>"+ "<td id='recall'>"+ String.format("%.7f",recall())+ "</td>"+ "<td id='specificity'>"+ String.format("%.7f",specificity())+ "</td>");
+  sb.append("<td>" + String.format("%.5f",AUC()) + "</td>"+ "<td>"+ String.format("%.5f",Gini())+ "</td>"+ "<td id='threshold'>"+ String.format("%g",threshold())+ "</td>"+ "<td id='F1_value'>"+ String.format("%.7f",F1())+ "</td>"+ "<td id='accuracy'>"+ String.format("%.7f",accuracy())+ "</td>"+ "<td id='precision'>"+ String.format("%.7f",precision())+ "</td>"+ "<td id='recall'>"+ String.format("%.7f",recall())+ "</td>"+ "<td id='specificity'>"+ String.format("%.7f",specificity())+ "</td>"+ "<td id='max_per_class_error'>"+ String.format("%.7f",max_per_class_error())+ "</td>");
   DocGen.HTML.arrayTail(sb);
   sb.append("<table><tr><td>");
   plotROC(sb);
@@ -69,6 +73,7 @@
   sb.append("\t" + "document.getElementById('precision').innerHTML = precision[i];\n");
   sb.append("\t" + "document.getElementById('recall').innerHTML = recall[i];\n");
   sb.append("\t" + "document.getElementById('specificity').innerHTML = specificity[i];\n");
+  sb.append("\t" + "document.getElementById('max_per_class_error').innerHTML = max_per_class_error[i];\n");
   sb.append("\t" + "update(dataset);\n");
   sb.append("}\n");
   sb.append("function set_criterion(i, idx){\n");
