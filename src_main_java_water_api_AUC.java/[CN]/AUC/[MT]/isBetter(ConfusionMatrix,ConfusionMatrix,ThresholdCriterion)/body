@@ -1,0 +1,12 @@
+{
+  if (criter == ThresholdCriterion.maximum_F1) {
+    return (!Double.isNaN(a.precisionAndRecall()) && (Double.isNaN(b.precisionAndRecall()) || a.precisionAndRecall() > b.precisionAndRecall()));
+  }
+ else   if (criter == ThresholdCriterion.minimum_Error) {
+    return a.err() < b.err();
+  }
+ else   if (criter == ThresholdCriterion.minimum_per_class_Error) {
+    return (Math.max(a.classErr(0),a.classErr(1)) < Math.max(b.classErr(0),b.classErr(1)));
+  }
+ else   throw new InvalidArgumentException("Unknown threshold criterion.");
+}
