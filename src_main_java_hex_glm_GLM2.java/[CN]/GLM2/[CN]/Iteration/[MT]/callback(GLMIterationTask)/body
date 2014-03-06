@@ -25,7 +25,9 @@
   }
   double[] newBeta=glmt._beta != null ? glmt._beta.clone() : MemoryManager.malloc8d(glmt._xy.length);
   double[] newBetaDeNorm=null;
-  new ADMMSolver(lambda[_lambdaIdx],alpha[0]).solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
+  ADMMSolver slvr=new ADMMSolver(lambda[_lambdaIdx],alpha[0],_addedL2);
+  slvr.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
+  _addedL2=slvr._addedL2;
   if (Utils.hasNaNsOrInfs(newBeta)) {
     Log.info("GLM forcibly converged by getting NaNs and/or Infs in beta");
   }

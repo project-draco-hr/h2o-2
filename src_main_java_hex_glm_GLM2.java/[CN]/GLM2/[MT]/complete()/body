@@ -1,4 +1,13 @@
 {
+  if (_addedL2 > 0) {
+    String warn="Added L2 penalty (rho = " + _addedL2 + ")  due to non-spd matrix. ";
+    if (_model.warnings == null || _model.warnings.length == 0)     _model.warnings=new String[]{warn};
+ else {
+      _model.warnings=Arrays.copyOf(_model.warnings,_model.warnings.length + 1);
+      _model.warnings[_model.warnings.length - 1]=warn;
+    }
+    _model.update(self());
+  }
   _model.unlock(self());
   if (_dinfo._nfolds == 0)   remove();
   if (_fjtask != null)   _fjtask.tryComplete();
