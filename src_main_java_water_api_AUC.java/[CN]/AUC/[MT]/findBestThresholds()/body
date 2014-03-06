@@ -9,8 +9,6 @@
   optimal_cms=new long[hs.size()][][];
   idxCriter=new int[hs.size()];
   optimal_thresholds=new float[hs.size()];
-  F1=new double[hs.size()];
-  err=new double[hs.size()];
   for (  ThresholdCriterion criter : hs) {
     final int id=criter.ordinal();
     idxCriter[id]=0;
@@ -22,7 +20,5 @@
       }
     }
     optimal_cms[id]=_cms[idxCriter[id]]._arr;
-    F1[id]=_cms[idxCriter[id]].F1();
-    err[id]=_cms[idxCriter[id]].err();
   }
 }

@@ -200,6 +200,7 @@
     checkStr("1.23 +\n-4",-2.77);
     checkStr("x=3;3*-x",-9);
     checkStr("x=3;3\n*\n-\nx",3);
+    checkStr("function(df) { min(df[,\"age\"]) }","The current Exec does not handle strings\nfunction(df) { min(df[,\"age\"]) }\n                        ^\n");
     checkStr("a=0;x=0;y=0",0);
   }
   finally {
