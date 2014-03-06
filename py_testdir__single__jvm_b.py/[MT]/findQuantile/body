@@ -1,25 +1,30 @@
-def findQuantile(d, dmin, dmax, drows, threshold):
-    binCount = BIN_COUNT
+def findQuantile(d, dmin, dmax, threshold):
     maxIterations = 30
+    totalRows = len(d)
     newValStart = dmin
     newValEnd = dmax
     newValRange = (newValEnd - newValStart)
-    newBinCount = binCount
-    newBinSize = (newValRange / (newBinCount + 0.0))
+    desiredBinCnt = BIN_COUNT
+    newBinSize = (newValRange / (desiredBinCnt + 0.0))
     newLowCount = 0
-    assert (newBinSize != 0)
-    iteration = 0
-    done = False
-    hcnt = [None for b in range((binCount + 1))]
-    hcnt_min = [None for b in range((binCount + 1))]
-    hcnt_max = [None for b in range((binCount + 1))]
+    desiredBinCnt = BIN_COUNT
+    maxBinCnt = (desiredBinCnt + 1)
+    assert (maxBinCnt > 0)
+    hcnt = [None for b in range(maxBinCnt)]
+    hcnt_min = [None for b in range(maxBinCnt)]
+    hcnt_max = [None for b in range(maxBinCnt)]
     hcnt_low = 0
     hcnt_high = 0
+    assert (newBinSize != 0)
+    assert (newValEnd > newValStart)
+    assert (newValRange > 0)
+    iteration = 0
+    done = False
     best_result = []
 
     def htot2():
         return ((sum(hcnt) + hcnt_low) + hcnt_high)
-    while ((iteration < maxIterations) and (not done)):
+    while ((iteration <= maxIterations) and (not done)):
         h2p.green_print('newValStart', newValStart)
         h2p.green_print('newValEnd', newValEnd)
         h2p.green_print('newValRange', newValRange)
@@ -31,11 +36,13 @@ def findQuantile(d, dmin, dmax, drows, threshold):
         valRange = newValRange
         binSize = newBinSize
         lowCount = newLowCount
+        desiredBinCnt = BIN_COUNT
+        maxBinCnt = (desiredBinCnt + 1)
         NUDGE = 0.001
         NUDGE = ((1000 * (valEnd - valStart)) / 1000000)
-        NUDGE = (binSize / binCount)
+        NUDGE = (binSize / desiredBinCnt)
         NUDGE = 0
-        for b in range((binCount + 1)):
+        for b in range(maxBinCnt):
             hcnt[b] = 0.0
         hcnt_low = 0
         hcnt_high = 0
@@ -46,14 +53,13 @@ def findQuantile(d, dmin, dmax, drows, threshold):
                 hcnt_low += 1
             elif (val > valEnd):
                 if (hcnt_high == 0):
-                    print 'First addition to hcnt_high this pass val:', val, 'valEnd:', valEnd
                     hcnt_high_min = val
                 else:
                     hcnt_high_min = min(hcnt_high_min, val)
                 hcnt_high += 1
             else:
                 hcntIdx = int((round(((valOffset * 1000000.0) / binSize)) / 1000000.0))
-                assert ((hcntIdx >= 0) and (hcntIdx <= binCount)), ('val %s %s %s %s hcntIdx: %s binCount: %s binSize: %s' % (val, valStart, valEnd, valOffset, hcntIdx, binCount, binSize))
+                assert ((hcntIdx >= 0) and (hcntIdx <= maxBinCnt)), ('val %s %s %s %s hcntIdx: %s maxBinCnt: %s binSize: %s' % (val, valStart, valEnd, valOffset, hcntIdx, maxBinCnt, binSize))
                 if (hcnt[hcntIdx] == 0):
                     hcnt_min[hcntIdx] = val
                     hcnt_max[hcntIdx] = val
@@ -61,111 +67,68 @@ def findQuantile(d, dmin, dmax, drows, threshold):
                     hcnt_min[hcntIdx] = min(hcnt_min[hcntIdx], val)
                     hcnt_max[hcntIdx] = max(hcnt_max[hcntIdx], val)
                 hcnt[hcntIdx] += 1
-        ht = htot2()
-        assert (drows == ht), ('drows: %s htot2() %s not equal' % (drows, ht))
-        s = 0
+        totalBinnedRows = htot2()
+        assert (totalRows == totalBinnedRows), ('totalRows: %s htot2() %s not equal' % (totalRows, totalBinnedRows))
         k = 0
         currentCnt = newLowCount
-        targetCnt = int(math.floor((threshold * drows)))
-        targetCntFractional = ((threshold * drows) - targetCnt)
-        exactGoal = (targetCntFractional == 0.0)
-        print 'targetCnt:', targetCnt, 'targetCntFractional', targetCntFractional
-        while ((currentCnt + hcnt[k]) <= targetCnt):
+        targetCntFull = ((threshold * totalRows) + 0.5)
+        targetCntInt = int(math.floor(targetCntFull))
+        targetCntFract = (targetCntFull - targetCntInt)
+        print 'targetCntInt:', targetCntInt, 'targetCntFract', targetCntFract
+        while ((currentCnt + hcnt[k]) < targetCntInt):
             currentCnt += hcnt[k]
-            k += 1
-            assert (k <= binCount), ('k too large, k: %s binCount %s' % (k, binCount))
-        if ((s == targetCnt) or (hcnt[k] == 0)):
-            if (hcnt[k] != 0):
-                guess = hcnt_min[k]
-                h2p.red_print('Guess A', guess, currentCnt, targetCnt)
-            elif (k == 0):
-                assert (hcnt[(k + 1)] != 0)
-                guess = hcnt_min[(k + 1)]
-                h2p.red_print('Guess B', guess, currentCnt, targetCnt)
-            elif (hcnt[(k - 1)] != 0):
-                guess = hcnt_max[(k - 1)]
-                h2p.red_print('Guess C', guess, currentCnt, targetCnt)
-            else:
-                assert false
-        else:
-            h2p.red_print('hcnt_max[k]', hcnt_max[k], 'hcnt_min[k]', hcnt_min[k])
-            actualBinWidth = (hcnt_max[k] - hcnt_min[k])
-            assert (actualBinWidth <= binSize)
-            guess = (hcnt_min[k] + (actualBinWidth * ((targetCnt - currentCnt) / hcnt[k])))
-            print 'Guess D:', 'guess', 'k', 'hcnt_min[k]', 'actualBinWidth', 'currentCnt', 'targetCnt', 'hcnt[k]'
-            print 'Guess D:', guess, k, hcnt_min[k], actualBinWidth, currentCnt, targetCnt, hcnt[k]
-        print 'checking for done, hcnt_min[k]', hcnt_min[k], 'hcnt_max[k]', hcnt_max[k]
-        if ((hcnt_min[k] == hcnt_max[k]) and (currentCnt == targetCnt)):
-            if ((hcnt[k] >= 2) and (targetCntFraction == 0)):
-                done = True
-                guess = hcnt_min[k]
-        if done:
-            print 'Done:', 'hcnt_min[k]', 'hcnt_max[k]', 'currentCnt', 'targetCnt', 'targetCntFractional'
-            print 'Done:', hcnt_min[k], hcnt_max[k], currentCnt, targetCnt, targetCntFractional
-        else:
-            print 'Not Done:', 'hcnt_min[k]', 'hcnt_max[k]', 'currentCnt', 'targetCnt', 'targetCntFractional'
-            print 'Not Done:', hcnt_min[k], hcnt_max[k], currentCnt, targetCnt, targetCntFractional
+            k = (k + 1)
+            assert (k <= maxBinCnt), ('k too large, k: %s maxBinCnt %s' % (k, maxBinCnt))
         if (hcnt[k] == 1):
             assert (hcnt_min[k] == hcnt_max[k])
-        if ((not done) and (hcnt[k] > 1) and (hcnt_min[k] == hcnt_max[k]) and (targetCntFractional != 0)):
+        done = False
+        if ((not done) and (hcnt_min[k] == hcnt_max[k]) and (currentCnt == targetCntInt)):
+            if ((hcnt[k] >= 2) or (targetCntFract == 0)):
+                done = True
+                guess = hcnt_min[k]
+                print 'Done:', 'hcnt_min[k]', 'hcnt_max[k]', 'currentCnt', 'targetCntInt', 'targetCntFract'
+                print 'Done:', hcnt_min[k], hcnt_max[k], currentCnt, targetCntInt, targetCntFract
+            else:
+                guess = ((hcnt_max[k] - hcnt_min[k]) / 2)
+        if ((not done) and (hcnt[k] > 1) and (hcnt_min[k] == hcnt_max[k]) and (targetCntFract != 0)):
             print '\nInterpolating result into single value of this bin'
-            print 'Guess E:', 'guess', 'k', 'hcnt[k]', 'hcnt_min[k]', 'hcnt_max[k]', 'currentCnt', 'targetCnt'
-            print 'Guess E:', guess, k, hcnt[k], hcnt_min[k], hcnt_max[k], currentCnt, targetCnt
+            print 'Guess E:', 'guess', 'k', 'hcnt[k]', 'hcnt_min[k]', 'hcnt_max[k]', 'currentCnt', 'targetCntInt'
+            print 'Guess E:', guess, k, hcnt[k], hcnt_min[k], hcnt_max[k], currentCnt, targetCntInt
             guess = hcnt_min[k]
             done = True
-        if ((not done) and (hcnt[k] == 1) and (hcnt_min[k] == hcnt_max[k]) and (targetCntFractional != 0)):
+        if ((not done) and (hcnt[k] == 1) and (hcnt_min[k] == hcnt_max[k]) and (targetCntFract != 0)):
             print '\nSingle value in this bin, but fractional means we need to interpolate to next non-zero'
-            print 'k', 'hcnt[k]', 'hcnt_min[k]', 'hcnt_max[k]', 'currentCnt', 'targetCnt'
-            print k, hcnt[k], hcnt_min[k], hcnt_max[k], currentCnt, targetCnt
-        if ((not done) and (hcnt[k] == 1) and (targetCntFractional != 0)):
-            assert (not exactGoal)
-            print ('Trying to find nextK for possibly interpolating k: %s' % k)
-            if (k < binCount):
+            if (k < maxBinCnt):
                 nextK = (k + 1)
             else:
                 nextK = k
-            while ((nextK < binCount) and (hcnt[nextK] == 0)):
+            while ((nextK < maxBinCnt) and (hcnt[nextK] == 0)):
                 nextK += 1
-            if (nextK >= binCount):
-                nextK = None
-                print 'nextK is outside the bins. Use hcnt_high_min'
-                if (hcnt_high > 0):
-                    print '\nInterpolating result using hcnt_high_min'
-                    print 'Guess F with hcnt_high_min:'
-                    print 'guess', 'k', 'hcnt_high_min', ' currentCnt', 'targetCnt', 'targetCntFractional', 'hcnt[k]'
-                    print guess, k, hcnt_high_min, currentCnt, targetCnt, targetCntFractional, hcnt[k]
-                    guess = ((hcnt_max[k] + hcnt_high_min) / 2.0)
-                else:
-                    print 'Guess F with hcnt_high_min not valid:', guess, k, hcnt_high, hcnt_high_min, currentCnt, targetCnt, targetCntFractional, hcnt[k]
-                    assert false
-                    guess = hcnt_high
+            if ((nextK >= maxBinCnt) and (hcnt_high_cnt != 0)):
+                nextVal = hcnt_high_min
             else:
-                assert (nextK < binCount), ('%s %s' % (nextK, binCount))
-                if (hcnt[nextK] == 0):
-                    nextK = k
-                nextCnt = int((nextK * binSize))
-                assert (nextK < (binCount + 1)), ('nextK too large, nextK: %s binCount %s' % (nextK, binCount))
-                print 'k:', k, 'nextK', nextK
-                if (k != nextK):
-                    guess = ((hcnt_max[k] + hcnt_min[nextK]) / 2.0)
-                    print '\nInterpolating result using nextK'
-                    print 'Guess G with nextK:', guess, k, nextK, hcnt_max[k], hcnt_min[nextK], currentCnt, targetCnt, hcnt[k]
-                assert (hcnt[nextK] != 0), hcnt[nextK]
-                assert (hcnt[k] != 0), hcnt[k]
-        newValStart = (hcnt_min[k] - NUDGE)
-        newValEnd = (hcnt_max[k] + NUDGE)
-        newValRange = (newValEnd - newValStart)
-        newBinSize = (newValRange / (binCount + 0.0))
+                assert (hcnt[nextK] != 0)
+                nextVal = hcnt_min[nextK]
+            guess = ((hcnt_max[k] + nextVal) / 2.0)
+            done = True
+            print ('\nInterpolating result using nextK: %s nextVal: %s' % (nextK, nextVal))
+            print 'Guess G with nextK:', guess
         if (not done):
+            newValStart = (hcnt_min[k] - NUDGE)
+            newValEnd = (hcnt_max[k] + NUDGE)
+            newValRange = (newValEnd - newValStart)
+            newBinSize = (newValRange / (desiredBinCnt + 0.0))
+            newLowCount = currentCnt
             print 'Saying done because newBinSize is 0.'
             print ('newValRange: %s, hcnt[k]: %s hcnt_min[k]: %s hcnt_max[k]: %s' % (newValRange, hcnt[k], hcnt_min[k], hcnt_max[k]))
+            guess = newValStart
             done = (newBinSize == 0)
-        newLowCount = currentCnt
         best_result.append(guess)
         print ('Compare these two, should be identical? %s %s' % (guess, best_result[(-1)]))
         iteration += 1
-        h2p.blue_print('Ending Pass', iteration, 'best_result:', best_result, 'done:', done, 'hcnt[k]', hcnt[k])
-        print 'currentCnt', currentCnt, 'targetCnt', targetCnt, 'hcnt_low', hcnt_low, 'hcnt_high', hcnt_high
+        h2p.blue_print('Ending Pass', iteration)
+        h2p.blue_print('best_result:', best_result, 'done:', done, 'hcnt[k]', hcnt[k])
+        print 'currentCnt', currentCnt, 'targetCntInt', targetCntInt, 'hcnt_low', hcnt_low, 'hcnt_high', hcnt_high
         print 'was', valStart, valEnd, valRange, binSize
         print 'next', newValStart, newValEnd, newValRange, newBinSize
     return best_result[(-1)]
