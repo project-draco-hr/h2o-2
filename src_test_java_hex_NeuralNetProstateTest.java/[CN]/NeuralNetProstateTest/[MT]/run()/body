@@ -28,9 +28,6 @@
     StringBuilder sb=new StringBuilder();
     double error=CM.toASCII(sb);
     Log.info(sb);
-    if (error != 0) {
-      Assert.fail("Classification error is not 0, but " + error + ".");
-    }
     pred.delete();
     mymodel.delete();
   }
