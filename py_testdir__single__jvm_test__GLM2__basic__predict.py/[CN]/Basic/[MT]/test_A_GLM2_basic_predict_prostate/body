@@ -1,0 +1,21 @@
+def test_A_GLM2_basic_predict_prostate(self):
+    h2o.beta_features = True
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()
+    print '\nStarting prostate.csv'
+    y = 1
+    csvFilename = 'prostate.csv'
+    csvPathname = ('logreg/' + csvFilename)
+    hexKey = (csvFilename + '.hex')
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hexKey, schema='put')
+    for maxx in range(1):
+        kwargs = {'response': y, 'family': 'binomial', 'ignored_cols': '0', 'n_folds': 0, 'alpha': 0, 'lambda': 1e-08, }
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, 'AGE', **kwargs)
+        GLMModel = glm['glm_model']
+        modelKey = GLMModel['_key']
+        print 'Doing predict with same dataset, and the GLM model'
+        h2o.nodes[0].generate_predictions(model_key=modelKey, data_key=hexKey, prediction='Predict.hex')
+        h2o.nodes[0].generate_auc(thresholds=None, actual=hexKey, predict='Predict.hex', vactual=y, vpredict=1)
+    h2o.nodes[0].log_view()
+    namelist = h2o.nodes[0].log_download()

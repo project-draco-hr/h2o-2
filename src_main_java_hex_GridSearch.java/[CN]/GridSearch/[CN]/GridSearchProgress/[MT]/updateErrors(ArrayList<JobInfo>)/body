@@ -1,0 +1,20 @@
+{
+  if (jobs == null)   return;
+  prediction_errors=new double[jobs.length];
+  int i=0;
+  for (  Job job : jobs) {
+    JobInfo info=new JobInfo();
+    info._job=job;
+    if (job.dest() != null) {
+      Object value=UKV.get(job.dest());
+      info._model=value instanceof Model ? (Model)value : null;
+      if (info._model != null) {
+        info._cm=info._model.cm();
+        info._error=info._model.mse();
+      }
+    }
+    if (info._cm != null)     info._error=info._cm.err();
+    if (infos != null)     infos.add(info);
+    prediction_errors[i++]=info._error;
+  }
+}

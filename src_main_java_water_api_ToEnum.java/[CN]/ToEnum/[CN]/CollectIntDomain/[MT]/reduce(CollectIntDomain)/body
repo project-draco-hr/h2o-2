@@ -1,0 +1,21 @@
+{
+  if (_dom == null)   _dom=other._dom;
+ else   if (other._dom != null && !Arrays.equals(_dom,other._dom)) {
+    int[] res=new int[_dom.length + other._dom.length];
+    Arrays.fill(res,Integer.MAX_VALUE);
+    int i=0, j=0, k=0;
+    while (i < _dom.length && j < other._dom.length) {
+      if (_dom[i] < other._dom[j])       res[k++]=_dom[i++];
+ else       if (_dom[i] == other._dom[j]) {
+        res[k++]=_dom[i++];
+        j++;
+      }
+ else       res[k++]=other._dom[j++];
+    }
+    assert(i == _dom.length || j == other._dom.length);
+    for (int ii=i; ii < _dom.length; ++ii)     res[k++]=_dom[ii];
+    for (int jj=j; jj < other._dom.length; ++jj)     res[k++]=other._dom[jj];
+    if (k > water.parser.Enum.MAX_ENUM_SIZE)     throw new RuntimeException("too many unique elements!");
+    _dom=Arrays.copyOf(res,k);
+  }
+}

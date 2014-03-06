@@ -1,3 +1,8 @@
 {
-  throw new RuntimeException("Should be overridden if job is a request");
+  try {
+    return execImpl();
+  }
+  finally {
+    cleanup();
+  }
 }

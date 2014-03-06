@@ -4,7 +4,7 @@
   DocGen.HTML.arrayHead(sb);
   sb.append("<th>AUC</th><th>Gini</th><th>F1</th><th>Threshold for max. F1</th>");
   sb.append("<tr class='warning'>");
-  sb.append("<td>" + String.format("%5f",AUC()) + "</td><td>"+ String.format("%5f",Gini())+ "</td><td>"+ String.format("%5f",F1())+ "</td><td>"+ String.format("%g",best_thresholdF1())+ "</td>");
+  sb.append("<td>" + String.format("%.5f",AUC()) + "</td><td>"+ String.format("%.5f",Gini())+ "</td><td>"+ String.format("%.5f",F1())+ "</td><td>"+ String.format("%g",threshold_maxF1())+ "</td>");
   sb.append("</tr>");
   DocGen.HTML.arrayTail(sb);
   _cms[idx_bestF1].toHTML(sb,actual_domain);
@@ -30,7 +30,7 @@
   sb.append("}\n");
   sb.append("</script>\n");
   sb.append("\n<div><b>Confusion Matrix at decision threshold:</b></div><select id=\"select\" onchange='show_cm(this.value)'>\n");
-  for (int i=0; i < _cms.length; ++i)   sb.append("\t<option value='" + i + "'"+ (_thresh[i] == best_thresholdF1() ? "selected='selected'" : "")+ ">"+ _thresh[i]+ "</option>\n");
+  for (int i=0; i < _cms.length; ++i)   sb.append("\t<option value='" + i + "'"+ (thresholds[i] == threshold_maxF1() ? "selected='selected'" : "")+ ">"+ thresholds[i]+ "</option>\n");
   sb.append("</select>\n");
   sb.append("</div>");
   return true;

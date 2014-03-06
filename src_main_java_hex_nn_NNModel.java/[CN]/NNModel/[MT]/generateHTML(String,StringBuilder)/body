@@ -19,8 +19,9 @@
     DocGen.HTML.section(sb,msg);
     DocGen.HTML.section(sb,"=======================================================================================");
   }
-  final double progress=model_info.get_params().progress();
   DocGen.HTML.title(sb,"Progress");
+  epoch_counter=training_rows > 0 ? (float)model_info().get_processed_total() / training_rows : 0;
+  final double progress=model_info.get_params().progress();
   if (model_info.parameters != null && model_info.parameters.diagnostics) {
     DocGen.HTML.section(sb,"Status of Neuron Layers");
     sb.append("<table class='table table-striped table-bordered table-condensed'>");
@@ -29,10 +30,15 @@
     sb.append("<th>").append("Units").append("</th>");
     sb.append("<th>").append("Type").append("</th>");
     sb.append("<th>").append("Dropout").append("</th>");
-    sb.append("<th>").append("Rate").append("</th>");
     sb.append("<th>").append("L1").append("</th>");
     sb.append("<th>").append("L2").append("</th>");
-    sb.append("<th>").append("Momentum").append("</th>");
+    if (model_info.get_params().adaptive_rate) {
+      sb.append("<th>").append("Rate (Mean, RMS)").append("</th>");
+    }
+ else {
+      sb.append("<th>").append("Rate").append("</th>");
+      sb.append("<th>").append("Momentum").append("</th>");
+    }
     sb.append("<th>").append("Weight (Mean, RMS)").append("</th>");
     sb.append("<th>").append("Bias (Mean, RMS)").append("</th>");
     sb.append("</tr>");
@@ -62,11 +68,16 @@
  else {
         sb.append("<td></td>");
       }
-      sb.append("<td>").append(String.format("%.5g",neurons[i].rate(error.training_samples))).append("</td>");
+      final String format="%g";
       sb.append("<td>").append(neurons[i].params.l1).append("</td>");
       sb.append("<td>").append(neurons[i].params.l2).append("</td>");
-      final String format="%g";
-      sb.append("<td>").append(String.format("%.5f",neurons[i].momentum(error.training_samples))).append("</td>");
+      if (model_info.get_params().adaptive_rate) {
+        sb.append("<td>(").append(String.format(format,model_info.mean_rate[i])).append(", ").append(String.format(format,model_info.rms_rate[i])).append(")</td>");
+      }
+ else {
+        sb.append("<td>").append(String.format("%.5g",neurons[i].rate(error.training_samples))).append("</td>");
+        sb.append("<td>").append(String.format("%.5f",neurons[i].momentum(error.training_samples))).append("</td>");
+      }
       sb.append("<td>(").append(String.format(format,model_info.mean_weight[i])).append(", ").append(String.format(format,model_info.rms_weight[i])).append(")</td>");
       sb.append("<td>(").append(String.format(format,model_info.mean_bias[i])).append(", ").append(String.format(format,model_info.rms_bias[i])).append(")</td>");
       sb.append("</tr>");
@@ -85,12 +96,13 @@
       DocGen.HTML.section(sb,"MSE on validation data: " + String.format(mse_format,error.valid_mse));
     }
   }
-  if (error.training_time_ms > 0) {
-    DocGen.HTML.paragraph(sb,"Epochs: " + String.format("%.3f",epoch_counter) + " / "+ model_info.parameters.epochs);
-    DocGen.HTML.paragraph(sb,"Training speed: " + error.training_samples * 1000 / error.training_time_ms + " samples/s");
-    DocGen.HTML.paragraph(sb,"Training time: " + PrettyPrint.msecs(error.training_time_ms,true));
-    if (!model_info.get_params().isDone())     DocGen.HTML.paragraph(sb,"Estimated time left: " + PrettyPrint.msecs((long)(error.training_time_ms * (1 - progress) / progress),true));
+  DocGen.HTML.paragraph(sb,"Epochs: " + String.format("%.3f",epoch_counter) + " / "+ model_info.parameters.epochs);
+  long time_so_far=model_info().job().isDone() ? error.training_time_ms : System.currentTimeMillis() - model_info.parameters.start_time;
+  if (time_so_far > 0) {
+    DocGen.HTML.paragraph(sb,"Training speed: " + String.format("%,d",model_info().get_processed_total() * 1000 / time_so_far) + " samples/s");
   }
+  DocGen.HTML.paragraph(sb,"Training time: " + PrettyPrint.msecs(time_so_far,true));
+  if (progress > 0 && !model_info.get_params().isDone())   DocGen.HTML.paragraph(sb,"Estimated time left: " + PrettyPrint.msecs((long)(time_so_far * (1 - progress) / progress),true));
   long score_train=error.score_training_samples;
   long score_valid=error.score_validation_samples;
   final boolean fulltrain=score_train == 0 || score_train == model_info().data_info()._adaptedFrame.numRows();

@@ -1,5 +1,4 @@
 {
-  Frame[] valid_adapted=null;
   Frame valid=null, validScoreFrame=null;
   Frame train=null, trainScoreFrame=null;
   try {
@@ -9,6 +8,7 @@
       model=UKV.get(dest());
     }
     model.write_lock(self());
+    prepareValidationWithModel(model);
     final long model_size=model.model_info().size();
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
@@ -22,8 +22,9 @@
     trainScoreFrame=sampleFrame(train,score_training_samples,seed);
     Log.info("Number of chunks of the training data: " + train.anyVec().nChunks());
     if (validation != null) {
-      valid_adapted=model.adapt(validation,false);
-      valid=reBalance(valid_adapted[0],seed + 1);
+      Frame adaptedValid=getValidation();
+      if (getValidAdaptor().needsAdaptation2CM())       adaptedValid.add("adaptedValidationResponse",getValidAdaptor().getAdaptedValidationResponse2CM());
+      valid=reBalance(adaptedValid,seed + 1);
       if (classification && balance_classes && score_validation_sampling == ClassSamplingMethod.Stratified) {
         validScoreFrame=sampleFrameStratified(valid,valid.lastVec(),null,score_validation_samples > 0 ? score_validation_samples : valid.numRows(),seed + 1,false,false);
       }
@@ -32,6 +33,7 @@
       }
       Log.info("Number of chunks of the validation data: " + valid.anyVec().nChunks());
     }
+    model.training_rows=train.numRows();
     if (mini_batch > train.numRows()) {
       Log.warn("Setting mini_batch (" + mini_batch + ") to the number of rows of the training data ("+ (mini_batch=train.numRows())+ ").");
     }
@@ -52,7 +54,6 @@
     if (model != null)     model.unlock(self());
     if (validScoreFrame != null && validScoreFrame != valid)     validScoreFrame.delete();
     if (trainScoreFrame != null && trainScoreFrame != train)     trainScoreFrame.delete();
-    if (validation != null && valid_adapted != null && valid_adapted.length > 1)     valid_adapted[1].delete();
     unlock_data();
   }
 }
