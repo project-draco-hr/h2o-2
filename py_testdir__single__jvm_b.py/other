@@ -5,10 +5,10 @@ import numpy as np
 import scipy as sp
 import math
 OTHER_T = 0.5
-BIN_COUNT = 2
-csvPathname = './d.csv'
-csvPathname = './syn_binary_1000000x1.csv'
+BIN_COUNT = 100000
 csvPathname = './syn_binary_100x1.csv'
+csvPathname = './d.csv'
+csvPathname = './syn_binary_100000x1.csv'
 col = 0
 print 'Reading csvPathname'
 dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', dtype=None)
@@ -30,7 +30,7 @@ from scipy import stats
 a1 = stats.scoreatpercentile(target, per=(100 * OTHER_T), interpolation_method='fraction')
 h2p.red_print('stats.scoreatpercentile:', a1)
 a2 = stats.mstats.mquantiles(targetFP, prob=[OTHER_T])
-h2p.red_print('scipy stats.mstats.mquantiles:', [('%.2f' % v) for v in a2])
+h2p.red_print('scipy stats.mstats.mquantiles:', a2)
 targetFP.sort()
 b = h2o_summ.percentileOnSortedList(targetFP, OTHER_T)
 h2p.blue_print('from scipy:', a2)
