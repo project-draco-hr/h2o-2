@@ -67,12 +67,13 @@ def findQuantile(d, dmin, dmax, threshold):
         totalBinnedRows = htot2()
         assert (totalRows == totalBinnedRows), ('totalRows: %s htot2() %s not equal' % (totalRows, totalBinnedRows))
         currentCnt = hcnt_low
-        targetCntFull = ((threshold * totalRows) + 0.5)
-        targetCntInt = int(math.floor(targetCntFull))
+        targetCntFull = (threshold * (totalRows - 1))
+        targetCntInt = int(math.floor((threshold * (totalRows - 1))))
         targetCntFract = (targetCntFull - targetCntInt)
+        assert ((targetCntFract >= 0) and (targetCntFract <= 1))
         print 'targetCntInt:', targetCntInt, 'targetCntFract', targetCntFract
         k = 0
-        while ((currentCnt + hcnt[k]) < targetCntInt):
+        while ((currentCnt + hcnt[k]) <= targetCntInt):
             currentCnt += hcnt[k]
             k += 1
             assert (k <= maxBinCnt), ('k too large, k: %s maxBinCnt %s' % (k, maxBinCnt))
@@ -130,7 +131,6 @@ def findQuantile(d, dmin, dmax, threshold):
                 guess = newValStart
                 done = True
         best_result.append(guess)
-        print ('Compare these two, should be identical? %s %s' % (guess, best_result[(-1)]))
         iteration += 1
         h2p.blue_print('Ending Pass', iteration)
         h2p.blue_print('best_result:', best_result, 'done:', done, 'hcnt[k]', hcnt[k])
