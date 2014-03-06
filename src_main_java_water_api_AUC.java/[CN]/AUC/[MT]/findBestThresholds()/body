@@ -1,0 +1,28 @@
+{
+  threshold_criteria=new String[ThresholdCriterion.values().length];
+  int i=0;
+  HashSet<ThresholdCriterion> hs=new HashSet<ThresholdCriterion>();
+  for (  ThresholdCriterion criter : ThresholdCriterion.values()) {
+    hs.add(criter);
+    threshold_criteria[i++]=criter.toString().replace("_"," ");
+  }
+  optimal_cms=new long[hs.size()][][];
+  idxCriter=new int[hs.size()];
+  optimal_thresholds=new float[hs.size()];
+  F1=new double[hs.size()];
+  err=new double[hs.size()];
+  for (  ThresholdCriterion criter : hs) {
+    final int id=criter.ordinal();
+    idxCriter[id]=0;
+    optimal_thresholds[id]=thresholds[0];
+    for (i=1; i < _cms.length; ++i) {
+      if (isBetter(_cms[i],_cms[idxCriter[id]],criter)) {
+        idxCriter[id]=i;
+        optimal_thresholds[id]=thresholds[i];
+      }
+    }
+    optimal_cms[id]=_cms[idxCriter[id]]._arr;
+    F1[id]=_cms[idxCriter[id]].precisionAndRecall();
+    err[id]=_cms[idxCriter[id]].err();
+  }
+}
