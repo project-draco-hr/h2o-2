@@ -50,7 +50,7 @@
     }
     if (!converged && _glm.family != Family.gaussian && _iter < max_iter) {
       ++_iter;
-      GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,case_mode,case_val,newBeta,_ymu,_reg,new Iteration()).dfork(_dinfo._adaptedFrame);
+      GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,newBeta,_ymu,_reg,new Iteration()).dfork(_dinfo._adaptedFrame);
       return;
     }
   }
