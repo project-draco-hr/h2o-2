@@ -1,4 +1,8 @@
 {
-  computeAIC();
-  if (_glm.family == Family.binomial)   computeAUC();
+  if (_glm.family == Family.binomial) {
+    AUC auc=new AUC(_cms,thresholds);
+    this.auc=auc.AUC();
+    best_threshold=auc.threshold();
+    computeAIC();
+  }
 }

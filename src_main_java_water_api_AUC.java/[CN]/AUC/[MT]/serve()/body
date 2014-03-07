@@ -11,7 +11,12 @@
     if (!va.group().equals(vp.group())) {
       vp=va.align(vp);
     }
-    if (thresholds == null) {
+    if (thresholds != null) {
+      if (_cms == null)       sort(thresholds);
+      if (Utils.minValue(thresholds) < 0)       throw new InvalidArgumentException("Minimum threshold cannot be negative.");
+      if (Utils.maxValue(thresholds) > 1)       throw new InvalidArgumentException("Maximum threshold cannot be greater than 1.");
+    }
+ else {
       HashSet hs=new HashSet();
       final int bins=(int)Math.min(vpredict.length(),200l);
       final long stride=Math.max(vpredict.length() / bins,1);
@@ -24,12 +29,16 @@
       }
       sort(thresholds);
     }
-    if (_cms == null) {
+    if (_cms != null) {
+      if (_cms.length != thresholds.length)       throw new InvalidArgumentException("Number of thresholds differs from number of confusion matrices.");
+    }
+ else {
       AUCTask at=new AUCTask(thresholds).doAll(va,vp);
       _cms=at.getCMs();
     }
     computeAUC();
     findBestThresholds();
+    computeMetrics();
     return Response.done(this);
   }
  catch (  Throwable t) {

@@ -2,7 +2,6 @@
   for (int i=0; i < _objvals.length; ++i) {
     final double[] beta=_betas[i];
     double y=responses[0];
-    if (_caseMode != CaseMode.none)     y=_caseMode.isCase(y,_caseVal) ? 1 : 0;
     _objvals[i]+=_glm.deviance(y,_glm.linkInv(computeEta(ncats,cats,nums,beta)));
   }
 }
