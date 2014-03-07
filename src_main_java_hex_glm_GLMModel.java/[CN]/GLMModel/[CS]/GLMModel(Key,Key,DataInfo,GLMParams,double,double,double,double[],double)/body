@@ -1,0 +1,18 @@
+{
+  super(selfKey,null,dinfo._adaptedFrame);
+  job_key=jobKey;
+  this.ymu=ymu;
+  this.glm=glm;
+  threshold=0.5;
+  this.data_info=dinfo;
+  this.warnings=null;
+  this.alpha=alpha;
+  this.lambda_max=lambda_max;
+  this.lambdas=lambda;
+  this.beta_eps=beta_eps;
+  submodels=new Submodel[lambda.length];
+  for (int i=0; i < submodels.length; ++i)   submodels[i]=new Submodel(null,null,0,0);
+  run_time=0;
+  start_time=System.currentTimeMillis();
+  coefficients_names=coefNames();
+}
