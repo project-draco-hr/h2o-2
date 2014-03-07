@@ -107,28 +107,29 @@ def findQuantile(d, dmin, dmax, threshold):
                     nextK += 1
                 if (nextK >= maxBinCnt):
                     assert (hcnt_high != 0)
-                    print 'hello1:', hcnt_high_min
+                    print 'Using hcnt_high_min for interpolate:', hcnt_high_min
                     nextVal = hcnt_high_min
                 else:
-                    print 'hello2:', nextK
+                    print 'Using nextK for interpolate:', nextK
                     assert (hcnt[nextK] != 0)
                     nextVal = hcnt_min[nextK]
-            guess = ((hcnt_max[k] + nextVal) / 2.0)
-            done = True
-            print 'k', 'hcnt_max[k]', 'nextVal'
-            print 'hello3:', k, hcnt_max[k], nextVal
-            print ('\nInterpolating result using nextK: %s nextVal: %s' % (nextK, nextVal))
-            print 'Guess D', guess
+                guess = ((hcnt_max[k] + nextVal) / 2.0)
+                done = True
+                print 'k', 'hcnt_max[k]', 'nextVal'
+                print 'hello3:', k, hcnt_max[k], nextVal
+                print ('\nInterpolating result using nextK: %s nextVal: %s' % (nextK, nextVal))
+                print 'Guess D', guess
         if (not done):
             newValStart = (hcnt_min[k] - NUDGE)
             newValEnd = (hcnt_max[k] + NUDGE)
             newValRange = (newValEnd - newValStart)
             newBinSize = (newValRange / (desiredBinCnt + 0.0))
             newLowCount = currentCnt
-            print 'Saying done because newBinSize is 0.'
-            print ('newValRange: %s, hcnt[k]: %s hcnt_min[k]: %s hcnt_max[k]: %s' % (newValRange, hcnt[k], hcnt_min[k], hcnt_max[k]))
             if (newBinSize == 0):
+                print 'Assuming done because newBinSize is 0.'
+                print ('newValRange: %s, hcnt[k]: %s hcnt_min[k]: %s hcnt_max[k]: %s' % (newValRange, hcnt[k], hcnt_min[k], hcnt_max[k]))
                 guess = newValStart
+                print 'Guess E', guess
                 done = True
         best_result.append(guess)
         iteration += 1
