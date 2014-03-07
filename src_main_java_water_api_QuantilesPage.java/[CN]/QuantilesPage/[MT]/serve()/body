@@ -4,6 +4,9 @@
   if (column.isEnum()) {
     throw new IllegalArgumentException("Column is an enum");
   }
+  if (!((interpolation_type == 2) || (interpolation_type == 7))) {
+    throw new IllegalArgumentException("Unsupported interpolation type");
+  }
   Vec[] vecs=new Vec[1];
   String[] names=new String[1];
   vecs[0]=column;
@@ -19,6 +22,7 @@
     summaries[0].finishUp(vecs[0]);
     column_name=summaries[0].colname;
     quantile_requested=summaries[0].DEFAULT_PERCENTILES[0];
+    interpolation_type_requested=interpolation_type;
     result=summaries[0]._pctile[0];
   }
   return Response.done(this);
