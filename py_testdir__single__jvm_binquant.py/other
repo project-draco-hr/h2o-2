@@ -4,8 +4,8 @@ import h2o_print as h2p, h2o_summ
 import numpy as np
 import scipy as sp
 import math
-OTHER_T = 0.5
-BIN_COUNT = 100000
+OTHER_T = 0.66
+BIN_COUNT = 2
 csvPathname = './syn_binary_100x1.csv'
 csvPathname = './syn_binary_100000x1.csv'
 csvPathname = './d.csv'
@@ -26,6 +26,7 @@ dmin = min(d)
 dmax = max(d)
 thresholdList = [OTHER_T]
 quantiles = findQuantileList(d, dmin, dmax, thresholdList)
+h2p.red_print('\nthis b result:', quantiles)
 from scipy import stats
 a1 = stats.scoreatpercentile(target, per=(100 * OTHER_T), interpolation_method='fraction')
 h2p.red_print('stats.scoreatpercentile:', a1)

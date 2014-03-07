@@ -4,14 +4,7 @@
     computeMajorities();
   }
  else {
-    _pctile=new double[DEFAULT_PERCENTILES.length];
-    if (false) {
-      Arrays.sort(_samples);
-      for (int i=0; i < _pctile.length; i++)       _pctile[i]=sampleQuantile(_samples,DEFAULT_PERCENTILES[i]);
-    }
- else {
-      approxQuantiles(_pctile,DEFAULT_PERCENTILES);
-    }
+    approxQuantiles1Pass(_pctile,DEFAULT_PERCENTILES);
   }
   for (int i=0; i < _mins.length; i++) {
     if (Double.isNaN(_mins[i])) {
