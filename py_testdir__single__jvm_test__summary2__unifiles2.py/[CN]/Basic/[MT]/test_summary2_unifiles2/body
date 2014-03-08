@@ -1,7 +1,6 @@
-def test_summary2_unifiles(self):
+def test_summary2_unifiles2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('cars.csv', 'c.hex', [('name', None), ('economy (mpg)', None), ('cylinders', None)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3750.0), (-2445), (-1200.0), 99), ('E', (-100000.0), (-50000.0), 1775.0, 50000.0, 100000.0), ('F', (-1.0), (-0.48), 0.0087, 0.5, 1.0)]), ('runifA.csv', 'A.hex', [('', 1.0, 25.0, 50.0, 75.0, 100.0), ('x', (-99.0), (-45.0), 7.43, 58.0, 91.7)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.95, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.13), 49.28, 100.0)])]
-    tryList = [('cars.csv', 'c.hex', [('name', None, None, None, None, None), ('economy (mpg)', None, None, None, None, None), ('cylinders', None, None, None, None, None)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3735.0), (-2443), (-1187.0), 99.8), ('E', (-100000.0), (-49208.0), 1783.8, 50621.9, 100000.0), ('F', (-1.0), (-0.4886), 0.00868, 0.5048, 1.0)]), ('runifA.csv', 'A.hex', [('', 1.0, None, 50.0, 75.0, 100.0), ('x', (-99.0), (-44.7), 7.43, 58.0, 91.7)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.95, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.135), 49.28, 100.0)])]
+    tryList = [('runif_.csv', 'x.hex', [('C1', (-5000.0), (-3735.0), (-2443), (-1187.0), 99.8)])]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -11,8 +10,8 @@ def test_summary2_unifiles(self):
     for (csvFilename, hex_key, expectedCols) in tryList:
         h2o.beta_features = False
         csvPathname = csvFilename
-        csvPathnameFull = h2i.find_folder_and_filename('smalldata', csvPathname, returnFullPath=True)
-        parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
+        csvPathnameFull = h2i.find_folder_and_filename('.', csvPathname, returnFullPath=True)
+        parseResult = h2i.import_parse(bucket='.', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

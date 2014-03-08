@@ -31,6 +31,13 @@ def test_summary2_uniform(self):
         column = summaryResult['summaries'][0]
         colname = column['colname']
         self.assertEqual(colname, expected[0])
+        quantile = (0.5 if DO_MEDIAN else 0.999)
+        q = h2o.nodes[0].quantiles(source_key=hex_key, column=column['colname'], quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
+        h2p.blue_print('h2o quantiles result:', q['result'])
+        h2p.blue_print('h2o quantiles result2:', q['result2'])
+        h2p.blue_print('h2o quantiles iterations:', q['iterations'])
+        h2p.blue_print('h2o quantiles interpolated:', q['interpolated'])
+        print h2o.dump_json(q)
         coltype = column['type']
         nacnt = column['nacnt']
         stats = column['stats']
@@ -55,7 +62,6 @@ def test_summary2_uniform(self):
         hbrk = column['hbrk']
         hcnt = column['hcnt']
         print 'pct:', pct
-        print ''
         print 'hcnt:', hcnt
         print 'len(hcnt)', len(hcnt)
         for b in hcnt[1:(-1)]:

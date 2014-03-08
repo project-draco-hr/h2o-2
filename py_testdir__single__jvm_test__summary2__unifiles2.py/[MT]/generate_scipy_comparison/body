@@ -1,0 +1,36 @@
+def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None):
+    import numpy as np
+    import scipy as sp
+    dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=1, dtype=None)
+    print 'csv read for training, done'
+    NUMCLASSES = 10
+    print 'csv read for training, done'
+    print dataset.shape
+    target = dataset
+    targetFP = np.array(target, np.float)
+    if (1 == 0):
+        n_features = (len(dataset[0]) - 1)
+        print 'n_features:', n_features
+        print 'histogram of target'
+        print target
+        print sp.histogram(target, bins=NUMCLASSES)
+        print target[0]
+        print target[1]
+    thresholds = [0.001, 0.01, 0.1, 0.25, 0.33, 0.5, 0.66, 0.75, 0.9, 0.99, 0.999]
+    per = [(1 * t) for t in thresholds]
+    print 'scipy per:', per
+    from scipy import stats
+    a = stats.mstats.mquantiles(targetFP, prob=per)
+    a2 = [('%.2f' % v) for v in a]
+    h2p.red_print('scipy stats.mstats.mquantiles:', a2)
+    targetFP.sort()
+    b = h2o_summ.percentileOnSortedList(targetFP, (0.5 if DO_MEDIAN else 0.999))
+    label = ('50%' if DO_MEDIAN else '99.9%')
+    h2p.blue_print(label, 'from sort:', b)
+    h2p.blue_print(label, 'from scipy:', a[(5 if DO_MEDIAN else 10)])
+    h2p.blue_print(label, 'from h2o:', h2oMedian)
+    if (1 == 0):
+        a = stats.mstats.mquantiles(targetFP, prob=per)
+        a2 = [('%.2f' % v) for v in a]
+        h2p.red_print('after sort')
+        h2p.red_print('scipy stats.mstats.mquantiles:', a2)
