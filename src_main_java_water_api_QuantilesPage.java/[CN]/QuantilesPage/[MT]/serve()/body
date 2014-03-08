@@ -26,7 +26,8 @@
   Quantiles[] qbins;
   double valStart=vecs[0].min();
   double valEnd=vecs[0].max();
-  qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd).doAll(fr)._qbins;
+  boolean multiPass=false;
+  qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass).doAll(fr)._qbins;
   if (qbins != null) {
     qbins[0].finishUp(vecs[0],max_qbins);
     column_name=qbins[0].colname;
@@ -34,8 +35,7 @@
     interpolation_type_requested=interpolation_type;
     result=qbins[0]._pctile[0];
   }
-  if (false) {
-    qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd).doAll(fr)._qbins;
-  }
+  int iteration=0;
+  int MAX_ITERATIONS=32;
   return Response.done(this);
 }
