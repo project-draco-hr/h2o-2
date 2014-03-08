@@ -1,3 +1,5 @@
 {
-  return new TreeVotesCollector(tmodel.treeBits,tmodel.nclasses(),ncols,rate,variable).doAll(f).result();
+  CompressedTree[][] trees=new CompressedTree[tmodel.numTrees()][];
+  for (int tidx=0; tidx < tmodel.numTrees(); tidx++)   trees[tidx]=tmodel.ctree(tidx);
+  return new TreeVotesCollector(trees,tmodel.nclasses(),ncols,rate,variable).doAll(f).result();
 }

@@ -1,0 +1,9 @@
+{
+  if (_treeBitsCache != null && _treeBitsCache[tidx] != null)   return _treeBitsCache[tidx];
+  if (_treeBitsCache == null)   _treeBitsCache=new CompressedTree[numTrees()][];
+  Key[] k=treeKeys[tidx];
+  CompressedTree[] ctree=new CompressedTree[nclasses()];
+  for (int i=0; i < nclasses(); i++)   ctree[i]=UKV.get(k[i]);
+  _treeBitsCache[tidx]=ctree;
+  return ctree;
+}
