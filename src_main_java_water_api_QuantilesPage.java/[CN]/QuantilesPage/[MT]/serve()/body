@@ -23,11 +23,10 @@
     boolean visInt=vec.isInt();
   }
   fs.blockForPending();
-  Quantiles.BasicStat basicStats[]=new Quantiles.PrePass().doAll(fr).finishUp()._basicStats;
   Quantiles[] qbins;
   double valStart=vecs[0].min();
   double valEnd=vecs[0].max();
-  qbins=new Quantiles.BinTask2(basicStats,quantile,max_qbins,valStart,valEnd).doAll(fr)._qbins;
+  qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd).doAll(fr)._qbins;
   if (qbins != null) {
     qbins[0].finishUp(vecs[0],max_qbins);
     column_name=qbins[0].colname;
@@ -36,7 +35,7 @@
     result=qbins[0]._pctile[0];
   }
   if (false) {
-    qbins=new Quantiles.BinTask2(basicStats,quantile,max_qbins,valStart,valEnd).doAll(fr)._qbins;
+    qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd).doAll(fr)._qbins;
   }
   return Response.done(this);
 }

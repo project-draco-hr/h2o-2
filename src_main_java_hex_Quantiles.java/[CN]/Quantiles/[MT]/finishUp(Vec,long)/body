@@ -1,7 +1,6 @@
 {
-  nacnt=_stat0._nas;
   _pctile=new double[QUANTILES_TO_DO.length];
-  if (_type == T_ENUM) {
+  if (_isEnum) {
     ;
   }
  else {
@@ -12,6 +11,5 @@
  else {
       approxQuantilesOnePass(_pctile,QUANTILES_TO_DO);
     }
-    this.stats=new NumStats(vec.mean(),vec.sigma(),_stat0._zeros,_pctile,QUANTILES_TO_DO);
   }
 }
