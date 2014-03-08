@@ -5,7 +5,13 @@
     ;
   }
  else {
-    approxQuantiles1Pass(_pctile,QUANTILES_TO_DO);
+    if (false) {
+      long desiredBinCnt=max_qbins + 1;
+      exactQuantilesMultiPass(_pctile,QUANTILES_TO_DO,desiredBinCnt);
+    }
+ else {
+      approxQuantilesOnePass(_pctile,QUANTILES_TO_DO);
+    }
     this.stats=new NumStats(vec.mean(),vec.sigma(),_stat0._zeros,_pctile,QUANTILES_TO_DO);
   }
 }
