@@ -1,4 +1,5 @@
 {
+  if (_output.get_params().self() != null && !Job.isRunning(_output.get_params().self()))   throw new Job.JobCancelledException();
   if (H2O.CLOUD.size() == 1) {
     seed+=model_info().get_processed_global();
   }
