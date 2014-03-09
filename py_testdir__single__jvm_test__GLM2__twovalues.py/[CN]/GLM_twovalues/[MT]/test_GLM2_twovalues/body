@@ -13,10 +13,15 @@ def test_GLM2_twovalues(self):
         write_syn_dataset(csvPathname, 20, rowDataTrue, rowDataFalse, str(outputTrue), str(outputFalse))
         hex_key = ((csvFilename + '_') + str(trial))
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key)
+        execExpr = ('A.hex=%s' % hex_key)
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = ('A.hex[,%s]=(A.hex[,%s]==%s)' % (12, 12, case))
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        aHack = {'destination_key': 'A.hex', }
         start = time.time()
-        kwargs = {'n_folds': 0, 'case_mode': '=', 'case_val': case, 'response': 'C13', 'family': 'binomial', 'alpha': 0.5, 'lambda': 0.0001, 'beta_epsilon': 0.0002, }
+        kwargs = {'n_folds': 0, 'response': 'C13', 'family': 'binomial', 'alpha': 0.5, 'lambda': 0.0001, 'beta_epsilon': 0.0002, }
         print ('using outputTrue: %s outputFalse: %s' % (outputTrue, outputFalse))
-        glm = h2o_cmd.runGLM(parseResult=parseResult, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=aHack, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         coefficients_names = glm['glm_model']['coefficients_names']
         print 'coefficients_names:', coefficients_names

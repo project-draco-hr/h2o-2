@@ -1,17 +1,15 @@
 {
-  nacnt=_stat0._nas;
   _pctile=new double[QUANTILES_TO_DO.length];
-  if (_type == T_ENUM) {
+  if (_isEnum) {
     ;
   }
  else {
-    if (false) {
-      long desiredBinCnt=max_qbins + 1;
-      exactQuantilesMultiPass(_pctile,QUANTILES_TO_DO,desiredBinCnt);
+    if (!_multiPass) {
+      _done=approxQuantilesOnePass(_pctile,QUANTILES_TO_DO);
     }
  else {
-      approxQuantilesOnePass(_pctile,QUANTILES_TO_DO);
+      long desiredBinCnt=max_qbins + 1;
+      _done=exactQuantilesMultiPass(_pctile,QUANTILES_TO_DO,desiredBinCnt);
     }
-    this.stats=new NumStats(vec.mean(),vec.sigma(),_stat0._zeros,_pctile,QUANTILES_TO_DO);
   }
 }

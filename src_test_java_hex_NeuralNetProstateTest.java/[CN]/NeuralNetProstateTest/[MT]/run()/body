@@ -26,7 +26,8 @@
     CM.vpredict=pred.vecs()[0];
     CM.serve();
     StringBuilder sb=new StringBuilder();
-    double error=CM.toASCII(sb);
+    CM.toASCII(sb);
+    double error=new ConfusionMatrix(CM.cm).err();
     Log.info(sb);
     pred.delete();
     mymodel.delete();
