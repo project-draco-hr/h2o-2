@@ -79,10 +79,10 @@ def findQuantile(d, dmin, dmax, threshold):
         done = False
         guess = ((hcnt2_max[k] - hcnt2_min[k]) / 2)
         if (currentCnt == targetCntInt):
-            if (hcnt2[k] > 2):
+            if ((hcnt2[k] > 2) and (hcnt2_min[k] == hcnt2_max[k])):
                 guess = hcnt2_min[k]
                 done = True
-                print 'Guess A', guess
+                print 'Guess A', guess, k, hcnt2[k]
             if (hcnt2[k] == 2):
                 guess = ((hcnt2_max[k] + hcnt2_min[k]) / 2.0)
                 done = True
