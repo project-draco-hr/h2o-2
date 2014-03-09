@@ -1,4 +1,4 @@
-def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None):
+def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None, h2oMedian2=None):
     import numpy as np
     import scipy as sp
     dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=1, dtype=None)
@@ -27,8 +27,12 @@ def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None):
     b = h2o_summ.percentileOnSortedList(targetFP, (0.5 if DO_MEDIAN else 0.999))
     label = ('50%' if DO_MEDIAN else '99.9%')
     h2p.blue_print(label, 'from sort:', b)
-    h2p.blue_print(label, 'from scipy:', a[(5 if DO_MEDIAN else 10)])
-    h2p.blue_print(label, 'from h2o:', h2oMedian)
+    s = a[(5 if DO_MEDIAN else 10)]
+    h2p.blue_print(label, 'from scipy:', s)
+    h2p.blue_print(label, 'from h2o summary2:', h2oMedian)
+    h2p.blue_print(label, 'from h2o quantile multipass:', h2oMedian2)
+    h2o_util.assertApproxEqual(h2oMedian2, b, tol=2e-07, msg='h2o quantile multipass is not approx. same as sort algo')
+    h2o_util.assertApproxEqual(h2oMedian2, s, tol=2e-07, msg='h2o quantile multipass is not approx. same as scipy algo')
     if (1 == 0):
         a = stats.mstats.mquantiles(targetFP, prob=per)
         a2 = [('%.2f' % v) for v in a]

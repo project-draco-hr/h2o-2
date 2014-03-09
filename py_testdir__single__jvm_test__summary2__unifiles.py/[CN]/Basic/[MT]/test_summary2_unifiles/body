@@ -1,7 +1,6 @@
 def test_summary2_unifiles(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('cars.csv', 'c.hex', [('name', None), ('economy (mpg)', None), ('cylinders', None)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3750.0), (-2445), (-1200.0), 99), ('E', (-100000.0), (-50000.0), 1775.0, 50000.0, 100000.0), ('F', (-1.0), (-0.48), 0.0087, 0.5, 1.0)]), ('runifA.csv', 'A.hex', [('', 1.0, 25.0, 50.0, 75.0, 100.0), ('x', (-99.0), (-45.0), 7.43, 58.0, 91.7)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.95, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.13), 49.28, 100.0)])]
-    tryList = [('cars.csv', 'c.hex', [('name', None, None, None, None, None), ('economy (mpg)', None, None, None, None, None), ('cylinders', None, None, None, None, None)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3735.0), (-2443), (-1187.0), 99.8), ('E', (-100000.0), (-49208.0), 1783.8, 50621.9, 100000.0), ('F', (-1.0), (-0.4886), 0.00868, 0.5048, 1.0)]), ('runifA.csv', 'A.hex', [('', 1.0, None, 50.0, 75.0, 100.0), ('x', (-99.0), (-44.7), 7.43, 58.0, 91.7)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.95, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.135), 49.28, 100.0)])]
+    tryList = [('cars.csv', 'c.hex', [(None, None, None, None, None, None), ('economy (mpg)', None, None, None, None, None), ('cylinders', None, None, None, None, None)]), ('runifA.csv', 'A.hex', [('', 1.0, None, 50.0, 75.0, 100.0), ('x', (-99.0), (-44.7), 7.43, 58.0, 91.7)]), ('runif.csv', 'x.hex', [('', 1.0, 5000.0, 10000.0, 15000.0, 20000.0), ('D', (-5000.0), (-3735.0), (-2443), (-1187.0), 99.8), ('E', (-100000.0), (-49208.0), 1783.8, 50621.9, 100000.0), ('F', (-1.0), (-0.4886), 0.00868, 0.5048, 1.0)]), ('runifB.csv', 'B.hex', [('', 1.0, 2501.0, 5001.0, 7501.0, 10000.0), ('x', (-100.0), (-50.0), 0.97, 51.7, 100, 0)]), ('runifC.csv', 'C.hex', [('', 1.0, 25002.0, 50002.0, 75002.0, 100000.0), ('x', (-100.0), (-50.45), (-1.135), 49.28, 100.0)])]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -20,18 +19,24 @@ def test_summary2_unifiles(self):
         numRows = inspect['num_rows']
         numCols = inspect['num_cols']
         h2o.beta_features = True
-        summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
+        print "keep summary2 with results for 1000 qbins, so it's accuracy doesn't degrade when fewer are used for 2/Quantile"
+        summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=1000)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
         summaries = summaryResult['summaries']
         scipyCol = 0
         for (expected, column) in zip(expectedCols, summaries):
             colname = column['colname']
-            if expected:
-                self.assertEqual(colname, expected[0])
+            if expected[0]:
+                (self.assertEqual(colname, expected[0]), colname, expected[0])
+            else:
+                scipyCol += 1
+                continue
             quantile = (0.5 if DO_MEDIAN else 0.999)
             q = h2o.nodes[0].quantiles(source_key=hex_key, column=column['colname'], quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
-            h2p.blue_print('h2o quantiles result:', q['result'])
-            h2p.blue_print('h2o quantiles result2:', q['result2'])
+            qresult = q['result']
+            qresult_multi = q['result_multi']
+            h2p.blue_print('h2o quantiles result:', qresult)
+            h2p.blue_print('h2o quantiles result_multi:', qresult_multi)
             h2p.blue_print('h2o quantiles iterations:', q['iterations'])
             h2p.blue_print('h2o quantiles interpolated:', q['interpolated'])
             print h2o.dump_json(q)
@@ -80,8 +85,8 @@ def test_summary2_unifiles(self):
                 print 'min/25/50/75/max colname:', colname, '(2 places):', actual
                 print 'maxs colname:', colname, '(2 places):', mx
                 print 'mins colname:', colname, '(2 places):', mn
-                if (DO_TRY_SCIPY and (colname != '')):
+                if (DO_TRY_SCIPY and expected[0] and (colname != '')):
                     print scipyCol, pctile[10]
-                    generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)])
+                    generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)], h2oMedian2=qresult_multi)
             scipyCol += 1
         trial += 1
