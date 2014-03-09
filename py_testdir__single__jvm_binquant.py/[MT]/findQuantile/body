@@ -51,16 +51,18 @@ def findQuantile(d, dmin, dmax, threshold):
             elif (val > valEnd):
                 if ((hcnt2_high == 0) or (val < hcnt2_high_min)):
                     hcnt2_high_min = val
-                    print 'hcnt2_high_min update:', hcnt2_high_min
+                    print '\nhcnt2_high_min update:', hcnt2_high_min, valOffset, val, valStart, hcnt2_high, val, valEnd, '\n'
                 hcnt2_high += 1
             else:
-                binIdx2 = int((math.floor(((valOffset * 1000000.0) / valBinSize)) / 1000000.0))
+                binIdx2 = int(math.floor((valOffset / (valBinSize + 0.0))))
                 assert ((binIdx2 >= 0) and (binIdx2 <= maxBinCnt)), ('val %s %s %s %s binIdx2: %s maxBinCnt: %s valBinSize: %s' % (val, valStart, valEnd, valOffset, binIdx2, maxBinCnt, valBinSize))
                 if ((hcnt2[binIdx2] == 0) or (val < hcnt2_min[binIdx2])):
                     hcnt2_min[binIdx2] = val
                 if ((hcnt2[binIdx2] == 0) or (val > hcnt2_max[binIdx2])):
                     hcnt2_max[binIdx2] = val
                 hcnt2[binIdx2] += 1
+                if (binIdx2 == (maxBinCnt - 1)):
+                    print '\nFP! val went into the extra maxBinCnt bin:', binIdx2, hcnt2_high_min, valOffset, val, valStart, hcnt2_high, val, valEnd, '\n'
             assert ((hcnt2_high == 0) or (hcnt2_high_min is not None))
             assert ((hcnt2_high_min is None) or (hcnt2_high != 0))
         totalBinnedRows = htot2()
@@ -121,10 +123,19 @@ def findQuantile(d, dmin, dmax, threshold):
                 print 'Guess D', guess
         if (not done):
             print 'Not done, setting new range', 'k: ', k, 'currentCnt: ', currentCnt, 'hcnt2_min[k]: ', hcnt2_min[k], 'hcnt2_max[k]: ', hcnt2_max[k]
-            newValStart = (hcnt2_min[k] - NUDGE)
-            newValEnd = (hcnt2_max[k] + NUDGE)
+            if ((k > 0) and (hcnt2[(k - 1)] > 0) and (hcnt2_min[(k - 1)] < hcnt2_min[k])):
+                newValStart = hcnt2_min[(k - 1)]
+            else:
+                newValStart = hcnt2_min[k]
+            if ((k < maxBinCnt) and (hcnt2[(k + 1)] > 0) and (hcnt2_max[(k + 1)] > hcnt2_max[k])):
+                print 'hello'
+                newValEnd = hcnt2_max[(k + 1)]
+            else:
+                newValEnd = hcnt2_max[k]
             newValRange = (newValEnd - newValStart)
             newValBinSize = (newValRange / (desiredBinCnt + 0.0))
+            if (NUDGE == 0.0):
+                assert ((desiredBinCnt > 1) or ((valStart == newValStart) and (valEnd == newValEnd))), ('if 1 bin, should be no per-pass edge leakage %s %s %s %s %s %s' % (k, hcnt2_high, valStart, newValStart, valEnd, newValEnd))
             newLowCount = currentCnt
             if (newValBinSize == 0):
                 print 'Assuming done because newValBinSize is 0.'
