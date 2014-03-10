@@ -1,0 +1,18 @@
+{
+  for (int i=0; i < weights.length; ++i) {
+    final Random rng=water.util.Utils.getDeterRNG(get_params().seed + 0xBAD5EED + i+ 1);
+    for (int j=0; j < weights[i].length; j++) {
+      if (parameters.initial_weight_distribution == DeepLearning.InitialWeightDistribution.UniformAdaptive) {
+        final double range=Math.sqrt(6. / (units[i] + units[i + 1]));
+        weights[i][j]=(float)uniformDist(rng,-range,range);
+        if (i == weights.length - 1 && parameters.classification)         weights[i][j]*=4;
+      }
+ else       if (parameters.initial_weight_distribution == DeepLearning.InitialWeightDistribution.Uniform) {
+        weights[i][j]=(float)uniformDist(rng,-parameters.initial_weight_scale,parameters.initial_weight_scale);
+      }
+ else       if (parameters.initial_weight_distribution == DeepLearning.InitialWeightDistribution.Normal) {
+        weights[i][j]=(float)(rng.nextGaussian() * parameters.initial_weight_scale);
+      }
+    }
+  }
+}

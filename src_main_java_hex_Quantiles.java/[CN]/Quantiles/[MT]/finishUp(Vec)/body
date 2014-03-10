@@ -1,0 +1,14 @@
+{
+  _pctile=new double[QUANTILES_TO_DO.length];
+  if (_isEnum) {
+    ;
+  }
+ else {
+    if (!_multiPass) {
+      _done=approxQuantilesOnePass(_pctile,QUANTILES_TO_DO);
+    }
+ else {
+      _done=exactQuantilesMultiPass(_pctile,QUANTILES_TO_DO);
+    }
+  }
+}

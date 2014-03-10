@@ -1,0 +1,26 @@
+{
+  params=(DeepLearning)p.clone();
+  params.rate*=Math.pow(params.rate_decay,index - 1);
+  _a=new double[units];
+  if (!(this instanceof Output) && !(this instanceof Input)) {
+    _e=new double[units];
+  }
+  if (training && (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout|| this instanceof Input)) {
+    _dropout=new Dropout(units);
+  }
+  if (!(this instanceof Input)) {
+    _previous=neurons[index - 1];
+    _minfo=minfo;
+    _w=minfo.get_weights(index - 1);
+    _b=minfo.get_biases(index - 1);
+    if (minfo.has_momenta()) {
+      _wm=minfo.get_weights_momenta(index - 1);
+      _bm=minfo.get_biases_momenta(index - 1);
+    }
+    if (minfo.adaDelta()) {
+      _E_dx2=minfo.get_E_dx2(index - 1);
+      _E_g2=minfo.get_E_g2(index - 1);
+    }
+  }
+  sanityCheck(training);
+}

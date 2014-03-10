@@ -9,7 +9,7 @@
   Vec svecs[]=src_key.vecs();
   DocGen.HTML.title(sb,skey.toString());
   DocGen.HTML.section(sb,"" + String.format("%,d",numCols) + " columns, "+ String.format("%,d",numRows)+ " rows, "+ PrettyPrint.bytes(byteSize)+ " bytes (compressed), "+ (naCnt == 0 ? "no" : PrettyPrint.bytes(naCnt))+ " missing elements");
-  sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(skey,"Distributed Random Forest") + ", "+ GBM.link(skey,"Distributed GBM")+ ", "+ GLM2.link(skey,"Generalized Linear Modeling (beta)")+ ", "+ NN.link(skey,"Neural Net (beta)")+ ", "+ hex.LR2.link(skey,"Linear Regression")+ ",<br>"+ SummaryPage2.link(skey,"Summary")+ ", "+ DownloadDataset.link(skey,"Download as CSV")+ "</div>");
+  sb.append("<div class='alert'>" + "<br/>Build models using " + DRF.link(skey,"Distributed Random Forest") + ", "+ GBM.link(skey,"Distributed GBM")+ ", "+ GLM2.link(skey,"Generalized Linear Modeling (beta)")+ ", "+ DeepLearning.link(skey,"Deep Learning (beta)")+ ", "+ hex.LR2.link(skey,"Linear Regression")+ ",<br>"+ SummaryPage2.link(skey,"Summary")+ ", "+ DownloadDataset.link(skey,"Download as CSV")+ "</div>");
   String _scrollto=String.valueOf(offset - 1);
   sb.append(" <script>$(document).ready(function(){ " + " $('html, body').animate({ scrollTop: $('#row_" + _scrollto + "').offset().top"+ "}, 2000);"+ "return false;"+ "});</script>");
   sb.append("<form class='well form-inline' action='Inspect2.html' id='inspect'>" + " <input type='hidden' name='src_key' value=" + skey.toString() + ">"+ " <input type='text' class='input-small span5' placeholder='filter' "+ "    name='offset' id='offset' value='"+ offset+ "' maxlength='512'>"+ " <button type='submit' class='btn btn-primary'>Jump to row!</button>"+ "</form>");
@@ -23,12 +23,12 @@
   sb.append("<td>").append("Change Type").append("</td>");
   for (int i=0; i < cols.length; i++) {
     if (cols[i].type == ColType.Int) {
-      String btn="<a href='ToEnum2.html?src_key=" + src_key._key.toString() + "&column_index="+ (i + 1)+ "'>"+ "<button type='submit' class='btn btn-success'>As Factor</button>";
+      String btn="<a href='ToEnum2.html?src_key=" + src_key._key.toString() + "&column_index="+ (i + 1)+ "'>"+ "<button type='submit' class='btn btn-custom'>As Factor</button>";
       sb.append("<td><b>").append(btn).append("</b></td>");
       continue;
     }
     if (src_key.vecs()[i] instanceof TransfVec) {
-      String btn2="<a href='ToInt2.html?src_key=" + src_key._key.toString() + "&column_index="+ (i + 1)+ "'>"+ "<button type='submit' class='btn btn-success'>As Integer</button>";
+      String btn2="<a href='ToInt2.html?src_key=" + src_key._key.toString() + "&column_index="+ (i + 1)+ "'>"+ "<button type='submit' class='btn btn-custom'>As Integer</button>";
       sb.append("<td><b>").append(btn2).append("</b></td>");
       continue;
     }
