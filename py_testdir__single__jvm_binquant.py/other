@@ -7,7 +7,9 @@ import math
 import argparse
 OTHER_T = 0.5
 BIN_COUNT = 20
-BIN_COUNT = 3
+BIN_COUNT = 50
+BIN_COUNT = 10
+INTERPOLATION_TYPE = 2
 print 'Using max_qbins: ', BIN_COUNT, 'threshold:', OTHER_T
 parser = argparse.ArgumentParser()
 parser.add_argument('-nc', '--nocolor', help="don't emit the chars that cause color printing", action='store_true')
@@ -44,19 +46,29 @@ dmax = max(d)
 thresholdList = [OTHER_T]
 quantiles = findQuantileList(d, dmin, dmax, thresholdList)
 h2p.red_print('\nthis b result:', quantiles)
+alphap = 0
+betap = 0
+alphap = 0.5
+betap = 0.5
+alphap = (1 / 3.0)
+betap = (1 / 3.0)
+alphap = 1
+betap = 1
+alphap = 0.4
+betap = 0.4
 from scipy import stats
 a1 = stats.scoreatpercentile(target, per=(100 * OTHER_T), interpolation_method='fraction')
 h2p.red_print('stats.scoreatpercentile:', a1)
-a2 = stats.mstats.mquantiles(targetFP, prob=[OTHER_T])
+a2 = stats.mstats.mquantiles(targetFP, prob=[OTHER_T], alphap=alphap, betap=betap)
 h2p.red_print('scipy stats.mstats.mquantiles:', a2)
-b = h2o_summ.percentileOnSortedList(targetFP, OTHER_T)
+b = h2o_summ.percentileOnSortedList(targetFP, OTHER_T, interpolate='mean')
 h2p.red_print('sort algo:', b)
 h2p.red_print('from h2o (multi):', quantiles[0])
 print 'Now looking at the sorted list..same thing'
 targetFP.sort()
 h2p.blue_print('stats.scoreatpercentile:', a1)
-a2 = stats.mstats.mquantiles(targetFP, prob=[OTHER_T])
+a2 = stats.mstats.mquantiles(targetFP, prob=[OTHER_T], alphap=alphap, betap=betap)
 h2p.blue_print('scipy stats.mstats.mquantiles:', a2)
-b = h2o_summ.percentileOnSortedList(targetFP, OTHER_T)
+b = h2o_summ.percentileOnSortedList(targetFP, OTHER_T, interpolate='mean')
 h2p.blue_print('sort algo:', b)
 h2p.blue_print('from h2o (multi):', quantiles[0])

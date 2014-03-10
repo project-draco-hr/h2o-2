@@ -7,7 +7,7 @@ def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None, h2oMedian2=Non
     print 'csv read for training, done'
     print dataset.shape
     print csvFilename
-    if (csvFilename == 'runif_.csv'):
+    if (len(dataset.shape) == 1):
         target = dataset
     else:
         target = [x[col] for x in dataset]

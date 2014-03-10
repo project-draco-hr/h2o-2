@@ -46,16 +46,16 @@ def findQuantile(d, dmin, dmax, threshold):
         hcnt2_high_min = None
         for val in d:
             valOffset = (val - valStart)
-            if (valOffset < 0):
+            binIdx2 = int(math.floor((valOffset / (valBinSize + 0.0))))
+            if ((valOffset < 0) or (binIdx2 < 0)):
                 hcnt2_low += 1
-            elif (val > valEnd):
+            elif ((val > valEnd) or (binIdx2 >= (maxBinCnt - 1))):
                 if ((hcnt2_high == 0) or (val < hcnt2_high_min)):
                     hcnt2_high_min = val
-                    print '\nhcnt2_high_min update:', hcnt2_high_min, valOffset, val, valStart, hcnt2_high, val, valEnd, '\n'
+                    print 'hcnt2_high_min update:', hcnt2_high_min, valOffset, val, valStart, hcnt2_high, val, valEnd
                 hcnt2_high += 1
             else:
-                binIdx2 = int(math.floor((valOffset / (valBinSize + 0.0))))
-                assert ((binIdx2 >= 0) and (binIdx2 <= maxBinCnt)), ('val %s %s %s %s binIdx2: %s maxBinCnt: %s valBinSize: %s' % (val, valStart, valEnd, valOffset, binIdx2, maxBinCnt, valBinSize))
+                assert ((binIdx2 >= 0) and (binIdx2 <= (maxBinCnt - 1))), ('val %s %s %s %s binIdx2: %s maxBinCnt: %s valBinSize: %s' % (val, valStart, valEnd, valOffset, binIdx2, maxBinCnt, valBinSize))
                 if ((hcnt2[binIdx2] == 0) or (val < hcnt2_min[binIdx2])):
                     hcnt2_min[binIdx2] = val
                 if ((hcnt2[binIdx2] == 0) or (val > hcnt2_max[binIdx2])):
@@ -78,7 +78,9 @@ def findQuantile(d, dmin, dmax, threshold):
         while ((currentCnt + hcnt2[k]) <= targetCntInt):
             currentCnt += hcnt2[k]
             k += 1
-            assert (k <= maxBinCnt), ('k too large, k: %s maxBinCnt %s' % (k, maxBinCnt))
+            if (k == maxBinCnt):
+                break
+            assert (k < maxBinCnt), ('k too large, k: %s maxBinCnt %s %s %s %s' % (k, maxBinCnt, currentCnt, targetCntInt, hcnt2[(k - 1)]))
         print 'Found k (multi): ', k, ' ', currentCnt, ' ', targetCntInt, ' ', totalRows, ' ', hcnt2[k], ' ', hcnt2_min[k], ' ', hcnt2_max[k]
         assert ((hcnt2[k] != 1) or (hcnt2_min[k] == hcnt2_max[k]))
         done = False
@@ -90,6 +92,12 @@ def findQuantile(d, dmin, dmax, threshold):
                 print 'Guess A', guess, k, hcnt2[k]
             if (hcnt2[k] == 2):
                 guess = ((hcnt2_max[k] + hcnt2_min[k]) / 2.0)
+                if (INTERPOLATION_TYPE == 2):
+                    guess = ((hcnt2_max[k] + hcnt2_min[k]) / 2.0)
+                else:
+                    dDiff = (hcnt2_max[k] - hcnt2_min[k])
+                    pctDiff = targetCntFract
+                    guess = (hcnt2_max[k] + (pctDiff * dDiff))
                 done = True
                 print 'Guess B', guess
             if ((hcnt2[k] == 1) and (targetCntFract == 0)):
@@ -116,6 +124,13 @@ def findQuantile(d, dmin, dmax, threshold):
                     assert (hcnt2[nextK] != 0)
                     nextVal = hcnt2_min[nextK]
                 guess = ((hcnt2_max[k] + nextVal) / 2.0)
+                if (INTERPOLATION_TYPE == 2):
+                    guess = ((hcnt2_max[k] + nextVal) / 2.0)
+                    pctDiff = 0.5
+                else:
+                    dDiff = (nextVal - hcnt2_max[k])
+                    pctDiff = targetCntFract
+                    guess = (hcnt2_max[k] + (pctDiff * dDiff))
                 done = True
                 print 'k', 'hcnt2_max[k]', 'nextVal'
                 print 'hello3:', k, hcnt2_max[k], nextVal
