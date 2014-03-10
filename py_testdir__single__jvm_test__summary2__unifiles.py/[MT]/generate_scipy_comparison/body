@@ -24,7 +24,7 @@ def generate_scipy_comparison(csvPathname, col=0, h2oMedian=None, h2oMedian2=Non
     a2 = [('%.2f' % v) for v in a]
     h2p.red_print('scipy stats.mstats.mquantiles:', a2)
     targetFP.sort()
-    b = h2o_summ.percentileOnSortedList(targetFP, (0.5 if DO_MEDIAN else 0.999))
+    b = h2o_summ.percentileOnSortedList(targetFP, (0.5 if DO_MEDIAN else 0.999), interpolate='mean')
     label = ('50%' if DO_MEDIAN else '99.9%')
     h2p.blue_print(label, 'from sort:', b)
     s = a[(5 if DO_MEDIAN else 10)]
