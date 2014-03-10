@@ -44,9 +44,14 @@ def sub_c3_fvec_long(self):
             x.remove(378)
             x = ','.join(map((lambda x: ('C' + str((x + 1)))), x))
             ignore_x = ','.join(map((lambda x: ('C' + str((x + 1)))), ignore_x))
-            GLMkwargs = {'ignored_cols': ignore_x, 'response': 'C379', 'case_val': 15, 'case_mode': '>', 'max_iter': 4, 'n_folds': 1, 'family': 'binomial', 'alpha': 0.2, 'lambda': 1e-05, }
+            GLMkwargs = {'ignored_cols': ignore_x, 'response': 'C379', 'max_iter': 4, 'n_folds': 1, 'family': 'binomial', 'alpha': 0.2, 'lambda': 1e-05, }
+            execExpr = ('A.hex=%s' % parseResult['destination_key'])
+            h2e.exec_expr(execExpr=execExpr, timeoutSecs=60)
+            execExpr = ('A.hex[,%s]=(A.hex[,%s]>%s)' % ('C379', 'C379', 15))
+            h2e.exec_expr(execExpr=execExpr, timeoutSecs=60)
+            aHack = {'destination_key': 'A.hex', }
             start = time.time()
-            glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **GLMkwargs)
+            glm = h2o_cmd.runGLM(parseResult=aHack, timeoutSecs=timeoutSecs, **GLMkwargs)
             elapsed = (time.time() - start)
             h2o.check_sandbox_for_errors()
             h2o_glm.simpleCheckGLM(self, glm, None, **GLMkwargs)

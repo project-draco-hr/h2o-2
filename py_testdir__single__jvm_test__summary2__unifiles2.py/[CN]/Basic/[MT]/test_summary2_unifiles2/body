@@ -34,11 +34,14 @@ def test_summary2_unifiles2(self):
             q = h2o.nodes[0].quantiles(source_key=hex_key, column=column['colname'], quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
             qresult = q['result']
             qresult_multi = q['result_multi']
+            qresult_iterations = q['iterations']
+            qresult_interpolated = q['interpolated']
             h2p.blue_print('h2o quantiles result:', qresult)
             h2p.blue_print('h2o quantiles result_multi:', qresult_multi)
-            h2p.blue_print('h2o quantiles iterations:', q['iterations'])
-            h2p.blue_print('h2o quantiles interpolated:', q['interpolated'])
+            h2p.blue_print('h2o quantiles iterations:', qresult_iterations)
+            h2p.blue_print('h2o quantiles interpolated:', qresult_interpolated)
             print h2o.dump_json(q)
+            self.assertLess(qresult_iterations, 16, msg='h2o does max of 16 iterations. likely no result_multi if we hit max. is bins=1?')
             coltype = column['type']
             nacnt = column['nacnt']
             stats = column['stats']

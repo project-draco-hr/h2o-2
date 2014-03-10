@@ -14,7 +14,10 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
             raise Exception(('DIMENSIONS must be >= 3, is:' + DIMENSIONS))
         xyzShift = random.randint(0, (DIMENSIONS - 3))
         print 'xyzShift:', xyzShift
-        initial = [int((0.5 * random.randint(0, MAXINTS[i]))) for i in range(DIMENSIONS)]
+        if DO_REALS:
+            initial = [((0.5 * random.random()) * MAXINTS[i]) for i in range(DIMENSIONS)]
+        else:
+            initial = [int((0.5 * random.randint(0, MAXINTS[i]))) for i in range(DIMENSIONS)]
         scale = []
         for i in range(3):
             MAX = MAXINTS[(xyzShift + i)]
@@ -22,7 +25,10 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
             if random.randint(0, 1):
                 a = (- a)
             initial[(xyzShift + i)] = a
-            scale.append((0.5 * random.randint(0, MAX)))
+            if DO_REALS:
+                scale.append((0.5 * random.randint(0, MAX)))
+            else:
+                scale.append(((0.5 * random.random()) * MAX))
         if (currentCenter is None):
             currentCenter = initial[:]
             lastCenter = currentCenter[:]
@@ -38,12 +44,19 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
         centersList.append(currentCenter)
         print 'currentCenter:', currentCenter, 'R:', R, 'numPts', numPts
         for n in range(numPts):
-            interestingEnum = getInterestingEnum()
             thisPt = currentCenter[:]
             xyz = get_xyz_sphere(R)
             for i in range(3):
-                thisPt[(xyzShift + i)] += int(xyz[i])
-            dsf.write((','.join(map(str, ([interestingEnum] + thisPt))) + '\n'))
+                if DO_REALS:
+                    thisPt[(xyzShift + i)] += xyz[i]
+                else:
+                    thisPt[(xyzShift + i)] += int(xyz[i])
+            if JUST_SPHERES:
+                row = (','.join(map(str, thisPt)) + '\n')
+            else:
+                interestingEnum = getInterestingEnum()
+                row = (','.join(map(str, ([interestingEnum] + thisPt))) + '\n')
+            dsf.write(row)
             totalRows += 1
         sphereCnt += 1
     dsf.close()
