@@ -1,6 +1,6 @@
 def checkLastValidationError(self, model, rows, expectedErr, relTol, **kwargs):
     errsLast = model['validation_errors'][(-1)]
-    h2o.verboseprint("NN 'Last scoring on test set:'", h2o.dump_json(errsLast))
+    h2o.verboseprint("Deep Learning 'Last scoring on test set:'", h2o.dump_json(errsLast))
     expectedSamples = (rows * kwargs['epochs'])
     print (('Expecting ' + format(expectedSamples)) + ' training samples')
     if (errsLast['training_samples'] != expectedSamples):

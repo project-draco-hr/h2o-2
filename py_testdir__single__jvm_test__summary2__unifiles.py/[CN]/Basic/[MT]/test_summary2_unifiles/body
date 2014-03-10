@@ -32,7 +32,7 @@ def test_summary2_unifiles(self):
                 scipyCol += 1
                 continue
             quantile = (0.5 if DO_MEDIAN else 0.999)
-            q = h2o.nodes[0].quantiles(source_key=hex_key, column=column['colname'], quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
+            q = h2o.nodes[0].quantiles(source_key=hex_key, column=column['colname'], quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1, interpolation_type=2)
             qresult = q['result']
             qresult_multi = q['result_multi']
             h2p.blue_print('h2o quantiles result:', qresult)
