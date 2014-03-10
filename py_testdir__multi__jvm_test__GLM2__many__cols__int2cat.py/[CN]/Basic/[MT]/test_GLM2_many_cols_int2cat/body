@@ -20,7 +20,7 @@ def test_GLM2_many_cols_int2cat(self):
         for k in paramDict:
             paramDict2[k] = paramDict[k][0]
         y = colCount
-        kwargs = {'response': ('C' + str(y)), 'max_iter': 50, 'case_val': 1, }
+        kwargs = {'response': ('C' + str(y)), 'max_iter': 50, }
         kwargs.update(paramDict2)
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)

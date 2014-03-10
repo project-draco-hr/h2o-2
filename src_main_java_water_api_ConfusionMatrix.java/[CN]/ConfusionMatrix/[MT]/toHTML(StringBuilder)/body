@@ -1,2 +1,15 @@
 {
+  if (classification) {
+    DocGen.HTML.section(sb,"Confusion Matrix");
+    if (cm == null)     return true;
+    printConfusionMatrix(sb,cm,domain,true);
+  }
+ else {
+    DocGen.HTML.section(sb,"Mean Squared Error");
+    if (mse == Double.NaN)     return true;
+    DocGen.HTML.arrayHead(sb);
+    sb.append("<tr class='warning'><td>" + mse + "</td></tr>");
+    DocGen.HTML.arrayTail(sb);
+  }
+  return true;
 }

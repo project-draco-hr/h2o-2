@@ -6,3 +6,4 @@ def test_c8_rf_airlines_hdfs(self):
     scoreParseResult = self.loadScoreData()
     kwargs = paramsScoreRF.copy()
     scoreResult = h2o_rf.scoreRF(scoreParseResult, trainResult, **kwargs)
+    h2i.delete_keys_at_all_nodes(timeoutSecs=600)
