@@ -88,17 +88,17 @@ def findQuantile(d, dmin, dmax, threshold):
         if (currentCnt == targetCntInt):
             if ((hcnt2[k] > 2) and (hcnt2_min[k] == hcnt2_max[k])):
                 guess = hcnt2_min[k]
-                done = True
                 print 'Guess A', guess, k, hcnt2[k]
             if (hcnt2[k] == 2):
+                print "\nTwo values in this bin but we could be aligned to the 2nd. so can't stop"
                 guess = ((hcnt2_max[k] + hcnt2_min[k]) / 2.0)
                 if (INTERPOLATION_TYPE == 2):
                     guess = ((hcnt2_max[k] + hcnt2_min[k]) / 2.0)
                 else:
                     dDiff = (hcnt2_max[k] - hcnt2_min[k])
                     pctDiff = targetCntFract
-                    guess = (hcnt2_max[k] + (pctDiff * dDiff))
-                done = True
+                    guess = (hcnt2_min[k] + (pctDiff * dDiff))
+                done = False
                 print 'Guess B', guess
             if ((hcnt2[k] == 1) and (targetCntFract == 0)):
                 assert (hcnt2_min[k] == hcnt2_max[k])
