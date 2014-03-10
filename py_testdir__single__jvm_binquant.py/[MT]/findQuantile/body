@@ -123,13 +123,13 @@ def findQuantile(d, dmin, dmax, threshold):
                 print 'Guess D', guess
         if (not done):
             print 'Not done, setting new range', 'k: ', k, 'currentCnt: ', currentCnt, 'hcnt2_min[k]: ', hcnt2_min[k], 'hcnt2_max[k]: ', hcnt2_max[k]
-            if ((k > 0) and (hcnt2[(k - 1)] > 0) and (hcnt2_min[(k - 1)] < hcnt2_min[k])):
-                newValStart = hcnt2_min[(k - 1)]
+            if ((k > 0) and (hcnt2[(k - 1)] > 0) and (hcnt2_max[(k - 1)] < hcnt2_min[k])):
+                newValStart = hcnt2_max[(k - 1)]
             else:
                 newValStart = hcnt2_min[k]
-            if ((k < maxBinCnt) and (hcnt2[(k + 1)] > 0) and (hcnt2_max[(k + 1)] > hcnt2_max[k])):
+            if ((k < maxBinCnt) and (hcnt2[(k + 1)] > 0) and (hcnt2_min[(k + 1)] > hcnt2_max[k])):
                 print 'hello'
-                newValEnd = hcnt2_max[(k + 1)]
+                newValEnd = hcnt2_min[(k + 1)]
             else:
                 newValEnd = hcnt2_max[k]
             newValRange = (newValEnd - newValStart)

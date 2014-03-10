@@ -7,7 +7,7 @@ import math
 import argparse
 OTHER_T = 0.5
 BIN_COUNT = 20
-BIN_COUNT = 1
+BIN_COUNT = 3
 print 'Using max_qbins: ', BIN_COUNT, 'threshold:', OTHER_T
 parser = argparse.ArgumentParser()
 parser.add_argument('-nc', '--nocolor', help="don't emit the chars that cause color printing", action='store_true')
@@ -21,6 +21,7 @@ csvPathname = './runif_.csv'
 csvPathname = './covtype1.data'
 csvPathname = './runif_.csv'
 csvPathname = '/home/0xdiag/datasets/kmeans_big/syn_sphere_gen.csv'
+csvPathname = './syn_binary_100000x1.csv'
 col = 0
 print 'Reading csvPathname'
 dataset = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', dtype=None)
