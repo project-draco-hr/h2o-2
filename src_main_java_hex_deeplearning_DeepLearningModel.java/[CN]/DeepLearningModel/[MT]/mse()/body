@@ -1,4 +1,4 @@
 {
   if (errors == null)   return super.mse();
-  return errors[errors.length - 1].validation ? errors[errors.length - 1].valid_mse : errors[errors.length - 1].train_mse;
+  return last_scored().validation ? last_scored().valid_mse : last_scored().train_mse;
 }

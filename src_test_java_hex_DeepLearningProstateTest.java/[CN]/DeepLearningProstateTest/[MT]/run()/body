@@ -20,6 +20,8 @@
     DeepLearningModel mymodel=UKV.get(dest);
     Frame pred=mymodel.score(frame);
     water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
+    final double trainErr=mymodel.calcError(frame,pred,"training",true,CM,null);
+    CM=new water.api.ConfusionMatrix();
     CM.actual=frame;
     CM.vactual=frame.vecs()[1];
     CM.predict=pred;
@@ -28,7 +30,12 @@
     StringBuilder sb=new StringBuilder();
     CM.toASCII(sb);
     double error=new ConfusionMatrix(CM.cm).err();
+    assert(error == mymodel.last_scored().train_err);
     Log.info(sb);
+    Assert.assertEquals(trainErr,error,1e-10);
+    if (error != 0) {
+      Assert.fail("Classification error is not 0, but " + error + ".");
+    }
     pred.delete();
     mymodel.delete();
   }
