@@ -33,7 +33,7 @@
   double exactResult;
   boolean done;
   if (qbins != null) {
-    qbins[0].finishUp(vecs[0],max_qbins);
+    qbins[0].finishUp(vecs[0]);
     column_name=qbins[0].colname;
     quantile_requested=qbins[0].QUANTILES_TO_DO[0];
     done=qbins[0]._done;
@@ -64,7 +64,7 @@
       qbins2=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(fr)._qbins;
       iterations=b + 1;
       if (qbins2 != null) {
-        qbins2[0].finishUp(vecs[0],max_qbins);
+        qbins2[0].finishUp(vecs[0]);
         double valRange=qbins2[0]._valRange;
         double valBinSize=qbins2[0]._valBinSize;
         Log.info("\nQ_ multipass iteration: " + iterations + " valStart: "+ valStart+ " valEnd: "+ valEnd);
@@ -75,13 +75,13 @@
         if (done)         break;
       }
     }
-    interpolation_type_used=2;
     if (qbins2 != null) {
       column_name=qbins2[0].colname;
       quantile_requested=qbins2[0].QUANTILES_TO_DO[0];
       done=qbins2[0]._done;
       exactResult=qbins2[0]._pctile[0];
       interpolated=qbins2[0]._interpolated;
+      interpolation_type_used=qbins2[0]._interpolationType;
     }
  else {
       column_name="";
@@ -90,6 +90,7 @@
       done=false;
       exactResult=Double.NaN;
       interpolated=false;
+      interpolation_type_used=interpolation_type;
     }
     qbins2=null;
     result_multi=exactResult;
