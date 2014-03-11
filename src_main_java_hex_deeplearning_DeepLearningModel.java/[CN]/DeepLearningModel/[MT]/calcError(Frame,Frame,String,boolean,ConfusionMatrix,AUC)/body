@@ -6,8 +6,10 @@
     auc.vactual=ftest.lastVec();
     auc.predict=fpreds;
     auc.vpredict=fpreds.vecs()[2];
+    auc.threshold_criterion=AUC.ThresholdCriterion.maximum_F1;
     auc.serve();
-    error=auc.toASCII(sb);
+    auc.toASCII(sb);
+    error=auc.err();
   }
  else {
     if (cm == null)     cm=new ConfusionMatrix();
@@ -19,7 +21,7 @@
     cm.toASCII(sb);
     error=isClassifier() ? new hex.ConfusionMatrix(cm.cm).err() : cm.mse;
   }
-  if (printCM && (cm.cm == null || cm.cm.length <= model_info().get_params().max_confusion_matrix_size)) {
+  if (printCM && (auc != null || cm.cm == null || cm.cm.length <= model_info().get_params().max_confusion_matrix_size)) {
     Log.info("Scoring on " + label + " data:");
     for (    String s : sb.toString().split("\n"))     Log.info(s);
   }

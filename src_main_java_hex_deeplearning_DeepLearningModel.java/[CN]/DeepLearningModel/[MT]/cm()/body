@@ -1,5 +1,5 @@
 {
-  final Errors lasterror=errors[errors.length - 1];
+  final Errors lasterror=last_scored();
   if (errors == null)   return null;
   water.api.ConfusionMatrix cm=lasterror.validation ? lasterror.valid_confusion_matrix : lasterror.train_confusion_matrix;
   if (cm == null || cm.cm == null) {
