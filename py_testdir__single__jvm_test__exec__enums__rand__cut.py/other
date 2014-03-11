@@ -1,6 +1,8 @@
 import unittest, random, sys, time, re
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_glm, h2o_util
+import h2o_gbm
+import getpass
 randChars = ('abeE01' + '$%+-.;|\t ')
 randChars = 'abeE01'
 quoteChars = '\'"'
@@ -8,5 +10,9 @@ quoteChars = ''
 MIN_ENUM_WIDTH = 2
 MAX_ENUM_WIDTH = 8
 RAND_ENUM_LENGTH = True
+DO_PLOT = (getpass.getuser() == 'kevin')
+DO_MEDIAN = True
+MAX_QBINS = 1000
+MULTI_PASS = 1
 if (__name__ == '__main__'):
     h2o.unit_main()
