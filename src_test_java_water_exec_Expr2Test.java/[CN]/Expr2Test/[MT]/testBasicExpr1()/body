@@ -186,6 +186,9 @@
     checkStr("ddply(h.hex,NA,sum)","NA not a valid column");
     checkStr("ddply(h.hex,c(1,NA,3),sum)","NA not a valid column");
     checkStr("ddply(h.hex,c(1,99,3),sum)","Column 99 out of range for frame columns 17");
+    checkStr("nrow(unique(h.hex[,5]))",3);
+    checkStr("nrow(unique(h.hex[,6]))",2);
+    checkStr("nrow(unique(h.hex[,c(5,6)]))",4);
     checkStr("3*4+5*6",42);
     checkStr("(h.hex[1,1]=2)",2);
     checkStr("(h.hex[1,1]=2\n)",2);
