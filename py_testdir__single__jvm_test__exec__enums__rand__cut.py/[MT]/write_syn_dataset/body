@@ -1,0 +1,19 @@
+def write_syn_dataset(csvPathname, rowCount, inCount=1, outCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n', quoteChars=''):
+    r1 = random.Random(SEED)
+    colEnumList = []
+    for col in range(inCount):
+        enumList = create_enum_list(n=random.randint(1, 4), quoteChars=quoteChars)
+        colEnumList.append(enumList)
+    dsf = open(csvPathname, 'w+')
+    for row in range(rowCount):
+        rowData = []
+        for iCol in range(inCount):
+            ri = random.choice(colEnumList[iCol])
+            rowData.append(ri)
+        for oCol in range(outCount):
+            ri = ('%.2f' % random.uniform(0, 10000000.0))
+            rowData.append(ri)
+        rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
+        sys.stdout.write(rowDataCsv)
+        dsf.write(rowDataCsv)
+    dsf.close()

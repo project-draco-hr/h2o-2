@@ -1,0 +1,9 @@
+def random_enum(n, randChars=randChars, quoteChars=quoteChars):
+    if (random.randint(0, 9) == 0):
+        return None
+    choiceStr = (randChars + quoteChars)
+    mightBeNumberOrWhite = True
+    while mightBeNumberOrWhite:
+        r = ''.join((random.choice(choiceStr) for x in range(n)))
+        mightBeNumberOrWhite = h2o_util.might_h2o_think_number_or_whitespace(r)
+    return r

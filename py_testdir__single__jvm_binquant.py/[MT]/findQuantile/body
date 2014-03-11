@@ -47,9 +47,18 @@ def findQuantile(d, dmin, dmax, threshold):
         for val in d:
             valOffset = (val - valStart)
             binIdx2 = int(math.floor((valOffset / (valBinSize + 0.0))))
+            cA = (valOffset < 0)
+            cB = (binIdx2 < 0)
+            t = {True: 1, False: 0, }
+            if ((cA and (not cB)) or ((not cA) and cB)):
+                h2p.red_print(('AB Interesting lower bin edge case %s%s' % (t[cA], t[cB])), 'cA', cA, 'cB', cB, 'valOffSet', valOffSet, 'binIdx2', binIdx2)
+            cC = (val > valEnd)
+            cD = (binIdx2 >= (maxBinCnt - 1))
+            if ((cC and (not cD)) or ((not cC) and cD)):
+                h2p.red_print(('CD Interesting upper bin edge case %s%s' % (t[cC], t[cD])), 'cC', cC, 'cB', cD, 'val', val, 'valEnd', valEnd, 'binIdx2', binIdx2, 'maxBinCnt', maxBinCnt)
             if ((valOffset < 0) or (binIdx2 < 0)):
                 hcnt2_low += 1
-            elif ((val > valEnd) or (binIdx2 >= (maxBinCnt - 1))):
+            elif ((val > valEnd) or (binIdx2 >= maxBinCnt)):
                 if ((hcnt2_high == 0) or (val < hcnt2_high_min)):
                     hcnt2_high_min = val
                     print 'hcnt2_high_min update:', hcnt2_high_min, valOffset, val, valStart, hcnt2_high, val, valEnd
