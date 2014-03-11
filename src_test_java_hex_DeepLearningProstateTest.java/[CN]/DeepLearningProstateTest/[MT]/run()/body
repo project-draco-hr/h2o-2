@@ -2,17 +2,23 @@
   Key file=NFSFileVec.make(find_test_file("smalldata/./logreg/prostate.csv"));
   Frame frame=ParseDataset2.parse(Key.make(),new Key[]{file});
   Key dest=Key.make("prostate");
-  DeepLearning p=new DeepLearning();
-  p.epochs=17;
-  p.source=frame;
-  p.response=frame.vecs()[1];
-  p.destination_key=dest;
-  p.seed=0xC01DF337;
-  p.force_load_balance=false;
-  p.balance_classes=false;
-  p.shuffle_training_data=false;
-  p.score_training_samples=0;
-  p.execImpl();
+{
+    DeepLearning p=new DeepLearning();
+    p.epochs=35;
+    p.source=frame;
+    p.validation=frame;
+    p.response=frame.vecs()[1];
+    p.destination_key=dest;
+    p.seed=0xC01DF337;
+    p.force_load_balance=true;
+    p.shuffle_training_data=true;
+    p.score_training_samples=100;
+    DeepLearningModel mymodel=p.initModel();
+    p.trainModel(mymodel);
+    p.trainModel(mymodel,p.epochs);
+    p.trainModel(mymodel,p.epochs);
+    p.delete();
+  }
 {
     DeepLearningModel mymodel=UKV.get(dest);
     Frame pred=mymodel.score(frame);
@@ -27,7 +33,6 @@
     auc.toASCII(sb);
     final double threshold=auc.threshold();
     final double error=auc.err();
-    if (!p.force_load_balance && !p.shuffle_training_data && !p.balance_classes&& p.score_training_samples == 0)     Assert.assertEquals(0.25263157894736843,error,1e-15);
     Assert.assertEquals(new ConfusionMatrix(auc.cm()).err(),error,1e-15);
     Assert.assertEquals(mymodel.calcError(frame,pred,"training",true,null,auc),error,1e-15);
     pred.delete();
