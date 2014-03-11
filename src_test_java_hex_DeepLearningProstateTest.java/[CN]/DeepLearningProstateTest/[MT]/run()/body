@@ -4,31 +4,37 @@
   Key dest=Key.make("prostate");
 {
     DeepLearning p=new DeepLearning();
-    p.epochs=1000;
+    p.epochs=35;
     p.source=frame;
-    p.response=frame.vecs()[1];
     p.validation=frame;
+    p.response=frame.vecs()[1];
     p.destination_key=dest;
-    p.force_load_balance=false;
-    p.balance_classes=false;
-    p.shuffle_training_data=false;
-    p.score_training_samples=0;
-    p.score_validation_samples=0;
-    p.execImpl();
+    p.seed=0xC01DF337;
+    p.force_load_balance=true;
+    p.shuffle_training_data=true;
+    p.score_training_samples=100;
+    DeepLearningModel mymodel=p.initModel();
+    p.trainModel(mymodel);
+    p.trainModel(mymodel,p.epochs);
+    p.trainModel(mymodel,p.epochs);
+    p.delete();
   }
 {
     DeepLearningModel mymodel=UKV.get(dest);
     Frame pred=mymodel.score(frame);
-    water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
-    CM.actual=frame;
-    CM.vactual=frame.vecs()[1];
-    CM.predict=pred;
-    CM.vpredict=pred.vecs()[0];
-    CM.serve();
     StringBuilder sb=new StringBuilder();
-    CM.toASCII(sb);
-    double error=new ConfusionMatrix(CM.cm).err();
-    Log.info(sb);
+    AUC auc=new AUC();
+    auc.actual=frame;
+    auc.vactual=frame.vecs()[1];
+    auc.predict=pred;
+    auc.vpredict=pred.vecs()[2];
+    auc.threshold_criterion=AUC.ThresholdCriterion.maximum_F1;
+    auc.serve();
+    auc.toASCII(sb);
+    final double threshold=auc.threshold();
+    final double error=auc.err();
+    Assert.assertEquals(new ConfusionMatrix(auc.cm()).err(),error,1e-15);
+    Assert.assertEquals(mymodel.calcError(frame,pred,"training",true,null,auc),error,1e-15);
     pred.delete();
     mymodel.delete();
   }
