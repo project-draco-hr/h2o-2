@@ -1,0 +1,24 @@
+def test_exec_enums_rand_cut(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    n = 10
+    tryList = [(n, 1, 1, 'cD', 300), (n, 2, 3, 'cE', 300), (n, 10, 9, 'cE', 300)]
+    for repeat in range(10):
+        for (rowCount, iColCount, oColCount, hex_key, timeoutSecs) in tryList:
+            colCount = (iColCount + oColCount)
+            SEEDPERFILE = random.randint(0, sys.maxint)
+            csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            print 'Creating random', csvPathname
+            write_syn_dataset(csvPathname, rowCount, iColCount, oColCount, SEEDPERFILE)
+            parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30)
+            print "Parse result['destination_key']:", parseResult['destination_key']
+            inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+            print h2o.dump_json(inspect)
+            (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
+            if (len(constantValuesDict) != 0):
+                raise Exception(("Probably got a col NA'ed and constant values as a result %s" % constantValuesDict))
+            start = time.time()
+            elapsed = (time.time() - start)
+            print 'predict end on ', csvFilename, 'took', elapsed, 'seconds.'
+            h2o.nodes[0].remove_all_keys()
