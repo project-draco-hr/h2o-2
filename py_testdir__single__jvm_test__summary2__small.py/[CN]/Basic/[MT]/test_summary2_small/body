@@ -35,6 +35,18 @@ def test_summary2_small(self):
         h2o.beta_features = True
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS, timeoutSecs=45)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
+        quantile = (0.5 if DO_MEDIAN else 0.999)
+        q = h2o.nodes[0].quantiles(source_key=hex_key, column=0, interpolation_type=7, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
+        qresult = q['result']
+        qresult_single = q['result_single']
+        qresult_iterations = q['iterations']
+        qresult_interpolated = q['interpolated']
+        h2p.blue_print('h2o quantiles result:', qresult)
+        h2p.blue_print('h2o quantiles result_single:', qresult_single)
+        h2p.blue_print('h2o quantiles iterations:', qresult_iterations)
+        h2p.blue_print('h2o quantiles interpolated:', qresult_interpolated)
+        print h2o.dump_json(q)
+        self.assertLess(qresult_iterations, 16, msg='h2o does max of 16 iterations. likely no result_single if we hit max. is bins=1?')
         column = summaryResult['summaries'][0]
         colname = column['colname']
         coltype = column['type']
@@ -89,5 +101,5 @@ def test_summary2_small(self):
         scipyCol = 0
         if (DO_TRY_SCIPY and (colname != '')):
             print scipyCol, pctile[10]
-            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)])
+            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)], h2oMedian2=qresult)
         h2i.delete_keys_at_all_nodes()
