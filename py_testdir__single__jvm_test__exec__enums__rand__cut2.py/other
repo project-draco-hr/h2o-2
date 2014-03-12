@@ -10,16 +10,18 @@ MIN_ENUM_WIDTH = 2
 MAX_ENUM_WIDTH = 5
 assert (MAX_ENUM_WIDTH > MIN_ENUM_WIDTH)
 RAND_ENUM_LENGTH = True
-CUT_EXPR_CNT = 50
-CUT_LOOP_CNT = 10
+CUT_EXPR_CNT = 150
+CUT_LOOP_CNT = 50
 assert (CUT_EXPR_CNT > (2 * CUT_LOOP_CNT))
 if (getpass.getuser() == 'kevin'):
     ROWS = 1000000
-    CAT_ITERATE = 8
+    WRITE_REPEAT = 10
+    CAT_ITERATE = 0
 else:
-    CAT_ITERATE = 6
+    CAT_ITERATE = 0
+    WRITE_REPEAT = 10
     ROWS = 10000
-assert (CAT_ITERATE >= 1)
+assert (CAT_ITERATE >= 0)
 DO_PLOT = (getpass.getuser() == 'kevin')
 DO_MEDIAN = True
 MAX_QBINS = 1000
