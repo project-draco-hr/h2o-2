@@ -9,6 +9,18 @@
     while (_x < _buf.length && isLetter2(_buf[_x]))     _x++;
     return _str.substring(x,_x);
   }
+  if ((_x > 0) && (_x + 3) > _buf.length) {
+  }
+ else {
+    char[] carr=new char[3];
+    carr[0]=_buf[_x - 1 + 0];
+    carr[1]=_buf[_x - 1 + 1];
+    carr[2]=_buf[_x - 1 + 2];
+    String s=new String(carr);
+    if (s.equals("%*%")) {
+      return s;
+    }
+  }
   if (_x >= _buf.length)   return _str.substring(_x - 1,_x);
   char c2=_buf[_x];
   if (isDigit(c2) || isLetter(c2) || isWS(c2)|| isReserved(c2)) {

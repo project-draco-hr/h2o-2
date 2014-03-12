@@ -13,8 +13,8 @@
     }
     if (thresholds != null) {
       if (_cms == null)       sort(thresholds);
-      if (Utils.minValue(thresholds) < 0)       throw new InvalidArgumentException("Minimum threshold cannot be negative.");
-      if (Utils.maxValue(thresholds) > 1)       throw new InvalidArgumentException("Maximum threshold cannot be greater than 1.");
+      if (Utils.minValue(thresholds) < 0)       throw new IllegalArgumentException("Minimum threshold cannot be negative.");
+      if (Utils.maxValue(thresholds) > 1)       throw new IllegalArgumentException("Maximum threshold cannot be greater than 1.");
     }
  else {
       HashSet hs=new HashSet();
@@ -30,7 +30,7 @@
       sort(thresholds);
     }
     if (_cms != null) {
-      if (_cms.length != thresholds.length)       throw new InvalidArgumentException("Number of thresholds differs from number of confusion matrices.");
+      if (_cms.length != thresholds.length)       throw new IllegalArgumentException("Number of thresholds differs from number of confusion matrices.");
     }
  else {
       AUCTask at=new AUCTask(thresholds).doAll(va,vp);
