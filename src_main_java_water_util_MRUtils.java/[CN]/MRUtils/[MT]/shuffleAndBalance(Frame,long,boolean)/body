@@ -1,7 +1,7 @@
 {
   int cores=0;
   for (  H2ONode node : H2O.CLOUD._memary)   cores+=node._heartbeat._num_cpus;
-  final int splits=cores;
+  final int splits=4 * cores;
   Vec[] vecs=fr.vecs();
   if (vecs[0].nChunks() < splits || shuffle) {
     long[] idx=null;
