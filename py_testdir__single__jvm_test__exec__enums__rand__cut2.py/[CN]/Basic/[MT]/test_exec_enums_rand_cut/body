@@ -31,7 +31,7 @@ def test_exec_enums_rand_cut(self):
                 else:
                     cutExprList.append(((('p$C' + str((i + 1))) + '==') + c))
             cutExpr = ' & '.join(cutExprList)
-            rowExpr = ('%s[%s,];' % (hex_key, cutExpr))
+            rowExpr = ('%s[%s,%s];' % (hex_key, cutExpr, (iColCount + 1)))
             print rowExpr
             rowExprList.append(rowExpr)
         SEEDPERFILE = random.randint(0, sys.maxint)
@@ -75,33 +75,20 @@ def test_exec_enums_rand_cut(self):
             e = random.sample(eKeys, 2)
             fKey = e[0]
             eKey = e[1]
-            if (1 == 0):
-                start = time.time()
-                e = h2o.nodes[0].exec_query(str=('%s=%s[,%s]' % (fKey, hex_key, (randOCol + 1))))
-                elapsed = (time.time() - start)
-                print 'exec 1 took', elapsed, 'seconds.'
-                execTime = elapsed
-            if (1 == 1):
-                start = time.time()
-                h2o.nodes[0].exec_query(str=('%s=%s' % (fKey, random.choice(rowExprList))))
-                elapsed = (time.time() - start)
-                execTime = elapsed
-                print 'exec 2 took', elapsed, 'seconds.'
-            if (1 == 0):
-                gKey = random.choice(eKeys)
-                start = time.time()
-                h2o.nodes[0].exec_query(str=('%s=%s' % (gKey, fKey)))
-                elapsed = (time.time() - start)
-                print 'exec 3 took', elapsed, 'seconds.'
-            if (1 == 1):
-                inspect = h2o_cmd.runInspect(key=fKey)
-                h2o_cmd.infoFromInspect(inspect, fKey)
-                numRows = inspect['numRows']
-                numCols = inspect['numCols']
+            start = time.time()
+            h2o.nodes[0].exec_query(str=('%s=%s' % (fKey, random.choice(rowExprList))))
+            elapsed = (time.time() - start)
+            execTime = elapsed
+            print 'exec 2 took', elapsed, 'seconds.'
+            inspect = h2o_cmd.runInspect(key=fKey)
+            h2o_cmd.infoFromInspect(inspect, fKey)
+            numRows = inspect['numRows']
+            numCols = inspect['numCols']
             if ((numRows == 0) or (numCols != colCount)):
                 h2p.red_print('Warning: Cut resulted in', numRows, 'rows and', numCols, 'cols. Quantile will abort')
             quantile = (0.5 if DO_MEDIAN else 0.999)
             column = iColCount
+            column = 0
             start = time.time()
             q = h2o.nodes[0].quantiles(source_key=fKey, column=column, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=MULTI_PASS)
             h2p.red_print('quantile', quantile, q['result'])
