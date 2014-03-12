@@ -99,7 +99,7 @@
   }
   DocGen.HTML.paragraph(sb,"Epochs: " + String.format("%.3f",epoch_counter) + " / "+ String.format("%.3f",model_info.parameters.epochs));
   final boolean isEnded=Job.isEnded(model_info().job().self());
-  long time_so_far=isEnded ? error.training_time_ms : System.currentTimeMillis() - model_info.parameters.start_time;
+  final long time_so_far=isEnded ? run_time : run_time + System.currentTimeMillis() - _timeLastScoreEnter;
   if (time_so_far > 0) {
     DocGen.HTML.paragraph(sb,"Training speed: " + String.format("%,d",model_info().get_processed_total() * 1000 / time_so_far) + " samples/s");
   }
