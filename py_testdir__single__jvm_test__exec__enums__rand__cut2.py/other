@@ -13,7 +13,10 @@ RAND_ENUM_LENGTH = True
 CUT_EXPR_CNT = 50
 CUT_LOOP_CNT = 10
 assert (CUT_EXPR_CNT > (2 * CUT_LOOP_CNT))
-ROWS = 10000000
+if (getpass.getuser() == 'kevin'):
+    ROWS = 1000000
+else:
+    ROWS = 10000000
 DO_PLOT = (getpass.getuser() == 'kevin')
 DO_MEDIAN = True
 MAX_QBINS = 1000
