@@ -7,10 +7,16 @@ randChars = 'abeE01'
 quoteChars = '\'"'
 quoteChars = ''
 MIN_ENUM_WIDTH = 2
-MAX_ENUM_WIDTH = 2
+MAX_ENUM_WIDTH = 5
+assert (MAX_ENUM_WIDTH > MIN_ENUM_WIDTH)
 RAND_ENUM_LENGTH = True
-CUT_EXPR_CNT = 200
-ROWS = 10000000
+CUT_EXPR_CNT = 50
+CUT_LOOP_CNT = 10
+assert (CUT_EXPR_CNT > (2 * CUT_LOOP_CNT))
+if (getpass.getuser() == 'kevin'):
+    ROWS = 1000000
+else:
+    ROWS = 10000000
 DO_PLOT = (getpass.getuser() == 'kevin')
 DO_MEDIAN = True
 MAX_QBINS = 1000

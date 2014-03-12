@@ -10,10 +10,11 @@ def test_exec_enums_rand_cut(self):
         hex_key = 'p'
         colEnumList = create_col_enum_list(iColCount)
         rowExprList = []
+        print 'Creating', CUT_EXPR_CNT, 'cut expressions'
         for i in range(CUT_EXPR_CNT):
-            print 'Creating', CUT_EXPR_CNT, 'cut expressions'
             cutValue = [None for i in range(iColCount)]
-            cols = random.sample(range((iColCount - 1)), random.randint(1, 4))
+            MAX_COLS_IN_EXPR = (iColCount - 1)
+            cols = random.sample(range((iColCount - 1)), random.randint(1, MAX_COLS_IN_EXPR))
             for c in cols:
                 cel = colEnumList[c]
                 if (1 == 1):
@@ -29,13 +30,9 @@ def test_exec_enums_rand_cut(self):
                     cutExprList.append(((('p$C' + str((i + 1))) + '!=') + c))
                 else:
                     cutExprList.append(((('p$C' + str((i + 1))) + '==') + c))
-            cutExpr = ' && '.join(cutExprList)
-            print 'cutExpr:', cutExpr
-            e = random.sample(eKeys, 2)
-            fKey = e[0]
-            eKey = e[1]
+            cutExpr = ' & '.join(cutExprList)
             rowExpr = ('%s[%s,];' % (hex_key, cutExpr))
-            print 'rowExpr:', rowExpr
+            print rowExpr
             rowExprList.append(rowExpr)
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -46,6 +43,8 @@ def test_exec_enums_rand_cut(self):
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
+        levels = h2o.nodes[0].levels(source=hex_key)
+        print 'levels result:', h2o.dump_json(levels)
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
         if (len(constantValuesDict) != 0):
             raise Exception(("Probably got a col NA'ed and constant values as a result %s" % constantValuesDict))
@@ -57,7 +56,7 @@ def test_exec_enums_rand_cut(self):
         xList = []
         eList = []
         fList = []
-        for repeat in range(200):
+        for repeat in range(CUT_LOOP_CNT):
             randICol = random.randint(0, (iColCount - 1))
             randOCol = random.randint(iColCount, ((iColCount + oColCount) - 1))
             e = random.sample(eKeys, 2)
