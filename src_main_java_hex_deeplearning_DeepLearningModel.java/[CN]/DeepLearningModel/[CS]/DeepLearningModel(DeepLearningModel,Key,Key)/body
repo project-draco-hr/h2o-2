@@ -5,5 +5,11 @@
   model_info.parameters.destination_key=selfKey;
   model_info.parameters.job_key=jobKey;
   start_time=cp.start_time;
+  run_time=cp.run_time;
   errors=cp.errors.clone();
+  model_info.parameters.start_time=System.currentTimeMillis();
+  _timeLastScoreEnter=System.currentTimeMillis();
+  _timeLastScoreStart=0;
+  _timeLastScoreEnd=0;
+  _timeLastPrintStart=0;
 }
