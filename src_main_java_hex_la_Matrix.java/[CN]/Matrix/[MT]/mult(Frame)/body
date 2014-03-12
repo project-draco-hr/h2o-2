@@ -6,6 +6,12 @@
   if (xcols != yrows)   throw new IllegalArgumentException("Matrices do not match: [" + xrows + "x"+ xcols+ "] * ["+ yrows+ "x"+ ycols+ "]");
   Vec[] x_vecs=_x.vecs();
   Vec[] y_vecs=y.vecs();
+  for (int k=0; k < xcols; k++) {
+    if (x_vecs[k].isEnum())     throw new IllegalArgumentException("Multiplication not meaningful for factor column " + k);
+  }
+  for (int j=0; j < ycols; j++) {
+    if (y_vecs[j].isEnum())     throw new IllegalArgumentException("Multiplication not meaningful for factor column " + j);
+  }
   Vec[] output=new Vec[ycols];
   for (int j=0; j < ycols; j++)   output[j]=Vec.makeSeq(xrows);
   for (int i=0; i < xrows; i++) {
@@ -16,5 +22,5 @@
       output[j].set(i,d);
     }
   }
-  return new Frame(_x._names,output);
+  return new Frame(y._names,output);
 }

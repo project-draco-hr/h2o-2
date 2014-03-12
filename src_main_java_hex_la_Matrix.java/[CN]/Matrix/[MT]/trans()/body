@@ -1,11 +1,21 @@
 {
+  int xrows=(int)_x.numRows();
+  int xcols=_x.numCols();
   Vec[] x_vecs=_x.vecs();
-  Vec[] output=new Vec[(int)_x.numRows()];
-  for (int i=0; i < _x.numRows(); i++) {
-    for (int j=0; j < _x.numCols(); j++) {
+  for (int j=0; j < xcols; j++) {
+    if (x_vecs[j].isEnum())     throw H2O.unimpl();
+  }
+  Vec[] output=new Vec[xrows];
+  String[] names=new String[xrows];
+  for (int i=0; i < xrows; i++) {
+    output[i]=Vec.makeSeq(xcols);
+    names[i]="C" + String.valueOf(i + 1);
+  }
+  for (int i=0; i < xrows; i++) {
+    for (int j=0; j < xcols; j++) {
       double d=x_vecs[j].at(i);
       output[i].set(j,d);
     }
   }
-  return new Frame(output);
+  return new Frame(names,output);
 }
