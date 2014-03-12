@@ -5,7 +5,7 @@
   assert(num_input > 0);
   assert(num_output > 0);
   parameters=params;
-  if (has_momenta() && adaDelta())   throw new InvalidArgumentException("Cannot have non-zero momentum and non-zero AdaDelta parameters at the same time.");
+  if (has_momenta() && adaDelta())   throw new IllegalArgumentException("Cannot have non-zero momentum and non-zero AdaDelta parameters at the same time.");
   final int layers=parameters.hidden.length;
   units=new int[layers + 2];
   units[0]=num_input;

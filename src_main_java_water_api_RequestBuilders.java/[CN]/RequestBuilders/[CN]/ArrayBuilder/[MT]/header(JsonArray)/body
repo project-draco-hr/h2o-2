@@ -4,7 +4,7 @@
   sb.append("<table class='table table-striped table-bordered'>");
   if (array.get(0) instanceof JsonObject) {
     sb.append("<tr>");
-    for (    Map.Entry<String,JsonElement> entry : ((JsonObject)array.get(0)).entrySet())     sb.append("<th>").append(header(entry.getKey())).append("</th>");
+    for (    Map.Entry<String,JsonElement> entry : ((JsonObject)array.get(0)).entrySet())     sb.append("<th style='min-width: 60px;'>").append(header(entry.getKey())).append("</th>");
     sb.append("</tr>");
   }
   return sb.toString();

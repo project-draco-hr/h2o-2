@@ -5,7 +5,7 @@
       arg.disable("Taken from model checkpoint.");
       final DeepLearningModel cp_model=UKV.get(checkpoint);
       if (cp_model.model_info().unstable()) {
-        throw new InvalidArgumentException("Checkpointed model was unstable. Not restarting.");
+        throw new IllegalArgumentException("Checkpointed model was unstable. Not restarting.");
       }
       final DeepLearning cp=cp_model.model_info().get_params();
       balance_classes=cp.balance_classes;
