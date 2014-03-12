@@ -1,6 +1,19 @@
 def create_col_enum_list(inCount):
+    widthChoice = random.randint(MIN_ENUM_WIDTH, MAX_ENUM_WIDTH)
+    MAX_CHOICES = 4
+    weights = [1.0]
+    numChoiceList = [2]
+    for i in range(3, MAX_CHOICES):
+        print 'weights:', weights
+        w = (weights[(-1)] / 2.0)
+        assert (w != 0)
+        weights.append(w)
+        numChoiceList.append(i)
+    print 'numChoiceList', numChoiceList
     colEnumList = []
     for col in range(inCount):
-        enumList = create_enum_list(n=random.randint(1, 4), quoteChars=quoteChars)
+        numChoice = numChoiceList[h2o_util.weighted_choice(weights)]
+        print 'numChoice:', numChoice
+        enumList = create_enum_list(n=numChoice, minWidth=MIN_ENUM_WIDTH, maxWidth=widthChoice, quoteChars=quoteChars)
         colEnumList.append(enumList)
     return colEnumList

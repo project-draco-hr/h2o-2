@@ -1,0 +1,12 @@
+{
+  Vec[] x_vecs=_x.vecs();
+  Vec[] output=new Vec[(int)_x.numRows()];
+  for (int i=0; i < _x.numRows(); i++) {
+    for (int j=0; j < _x.numRows(); j++) {
+      double d=0;
+      for (int k=0; k < _x.numCols(); k++)       d+=x_vecs[k].at(i) * x_vecs[k].at(k);
+      output[j].set(i,d);
+    }
+  }
+  return (new Frame(output));
+}

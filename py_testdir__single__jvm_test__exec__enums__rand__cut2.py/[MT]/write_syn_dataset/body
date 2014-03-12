@@ -1,6 +1,10 @@
 def write_syn_dataset(csvPathname, rowCount, inCount=1, outCount=1, SEED='12345678', colSepChar=',', rowSepChar='\n', quoteChars='', colEnumList=None):
     r1 = random.Random(SEED)
-    dsf = open(csvPathname, 'w+')
+    if (CAT_ITERATE == 0):
+        dsf = open(csvPathname, 'w+')
+    else:
+        (tmpFd, tmpPathname) = h2o.tmp_file('cat', '.csv')
+        dsf = open(tmpPathname, 'w+')
     for row in range(rowCount):
         rowData = []
         for iCol in range(inCount):
@@ -12,4 +16,14 @@ def write_syn_dataset(csvPathname, rowCount, inCount=1, outCount=1, SEED='123456
         rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
         dsf.write(rowDataCsv)
     dsf.close()
+    if (CAT_ITERATE > 0):
+        for c in range((CAT_ITERATE + 1)):
+            if (c == CAT_ITERATE):
+                print 'Doubling', tmpPathname, 'into', csvPathname
+                h2o_util.file_cat(tmpPathname, tmpPathname, csvPathname)
+            else:
+                (tmp2Fd, tmp2Pathname) = h2o.tmp_file()
+                print 'Doubling', tmpPathname, 'into', tmp2Pathname
+                h2o_util.file_cat(tmpPathname, tmpPathname, tmp2Pathname)
+                tmpPathname = tmp2Pathname
     return colEnumList
