@@ -8,19 +8,19 @@
       cp.write_lock(self());
       assert(state == JobState.RUNNING);
       if (source != previous.model_info().get_params().source) {
-        throw new InvalidArgumentException("source must be the same as for the checkpointed model.");
+        throw new IllegalArgumentException("source must be the same as for the checkpointed model.");
       }
       if (response != previous.model_info().get_params().response) {
-        throw new InvalidArgumentException("response must be the same as for the checkpointed model.");
+        throw new IllegalArgumentException("response must be the same as for the checkpointed model.");
       }
       if (Utils.difference(ignored_cols,previous.model_info().get_params().ignored_cols).length != 0) {
-        throw new InvalidArgumentException("ignored_cols must be the same as for the checkpointed model.");
+        throw new IllegalArgumentException("ignored_cols must be the same as for the checkpointed model.");
       }
       if (validation != previous.model_info().get_params().validation) {
-        throw new InvalidArgumentException("validation must be the same as for the checkpointed model.");
+        throw new IllegalArgumentException("validation must be the same as for the checkpointed model.");
       }
       if (classification != previous.model_info().get_params().classification) {
-        throw new InvalidArgumentException("classification must be the same as for the checkpointed model.");
+        throw new IllegalArgumentException("classification must be the same as for the checkpointed model.");
       }
       cp.model_info().get_params().expert_mode=expert_mode;
       cp.model_info().get_params().seed=seed;
