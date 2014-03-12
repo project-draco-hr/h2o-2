@@ -1,0 +1,9 @@
+{
+  super(selfKey,cp._dataKey,cp.model_info().data_info()._adaptedFrame,cp._priorClassDist);
+  this.jobKey=jobKey;
+  model_info=(DeepLearningModelInfo)cp.model_info.clone();
+  model_info.parameters.destination_key=selfKey;
+  model_info.parameters.job_key=jobKey;
+  start_time=cp.start_time;
+  errors=cp.errors.clone();
+}

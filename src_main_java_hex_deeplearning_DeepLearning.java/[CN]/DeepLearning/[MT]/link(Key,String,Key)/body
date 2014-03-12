@@ -1,0 +1,8 @@
+{
+  DeepLearning req=new DeepLearning();
+  RString rs=new RString("<a href='" + req.href() + ".query?source=%$key&checkpoint=%$cp'>%content</a>");
+  rs.replace("key",k.toString());
+  rs.replace("content",content);
+  rs.replace("cp",cp == null ? "null" : cp.toString());
+  return rs.toString();
+}
