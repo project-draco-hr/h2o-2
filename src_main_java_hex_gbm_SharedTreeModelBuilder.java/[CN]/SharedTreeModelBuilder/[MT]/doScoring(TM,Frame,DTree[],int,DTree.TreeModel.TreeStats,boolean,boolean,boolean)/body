@@ -15,7 +15,7 @@
   float[] varimpSD=null;
   if (importance && ktrees != null) {
     Timer vi_timer=new Timer();
-    float[][] vi=doVarImpCalc(model,ktrees,tid - 1,fTrain);
+    float[][] vi=doVarImpCalc(model,ktrees,tid - 1,fTrain,scale_importance);
     varimp=vi[0];
     varimpSD=vi[1];
     Log.info(Sys.DRF__,"Computation of variable importance with " + tid + "th-tree took: "+ vi_timer.toString());
