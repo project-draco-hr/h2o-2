@@ -7,7 +7,7 @@
       if (_c0 == null || _sz >= _c0._len) {
         sz[0]+=_c0 != null ? _c0._len : 0;
         if (_cidx >= nChunks())         return 0;
-        _c0=elem2BV(_cidx++);
+        _c0=chunkForChunkIdx(_cidx++);
         _sz=C1NChunk.OFF;
         if (pmon != null)         pmon.update(_c0._len);
       }
