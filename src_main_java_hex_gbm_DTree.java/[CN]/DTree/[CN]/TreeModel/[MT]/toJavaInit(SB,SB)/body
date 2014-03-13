@@ -12,8 +12,8 @@
   sb.i().p("}").nl();
   sb.di(1);
   sb.p(TO_JAVA_BENCH_FUNC);
-  JCodeGen.toStaticVar(sb,"NTREES",numTrees(),"Number of trees in this model.");
-  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",numTrees() * nclasses(),"Number of internal trees in this model (= NTREES*NCLASSES).");
+  JCodeGen.toStaticVar(sb,"NTREES",ntrees(),"Number of trees in this model.");
+  JCodeGen.toStaticVar(sb,"NTREES_INTERNAL",ntrees() * nclasses(),"Number of internal trees in this model (= NTREES*NCLASSES).");
   JCodeGen.toStaticVar(sb,"DEFAULT_ITERATIONS",10000,"Default number of iterations.");
   if (_dataKey != null) {
     Value dataval=DKV.get(_dataKey);

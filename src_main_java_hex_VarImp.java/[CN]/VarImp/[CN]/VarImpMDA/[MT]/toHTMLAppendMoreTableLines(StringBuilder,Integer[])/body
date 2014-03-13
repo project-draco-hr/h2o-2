@@ -1,0 +1,9 @@
+{
+  StringBuilder ssb=super.toHTMLAppendMoreTableLines(sb,sortOrder);
+  if (varimpSD != null) {
+    DocGen.HTML.tableLine(sb,"SD",varimpSD,sortOrder);
+    float[] zscores=z_score();
+    DocGen.HTML.tableLine(sb,"Z-scores",zscores,sortOrder);
+  }
+  return ssb;
+}
