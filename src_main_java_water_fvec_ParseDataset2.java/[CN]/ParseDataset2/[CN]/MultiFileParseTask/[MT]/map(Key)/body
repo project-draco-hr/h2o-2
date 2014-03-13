@@ -1,6 +1,6 @@
 {
   ByteVec vec=(ByteVec)getVec(key);
-  byte[] bits=vec.elem2BV(0)._mem;
+  byte[] bits=vec.chunkForChunkIdx(0)._mem;
   final int chunkStartIdx=_fileChunkOffsets.get(key)._val;
   Compression cpr=Utils.guessCompressionMethod(bits);
   CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,false)._setup;

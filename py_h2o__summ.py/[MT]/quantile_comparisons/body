@@ -1,4 +1,4 @@
-def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float', h2oSummary2=None, h2oQuantilesApprox=None, h2oQuantilesExact=None, interpolate='linear', quantile=0.5):
+def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float', h2oSummary2=None, h2oQuantilesApprox=None, h2oQuantilesExact=None, interpolate='linear', quantile=0.5, use_genfromtxt=False):
     SCIPY_INSTALLED = True
     try:
         import scipy as sp
@@ -7,7 +7,13 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
     except ImportError:
         print 'numpy or scipy is not installed. Will only do sort-based checking'
         SCIPY_INSTALLED = false
-    target = h2o_util.file_read_csv_col(csvPathname, col=col, datatype=datatype, skipHeader=skipHeader, preview=5)
+    if use_genfromtxt:
+        print 'Using numpy.genfromtxt. Better handling of null bytes'
+        target = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=(1 if skipHeader else 0), dtype=None)
+        print 'shape:', target.shape()
+    else:
+        print 'Using python csv reader'
+        target = h2o_util.file_read_csv_col(csvPathname, col=col, datatype=datatype, skipHeader=skipHeader, preview=5)
     if (datatype == 'float'):
         targetFP = map(float, target)
     if (datatype == 'int'):
@@ -56,7 +62,7 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
     if h2oSummary2:
         if math.isnan(float(h2oSummary2)):
             raise Exception(('h2oSummary2 is unexpectedly NaN %s' % h2oSummary2))
-        h2o_util.assertApproxEqual(h2oSummary2, b, rel=0.5, msg='h2o summary2 is not approx. same as sort algo')
+        h2o_util.assertApproxEqual(h2oSummary2, b, rel=1.0, msg='h2o summary2 is not approx. same as sort algo')
     if SCIPY_INSTALLED:
         if h2oQuantilesApprox:
             h2o_util.assertApproxEqual(h2oQuantilesExact, p, tol=2e-07, msg='h2o quantile multipass is not same as numpy.percentile')
