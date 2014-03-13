@@ -1,6 +1,6 @@
 def test_summary2_unifiles2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('covtype.data', 'x.hex', [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard'), ('runif_.csv', 'x.hex', [('C1', None, None, None, None, None)], '.', None)]
+    tryList = [('covtype.data', 'x.hex', [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard'), ('runif.csv', 'x.hex', [(None, None, None, None, None, None)], 'smalldata', None)]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -25,13 +25,13 @@ def test_summary2_unifiles2(self):
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
         summaries = summaryResult['summaries']
-        scipyCol = 0
+        scipyCol = 1
         for (expected, column) in zip(expectedCols, summaries):
             colname = column['colname']
-            if expected:
+            if expected[0]:
                 self.assertEqual(colname, expected[0])
             quantile = (0.5 if DO_MEDIAN else 0.999)
-            q = h2o.nodes[0].quantiles(source_key=hex_key, column=column['colname'], quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
+            q = h2o.nodes[0].quantiles(source_key=hex_key, column=scipyCol, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
             qresult = q['result']
             qresult_single = q['result_single']
             qresult_iterations = q['iterations']
@@ -53,8 +53,8 @@ def test_summary2_unifiles2(self):
                 zeros = stats['zeros']
                 mins = stats['mins']
                 maxs = stats['maxs']
-                print 'colname:', colname, 'mean (2 places):', twoDecimals(mean)
-                print 'colname:', colname, 'std dev. (2 places):', twoDecimals(sd)
+                print 'colname:', colname, 'mean (2 places):', h2o_util.twoDecimals(mean)
+                print 'colname:', colname, 'std dev. (2 places):', h2o_util.twoDecimals(sd)
                 pct = stats['pct']
                 print 'pct:', pct
                 print ''
@@ -77,19 +77,17 @@ def test_summary2_unifiles2(self):
             for b in hcnt:
                 e = (0.1 * numRows)
             if (stattype != 'Enum'):
-                pt = twoDecimals(pctile)
+                pt = h2o_util.twoDecimals(pctile)
                 print 'colname:', colname, 'pctile (2 places):', pt
-                mx = twoDecimals(maxs)
-                mn = twoDecimals(mins)
+                mx = h2o_util.twoDecimals(maxs)
+                mn = h2o_util.twoDecimals(mins)
                 print 'colname:', colname, 'maxs: (2 places):', mx
                 print 'colname:', colname, 'mins: (2 places):', mn
                 actual = (mn[0], pt[3], pt[5], pt[7], mx[0])
                 print 'min/25/50/75/max colname:', colname, '(2 places):', actual
                 print 'maxs colname:', colname, '(2 places):', mx
                 print 'mins colname:', colname, '(2 places):', mn
-                if (DO_TRY_SCIPY and (colname != '') and (csvFilename != 'covtype.data')):
-                    print 'Going to try with scipy'
-                    print scipyCol, pctile[10]
-                    generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=qresult, h2oMedian2=qresult_single, csvFilename=csvFilename)
+                if ((colname != '') and expected[scipyCol] and (csvFilename != 'covtype.data')):
+                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oSummary2=pctile[(5 if DO_MEDIAN else 10)], h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult)
             scipyCol += 1
         trial += 1
