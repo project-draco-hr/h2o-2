@@ -12,7 +12,6 @@ def get_args(self):
         args += [('-Xmx%dm' % self.java_heap_MB)]
     if (self.java_extra_args is not None):
         args += [('%s' % self.java_extra_args)]
-    args += ['-ea']
     if self.use_maprfs:
         args += ['-Djava.library.path=/opt/mapr/lib']
     if self.classpath:
