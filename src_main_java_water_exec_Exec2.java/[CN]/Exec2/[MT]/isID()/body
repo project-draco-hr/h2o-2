@@ -9,6 +9,12 @@
     while (_x < _buf.length && isLetter2(_buf[_x]))     _x++;
     return _str.substring(x,_x);
   }
+  if (_x + 2 <= _buf.length && c == '%' && _buf[_x + 1] == '%') {
+    if (_buf[_x] == '*') {
+      _x+=2;
+      return "%*%";
+    }
+  }
   if (_x >= _buf.length)   return _str.substring(_x - 1,_x);
   char c2=_buf[_x];
   if (isDigit(c2) || isLetter(c2) || isWS(c2)|| isReserved(c2)) {

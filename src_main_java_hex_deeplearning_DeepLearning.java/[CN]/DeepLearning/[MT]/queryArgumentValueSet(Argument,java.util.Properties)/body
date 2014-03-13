@@ -1,5 +1,22 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
+  if (!arg._name.equals("checkpoint") && !arg._name.equals("epochs") && !arg._name.equals("expert_mode")&& !arg._name.equals("seed")&& !arg._name.equals("score_interval")&& !arg._name.equals("score_duty_cycle")&& !arg._name.equals("quiet_mode")&& !arg._name.equals("diagnostics")) {
+    if (checkpoint != null) {
+      arg.disable("Taken from model checkpoint.");
+      final DeepLearningModel cp_model=UKV.get(checkpoint);
+      if (cp_model.model_info().unstable()) {
+        throw new IllegalArgumentException("Checkpointed model was unstable. Not restarting.");
+      }
+      final DeepLearning cp=cp_model.model_info().get_params();
+      balance_classes=cp.balance_classes;
+      score_validation_sampling=cp.score_validation_sampling;
+      max_after_balance_size=cp.max_after_balance_size;
+      score_training_samples=cp.score_training_samples;
+      score_validation_samples=cp.score_validation_samples;
+      state=JobState.RUNNING;
+      return;
+    }
+  }
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
   }
@@ -8,10 +25,6 @@
     loss=Loss.MeanSquare;
   }
   if (H2O.CLOUD.size() > 1) {
-    if (expert_mode && arg._name.equals("force_load_balance")) {
-      force_load_balance=false;
-      arg.disable("Only for single-node operation.");
-    }
     if (arg._name.equals("seed")) {
       arg.disable("Only for single-node operation.");
     }

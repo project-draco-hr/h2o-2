@@ -18,6 +18,7 @@ def test_summary2_percentile(self):
         expectedMean = 0.5
         expectedSigma = 0.5
         write_syn_dataset(csvPathname, rowCount, colCount, low=expectedMin, high=expectedMax, mode=mode, SEED=SEEDPERFILE)
+        csvPathnameFull = h2i.find_folder_and_filename('.', csvPathname, returnFullPath=True)
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
@@ -26,6 +27,7 @@ def test_summary2_percentile(self):
         if h2o.verbose:
             print 'summaryResult:', h2o.dump_json(summaryResult)
         summaries = summaryResult['summaries']
+        scipyCol = 0
         for column in summaries:
             colname = column['colname']
             coltype = column['type']
@@ -63,3 +65,6 @@ def test_summary2_percentile(self):
                 eV = [(e + 1) for e in eV1]
             else:
                 raise Exception(("Test doesn't have the expected percentileValues for expectedMin: %s" % expectedMin))
+            if (colname != ''):
+                h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oSummary2=pctile[(5 if DO_MEDIAN else 10)])
+            scipyCol += 1

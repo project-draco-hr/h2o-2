@@ -3,9 +3,15 @@ def write_syn_dataset(csvPathname, rowCount, inCount=1, outCount=1, SEED='123456
     if (CAT_ITERATE == 0):
         dsf = open(csvPathname, 'w+')
     else:
-        (tmpFd, tmpPathname) = h2o.tmp_file('cat', '.csv')
+        (tmpFd, tmpPathname) = h2o.tmp_file('cat', '.csv', tmp_dir='/tmp')
         dsf = open(tmpPathname, 'w+')
+    global WRITE_REPEAT
+    if (not ((WRITE_REPEAT >= 1) and (WRITE_REPEAT <= 100))):
+        print 'Forcing WRITE_REPEAT to 1'
+        WRITE_REPEAT = 1
     for row in range(rowCount):
+        if (((WRITE_REPEAT * row) % 100000) == 0):
+            print 'Wrote', (WRITE_REPEAT * row), 'lines'
         rowData = []
         for iCol in range(inCount):
             ri = random.choice(colEnumList[iCol])
@@ -14,7 +20,8 @@ def write_syn_dataset(csvPathname, rowCount, inCount=1, outCount=1, SEED='123456
             ri = ('%.2f' % random.uniform(0, 10000000.0))
             rowData.append(ri)
         rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
-        dsf.write(rowDataCsv)
+        for i in range(WRITE_REPEAT):
+            dsf.write(rowDataCsv)
     dsf.close()
     if (CAT_ITERATE > 0):
         for c in range((CAT_ITERATE + 1)):

@@ -1,0 +1,16 @@
+{
+  if (!env.isAry(-1)) {
+    Key k=new Vec.VectorGroup().addVec();
+    Futures fs=new Futures();
+    AppendableVec avec=new AppendableVec(k);
+    NewChunk chunk=new NewChunk(avec,0);
+    chunk.addNum(env.dbl(-1));
+    chunk.close(0,fs);
+    Vec vec=avec.close(fs);
+    fs.blockForPending();
+    vec._domain=null;
+    Frame fr=new Frame(new String[]{"C1"},new Vec[]{vec});
+    env.poppush(2,new Matrix(fr).trans(),null);
+  }
+ else   env.poppush(2,new Matrix(env.ary(-1)).trans(),null);
+}

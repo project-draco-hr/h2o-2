@@ -27,7 +27,7 @@ def test_GBM_manyfiles_train_test(self):
         num_rows = inspect['num_rows']
         num_cols = inspect['num_cols']
         execExpr = ('%s[,378] = %s[,378]>15 ? 1 : 0' % (trainKey, trainKey))
-        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=180)
+        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=500)
         if h2o.beta_features:
             print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
@@ -38,8 +38,9 @@ def test_GBM_manyfiles_train_test(self):
         elapsed = (time.time() - start)
         print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'test parse result:', parseTestResult['destination_key']
+        print 'Slow! exec is converting all imported keys?, not just what was parsed'
         execExpr = ('%s[,378] = %s[,378]>15 ? 1 : 0' % (testKey, testKey, testKey))
-        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=180)
+        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=300)
         response = 378
         print ('Using the same response %s for train and test (which should have a output value too)' % response)
         ntrees = 10
