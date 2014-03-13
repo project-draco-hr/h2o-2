@@ -1,0 +1,19 @@
+{
+  DocGen.HTML.section(sb,"Variable importance of input variables");
+  DocGen.HTML.arrayHead(sb);
+  Integer[] sortOrder=new Integer[varimp.length];
+  for (int i=0; i < sortOrder.length; i++)   sortOrder[i]=i;
+  Arrays.sort(sortOrder,new Comparator<Integer>(){
+    @Override public int compare(    Integer o1,    Integer o2){
+      float f=varimp[o1] - varimp[o2];
+      return f < 0 ? 1 : (f > 0 ? -1 : 0);
+    }
+  }
+);
+  if (variables != null)   DocGen.HTML.tableLine(sb,"Variable",variables,sortOrder);
+  if (varimp != null)   DocGen.HTML.tableLine(sb,method.toString(),varimp,sortOrder);
+  toHTMLAppendMoreTableLines(sb,sortOrder);
+  DocGen.HTML.arrayTail(sb);
+  DocGen.HTML.graph(sb,"graphvarimp","g_varimp",DocGen.HTML.toJSArray(new StringBuilder(),variables),DocGen.HTML.toJSArray(new StringBuilder(),varimp));
+  return sb;
+}
