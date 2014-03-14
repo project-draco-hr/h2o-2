@@ -35,7 +35,7 @@
     final double error=auc.err();
     Log.info(sb);
     Assert.assertEquals(new ConfusionMatrix(auc.cm()).err(),error,1e-15);
-    Assert.assertEquals(mymodel.calcError(frame,pred,"training",false,null,auc,null),error,1e-15);
+    Assert.assertEquals(mymodel.calcError(frame,pred,pred,"training",false,null,auc,null),error,1e-15);
     double CMerrorOrig;
 {
       sb=new StringBuilder();
