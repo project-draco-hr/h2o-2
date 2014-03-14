@@ -142,6 +142,10 @@
       }
     }
   }
+  if (model_info().get_params().variable_importances) {
+    final float[] varimp=model_info().computeVariableImportances();
+    new VarImp(varimp,Arrays.copyOfRange(model_info().data_info().coefNames(),0,varimp.length)).toHTML(sb);
+  }
   DocGen.HTML.title(sb,"Scoring history");
   if (errors.length > 1) {
 {
