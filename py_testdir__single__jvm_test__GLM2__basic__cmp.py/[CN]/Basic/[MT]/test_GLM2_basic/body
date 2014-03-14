@@ -1,0 +1,13 @@
+def test_GLM2_basic(self):
+    bucket = 'smalldata'
+    importFolderPath = 'logreg'
+    csvFilename = 'prostate.csv'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    L = 0.0001
+    do_h2o_glm(self, bucket, csvPathname, L)
+    if SCIPY_INSTALLED:
+        do_scipy_glm(self, bucket, csvPathname, L)
+    L = 1e-13
+    do_h2o_glm(self, bucket, csvPathname, L)
+    if SCIPY_INSTALLED:
+        do_scipy_glm(self, bucket, csvPathname, L)
