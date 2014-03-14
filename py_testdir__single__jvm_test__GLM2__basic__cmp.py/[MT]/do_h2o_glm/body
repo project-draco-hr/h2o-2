@@ -1,4 +1,4 @@
-def do_h2o_glm(self, bucket, csvPathname):
+def do_h2o_glm(self, bucket, csvPathname, L):
     h2p.red_print('\nNow doing h2o')
     h2o.beta_features = True
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='local', timeoutSecs=180)
@@ -9,7 +9,7 @@ def do_h2o_glm(self, bucket, csvPathname):
     y = 'CAPSULE'
     family = 'binomial'
     alpha = '0'
-    lambda_ = '1E-4'
+    lambda_ = L
     nfolds = '0'
     f = 'prostate'
     modelKey = ('GLM_' + f)
@@ -19,6 +19,8 @@ def do_h2o_glm(self, bucket, csvPathname):
     glmResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     (warnings, clist, intercept) = h2o_glm.simpleCheckGLM(self, glmResult, None, **kwargs)
     cstring = ''.join([('%.5e  ' % c) for c in clist])
+    h2p.green_print('h2o alpha ', alpha)
+    h2p.green_print('h2o lambda ', lambda_)
     h2p.green_print('h2o coefficient list:', cstring)
     h2p.green_print('h2o intercept', ('%.5e  ' % intercept))
     glm_model = glmResult['glm_model']

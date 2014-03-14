@@ -1,4 +1,4 @@
-def do_scipy_glm(self, bucket, csvPathname):
+def do_scipy_glm(self, bucket, csvPathname, L):
     h2p.red_print('Now doing sklearn')
     h2p.red_print('\nsee http://scikit-learn.org/0.11/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression')
     import numpy as np
@@ -6,7 +6,7 @@ def do_scipy_glm(self, bucket, csvPathname):
     from sklearn.linear_model import LogisticRegression
     from numpy import loadtxt
     csvPathnameFull = h2i.find_folder_and_filename(bucket, csvPathname, returnFullPath=True)
-    C = 10000.0
+    C = (1 / (L + 0.0))
     print 'C regularization:', C
     dataset = np.loadtxt(open(csvPathnameFull, 'r'), skiprows=1, delimiter=',', dtype='float')
     print '\ncsv read for training, done'
@@ -27,6 +27,7 @@ def do_scipy_glm(self, bucket, csvPathname):
     clf2.fit(train, target)
     print 'L2 fit took', (time.time() - start), 'seconds'
     cstring = ''.join([('%.5e  ' % c) for c in clf2.coef_[0]])
+    h2p.green_print('sklearn L2 C', C)
     h2p.green_print('sklearn coefficients:', cstring)
     h2p.green_print('sklearn intercept:', ('%.5e' % clf2.intercept_[0]))
     h2p.green_print('sklearn score:', clf2.score(train, target))
@@ -36,6 +37,7 @@ def do_scipy_glm(self, bucket, csvPathname):
     clf1.fit(train, target)
     print 'L1 fit took', (time.time() - start), 'seconds'
     cstring = ''.join([('%.5e  ' % c) for c in clf1.coef_[0]])
+    h2p.green_print('sklearn L1 C', C)
     h2p.green_print('sklearn coefficients:', cstring)
     h2p.green_print('sklearn intercept:', ('%.5e' % clf1.intercept_[0]))
     h2p.green_print('sklearn score:', clf1.score(train, target))
