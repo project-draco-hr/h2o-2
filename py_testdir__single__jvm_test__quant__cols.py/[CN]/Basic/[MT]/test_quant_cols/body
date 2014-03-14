@@ -27,7 +27,12 @@ def test_quant_cols(self):
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
         if (len(constantValuesDict) != 0):
             print ("Probably got a col NA'ed and constant values as a result %s" % constantValuesDict)
+        levels = h2o.nodes[0].levels(source=hex_key)
+        l = levels['levels']
         for column in range(iColCount, (iColCount + oColCount)):
+            if l[column]:
+                print 'Skipping', column, "because it's enum (says levels)"
+                continue
             quantile = (0.5 if DO_MEDIAN else 0.999)
             start = time.time()
             q = h2o.nodes[0].quantiles(source_key=hex_key, column=column, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
