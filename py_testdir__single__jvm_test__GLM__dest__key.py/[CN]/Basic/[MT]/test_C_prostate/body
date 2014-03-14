@@ -12,7 +12,7 @@ def test_C_prostate(self):
         x = ','.join(map(str, x))
         print '\nx:', x
         print 'y:', y
-        destination_key = 'GLM_model_$python_0_default_0'
+        destination_key = 'GLM_model_python_0_default_0'
         kwargs = {'x': x, 'y': y, 'n_folds': 5, 'destination_key': destination_key, }
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
         h2o_destination_key = glm['destination_key']
