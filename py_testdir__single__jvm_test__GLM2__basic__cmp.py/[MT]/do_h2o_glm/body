@@ -1,0 +1,43 @@
+def do_h2o_glm(self, bucket, csvPathname):
+    h2p.red_print('\nNow doing h2o')
+    h2o.beta_features = True
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='local', timeoutSecs=180)
+    inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+    print inspect
+    print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    x = 'ID'
+    y = 'CAPSULE'
+    family = 'binomial'
+    alpha = '0'
+    lambda_ = '1E-4'
+    nfolds = '0'
+    f = 'prostate'
+    modelKey = ('GLM_' + f)
+    kwargs = {'response': y, 'ignored_cols': x, 'family': family, 'lambda': lambda_, 'alpha': alpha, 'n_folds': nfolds, 'destination_key': modelKey, }
+    timeoutSecs = 60
+    start = time.time()
+    glmResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+    (warnings, clist, intercept) = h2o_glm.simpleCheckGLM(self, glmResult, None, **kwargs)
+    cstring = ''.join([('%.5e  ' % c) for c in clist])
+    h2p.green_print('h2o coefficient list:', cstring)
+    h2p.green_print('h2o intercept', ('%.5e  ' % intercept))
+    glm_model = glmResult['glm_model']
+    _names = glm_model['_names']
+    coefficients_names = glm_model['coefficients_names']
+    submodels = glm_model['submodels'][0]
+    beta = submodels['beta']
+    h2p.red_print('beta:', beta)
+    norm_beta = submodels['norm_beta']
+    iteration = submodels['iteration']
+    validation = submodels['validation']
+    avg_err = validation['avg_err']
+    auc = validation['auc']
+    aic = validation['aic']
+    null_deviance = validation['null_deviance']
+    residual_deviance = validation['residual_deviance']
+    print '_names', _names
+    print 'coefficients_names', coefficients_names
+    print 'beta', beta
+    print 'iteration', iteration
+    print 'avg_err', avg_err
+    print 'auc', auc

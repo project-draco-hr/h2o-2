@@ -1,0 +1,43 @@
+def do_scipy_glm(self, bucket, csvPathname):
+    h2p.red_print('Now doing sklearn')
+    h2p.red_print('\nsee http://scikit-learn.org/0.11/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression')
+    import numpy as np
+    import scipy as sp
+    from sklearn.linear_model import LogisticRegression
+    from numpy import loadtxt
+    csvPathnameFull = h2i.find_folder_and_filename(bucket, csvPathname, returnFullPath=True)
+    C = 10000.0
+    print 'C regularization:', C
+    dataset = np.loadtxt(open(csvPathnameFull, 'r'), skiprows=1, delimiter=',', dtype='float')
+    print '\ncsv read for training, done'
+    n_features = (len(dataset[0]) - 1)
+    print 'n_features:', n_features
+    target = [x[(-1)] for x in dataset]
+    train = np.array([x[:(-1)] for x in dataset])
+    (n_samples, n_features) = train.shape
+    print 'n_samples:', n_samples, 'n_features:', n_features
+    print 'histogram of target'
+    print sp.histogram(target, 3)
+    print 'len(train):', len(train)
+    print 'len(target):', len(target)
+    print 'dataset shape:', dataset.shape
+    print '\nTrying l2'
+    clf2 = LogisticRegression(C=C, dual=False, fit_intercept=True, intercept_scaling=1, penalty='l2', tol=0.0001)
+    start = time.time()
+    clf2.fit(train, target)
+    print 'L2 fit took', (time.time() - start), 'seconds'
+    cstring = ''.join([('%.5e  ' % c) for c in clf2.coef_[0]])
+    h2p.green_print('sklearn coefficients:', cstring)
+    h2p.green_print('sklearn intercept:', ('%.5e' % clf2.intercept_[0]))
+    h2p.green_print('sklearn score:', clf2.score(train, target))
+    print '\nTrying l1'
+    clf1 = LogisticRegression(C=C, dual=False, fit_intercept=True, intercept_scaling=1, penalty='l1', tol=0.0001)
+    start = time.time()
+    clf1.fit(train, target)
+    print 'L1 fit took', (time.time() - start), 'seconds'
+    cstring = ''.join([('%.5e  ' % c) for c in clf1.coef_[0]])
+    h2p.green_print('sklearn coefficients:', cstring)
+    h2p.green_print('sklearn intercept:', ('%.5e' % clf1.intercept_[0]))
+    h2p.green_print('sklearn score:', clf1.score(train, target))
+    dx = clf1.__dict__
+    dx.keys()
