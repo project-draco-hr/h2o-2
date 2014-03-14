@@ -21,6 +21,13 @@
     cm.toASCII(sb);
     error=isClassifier() ? new hex.ConfusionMatrix(cm.cm).err() : cm.mse;
   }
+  if (hr != null) {
+    hr.actual=ftest;
+    hr.vactual=ftest.lastVec();
+    hr.predict=fpreds;
+    hr.serve();
+    hr.toASCII(sb);
+  }
   if (printCM && (auc != null || cm.cm == null || cm.cm.length <= model_info().get_params().max_confusion_matrix_size)) {
     Log.info("Scoring on " + label + " data:");
     for (    String s : sb.toString().split("\n"))     Log.info(s);
