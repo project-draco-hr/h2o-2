@@ -1,6 +1,6 @@
 def test_quantile_cmp_uniform(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(5000000, 1, 'x.hex', 1, 20000, ('C1', 1.1, 5000.0, 10000.0, 15000.0, 20000.0)), (5000000, 1, 'x.hex', (-5000), 0, ('C1', (-5001.0), (-3750.0), (-2445), (-1200.0), 99)), (1000000, 1, 'x.hex', (-100000), 100000, ('C1', (-100001.0), (-50000.0), 1613.0, 50000.0, 100000.0)), (1000000, 1, 'x.hex', (-1), 1, ('C1', (-1.05), (-0.48), 0.0087, 0.5, 1.0)), (1000000, 1, 'A.hex', 1, 100, ('C1', 1.05, 26.0, 51.0, 76.0, 100.0)), (1000000, 1, 'A.hex', (-99), 99, ('C1', (-99), (-50.0), 0, 50.0, 99)), (1000000, 1, 'B.hex', 1, 10000, ('C1', 1.05, 2501.0, 5001.0, 7501.0, 10000.0)), (1000000, 1, 'B.hex', (-100), 100, ('C1', (-100.1), (-50.0), 0.85, 51.7, 100, 0)), (1000000, 1, 'C.hex', 1, 100000, ('C1', 1.05, 25002.0, 50002.0, 75002.0, 100000.0)), (1000000, 1, 'C.hex', (-101), 101, ('C1', (-100.1), (-50.45), (-1.18), 49.28, 100.0))]
+    tryList = [(500000, 1, 'x.hex', 1, 20000, ('C1', 1.1, 5000.0, 10000.0, 15000.0, 20000.0)), (500000, 1, 'x.hex', (-5000), 0, ('C1', (-5001.0), (-3750.0), (-2445), (-1200.0), 99)), (100000, 1, 'x.hex', (-100000), 100000, ('C1', (-100001.0), (-50000.0), 1613.0, 50000.0, 100000.0)), (100000, 1, 'x.hex', (-1), 1, ('C1', (-1.05), (-0.48), 0.0087, 0.5, 1.0)), (100000, 1, 'A.hex', 1, 100, ('C1', 1.05, 26.0, 51.0, 76.0, 100.0)), (100000, 1, 'A.hex', (-99), 99, ('C1', (-99), (-50.0), 0, 50.0, 99)), (100000, 1, 'B.hex', 1, 10000, ('C1', 1.05, 2501.0, 5001.0, 7501.0, 10000.0)), (100000, 1, 'B.hex', (-100), 100, ('C1', (-100.1), (-50.0), 0.85, 51.7, 100, 0)), (100000, 1, 'C.hex', 1, 100000, ('C1', 1.05, 25002.0, 50002.0, 75002.0, 100000.0)), (100000, 1, 'C.hex', (-101), 101, ('C1', (-100.1), (-50.45), (-1.18), 49.28, 100.0))]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -37,8 +37,8 @@ def test_quantile_cmp_uniform(self):
         stattype = stats['type']
         mean = stats['mean']
         sd = stats['sd']
-        print 'colname:', colname, 'mean (2 places):', twoDecimals(mean)
-        print 'colname:', colname, 'std dev. (2 places):', twoDecimals(sd)
+        print 'colname:', colname, 'mean (2 places):', h2o_util.twoDecimals(mean)
+        print 'colname:', colname, 'std dev. (2 places):', h2o_util.twoDecimals(sd)
         zeros = stats['zeros']
         mins = stats['mins']
         h2o_util.assertApproxEqual(mins[0], expected[1], tol=maxDelta, msg='min is not approx. expected')
@@ -59,10 +59,9 @@ def test_quantile_cmp_uniform(self):
         print 'len(hcnt)', len(hcnt)
         for b in hcnt[1:(-1)]:
             e = (numRows / len(hcnt))
-            self.assertAlmostEqual(b, (rowCount / len(hcnt)), delta=(0.01 * rowCount), msg=('Bins not right. b: %s e: %s' % (b, e)))
-        pt = twoDecimals(pctile)
-        mx = twoDecimals(maxs)
-        mn = twoDecimals(mins)
+        pt = h2o_util.twoDecimals(pctile)
+        mx = h2o_util.twoDecimals(maxs)
+        mn = h2o_util.twoDecimals(mins)
         print 'colname:', colname, 'pctile (2 places):', pt
         print 'colname:', colname, 'maxs: (2 places):', mx
         print 'colname:', colname, 'mins: (2 places):', mn
@@ -73,12 +72,14 @@ def test_quantile_cmp_uniform(self):
         trial += 1
         h2p.blue_print('\nTrying exec quantile')
         print 'Comparing (two places) each of the summary2 threshold quantile results, to single exec quantile'
-        for (i, trial) in enumerate(thresholds):
-            execExpr = ('quantile(%s[,1], c(%s));' % (hex_key, trial))
+        for (i, threshold) in enumerate(thresholds):
+            execExpr = ('quantile(%s[,1], c(%s));' % (hex_key, threshold))
             (resultExec, result) = h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
             h2p.green_print(('\nresultExec: %s' % h2o.dump_json(resultExec)))
-            ex = twoDecimals(result)
-            h2p.blue_print(('\nthreshold: %.2f Exec quantile: %s Summary2: %s' % (trial, ex, pt[i])))
-            h2o_util.assertApproxEqual(result, pctile[i], tol=maxDelta, msg=('percentile: % is not expected: %s' % (result, pctile[i])))
-        if DO_TRY_SCIPY:
-            generate_scipy_comparison(csvPathnameFull)
+            h2p.blue_print(('\nthreshold: %.2f Exec quantile: %s Summary2: %s' % (threshold, result, pt[i])))
+            if (not result):
+                raise Exception(('exec result: %s for quantile: %s is bad' % (result, threshold)))
+            h2o_util.assertApproxEqual(result, pctile[i], tol=maxDelta, msg=('exec percentile: %s too different from expected: %s' % (result, pctile[i])))
+        if (colname != ''):
+            h2o_summ.quantile_comparisons(csvPathnameFull, col=0, datatype='float', quantile=thresholds[(-1)], h2oSummary2=pctile[(-1)], h2oExecQuantilesApprox=result)
+        h2o.nodes[0].remove_all_keys()

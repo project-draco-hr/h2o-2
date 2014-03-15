@@ -1,0 +1,17 @@
+import unittest, random, sys, time
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i, h2o_exec, h2o_glm, h2o_jobs
+import h2o_print as h2p
+SCIPY_INSTALLED = True
+try:
+    import scipy as sp
+    import numpy as np
+    import sklearn as sk
+    import statsmodels as sm
+    import statsmodels.api as sm_api
+    print 'numpy, scipy and sklearn are installed. Will do extra checks'
+except ImportError:
+    print 'numpy, sklearn, or statsmodels  is not installed. Will just do h2o stuff'
+    SCIPY_INSTALLED = False
+if (__name__ == '__main__'):
+    h2o.unit_main()

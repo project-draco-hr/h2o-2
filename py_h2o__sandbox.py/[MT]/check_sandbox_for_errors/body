@@ -58,6 +58,7 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
         justInfo = True
         for e in errLines:
             justInfo &= (re.match('INFO:', e) or ('apache' in e))
+            justInfo |= ('java.net.SocketException: Broken pipe' in e)
         if (not justInfo):
             emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr (or R stdout/stderr).\n' + 'Could have occurred at any prior time\n\n')
             emsg2 = ''.join(errLines)

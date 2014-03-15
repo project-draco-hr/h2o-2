@@ -1,0 +1,46 @@
+def test_GLM2_mnist(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilelist = [(10000, 500, 'cA', 60)]
+    trial = 0
+    for (rowCount, colCount, hex_key, timeoutSecs) in csvFilelist:
+        trialStart = time.time()
+        csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        write_syn_dataset(csvPathname, rowCount, colCount)
+        start = time.time()
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
+        elapsed = (time.time() - start)
+        print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        modelKey = 'GLM_model'
+        y = colCount
+        kwargs = {'response': ('C' + str((y + 1))), 'family': 'binomial', 'lambda': 0.0001, 'alpha': 0, 'max_iter': 15, 'n_folds': 1, 'beta_epsilon': 0.0001, 'destination_key': modelKey, }
+        execExpr = ('aHack=%s; aHack[,%s] = aHack[,%s]==1' % (hex_key, (y + 1), (y + 1)))
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        aHack = {'destination_key': 'aHack', }
+        timeoutSecs = 1800
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=aHack, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, **kwargs)
+        elapsed = (time.time() - start)
+        print 'GLM completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
+        modelKey = glm['glm_model']['_key']
+        lambdaMax = glm['glm_model']['lambda_max']
+        print 'lambdaMax:', lambdaMax
+        best_threshold = glm['glm_model']['submodels'][0]['validation']['best_threshold']
+        print 'best_threshold', best_threshold
+        cm = glm['glm_model']['submodels'][0]['validation']['_cms'][5]['_arr']
+        print 'cm:', cm
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        print '\nTrain\n==========\n'
+        print h2o_gbm.pp_cm(cm)
+        print '\nPredict\n==========\n'
+        predictKey = 'Predict.hex'
+        start = time.time()
+        predictResult = h2o_cmd.runPredict(data_key='aHack', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='aHack', vactual=('C' + str((y + 1))), predict=predictKey, vpredict='predict')
+        cm = predictCMResult['cm']
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        self.assertLess(pctWrong, 50, 'Should see less than 50% error')
+        print '\nTest\n==========\n'
+        print h2o_gbm.pp_cm(cm)
