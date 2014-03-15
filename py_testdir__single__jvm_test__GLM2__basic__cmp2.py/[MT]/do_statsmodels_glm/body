@@ -1,0 +1,33 @@
+def do_statsmodels_glm(self, bucket, csvPathname, L, family='gaussian'):
+    h2p.red_print('Now doing statsmodels')
+    h2p.red_print('http://statsmodels.sourceforge.net/devel/glm.html#module-reference')
+    h2p.red_print('http://statsmodels.sourceforge.net/devel/generated/statsmodels.genmod.generalized_linear_model.GLM.html')
+    import numpy as np
+    import scipy as sp
+    from numpy import loadtxt
+    import statsmodels as sm
+    csvPathnameFull = h2i.find_folder_and_filename(bucket, csvPathname, returnFullPath=True)
+    if (1 == 1):
+        dataset = np.loadtxt(open(csvPathnameFull, 'r'), skiprows=1, delimiter=',', dtype='float')
+    if (1 == 0):
+        f = (open(csvPathnameFull, 'r'),)
+        np.genfromtxt((','.join(ln.split()[1:]) for ln in f), skiprows=1, delimiter=',', dtype='float')
+    print '\ncsv read for training, done'
+    n_features = (len(dataset[0]) - 1)
+    print 'n_features:', n_features
+    target = [x[1] for x in dataset]
+    train = np.array([x[2:] for x in dataset])
+    (n_samples, n_features) = train.shape
+    print 'n_samples:', n_samples, 'n_features:', n_features
+    print 'histogram of target'
+    print sp.histogram(target, 3)
+    print 'len(train):', len(train)
+    print 'len(target):', len(target)
+    print 'dataset shape:', dataset.shape
+    if (family != 'gaussian'):
+        raise Exception('Only have gaussian logistic for scipy')
+    gauss_log = sm_api.GLM(target, train, family=sm_api.families.Gaussian(sm_api.families.links.log))
+    start = time.time()
+    gauss_log_results = gauss_log.fit()
+    print 'sm_api.GLM took', (time.time() - start), 'seconds'
+    print gauss_log_results.summary()

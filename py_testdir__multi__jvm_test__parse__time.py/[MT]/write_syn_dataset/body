@@ -1,8 +1,8 @@
-def write_syn_dataset(csvPathname, rowCount, headerData=None, rowData=None):
+def write_syn_dataset(csvPathname, rowCount, colCount, headerData=None):
     dsf = open(csvPathname, 'w+')
     if (headerData is not None):
         dsf.write((headerData + '\n'))
-    if (rowData is not None):
-        for i in range(rowCount):
-            dsf.write((rowData + '\n'))
+    for i in range(rowCount):
+        rowData = rand_rowData(colCount)
+        dsf.write((rowData + '\n'))
     dsf.close()

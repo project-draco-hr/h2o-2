@@ -1,4 +1,4 @@
-def do_scipy_glm(self, bucket, csvPathname, L):
+def do_scipy_glm(self, bucket, csvPathname, L, family='binomial'):
     h2p.red_print('Now doing sklearn')
     h2p.red_print('\nsee http://scikit-learn.org/0.11/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression')
     import numpy as np
@@ -12,8 +12,8 @@ def do_scipy_glm(self, bucket, csvPathname, L):
     print '\ncsv read for training, done'
     n_features = (len(dataset[0]) - 1)
     print 'n_features:', n_features
-    target = [x[(-1)] for x in dataset]
-    train = np.array([x[:(-1)] for x in dataset])
+    target = [x[1] for x in dataset]
+    train = np.array([x[2:] for x in dataset])
     (n_samples, n_features) = train.shape
     print 'n_samples:', n_samples, 'n_features:', n_features
     print 'histogram of target'
@@ -21,6 +21,8 @@ def do_scipy_glm(self, bucket, csvPathname, L):
     print 'len(train):', len(train)
     print 'len(target):', len(target)
     print 'dataset shape:', dataset.shape
+    if (family != 'binomial'):
+        raise Exception('Only have binomial logistic for scipy')
     print '\nTrying l2'
     clf2 = LogisticRegression(C=C, dual=False, fit_intercept=True, intercept_scaling=1, penalty='l2', tol=0.0001)
     start = time.time()

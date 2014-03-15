@@ -42,9 +42,9 @@ def test_GLM_umass(self):
         print 'col_names:', col_names
         print 'x:', x
         if h2o.beta_features:
-            kwargs = {'n_folds': 0, 'response': y, 'family': family, 'alpha': 0, 'lambda': 0.5, 'beta_epsilon': 0.0001, 'max_iter': 50, }
+            kwargs = {'n_folds': 0, 'response': y, 'family': family, 'alpha': 0, 'lambda': 0.0001, 'beta_epsilon': 0.0001, 'max_iter': 50, }
         else:
-            kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'alpha': 0, 'lambda': 0.5, 'beta_epsilon': 0.0001, 'max_iter': 50, }
+            kwargs = {'n_folds': 0, 'y': y, 'x': x, 'family': family, 'alpha': 0, 'lambda': 0.0001, 'beta_epsilon': 0.0001, 'max_iter': 50, }
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'glm end (w/check) on ', csvPathname2, 'took', (time.time() - start), 'seconds'

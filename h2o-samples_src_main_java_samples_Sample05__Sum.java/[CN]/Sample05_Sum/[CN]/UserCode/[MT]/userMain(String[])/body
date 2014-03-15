@@ -1,0 +1,9 @@
+{
+  H2O.main(args);
+  Key file=NFSFileVec.make(new File("lib/resources/datasets/gaussian.csv"));
+  Frame frame=ParseDataset2.parse(Key.make("test"),new Key[]{file});
+  Sum task=new Sum();
+  task.doAll(frame);
+  System.out.println("Sum is " + task.getSum());
+  System.exit(0);
+}

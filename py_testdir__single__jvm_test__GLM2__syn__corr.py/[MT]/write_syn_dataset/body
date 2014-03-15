@@ -1,0 +1,15 @@
+def write_syn_dataset(csvPathname, rowCount=100, colCount=10):
+    corr = 1.0
+    n_samples = rowCount
+    n_features = colCount
+    np.random.seed(0)
+    X = np.random.randn(n_samples, n_features)
+    w = np.random.randn(n_features)
+    y = np.sign(X.dot(w))
+    X += (0.8 * np.random.randn(n_samples, n_features))
+    X += corr
+    print X.shape
+    print y.shape
+    y2 = np.reshape(y, (X.shape[0], 1))
+    Xy = np.hstack((X, y2))
+    np.savetxt(csvPathname, Xy, delimiter=',', fmt='%5.4f')

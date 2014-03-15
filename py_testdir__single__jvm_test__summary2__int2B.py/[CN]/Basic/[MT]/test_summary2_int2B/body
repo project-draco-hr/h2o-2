@@ -64,7 +64,6 @@ def test_summary2_int2B(self):
         print 'len(hcnt)', len(hcnt)
         for b in hcnt[1:(-1)]:
             e = (numRows / len(hcnt))
-            self.assertAlmostEqual(b, (rowCount / len(hcnt)), delta=(0.01 * rowCount), msg=('Bins not right. b: %s e: %s' % (b, e)))
         pt = h2o_util.twoDecimals(pctile)
         mx = h2o_util.twoDecimals(maxs)
         mn = h2o_util.twoDecimals(mins)
