@@ -1,4 +1,5 @@
 def test_parse_time(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilename = 'syn_time.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
@@ -16,13 +17,12 @@ def test_parse_time(self):
         inspect = h2o_cmd.runInspect(key=hex_key)
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
         print 'missingValuesListA', missingValuesListA
-        num_colsA = inspect['num_cols']
-        num_rowsA = inspect['num_rows']
-        row_sizeA = inspect['row_size']
-        value_size_bytesA = inspect['value_size_bytes']
+        numColsA = inspect['numCols']
+        numRowsA = inspect['numRows']
+        byteSizeA = inspect['byteSize']
         self.assertEqual(missingValuesListA, [], 'missingValuesList should be empty')
-        self.assertEqual(num_colsA, colCount)
-        self.assertEqual(num_rowsA, rowCount)
+        self.assertEqual(numColsA, colCount)
+        self.assertEqual(numRowsA, rowCount)
         csvDownloadPathname = (SYNDATASETS_DIR + '/csvDownload.csv')
         h2o.nodes[0].csv_download(src_key=hex_key, csvPathname=csvDownloadPathname)
         h2o.nodes[0].remove_key(hex_key)
@@ -32,16 +32,13 @@ def test_parse_time(self):
         inspect = h2o_cmd.runInspect(key=hex_key)
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
         print 'missingValuesListB', missingValuesListB
-        num_colsB = inspect['num_cols']
-        num_rowsB = inspect['num_rows']
-        row_sizeB = inspect['row_size']
-        value_size_bytesB = inspect['value_size_bytes']
+        numColsB = inspect['numCols']
+        numRowsB = inspect['numRows']
+        byteSizeB = inspect['byteSize']
         self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
-        self.assertEqual(num_colsA, num_colsB, 'num_cols mismatches after re-parse of downloadCsv result')
-        self.assertEqual(num_rowsA, num_rowsB, ('num_rowsA: %s num_rowsB: %s mismatch after re-parse of downloadCsv result' % (num_rowsA, num_rowsB)))
+        self.assertEqual(numColsA, numColsB, 'numCols mismatches after re-parse of downloadCsv result')
+        self.assertEqual(numRowsA, numRowsB, ('numRowsA: %s numRowsB: %s mismatch after re-parse of downloadCsv result' % (numRowsA, numRowsB)))
         print 'H2O writes the internal format (number) out for time.'
-        print "So don't do the row_size and value_size comparisons."
         if (1 == 0):
-            self.assertEqual(row_sizeA, row_sizeB, ('row_size wrong after re-parse of downloadCsv result %d %d' % (row_sizeA, row_sizeB)))
-            self.assertEqual(value_size_bytesA, value_size_bytesB, ('value_size_bytes mismatches after re-parse of downloadCsv result %d %d' % (value_size_bytesA, value_size_bytesB)))
+            self.assertEqual(byteSizeA, byteSizeB, ('byteSize mismatches after re-parse of downloadCsv result %d %d' % (byteSizeA, byteSizeB)))
         h2o.check_sandbox_for_errors()
