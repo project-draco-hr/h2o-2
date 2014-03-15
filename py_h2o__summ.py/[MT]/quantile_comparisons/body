@@ -77,7 +77,7 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
             if (interpolate == 'mean'):
                 h2o_util.assertApproxEqual(h2oQuantilesApprox, s2, rel=0.01, msg='h2o quantile singlepass is not approx. same as scipy stats.mstats.mquantiles')
             else:
-                h2o_util.assertApproxEqual(h2oQuantilesApprox, s2, tol=2e-07, msg='h2o quantile singlepass is not same as scipy stats.mstats.mquantiles')
+                h2o_util.assertApproxEqual(h2oQuantilesApprox, s2, rel=0.01, msg='h2o quantile singlepass is not same as scipy stats.mstats.mquantiles')
         if (1 == 0):
             a = stats.mstats.mquantiles(targetFP, prob=quantile, alphap=alphap, betap=betap)
             h2p.red_print('after sort')

@@ -66,7 +66,7 @@ def test_summary2_uniform(self):
         print 'pct:', pct
         print 'hcnt:', hcnt
         print 'len(hcnt)', len(hcnt)
-        for b in hcnt[1:(-1)]:
+        for b in hcnt[1:((-2) if (len(hcnt) > 2) else (-1))]:
             e = (numRows / len(hcnt))
             self.assertAlmostEqual(b, (rowCount / len(hcnt)), delta=(0.01 * rowCount), msg=('Bins not right. b: %s e: %s' % (b, e)))
         pt = h2o_util.twoDecimals(pctile)

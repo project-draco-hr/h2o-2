@@ -15,12 +15,6 @@
   Futures fs=new Futures();
   for (  Vec vec : vecs) {
     vec.rollupStats(fs);
-    double vmax=vec.max();
-    double vmin=vec.min();
-    double vmean=vec.mean();
-    double vsigma=vec.sigma();
-    long vnaCnt=vec.naCnt();
-    boolean visInt=vec.isInt();
   }
   fs.blockForPending();
   double valStart=vecs[0].min();
