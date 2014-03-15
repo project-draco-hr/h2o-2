@@ -6,7 +6,7 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
         print 'Both numpy and scipy are installed. Will do extra checks'
     except ImportError:
         print 'numpy or scipy is not installed. Will only do sort-based checking'
-        SCIPY_INSTALLED = false
+        SCIPY_INSTALLED = False
     if use_genfromtxt:
         print 'Using numpy.genfromtxt. Better handling of null bytes'
         target = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=(1 if skipHeader else 0), dtype=None)
