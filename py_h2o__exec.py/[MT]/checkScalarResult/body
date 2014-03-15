@@ -23,7 +23,7 @@ def checkScalarResult(resultExec, resultKey, allowEmptyResult=False):
         raise Exception(('exec result (resultExec) missing what we expected. Look at json above. ' + emsg))
     if ((cols and ((not num_rows) or (num_rows == 0))) and (not allowEmptyResult)):
         print 'resultExec[0]:', h2o.dump_json(resultExec)
-        raise Exception(('checkScalarResult says cols, but num_rows is 0 or None %s' % num_rows))
+        raise Exception((("checkScalarResult says 'cols' exist in exec json response," + " but num_rows: %s is 0 or None. Is that an expected 'empty' key state?") + (" Use 'allowEmptyResult if so." % num_rows)))
     if (not cols):
         scalar = resultExec['scalar']
         if (scalar is None):
