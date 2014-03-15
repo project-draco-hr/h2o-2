@@ -13,6 +13,7 @@
     }
     Key keys[]=new Vec.VectorGroup().addVecs(vecs.length);
     final long rows_per_new_chunk=(long)(Math.ceil((double)fr.numRows() / splits));
+    Futures fs=new Futures();
     for (int col=0; col < vecs.length; col++) {
       AppendableVec vec=new AppendableVec(keys[col]);
       NewChunk[] outCkg=new NewChunk[splits];
@@ -26,11 +27,12 @@
           outCkg[outCkgIdx].addNum(inCkg.at0(row));
         }
       }
-      for (int i=0; i < outCkg.length; ++i)       outCkg[i].close(i,null);
-      Vec t=vec.close(null);
+      for (int i=0; i < outCkg.length; ++i)       outCkg[i].close(i,fs);
+      Vec t=vec.close(fs);
       t._domain=vecs[col]._domain;
       vecs[col]=t;
     }
+    fs.blockForPending();
     Log.info("Load balancing done.");
   }
   fr.reloadVecs();
