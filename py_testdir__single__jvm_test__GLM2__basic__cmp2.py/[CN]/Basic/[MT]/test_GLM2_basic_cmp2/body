@@ -1,0 +1,19 @@
+def test_GLM2_basic_cmp2(self):
+    if (1 == 1):
+        bucket = 'smalldata'
+        importFolderPath = 'logreg'
+        csvFilename = 'prostate.csv'
+    if (1 == 0):
+        bucket = 'home-0xdiag-datasets'
+        importFolderPath = 'standard'
+        csvFilename = 'covtype.data'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    family = 'gaussian'
+    L = 0.0001
+    do_h2o_glm(self, bucket, csvPathname, L, family)
+    if SCIPY_INSTALLED:
+        do_statsmodels_glm(self, bucket, csvPathname, L, family)
+    L = 0
+    do_h2o_glm(self, bucket, csvPathname, L, family)
+    if SCIPY_INSTALLED:
+        do_statsmodels_glm(self, bucket, csvPathname, L, family)
