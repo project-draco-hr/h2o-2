@@ -40,6 +40,7 @@
   }
   if (Utils.minValue(dist) == 0) {
     Log.info("Re-doing stratified sampling because not all classes were represented (unlucky draw).");
+    r.delete();
     return sampleFrameStratified(fr,label,sampling_ratios,seed + 1,debug);
   }
   Frame shuffled=shuffleFramePerChunk(r,seed + 0x580FF13);
