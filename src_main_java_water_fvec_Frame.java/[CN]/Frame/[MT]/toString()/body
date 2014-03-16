@@ -12,7 +12,7 @@
   if (v0 == null)   return s;
   int nc=v0.nChunks();
   s+="Chunk starts: {";
-  for (int i=0; i < nc; i++)   s+=v0.elem2BV(i)._start + ",";
+  for (int c=0; c < nc; c++)   s+=v0.chunk2StartElem(c) + ",";
   s+="}";
   return s;
 }

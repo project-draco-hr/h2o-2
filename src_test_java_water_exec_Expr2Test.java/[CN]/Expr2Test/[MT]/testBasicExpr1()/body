@@ -48,6 +48,7 @@
     checkStr("x=mean(c(\n3))",3);
     checkStr("x=mean+3","Arg 'x' typed as dblary but passed dbl(ary)\n" + "x=mean+3\n" + "  ^-----^\n");
     checkStr("apply(c(1,2,3),,nrow)","Missing argument\napply(c(1,2,3),,nrow)\n               ^\n");
+    checkStr("foo==bar","Unknown var foo\nfoo==bar\n^--^\n");
     checkStr("h.hex");
     checkStr("h.hex[2,3]",1);
     checkStr("h.hex[2,+]","Must be scalar or array\n" + "h.hex[2,+]\n" + "        ^-^\n");

@@ -1,8 +1,0 @@
-{
-  int ncols=env.peekAry().numCols();
-  env.push(new Frame(new String[]{"c"},new Vec[]{Vec.makeSeq(ncols)}));
-  env.push(new ASTNrow());
-  super.apply(env,4);
-  Frame fru=env.peekAry();
-  env.subRef(fru.remove(fru.numCols() - 1),null);
-}

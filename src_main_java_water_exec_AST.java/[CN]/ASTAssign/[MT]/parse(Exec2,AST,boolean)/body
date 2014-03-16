@@ -1,11 +1,6 @@
 {
   int x=E._x;
-  if (!E.peek('=',EOS)) {
-    if (!(E.peek('<',EOS) && E.peek('-',EOS))) {
-      E._x=x;
-      return null;
-    }
-  }
+  if (!E.isAssign(EOS))   return null;
   AST ast2=ast;
   ASTSlice slice=null;
   if ((ast instanceof ASTSlice))   ast2=(slice=(ASTSlice)ast)._ast;

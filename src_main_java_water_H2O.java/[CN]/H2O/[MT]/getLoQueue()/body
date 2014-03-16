@@ -1,3 +1,6 @@
 {
-  return FJP_NORM.getQueuedSubmissionCount();
+  int sum=0;
+  for (int i=0; i < MIN_HI_PRIORITY; i++)   if (FJPS[i] != null)   sum+=FJPS[i].getQueuedSubmissionCount();
+ else   break;
+  return sum;
 }
