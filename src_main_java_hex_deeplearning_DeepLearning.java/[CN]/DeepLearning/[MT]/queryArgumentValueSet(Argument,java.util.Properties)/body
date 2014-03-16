@@ -27,11 +27,6 @@
     arg.disable("Using MeanSquare loss for regression.",inputArgs);
     loss=Loss.MeanSquare;
   }
-  if (H2O.CLOUD.size() > 1) {
-    if (arg._name.equals("seed")) {
-      arg.disable("Only for single-node operation.");
-    }
-  }
   if (classification) {
     if (arg._name.equals("regression_stop")) {
       arg.disable("Only for regression.",inputArgs);
