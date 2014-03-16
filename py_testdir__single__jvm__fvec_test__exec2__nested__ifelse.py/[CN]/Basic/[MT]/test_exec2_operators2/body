@@ -6,7 +6,6 @@ def test_exec2_operators2(self):
     for (resultKey, execExpr) in initList:
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=4)
     start = time.time()
-    h2e.exec_expr_list_rand(len(h2o.nodes), exprList, None, maxTrials=200, timeoutSecs=10)
     for execExpr in exprList:
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)
     h2o.check_sandbox_for_errors()
