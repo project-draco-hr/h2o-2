@@ -72,14 +72,24 @@ def test_quantile_cmp_uniform(self):
         trial += 1
         h2p.blue_print('\nTrying exec quantile')
         print 'Comparing (two places) each of the summary2 threshold quantile results, to single exec quantile'
+        h2o.beta_features = True
         for (i, threshold) in enumerate(thresholds):
-            execExpr = ('quantile(%s[,1], c(%s));' % (hex_key, threshold))
-            (resultExec, result) = h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-            h2p.green_print(('\nresultExec: %s' % h2o.dump_json(resultExec)))
-            h2p.blue_print(('\nthreshold: %.2f Exec quantile: %s Summary2: %s' % (threshold, result, pt[i])))
-            if (not result):
-                raise Exception(('exec result: %s for quantile: %s is bad' % (result, threshold)))
-            h2o_util.assertApproxEqual(result, pctile[i], tol=maxDelta, msg=('exec percentile: %s too different from expected: %s' % (result, pctile[i])))
+            if (i != 0):
+                execExpr = ('r2=c(1); r2=quantile(%s[,1], c(%s));' % (hex_key, threshold))
+                (resultExec, result) = h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+                h2p.green_print(('\nresultExec: %s' % h2o.dump_json(resultExec)))
+                h2p.blue_print(('\nthreshold: %.2f Exec quantile: %s Summary2: %s' % (threshold, result, pt[i])))
+                if (not result):
+                    raise Exception(('exec result: %s for quantile: %s is bad' % (result, threshold)))
+                h2o_util.assertApproxEqual(result, pctile[i], tol=maxDelta, msg=('exec percentile: %s too different from expected: %s' % (result, pctile[i])))
+            else:
+                execExpr = ('r2=c(1); r2=quantile(%s[,1], c(%s));' % (hex_key, ','.join(map(str, thresholds))))
+                (resultExec, result) = h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+                inspect = h2o_cmd.runInspect(key='r2')
+                numCols = inspect['numCols']
+                numRows = inspect['numRows']
+                self.assertEqual(numCols, 1)
+                self.assertEqual(numRows, len(thresholds))
         if (colname != ''):
             h2o_summ.quantile_comparisons(csvPathnameFull, col=0, datatype='float', quantile=thresholds[(-1)], h2oSummary2=pctile[(-1)], h2oExecQuantilesApprox=result)
         h2o.nodes[0].remove_all_keys()
