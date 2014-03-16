@@ -46,7 +46,6 @@
     do     model.set_model_info(new DeepLearningTask(model.model_info(),sync_fraction).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,timeStart,self()));
     Log.info("Finished training the Deep Learning model.");
-    emptyLTrash();
     return model;
   }
  catch (  JobCancelledException ex) {
@@ -61,5 +60,6 @@ catch (  Exception ex) {
  finally {
     if (model != null)     model.unlock(self());
     unlock_data();
+    emptyLTrash();
   }
 }
