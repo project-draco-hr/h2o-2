@@ -33,8 +33,8 @@ def test_summary2_exp(self):
         percentiles1 = summary1Result['summary']['columns'][0]['percentiles']
         thresholds1 = percentiles1['thresholds']
         values1 = percentiles1['values']
-        print 'Summary1 thresholds', twoDecimals(thresholds1)
-        print 'Summary1 values', twoDecimals(values1)
+        print 'Summary1 thresholds', h2o_util.twoDecimals(thresholds1)
+        print 'Summary1 values', h2o_util.twoDecimals(values1)
         h2o.beta_features = True
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
         h2o.verboseprint('Summary2 summaryResult:', h2o.dump_json(summaryResult))
@@ -46,8 +46,8 @@ def test_summary2_exp(self):
         stattype = stats['type']
         mean = stats['mean']
         sd = stats['sd']
-        print 'colname:', colname, 'mean (2 places):', twoDecimals(mean)
-        print 'colname:', colname, 'std dev. (2 places):', twoDecimals(sd)
+        print 'colname:', colname, 'mean (2 places):', h2o_util.twoDecimals(mean)
+        print 'colname:', colname, 'std dev. (2 places):', h2o_util.twoDecimals(sd)
         zeros = stats['zeros']
         mins = stats['mins']
         maxs = stats['maxs']
@@ -75,9 +75,9 @@ def test_summary2_exp(self):
         print 'hcnt:', hcnt
         print 'len(hcnt)', len(hcnt)
         print "Can't estimate the bin distribution"
-        pt = twoDecimals(pctile)
-        mx = twoDecimals(maxs)
-        mn = twoDecimals(mins)
+        pt = h2o_util.twoDecimals(pctile)
+        mx = h2o_util.twoDecimals(maxs)
+        mn = h2o_util.twoDecimals(mins)
         print 'colname:', colname, 'pctile (2 places):', pt
         print 'colname:', colname, 'maxs: (2 places):', mx
         print 'colname:', colname, 'mins: (2 places):', mn
@@ -88,6 +88,5 @@ def test_summary2_exp(self):
         trial += 1
         h2o.nodes[0].remove_all_keys()
         scipyCol = 0
-        if (DO_TRY_SCIPY and (colname != '')):
-            print scipyCol, pctile[10]
-            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)], h2o1Median=values1[(5 if DO_MEDIAN else 10)])
+        if ((colname != '') and expected[scipyCol]):
+            h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oSummary2=pctile[(5 if DO_MEDIAN else 10)])

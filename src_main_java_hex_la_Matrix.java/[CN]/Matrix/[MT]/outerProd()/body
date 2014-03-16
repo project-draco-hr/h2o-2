@@ -1,12 +1,22 @@
 {
+  int xrows=(int)_x.numRows();
+  int xcols=_x.numCols();
   Vec[] x_vecs=_x.vecs();
-  Vec[] output=new Vec[(int)_x.numRows()];
-  for (int i=0; i < _x.numRows(); i++) {
-    for (int j=0; j < _x.numRows(); j++) {
+  for (int j=0; j < xcols; j++) {
+    if (x_vecs[j].isEnum())     throw new IllegalArgumentException("Multiplication not meaningful for factor column " + j);
+  }
+  Vec[] output=new Vec[xrows];
+  String[] names=new String[xrows];
+  for (int i=0; i < xrows; i++) {
+    output[i]=Vec.makeSeq(xrows);
+    names[i]="C" + String.valueOf(i + 1);
+  }
+  for (int i=0; i < xrows; i++) {
+    for (int j=0; j < xrows; j++) {
       double d=0;
-      for (int k=0; k < _x.numCols(); k++)       d+=x_vecs[k].at(i) * x_vecs[k].at(k);
+      for (int k=0; k < xcols; k++)       d+=x_vecs[k].at(i) * x_vecs[k].at(k);
       output[j].set(i,d);
     }
   }
-  return new Frame(output);
+  return new Frame(names,output);
 }

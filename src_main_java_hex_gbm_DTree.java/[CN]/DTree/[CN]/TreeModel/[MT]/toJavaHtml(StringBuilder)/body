@@ -1,7 +1,7 @@
 {
   if (treeStats == null)   return;
   sb.append("<br /><br /><div class=\"pull-right\"><a href=\"#\" onclick=\'$(\"#javaModel\").toggleClass(\"hide\");\'" + "class=\'btn btn-inverse btn-mini\'>Java Model</a></div><br /><div class=\"hide\" id=\"javaModel\">" + "<pre style=\"overflow-y:scroll;\"><code class=\"language-java\">");
-  if (numTrees() * treeStats.meanLeaves > 5000) {
+  if (ntrees() * treeStats.meanLeaves > 5000) {
     String modelName=JCodeGen.toJavaId(_key.toString());
     sb.append("/* Java code is too large to display, download it directly.\n");
     sb.append("   To obtain the code please invoke in your terminal:\n");

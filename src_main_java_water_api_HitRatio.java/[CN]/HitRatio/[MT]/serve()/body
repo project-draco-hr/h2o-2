@@ -1,0 +1,22 @@
+{
+  Vec va=null, vp;
+  if (actual == null || predict == null)   throw new IllegalArgumentException("Missing actual or predict!");
+  if (vactual == null)   throw new IllegalArgumentException("Missing vactual!");
+  if (vactual.length() != predict.anyVec().length())   throw new IllegalArgumentException("Both arguments must have the same length!");
+  if (!vactual.isInt())   throw new IllegalArgumentException("Actual column must be integer class labels!");
+  try {
+    va=vactual.toEnum();
+    actual_domain=va._domain;
+    if (max_k > predict.numCols() - 1)     throw new IllegalArgumentException("K cannot be larger than " + String.format("%,d",predict.numCols() - 1));
+    final Frame actual_predict=new Frame(predict.names(),predict.vecs());
+    actual_predict.replace(0,va);
+    hit_ratios=new HitRatioTask(max_k,seed).doAll(actual_predict).hit_ratios();
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+ finally {
+    if (va != null)     UKV.remove(va._key);
+  }
+}

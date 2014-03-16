@@ -36,7 +36,7 @@ def test_summary2_small(self):
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS, timeoutSecs=45)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
         quantile = (0.5 if DO_MEDIAN else 0.999)
-        q = h2o.nodes[0].quantiles(source_key=hex_key, column=0, interpolation_type=7, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
+        q = h2o.nodes[0].quantiles(source_key=hex_key, column=0, interpolation_type=7, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=2)
         qresult = q['result']
         qresult_single = q['result_single']
         qresult_iterations = q['iterations']
@@ -55,8 +55,8 @@ def test_summary2_small(self):
         stattype = stats['type']
         mean = stats['mean']
         sd = stats['sd']
-        print 'colname:', colname, 'mean (2 places):', twoDecimals(mean)
-        print 'colname:', colname, 'std dev. (2 places):', twoDecimals(sd)
+        print 'colname:', colname, 'mean (2 places):', h2o_util.twoDecimals(mean)
+        print 'colname:', colname, 'std dev. (2 places):', h2o_util.twoDecimals(sd)
         zeros = stats['zeros']
         mins = stats['mins']
         maxs = stats['maxs']
@@ -85,10 +85,10 @@ def test_summary2_small(self):
         print 'len(hcnt)', len(hcnt)
         for b in hcnt[1:(-1)]:
             e = (numRows / len(hcnt))
-            self.assertAlmostEqual(b, (rowCount / len(hcnt)), delta=(0.01 * rowCount), msg=('Bins not right. b: %s e: %s' % (b, e)))
-        pt = twoDecimals(pctile)
-        mx = twoDecimals(maxs)
-        mn = twoDecimals(mins)
+            self.assertAlmostEqual(b, (numRows / len(hcnt)), delta=(1 + (0.01 * numRows)), msg=('Bins not right. b: %s e: %s' % (b, e)))
+        pt = h2o_util.twoDecimals(pctile)
+        mx = h2o_util.twoDecimals(maxs)
+        mn = h2o_util.twoDecimals(mins)
         print 'colname:', colname, 'pctile (2 places):', pt
         print 'colname:', colname, 'maxs: (2 places):', mx
         print 'colname:', colname, 'mins: (2 places):', mn
@@ -99,7 +99,5 @@ def test_summary2_small(self):
         trial += 1
         h2o.nodes[0].remove_all_keys()
         scipyCol = 0
-        if (DO_TRY_SCIPY and (colname != '')):
-            print scipyCol, pctile[10]
-            generate_scipy_comparison(csvPathnameFull, col=scipyCol, h2oMedian=pctile[(5 if DO_MEDIAN else 10)], h2oMedian2=qresult)
-        h2i.delete_keys_at_all_nodes()
+        if (colname != ''):
+            h2o_summ.quantile_comparisons(csvPathnameFull, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oSummary2=pctile[(5 if DO_MEDIAN else 10)], h2oQuantilesExact=qresult)
