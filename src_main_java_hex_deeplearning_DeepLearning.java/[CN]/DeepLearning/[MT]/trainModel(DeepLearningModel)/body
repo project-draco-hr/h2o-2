@@ -12,7 +12,7 @@
     final long model_size=model.model_info().size();
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
-    train=updateFrame(train,reBalance(model.model_info().data_info()._adaptedFrame,seed));
+    train=updateFrame(train,reBalance(train,seed));
     float[] trainSamplingFactors;
     if (classification && balance_classes) {
       trainSamplingFactors=new float[train.lastVec().domain().length];
@@ -26,7 +26,7 @@
     if (validation != null) {
       Frame adaptedValid=getValidation();
       if (getValidAdaptor().needsAdaptation2CM())       adaptedValid.add("adaptedValidationResponse",getValidAdaptor().getAdaptedValidationResponse2CM());
-      valid=reBalance(adaptedValid,seed + 1);
+      valid=updateFrame(adaptedValid,reBalance(adaptedValid,seed + 1));
       if (classification && balance_classes && score_validation_sampling == ClassSamplingMethod.Stratified) {
         validScoreFrame=sampleFrameStratified(valid,valid.lastVec(),null,score_validation_samples > 0 ? score_validation_samples : valid.numRows(),seed + 1,false,false);
       }
