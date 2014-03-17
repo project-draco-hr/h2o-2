@@ -1,7 +1,7 @@
 def test_parse_200k_cols_fvec(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(10, 100000, 'cA', 200, 200), (10, 200000, 'cB', 200, 200), (10, 300000, 'cB', 200, 200)]
+    tryList = [(10, 200000, 'cB', 200, 200)]
     h2b.browseTheCloud()
     for (rowCount, colCount, hex_key, timeoutSecs, timeoutSecs2) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
@@ -19,3 +19,4 @@ def test_parse_200k_cols_fvec(self):
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         self.assertEqual(inspect['numCols'], colCount, ('parse created result with the wrong number of cols %s %s' % (inspect['numCols'], colCount)))
         self.assertEqual(inspect['numRows'], rowCount, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['numRows'], rowCount)))
+        h2i.delete_keys_at_all_nodes()

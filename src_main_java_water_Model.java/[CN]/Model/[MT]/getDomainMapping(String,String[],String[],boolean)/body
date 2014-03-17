@@ -21,5 +21,7 @@
       if (!found)       Log.warn(Sys.SCORM,"Column " + colName + " WAS NOT trained with factor '"+ colDom[i]+ "' which appears in column data");
     }
   }
-  return Utils.pack(emap,bmap);
+  int[][] res=Utils.pack(emap,bmap);
+  Utils.sortWith(res[0],res[1]);
+  return res;
 }
