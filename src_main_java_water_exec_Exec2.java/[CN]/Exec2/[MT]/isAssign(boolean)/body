@@ -1,0 +1,14 @@
+{
+  if (peek('<',EOS)) {
+    if (_buf[_x] == '-') {
+      _x++;
+      return true;
+    }
+ else     return false;
+  }
+  if (!peek('=',EOS))   return false;
+  char c=_buf[_x];
+  if (isDigit(c) || isLetter(c) || isWS(c)|| isReserved(c))   return true;
+  _x--;
+  return false;
+}

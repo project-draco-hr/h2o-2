@@ -3,6 +3,7 @@
   if (checkpoint == null)   cp=initModel();
  else {
     final DeepLearningModel previous=UKV.get(checkpoint);
+    if (previous == null)     throw new IllegalArgumentException("Checkpoint not found.");
     cp=new DeepLearningModel(previous,destination_key,job_key);
     try {
       cp.write_lock(self());

@@ -6,6 +6,13 @@ DO_HDFS = False
 DO_ALL_DIGITS = False
 print 'Uses numpy to create dataset..I guess we have to deal with jenkins not having it'
 print 'uses dot product off some coefficients to create output. also correlatation with constant term in cols'
-import numpy as np
+SCIPY_INSTALLED = True
+try:
+    import scipy as sp
+    import numpy as np
+    print 'Both numpy and scipy are installed. Will do extra checks'
+except ImportError:
+    print 'numpy or scipy is not installed. Will only do sort-based checking'
+    SCIPY_INSTALLED = False
 if (__name__ == '__main__'):
     h2o.unit_main()

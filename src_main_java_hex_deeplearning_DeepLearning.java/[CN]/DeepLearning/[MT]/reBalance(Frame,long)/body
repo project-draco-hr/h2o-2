@@ -1,5 +1,3 @@
 {
-  Frame f=force_load_balance || shuffle_training_data ? MRUtils.shuffleAndBalance(fr,seed,shuffle_training_data) : fr;
-  if (f != fr)   ltrash(f);
-  return f;
+  return force_load_balance || shuffle_training_data ? MRUtils.shuffleAndBalance(fr,seed,shuffle_training_data) : fr;
 }

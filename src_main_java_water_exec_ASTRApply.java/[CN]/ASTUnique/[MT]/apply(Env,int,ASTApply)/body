@@ -1,0 +1,13 @@
+{
+  Thread cThr=Thread.currentThread();
+  int priority=(cThr instanceof H2O.FJWThr) ? ((H2O.FJWThr)cThr)._priority : -1;
+  Frame fr=env.peekAry();
+  int cols[]=new int[fr.numCols()];
+  for (int i=0; i < cols.length; i++)   cols[i]=i;
+  ddplyPass1 p1=new ddplyPass1(false,cols).doAll(fr);
+  double dss[][]=new double[p1._groups.size()][];
+  int i=0;
+  for (  Group g : p1._groups.keySet())   dss[i++]=g._ds;
+  Frame res=TestUtil.frame(fr._names,dss);
+  env.poppush(2,res,null);
+}

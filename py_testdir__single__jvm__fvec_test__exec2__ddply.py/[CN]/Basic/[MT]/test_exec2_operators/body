@@ -1,0 +1,15 @@
+def test_exec2_operators(self):
+    h2o.beta_features = True
+    bucket = 'home-0xdiag-datasets'
+    csvPathname = 'standard/covtype.data'
+    hexKey = 'i.hex'
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
+    for (resultKey, execExpr) in initList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+    for execExpr in exprList:
+        start = time.time()
+        (resultExec, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=30)
+        print 'exec end took', (time.time() - start), 'seconds'
+        print 'result:', result
+        print 'resultExec:', h2o.dump_json(resultExec)
+    h2o.check_sandbox_for_errors()

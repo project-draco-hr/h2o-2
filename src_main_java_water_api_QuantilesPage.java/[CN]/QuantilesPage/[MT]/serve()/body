@@ -10,8 +10,6 @@
   Vec[] vecs=new Vec[1];
   String[] names=new String[1];
   vecs[0]=column;
-  names[0]=source_key.names()[source_key.find(column)];
-  Frame fr=new Frame(names,vecs);
   Futures fs=new Futures();
   for (  Vec vec : vecs) {
     vec.rollupStats(fs);
@@ -30,11 +28,11 @@
     multiPass=false;
     result_single=Double.NaN;
     if (multiple_pass == 0)     result=Double.NaN;
-    qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(fr)._qbins;
+    qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(vecs[0])._qbins;
     Log.debug("Q_ for approx. valStart: " + valStart + " valEnd: "+ valEnd);
     if (qbins != null) {
       qbins[0].finishUp(vecs[0]);
-      column_name=qbins[0].colname;
+      column_name=names[0];
       quantile_requested=qbins[0].QUANTILES_TO_DO[0];
       iterations=1;
       done=qbins[0]._done;
@@ -63,13 +61,13 @@
     int iteration;
     qbins2=null;
     for (int b=0; b < MAX_ITERATIONS; b++) {
-      qbins2=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(fr)._qbins;
+      qbins2=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(vecs[0])._qbins;
       iterations=b + 1;
-      if (qbins2 != null) {
+      if (qbins2 == null)       break;
+ else {
         qbins2[0].finishUp(vecs[0]);
-        double valRange=qbins2[0]._valRange;
-        double valBinSize=qbins2[0]._valBinSize;
         Log.debug("\nQ_ multipass iteration: " + iterations + " valStart: "+ valStart+ " valEnd: "+ valEnd);
+        double valBinSize=qbins2[0]._valBinSize;
         Log.debug("Q_ valBinSize: " + valBinSize);
         valStart=qbins2[0]._newValStart;
         valEnd=qbins2[0]._newValEnd;
@@ -78,7 +76,7 @@
       }
     }
     if (qbins2 != null) {
-      column_name=qbins2[0].colname;
+      column_name=names[0];
       quantile_requested=qbins2[0].QUANTILES_TO_DO[0];
       done=qbins2[0]._done;
       exactResult=qbins2[0]._pctile[0];

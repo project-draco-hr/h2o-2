@@ -1,0 +1,46 @@
+{
+  Frame x=env.ary(-2);
+  Vec xv=x.theVec("Argument #1 in Quantile contains more than 1 column.");
+  Vec pv=env.ary(-1).theVec("Argument #2 in Quantile contains more than 1 column.");
+  double p[]=new double[(int)pv.length()];
+  for (int i=0; i < pv.length(); i++) {
+    if ((p[i]=pv.at((long)i)) < 0 || p[i] > 1)     throw new IllegalArgumentException("Quantile: probs must be in the range of [0, 1].");
+  }
+  if (xv.isEnum()) {
+    throw new IllegalArgumentException("Quantile: column type cannot be Enum.");
+  }
+  Futures fs=new Futures();
+  xv.rollupStats(fs);
+  fs.blockForPending();
+  Key key=Vec.VectorGroup.VG_LEN1.addVecs(1)[0];
+  AppendableVec av=new AppendableVec(key);
+  NewChunk nc=new NewChunk(av,0);
+  Quantiles[] qbins=null;
+  final int MAX_ITERATIONS=16;
+  final int MAX_QBINS=1000;
+  final boolean MULTIPASS=true;
+  final int INTERPOLATION=7;
+  double result;
+  for (  double quantile : p) {
+    double valStart=xv.min();
+    double valEnd=xv.max();
+    for (int iteration=1; iteration <= MAX_ITERATIONS; iteration++) {
+      qbins=new Quantiles.BinTask2(quantile,MAX_QBINS,valStart,valEnd,MULTIPASS,INTERPOLATION).doAll(xv)._qbins;
+      if (qbins == null)       break;
+ else {
+        qbins[0].finishUp(xv);
+        Log.debug("\nQ_ multipass iteration: " + iteration + " valStart: "+ valStart+ " valEnd: "+ valEnd+ " valBinSize: "+ qbins[0]._valBinSize);
+        valStart=qbins[0]._newValStart;
+        valEnd=qbins[0]._newValEnd;
+        if (qbins[0]._done)         break;
+      }
+    }
+    if (qbins == null)     result=Double.NaN;
+ else     result=qbins[0]._pctile[0];
+    qbins=null;
+    nc.addNum(result);
+  }
+  nc.close(0,null);
+  Vec v=av.close(null);
+  env.poppush(argcnt,new Frame(new String[]{"Quantile"},new Vec[]{v}),null);
+}
