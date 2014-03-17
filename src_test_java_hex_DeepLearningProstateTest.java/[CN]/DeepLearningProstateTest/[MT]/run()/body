@@ -4,14 +4,14 @@
   Key vfile=NFSFileVec.make(find_test_file("smalldata/./logreg/prostate.csv"));
   Frame vframe=ParseDataset2.parse(Key.make(),new Key[]{vfile});
   int count=0;
-  for (  boolean load_balance : new boolean[]{true,false}) {
-    for (    boolean shuffle : new boolean[]{true,false}) {
+  for (  boolean load_balance : new boolean[]{true}) {
+    for (    boolean shuffle : new boolean[]{true}) {
       for (      boolean balance_classes : new boolean[]{true,false}) {
         for (        int resp : new int[]{1,2,8}) {
-          for (          DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified,DeepLearning.ClassSamplingMethod.Uniform}) {
+          for (          DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified}) {
             if (resp == 8 && csm == DeepLearning.ClassSamplingMethod.Stratified && load_balance)             continue;
-            for (            int scoretraining : new int[]{200,0}) {
-              for (              int scorevalidation : new int[]{200,0}) {
+            for (            int scoretraining : new int[]{200}) {
+              for (              int scorevalidation : new int[]{200}) {
                 for (                int vf : new int[]{0,1,-1}) {
                   count++;
                   Log.info("**************************)");
