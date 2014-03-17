@@ -5,7 +5,7 @@ def test_exec2_operators(self):
     hexKey = 'i.hex'
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     for (resultKey, execExpr) in initList:
-        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=10)
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
     for execExpr in exprList:
         start = time.time()
         (resultExec, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=30)
