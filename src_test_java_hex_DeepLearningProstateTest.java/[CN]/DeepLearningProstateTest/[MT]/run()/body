@@ -6,8 +6,8 @@
   int count=0;
   for (  boolean load_balance : new boolean[]{true}) {
     for (    boolean shuffle : new boolean[]{true}) {
-      for (      boolean balance_classes : new boolean[]{true}) {
-        for (        int resp : new int[]{8}) {
+      for (      boolean balance_classes : new boolean[]{true,false}) {
+        for (        int resp : new int[]{1,2,8}) {
           for (          DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified}) {
             for (            int scoretraining : new int[]{200}) {
               for (              int scorevalidation : new int[]{200}) {
