@@ -6,9 +6,9 @@ def test_GLM2_covtype_1(self):
     x = ''
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
     max_iter = 8
-    y = 'C54'
+    y = 54
     modelKey = 'GLMModel'
-    kwargs = {'response': y, 'family': 'binomial', 'n_folds': 2, 'max_iter': max_iter, 'beta_epsilon': 0.001, 'destination_key': modelKey, }
+    kwargs = {'response': ('C' + str((y + 1))), 'family': 'binomial', 'n_folds': 2, 'max_iter': max_iter, 'beta_epsilon': 0.001, 'destination_key': modelKey, }
     execExpr = ('A.hex=%s' % parseResult['destination_key'])
     h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     execExpr = ('A.hex[,%s]=(A.hex[,%s]>%s)' % ((y + 1), (y + 1), 1))
