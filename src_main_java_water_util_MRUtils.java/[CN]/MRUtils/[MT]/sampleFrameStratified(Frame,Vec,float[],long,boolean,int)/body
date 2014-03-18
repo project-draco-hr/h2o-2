@@ -30,6 +30,7 @@
   }
 .doAll(fr.numCols(),fr).outputFrame(fr.names(),fr.domains());
   long[] dist=new ClassDist(r.vecs()[labelidx]).doAll(r.vecs()[labelidx]).dist();
+  if (dist == null)   return fr;
   if (debug) {
     long sumdist=Utils.sum(dist);
     Log.info("After stratified sampling: " + sumdist + " rows.");
