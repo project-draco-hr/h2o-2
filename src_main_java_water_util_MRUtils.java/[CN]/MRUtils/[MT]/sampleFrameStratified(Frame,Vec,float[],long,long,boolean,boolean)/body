@@ -19,7 +19,7 @@
       sampling_ratios[i]=((float)fr.numRows() / label.domain().length) / dist[i];
     }
     final float inv_scale=Utils.minValue(sampling_ratios);
-    Utils.div(sampling_ratios,inv_scale);
+    if (!Float.isNaN(inv_scale) && !Float.isInfinite(inv_scale))     Utils.div(sampling_ratios,inv_scale);
   }
   if (!allowOversampling) {
     for (int i=0; i < sampling_ratios.length; ++i) {
@@ -31,7 +31,7 @@
     numrows+=sampling_ratios[i] * dist[i];
   }
   final long actualnumrows=Math.min(maxrows,Math.round(numrows));
-  assert(actualnumrows > 0);
+  assert(actualnumrows >= 0);
   Log.info("Stratified sampling to a total of " + String.format("%,d",actualnumrows) + " rows.");
   if (actualnumrows != numrows) {
     Utils.mult(sampling_ratios,(float)actualnumrows / numrows);
