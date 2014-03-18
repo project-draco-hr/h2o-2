@@ -1,0 +1,36 @@
+import random
+import jenkinsapi
+import getpass
+from jenkinsapi.jenkins import Jenkins
+import re
+(username, password) = login()
+jenkinsurl = 'http://192.168.1.164:8080'
+jobName = 'h2o_master_test'
+J = Jenkins(jenkinsurl, username, password)
+print J.keys()
+print J[jobName]
+job = J[jobName]
+lgb = job.get_last_good_build()
+print lgb.get_revision()
+print job.get_config
+if (1 == 0):
+    from jenkinsapi.api import search_artifact_by_regexp
+    artifact_regexp = re.compile('commands.log')
+    result = search_artifact_by_regexp(jenkinsurl, jobName, artifact_regexp)
+    print repr(result)
+print job.get_last_stable_buildnumber()
+print job.get_last_good_buildnumber()
+print job.get_last_failed_buildnumber()
+print job.get_last_buildnumber()
+build = job.get_build(job.get_last_good_buildnumber())
+print build.get_revision()
+af = build.get_artifacts()
+dict_af = build.get_artifact_dict()
+print build.get_status()
+print build.name
+print build.get_number()
+print dict_af
+for a in af:
+    txt = a.get_data()
+    print '####################################'
+    print txt
