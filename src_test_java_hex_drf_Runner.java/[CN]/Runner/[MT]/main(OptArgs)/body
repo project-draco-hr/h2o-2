@@ -26,9 +26,9 @@
     test=TestUtil.parseFrame(testkey,ARGS.testFile);
   }
   Log.info(sys,"Data loaded in " + t_load);
-  Vec response=train.subframe(new String[]{ARGS.response}).vecs()[0];
-  train=train.subframe(cs);
-  if (test != null)   test=test.subframe(cs);
+  Vec response=train.subframe(new String[]{ARGS.response},false).vecs()[0];
+  train=train.subframe(cs,false);
+  if (test != null)   test=test.subframe(cs,false);
   Vec vs[]=train.vecs();
   for (  Vec v : vs)   v.min();
   for (int i=0; i < train.numCols(); i++)   Log.info(sys,train._names[i] + ", " + vs[i].min()+ " - "+ vs[i].max()+ (vs[i].naCnt() == 0 ? "" : (", missing=" + vs[i].naCnt())));
