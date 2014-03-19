@@ -1,4 +1,4 @@
-def browseJsonHistoryAsUrl():
+def browseJsonHistoryAsUrl(retryDelaySecs=0.25):
     if (not h2o.browse_disable):
         tabCount = 0
         for url in h2o.json_url_history:
@@ -10,8 +10,8 @@ def browseJsonHistoryAsUrl():
                 print 'browseJsonHistoryAsUrl:', url
                 print 'same, decoded:', urllib.unquote(url)
                 h2o.log(url, comment='From browseJsonHistoryAsUrl')
-                webbrowser.open(url)
-                time.sleep(0.25)
+                webbrowser.open(url, new=0)
+                time.sleep(retryDelaySecs)
                 tabCount += 1
             if (tabCount == 50):
                 break
