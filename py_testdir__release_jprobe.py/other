@@ -3,7 +3,14 @@ import jenkinsapi
 import getpass
 from jenkinsapi.jenkins import Jenkins
 import re
+import os
+from os.path import expanduser
+import shutil
+import logging
+logging.basicConfig(filename='python.log', level=logging.INFO)
 (username, password) = login()
+LOG_DIR = 'sandbox'
+clean_sandbox(LOG_DIR)
 jenkinsurl = 'http://192.168.1.164:8080'
 jobName = 'h2o_master_test'
 J = Jenkins(jenkinsurl, username, password)
@@ -30,7 +37,9 @@ print 'build get_status', build.get_status()
 print 'build name', build.name
 print 'build number', build.get_number()
 print 'dict_af', dict_af
-for a in af:
-    print 'a.keys():', a.keys()
-    txt = a.get_data()
-    print '####################################'
+for (i, a) in enumerate(af):
+    print ('Artifact #%s' % i), a.filename, a.build, a.url
+    if ('txt' in a.filename):
+        print '\n', a.filename, '####################################'
+        print '\n', a.url, '####################################'
+        a.save(((LOG_DIR + '/') + a.filename))

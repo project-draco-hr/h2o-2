@@ -1,6 +1,21 @@
-def login(username='none'):
-    user = raw_input(('Username [%s]: ' % username))
+def login():
+    username = None
+    pswd = None
+    home = expanduser('~')
+    jenkins_user = (home + '/.ec2/jenkins_user')
+    jenkins_pswd = (home + '/.ec2/jenkins_pswd')
+
+    def getit(j):
+        with open(j) as f:
+            lines = f.read().splitlines()
+        return lines[0]
+    if (os.path.isfile(jenkins_user) and os.path.isfile(jenkins_pswd)):
+        username = getit(jenkins_user)
+        pswd = getit(jenkins_pswd)
     if (not username):
-        user = getpass.getuser()
-    p1 = getpass.getpass()
-    return (user, p1)
+        username = getpass.getuser()
+        username = raw_input(('Username [%s]: ' % username))
+    if (not pswd):
+        pswd = getpass.getpass()
+    print username, pswd
+    return (username, pswd)
