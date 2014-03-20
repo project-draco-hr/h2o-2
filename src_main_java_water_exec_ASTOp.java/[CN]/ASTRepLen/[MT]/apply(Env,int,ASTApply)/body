@@ -1,0 +1,9 @@
+{
+  if (env.isAry(-2))   H2O.unimpl();
+ else {
+    int len=(int)env.popDbl();
+    if (len <= 0)     throw new IllegalArgumentException("Error in rep_len: argument length.out must be coercible to a positive integer");
+    double x=env.popDbl();
+    env.poppush(1,new Frame(new String[]{"C1"},new Vec[]{Vec.makeConSeq(x,len)}),null);
+  }
+}
