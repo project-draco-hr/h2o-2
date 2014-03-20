@@ -18,7 +18,7 @@
     if (converged)     Log.info("GLM converged by reaching 0 gradient/subgradient.");
     double objval=glmt._val.residual_deviance + 0.5 * l2pen * l2norm(glmt._beta);
     if (!converged && _lastResult != null && needLineSearch(glmt._beta,objval,1)) {
-      new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,new LineSearchIteration()).dfork(_dinfo._adaptedFrame);
+      new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,new LineSearchIteration()).asyncExec(_dinfo._adaptedFrame);
       return;
     }
     _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
@@ -50,7 +50,7 @@
     }
     if (!converged && _glm.family != Family.gaussian && _iter < max_iter) {
       ++_iter;
-      GLMIterationTask nextIter=new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,newBeta,_ymu,_reg,new Iteration()).dfork(_dinfo._adaptedFrame);
+      new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,newBeta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
       return;
     }
   }

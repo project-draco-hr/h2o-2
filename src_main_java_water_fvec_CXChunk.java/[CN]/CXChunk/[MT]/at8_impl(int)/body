@@ -1,0 +1,14 @@
+{
+  if (_isInt) {
+    int off=findOffset(idx);
+    if (getId(off) != idx)     return 0;
+    long v=getIValue(off);
+    if (v == NAS[(_idsz >>> 1) - 1])     throw new IllegalArgumentException("at8 but value is missing");
+    return v;
+  }
+ else {
+    double d=getFValue(findOffset(idx));
+    if (Double.isNaN(d))     throw new IllegalArgumentException("at8 but value is missing");
+    return (long)d;
+  }
+}

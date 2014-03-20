@@ -1,0 +1,12 @@
+{
+  if (_isInt) {
+    long v=getIValue(off);
+    if (v == NAS[(_elsz >>> 1) - 1])     throw new IllegalArgumentException("at8 but value is missing");
+    return v;
+  }
+ else {
+    double d=getFValue(off);
+    if (Double.isNaN(d))     throw new IllegalArgumentException("at8 but value is missing");
+    return (long)d;
+  }
+}
