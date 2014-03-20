@@ -6,4 +6,5 @@
   if (DEBUG_DETERMINISTIC && seed == -1)   _seed=0x1321e74a0192470cL;
  else   if (seed == -1)   _seed=_seedGenerator.nextLong();
  else   _seed=seed;
+  if (sample_rate == 1f && validation != null)   Log.warn(Sys.DRF__,"Sample rate is 100% and no validation dataset is required. There are no OOB data to perform validation!");
 }
