@@ -9,6 +9,7 @@ parse.add_argument('-j', '--jobname', help='jobname. Correct url is found', defa
 parse.add_argument('-l', '--logging', help='turn on logging.DEBUG msgs to see allUrls used', action='store_true')
 args = parse.parse_args()
 print 'creates jsandbox (cleaned), and puts aTxt.txt and aConsole.txt in there, along with artifacts'
+print ' also creates fails* and regress* in there'
 allowedJobsX = ['h2o_master_test', 'h2o_master_test2', 'h2o_release_tests', 'h2o_release_tests2', 'h2o_release_tests_164', 'h2o_release_tests_c10_only', 'h2o_perf_test', 'h2o_release_Runit']
 allowedJobsE = ['h2o.tests.single.jvm', 'h2o.tests.single.jvm.fvec', 'h2o.multi.vm.temporary', 'h2o.tests.ec2.multi.jvm', 'h2o.tests.ec2.multi.jvm.fvec', 'h2o.tests.ec2.hosts']
 allUrls = {'ec2': 'http://test.0xdata.com', '164': 'http://192.168.1.164:8080', }
@@ -104,10 +105,11 @@ see(buildtimestamp)
 t = buildtimestamp
 hm = ('%s_%s' % (t.hour, t.minute))
 hms = ('%s_%s' % (hm, t.second))
-failName = ('%s_%s_%s_%s%s' % ('fails', jobname, buildnumber, hm, '.txt'))
-print failName
+failName = ('%s_%s_%s_%s%s' % ('fail', jobname, buildnumber, hm, '.txt'))
+print 'failName:', failName
+regressName = ('%s_%s_%s_%s%s' % ('regress', jobname, buildnumber, hm, '.txt'))
+print 'regressName:', regressName
 stats = {}
-fTxt = open(((LOG_DIR + '/') + failName), 'a')
 for (i, (k, v)) in enumerate(rs.items()):
     if (v.status in stats):
         stats[v.status] += 1
@@ -118,40 +120,25 @@ for (i, (k, v)) in enumerate(rs.items()):
     aTxt.write((e1 + '\n'))
     aTxt.write((e2 + '\n'))
     if (v.status != 'PASSED'):
-        fprint(e1)
-        fprint(e2)
-        fprint(i, 'v.duration', v.duration)
-        fprint(i, 'v.errorStackTrace', v.errorStackTrace)
-        fprint(i, 'v.failedSince', v.failedSince)
-        fprint(i, 'v.stderr', v.stderr)
-        if (not v.stdout):
-            fprint('v.stdout is empty')
-        else:
-            fprint('len(v.stdout):', len(v.stdout))
-            stdout = v.stdout
-            stdout = string.replace(stdout, '\\n', '\n')
-            stdout = string.replace(stdout, '\\tat', '\t')
-            stdout = string.replace(stdout, '\n\n', '\n')
-            lineList = stdout.splitlines()
-            fprint('len(lineList):', len(lineList))
-            num = min(20, len(lineList))
-            if (num != 0):
-                fprint(i, ('Last %s lineList of stdout\n' % num))
-                fprint('\n'.join(lineList[(- num):]))
-            else:
-                fprint('v.stdout is empty')
-        if PRINTALL:
-            fprint(i, 'k', k)
-            fprint(i, 'v', v)
-            fprint(i, 'v.errorDetails', v.errorDetails)
-            fprint(i, 'v.age', v.age)
-            fprint(i, 'v.className', v.className)
-            fprint(i, 'v.identifier()', v.identifier())
-            fprint(i, 'v.name', v.name)
-            fprint(i, 'v.skipped', v.age)
-            fprint(i, 'v.skippedMessage', v.skippedMessage)
-            fprint(i, 'v.status', v.status)
-            fprint(i, 'v.stdout', v.stdout)
+        fTxt = open(((LOG_DIR + '/') + failName), 'a')
+        printStuff()
+        fTxt.close()
+    if (v.status == 'REGRESSION'):
+        fTxt = open(((LOG_DIR + '/') + regressName), 'a')
+        printStuff()
+        fTxt.close()
+    if PRINTALL:
+        fprint(i, 'k', k)
+        fprint(i, 'v', v)
+        fprint(i, 'v.errorDetails', v.errorDetails)
+        fprint(i, 'v.age', v.age)
+        fprint(i, 'v.className', v.className)
+        fprint(i, 'v.identifier()', v.identifier())
+        fprint(i, 'v.name', v.name)
+        fprint(i, 'v.skipped', v.age)
+        fprint(i, 'v.skippedMessage', v.skippedMessage)
+        fprint(i, 'v.status', v.status)
+        fprint(i, 'v.stdout', v.stdout)
 if (1 == 1):
     for a in af:
         e = ('%s %s %s %s\n' % ('#', a.filename, a.url, '########### artifact saved ####################'))
