@@ -99,6 +99,7 @@ def findQuantile(d, dmin, dmax, threshold):
                 guess = hcnt2_min[k]
                 print 'Guess A', guess, k, hcnt2[k]
             if (hcnt2[k] == 2):
+                print 'hello'
                 print "\nTwo values in this bin but we could be aligned to the 2nd. so can't stop"
                 guess = ((hcnt2_max[k] + hcnt2_min[k]) / 2.0)
                 if (INTERPOLATION_TYPE == 2):
@@ -146,15 +147,18 @@ def findQuantile(d, dmin, dmax, threshold):
                 print ('\nInterpolating result using nextK: %s nextVal: %s' % (nextK, nextVal))
                 print 'Guess D', guess
         if (not done):
-            print 'Not done, setting new range', 'k: ', k, 'currentCnt: ', currentCnt, 'hcnt2_min[k]: ', hcnt2_min[k], 'hcnt2_max[k]: ', hcnt2_max[k]
+            print ('%s %s %s %s Not done, setting new range' % (hcnt2[k], currentCnt, targetCntInt, targetCntFract)), 'k: ', k, 'currentCnt: ', currentCnt, 'hcnt2_min[k]: ', hcnt2_min[k], 'hcnt2_max[k]: ', hcnt2_max[k]
             if ((k > 0) and (hcnt2[(k - 1)] > 0) and (hcnt2_max[(k - 1)] < hcnt2_min[k])):
+                print '1'
                 newValStart = hcnt2_max[(k - 1)]
             else:
+                print '2'
                 newValStart = hcnt2_min[k]
             if ((k < maxBinCnt) and (hcnt2[(k + 1)] > 0) and (hcnt2_min[(k + 1)] > hcnt2_max[k])):
-                print 'hello'
+                print '3'
                 newValEnd = hcnt2_min[(k + 1)]
             else:
+                print '4'
                 newValEnd = hcnt2_max[k]
             newValRange = (newValEnd - newValStart)
             newValBinSize = (newValRange / (desiredBinCnt + 0.0))
