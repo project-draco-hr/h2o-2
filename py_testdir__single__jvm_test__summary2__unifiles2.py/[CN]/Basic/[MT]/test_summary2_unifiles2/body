@@ -1,6 +1,6 @@
 def test_summary2_unifiles2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('covtype.data', 'x.hex', [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard'), ('runif.csv', 'x.hex', [(None, None, None, None, None, None)], 'smalldata', None)]
+    tryList = [('breadth.csv', 'x.hex', [('C1', None, None, None, None, None)], '.', None), ('covtype.data', 'x.hex', [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard'), ('runif.csv', 'x.hex', [(None, None, None, None, None, None)], 'smalldata', None)]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -25,12 +25,12 @@ def test_summary2_unifiles2(self):
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
         summaries = summaryResult['summaries']
-        scipyCol = 1
+        scipyCol = 0
         for (expected, column) in zip(expectedCols, summaries):
             colname = column['colname']
             if expected[0]:
                 self.assertEqual(colname, expected[0])
-            quantile = (0.5 if DO_MEDIAN else 0.999)
+            quantile = (0.5 if DO_MEDIAN else OTHER)
             q = h2o.nodes[0].quantiles(source_key=hex_key, column=scipyCol, quantile=quantile, max_qbins=MAX_QBINS, multiple_pass=1)
             qresult = q['result']
             qresult_single = q['result_single']
@@ -88,6 +88,6 @@ def test_summary2_unifiles2(self):
                 print 'maxs colname:', colname, '(2 places):', mx
                 print 'mins colname:', colname, '(2 places):', mn
                 if ((colname != '') and expected[scipyCol] and (csvFilename != 'covtype.data')):
-                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oSummary2=pctile[(5 if DO_MEDIAN else 10)], h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult)
+                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else OTHER), h2oSummary2=pctile[(5 if DO_MEDIAN else OTHER_FROM_SUMM)], h2oQuantilesExact=qresult)
             scipyCol += 1
         trial += 1
