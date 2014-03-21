@@ -18,8 +18,12 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
             if (re.search('h2o.*stdout|h2o.*stderr', filename) and (not re.search('doneToLine', filename))):
                 fileList.append(filename)
         if (len(fileList) == 0):
-            raise Exception(('Unexpected: h2o_sandbox found 0 files in %s that matched the stdout/stderr pattern' % LOG_DIR))
-    print 'h2o_sandbox: checking', len(fileList), 'files'
+            emsg = ('Unexpected: h2o_sandbox found 0 files in %s that matched the stdout/stderr pattern' % LOG_DIR)
+            if sandboxIgnoreErrors:
+                print emsg
+                return
+            else:
+                raise Exception(emsg)
     errLines = []
     for filename in fileList:
         sandFile = open(((LOG_DIR + '/') + filename), 'r')

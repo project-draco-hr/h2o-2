@@ -1,0 +1,20 @@
+{
+  Vec va=null, vp;
+  if (before == null)   throw new IllegalArgumentException("Missing frame to rebalance!");
+  if (after == null)   throw new IllegalArgumentException("Missing name (key for the rebalanced Frame!");
+  try {
+    before.read_lock(null);
+    Frame balanced=MRUtils.shuffleAndBalance(before,seed,false);
+    before.unlock(null);
+    Frame balanced2=new Frame(Key.make(after),balanced.names(),balanced.vecs());
+    balanced2.delete_and_lock(null);
+    balanced2.unlock(null);
+    return RequestBuilders.Response.done(this);
+  }
+ catch (  Throwable t) {
+    return RequestBuilders.Response.error(t);
+  }
+ finally {
+    if (va != null)     UKV.remove(va._key);
+  }
+}
