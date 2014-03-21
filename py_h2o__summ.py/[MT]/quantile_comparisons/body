@@ -1,4 +1,4 @@
-def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float', h2oSummary2=None, h2oQuantilesApprox=None, h2oQuantilesExact=None, h2oExecQuantilesApprox=None, interpolate='linear', quantile=0.5, use_genfromtxt=False):
+def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float', h2oSummary2=None, h2oSummary2MaxErr=None, h2oQuantilesApprox=None, h2oQuantilesExact=None, h2oExecQuantilesApprox=None, interpolate='linear', quantile=0.5, use_genfromtxt=False):
     SCIPY_INSTALLED = True
     try:
         import scipy as sp
@@ -64,7 +64,10 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
     if h2oSummary2:
         if math.isnan(float(h2oSummary2)):
             raise Exception(('h2oSummary2 is unexpectedly NaN %s' % h2oSummary2))
-        h2o_util.assertApproxEqual(h2oSummary2, b, rel=1.0, msg='h2o summary2 is not approx. same as sort algo')
+        if h2oSummary2MaxErr:
+            h2o_util.assertApproxEqual(h2oSummary2, b, tol=h2oSummary2MaxErr, msg='h2o summary2 is not approx. same as sort algo (calculated expected max error)')
+        else:
+            h2o_util.assertApproxEqual(h2oSummary2, b, rel=1.0, msg='h2o summary2 is not approx. same as sort algo (sloppy compare)')
     if (h2oQuantilesApprox and h2oSummary2):
         h2o_util.assertApproxEqual(h2oSummary2, h2oQuantilesApprox, rel=0.04, msg=('h2o summary2 is not approx. same as h2o singlepass.' + ' Check that max_qbins is 1000 (summary2 is fixed) and type 7 interpolation'))
     if h2oExecQuantilesApprox:
