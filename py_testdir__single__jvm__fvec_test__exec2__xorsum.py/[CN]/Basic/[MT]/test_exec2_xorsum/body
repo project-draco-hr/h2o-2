@@ -1,0 +1,26 @@
+def test_exec2_xorsum(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(2, 1, 'r1', 0, 10, None)]
+    for (rowCount, colCount, hex_key, expectedMin, expectedMax, expected) in tryList:
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        maxDelta = (expectedMax - expectedMin)
+        csvFilename = (((('syn_real_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        csvPathnameFull = h2i.find_folder_and_filename(None, csvPathname, returnFullPath=True)
+        print 'Creating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEEDPERFILE)
+        parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=3000, retryDelaySecs=2)
+        inspect = h2o_cmd.runInspect(key=hex_key)
+        print 'numRows:', inspect['numRows']
+        print 'numCols:', inspect['numCols']
+        inspect = h2o_cmd.runInspect(key=hex_key, offset=(-1))
+        print 'inspect offset = -1:', h2o.dump_json(inspect)
+        for execExpr in exprList:
+            start = time.time()
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=300)
+            print 'exec took', (time.time() - start), 'seconds'
+            print 'execResult:', h2o.dump_json(execResult)
+            print 'fp result:', ('%.15f' % result)
+            print 'bit result:', h2o_util.floatToBits(result)
+        h2o.check_sandbox_for_errors()

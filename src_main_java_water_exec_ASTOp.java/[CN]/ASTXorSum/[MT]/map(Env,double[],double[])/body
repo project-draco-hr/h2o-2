@@ -1,0 +1,12 @@
+{
+  if (out == null || out.length < 1)   out=new double[1];
+  long xorsumBits=0;
+  long vBits;
+  for (  double v : in) {
+    vBits=Double.doubleToLongBits(v);
+    xorsumBits=xorsumBits ^ vBits;
+  }
+  double xorsum=Double.longBitsToDouble(xorsumBits);
+  out[0]=xorsum;
+  return out;
+}
