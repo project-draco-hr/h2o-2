@@ -1,4 +1,4 @@
-def fp_format(val=None, sel=None):
+def fp_format(val=None, sel=None, only=None):
 
     def e0(val):
         return ('%e' % val)
@@ -152,5 +152,19 @@ def fp_format(val=None, sel=None):
         choice = sel
     else:
         choice = random.randint(0, (len(caseList) - 1))
+    SUBGRPS = 3
+    SUBGRP_SIZE = (len(caseList) / SUBGRPS)
+    assert (math.floor(SUBGRP_SIZE) == SUBGRP_SIZE), 'You got a code problem in h2o_util.fp_format'
+    if only:
+        choice = (choice % SUBGRPS)
+        assert ((choice >= 0) and (choice < SUBGRP_SIZE))
+        if (only == 'e'):
+            choice += 0
+        elif (only == 'f'):
+            choice += 16
+        elif (only == 'g'):
+            choice += 32
+        else:
+            raise Exception(('Bad param combo of only: %s and sel: % in h2o_util.fp_format()' % (only, sel)))
     f = caseList[choice]
     return f(val)
