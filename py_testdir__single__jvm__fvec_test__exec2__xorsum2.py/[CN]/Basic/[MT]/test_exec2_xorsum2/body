@@ -32,7 +32,8 @@ def test_exec2_xorsum2(self):
                 print ('%30s' % 'ullResult (0.16x):'), ('0x%0.16x   %s' % (ullResult, fpResult))
                 print ('%30s' % 'expectedUllSum (0.16x):'), ('0x%0.16x   %s' % (expectedUllSum, expectedUllSumAsDouble))
                 print ('%30s' % 'expectedFpSum (0.16x):'), ('0x%0.16x   %s' % (expectedFpSumAsLongLong, expectedFpSum))
-                if (ullResult != expectedUllSum):
+                ALLOWED_BIT_ERR = 31
+                if ((ullResult != expectedUllSum) and (abs((ullResult - expectedUllSum)) > ALLOWED_BIT_ERR)):
                     raise Exception(("h2o didn't get the same xorsum as python. 0x%0.16x 0x%0.16x" % (ullResult, expectedUllSum)))
                     print ("h2o didn't get the same xorsum as python. 0x%0.16x 0x%0.16x" % (ullResult, expectedUllSum))
             h2o.check_sandbox_for_errors()
