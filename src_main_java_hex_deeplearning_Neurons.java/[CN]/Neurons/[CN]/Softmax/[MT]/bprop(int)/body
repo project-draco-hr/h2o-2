@@ -1,15 +1,15 @@
 {
-  long processed=_minfo.get_processed_total();
-  double m=momentum(processed);
-  double r=rate(processed) * (1 - m);
+  double g;
   for (int u=0; u < _a.length; u++) {
-    final double targetval=(u == target ? 1 : 0);
-    double g=targetval - _a[u];
+    final double t=(u == target ? 1 : 0);
+    final double y=_a[u];
     if (params.loss == Loss.CrossEntropy) {
+      g=t - y;
     }
- else     if (params.loss == Loss.MeanSquare) {
-      g*=(1 - _a[u]) * _a[u];
+ else {
+      assert(params.loss == Loss.MeanSquare);
+      g=(t - y) * (1 - y) * y;
     }
-    bprop(u,g,r,m);
+    bprop(u,g);
   }
 }
