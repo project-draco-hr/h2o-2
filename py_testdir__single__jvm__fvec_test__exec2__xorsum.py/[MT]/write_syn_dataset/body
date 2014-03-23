@@ -1,8 +1,8 @@
 def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax, SEEDPERFILE):
     dsf = open(csvPathname, 'w')
     expectedRange = (expectedMax - expectedMin)
-    expectedFpSum = 0.0
-    expectedUllSum = 0
+    expectedFpSum = float(0)
+    expectedUllSum = int(0)
     for row in range(rowCount):
         rowData = []
         for j in range(colCount):
@@ -18,11 +18,12 @@ def write_syn_dataset(csvPathname, rowCount, colCount, expectedMin, expectedMax,
                     value = ((-1) * value)
             fpResult = float(value)
             ullResult = h2o_util.doubleToUnsignedLongLong(fpResult)
-            expectedUllSum ^= ullResult
             expectedFpSum += fpResult
+            expectedUllSum = (expectedUllSum ^ ullResult)
             s = ('%.16f' % value)
             rowData.append(s)
         rowDataCsv = ','.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
     dsf.close()
+    expectedUllSum = (expectedUllSum & (~ (15 << 60)))
     return (expectedUllSum, expectedFpSum)
