@@ -1,4 +1,10 @@
 {
+  final long processed=_minfo.get_processed_total();
+  double m=0, r=0;
+  if (_E_dx2 == null || _E_g2 == null) {
+    m=momentum(processed);
+    r=rate(processed) * (1 - m);
+  }
   double r2=0;
   final int off=u * _previous._a.length;
   for (int i=0; i < _previous._a.length; i++) {
