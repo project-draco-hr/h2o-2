@@ -91,5 +91,5 @@ def test_quantile_cmp_uniform(self):
                 self.assertEqual(numCols, 1)
                 self.assertEqual(numRows, len(thresholds))
         if (colname != ''):
-            h2o_summ.quantile_comparisons(csvPathnameFull, col=0, datatype='float', quantile=thresholds[(-1)], h2oSummary2=pctile[(-1)], h2oExecQuantilesApprox=result)
+            h2o_summ.quantile_comparisons(csvPathnameFull, col=0, datatype='float', quantile=thresholds[(-1)], h2oExecQuantiles=result)
         h2o.nodes[0].remove_all_keys()
