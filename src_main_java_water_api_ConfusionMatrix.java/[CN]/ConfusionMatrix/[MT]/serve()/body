@@ -1,9 +1,9 @@
 {
   Vec va=null, vp=null, avp=null;
   classification=vactual.isInt() && vpredict.isInt();
-  if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing actual or predict!");
-  if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
   try {
+    if (vactual == null || vpredict == null)     throw new IllegalArgumentException("Missing actual or predict!");
+    if (vactual.length() != vpredict.length())     throw new IllegalArgumentException("Both arguments must have the same length!");
     if (classification) {
       va=vactual.toEnum();
       actual_domain=va._domain;
