@@ -92,6 +92,6 @@ def test_summary2_unifiles(self):
                 print 'maxs colname:', colname, '(2 places):', mx
                 print 'mins colname:', colname, '(2 places):', mn
                 if ((colname != '') and expected[scipyCol]):
-                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult, h2oSummary2MaxErr=(maxErr * 5))
+                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oSummary2=pctile[(5 if DO_MEDIAN else 10)], h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult, h2oSummary2MaxErr=maxErr)
             scipyCol += 1
         trial += 1
