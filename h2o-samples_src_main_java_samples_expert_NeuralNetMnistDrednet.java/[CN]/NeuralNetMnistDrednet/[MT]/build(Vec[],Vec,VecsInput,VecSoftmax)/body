@@ -16,9 +16,12 @@
   p.momentum_start=0.5f;
   p.momentum_ramp=1800000;
   p.momentum_stable=0.99f;
+  p.score_training=1000;
+  p.score_validation=10000;
   p.l1=.00001f;
   p.l2=.00f;
   p.initial_weight_distribution=NeuralNet.InitialWeightDistribution.UniformAdaptive;
+  p.score_interval=30;
   for (int i=0; i < ls.length; i++) {
     ls[i].init(ls,i,p);
   }
