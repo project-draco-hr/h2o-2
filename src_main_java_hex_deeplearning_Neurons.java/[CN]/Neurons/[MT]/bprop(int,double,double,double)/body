@@ -1,9 +1,8 @@
 {
-  final long processed=_minfo.get_processed_total();
-  double m=0, r=0;
-  if (_E_dx2 == null || _E_g2 == null) {
-    m=momentum(processed);
-    r=rate(processed) * (1 - m);
+  if (params.fast_mode || (_wm == null && params.l1 == 0.0 && params.l2 == 0.0)) {
+    if (Math.abs(g) <= 1e-8) {
+      return;
+    }
   }
   double r2=0;
   final int off=u * _previous._a.length;
@@ -36,7 +35,6 @@
       }
       _w[w]+=r * d;
     }
-    if (Double.isInfinite(_w[w]))     _minfo.set_unstable();
     if (params.max_w2 != Double.POSITIVE_INFINITY)     r2+=_w[w] * _w[w];
   }
   if (params.max_w2 != Double.POSITIVE_INFINITY && r2 > params.max_w2) {
