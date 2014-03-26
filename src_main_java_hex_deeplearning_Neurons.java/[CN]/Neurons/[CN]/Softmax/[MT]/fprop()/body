@@ -1,9 +1,9 @@
 {
   gemv(_a,_w,_previous._a,_b,null);
-  final double max=Utils.maxValue(_a);
-  double scale=0;
+  final float max=Utils.maxValue(_a);
+  float scale=0;
   for (int o=0; o < _a.length; o++) {
-    _a[o]=Math.exp(_a[o] - max);
+    _a[o]=(float)Math.exp(_a[o] - max);
     scale+=_a[o];
   }
   for (int o=0; o < _a.length; o++) {

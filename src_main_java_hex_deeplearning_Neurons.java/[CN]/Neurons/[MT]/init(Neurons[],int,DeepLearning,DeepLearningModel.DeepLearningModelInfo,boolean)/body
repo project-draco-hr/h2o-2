@@ -1,9 +1,9 @@
 {
   params=(DeepLearning)p.clone();
   params.rate*=Math.pow(params.rate_decay,index - 1);
-  _a=new double[units];
+  _a=new float[units];
   if (!(this instanceof Output) && !(this instanceof Input)) {
-    _e=new double[units];
+    _e=new float[units];
   }
   if (training && (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout|| this instanceof Input)) {
     _dropout=new Dropout(units);
