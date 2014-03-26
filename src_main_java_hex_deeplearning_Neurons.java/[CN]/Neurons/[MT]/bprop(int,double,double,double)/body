@@ -1,8 +1,6 @@
 {
-  if (params.fast_mode || (_wm == null && params.l1 == 0.0 && params.l2 == 0.0)) {
-    if (Math.abs(g) <= 1e-8) {
-      return;
-    }
+  if (params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0)) {
+    if (Math.abs(g) <= 1e-10)     return;
   }
   double r2=0;
   final int off=u * _previous._a.length;
