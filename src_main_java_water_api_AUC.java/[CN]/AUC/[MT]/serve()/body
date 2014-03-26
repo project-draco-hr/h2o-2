@@ -3,7 +3,7 @@
   if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing vactual or vpredict!");
   if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
   if (!vactual.isInt())   throw new IllegalArgumentException("Actual column must be integer class labels!");
-  if (vpredict.isInt())   throw new IllegalArgumentException("Predicted column must be a floating point probability!");
+  if (vpredict.isInt() && vpredict.min() != vpredict.max())   throw new IllegalArgumentException("Predicted column must be a floating point probability!");
   try {
     va=vactual.toEnum();
     actual_domain=va._domain;
