@@ -14,6 +14,8 @@ def scrape_port_from_stdout_remote(self):
                 port = match_groups.group(2)
                 if (port is not None):
                     self.port = port
+                    self.pid = self.request_pid()
+                    self.first_ticks = self.get_ticks()
                     f.close()
                     print 'H2O Cloud {} Node {} started with output file {}'.format(self.cloud_num, self.node_num, self.output_file_name)
                     return
