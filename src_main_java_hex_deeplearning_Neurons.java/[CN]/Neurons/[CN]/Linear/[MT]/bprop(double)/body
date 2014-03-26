@@ -2,5 +2,8 @@
   if (params.loss != Loss.MeanSquare)   throw new UnsupportedOperationException("Regression is only implemented for MeanSquare error.");
   final int u=0;
   final double g=target - _a[u];
-  bprop(u,g);
+  final long processed=_minfo.get_processed_total();
+  double m=momentum(processed);
+  double r=rate(processed) * (1 - m);
+  bprop(u,g,r,m);
 }

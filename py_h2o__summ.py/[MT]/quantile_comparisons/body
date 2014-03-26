@@ -10,7 +10,6 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
     if use_genfromtxt:
         print 'Using numpy.genfromtxt. Better handling of null bytes'
         target = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=(1 if skipHeader else 0), dtype=None)
-        print 'shape:', target.shape()
     else:
         print 'Using python csv reader'
         target = h2o_util.file_read_csv_col(csvPathname, col=col, datatype=datatype, skipHeader=skipHeader, preview=5)

@@ -1,6 +1,6 @@
 def test_summary2_small(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(None, 1, 'x.hex', [(-1), 0, 1], ('C1', None, None, (-1), None, None)), (None, 2, 'x.hex', [(-1), 0, 1], ('C1', None, None, (-1), None, None)), (None, 10, 'x.hex', [(-1), 0, 1], ('C1', None, None, (-1), None, None)), (None, 100, 'x.hex', [(-1), 0, 1], ('C1', None, None, (-1), None, None)), (None, 1000, 'x.hex', [(-1), 0, 1], ('C1', None, None, (-1), None, None)), (None, 10000, 'x.hex', [(-1), 0, 1], ('C1', None, None, (-1), None, None))]
+    tryList = [(None, 1, 'x.hex', [(-1), 0, 1], ('C1', None, None, 0, None, None)), (None, 2, 'x.hex', [(-1), 0, 1], ('C1', None, None, 0, None, None)), (None, 10, 'x.hex', [(-1), 0, 1], ('C1', None, None, 0, None, None)), (None, 100, 'x.hex', [(-1), 0, 1], ('C1', None, None, 0, None, None)), (None, 1000, 'x.hex', [(-1), 0, 1], ('C1', None, None, 0, None, None))]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -63,6 +63,7 @@ def test_summary2_small(self):
         pct = stats['pct']
         expectedPct = [0.01, 0.05, 0.1, 0.25, 0.33, 0.5, 0.66, 0.75, 0.9, 0.95, 0.99]
         pctile = stats['pctile']
+        print 'pctile:', pctile
         if expected[0]:
             self.assertEqual(colname, expected[0])
         if expected[1]:
