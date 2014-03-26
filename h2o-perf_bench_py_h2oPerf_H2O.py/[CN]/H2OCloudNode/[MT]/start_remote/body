@@ -16,7 +16,8 @@ def start_remote(self):
     PerfUtils.drain(self.channel.makefile_stderr(), errfd)
     self.channel.exec_command(cmd)
     cmd_serve = ['python', '/home/0xdiag/serve_proc.py']
-    self.channel.exec_command(cmd_serve)
+    self.channelServe = self.open_channel()
+    self.channelServe.exec_command(' '.join(cmd_serve))
 
     @atexit.register
     def kill_process():

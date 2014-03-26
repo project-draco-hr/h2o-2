@@ -1,6 +1,7 @@
 def request_pid(self):
     '\n        Use a request for /Cloud.json and look for pid.\n        '
     name = ((self.ip + ':') + self.port)
+    time.sleep(5)
     r = requests.get((('http://' + name) + '/Cloud.json'))
     name = ('/' + name)
     j = json.loads(r.text)
