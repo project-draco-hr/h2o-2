@@ -2,7 +2,7 @@
   Softmax output=(Softmax)ls[ls.length - 1];
   if (output.target() == -1)   return false;
   for (  Layer l : ls)   l.fprop(-1,false);
-  double[] out=ls[ls.length - 1]._a;
+  float[] out=ls[ls.length - 1]._a;
   int target=output.target();
   for (int o=0; o < out.length; o++) {
     final boolean hitpos=(o == target);
@@ -12,8 +12,9 @@
     e.cross_entropy+=hitpos ? -Math.log(out[o]) : 0;
   }
   float[] preds=new float[out.length + 1];
-  for (int i=0; i < out.length; ++i)   preds[i + 1]=(float)out[i];
-  preds[0]=ModelUtils.getPrediction(preds,ls[0]._a);
+  for (int i=0; i < out.length; ++i)   preds[i + 1]=out[i];
+  double[] data=new double[ls[0]._a.length];
+  preds[0]=ModelUtils.getPrediction(preds,data);
   if (confusion != null) {
     if (output.target() != Layer.missing_int_value)     confusion[output.target()][(int)preds[0]]++;
   }
