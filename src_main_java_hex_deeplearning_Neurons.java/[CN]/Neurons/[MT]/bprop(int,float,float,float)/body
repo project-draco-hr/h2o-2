@@ -7,18 +7,17 @@
   for (int i=0; i < _previous._a.length; i++) {
     int w=off + i;
     if (_previous._e != null)     _previous._e[i]+=g * _w[w];
-    float d=g * _previous._a[i] - (float)(_w[w] * params.l2) - (float)(Math.signum(_w[w]) * params.l1);
+    float grad=g * _previous._a[i] - (float)(_w[w] * params.l2) - (float)(Math.signum(_w[w]) * params.l1);
     if (_E_dx2 != null && _E_g2 != null) {
       assert(_wm == null && _bm == null);
-      final float grad=d;
       _E_g2[w]=(float)(params.rho * _E_g2[w] + (1. - params.rho) * grad * grad);
-      final float RMS_dx=(float)Math.sqrt(_E_dx2[w] + params.epsilon);
-      final float RMS_g=(float)Math.sqrt(_E_g2[w] + params.epsilon);
-      r=RMS_dx / RMS_g;
-      _E_dx2[w]=(float)(params.rho * _E_dx2[w] + (1. - params.rho) * (r * d) * (r * d));
+      final float RMS_dx=approxSqrt(_E_dx2[w] + (float)params.epsilon);
+      final float invRMS_g=approxInvSqrt(_E_g2[w] + (float)params.epsilon);
+      r=RMS_dx * invRMS_g;
+      _E_dx2[w]=(float)(params.rho * _E_dx2[w] + (1. - params.rho) * (r * grad) * (r * grad));
     }
     if (!params.nesterov_accelerated_gradient) {
-      final float delta=r * d;
+      final float delta=r * grad;
       _w[w]+=delta;
       if (_wm != null) {
         _w[w]+=m * _wm[w];
@@ -28,15 +27,15 @@
  else {
       if (_wm != null) {
         _wm[w]*=m;
-        _wm[w]+=d;
-        d=_wm[w];
+        _wm[w]+=grad;
+        grad=_wm[w];
       }
-      _w[w]+=r * d;
+      _w[w]+=r * grad;
     }
     if (params.max_w2 != Double.POSITIVE_INFINITY)     r2+=_w[w] * _w[w];
   }
   if (params.max_w2 != Double.POSITIVE_INFINITY && r2 > params.max_w2) {
-    final double scale=Math.sqrt(params.max_w2 / r2);
+    final double scale=approxSqrt((float)(params.max_w2 / r2));
     for (int i=0; i < _previous._a.length; i++)     _w[off + i]*=scale;
   }
   if (!params.nesterov_accelerated_gradient) {
