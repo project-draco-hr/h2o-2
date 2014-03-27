@@ -2,7 +2,7 @@
   Linear linear=(Linear)ls[ls.length - 1];
   for (  Layer l : ls)   l.fprop(-1,false);
   float[] output=ls[ls.length - 1]._a;
-  double[] target=linear.target();
+  float[] target=linear.target();
   e.mean_square=0;
   for (int o=0; o < output.length; o++) {
     final double d=target[o] - output[o];

@@ -1,6 +1,6 @@
 {
-  if (_values == null)   _values=new double[units];
+  if (_values == null)   _values=new float[units];
   long pos=_input._pos;
-  _values[0]=_vec.isNA(pos) ? missing_double_value : _vec.at(pos);
+  _values[0]=_vec.isNA(pos) ? missing_float_value : (float)_vec.at(pos);
   return _values;
 }
