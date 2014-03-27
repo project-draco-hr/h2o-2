@@ -1,0 +1,15 @@
+{
+  new ExcludeNAResponse().doAll(fr);
+  if (_nclass == 1) {
+    final float mean=(float)fr.vec(initialModel.responseName()).mean();
+    new MRTask2(){
+      @Override public void map(      Chunk[] chks){
+        Chunk tr=chk_tree(chks,0);
+        for (int i=0; i < tr._len; i++)         tr.set0(i,mean);
+      }
+    }
+.doAll(fr);
+  }
+ else {
+  }
+}
