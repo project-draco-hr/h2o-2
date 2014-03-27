@@ -1,0 +1,52 @@
+{
+  int rows=2048;
+  int cols=1024;
+  int loops=1000;
+  float[] a=new float[rows * cols];
+  double[] x=new double[cols];
+  double[] y=new double[rows];
+  double[] res=new double[rows];
+  byte[] bits=new byte[rows];
+  for (int i=0; i < rows; ++i) {
+    y[i]=0;
+    res[i]=0;
+    bits[i]=(byte)(new String("abcdefghijklmnopqrstuvwxyz").toCharArray()[i % 26]);
+  }
+  for (int i=0; i < cols; ++i) {
+    x[i]=((float)i) / cols;
+  }
+  for (int i=0; i < rows; ++i) {
+    int off=i * cols;
+    for (int j=0; j < cols; ++j) {
+      a[off + j]=((float)(i + j)) / cols;
+    }
+  }
+  double sum=0;
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(res,a,x,y,bits);
+    sum+=res[rows / 2];
+  }
+  System.gc();
+  sum=0;
+  long start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(res,a,x,y,bits);
+    sum+=res[rows / 2];
+  }
+  Log.info("result: " + sum + " and "+ Utils.sum(res));
+  Log.info("Naive time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  sum=0;
+  for (int l=0; l < loops; ++l) {
+    gemv(res,a,x,y,bits);
+    sum+=res[rows / 2];
+  }
+  System.gc();
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv(res,a,x,y,bits);
+    sum+=res[rows / 2];
+  }
+  Log.info("result: " + sum + " and "+ Utils.sum(res));
+  Log.info("Optimized time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+}
