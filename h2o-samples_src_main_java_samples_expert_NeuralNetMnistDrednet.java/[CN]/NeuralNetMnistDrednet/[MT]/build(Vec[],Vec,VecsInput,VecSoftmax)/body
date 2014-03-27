@@ -1,11 +1,10 @@
 {
-  Layer[] ls=new Layer[5];
-  ls[0]=new VecsInput(data,inputStats);
-  ls[1]=new Layer.RectifierDropout(1024);
-  ls[2]=new Layer.RectifierDropout(1024);
-  ls[3]=new Layer.RectifierDropout(2048);
-  ls[4]=new VecSoftmax(labels,outputStats);
   NeuralNet p=new NeuralNet();
+  Layer[] ls=new Layer[5];
+  p.hidden=new int[]{1024,1024,2048};
+  ls[0]=new VecsInput(data,inputStats);
+  for (int i=1; i < ls.length - 1; i++)   ls[i]=new Layer.RectifierDropout(p.hidden[i - 1]);
+  ls[4]=new VecSoftmax(labels,outputStats);
   p.rate=0.01f;
   p.rate_annealing=1e-6f;
   p.epochs=1000;
@@ -16,9 +15,12 @@
   p.momentum_start=0.5f;
   p.momentum_ramp=1800000;
   p.momentum_stable=0.99f;
+  p.score_training=1000;
+  p.score_validation=10000;
   p.l1=.00001f;
   p.l2=.00f;
   p.initial_weight_distribution=NeuralNet.InitialWeightDistribution.UniformAdaptive;
+  p.score_interval=30;
   for (int i=0; i < ls.length; i++) {
     ls[i].init(ls,i,p);
   }

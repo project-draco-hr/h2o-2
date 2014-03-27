@@ -6,7 +6,7 @@
     biases_momenta=new double[biases.length][];
     for (int i=0; i < biases_momenta.length; ++i)     biases_momenta[i]=new double[units[i + 1]];
   }
- else {
+ else   if (adaDelta()) {
     if (E_dx2 != null)     return;
     E_dx2=new float[weights.length][];
     for (int i=0; i < E_dx2.length; ++i)     E_dx2[i]=new float[units[i] * units[i + 1]];

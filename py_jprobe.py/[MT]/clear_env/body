@@ -1,0 +1,7 @@
+def clear_env():
+    if os.environ.get('HTTPS_PROXY'):
+        print "removing HTTPS_PROXY os env variable so requests won't use it"
+        del os.environ['HTTPS_PROXY']
+    if os.environ.get('HTTP_PROXY'):
+        print "removing HTTP_PROXY os env variable so requests won't use it"
+        del os.environ['HTTP_PROXY']

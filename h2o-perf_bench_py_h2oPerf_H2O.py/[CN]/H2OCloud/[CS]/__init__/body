@@ -15,6 +15,6 @@ def __init__(self, cloud_num, hosts_in_cloud, nodes_per_cloud, h2o_jar, base_por
     self.nodes = []
     self.jobs_run = 0
     for (node_num, node_) in enumerate(self.hosts_in_cloud):
-        node = H2OCloudNode(self.cloud_num, self.nodes_per_cloud, node_num, self.cloud_name, self.h2o_jar, node_['ip'], self.base_port, node_['memory_bytes'], self.output_dir, isEC2)
+        node = H2OCloudNode(self.cloud_num, self.nodes_per_cloud, node_num, self.cloud_name, self.h2o_jar, node_['ip'], node_['port'], node_['memory_bytes'], self.output_dir, isEC2)
         self.nodes.append(node)
     self.distribute_h2o()
