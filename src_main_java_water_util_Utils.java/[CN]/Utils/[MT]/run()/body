@@ -1,0 +1,47 @@
+{
+{
+    float err=0;
+    for (int i=0; i < 100000; ++i) {
+      final float x=Math.abs(new Random().nextFloat() * new Random().nextLong());
+      err=Math.max(err,Math.abs((float)Math.sqrt(x) - approxSqrt(x)) / (float)Math.sqrt(x));
+    }
+    Log.info("rel. error for approxSqrt(float): " + err);
+    Assert.assertTrue("rel. error for approxSqrt(float): " + err,Math.abs(err) < 5e-2);
+  }
+{
+    double err=0;
+    for (int i=0; i < 100000; ++i) {
+      final double x=Math.abs(new Random().nextDouble() * new Random().nextLong());
+      err=Math.max(err,Math.abs(Math.sqrt(x) - approxSqrt(x)) / Math.sqrt(x));
+    }
+    Log.info("rel. error for approxSqrt(double): " + err);
+    Assert.assertTrue("rel. error for approxSqrt(double): " + err,Math.abs(err) < 5e-2);
+  }
+{
+    float err=0;
+    for (int i=0; i < 100000; ++i) {
+      final float x=Math.abs(new Random().nextFloat() * new Random().nextLong());
+      err=Math.max(err,Math.abs((float)(1. / Math.sqrt(x)) - approxInvSqrt(x)) * (float)Math.sqrt(x));
+    }
+    Log.info("rel. error for approxInvSqrt(float): " + err);
+    Assert.assertTrue("rel. error for approxInvSqrt(float): " + err,Math.abs(err) < 2e-2);
+  }
+{
+    double err=0;
+    for (int i=0; i < 100000; ++i) {
+      final double x=Math.abs(new Random().nextDouble());
+      err=Math.max(err,Math.abs((1. / Math.sqrt(x)) - approxInvSqrt(x)) * Math.sqrt(x));
+    }
+    Log.info("rel. error for approxInvSqrt(double): " + err);
+    Assert.assertTrue("rel. error for approxInvSqrt(double): " + err,Math.abs(err) < 2e-2);
+  }
+{
+    double err=0;
+    for (int i=0; i < 100000; ++i) {
+      final double x=new Random().nextDouble() * new Random().nextInt(30);
+      err=Math.max(err,Math.abs(Math.exp(x) - approxExp(x)) / Math.exp(x));
+    }
+    Log.info("rel. error for approxExp(double): " + err);
+    Assert.assertTrue("rel. error for approxExp(double): " + err,Math.abs(err) < 5e-2);
+  }
+}
