@@ -1,0 +1,14 @@
+def __init__(self, maxNumbers, _maxdepth=None, _depth=0):
+    '\n        maxNumbers has to be a power of 2\n        '
+    if (_maxdepth is None):
+        _maxdepth = (math.log(maxNumbers, 2) - 1)
+    if ((_depth < _maxdepth) and (random.randint(0, _maxdepth) > _depth)):
+        self.left = Expression(maxNumbers, _maxdepth, (_depth + 1))
+    else:
+        self.left = random.randint(Expression.MIN_NUM, Expression.MAX_NUM)
+    if ((_depth < _maxdepth) and (random.randint(0, _maxdepth) > _depth)):
+        self.right = Expression(maxNumbers, _maxdepth, (_depth + 1))
+    else:
+        self.right = random.randint(Expression.MIN_NUM, Expression.MAX_NUM)
+    self.grouped = (random.random() < Expression.GROUP_PROB)
+    self.operator = random.choice(Expression.OPS)
