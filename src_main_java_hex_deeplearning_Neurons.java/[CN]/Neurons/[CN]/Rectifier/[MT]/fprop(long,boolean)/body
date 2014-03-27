@@ -1,4 +1,6 @@
 {
   gemv(_a,_w,_previous._a,_b,_dropout != null ? _dropout.bits() : null);
-  for (int o=0; o < _a.length; o++)   _a[o]=Math.max(_a[o],0f);
+  for (int o=0; o < _a.length; o++) {
+    _a[o]=Math.max(_a[o],0f);
+  }
 }

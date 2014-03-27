@@ -2,16 +2,22 @@
   if (params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0)) {
     if (Math.abs(g) <= 1e-10)     return;
   }
-  double r2=0;
   final float rho=(float)params.rho;
   final float eps=(float)params.epsilon;
+  final float l1=(float)params.l1;
+  final float l2=(float)params.l2;
+  final boolean update_prev=_previous._e != null;
+  final boolean have_momenta=_wm != null;
+  final boolean have_ada=_ada != null;
+  final boolean nesterov=params.nesterov_accelerated_gradient;
   final int off=u * _previous._a.length;
+  double r2=0;
   for (int i=0; i < _previous._a.length; i++) {
-    int w=off + i;
-    if (_previous._e != null)     _previous._e[i]+=g * _w[w];
-    float grad=g * _previous._a[i] - (float)(_w[w] * params.l2) - (float)(Math.signum(_w[w]) * params.l1);
-    if (_ada != null) {
-      assert(_wm == null && _bm == null);
+    final int w=off + i;
+    if (update_prev)     _previous._e[i]+=g * _w[w];
+    final float grad=g * _previous._a[i] - Math.signum(_w[w]) * l1 - _w[w] * l2;
+    if (have_ada) {
+      assert(!have_momenta);
       final float grad2=grad * grad;
       _ada[2 * w + 1]*=rho;
       _ada[2 * w + 1]+=(1f - rho) * grad2;
@@ -19,22 +25,26 @@
       final float invRMS_g=Utils.approxInvSqrt(_ada[2 * w + 1] + eps);
       r=RMS_dx * invRMS_g;
       _ada[2 * w]=rho * _ada[2 * w] + (1f - rho) * r * r* grad2;
-    }
-    if (!params.nesterov_accelerated_gradient) {
-      final float delta=r * grad;
-      _w[w]+=delta;
-      if (_wm != null) {
-        _w[w]+=m * _wm[w];
-        _wm[w]=delta;
-      }
+      _w[w]+=r * grad;
     }
  else {
-      if (_wm != null) {
-        _wm[w]*=m;
-        _wm[w]+=grad;
-        grad=_wm[w];
+      if (!nesterov) {
+        final float delta=r * grad;
+        _w[w]+=delta;
+        if (have_momenta) {
+          _w[w]+=m * _wm[w];
+          _wm[w]=delta;
+        }
       }
-      _w[w]+=r * grad;
+ else {
+        float tmp=grad;
+        if (have_momenta) {
+          _wm[w]*=m;
+          _wm[w]+=tmp;
+          tmp=_wm[w];
+        }
+        _w[w]+=r * tmp;
+      }
     }
     if (params.max_w2 != Double.POSITIVE_INFINITY)     r2+=_w[w] * _w[w];
   }
@@ -45,14 +55,14 @@
   if (!params.nesterov_accelerated_gradient) {
     final float delta=r * g;
     _b[u]+=delta;
-    if (_bm != null) {
+    if (have_momenta) {
       _b[u]+=m * _bm[u];
       _bm[u]=delta;
     }
   }
  else {
     float d=g;
-    if (_bm != null) {
+    if (have_momenta) {
       _bm[u]*=m;
       _bm[u]+=d;
       d=_bm[u];
