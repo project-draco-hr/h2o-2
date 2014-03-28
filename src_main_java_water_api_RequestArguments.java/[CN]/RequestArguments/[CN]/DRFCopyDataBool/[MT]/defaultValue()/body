@@ -1,6 +1,6 @@
 {
   long bs=fr().byteSize();
-  boolean b=MemoryManager.tryReserveTaskMem(bs);
-  if (b)   MemoryManager.freeTaskMem(bs);
-  return b;
+  if (!MemoryManager.tryReserveTaskMem(bs))   return false;
+  if (fr().anyVec().nChunks() >= 2 * H2O.CLOUD.size())   return false;
+  return true;
 }

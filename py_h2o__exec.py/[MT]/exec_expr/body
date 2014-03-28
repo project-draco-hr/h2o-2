@@ -10,13 +10,16 @@ def exec_expr(node=None, execExpr=None, resultKey=None, timeoutSecs=10, ignoreH2
         if (('funstr' in resultExec) and resultExec['funstr']):
             raise Exception(("cols and funstr shouldn't both be in resultExec: %s" % h2o.dump_json(resultExec)))
         else:
+            print 'Frame return'
             if (resultKey is not None):
                 kwargs = {'str': resultKey, }
                 resultExec = h2o_cmd.runExec(node, timeoutSecs=timeoutSecs, ignoreH2oError=ignoreH2oError, **kwargs)
                 h2o.verboseprint('resultExec2:', h2o.dump_json(resultExec))
             result = resultExec['cols'][0]['min']
     elif (('funstr' in resultExec) and resultExec['funstr']):
+        print 'function return'
         result = resultExec['funstr']
     else:
+        print 'scalar return'
         result = resultExec['scalar']
     return (resultExec, result)

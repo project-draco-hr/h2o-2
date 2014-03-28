@@ -1,0 +1,6 @@
+def __str__(self):
+    s = '{0!s} {1} {2!s}'.format(self.left, self.operator, self.right)
+    if self.grouped:
+        return '({0})'.format(s)
+    else:
+        return s

@@ -113,8 +113,8 @@
                       }
                       ref.train((int)p.epochs,rate,p.momentum_stable,loss);
                       mymodel=p.trainModel(mymodel);
-                      final double abseps=1e-13;
-                      final double releps=1e-13;
+                      final double abseps=1e-4;
+                      final double releps=1e-4;
                       neurons=DeepLearningTask.makeNeuronsForTesting(mymodel.model_info());
                       l=neurons[1];
                       for (int o=0; o < l._a.length; o++) {

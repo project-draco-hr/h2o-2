@@ -25,14 +25,14 @@
   double valStart=xv.min();
   double valEnd=xv.max();
   double[] quantiles_to_do=new double[1];
-  qbins1=new Quantiles.BinTask2(MAX_QBINS,valStart,valEnd,MULTIPASS).doAll(xv)._qbins;
+  qbins1=new Quantiles.BinTask2(MAX_QBINS,valStart,valEnd).doAll(xv)._qbins;
   for (  double quantile : p) {
     result=Double.NaN;
     for (int iteration=1; iteration <= MAX_ITERATIONS; iteration++) {
       if (iteration == 1) {
         if (qbins1 == null)         break;
         quantiles_to_do[0]=quantile;
-        qbins1[0].finishUp(xv,quantiles_to_do,INTERPOLATION);
+        qbins1[0].finishUp(xv,quantiles_to_do,INTERPOLATION,MULTIPASS);
         Log.debug("\nQ_ 1st multipass iteration: " + iteration + " valStart: "+ valStart+ " valEnd: "+ valEnd+ " valBinSize: "+ qbins1[0]._valBinSize);
         if (qbins1[0]._done) {
           result=qbins1[0]._pctile[0];
@@ -44,7 +44,7 @@
       if (iteration > 1) {
         if (qbinsM == null)         break;
         quantiles_to_do[0]=quantile;
-        qbinsM[0].finishUp(xv,quantiles_to_do,INTERPOLATION);
+        qbinsM[0].finishUp(xv,quantiles_to_do,INTERPOLATION,MULTIPASS);
         Log.debug("\nQ_ multipass iteration: " + iteration + " valStart: "+ valStart+ " valEnd: "+ valEnd+ " valBinSize: "+ qbinsM[0]._valBinSize);
         if (qbinsM[0]._done) {
           result=qbinsM[0]._pctile[0];
@@ -53,7 +53,7 @@
         valStart=qbinsM[0]._newValStart;
         valEnd=qbinsM[0]._newValEnd;
       }
-      qbinsM=new Quantiles.BinTask2(MAX_QBINS,valStart,valEnd,MULTIPASS).doAll(xv)._qbins;
+      qbinsM=new Quantiles.BinTask2(MAX_QBINS,valStart,valEnd).doAll(xv)._qbins;
     }
     qbinsM=null;
     nc.addNum(result);

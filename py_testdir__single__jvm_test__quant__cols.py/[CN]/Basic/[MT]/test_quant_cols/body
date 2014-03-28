@@ -2,7 +2,7 @@ def test_quant_cols(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     if (getpass.getuser() == 'kevin'):
-        tryList = [('home-0xdiag-datasets', 'airlines/year2013.csv', None, None, 'cE', 300), (None, '/home/kevin/Downloads/t.csv', 15, 11, 'cE', 300)]
+        tryList = [(None, '/home/kevin/Downloads/t.csv', 15, 11, 'cE', 300), ('home-0xdiag-datasets', 'airlines/year2013.csv', None, None, 'cE', 300)]
     else:
         tryList = [('home-0xdiag-datasets', 'airlines/year2013.csv', None, None, 'cE', 300)]
     trial = 0
@@ -26,7 +26,6 @@ def test_quant_cols(self):
             print 'Column', i, 'summary'
             h2o_cmd.runSummary(key=hex_key, max_qbins=1, cols=i)
         levels = h2o.nodes[0].levels(source=hex_key)
-        print 'levels result:', h2o.dump_json(levels)
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
         if (len(constantValuesDict) != 0):
             print ("Probably got a col NA'ed and constant values as a result %s" % constantValuesDict)
@@ -44,7 +43,7 @@ def test_quant_cols(self):
             elapsed = (time.time() - start)
             print 'quantile end on ', hex_key, 'took', elapsed, 'seconds.'
             quantileTime = elapsed
-            if (1 == 0):
+            if (1 == 1):
                 h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=True, col=column, datatype='float', quantile=(0.5 if DO_MEDIAN else 0.999), h2oQuantilesExact=qresult, use_genfromtxt=True)
             trial += 1
             execTime = 0

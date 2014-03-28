@@ -32,4 +32,4 @@ def __init__(self, cloud_num, nodes_per_cloud, node_num, cloud_name, h2o_jar, ip
     self.error_file_name = ''
     self.terminated = False
     ports_per_node = 2
-    self.my_base_port = ((self.base_port + ((self.cloud_num * self.nodes_per_cloud) * ports_per_node)) + (self.node_num * ports_per_node))
+    self.my_base_port = ((int(self.base_port) + int(((self.cloud_num * self.nodes_per_cloud) * ports_per_node))) + int((self.node_num * ports_per_node)))
