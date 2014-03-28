@@ -7,7 +7,6 @@
   for (int u=0; u < _a.length; u++) {
     if (v[u] == missing_float_value)     continue;
     float g=v[u] - _a[u];
-    g*=(1 - _a[u]) * _a[u];
     bprop(u,g,r,m);
   }
 }
