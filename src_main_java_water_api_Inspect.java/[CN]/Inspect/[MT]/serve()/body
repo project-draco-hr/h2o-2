@@ -56,6 +56,7 @@
   if (f instanceof KMeans2Model)   return KMeans2ModelView.redirect(this,key);
   if (f instanceof GridSearch)   return ((GridSearch)f).redirect();
   if (f instanceof hex.pca.PCAModel)   return PCAModelView.redirect(this,key);
+  if (f instanceof hex.nb.NBModel)   return NBModelView.redirect(this,key);
   if (f instanceof DRFModel)   return DRFModelView.redirect(this,key);
   return Response.error("No idea how to display a " + f.getClass());
 }
