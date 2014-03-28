@@ -50,7 +50,7 @@
   if ((arg._name.equals("score_validation_samples") || arg._name.equals("score_validation_sampling")) && validation == null) {
     arg.disable("Requires a validation data set.",inputArgs);
   }
-  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("score_duty_cycle")|| arg._name.equals("fast_mode")|| arg._name.equals("score_validation_sampling")|| arg._name.equals("max_after_balance_size")|| arg._name.equals("ignore_const_cols")|| arg._name.equals("force_load_balance")|| arg._name.equals("shuffle_training_data")|| arg._name.equals("nesterov_accelerated_gradient")|| arg._name.equals("classification_stop")|| arg._name.equals("regression_stop")|| arg._name.equals("quiet_mode")|| arg._name.equals("max_confusion_matrix_size")|| arg._name.equals("max_hit_ratio_k")) {
+  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("score_duty_cycle")|| arg._name.equals("fast_mode")|| arg._name.equals("score_validation_sampling")|| arg._name.equals("max_after_balance_size")|| arg._name.equals("ignore_const_cols")|| arg._name.equals("force_load_balance")|| arg._name.equals("shuffle_training_data")|| arg._name.equals("nesterov_accelerated_gradient")|| arg._name.equals("classification_stop")|| arg._name.equals("regression_stop")|| arg._name.equals("quiet_mode")|| arg._name.equals("max_confusion_matrix_size")|| arg._name.equals("max_hit_ratio_k")|| arg._name.equals("hidden_dropout_ratios")) {
     if (!expert_mode)     arg.disable("Only in expert mode.",inputArgs);
   }
   if (!adaptive_rate) {
@@ -65,6 +65,11 @@
       arg.disable("Only for non-adaptive learning rate.",inputArgs);
       momentum_start=0;
       momentum_stable=0;
+    }
+  }
+  if (arg._name.equals("hidden_dropout_ratios")) {
+    if (activation != Activation.TanhWithDropout && activation != Activation.MaxoutWithDropout && activation != Activation.RectifierWithDropout) {
+      arg.disable("Only for activation functions with dropout.",inputArgs);
     }
   }
 }

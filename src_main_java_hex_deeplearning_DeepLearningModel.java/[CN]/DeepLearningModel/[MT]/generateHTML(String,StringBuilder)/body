@@ -64,7 +64,7 @@
       }
  else       if (i < neurons.length - 1) {
         sb.append("<td>");
-        sb.append(neurons[i] instanceof Neurons.TanhDropout || neurons[i] instanceof Neurons.RectifierDropout || neurons[i] instanceof Neurons.MaxoutDropout ? "50%" : "0%");
+        sb.append(formatPct(neurons[i].params.hidden_dropout_ratios[i - 1]));
         sb.append("</td>");
       }
  else {
