@@ -1,5 +1,5 @@
 {
-  double[][] rate=parameters.adaptive_rate ? new double[units.length - 1][] : null;
+  float[][] rate=parameters.adaptive_rate ? new float[units.length - 1][] : null;
   for (int y=1; y < units.length; y++) {
     mean_rate[y]=rms_rate[y]=0;
     mean_bias[y]=rms_bias[y]=0;
@@ -7,13 +7,13 @@
     for (int u=0; u < biases[y - 1].length; u++) {
       mean_bias[y]+=biases[y - 1][u];
     }
-    if (rate != null)     rate[y - 1]=new double[weights[y - 1].length];
+    if (rate != null)     rate[y - 1]=new float[weights[y - 1].length];
     for (int u=0; u < weights[y - 1].length; u++) {
       mean_weight[y]+=weights[y - 1][u];
       if (rate != null) {
-        final double RMS_dx=Math.sqrt(E_dx2[y - 1][u] + parameters.epsilon);
-        final double RMS_g=Math.sqrt(E_g2[y - 1][u] + parameters.epsilon);
-        rate[y - 1][u]=(RMS_dx / RMS_g);
+        final float RMS_dx=Utils.approxSqrt(ada[y - 1][2 * u] + (float)parameters.epsilon);
+        final float invRMS_g=Utils.approxInvSqrt(ada[y - 1][2 * u + 1] + (float)parameters.epsilon);
+        rate[y - 1][u]=RMS_dx * invRMS_g;
         mean_rate[y]+=rate[y - 1][u];
       }
     }
@@ -32,9 +32,9 @@
         rms_rate[y]+=drate * drate;
       }
     }
-    rms_bias[y]=Math.sqrt(rms_bias[y] / biases[y - 1].length);
-    rms_weight[y]=Math.sqrt(rms_weight[y] / weights[y - 1].length);
-    if (rate != null)     rms_rate[y]=Math.sqrt(rms_rate[y] / rate[y - 1].length);
+    rms_bias[y]=Utils.approxSqrt(rms_bias[y] / biases[y - 1].length);
+    rms_weight[y]=Utils.approxSqrt(rms_weight[y] / weights[y - 1].length);
+    if (rate != null)     rms_rate[y]=Utils.approxSqrt(rms_rate[y] / rate[y - 1].length);
     unstable|=isNaN(mean_bias[y]) || isNaN(rms_bias[y]) || isNaN(mean_weight[y])|| isNaN(rms_weight[y]);
     final double thresh=1e10;
     unstable|=mean_bias[y] > thresh || isNaN(mean_bias[y]) || rms_bias[y] > thresh || isNaN(rms_bias[y]) || mean_weight[y] > thresh || isNaN(mean_weight[y]) || rms_weight[y] > thresh || isNaN(rms_weight[y]);

@@ -1,0 +1,36 @@
+{
+  if (title != null && !title.isEmpty())   DocGen.HTML.title(sb,title);
+  DocGen.HTML.paragraph(sb,"Model Key: " + _key);
+  sb.append("<div class='alert'>Actions: " + Predict.link(_key,"Predict on dataset") + ", "+ NaiveBayes.link(_dataKey,"Compute new model")+ "</div>");
+  DocGen.HTML.section(sb,"A-Priori Probabilities");
+  sb.append("<span style='display: inline-block;'>");
+  sb.append("<table class='table table-striped table-bordered'>");
+  String[] resdom=_domains[_domains.length - 1];
+  sb.append("<tr>");
+  for (int i=0; i < resdom.length; i++)   sb.append("<th>").append(resdom[i]).append("</th>");
+  sb.append("</tr>");
+  sb.append("<tr>");
+  for (int i=0; i < pprior.length; i++)   sb.append("<td>").append(ElementBuilder.format(pprior[i])).append("</td>");
+  sb.append("</tr>");
+  sb.append("</table></span>");
+  DocGen.HTML.section(sb,"Conditional Probabilities");
+  for (int col=0; col < pcond.length; col++) {
+    DocGen.HTML.paragraph(sb,"Column: " + _names[col]);
+    sb.append("<span style='display: inline-block;'>");
+    sb.append("<table class='table table-striped table-bordered'>");
+    sb.append("<tr>");
+    sb.append("<th>").append("Response/Predictor").append("</th>");
+    for (int i=0; i < _domains[col].length; i++)     sb.append("<th>").append(_domains[col][i]).append("</th>");
+    sb.append("</tr>");
+    for (int r=0; r < pcond[col].length; r++) {
+      sb.append("<tr>");
+      sb.append("<th>").append(resdom[r]).append("</th>");
+      for (int c=0; c < pcond[col][r].length; c++) {
+        double e=pcond[col][r][c];
+        sb.append("<td>").append(ElementBuilder.format(e)).append("</td>");
+      }
+      sb.append("</tr>");
+    }
+    sb.append("</table></span>");
+  }
+}

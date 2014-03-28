@@ -1,11 +1,11 @@
 {
   int rows=2048;
   int cols=1024;
-  int loops=1000;
+  int loops=5000;
   float[] a=new float[rows * cols];
-  double[] x=new double[cols];
-  double[] y=new double[rows];
-  double[] res=new double[rows];
+  float[] x=new float[cols];
+  float[] y=new float[rows];
+  float[] res=new float[rows];
   byte[] bits=new byte[rows];
   for (int i=0; i < rows; ++i) {
     y[i]=0;
@@ -21,32 +21,38 @@
       a[off + j]=((float)(i + j)) / cols;
     }
   }
-  double sum=0;
-  for (int l=0; l < loops; ++l) {
+  System.out.println("warming up.");
+  float sum=0;
+  for (int l=0; l < 11000; ++l) {
     gemv_naive(res,a,x,y,bits);
     sum+=res[rows / 2];
   }
-  System.gc();
+  for (int l=0; l < 11000; ++l) {
+    gemv(res,a,x,y,bits);
+    sum+=res[rows / 2];
+  }
+  try {
+    Thread.sleep(1000);
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  System.out.println("starting naive.");
   sum=0;
   long start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
     gemv_naive(res,a,x,y,bits);
     sum+=res[rows / 2];
   }
-  Log.info("result: " + sum + " and "+ Utils.sum(res));
-  Log.info("Naive time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
-  sum=0;
-  for (int l=0; l < loops; ++l) {
-    gemv(res,a,x,y,bits);
-    sum+=res[rows / 2];
-  }
-  System.gc();
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("Naive time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("starting optimized.");
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
     gemv(res,a,x,y,bits);
     sum+=res[rows / 2];
   }
-  Log.info("result: " + sum + " and "+ Utils.sum(res));
-  Log.info("Optimized time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("Optimized time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
 }

@@ -1,11 +1,11 @@
 {
   final long processed=_minfo.get_processed_total();
-  double m=momentum(processed);
-  double r=rate(processed) * (1 - m);
-  double g;
+  float m=momentum(processed);
+  float r=rate(processed) * (1 - m);
+  float g;
   for (int u=0; u < _a.length; u++) {
-    final double t=(u == target ? 1 : 0);
-    final double y=_a[u];
+    final float t=(u == target ? 1 : 0);
+    final float y=_a[u];
     if (params.loss == Loss.CrossEntropy) {
       g=t - y;
     }
