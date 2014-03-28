@@ -1,13 +1,5 @@
 {
-  AppendableVec av=new AppendableVec(Vec.newKey());
-  NewChunk nv=new NewChunk(av,0);
-  nv._ls=ls;
-  nv._xs=xs;
-  nv._len=nv._len2=ls.length;
-  Chunk bv=nv.compress();
-  bv._vec=av.close(new Futures());
-  assertTrue("Found chunk class " + bv.getClass() + " but expected "+ C,C.isInstance(bv));
-  assertEquals(hasFloat,bv.hasFloat());
-  for (int i=0; i < ls.length; i++)   assertEquals(ls[i] * DParseTask.pow10(xs[i]),bv.at0(i),bv.at0(i) * EPSILON);
-  UKV.remove(av._key);
+  int[] id=new int[xs.length];
+  for (int i=0; i < xs.length; ++i)   id[i]=i;
+  testImpl(ls,xs,id,C,hasFloat);
 }

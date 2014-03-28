@@ -2,6 +2,6 @@
   int off=_lastOff;
   int currentId=getId(off);
   if (rid != currentId)   off=findOffset(rid);
-  if (off < _mem.length - _idsz - _elsz)   return getId(off + _idsz + _elsz) - rid;
+  if (off < _mem.length - _ridsz - _valsz)   return getId(off + _ridsz + _valsz) - rid;
   return 0;
 }

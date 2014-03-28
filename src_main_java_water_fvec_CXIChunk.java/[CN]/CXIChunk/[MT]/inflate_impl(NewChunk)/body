@@ -6,10 +6,10 @@
   nc._xs=MemoryManager.malloc4(len);
   nc._id=MemoryManager.malloc4(len);
   int off=OFF;
-  for (int i=0; i < len; ++i, off+=_idsz + _elsz) {
+  for (int i=0; i < len; ++i, off+=_ridsz + _valsz) {
     nc._id[i]=getId(off);
     long v=getIValue(off);
-    if (v == NAS[_elsz_log - 1]) {
+    if (v == NAS[_valsz_log - 1]) {
       nc._ls[i]=Long.MAX_VALUE;
       nc._xs[i]=Integer.MIN_VALUE;
     }

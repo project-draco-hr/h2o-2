@@ -2,14 +2,14 @@
   _mem=bb.bufClose();
   _start=-1;
   _len=UDP.get4(_mem,0);
-  _idsz=_mem[4];
-  _elsz=_mem[5];
-  int x=_elsz;
+  _ridsz=_mem[4];
+  _valsz=_mem[5];
+  int x=_valsz;
   int log=0;
   while (x > 1) {
     x=x >>> 1;
     ++log;
   }
-  _elsz_log=log;
+  _valsz_log=log;
   return this;
 }

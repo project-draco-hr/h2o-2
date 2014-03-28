@@ -1,5 +1,9 @@
 {
   if (_ds == null || _len >= _ds.length)   append2slowd();
-  _ds[_len++]=d;
-  _len2++;
+  _ds[_len]=d;
+  if (_id != null && d != 0) {
+    _id[_len]=_len2;
+    ++_len;
+  }
+  ++_len2;
 }

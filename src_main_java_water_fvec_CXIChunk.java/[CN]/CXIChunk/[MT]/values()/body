@@ -2,10 +2,10 @@
   final Value val=new Value();
   return new Iterator<Value>(){
     @Override public boolean hasNext(){
-      return val.off != _mem.length - (_idsz + _elsz);
+      return val.off != _mem.length - (_ridsz + _valsz);
     }
     @Override public Value next(){
-      val.off+=(_idsz + _elsz);
+      val.off+=(_ridsz + _valsz);
       return val;
     }
     @Override public void remove(){
