@@ -1,0 +1,16 @@
+{
+  int res_idx=chks.length - 1;
+  Chunk res=chks[res_idx];
+  for (int row=0; row < chks[0]._len; row++) {
+    if (res.isNA0(row))     continue;
+    int rlevel=(int)res.at0(row);
+    _rescnt[rlevel]++;
+    _nobs++;
+    for (int col=0; col < res_idx; col++) {
+      Chunk C=chks[col];
+      if (C.isNA0(row))       continue;
+      int plevel=(int)C.at0(row);
+      _jntcnt[col][rlevel][plevel]++;
+    }
+  }
+}
