@@ -3,16 +3,16 @@
   parameters=p;
   layers=ls;
   weights=new float[ls.length][];
-  biases=new double[ls.length][];
+  biases=new float[ls.length][];
   for (int y=1; y < layers.length; y++) {
     weights[y]=layers[y]._w;
     biases[y]=layers[y]._b;
   }
   if (parameters.diagnostics) {
-    mean_bias=new double[ls.length];
-    rms_bias=new double[ls.length];
-    mean_weight=new double[ls.length];
-    rms_weight=new double[ls.length];
+    mean_bias=new float[ls.length];
+    rms_bias=new float[ls.length];
+    mean_weight=new float[ls.length];
+    rms_weight=new float[ls.length];
     for (int y=1; y < layers.length; y++) {
       final Layer l=layers[y];
       final int len=l._a.length;
@@ -36,8 +36,8 @@
           rms_weight[y]+=dw * dw;
         }
       }
-      rms_bias[y]=Math.sqrt(rms_bias[y] / len);
-      rms_weight[y]=Math.sqrt(rms_weight[y] / len / l._previous._a.length);
+      rms_bias[y]=(float)Math.sqrt(rms_bias[y] / len);
+      rms_weight[y]=(float)Math.sqrt(rms_weight[y] / len / l._previous._a.length);
       unstable|=Double.isNaN(mean_bias[y]) || Double.isNaN(rms_bias[y]) || Double.isNaN(mean_weight[y])|| Double.isNaN(rms_weight[y]);
       final double thresh=1e10;
       unstable|=mean_bias[y] > thresh || rms_bias[y] > thresh || mean_weight[y] > thresh || rms_weight[y] > thresh;

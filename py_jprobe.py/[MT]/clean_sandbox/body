@@ -1,0 +1,6 @@
+def clean_sandbox(LOG_DIR='sandbox'):
+    if os.path.exists(LOG_DIR):
+        shutil.rmtree(LOG_DIR)
+    if (not os.path.exists(LOG_DIR)):
+        os.mkdir(LOG_DIR)
+    return LOG_DIR

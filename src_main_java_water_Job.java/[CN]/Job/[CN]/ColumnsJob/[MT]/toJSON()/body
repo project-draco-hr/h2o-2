@@ -14,7 +14,7 @@
         jo.getAsJsonObject("source").addProperty(key,sb.toString().substring(0,sb.length() - 1));
       }
  else {
-        jo.getAsJsonObject("source").addProperty(key,"N/A");
+        jo.getAsJsonObject("source").add(key,JsonNull.INSTANCE);
       }
     }
   }

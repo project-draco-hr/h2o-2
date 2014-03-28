@@ -1,0 +1,18 @@
+def login(machine='164'):
+
+    def getit(k):
+        if (not os.path.isfile(k)):
+            print ('you probably should create this file to avoid typing %s' % k)
+            return None
+        else:
+            with open(k) as f:
+                lines = f.read().splitlines()
+            return lines[0]
+    home = os.path.expanduser('~')
+    username = getit(((home + '/.ec2/jenkins_user_') + machine))
+    pswd = getit(((home + '/.ec2/jenkins_pswd_') + machine))
+    if (not username):
+        username = raw_input(('Username [%s]: ' % getpass.getuser()))
+    if (not pswd):
+        pswd = getpass.getpass()
+    return (username, pswd)

@@ -2,7 +2,7 @@ def random_forest(self, data_key, trees, timeoutSecs=300, retryDelaySecs=1.0, in
     algo = ('2/DRF' if beta_features else 'RF')
     algoView = ('2/DRFView' if beta_features else 'RFView')
     if beta_features:
-        params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'cols': None, 'ignored_cols_by_name': None, 'classification': None, 'validation': None, 'importance': None, 'ntrees': trees, 'max_depth': None, 'min_rows': None, 'nbins': None, 'mtries': None, 'sample_rate': None, 'seed': None, 'build_tree_per_node': None, 'score_each_iteration': None, }
+        params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'cols': None, 'ignored_cols_by_name': None, 'classification': None, 'validation': None, 'importance': 1, 'ntrees': trees, 'max_depth': None, 'min_rows': None, 'nbins': None, 'mtries': None, 'sample_rate': None, 'seed': None, 'build_tree_per_node': None, 'score_each_iteration': None, }
         if ('model_key' in kwargs):
             kwargs['destination_key'] = kwargs['model_key']
     else:

@@ -1,0 +1,60 @@
+{
+  final boolean rclosed=env.popDbl() == 0 ? false : true;
+  if (env.isDbl()) {
+    final double cutoff=env.popDbl();
+    Frame fr=env.popAry();
+    String skey=env.key();
+    if (fr.vecs().length != 1 || fr.vecs()[0].isEnum())     throw new IllegalArgumentException("First argument must be a numeric column vector");
+    Frame fr2=new MRTask2(){
+      @Override public void map(      Chunk chk,      NewChunk nchk){
+        for (int r=0; r < chk._len; r++) {
+          double x=chk.at0(r);
+          if (Double.isNaN(x))           nchk.addNum(Double.NaN);
+ else {
+            if (rclosed)             nchk.addNum(x > cutoff ? 1 : 0);
+ else             nchk.addNum(x >= cutoff ? 1 : 0);
+          }
+        }
+      }
+    }
+.doAll(1,fr).outputFrame(fr._names,fr.domains());
+    env.subRef(fr,skey);
+    env.pop();
+    env.push(fr2);
+  }
+ else   if (env.isAry()) {
+    Frame ary=env.popAry();
+    String skey1=env.key();
+    if (ary.vecs().length != 1 || ary.vecs()[0].isEnum())     throw new IllegalArgumentException("Second argument must be a numeric column vector");
+    Vec brks=ary.vecs()[0];
+    final int len=(int)brks.length();
+    final double[] cutoffs=new double[len];
+    for (int i=0; i < len - 1; i++) {
+      if (brks.at(i) > brks.at(i + 1))       throw new IllegalArgumentException("Second argument must be sorted in non-decreasing order");
+      cutoffs[i]=brks.at(i);
+    }
+    cutoffs[len - 1]=brks.at(len - 1);
+    Frame fr=env.popAry();
+    String skey2=env.key();
+    if (fr.vecs().length != 1 || fr.vecs()[0].isEnum())     throw new IllegalArgumentException("First argument must be a numeric column vector");
+    Frame fr2=new MRTask2(){
+      @Override public void map(      Chunk chk,      NewChunk nchk){
+        for (int r=0; r < chk._len; r++) {
+          double x=chk.at0(r);
+          if (Double.isNaN(x))           nchk.addNum(Double.NaN);
+ else {
+            double n=Arrays.binarySearch(cutoffs,x);
+            if (n < 0)             nchk.addNum(-n - 1);
+ else             if (rclosed && n == len - 1)             nchk.addNum(n);
+ else             nchk.addNum(n + 1);
+          }
+        }
+      }
+    }
+.doAll(1,fr).outputFrame(fr._names,fr.domains());
+    env.subRef(ary,skey1);
+    env.subRef(fr,skey2);
+    env.pop();
+    env.push(fr2);
+  }
+}

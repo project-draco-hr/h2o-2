@@ -1,24 +1,34 @@
 {
   JsonObject result=new JsonObject();
-  int offset=_offset.value();
-  H2O cloud=H2O.CLOUD;
-  Key[] keys=new Key[_view._max];
+  final int offset=_offset.value();
+  final int view=_view.value();
+  final H2O cloud=H2O.CLOUD;
+  Key[] keys=new Key[view];
   int len=0;
+  int off=0;
   String filter=_filter.value();
-  for (  Key key : H2O.globalKeySet(null)) {
+  Set<Key> keySet=new TreeSet(H2O.globalKeySet(null));
+  int kcnt=keySet.size();
+  int allkeys=0;
+  for (  Key key : keySet) {
+    kcnt--;
     if (filter != null && key.toString().indexOf(filter) == -1)     continue;
     if (!key.user_allowed())     continue;
     if (H2O.get(key) == null)     continue;
-    keys[len++]=key;
-    if (len == keys.length) {
-      result.addProperty(Constants.MORE,true);
-      break;
+    if (off >= offset) {
+      if (len < view) {
+        keys[len++]=key;
+        if (len == view && kcnt > 0) {
+          result.addProperty(Constants.MORE,true);
+        }
+      }
     }
+ else     off++;
+    allkeys++;
   }
-  Arrays.sort(keys,0,len);
-  if ((offset >= len) && (offset != 0))   return Response.error("Only " + len + " keys available");
+  if (off < offset)   return Response.error("Not enough keys - request offset is " + off + " but K/V contains "+ len+ " keys.");
   JsonArray ary=new JsonArray();
-  for (int i=offset; i < offset + _view.value(); i++) {
+  for (int i=0; i < len; i++) {
     if (i >= len)     break;
     Value val=DKV.get(keys[i]);
     if (val != null) {
@@ -32,7 +42,7 @@
   result.addProperty(NODE_NAME,H2O.SELF.toString());
   Response r=Response.done(result);
   r.addHeader("<form class='well form-inline' action='StoreView.html'>" + " <input type='text' class='input-small span10' placeholder='filter' " + "    name='filter' id='filter' value='" + _filter.value() + "' maxlength='512'>"+ " <button type='submit' class='btn btn-primary'>Filter keys!</button>"+ "</form>");
-  r.setBuilder(KEYS,new PaginatedTable(argumentsToJson(),offset,_view.value(),len,false));
+  r.setBuilder(KEYS,new PaginatedTable(argumentsToJson(),offset,view,allkeys,false));
   r.setBuilder(KEYS + "." + KEY,new KeyCellBuilder());
   r.setBuilder(KEYS + ".col_0",new KeyMinAvgMaxBuilder());
   r.setBuilder(KEYS + ".col_1",new KeyMinAvgMaxBuilder());

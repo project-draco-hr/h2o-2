@@ -2,6 +2,8 @@
   if (rpc == null)   return;
   T mrt=rpc.get();
   _profile.gather(mrt._profile,rpc.size_rez());
-  if (mrt._nodes != -1L)   if (_res == null)   _res=mrt;
- else   _res.reduce4(mrt);
+  if (mrt._nhi != -1L) {
+    if (_res == null)     _res=mrt;
+ else     _res.reduce4(mrt);
+  }
 }

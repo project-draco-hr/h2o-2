@@ -14,7 +14,7 @@
         info._error=info._model.mse();
       }
     }
-    if (info._cm != null)     info._error=info._cm.err();
+    if (info._cm != null && info._cm._arr != null)     info._error=info._cm.err();
     if (infos != null)     infos.add(info);
     prediction_errors[i]=info._error;
     job_state[i]=info._job.state.toString();

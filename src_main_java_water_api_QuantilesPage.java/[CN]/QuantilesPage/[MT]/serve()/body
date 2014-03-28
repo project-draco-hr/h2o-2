@@ -15,84 +15,83 @@
     vec.rollupStats(fs);
   }
   fs.blockForPending();
-  double valStart=vecs[0].min();
-  double valEnd=vecs[0].max();
   boolean multiPass;
   Quantiles[] qbins;
+  double[] quantiles_to_do=new double[1];
+  quantiles_to_do[0]=quantile;
   double approxResult;
   double exactResult;
   result_single=Double.NaN;
   result=Double.NaN;
   boolean done=false;
+  qbins=null;
   if (multiple_pass == 0 || multiple_pass == 2) {
     multiPass=false;
     result_single=Double.NaN;
     if (multiple_pass == 0)     result=Double.NaN;
-    qbins=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(vecs[0])._qbins;
+    double valStart=vecs[0].min();
+    double valEnd=vecs[0].max();
+    qbins=new Quantiles.BinTask2(max_qbins,valStart,valEnd).doAll(vecs[0])._qbins;
     Log.debug("Q_ for approx. valStart: " + valStart + " valEnd: "+ valEnd);
+    interpolation_type_used=interpolation_type;
+    quantile_requested=quantiles_to_do[0];
     if (qbins != null) {
-      qbins[0].finishUp(vecs[0]);
+      qbins[0].finishUp(vecs[0],quantiles_to_do,interpolation_type,multiPass);
       column_name=names[0];
-      quantile_requested=qbins[0].QUANTILES_TO_DO[0];
       iterations=1;
       done=qbins[0]._done;
       approxResult=qbins[0]._pctile[0];
       interpolated=qbins[0]._interpolated;
-      interpolation_type_used=qbins[0]._interpolationType;
     }
  else {
       column_name="";
-      quantile_requested=quantile;
       iterations=0;
       done=false;
       approxResult=Double.NaN;
       interpolated=false;
-      interpolation_type_used=interpolation_type;
     }
     result_single=approxResult;
     if (multiple_pass == 0)     result=approxResult;
-    qbins=null;
   }
   if (multiple_pass == 1 || multiple_pass == 2) {
     final int MAX_ITERATIONS=16;
     multiPass=true;
     exactResult=Double.NaN;
-    Quantiles[] qbins2;
-    int iteration;
-    qbins2=null;
+    double valStart=vecs[0].min();
+    double valEnd=vecs[0].max();
     for (int b=0; b < MAX_ITERATIONS; b++) {
-      qbins2=new Quantiles.BinTask2(quantile,max_qbins,valStart,valEnd,multiPass,interpolation_type).doAll(vecs[0])._qbins;
+      if (!(multiple_pass == 2 && b == 0)) {
+        qbins=new Quantiles.BinTask2(max_qbins,valStart,valEnd).doAll(vecs[0])._qbins;
+      }
       iterations=b + 1;
-      if (qbins2 == null)       break;
+      if (qbins == null)       break;
  else {
-        qbins2[0].finishUp(vecs[0]);
+        qbins[0].finishUp(vecs[0],quantiles_to_do,interpolation_type,multiPass);
         Log.debug("\nQ_ multipass iteration: " + iterations + " valStart: "+ valStart+ " valEnd: "+ valEnd);
-        double valBinSize=qbins2[0]._valBinSize;
+        double valBinSize=qbins[0]._valBinSize;
         Log.debug("Q_ valBinSize: " + valBinSize);
-        valStart=qbins2[0]._newValStart;
-        valEnd=qbins2[0]._newValEnd;
-        done=qbins2[0]._done;
+        valStart=qbins[0]._newValStart;
+        valEnd=qbins[0]._newValEnd;
+        done=qbins[0]._done;
         if (done)         break;
       }
     }
-    if (qbins2 != null) {
+    interpolation_type_used=interpolation_type;
+    quantile_requested=quantiles_to_do[0];
+    if (qbins != null) {
       column_name=names[0];
-      quantile_requested=qbins2[0].QUANTILES_TO_DO[0];
-      done=qbins2[0]._done;
-      exactResult=qbins2[0]._pctile[0];
-      interpolated=qbins2[0]._interpolated;
-      interpolation_type_used=qbins2[0]._interpolationType;
+      done=qbins[0]._done;
+      exactResult=qbins[0]._pctile[0];
+      interpolated=qbins[0]._interpolated;
     }
  else {
       column_name="";
-      quantile_requested=quantile;
       iterations=0;
       done=false;
       exactResult=Double.NaN;
       interpolated=false;
-      interpolation_type_used=interpolation_type;
     }
-    qbins2=null;
+    qbins=null;
     result=exactResult;
   }
   return Response.done(this);

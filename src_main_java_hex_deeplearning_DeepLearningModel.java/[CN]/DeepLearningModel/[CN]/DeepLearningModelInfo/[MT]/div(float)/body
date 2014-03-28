@@ -1,0 +1,11 @@
+{
+  for (  float[] weight : weights)   Utils.div(weight,N);
+  for (  float[] bias : biases)   Utils.div(bias,N);
+  if (has_momenta()) {
+    for (    float[] weight_momenta : weights_momenta)     Utils.div(weight_momenta,N);
+    for (    float[] bias_momenta : biases_momenta)     Utils.div(bias_momenta,N);
+  }
+  if (adaDelta()) {
+    for (    float[] dx2 : ada)     Utils.div(dx2,N);
+  }
+}
