@@ -1,0 +1,14 @@
+{
+  logStart();
+  double[] pprior=tsk._rescnt.clone();
+  double[][][] pcond=tsk._jntcnt.clone();
+  String[][] domains=dinfo._adaptedFrame.domains();
+  for (int col=0; col < pcond.length; col++) {
+    for (int i=0; i < pcond[0].length; i++) {
+      for (int j=0; j < pcond[0][0].length; j++)       pcond[col][i][j]=(pcond[col][i][j] + laplace) / (pprior[i] + domains[col].length * laplace);
+    }
+  }
+  for (int i=0; i < pprior.length; i++)   pprior[i]=(pprior[i] + laplace) / (tsk._nobs + tsk._nres * laplace);
+  Key dataKey=input("source") == null ? null : Key.make(input("source"));
+  return new NBModel(destination_key,dataKey,dinfo,tsk,pprior,pcond,laplace);
+}
