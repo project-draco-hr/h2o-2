@@ -1,7 +1,7 @@
 {
+  assert(_res.model_info().get_params().replicate_training_data);
   super.postGlobal();
-  assert(_res._output.get_params().replicate_training_data);
-  _res._output.div(_res._chunk_node_count);
-  _res._output.add_processed_global(_res._output.get_processed_local());
-  _res._output.set_processed_local(0l);
+  _res.model_info().div(_res._chunk_node_count);
+  _res.model_info().add_processed_global(_res.model_info().get_processed_local());
+  _res.model_info().set_processed_local(0l);
 }

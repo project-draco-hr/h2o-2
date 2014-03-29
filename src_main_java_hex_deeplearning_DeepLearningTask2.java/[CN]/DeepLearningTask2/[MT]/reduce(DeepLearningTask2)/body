@@ -1,11 +1,8 @@
 {
-  if (_res == null) {
-    _res=drt._res;
-  }
+  if (_res == null)   _res=drt._res;
  else {
-    assert(drt._res._output != _res._output);
     _res._chunk_node_count+=drt._res._chunk_node_count;
-    _res._output.add(drt._res._output);
+    _res.model_info().add(drt._res.model_info());
   }
-  assert(_res._output.get_params().replicate_training_data);
+  assert(_res.model_info().get_params().replicate_training_data);
 }
