@@ -1,0 +1,34 @@
+def test_parse_nflx_loop_hdfs_fvec(self):
+    h2o.beta_features = True
+    importFolderPath = 'standard'
+    csvFilename = 'covtype.data'
+    csvFilePattern = 'covtype.data'
+    trialMax = 100
+    parseTrial = 0
+    summaryTrial = 0
+    timeoutSecs = 500
+    outstanding = 5
+    while (parseTrial <= trialMax):
+        start = time.time()
+        for o in range(outstanding):
+            parseTrial += 1
+            src_key = ((csvFilename + '_') + str(parseTrial))
+            hex_key = (((csvFilename + '_') + str(parseTrial)) + '.hex')
+            csvPathname = ((importFolderPath + '/') + csvFilePattern)
+            start = time.time()
+            (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', src_key=src_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
+            parseResult = h2i.parse_only(pattern=importPattern, hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60, noPoll=True)
+        h2o_jobs.pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=0.25)
+        elapsed = (time.time() - start)
+        print 'Parse group end at #', parseTrial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        o = (summaryTrial + outstanding)
+        for p in range(outstanding):
+            summaryTrial += 1
+            hex_key = (((csvFilename + '_') + str(o)) + '.hex')
+            if DO_EXEC_QUANT:
+                execExpr = ('r2=c(1); r2=quantile(%s[,1], c(%s));' % (hex_key, thresholds))
+                (resultExec, result) = h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+            else:
+                h2o_cmd.runSummary(key=hex_key)
+            o -= 1
+        h2o_cmd.runStoreView()
