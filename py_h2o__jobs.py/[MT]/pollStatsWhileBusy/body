@@ -4,7 +4,7 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
     start = time.time()
     polls = 0
     statSum = {}
-    lastUsedMemBytes = [1 for i in range(32)]
+    lastUsedMemBytes = [1 for i in range(64)]
     while busy:
         polls += 1
         a = h2o.nodes[0].jobs_admin(timeoutSecs=10)
