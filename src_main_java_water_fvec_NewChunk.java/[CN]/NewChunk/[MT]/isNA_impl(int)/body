@@ -1,4 +1,8 @@
 {
-  if (_len2 != _len)   throw H2O.unimpl();
-  return isNA(i);
+  if (_len2 != _len) {
+    int idx=Arrays.binarySearch(_id,0,_len,i);
+    if (idx >= 0)     i=idx;
+ else     return false;
+  }
+  return isNA2(i);
 }
