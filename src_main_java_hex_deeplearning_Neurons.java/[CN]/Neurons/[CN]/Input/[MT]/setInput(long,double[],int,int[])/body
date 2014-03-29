@@ -2,8 +2,7 @@
   Arrays.fill(_a,0f);
   for (int i=0; i < numcat; ++i)   _a[cats[i]]=1f;
   for (int i=0; i < nums.length; ++i)   _a[_dinfo.numStart() + i]=Double.isNaN(nums[i]) ? 0f : (float)nums[i];
-  final double rate=params.input_dropout_ratio;
-  if (rate == 0 || _dropout == null)   return;
+  if (_dropout == null)   return;
   seed+=params.seed + 0x1337B4BE;
-  _dropout.randomlySparsifyActivation(_a,rate,seed);
+  _dropout.randomlySparsifyActivation(_a,seed);
 }

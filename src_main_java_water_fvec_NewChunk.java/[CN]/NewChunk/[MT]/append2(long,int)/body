@@ -1,14 +1,14 @@
 {
-  if (_ls == null || _len >= _ls.length)   append2slow();
-  if (_len2 != _len) {
-    if (x != 0)     cancel_sparse();
- else     if (l == 0) {
-      _len2++;
+  if (_id == null || l != 0) {
+    if (_ls == null || _len == _ls.length) {
+      append2slow();
+      append2(l,x);
       return;
     }
- else     x=_len2;
+    _ls[_len]=l;
+    _xs[_len]=x;
+    if (_id != null)     _id[_len]=_len2;
+    _len++;
   }
-  _ls[_len]=l;
-  _xs[_len++]=x;
   _len2++;
 }

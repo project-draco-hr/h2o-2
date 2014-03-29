@@ -6,7 +6,7 @@
     _e=new float[units];
   }
   if (training && (this instanceof MaxoutDropout || this instanceof TanhDropout || this instanceof RectifierDropout|| this instanceof Input)) {
-    _dropout=new Dropout(units);
+    _dropout=this instanceof Input ? new Dropout(units,params.input_dropout_ratio) : new Dropout(units,params.hidden_dropout_ratios[index - 1]);
   }
   if (!(this instanceof Input)) {
     _previous=neurons[index - 1];

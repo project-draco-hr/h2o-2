@@ -5,7 +5,7 @@
       try {
         GLMModel[] models=new GLMModel[keys.length];
         for (int i=0; i < models.length; ++i)         models[i]=DKV.get(keys[i]).get();
-        new GLMXValidationTask(model,_lambdaIdx,models,cmp).dfork(_dinfo._adaptedFrame);
+        new GLMXValidationTask(model,_lambdaIdx,models,cmp).asyncExec(_dinfo._adaptedFrame);
       }
  catch (      Throwable ex) {
         cmp.completeExceptionally(ex);
