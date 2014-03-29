@@ -1,16 +1,18 @@
 {
-  final Value val=new Value();
-  return new Iterator<Value>(){
-    @Override public boolean hasNext(){
-      return val.off != _mem.length - (_ridsz + _valsz);
+  return new SparseIterator(new Value(){
+    @Override public final long asLong(){
+      long v=getIValue(_off);
+      if (v == NAS[(_valsz >>> 1) - 1])       throw new IllegalArgumentException("at8 but value is missing");
+      return v;
     }
-    @Override public Value next(){
-      val.off+=(_ridsz + _valsz);
-      return val;
+    @Override public final double asDouble(){
+      long v=getIValue(_off);
+      return (v == NAS[_valsz_log - 1]) ? Double.NaN : v;
     }
-    @Override public void remove(){
-      throw new UnsupportedOperationException();
+    @Override public final boolean isNA(){
+      long v=getIValue(_off);
+      return (v == NAS[_valsz_log]);
     }
   }
-;
+);
 }
