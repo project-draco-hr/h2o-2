@@ -12,7 +12,7 @@
     final long model_size=model.model_info().size();
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
-    train=updateFrame(train,reBalance(train,seed));
+    train=updateFrame(train,reBalance(train,seed,replicate_training_data));
     float[] trainSamplingFactors;
     if (classification && balance_classes) {
       trainSamplingFactors=new float[train.lastVec().domain().length];
@@ -28,22 +28,25 @@
       if (getValidAdaptor().needsAdaptation2CM()) {
         adaptedValid.add(getValidAdaptor().adaptedValidationResponse(_responseName),getValidAdaptor().getAdaptedValidationResponse2CM());
       }
-      validScoreFrame=updateFrame(adaptedValid,reBalance(adaptedValid,seed + 1));
       if (classification && balance_classes && score_validation_sampling == ClassSamplingMethod.Stratified) {
-        validScoreFrame=updateFrame(validScoreFrame,sampleFrameStratified(validScoreFrame,validScoreFrame.lastVec(),null,score_validation_samples > 0 ? score_validation_samples : validScoreFrame.numRows(),seed + 1,false,false));
+        validScoreFrame=updateFrame(adaptedValid,sampleFrameStratified(adaptedValid,adaptedValid.lastVec(),null,score_validation_samples > 0 ? score_validation_samples : adaptedValid.numRows(),seed + 1,false,false));
       }
  else {
-        validScoreFrame=updateFrame(validScoreFrame,sampleFrame(validScoreFrame,score_validation_samples,seed + 1));
+        validScoreFrame=updateFrame(adaptedValid,sampleFrame(adaptedValid,score_validation_samples,seed + 1));
       }
+      validScoreFrame=updateFrame(validScoreFrame,reBalance(validScoreFrame,seed + 1,false));
       Log.info("Number of chunks of the validation data: " + validScoreFrame.anyVec().nChunks());
     }
-    if (mini_batch > train.numRows()) {
-      Log.warn("Setting mini_batch (" + mini_batch + ") to the number of rows of the training data ("+ (mini_batch=train.numRows())+ ").");
+    if ((mini_batch == -1 || mini_batch == 0 || mini_batch > train.numRows()) && !replicate_training_data) {
+      Log.warn("Setting mini_batch (" + mini_batch + ") to one epoch: #rows ("+ (mini_batch=train.numRows())+ ").");
+    }
+    if ((mini_batch == -1 || mini_batch > H2O.CLOUD.size() * train.numRows()) && replicate_training_data) {
+      Log.warn("Setting mini_batch (" + mini_batch + ") to the largest possible number: #nodes x #rows ("+ (mini_batch=H2O.CLOUD.size() * train.numRows())+ ").");
     }
     final float sync_fraction=mini_batch == 0l ? 1.0f : (float)mini_batch / train.numRows();
     if (!quiet_mode)     Log.info("Initial model:\n" + model.model_info());
     Log.info("Starting to train the Deep Learning model.");
-    do     model.set_model_info(new DeepLearningTask(model.model_info(),sync_fraction).doAll(train).model_info());
+    do     model.set_model_info(H2O.CLOUD.size() > 1 && replicate_training_data ? new DeepLearningTask2(train,model.model_info(),sync_fraction / H2O.CLOUD.size()).invokeOnAllNodes().model_info() : new DeepLearningTask(model.model_info(),sync_fraction).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor()));
     Log.info("Finished training the Deep Learning model.");
     return model;

@@ -1,6 +1,9 @@
 {
   int cores=0;
-  for (  H2ONode node : H2O.CLOUD._memary)   cores+=node._heartbeat._num_cpus;
+  for (  H2ONode node : H2O.CLOUD._memary) {
+    if (local)     cores=Math.max(cores,node._heartbeat._num_cpus);
+ else     cores+=node._heartbeat._num_cpus;
+  }
   final int splits=4 * cores;
   if ((fr.vecs()[0].nChunks() < cores || shuffle) && fr.numRows() > splits) {
     Vec[] vecs=fr.vecs().clone();
