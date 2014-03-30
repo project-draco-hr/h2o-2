@@ -31,7 +31,7 @@ def test_GBM_cancel_model_reuse(self):
             jobids = []
             for j in range(5):
                 kwargs['destination_key'] = ('GBMBad' + str(j))
-                GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, ignoreH2oError=True, **kwargs)
+                GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
                 jobids.append(GBMFirstResult['job_key'])
                 h2o.check_sandbox_for_errors()
             h2o_jobs.cancelAllJobs()
