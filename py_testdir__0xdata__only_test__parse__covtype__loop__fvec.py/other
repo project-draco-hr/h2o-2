@@ -1,8 +1,22 @@
 import unittest, sys, random, time
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_browse as h2b, h2o_import as h2i, h2o_hosts, h2o_jobs, h2o_exec as h2e
-print 'Back to Basics!'
-DO_EXEC_QUANT = True
-thresholds = '0,0.001,0.999'
+import h2o_util
+import multiprocessing, os, signal, time
+from multiprocessing import Process, Queue, Pool
+print 'Back to Basics with a multiprocessing twist!'
+DO_EXEC_QUANT = False
+DO_SUMMARY = True
+DO_XORSUM = False
+DO_BIGFILE = True
+DO_IRIS = False
+OUTSTANDING = 5
+DO_PARSE_ALSO = True
+UPLOAD_PARSE_DIFF_NODES = True
+RANDOM_HEAP = False
+PARSE_NOPOLL = False
+thresholdsList = [0.5]
+thresholds = ','.join(map(str, thresholdsList))
+pool = Pool(16)
 if (__name__ == '__main__'):
     h2o.unit_main()

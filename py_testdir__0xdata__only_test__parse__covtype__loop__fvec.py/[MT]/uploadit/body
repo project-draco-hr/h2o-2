@@ -1,0 +1,10 @@
+def uploadit(n, bucket, path, src_key, hex_key, timeoutSecs=60, retryDelaySecs=1, pollTimeoutSecs=30):
+    (importResult, importPattern) = h2i.import_only(node=h2o.nodes[n], bucket=bucket, path=path, schema='put', src_key=src_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=60)
+    print 'uploadit:', importPattern, hex_key
+    if UPLOAD_PARSE_DIFF_NODES:
+        np1 = ((n + 1) % len(h2o.nodes))
+    else:
+        np1 = n
+    if DO_PARSE_ALSO:
+        parseit(np1, importPattern, hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
+    return (importPattern, hex_key)

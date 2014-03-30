@@ -2,6 +2,7 @@ import random, jenkinsapi, getpass, re, os, argparse, shutil, json, logging, sys
 import string
 from jenkinsapi.jenkins import Jenkins
 from see import see
+DO_LAST_GOOD = False
 import sys
 sys.excepthook = my_hook
 parse = argparse.ArgumentParser()
@@ -100,7 +101,7 @@ if (1 == 0):
     print ('tested search_artifact_by_regexp', repr(result))
 print 'last_good_buildnumber', job.get_last_good_buildnumber()
 print 'last_buildnumber', job.get_last_buildnumber()
-if True:
+if DO_LAST_GOOD:
     print ('Using last_good_buildnumber %s for result set' % job.get_last_good_buildnumber())
     build = job.get_build(job.get_last_good_buildnumber())
 else:
