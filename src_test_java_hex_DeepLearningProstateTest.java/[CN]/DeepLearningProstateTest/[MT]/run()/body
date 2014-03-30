@@ -4,15 +4,15 @@
   Key vfile=NFSFileVec.make(find_test_file("smalldata/./logreg/prostate.csv"));
   Frame vframe=ParseDataset2.parse(Key.make(),new Key[]{vfile});
   int count=0;
-  for (  boolean replicate : new boolean[]{true}) {
+  for (  boolean replicate : new boolean[]{false}) {
     for (    boolean load_balance : new boolean[]{true}) {
       for (      boolean shuffle : new boolean[]{false}) {
         for (        boolean balance_classes : new boolean[]{false}) {
           for (          int resp : new int[]{1}) {
             for (            DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Uniform}) {
-              for (              int scoretraining : new int[]{200}) {
+              for (              int scoretraining : new int[]{0}) {
                 for (                int scorevalidation : new int[]{200}) {
-                  for (                  int vf : new int[]{1}) {
+                  for (                  int vf : new int[]{-1}) {
                     count++;
                     Log.info("**************************)");
                     Log.info("Starting test #" + count);
