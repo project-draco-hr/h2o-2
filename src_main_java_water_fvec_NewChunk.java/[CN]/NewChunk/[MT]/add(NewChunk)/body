@@ -1,21 +1,2 @@
 {
-  if (nc._len == 0)   return;
-  if (nc.sparse() != sparse()) {
-    cancel_sparse();
-    nc.cancel_sparse();
-  }
-  if (_ds != null)   throw H2O.unimpl();
-  while (_len + nc._len >= _xs.length)   _xs=MemoryManager.arrayCopyOf(_xs,_xs.length << 1);
-  _ls=MemoryManager.arrayCopyOf(_ls,_xs.length);
-  if (_id != null)   _id=MemoryManager.arrayCopyOf(_id,_xs.length);
-  System.arraycopy(nc._ls,0,_ls,_len,nc._len);
-  System.arraycopy(nc._xs,0,_xs,_len,nc._len);
-  if (nc._id != null)   System.arraycopy(nc._id,0,_id,_len,nc._len);
-  for (int i=_len; i < _len + nc._len; ++i)   _id[i]+=_len2;
-  _len+=nc._len;
-  _len2+=nc._len2;
-  nc._ls=null;
-  nc._xs=null;
-  nc._id=null;
-  nc._len=nc._len2=0;
 }
