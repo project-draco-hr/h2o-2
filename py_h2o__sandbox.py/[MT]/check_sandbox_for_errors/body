@@ -28,8 +28,15 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
     for filename in fileList:
         sandFile = open(((LOG_DIR + '/') + filename), 'r')
         try:
-            with open((((LOG_DIR + '/') + 'doneToLine.') + filename)) as f:
-                doneToLine = int(f.readline().rstrip())
+            with open(((LOG_DIR + '/doneToLine.') + filename)) as f:
+                r = f.readline().rstrip()
+                if ((not r) or (r == '')):
+                    doneToLine = 0
+                else:
+                    try:
+                        doneToLine = int(r)
+                    except:
+                        raise Exception(('%s/doneToLine.%s is corrupted (multiprocess issue?): %s' % (LOG_DIR, filename, r)))
         except IOError:
             doneToLine = 0
         if pattern:
