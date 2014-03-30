@@ -6,13 +6,13 @@
   int count=0;
   for (  boolean replicate : new boolean[]{true}) {
     for (    boolean load_balance : new boolean[]{true}) {
-      for (      boolean shuffle : new boolean[]{true}) {
-        for (        boolean balance_classes : new boolean[]{true,false}) {
-          for (          int resp : new int[]{1,2,8}) {
-            for (            DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified}) {
+      for (      boolean shuffle : new boolean[]{false}) {
+        for (        boolean balance_classes : new boolean[]{false}) {
+          for (          int resp : new int[]{1}) {
+            for (            DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Uniform}) {
               for (              int scoretraining : new int[]{200}) {
                 for (                int scorevalidation : new int[]{200}) {
-                  for (                  int vf : new int[]{0,1,-1}) {
+                  for (                  int vf : new int[]{1}) {
                     count++;
                     Log.info("**************************)");
                     Log.info("Starting test #" + count);
@@ -22,7 +22,7 @@
  else                     if (vf == -1)                     valid=vframe;
                     Key dest=Key.make("prostate");
 {
-                      final long seed=new Random().nextLong();
+                      final long seed=2811479049790142983l;
                       Log.info("Using seed: " + seed);
                       DeepLearning p=new DeepLearning();
                       p.epochs=1.0 + new Random(seed).nextDouble();
@@ -33,6 +33,7 @@
                       p.destination_key=dest;
                       p.seed=seed;
                       p.validation=valid;
+                      p.mini_batch=0;
                       p.force_load_balance=load_balance;
                       p.replicate_training_data=replicate;
                       p.shuffle_training_data=shuffle;
