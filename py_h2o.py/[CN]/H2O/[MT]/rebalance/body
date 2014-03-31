@@ -1,0 +1,4 @@
+def rebalance(self, before=None, after=None, seed=None, timeoutSecs=180):
+    a = self.__do_json_request('2/ReBalance.json', timeout=timeoutSecs, params={'path': before, 'after': after, 'seed': seed, })
+    verboseprint('\n rebalance result:', dump_json(a))
+    return a

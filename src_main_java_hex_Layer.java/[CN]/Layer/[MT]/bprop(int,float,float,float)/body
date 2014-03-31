@@ -1,0 +1,33 @@
+{
+  if (params.fast_mode || (_w == null && params.l1 == 0.0 && params.l2 == 0.0)) {
+    if (Math.abs(g) <= 1e-10)     return;
+  }
+  final float l1=(float)params.l1;
+  final float l2=(float)params.l2;
+  double r2=0;
+  final int off=u * _previous._a.length;
+  for (int i=0; i < _previous._a.length; i++) {
+    int w=off + i;
+    if (_previous._e != null)     _previous._e[i]+=g * _w[w];
+    if (params.fast_mode && _previous._a[i] == 0)     continue;
+    float d=g * _previous._a[i] - Math.signum(_w[w]) * l1 - _w[w] * l2;
+    if (_wm != null) {
+      _wm[w]*=m;
+      _wm[w]+=d;
+      d=_wm[w];
+    }
+    _w[w]+=r * d;
+    if (params.max_w2 != Double.POSITIVE_INFINITY)     r2+=_w[w] * _w[w];
+  }
+  if (params.max_w2 != Double.POSITIVE_INFINITY && r2 > params.max_w2) {
+    final float scale=Utils.approxSqrt((float)(params.max_w2 / r2));
+    for (int i=0; i < _previous._a.length; i++)     _w[off + i]*=scale;
+  }
+  float d=g;
+  if (_bm != null) {
+    _bm[u]*=m;
+    _bm[u]+=d;
+    d=_bm[u];
+  }
+  _b[u]+=r * d;
+}

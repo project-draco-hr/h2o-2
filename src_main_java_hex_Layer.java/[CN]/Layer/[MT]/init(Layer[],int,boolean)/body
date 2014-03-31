@@ -1,8 +1,8 @@
 {
   params.rate*=Math.pow(params.rate_decay,index - 1);
-  _a=new double[units];
+  _a=new float[units];
   if (!(this instanceof Output) && !(this instanceof Input)) {
-    _e=new double[units];
+    _e=new float[units];
   }
   _previous=ls[index - 1];
   _input=(Input)ls[0];
@@ -11,10 +11,10 @@
   }
   if (weights) {
     _w=new float[units * _previous.units];
-    _b=new double[units];
+    _b=new float[units];
     if (params.momentum_start != 0 || params.momentum_stable != 0) {
       _wm=new float[_w.length];
-      _bm=new double[_b.length];
+      _bm=new float[_b.length];
     }
   }
 }

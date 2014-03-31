@@ -1,0 +1,11 @@
+{
+  _job=job;
+  _dinfo=dinfo;
+  _nobs=0;
+  String[][] domains=dinfo._adaptedFrame.domains();
+  int ncol=dinfo._adaptedFrame.numCols();
+  _nres=domains[ncol - 1].length;
+  _rescnt=new double[_nres];
+  _jntcnt=new double[ncol - 1][][];
+  for (int i=0; i < _jntcnt.length; i++)   _jntcnt[i]=new double[_nres][domains[i].length];
+}

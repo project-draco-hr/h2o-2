@@ -17,5 +17,5 @@
   }
 ;
   if (GLM2.this.n_folds >= 2)   xvalidate(_model.clone(),_lambdaIdx,fin);
- else   new GLMValidationTask(_model.clone(),_lambdaIdx,fin).dfork(_dinfo._adaptedFrame);
+ else   new GLMValidationTask(_model.clone(),_lambdaIdx,fin).asyncExec(_dinfo._adaptedFrame);
 }

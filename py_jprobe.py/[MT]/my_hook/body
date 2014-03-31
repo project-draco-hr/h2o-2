@@ -1,0 +1,7 @@
+def my_hook(type, value, traceback):
+    print 'hooked the exception so we can clear env variables'
+    clear_env()
+    print 'Type:', type
+    print 'Value:', value
+    print 'Traceback:', traceback
+    raise Exception

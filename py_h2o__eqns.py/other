@@ -6,15 +6,16 @@ operators = {'^': {'prec': 10, 'prob': 0.6, 'eval': (lambda a, b: pow(a, b)), },
 max_levels = 3
 integer_range = ((-5), (-3))
 random.seed()
-max_result = pow(10, 10)
-for i in range(30):
-    expr = expression.create_random(0)
-    try:
-        value = float(expr.eval())
-    except:
-        value = 'indeterminate'
-    print expr, '=', value
 import random
 import math
-for i in range(10):
-    print '\na=', Expression(20, 12, 1), ';'
+if (__name__ == '__main__'):
+    max_result = pow(10, 10)
+    for i in range(30):
+        expr = expression.create_random(0)
+        try:
+            value = float(expr.eval())
+        except:
+            value = 'indeterminate'
+        print expr, '=', value
+    for i in range(10):
+        print '\na=', Expression(20, 12, 1), ';'

@@ -21,7 +21,7 @@ case NONE:
         DParse dp=new DParse(_vg,localSetup,_vecIdStart,chunkStartIdx,this);
         addToPendingCount(1);
         dp.setCompleter(this);
-        dp.dfork(new Frame(vec));
+        dp.asyncExec(new Frame(vec));
         for (int i=0; i < vec.nChunks(); ++i)         _chunk2Enum[chunkStartIdx + i]=vec.chunkKey(i).home_node().index();
       }
  else {

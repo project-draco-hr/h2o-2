@@ -1,0 +1,13 @@
+{
+  Frame fr=DataInfo.prepareFrame(source,response,ignored_cols,false,false);
+  Vec[] vecs=fr.vecs();
+  for (int i=0; i < vecs.length; i++) {
+    if (vecs[i].naCnt() != 0)     throw H2O.unimpl();
+  }
+  DataInfo dinfo=new DataInfo(fr,1,false,false);
+  NBTask tsk=new NBTask(this,dinfo).doAll(dinfo._adaptedFrame);
+  NBModel myModel=buildModel(dinfo,tsk,laplace);
+  myModel.delete_and_lock(self());
+  myModel.unlock(self());
+  return JobState.DONE;
+}
