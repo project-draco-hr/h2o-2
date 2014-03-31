@@ -7,27 +7,31 @@
   H2O.globalKeySet("water.ValueArray");
   for (  Key k : H2O.localKeySet()) {
     Value val=H2O.raw_get(k);
-    if (val != null && val.isArray()) {
-      Frame frAuto=ValueArray.asFrame(DKV.get(k));
+    if (val == null)     continue;
+    if (val.isArray()) {
+      val=DKV.get(k);
+      if (val == null)       continue;
+      Frame frAuto=ValueArray.asFrame(val);
       Frame fr2=new Frame(k,frAuto._names,frAuto.vecs());
       frAuto.remove(0,fr2.numCols());
       frAuto.delete();
       fr2.delete_and_lock(null).unlock(null);
-      DKV.get(k);
+      val=DKV.get(k);
     }
-  }
-  for (  Key k : H2O.localKeySet()) {
-    if (!H2O.raw_get(k).isFrame())     continue;
-    Frame fr=DKV.get(k).get();
-    String kstr=k.toString();
-    try {
-      env.push(fr,kstr);
-      global.add(new ASTId(Type.ARY,kstr,0,global.size()));
-      fr.read_lock(null);
-      locked.add(fr._key);
-    }
- catch (    Exception e) {
-      System.err.println("Exception while adding frame " + k + " to Exec env");
+    if (val.isFrame()) {
+      val=DKV.get(k);
+      if (val == null)       continue;
+      Frame fr=val.get();
+      String kstr=k.toString();
+      try {
+        env.push(fr,kstr);
+        global.add(new ASTId(Type.ARY,kstr,0,global.size()));
+        fr.read_lock(null);
+        locked.add(fr._key);
+      }
+ catch (      Exception e) {
+        System.err.println("Exception while adding frame " + k + " to Exec env");
+      }
     }
   }
   global.add(new ASTId(Type.DBL,"T",0,global.size()));
