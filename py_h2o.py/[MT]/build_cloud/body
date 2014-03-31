@@ -8,7 +8,8 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
     log('#*********************************************************************')
     log((('Starting new test: ' + python_test_name) + ' at build_cloud()'))
     log('#*********************************************************************')
-    check_h2o_version()
+    if (getpass.getuser() == 'jenkins'):
+        check_h2o_version()
     if kwargs.setdefault('enable_benchmark_log', False):
         setup_benchmark_log()
     ports_per_node = 2
