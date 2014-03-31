@@ -1,4 +1,7 @@
 {
+  if (model_info().unstable()) {
+    throw new UnsupportedOperationException("Trying to predict with an unstable model.");
+  }
   Neurons[] neurons=DeepLearningTask.makeNeuronsForTesting(model_info);
   ((Neurons.Input)neurons[0]).setInput(-1,data);
   DeepLearningTask.step(-1,neurons,model_info,false,null);

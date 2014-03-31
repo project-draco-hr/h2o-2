@@ -4,7 +4,7 @@
   if (after == null)   throw new IllegalArgumentException("Missing name (key for the rebalanced Frame!");
   try {
     before.read_lock(null);
-    Frame balanced=MRUtils.shuffleAndBalance(before,seed,false);
+    Frame balanced=MRUtils.shuffleAndBalance(before,seed,false,false);
     before.unlock(null);
     Frame balanced2=new Frame(Key.make(after),balanced.names(),balanced.vecs());
     balanced2.delete_and_lock(null);
