@@ -1,0 +1,12 @@
+{
+  int cores=0;
+  for (  H2ONode node : H2O.CLOUD._memary) {
+    if (local)     cores=Math.max(cores,node._heartbeat._num_cpus);
+ else     cores+=node._heartbeat._num_cpus;
+  }
+  final int chunks=4 * cores;
+  if (force_load_balance && chunks < fr.numRows()) {
+    return rebalanceDataset(Key.make(fr._key.toString() + ".balanced"),fr,chunks);
+  }
+ else   return fr;
+}

@@ -12,7 +12,7 @@
     final long model_size=model.model_info().size();
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
-    train=updateFrame(train,reBalance(train,seed,replicate_training_data));
+    train=updateFrame(train,reBalance(train,replicate_training_data));
     float[] trainSamplingFactors;
     if (classification && balance_classes) {
       trainSamplingFactors=new float[train.lastVec().domain().length];
@@ -34,7 +34,7 @@
  else {
         validScoreFrame=updateFrame(adaptedValid,sampleFrame(adaptedValid,score_validation_samples,seed + 1));
       }
-      validScoreFrame=updateFrame(validScoreFrame,reBalance(validScoreFrame,seed + 1,false));
+      validScoreFrame=updateFrame(validScoreFrame,reBalance(validScoreFrame,false));
       Log.info("Number of chunks of the validation data: " + validScoreFrame.anyVec().nChunks());
     }
     if ((mini_batch == -1 || mini_batch == 0 || mini_batch > train.numRows()) && !replicate_training_data) {
