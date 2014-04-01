@@ -1,0 +1,5 @@
+{
+  float rowUsageFraction=(float)mini_batch / numRows;
+  if (replicate_training_data && !single_node_mode)   rowUsageFraction/=H2O.CLOUD.size();
+  return rowUsageFraction;
+}

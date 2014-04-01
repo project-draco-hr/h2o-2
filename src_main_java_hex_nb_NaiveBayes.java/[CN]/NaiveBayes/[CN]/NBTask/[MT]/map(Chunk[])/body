@@ -6,9 +6,14 @@
       if (chks[col].isNA0(row))       continue OUTER;
     }
     int rlevel=(int)res.at0(row);
-    for (int col=0; col < res_idx; col++) {
+    for (int col=0; col < _dinfo._cats; col++) {
       int plevel=(int)chks[col].at0(row);
       _jntcnt[col][rlevel][plevel]++;
+    }
+    for (int col=0; col < _dinfo._nums; col++) {
+      double x=chks[col + _dinfo._cats].at0(row);
+      _jntcnt[col][rlevel][0]+=x;
+      _jntcnt[col][rlevel][1]+=x * x;
     }
     _rescnt[rlevel]++;
     _nobs++;

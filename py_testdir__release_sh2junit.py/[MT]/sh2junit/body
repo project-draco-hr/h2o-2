@@ -22,7 +22,7 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, shdir=None, **kwa
     errors = 0
     timeoutError = False
     while linesMayExist:
-        linesMayExist = ps.is_running()
+        linesMayExist = (ps.is_running() and (not (ps.status() == psutil.STATUS_ZOMBIE)))
         lineBurstCnt = 0
         line = ps.stdout.readline()
         while line:

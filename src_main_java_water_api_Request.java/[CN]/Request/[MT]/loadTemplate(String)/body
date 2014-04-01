@@ -14,7 +14,7 @@ catch (  Exception e) {
     Log.die(e.getMessage());
   }
  finally {
-    Closeables.closeQuietly(resource);
+    Utils.close(resource);
   }
   return null;
 }

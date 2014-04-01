@@ -3,12 +3,22 @@
   double[] pprior=tsk._rescnt.clone();
   double[][][] pcond=tsk._jntcnt.clone();
   String[][] domains=dinfo._adaptedFrame.domains();
-  for (int col=0; col < pcond.length; col++) {
+  for (int i=0; i < pprior.length; i++)   pprior[i]=(pprior[i] + laplace) / (tsk._nobs + tsk._nres * laplace);
+  for (int col=0; col < dinfo._cats; col++) {
     for (int i=0; i < pcond[0].length; i++) {
-      for (int j=0; j < pcond[0][0].length; j++)       pcond[col][i][j]=(pcond[col][i][j] + laplace) / (pprior[i] + domains[col].length * laplace);
+      for (int j=0; j < pcond[0][0].length; j++)       pcond[col][i][j]=(pcond[col][i][j] + laplace) / (tsk._rescnt[i] + domains[col].length * laplace);
     }
   }
-  for (int i=0; i < pprior.length; i++)   pprior[i]=(pprior[i] + laplace) / (tsk._nobs + tsk._nres * laplace);
+  for (int col=0; col < dinfo._nums; col++) {
+    for (int i=0; i < pcond[0].length; i++) {
+      int cidx=dinfo._cats + col;
+      double num=tsk._rescnt[i];
+      double pmean=pcond[cidx][i][0] / num;
+      pcond[cidx][i][0]=pmean;
+      double pvar=pcond[cidx][i][1] / (num - 1) - pmean * pmean * num / (num - 1);
+      pcond[cidx][i][1]=Math.sqrt(pvar);
+    }
+  }
   Key dataKey=input("source") == null ? null : Key.make(input("source"));
   return new NBModel(destination_key,dataKey,dinfo,tsk,pprior,pcond,laplace);
 }
