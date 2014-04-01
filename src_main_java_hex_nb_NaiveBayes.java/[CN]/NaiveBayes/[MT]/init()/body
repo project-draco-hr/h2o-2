@@ -1,7 +1,4 @@
 {
   super.init();
-  Vec[] vecs=selectFrame(source).vecs();
-  for (int i=0; i < vecs.length; i++) {
-    if (!vecs[i].isEnum())     throw H2O.unimpl();
-  }
+  if (!response.isEnum())   throw new IllegalArgumentException("Response must be a categorical column");
 }

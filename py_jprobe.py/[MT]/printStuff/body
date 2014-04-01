@@ -6,20 +6,21 @@ def printStuff():
     fprint(i, 'v.duration', v.duration)
     fprint(i, 'v.errorStackTrace', v.errorStackTrace)
     fprint(i, 'v.failedSince', v.failedSince)
-    fprint(i, 'v.stderr', v.stderr)
-    if (not v.stdout):
-        fprint('v.stdout is empty')
-    else:
-        fprint('len(v.stdout):', len(v.stdout))
-        stdout = v.stdout
-        stdout = string.replace(stdout, '\\n', '\n')
-        stdout = string.replace(stdout, '\\tat', '\t')
-        stdout = string.replace(stdout, '\n\n', '\n')
-        lineList = stdout.splitlines()
-        fprint('len(lineList):', len(lineList))
-        num = min(20, len(lineList))
-        if (num != 0):
-            fprint(i, ('Last %s lineList of stdout\n' % num))
-            fprint('\n'.join(lineList[(- num):]))
-        else:
+    if args.verbose:
+        fprint(i, 'v.stderr', v.stderr)
+        if (not v.stdout):
             fprint('v.stdout is empty')
+        else:
+            fprint('len(v.stdout):', len(v.stdout))
+            stdout = v.stdout
+            stdout = string.replace(stdout, '\\n', '\n')
+            stdout = string.replace(stdout, '\\tat', '\t')
+            stdout = string.replace(stdout, '\n\n', '\n')
+            lineList = stdout.splitlines()
+            fprint('len(lineList):', len(lineList))
+            num = min(20, len(lineList))
+            if (num != 0):
+                fprint(i, ('Last %s lineList of stdout\n' % num))
+                fprint('\n'.join(lineList[(- num):]))
+            else:
+                fprint('v.stdout is empty')
