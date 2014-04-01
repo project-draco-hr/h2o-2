@@ -7,7 +7,11 @@
   final int chunks=4 * cores;
   if (force_load_balance && chunks < fr.numRows()) {
     Key newKey=fr._key != null ? Key.make(fr._key.toString() + ".balanced") : Key.make();
-    return rebalanceDataset(newKey,fr,chunks);
+    RebalanceDataSet rb=new RebalanceDataSet(fr,newKey,chunks);
+    H2O.submitTask(rb);
+    rb.join();
+    Frame rebalanced=UKV.get(newKey);
+    return rebalanced;
   }
  else   return fr;
 }
