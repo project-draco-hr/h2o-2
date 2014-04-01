@@ -7,7 +7,7 @@
     auc.predict=fpreds;
     auc.vpredict=fpreds.vecs()[2];
     auc.threshold_criterion=AUC.ThresholdCriterion.maximum_F1;
-    auc.serve();
+    auc.invoke();
     auc.toASCII(sb);
     error=auc.err();
   }
@@ -17,7 +17,7 @@
     cm.vactual=ftest.lastVec();
     cm.predict=fpreds;
     cm.vpredict=fpreds.vecs()[0];
-    cm.serve();
+    cm.invoke();
     cm.toASCII(sb);
     error=isClassifier() ? new hex.ConfusionMatrix(cm.cm).err() : cm.mse;
   }
