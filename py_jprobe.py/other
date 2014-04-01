@@ -11,6 +11,7 @@ group.add_argument('-x', help='job number from a list of 164 known jobs', type=i
 group.add_argument('-s', help='job number from a list of sm known jobs', type=int, action='store', default=None)
 group.add_argument('-j', '--jobname', help='jobname. Correct url is found', action='store', default=None)
 parse.add_argument('-l', '--logging', help='turn on logging.DEBUG msgs to see allUrls used', action='store_true')
+parse.add_argument('-v', '--verbose', help='dump the last N stdout from the failed jobs', action='store_true')
 group.add_argument('-c', help='do a hardwired special job copy between jenkins', type=int, action='store', default=None)
 args = parse.parse_args()
 print 'creates jsandbox (cleaned), and puts aTxt.txt and aConsole.txt in there, along with artifacts'
@@ -91,6 +92,8 @@ print '\nlast good build:'
 lgb = job.get_last_good_build()
 print '\nlast good build revision:'
 print lgb.get_revision()
+from jenkinsapi.api import get_latest_complete_build
+from jenkinsapi.api import get_latest_test_results
 if (1 == 0):
     expr = 'commands.log'
     print ('testing search_artifact_by_regexp with expression %s' % expr)
@@ -147,6 +150,8 @@ failName = ('%s_%s_%s_%s%s' % ('fail', jobname, buildnumber, hm, '.txt'))
 print 'failName:', failName
 regressName = ('%s_%s_%s_%s%s' % ('regress', jobname, buildnumber, hm, '.txt'))
 print 'regressName:', regressName
+fixedName = ('%s_%s_%s_%s%s' % ('fixed', jobname, buildnumber, hm, '.txt'))
+print 'fixedName:', fixedName
 stats = {}
 for (i, (k, v)) in enumerate(rs.items()):
     if (v.status in stats):
@@ -157,12 +162,16 @@ for (i, (k, v)) in enumerate(rs.items()):
     e2 = ('%s %s %s' % (i, jobname, v))
     aTxt.write((e1 + '\n'))
     aTxt.write((e2 + '\n'))
-    if (v.status != 'PASSED'):
+    if (v.status == 'FAILED'):
         fTxt = open(((LOG_DIR + '/') + failName), 'a')
         printStuff()
         fTxt.close()
     if (v.status == 'REGRESSION'):
         fTxt = open(((LOG_DIR + '/') + regressName), 'a')
+        printStuff()
+        fTxt.close()
+    if (v.status == 'FIXED'):
+        fTxt = open(((LOG_DIR + '/') + fixedName), 'a')
         printStuff()
         fTxt.close()
     if PRINTALL:
