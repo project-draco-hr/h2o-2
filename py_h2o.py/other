@@ -24,7 +24,10 @@ clone_cloud_json = None
 disable_time_stamp = False
 debug_rest = False
 python_test_name = inspect.stack()[1][1]
-python_cmd_ip = get_ip_address()
+if ipaddr_from_cmd_line:
+    python_cmd_ip = ipaddr_from_cmd_line
+else:
+    python_cmd_ip = get_ip_address()
 python_cmd_args = ''
 python_cmd_line = ''
 python_username = getpass.getuser()
