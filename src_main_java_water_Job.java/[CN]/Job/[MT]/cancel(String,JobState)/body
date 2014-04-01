@@ -1,0 +1,14 @@
+{
+  if (state == JobState.CANCELLED)   Log.info("Job " + self() + "("+ description+ ") was cancelled.");
+  exception=msg;
+  state=resultingState;
+  replaceByJobHandle();
+  DKV.write_barrier();
+  final Job job=this;
+  H2O.submitTask(new H2OCountedCompleter(){
+    @Override public void compute2(){
+      job.onCancelled();
+    }
+  }
+);
+}
