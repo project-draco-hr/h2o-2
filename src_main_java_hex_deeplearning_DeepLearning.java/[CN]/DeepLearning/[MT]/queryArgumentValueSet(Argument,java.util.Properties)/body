@@ -1,6 +1,6 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
-  if (!arg._name.equals("checkpoint") && !arg._name.equals("epochs") && !arg._name.equals("expert_mode")&& !arg._name.equals("seed")&& !arg._name.equals("score_interval")&& !arg._name.equals("score_duty_cycle")&& !arg._name.equals("quiet_mode")&& !arg._name.equals("diagnostics")&& !arg._name.equals("mini_batch")&& !arg._name.equals("single_node_mode")&& !arg._name.equals("replicate_training_data")) {
+  if (!arg._name.equals("checkpoint") && !Utils.contains(cp_modifiable,arg._name)) {
     if (checkpoint != null) {
       arg.disable("Taken from model checkpoint.");
       final DeepLearningModel cp_model=UKV.get(checkpoint);
@@ -10,15 +10,6 @@
       if (cp_model.model_info().unstable()) {
         throw new IllegalArgumentException("Checkpointed model was unstable. Not restarting.");
       }
-      final DeepLearning cp=cp_model.model_info().get_params();
-      balance_classes=cp.balance_classes;
-      score_validation_sampling=cp.score_validation_sampling;
-      max_after_balance_size=cp.max_after_balance_size;
-      score_training_samples=cp.score_training_samples;
-      score_validation_samples=cp.score_validation_samples;
-      force_load_balance=cp.force_load_balance;
-      shuffle_training_data=cp.shuffle_training_data;
-      classification=cp.classification;
       state=JobState.RUNNING;
       return;
     }
@@ -50,8 +41,8 @@
   if ((arg._name.equals("score_validation_samples") || arg._name.equals("score_validation_sampling")) && validation == null) {
     arg.disable("Requires a validation data set.",inputArgs);
   }
-  if (arg._name.equals("loss") || arg._name.equals("max_w2") || arg._name.equals("warmup_samples")|| arg._name.equals("score_training_samples")|| arg._name.equals("score_validation_samples")|| arg._name.equals("initial_weight_distribution")|| arg._name.equals("initial_weight_scale")|| arg._name.equals("diagnostics")|| arg._name.equals("rate_decay")|| arg._name.equals("score_duty_cycle")|| arg._name.equals("fast_mode")|| arg._name.equals("score_validation_sampling")|| arg._name.equals("max_after_balance_size")|| arg._name.equals("ignore_const_cols")|| arg._name.equals("force_load_balance")|| arg._name.equals("replicate_training_data")|| arg._name.equals("shuffle_training_data")|| arg._name.equals("nesterov_accelerated_gradient")|| arg._name.equals("classification_stop")|| arg._name.equals("regression_stop")|| arg._name.equals("quiet_mode")|| arg._name.equals("max_confusion_matrix_size")|| arg._name.equals("max_hit_ratio_k")|| arg._name.equals("hidden_dropout_ratios")|| arg._name.equals("single_node_mode")) {
-    if (!expert_mode)     arg.disable("Only in expert mode.",inputArgs);
+  if (Utils.contains(expert_options,arg._name) && !expert_mode) {
+    arg.disable("Only in expert mode.",inputArgs);
   }
   if (!adaptive_rate) {
     if (arg._name.equals("rho") || arg._name.equals("epsilon")) {

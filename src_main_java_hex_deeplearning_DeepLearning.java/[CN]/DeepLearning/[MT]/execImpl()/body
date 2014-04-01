@@ -23,16 +23,27 @@
       if (classification != previous.model_info().get_params().classification) {
         throw new IllegalArgumentException("classification must be the same as for the checkpointed model.");
       }
-      cp.model_info().get_params().expert_mode=expert_mode;
-      cp.model_info().get_params().seed=seed;
-      cp.model_info().get_params().epochs=previous.epoch_counter + epochs;
-      cp.model_info().get_params().score_interval=score_interval;
-      cp.model_info().get_params().score_duty_cycle=score_duty_cycle;
-      cp.model_info().get_params().quiet_mode=quiet_mode;
-      cp.model_info().get_params().diagnostics=diagnostics;
-      cp.model_info().get_params().mini_batch=mini_batch;
-      cp.model_info().get_params().single_node_mode=single_node_mode;
-      cp.model_info().get_params().replicate_training_data=replicate_training_data;
+      Log.info("Resuming from checkpoint.");
+      final DeepLearning mp=cp.model_info().get_params();
+      Object A=mp, B=this;
+      for (      Field fA : A.getClass().getDeclaredFields()) {
+        if (Utils.contains(cp_modifiable,fA.getName())) {
+          if (!expert_mode && Utils.contains(expert_options,fA.getName()))           continue;
+          for (          Field fB : B.getClass().getDeclaredFields()) {
+            if (fA.equals(fB)) {
+              try {
+                if (!fA.get(A).toString().equals(fB.get(B).toString())) {
+                  Log.info("Applying user-requested modification of '" + fA.getName() + "': "+ fA.get(A)+ " -> "+ fB.get(B));
+                  fA.set(A,fB.get(B));
+                }
+              }
+ catch (              IllegalAccessException e) {
+                e.printStackTrace();
+              }
+            }
+          }
+        }
+      }
       cp.update(self());
     }
   finally {
