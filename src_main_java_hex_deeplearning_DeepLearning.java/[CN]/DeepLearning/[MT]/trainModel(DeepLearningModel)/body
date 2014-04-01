@@ -3,7 +3,7 @@
   Frame train, trainScoreFrame;
   try {
     lock_data();
-    logStart();
+    if (checkpoint == null)     logStart();
     if (model == null) {
       model=UKV.get(dest());
     }
@@ -46,7 +46,7 @@
     final float sync_fraction=mini_batch == 0l ? 1.0f : (float)mini_batch / train.numRows();
     if (!quiet_mode)     Log.info("Initial model:\n" + model.model_info());
     Log.info("Starting to train the Deep Learning model.");
-    do     model.set_model_info(H2O.CLOUD.size() > 1 && replicate_training_data ? new DeepLearningTask2(train,model.model_info(),sync_fraction / H2O.CLOUD.size()).invokeOnAllNodes().model_info() : new DeepLearningTask(model.model_info(),sync_fraction).doAll(train).model_info());
+    do     model.set_model_info(H2O.CLOUD.size() > 1 && replicate_training_data ? (single_node ? new DeepLearningTask2(train,model.model_info(),sync_fraction).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),sync_fraction / H2O.CLOUD.size()).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),sync_fraction).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor()));
     Log.info("Finished training the Deep Learning model.");
     return model;
