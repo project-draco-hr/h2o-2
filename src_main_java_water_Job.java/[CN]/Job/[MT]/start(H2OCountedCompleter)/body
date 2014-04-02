@@ -1,17 +1,2 @@
 {
-  _fjtask=fjtask;
-  start_time=System.currentTimeMillis();
-  state=JobState.RUNNING;
-  UKV.put(self(),this);
-  new TAtomic<List>(){
-    @Override public List atomic(    List old){
-      if (old == null)       old=new List();
-      Key[] jobs=old._jobs;
-      old._jobs=Arrays.copyOf(jobs,jobs.length + 1);
-      old._jobs[jobs.length]=job_key;
-      return old;
-    }
-  }
-.invoke(LIST);
-  return this;
 }

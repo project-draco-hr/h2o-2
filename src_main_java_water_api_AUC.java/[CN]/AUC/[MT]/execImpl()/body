@@ -1,8 +1,5 @@
 {
   Vec va=null, vp;
-  if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing vactual or vpredict!");
-  if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
-  if (!vactual.isInt())   throw new IllegalArgumentException("Actual column must be integer class labels!");
   try {
     va=vactual.toEnum();
     actual_domain=va._domain;
@@ -38,12 +35,8 @@
     computeAUC();
     findBestThresholds();
     computeMetrics();
-    return Response.done(this);
   }
- catch (  Throwable t) {
-    return Response.error(t);
-  }
- finally {
+  finally {
     if (va != null)     UKV.remove(va._key);
   }
 }

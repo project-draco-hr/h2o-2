@@ -1,7 +1,7 @@
 {
   Job jjob=null;
   if (job_key != null)   jjob=Job.findJob(job_key);
-  if (jjob != null && jjob.isCancelled())   return Response.error(jjob.isCrashed() ? jjob.exception : "Job was cancelled by user!");
+  if (jjob != null && jjob.isCancelledOrCrashed())   return Response.error(jjob.isCrashed() ? jjob.exception : "Job was cancelled by user!");
   if (jjob == null || jjob.isDone())   return jobDone(destination_key);
   return jobInProgress(jjob,destination_key);
 }
