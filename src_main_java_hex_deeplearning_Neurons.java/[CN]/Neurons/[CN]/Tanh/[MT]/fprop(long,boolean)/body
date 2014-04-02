@@ -1,5 +1,6 @@
 {
-  gemv(_a,_w,_previous._a,_b,_dropout != null ? _dropout.bits() : null);
+  if (_previous instanceof Input)   gemv_naive(new DenseVector(_a),new DenseRowMatrix(_w,_b.length,_a.length),((Input)_previous)._svec,new DenseVector(_b),_dropout != null ? _dropout.bits() : null);
+ else   gemv(_a,_w,_previous._a,_b,_dropout != null ? _dropout.bits() : null);
   for (int o=0; o < _a.length; o++) {
     _a[o]=1f - 2f / (1f + (float)Math.exp(2 * _a[o]));
   }

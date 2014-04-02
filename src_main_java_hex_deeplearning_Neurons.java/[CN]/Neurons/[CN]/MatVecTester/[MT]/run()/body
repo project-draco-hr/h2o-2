@@ -1,7 +1,10 @@
 {
   int rows=2048;
-  int cols=1024;
-  int loops=5000;
+  int cols=8192;
+  int loops=50;
+  int warmup_loops=50;
+  float nnz_ratio_vec=0.01f;
+  float nnz_ratio_mat=0.1f;
   float[] a=new float[rows * cols];
   float[] x=new float[cols];
   float[] y=new float[rows];
@@ -12,23 +15,54 @@
     res[i]=0;
     bits[i]=(byte)(new String("abcdefghijklmnopqrstuvwxyz").toCharArray()[i % 26]);
   }
-  for (int i=0; i < cols; ++i) {
-    x[i]=((float)i) / cols;
-  }
+  Random rng=new Random();
+  for (int i=0; i < cols; ++i)   if (rng.nextFloat() < nnz_ratio_vec)   x[i]=((float)i) / cols;
   for (int i=0; i < rows; ++i) {
     int off=i * cols;
     for (int j=0; j < cols; ++j) {
-      a[off + j]=((float)(i + j)) / cols;
+      if (rng.nextFloat() < nnz_ratio_mat)       a[off + j]=((float)(i + j)) / cols;
     }
   }
+  DenseRowMatrix dra=new DenseRowMatrix(a,rows,cols);
+  DenseColMatrix dca=new DenseColMatrix(dra,rows,cols);
+  SparseRowMatrix sra=new SparseRowMatrix(dra,rows,cols);
+  SparseColMatrix sca=new SparseColMatrix(dca,rows,cols);
+  DenseVector dx=new DenseVector(x);
+  DenseVector dy=new DenseVector(y);
+  DenseVector dres=new DenseVector(res);
+  SparseVector sx=new SparseVector(x);
   System.out.println("warming up.");
   float sum=0;
-  for (int l=0; l < 11000; ++l) {
+  for (int l=0; l < warmup_loops; ++l) {
     gemv_naive(res,a,x,y,bits);
     sum+=res[rows / 2];
   }
-  for (int l=0; l < 11000; ++l) {
+  for (int l=0; l < warmup_loops; ++l) {
+    gemv_naive(dres,dra,dx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  for (int l=0; l < warmup_loops; ++l) {
     gemv(res,a,x,y,bits);
+    sum+=res[rows / 2];
+  }
+  for (int l=0; l < warmup_loops; ++l) {
+    gemv_naive(dres,dca,dx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  for (int l=0; l < warmup_loops; ++l) {
+    gemv_naive(dres,dra,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  for (int l=0; l < warmup_loops; ++l) {
+    gemv_naive(dres,dca,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  for (int l=0; l < warmup_loops; ++l) {
+    gemv_naive(dres,sra,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  for (int l=0; l < warmup_loops; ++l) {
+    gemv_naive(dres,sca,sx,dy,bits);
     sum+=res[rows / 2];
   }
   try {
@@ -37,7 +71,7 @@
  catch (  InterruptedException e) {
     e.printStackTrace();
   }
-  System.out.println("starting naive.");
+  System.out.println("\nstarting naive.");
   sum=0;
   long start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
@@ -45,8 +79,17 @@
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
-  System.out.println("Naive time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
-  System.out.println("starting optimized.");
+  System.out.println("naive time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting dense row * dense.");
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(dres,dra,dx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("dense row * dense time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting optimized dense row * dense.");
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
@@ -54,5 +97,50 @@
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
-  System.out.println("Optimized time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("optimized dense row * dense time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting dense col * dense.");
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(dres,dca,dx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("dense col * dense time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting dense row * sparse.");
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(dres,dra,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("dense row * sparse time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting dense col * sparse.");
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(dres,dca,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("dense col * sparse time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting sparse row * sparse.");
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(dres,sra,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("sparse row * sparse time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
+  System.out.println("\nstarting sparse col * sparse.");
+  sum=0;
+  start=System.currentTimeMillis();
+  for (int l=0; l < loops; ++l) {
+    gemv_naive(dres,sca,sx,dy,bits);
+    sum+=res[rows / 2];
+  }
+  System.out.println("result: " + sum + " and "+ Utils.sum(res));
+  System.out.println("sparse col * sparse time: " + PrettyPrint.msecs(System.currentTimeMillis() - start,true));
 }
