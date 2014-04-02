@@ -9,7 +9,7 @@
   finished=model.size();
   if (_job.value() != null) {
     Job jjob=Job.findJob(_job.value());
-    if (jjob != null && jjob.isCancelled())     return Response.error(jjob.exception == null ? "Job was cancelled by user!" : jjob.exception);
+    if (jjob != null && jjob.isCancelledOrCrashed())     return Response.error(jjob.exception == null ? "Job was cancelled by user!" : jjob.exception);
   }
   JsonObject response=defaultJsonResponse();
   if (!_noCM.value() && (finished == tasks || _iterativeCM.value()) && finished > 0) {

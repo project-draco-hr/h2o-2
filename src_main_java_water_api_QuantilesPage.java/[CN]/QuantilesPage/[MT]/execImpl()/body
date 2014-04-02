@@ -1,12 +1,4 @@
 {
-  if (source_key == null)   return RequestServer._http404.serve();
-  if (column == null)   return RequestServer._http404.serve();
-  if (column.isEnum()) {
-    throw new IllegalArgumentException("Column is an enum");
-  }
-  if (!((interpolation_type == 2) || (interpolation_type == 7))) {
-    throw new IllegalArgumentException("Unsupported interpolation type. Currently only allow 2 or 7");
-  }
   Vec[] vecs=new Vec[1];
   String[] names=new String[1];
   vecs[0]=column;
@@ -94,5 +86,4 @@
     qbins=null;
     result=exactResult;
   }
-  return Response.done(this);
 }
