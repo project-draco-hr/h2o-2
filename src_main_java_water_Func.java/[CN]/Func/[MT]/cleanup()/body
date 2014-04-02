@@ -1,0 +1,6 @@
+{
+  Futures fs=new Futures();
+  cleanupTrash(_gVecTrash,fs);
+  if (!_lVecTrash.isEmpty())   cleanupTrash(_lVecTrash,fs);
+  fs.blockForPending();
+}
