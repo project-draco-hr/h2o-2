@@ -83,7 +83,10 @@ def test_quantile_cmp_uniform(self):
                     raise Exception(('exec result: %s for quantile: %s is bad' % (result, threshold)))
                 h2o_util.assertApproxEqual(result, pctile[i], tol=maxDelta, msg=('exec percentile: %s too different from expected: %s' % (result, pctile[i])))
             else:
-                execExpr = ('r2=c(1); r2=quantile(%s[,1], c(%s));' % (hex_key, ','.join(map(str, thresholds))))
+                if (1 == 0):
+                    execExpr = ('r2=c(1); r2=quantile(%s[,1], c(%s));' % (hex_key, ','.join(map(str, thresholds))))
+                else:
+                    execExpr = ('r2=c(1); r2=quantile(%s$C1, c(%s));' % (hex_key, ','.join(map(str, thresholds))))
                 (resultExec, result) = h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
                 inspect = h2o_cmd.runInspect(key='r2')
                 numCols = inspect['numCols']
