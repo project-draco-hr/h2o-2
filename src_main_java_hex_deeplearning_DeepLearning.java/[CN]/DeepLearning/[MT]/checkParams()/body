@@ -11,10 +11,6 @@
     }
   }
  else   if (hidden_dropout_ratios.length != hidden.length)   throw new IllegalArgumentException("Must have " + hidden.length + " hidden layer dropout ratios.");
-  if (replicate_training_data && (mini_batch >= source.numRows() * H2O.CLOUD.size()) && !shuffle_training_data) {
-    Log.warn("Enabling training data shuffling, because all nodes train on the full dataset (replicated training data)");
-    shuffle_training_data=true;
-  }
   if (!classification && loss != Loss.MeanSquare) {
     Log.warn("Setting loss to MeanSquare for regression.");
     loss=Loss.MeanSquare;

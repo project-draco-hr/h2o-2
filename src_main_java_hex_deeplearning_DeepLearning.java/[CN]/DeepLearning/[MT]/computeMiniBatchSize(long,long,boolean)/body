@@ -1,6 +1,0 @@
-{
-  if (mini_batch == 0 || (!replicate_training_data && (mini_batch == -1 || mini_batch > numRows)))   Log.info("Setting mini_batch (" + mini_batch + ") to one epoch: #rows ("+ (mini_batch=numRows)+ ").");
- else   if (mini_batch == -1 || mini_batch > H2O.CLOUD.size() * numRows)   Log.info("Setting mini_batch (" + mini_batch + ") to the largest possible number: #nodes x #rows ("+ (mini_batch=H2O.CLOUD.size() * numRows)+ ").");
-  assert(mini_batch != 0 && mini_batch != -1);
-  return mini_batch;
-}
