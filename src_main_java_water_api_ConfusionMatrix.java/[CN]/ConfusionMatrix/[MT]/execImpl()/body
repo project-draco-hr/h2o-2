@@ -1,10 +1,5 @@
 {
   Vec va=null, vp=null, avp=null;
-  classification=vactual.isInt() && vpredict.isInt();
-  if (vactual == null || vpredict == null)   throw new IllegalArgumentException("Missing actual or predict!");
-  if (vactual.length() != vpredict.length())   throw new IllegalArgumentException("Both arguments must have the same length!");
-  if (!classification && vactual.isEnum())   throw new IllegalArgumentException("Actual vector cannot be categorical for regression scoring.");
-  if (!classification && vpredict.isEnum())   throw new IllegalArgumentException("Predicted vector cannot be categorical for regression scoring.");
   try {
     if (classification) {
       va=vactual.toEnum();
@@ -28,7 +23,7 @@
  else {
       mse=new CM(1).doAll(vactual,vpredict).mse();
     }
-    return Response.done(this);
+    return;
   }
   finally {
     if (va != null)     UKV.remove(va._key);

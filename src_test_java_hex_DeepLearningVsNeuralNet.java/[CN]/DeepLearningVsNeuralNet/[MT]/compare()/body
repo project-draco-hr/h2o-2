@@ -84,7 +84,7 @@
                             p.nesterov_accelerated_gradient=true;
                             p.classification_stop=-1;
                             p.force_load_balance=false;
-                            p.execImpl();
+                            p.invoke();
                             mymodel=UKV.get(p.dest());
                             neurons=DeepLearningTask.makeNeuronsForTesting(mymodel.model_info());
                           }
@@ -175,7 +175,7 @@
                             CM.vactual=_train.lastVec();
                             CM.predict=fpreds;
                             CM.vpredict=fpreds.vecs()[0];
-                            CM.serve();
+                            CM.invoke();
                             StringBuilder sb=new StringBuilder();
                             CM.toASCII(sb);
                             trainerr+=new ConfusionMatrix(CM.cm).err();
@@ -187,7 +187,7 @@
                             CM.vactual=_test.lastVec();
                             CM.predict=fpreds2;
                             CM.vpredict=fpreds2.vecs()[0];
-                            CM.serve();
+                            CM.invoke();
                             sb=new StringBuilder();
                             testerr+=new ConfusionMatrix(CM.cm).err();
                             for (                            String s : sb.toString().split("\n"))                             Log.info(s);

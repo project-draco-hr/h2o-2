@@ -2,19 +2,19 @@
   init();
   H2OCountedCompleter task=new H2OCountedCompleter(){
     @Override public void compute2(){
-      Throwable t=null;
       try {
-        JobState status=Job.this.exec();
-        if (status == JobState.DONE)         Job.this.remove();
+        try {
+          Job.this.exec();
+          Job.this.remove();
+        }
+ catch (        Throwable t) {
+          if (!(t instanceof ExpectedExceptionForDebug))           Log.err(t);
+          Job.this.cancel(t);
+        }
       }
- catch (      Throwable t_) {
-        t=t_;
-        if (!(t instanceof ExpectedExceptionForDebug))         Log.err(t);
-      }
- finally {
+  finally {
         tryComplete();
       }
-      if (t != null)       Job.this.cancel(t);
     }
   }
 ;
