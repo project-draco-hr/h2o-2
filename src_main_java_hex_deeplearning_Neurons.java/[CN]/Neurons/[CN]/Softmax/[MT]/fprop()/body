@@ -1,13 +1,13 @@
 {
-  gemv(_a,_w,_previous._a,_b,null);
-  final float max=Utils.maxValue(_a);
+  gemv(_a.raw(),_w.raw(),_previous._a.raw(),_b.raw(),null);
+  final float max=Utils.maxValue(_a.raw());
   float scale=0;
-  for (int o=0; o < _a.length; o++) {
-    _a[o]=(float)Math.exp(_a[o] - max);
-    scale+=_a[o];
+  for (int o=0; o < _a.size(); o++) {
+    _a.set(o,(float)Math.exp(_a.get(o) - max));
+    scale+=_a.get(o);
   }
-  for (int o=0; o < _a.length; o++) {
-    if (Float.isNaN(_a[o]))     throw new RuntimeException("Numerical instability, predicted NaN.");
-    _a[o]/=scale;
+  for (int o=0; o < _a.size(); o++) {
+    if (Float.isNaN(_a.get(o)))     throw new RuntimeException("Numerical instability, predicted NaN.");
+    _a.raw()[o]/=scale;
   }
 }

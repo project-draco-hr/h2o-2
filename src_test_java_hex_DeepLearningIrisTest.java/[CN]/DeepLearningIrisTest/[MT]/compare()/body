@@ -96,21 +96,22 @@
                       p.classification_stop=-1;
                       p.force_load_balance=false;
                       p.replicate_training_data=false;
+                      p.single_node_mode=true;
                       DeepLearningModel mymodel=p.initModel();
                       Neurons[] neurons=DeepLearningTask.makeNeuronsForTraining(mymodel.model_info());
                       Neurons l=neurons[1];
-                      for (int o=0; o < l._a.length; o++) {
-                        for (int i=0; i < l._previous._a.length; i++) {
-                          ref._nn.ihWeights[i][o]=l._w[o * l._previous._a.length + i];
+                      for (int o=0; o < l._a.size(); o++) {
+                        for (int i=0; i < l._previous._a.size(); i++) {
+                          ref._nn.ihWeights[i][o]=l._w.get(o,i);
                         }
-                        ref._nn.hBiases[o]=l._b[o];
+                        ref._nn.hBiases[o]=l._b.get(o);
                       }
                       l=neurons[2];
-                      for (int o=0; o < l._a.length; o++) {
-                        for (int i=0; i < l._previous._a.length; i++) {
-                          ref._nn.hoWeights[i][o]=l._w[o * l._previous._a.length + i];
+                      for (int o=0; o < l._a.size(); o++) {
+                        for (int i=0; i < l._previous._a.size(); i++) {
+                          ref._nn.hoWeights[i][o]=l._w.get(o,i);
                         }
-                        ref._nn.oBiases[o]=l._b[o];
+                        ref._nn.oBiases[o]=l._b.get(o);
                       }
                       ref.train((int)p.epochs,rate,p.momentum_stable,loss);
                       mymodel=p.trainModel(mymodel);
@@ -118,41 +119,38 @@
                       final double releps=1e-4;
                       neurons=DeepLearningTask.makeNeuronsForTesting(mymodel.model_info());
                       l=neurons[1];
-                      for (int o=0; o < l._a.length; o++) {
-                        for (int i=0; i < l._previous._a.length; i++) {
+                      for (int o=0; o < l._a.size(); o++) {
+                        for (int i=0; i < l._previous._a.size(); i++) {
                           double a=ref._nn.ihWeights[i][o];
-                          double b=l._w[o * l._previous._a.length + i];
+                          double b=l._w.get(o,i);
                           compareVal(a,b,abseps,releps);
                         }
                         double ba=ref._nn.hBiases[o];
-                        double bb=l._b[o];
+                        double bb=l._b.get(o);
                         compareVal(ba,bb,abseps,releps);
                       }
                       Log.info("Weights and biases for hidden layer: PASS");
                       l=neurons[2];
-                      for (int o=0; o < l._a.length; o++) {
-                        for (int i=0; i < l._previous._a.length; i++) {
+                      for (int o=0; o < l._a.size(); o++) {
+                        for (int i=0; i < l._previous._a.size(); i++) {
                           double a=ref._nn.hoWeights[i][o];
-                          double b=l._w[o * l._previous._a.length + i];
+                          double b=l._w.get(o,i);
                           compareVal(a,b,abseps,releps);
                         }
                         double ba=ref._nn.oBiases[o];
-                        double bb=l._b[o];
+                        double bb=l._b.get(o);
                         compareVal(ba,bb,abseps,releps);
                       }
                       Log.info("Weights and biases for output layer: PASS");
                       Frame fpreds=mymodel.score(_test);
                       for (int i=0; i < _test.numRows(); ++i) {
-                        double[] xValues=new double[neurons[0]._a.length];
+                        double[] xValues=new double[neurons[0]._a.size()];
                         System.arraycopy(ref._testData[i],0,xValues,0,xValues.length);
                         double[] ref_preds=ref._nn.ComputeOutputs(xValues);
                         float[] preds=new float[ref_preds.length + 1];
                         for (int j=0; j < ref_preds.length; ++j)                         preds[j + 1]=(float)ref_preds[j];
                         preds[0]=getPrediction(preds,i);
                         Assert.assertTrue(preds[0] == (int)fpreds.vecs()[0].at(i));
-                        for (int j=0; j < ref_preds.length; ++j) {
-                          compareVal((float)(ref_preds[j]),fpreds.vecs()[1 + j].at(i),abseps,releps);
-                        }
                       }
                       fpreds.delete();
                       Log.info("Predicted values: PASS");

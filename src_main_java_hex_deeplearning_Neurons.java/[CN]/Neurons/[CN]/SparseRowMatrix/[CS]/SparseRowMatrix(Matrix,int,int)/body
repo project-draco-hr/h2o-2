@@ -1,6 +1,6 @@
 {
   _rows=new TreeMap[rows];
-  for (int i=0; i < rows; ++i)   _rows[i]=new TreeMap<Integer,Float>();
+  for (int row=0; row < rows; ++row)   _rows[row]=new TreeMap<Integer,Float>();
   _cols=cols;
-  if (v != null)   for (int i=0; i < rows; ++i)   for (int j=0; j < cols; ++j)   if (v.get(i,j) != 0f)   add(i,j,v.get(i,j));
+  if (v != null)   for (int row=0; row < rows; ++row)   for (int col=0; col < cols; ++col)   if (v.get(row,col) != 0f)   add(row,col,v.get(row,col));
 }

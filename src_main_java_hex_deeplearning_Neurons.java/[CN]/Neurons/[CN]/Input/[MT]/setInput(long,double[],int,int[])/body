@@ -1,9 +1,7 @@
 {
-  Arrays.fill(_a,0f);
-  for (int i=0; i < numcat; ++i)   _a[cats[i]]=1f;
-  for (int i=0; i < nums.length; ++i)   _a[_dinfo.numStart() + i]=Double.isNaN(nums[i]) ? 0f : (float)nums[i];
+  for (int i=0; i < numcat; ++i)   _a.set(cats[i],1f);
+  for (int i=0; i < nums.length; ++i)   _a.set(_dinfo.numStart() + i,Double.isNaN(nums[i]) ? 0f : (float)nums[i]);
   if (_dropout == null)   return;
   seed+=params.seed + 0x1337B4BE;
-  _dropout.randomlySparsifyActivation(_a,seed);
-  _svec=new SparseVector(_a);
+  _dropout.randomlySparsifyActivation(_a.raw(),seed);
 }

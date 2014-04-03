@@ -11,10 +11,10 @@
   units[0]=num_input;
   System.arraycopy(parameters.hidden,0,units,1,layers);
   units[layers + 1]=num_output;
-  weights=new float[layers + 1][];
-  for (int i=0; i <= layers; ++i)   weights[i]=new float[units[i] * units[i + 1]];
-  biases=new float[layers + 1][];
-  for (int i=0; i <= layers; ++i)   biases[i]=new float[units[i + 1]];
+  weights=new Neurons.DenseRowMatrix[layers + 1];
+  for (int i=0; i <= layers; ++i)   weights[i]=new Neurons.DenseRowMatrix(units[i + 1],units[i]);
+  biases=new Neurons.DenseVector[layers + 1];
+  for (int i=0; i <= layers; ++i)   biases[i]=new Neurons.DenseVector(units[i + 1]);
   fillHelpers();
   mean_rate=new float[units.length];
   rms_rate=new float[units.length];

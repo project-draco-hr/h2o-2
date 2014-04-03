@@ -1,10 +1,19 @@
 {
-  Utils.add(weights,other.weights);
-  Utils.add(biases,other.biases);
+  for (int i=0; i < weights.length; ++i) {
+    if (weights[i] instanceof Neurons.DenseRowMatrix) {
+      Utils.add(weights[i].raw(),other.weights[i].raw());
+    }
+ else     throw new UnsupportedOperationException("only dense row matrix implemented");
+  }
+  for (int i=0; i < biases.length; ++i)   Utils.add(biases[i].raw(),other.biases[i].raw());
   if (has_momenta()) {
     assert(other.has_momenta());
-    Utils.add(weights_momenta,other.weights_momenta);
-    Utils.add(biases_momenta,other.biases_momenta);
+    for (int i=0; i < weights_momenta.length; ++i) {
+      Utils.add(weights_momenta[i].raw(),other.weights_momenta[i].raw());
+    }
+    for (int i=0; i < biases_momenta.length; ++i) {
+      Utils.add(biases_momenta[i].raw(),other.biases_momenta[i].raw());
+    }
   }
   if (adaDelta()) {
     assert(other.adaDelta());

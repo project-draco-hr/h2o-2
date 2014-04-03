@@ -10,17 +10,17 @@
   float[] y=new float[rows];
   float[] res=new float[rows];
   byte[] bits=new byte[rows];
-  for (int i=0; i < rows; ++i) {
-    y[i]=0;
-    res[i]=0;
-    bits[i]=(byte)(new String("abcdefghijklmnopqrstuvwxyz").toCharArray()[i % 26]);
+  for (int row=0; row < rows; ++row) {
+    y[row]=0;
+    res[row]=0;
+    bits[row]=(byte)(new String("abcdefghijklmnopqrstuvwxyz").toCharArray()[row % 26]);
   }
   Random rng=new Random();
-  for (int i=0; i < cols; ++i)   if (rng.nextFloat() < nnz_ratio_vec)   x[i]=((float)i) / cols;
-  for (int i=0; i < rows; ++i) {
-    int off=i * cols;
-    for (int j=0; j < cols; ++j) {
-      if (rng.nextFloat() < nnz_ratio_mat)       a[off + j]=((float)(i + j)) / cols;
+  for (int col=0; col < cols; ++col)   if (rng.nextFloat() < nnz_ratio_vec)   x[col]=((float)col) / cols;
+  for (int row=0; row < rows; ++row) {
+    int off=row * cols;
+    for (int col=0; col < cols; ++col) {
+      if (rng.nextFloat() < nnz_ratio_mat)       a[off + col]=((float)(row + col)) / cols;
     }
   }
   DenseRowMatrix dra=new DenseRowMatrix(a,rows,cols);

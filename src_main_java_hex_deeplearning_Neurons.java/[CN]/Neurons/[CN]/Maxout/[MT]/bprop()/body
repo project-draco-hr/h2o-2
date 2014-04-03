@@ -2,8 +2,8 @@
   final long processed=_minfo.get_processed_total();
   float m=momentum(processed);
   float r=rate(processed) * (1 - m);
-  for (int u=0; u < _a.length; u++) {
-    float g=_e[u];
+  for (int u=0; u < _a.size(); u++) {
+    float g=_e.get(u);
     bprop(u,g,r,m);
   }
 }

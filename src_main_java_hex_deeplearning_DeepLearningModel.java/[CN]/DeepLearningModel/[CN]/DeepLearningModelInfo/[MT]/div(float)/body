@@ -1,9 +1,11 @@
 {
-  for (  float[] weight : weights)   Utils.div(weight,N);
-  for (  float[] bias : biases)   Utils.div(bias,N);
+  for (  Neurons.Matrix weight : weights) {
+    Utils.div(weight.raw(),N);
+  }
+  for (  Neurons.Vector bias : biases)   Utils.div(bias.raw(),N);
   if (has_momenta()) {
-    for (    float[] weight_momenta : weights_momenta)     Utils.div(weight_momenta,N);
-    for (    float[] bias_momenta : biases_momenta)     Utils.div(bias_momenta,N);
+    for (    Neurons.Matrix weight_momenta : weights_momenta)     Utils.div(weight_momenta.raw(),N);
+    for (    Neurons.Vector bias_momenta : biases_momenta)     Utils.div(bias_momenta.raw(),N);
   }
   if (adaDelta()) {
     for (    float[] dx2 : ada)     Utils.div(dx2,N);
