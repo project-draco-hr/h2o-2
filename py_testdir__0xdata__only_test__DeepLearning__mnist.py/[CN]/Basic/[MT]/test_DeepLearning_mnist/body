@@ -12,7 +12,7 @@ def test_DeepLearning_mnist(self):
     response = (inspect['numCols'] - 1)
     identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
     model_key = (('deeplearning_' + identifier) + '.hex')
-    kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '1024,1024,2048', 'adaptive_rate': 0, 'mini_batch': (-1), 'rate': 0.01, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 1800000, 'momentum_stable': 0.99, 'l1': 1e-05, 'l2': 0.0, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 128, 'destination_key': model_key, 'validation': validation_key, 'score_interval': 10000, }
+    kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '1024,1024,2048', 'adaptive_rate': 0, 'mini_batch': 0, 'rate': 0.01, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 1800000, 'momentum_stable': 0.99, 'l1': 1e-05, 'l2': 0.0, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 128, 'destination_key': model_key, 'validation': validation_key, 'score_interval': 10000, }
     timeoutSecs = 7200
     start = time.time()
     deeplearning = h2o_cmd.runDeepLearning(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
@@ -28,5 +28,4 @@ def test_DeepLearning_mnist(self):
     print h2o_gbm.pp_cm(cm)
     actualErr = (h2o_gbm.pp_cm_summary(cm) / 100.0)
     print ('actual   classification error:' + format(actualErr))
-    print ('expected classification error:' + format(expectedErr))
     h2o.beta_features = False
