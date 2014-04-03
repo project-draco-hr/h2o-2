@@ -8,13 +8,13 @@
   double[] rates={0.005 + 1e-2 * new Random().nextFloat()};
   int[] epochs={5 + new Random().nextInt(5)};
   double[] input_dropouts={0,new Random().nextFloat() * 0.5};
-  double p0=0;
-  long pR=1;
-  double p1=0;
-  double l1=0;
-  double l2=0;
+  double p0=0.5 * new Random().nextFloat();
+  long pR=1000 + new Random().nextInt(1000);
+  double p1=0.5 + 0.49 * new Random().nextFloat();
+  double l1=1e-5 * new Random().nextFloat();
+  double l2=1e-5 * new Random().nextFloat();
   double max_w2=Double.POSITIVE_INFINITY;
-  double rate_annealing=0;
+  double rate_annealing=1e-7 + new Random().nextFloat() * 1e-6;
   boolean threaded=false;
   int num_repeats=1;
   String[] files={"smalldata/iris/iris.csv","smalldata/neural/two_spiral.data"};
@@ -84,6 +84,7 @@
                             p.nesterov_accelerated_gradient=true;
                             p.classification_stop=-1;
                             p.force_load_balance=false;
+                            p.replicate_training_data=false;
                             p.invoke();
                             mymodel=UKV.get(p.dest());
                             neurons=DeepLearningTask.makeNeuronsForTesting(mymodel.model_info());
@@ -157,14 +158,14 @@
                           for (int n=1; n < ls.length; ++n) {
                             Neurons l=neurons[n];
                             Layer ref=ls[n];
-                            for (int o=0; o < l._a.length; o++) {
-                              for (int i=0; i < l._previous._a.length; i++) {
-                                a[n]+=ref._w[o * l._previous._a.length + i];
-                                b[n]+=l._w[o * l._previous._a.length + i];
+                            for (int o=0; o < l._a.size(); o++) {
+                              for (int i=0; i < l._previous._a.size(); i++) {
+                                a[n]+=ref._w[o * l._previous._a.size() + i];
+                                b[n]+=l._w.raw()[o * l._previous._a.size() + i];
                                 numweights++;
                               }
                               ba[n]+=ref._b[o];
-                              bb[n]+=l._b[o];
+                              bb[n]+=l._b.get(o);
                               numbiases++;
                             }
                           }
