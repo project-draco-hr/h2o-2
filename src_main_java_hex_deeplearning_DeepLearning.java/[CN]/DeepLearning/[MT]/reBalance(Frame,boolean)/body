@@ -6,12 +6,8 @@
   }
   final int chunks=4 * cores;
   if (force_load_balance && chunks < fr.numRows()) {
-    Key newKey=fr._key != null ? Key.make(fr._key.toString() + ".balanced") : Key.make();
-    RebalanceDataSet rb=new RebalanceDataSet(fr,newKey,chunks);
-    H2O.submitTask(rb);
-    rb.join();
-    Frame rebalanced=UKV.get(newKey);
-    return rebalanced;
+    Log.info("Starting load balancing into (at least) " + chunks + " chunks.");
+    return MRUtils.shuffleAndBalance(fr,chunks,seed,local,shuffle_training_data);
   }
  else   return fr;
 }
