@@ -1,0 +1,73 @@
+{
+  final float rho=(float)params.rho;
+  final float eps=(float)params.epsilon;
+  final float l1=(float)params.l1;
+  final float l2=(float)params.l2;
+  final boolean have_momenta=_wm != null;
+  final boolean have_ada=_ada != null;
+  final boolean nesterov=params.nesterov_accelerated_gradient;
+  final boolean update_prev=_previous._e != null;
+  final int cols=_previous._a.size();
+  final int idx=row * cols;
+  for (int col=0; col < cols; col++) {
+    if (update_prev)     _previous._e.add(col,partial_grad * _w.get(row,col));
+    if (params.fast_mode && _previous._a.get(col) == 0)     continue;
+    final float grad=partial_grad * _previous._a.get(col) - Math.signum(_w.get(row,col)) * l1 - _w.get(row,col) * l2;
+    if (have_ada) {
+      final int w=idx + col;
+      assert(!have_momenta);
+      final float grad2=grad * grad;
+      _ada[2 * w + 1]*=rho;
+      _ada[2 * w + 1]+=(1f - rho) * grad2;
+      final float RMS_dx=Utils.approxSqrt(_ada[2 * w] + eps);
+      final float invRMS_g=Utils.approxInvSqrt(_ada[2 * w + 1] + eps);
+      rate=RMS_dx * invRMS_g;
+      _ada[2 * w]=rho * _ada[2 * w] + (1f - rho) * rate * rate* grad2;
+      _w.add(row,col,rate * grad);
+    }
+ else {
+      if (!nesterov) {
+        final float delta=rate * grad;
+        _w.add(row,col,delta);
+        if (have_momenta) {
+          _w.add(row,col,momentum * _wm.get(row,col));
+          _wm.add(row,col,delta);
+        }
+      }
+ else {
+        float tmp=grad;
+        if (have_momenta) {
+          _wm.set(row,col,_wm.get(row,col) * momentum);
+          _wm.add(row,col,tmp);
+          tmp=_wm.get(row,col);
+        }
+        _w.add(row,col,rate * tmp);
+      }
+    }
+  }
+  if (!params.nesterov_accelerated_gradient) {
+    final float delta=rate * partial_grad;
+    _b.add(row,delta);
+    if (have_momenta) {
+      _b.add(row,momentum * _bm.get(row));
+      _bm.set(row,delta);
+    }
+  }
+ else {
+    float d=partial_grad;
+    if (have_momenta) {
+      _bm.set(row,_bm.get(row) * momentum);
+      _bm.add(row,d);
+      d=_bm.get(row);
+    }
+    _b.add(row,rate * d);
+  }
+  if (params.max_w2 != Double.POSITIVE_INFINITY) {
+    final double r2=Utils.sumSquares(_w.raw(),idx,idx + cols);
+    if (r2 > params.max_w2) {
+      final float scale=Utils.approxSqrt((float)(params.max_w2 / r2));
+      for (int c=0; c < cols; c++)       _w.raw()[idx + c]*=scale;
+    }
+  }
+  if (Float.isInfinite(_b.get(row)))   _minfo.set_unstable();
+}
