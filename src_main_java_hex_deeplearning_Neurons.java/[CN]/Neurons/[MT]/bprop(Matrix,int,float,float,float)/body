@@ -10,9 +10,10 @@
   final int cols=_previous._a.size();
   final int idx=row * cols;
   for (int col=0; col < cols; col++) {
-    if (update_prev)     _previous._e.add(col,partial_grad * _w.get(row,col));
+    final float weight=_w.get(row,col);
+    if (update_prev)     _previous._e.add(col,partial_grad * weight);
     if (params.fast_mode && _previous._a.get(col) == 0)     continue;
-    final float grad=partial_grad * _previous._a.get(col) - Math.signum(_w.get(row,col)) * l1 - _w.get(row,col) * l2;
+    final float grad=partial_grad * _previous._a.get(col) - Math.signum(weight) * l1 - weight * l2;
     if (have_ada) {
       final int w=idx + col;
       assert(!have_momenta);

@@ -2,6 +2,5 @@
   if (params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0)) {
     if (Math.abs(partial_grad) <= 1e-10)     return;
   }
-  if (_w instanceof DenseRowMatrix)   bprop(_w,row,partial_grad,rate,momentum);
- else   throw new UnsupportedOperationException("bprop col matrix not implemented.");
+  bprop(_w,row,partial_grad,rate,momentum);
 }
