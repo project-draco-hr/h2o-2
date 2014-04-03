@@ -4,6 +4,9 @@
   Value res=STORE.putIfMatchUnlocked(key,val,old);
   if (res != old)   return res;
   if (old != null && val == null)   old.removeIce();
-  if (val != null)   dirty_store();
+  if (val != null) {
+    dirty_store();
+    Scope.track(key);
+  }
   return old;
 }
