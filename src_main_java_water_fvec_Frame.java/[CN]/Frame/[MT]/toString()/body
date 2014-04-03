@@ -1,14 +1,15 @@
 {
-  Vec vecs[]=vecs();
+  Vec vecs[]=_vecs;
+  if (vecs == null)   vecs=vecs_impl();
   if (vecs.length == 0)   return "{}";
-  String s="{" + _names[0];
+  String s="{" + (_names == null ? "C0" : _names[0]);
   long bs=vecs[0].byteSize();
   for (int i=1; i < vecs.length; i++) {
-    s+="," + _names[i];
+    s+="," + (_names == null ? "C" + i : _names[i]);
     bs+=vecs[i].byteSize();
   }
   s+="}, " + PrettyPrint.bytes(bs) + "\n";
-  Vec v0=anyVec();
+  Vec v0=_vecs[0];
   if (v0 == null)   return s;
   int nc=v0.nChunks();
   s+="Chunk starts: {";
