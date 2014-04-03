@@ -1,10 +1,11 @@
 {
-  long seed=0xDECAF;
+  long seed0=0xDECAF;
   for (int repeat=0; repeat < 1; ++repeat) {
     DeepLearning.Activation[] activations={DeepLearning.Activation.Tanh,DeepLearning.Activation.Rectifier};
     DeepLearning.Loss[] losses={DeepLearning.Loss.MeanSquare,DeepLearning.Loss.CrossEntropy};
     DeepLearning.InitialWeightDistribution[] dists={DeepLearning.InitialWeightDistribution.UniformAdaptive};
-    Random rng=new Random(seed + repeat);
+    final long seed=seed0 + repeat;
+    Random rng=new Random(seed);
     double[] initial_weight_scales={1e-4 + rng.nextDouble()};
     double[] holdout_ratios={0.1 + rng.nextDouble() * 0.8};
     double[] momenta={rng.nextDouble() * 0.99};
