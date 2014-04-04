@@ -4,7 +4,8 @@
     _iced=_pool.get("water.Iced");
     _dtask=_pool.get("water.DTask");
     _enum=_pool.get("java.lang.Enum");
-    _serBases=new CtClass[]{_iced,_dtask,_enum};
+    _freezable=_pool.get("water.Freezable");
+    _serBases=new CtClass[]{_iced,_dtask,_enum,_freezable};
     for (    CtClass c : _serBases)     c.freeze();
     _fielddoc=_pool.get("water.api.DocGen$FieldDoc");
     _arg=_pool.get("water.api.RequestArguments$Argument");
