@@ -1,4 +1,6 @@
 {
+  final ClassLoader ccl=Thread.currentThread().getContextClassLoader();
+  Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
   try {
     if (name.equals("water.Boot"))     return null;
     CtClass cc=_pool.get(name);
@@ -12,5 +14,8 @@
   }
 catch (  CannotCompileException e) {
     throw new RuntimeException(e);
+  }
+ finally {
+    Thread.currentThread().setContextClassLoader(ccl);
   }
 }
