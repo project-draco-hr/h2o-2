@@ -1,23 +1,30 @@
 def test_rf_covtype20x_fvec(self):
     h2o.beta_features = True
     importFolderPath = 'standard'
-    csvFilenameTrain = 'covtype20x.data'
-    csvFilenameTrain = 'covtype.data'
+    if DO_SMALL:
+        csvFilenameTrain = 'covtype.data'
+        hex_key = 'covtype1x.data.A.hex'
+    else:
+        csvFilenameTrain = 'covtype20x.data'
+        hex_key = 'covtype20x.data.A.hex'
     csvPathname = ((importFolderPath + '/') + csvFilenameTrain)
-    hex_key = 'covtype20x.data.A.hex'
     parseResultTrain = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=500)
     inspect = h2o_cmd.runInspect(key=parseResultTrain['destination_key'])
     dataKeyTrain = parseResultTrain['destination_key']
     print 'Parse end', dataKeyTrain
-    csvFilenameTest = 'covtype20x.data'
-    csvFilenameTest = 'covtype.data'
+    if DO_SMALL:
+        csvFilenameTest = 'covtype.data'
+        hex_key = 'covtype1x.data.B.hex'
+        dataKeyTest2 = 'covtype1x.data.C.hex'
+    else:
+        csvFilenameTest = 'covtype20x.data'
+        hex_key = 'covtype20x.data.B.hex'
+        dataKeyTest2 = 'covtype20x.data.C.hex'
     csvPathname = ((importFolderPath + '/') + csvFilenameTest)
-    hex_key = 'covtype20x.data.B.hex'
     parseResultTest = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=500)
     print "Parse result['destination_key']:", parseResultTest['destination_key']
     inspect = h2o_cmd.runInspect(key=parseResultTest['destination_key'])
     dataKeyTest = parseResultTest['destination_key']
-    dataKeyTest2 = 'covtype20x.data.C.hex'
     print 'Parse end', dataKeyTest
     execExpr = ((dataKeyTest2 + '=') + dataKeyTest)
     if h2o.beta_features:
