@@ -1,7 +1,10 @@
 {
   CtField ctfs[]=cc.getDeclaredFields();
   boolean api=false;
-  for (  CtField ctf : ctfs)   if (ctf.getName().equals("API_WEAVER"))   api=true;
+  for (  CtField ctf : ctfs)   if (ctf.getName().equals("API_WEAVER")) {
+    api=true;
+    break;
+  }
   if (api == false)   return;
   CtField fielddoc=null;
   CtField getdoc=null;
