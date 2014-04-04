@@ -3,12 +3,12 @@
   boolean w=hasExisting("write","(Lwater/AutoBuffer;)Lwater/AutoBuffer;",ccms);
   boolean r=hasExisting("read","(Lwater/AutoBuffer;)Lwater/Freezable;",ccms);
   boolean d=cc.subclassOf(_dtask);
-  boolean c=hasExisting("copyOver","(Lwater/DTask;)V",ccms);
+  boolean c=hasExisting("copyOver","(Lwater/Freezable;)V",ccms);
   if (w && r && (!d || c))   return;
-  if (w || r || c)   throw new RuntimeException(cc.getName() + " must implement all of " + "read(AutoBuffer) and write(AutoBuffer) and copyOver(DTask) or none");
+  if (w || r || c)   throw new RuntimeException(cc.getName() + " must implement all of " + "read(AutoBuffer) and write(AutoBuffer) and copyOver(Freezable) or none");
   CtField ctfs[]=cc.getDeclaredFields();
   boolean callsuper=true;
   make_body(cc,ctfs,callsuper,"public water.AutoBuffer write(water.AutoBuffer ab) {\n","  super.write(ab);\n","  ab.put%z(%s);\n","  ab.putEnum(%s);\n","  ab.put%z(%s);\n","","  return ab;\n" + "}",null);
   make_body(cc,ctfs,callsuper,"public water.Freezable read(water.AutoBuffer s) {\n","  super.read(s);\n","  %s = s.get%z();\n","  %s = %c.raw_enum(s.get1());\n","  %s = (%C)s.get%z(%c.class);\n","","  return this;\n" + "}",null);
-  if (d)   make_body(cc,ctfs,callsuper,"public void copyOver(water.DTask i) {\n" + "  " + cc.getName() + " s = ("+ cc.getName()+ ")i;\n","  super.copyOver(s);\n","  %s = s.%s;\n","  %s = s.%s;\n","  %s = s.%s;\n","","}",null);
+  if (d)   make_body(cc,ctfs,callsuper,"public void copyOver(water.Freezable i) {\n" + "  " + cc.getName() + " s = ("+ cc.getName()+ ")i;\n","  super.copyOver(s);\n","  %s = s.%s;\n","  %s = s.%s;\n","  %s = s.%s;\n","","}",null);
 }
