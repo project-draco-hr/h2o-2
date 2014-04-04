@@ -45,6 +45,7 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
         stabilize_cloud(nodeList[0], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, noExtraErrorCheck=True)
         verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
+        h2p.red_print('Built cloud:', nodeList[0].java_heap_GB, 'GB java heap(s) with', len(nodeList), 'total nodes')
         if conservative:
             for n in nodeList:
                 stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
