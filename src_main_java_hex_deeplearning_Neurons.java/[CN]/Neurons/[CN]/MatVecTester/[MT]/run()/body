@@ -43,7 +43,7 @@
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
-    gemv(res,a,x,y,bits);
+    gemv_row_optimized(res,a,x,y,bits);
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
@@ -94,7 +94,7 @@
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
-    gemv(res,a,x,y,bits);
+    gemv_row_optimized(res,a,x,y,bits);
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));

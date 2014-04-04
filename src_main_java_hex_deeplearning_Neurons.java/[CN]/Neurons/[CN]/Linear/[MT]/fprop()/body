@@ -1,3 +1,4 @@
 {
-  gemv(_a.raw(),_w.raw(),_previous._a.raw(),_b.raw(),null);
+  if (_w instanceof DenseRowMatrix)   gemv_row_optimized(_a.raw(),_w.raw(),_previous._a.raw(),_b.raw(),null);
+ else   throw new UnsupportedOperationException("only row matrix");
 }
