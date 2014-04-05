@@ -7,15 +7,16 @@
   final boolean have_momenta=_wm != null;
   final boolean have_ada=_ada != null;
   final boolean nesterov=params.nesterov_accelerated_gradient;
-  final boolean update_prev=_previous._e != null;
+  final boolean update_prev=prev_e != null;
   final boolean fast_mode=params.fast_mode;
-  final int cols=_previous._a.size();
+  final int cols=prev_a.size();
   final int idx=row * cols;
-  for (int col=0; col < cols; col++) {
+  for (SparseVector.Iterator it=prev_a.begin(); !it.equals(prev_a.end()); it.next()) {
+    final int col=it.index();
     final float weight=_w.get(row,col);
-    if (update_prev)     _previous._e.add(col,partial_grad * weight);
-    final float previous_a=_previous._a.get(col);
-    if (fast_mode && previous_a == 0)     continue;
+    if (update_prev)     prev_e.add(col,partial_grad * weight);
+    final float previous_a=it.value();
+    assert(previous_a != 0);
     final float grad=partial_grad * previous_a - Math.signum(weight) * l1 - weight * l2;
     final int w=idx + col;
     if (have_ada) {
