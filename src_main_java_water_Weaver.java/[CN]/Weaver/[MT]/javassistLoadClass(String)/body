@@ -1,10 +1,22 @@
 {
+  final ClassLoader ccl=Thread.currentThread().getContextClassLoader();
+  Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
   try {
     if (name.equals("water.Boot"))     return null;
     CtClass cc=_pool.get(name);
     if (cc == null)     return null;
     if (!inPackages(cc.getPackageName()))     return null;
     for (    CtClass base : _serBases)     if (cc.subclassOf(base))     return javassistLoadClass(cc);
+    if (cc.subtypeOf(_freezable)) {
+      CtClass xcc=cc;
+      CtClass ycc=null;
+      while (xcc.subtypeOf(_freezable)) {
+        ycc=xcc;
+        xcc=xcc.getSuperclass();
+      }
+      if (!ycc.isFrozen())       ycc.freeze();
+      return cc == ycc ? cc : javassistLoadClass(cc);
+    }
     return cc;
   }
  catch (  NotFoundException nfe) {
@@ -12,5 +24,8 @@
   }
 catch (  CannotCompileException e) {
     throw new RuntimeException(e);
+  }
+ finally {
+    Thread.currentThread().setContextClassLoader(ccl);
   }
 }
