@@ -1,12 +1,13 @@
 def test_exec_multi_node2(self):
     h2o.beta_features = True
     for node in h2o.nodes:
-        execExpr = 'r1 = c(0,0); r2 = c(0,0); r3 = c(0,0); r4 = c(0,0)'
+        execExpr = 'r0=c(0); r1 = c(0); r2 = c(0);'
         print ('Sending request to node: %s' % node)
         h2e.exec_expr(node=node, execExpr=execExpr, timeoutSecs=30)
-        execExpr = '(r1==c(0,0)) ? c(0,0) : c(1,1)'
-        print ('Sending request to node: %s' % node)
-        h2e.exec_expr(node=node, execExpr=execExpr, timeoutSecs=30)
+        if TEST_MUX:
+            execExpr = '(r1==0) ? c(0) : c(1)'
+            print ('Sending request to node: %s' % node)
+            h2e.exec_expr(node=node, execExpr=execExpr, timeoutSecs=30)
     global OUTSTANDING
     if (not OUTSTANDING):
         OUTSTANDING = min(10, len(h2o.nodes))
