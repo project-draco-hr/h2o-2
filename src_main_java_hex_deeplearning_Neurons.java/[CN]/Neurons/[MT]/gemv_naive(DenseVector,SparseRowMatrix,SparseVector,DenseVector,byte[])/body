@@ -6,8 +6,6 @@
     if (row_bits != null && (row_bits[r / 8] & (1 << (r % 8))) == 0)     continue;
     TreeMap<Integer,Float> row=a.row(r);
     Set<Map.Entry<Integer,Float>> set=row.entrySet();
-    Iterator<Map.Entry<Integer,Float>> itA=set.iterator();
-    SparseVector.Iterator itB=x.begin();
     for (    Map.Entry<Integer,Float> e : set) {
       final float val=x.get(e.getKey());
       if (val != 0f)       res.add(r,e.getValue() * val);
