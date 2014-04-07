@@ -1,0 +1,22 @@
+def execit(n, bucket, path, src_key, hex_key, timeoutSecs=60, retryDelaySecs=1, pollTimeoutSecs=30):
+    np1 = ((n + 1) % len(h2o.nodes))
+    np = (n % len(h2o.nodes))
+    if (np == 0):
+        if READ_ONLY:
+            execExpr = ('(r%s==1) ? c(1) : c(0);' % np)
+        else:
+            execExpr = ('r%s = c(1)' % np1)
+        print ('Sending request to node: %s' % h2o.nodes[np1]),
+        h2e.exec_expr(node=h2o.nodes[np1], execExpr=execExpr, timeoutSecs=30)
+    else:
+        if READ_ONLY:
+            execExpr = ('(r%s==1) ? c(1) : c(0);' % np)
+        else:
+            execExpr = ('r%s = (r%s==1) ? c(1) : c(0);' % (np1, np))
+        print ('Sending request to node: %s' % h2o.nodes[np1]),
+        (resultExec, fpResult) = h2e.exec_expr(node=h2o.nodes[np1], execExpr=execExpr, timeoutSecs=30)
+        while (fpResult != 1):
+            print ('to node: %s' % h2o.nodes[np1])
+            (resultExec, fpResult) = h2e.exec_expr(node=h2o.nodes[np1], execExpr=execExpr, timeoutSecs=30)
+    hex_key = np1
+    return hex_key

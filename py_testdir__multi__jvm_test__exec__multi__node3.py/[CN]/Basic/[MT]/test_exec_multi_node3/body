@@ -1,0 +1,44 @@
+def test_exec_multi_node3(self):
+    h2o.beta_features = True
+    for initTrial in range(1):
+        for node in h2o.nodes:
+            execExpr = 'r0 = c(0,0); r1 = c(0,0); r2 = c(0,0);'
+            print ('Sending request to node: %s' % node)
+            h2e.exec_expr(node=node, execExpr=execExpr, timeoutSecs=30)
+            if TEST_MUX_STORE:
+                execExpr = '(r1==c(0,0)) ? c(0,0) : c(1,1)'
+                print ('Sending request to node: %s' % node)
+                h2e.exec_expr(node=node, execExpr=execExpr, timeoutSecs=30)
+    global OUTSTANDING
+    if (not OUTSTANDING):
+        OUTSTANDING = min(10, len(h2o.nodes))
+    execTrial = 0
+    worker_resultq = multiprocessing.Queue()
+    while (execTrial <= TRIALMAX):
+        start = time.time()
+        workers = []
+        for o in range(OUTSTANDING):
+            np = (execTrial % len(h2o.nodes))
+            retryDelaySecs = 5
+            timeoutSecs = 60
+            bucket = None
+            csvPathname = None
+            src_key = None
+            hex_key = 'a'
+            tmp = multiprocessing.Process(target=function_no_keyboard_intr, args=(worker_resultq, execit, np, bucket, csvPathname, src_key, hex_key, timeoutSecs, retryDelaySecs))
+            tmp.start()
+            workers.append(tmp)
+            execTrial += 1
+        for worker in workers:
+            try:
+                worker.join()
+                print 'worker joined:', worker
+                worker.terminate()
+                hex_key = worker_resultq.get(timeout=2)
+            except KeyboardInterrupt:
+                print 'parent received ctrl-c'
+                for worker in workers:
+                    worker.terminate()
+                    worker.join()
+        elapsed = (time.time() - start)
+        print 'Group end at #', execTrial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
