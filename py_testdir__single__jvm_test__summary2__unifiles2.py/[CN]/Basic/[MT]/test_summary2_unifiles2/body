@@ -1,20 +1,24 @@
 def test_summary2_unifiles2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('breadth.csv', 'b.hex', [('C1', None, None, None, None, None)], 'smalldata', 'quantiles'), ('covtype.data', 'c.hex', [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard')]
+    tryList = [('breadth.csv', 'b.hex', False, [('C1', None, None, None, None, None)], 'smalldata', 'quantiles'), ('wonkysummary.csv', 'b.hex', True, [('X1', None, None, None, None, None)], 'smalldata', None), ('covtype.data', 'c.hex', False, [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard')]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
     lenNodes = len(h2o.nodes)
     x = 0
     timeoutSecs = 60
-    for (csvFilename, hex_key, expectedCols, bucket, pathPrefix) in tryList:
+    for (csvFilename, hex_key, skipHeader, expectedCols, bucket, pathPrefix) in tryList:
         h2o.beta_features = False
         if pathPrefix:
             csvPathname = ((pathPrefix + '/') + csvFilename)
         else:
             csvPathname = csvFilename
         csvPathnameFull = h2i.find_folder_and_filename(bucket, csvPathname, returnFullPath=True)
-        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
+        if skipHeader:
+            header = 1
+        else:
+            header = 0
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', header=header, hex_key=hex_key, timeoutSecs=10, doSummary=False)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
@@ -87,6 +91,6 @@ def test_summary2_unifiles2(self):
                 print 'maxs colname:', colname, '(2 places):', mx
                 print 'mins colname:', colname, '(2 places):', mn
                 if ((colname != '') and expected[scipyCol] and (csvFilename != 'covtype.data')):
-                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=False, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else OTHER_Q), h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult)
+                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=skipHeader, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else OTHER_Q), h2oSummary2=pctile[(5 if DO_MEDIAN else OTHER_Q_SUMM_INDEX)], h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult)
             scipyCol += 1
         trial += 1

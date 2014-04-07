@@ -3,9 +3,9 @@
   float m=momentum(processed);
   float r=rate(processed) * (1 - m);
   float g;
-  for (int u=0; u < _a.length; u++) {
+  for (int u=0; u < _a.size(); u++) {
     final float t=(u == target ? 1 : 0);
-    final float y=_a[u];
+    final float y=_a.get(u);
     if (params.loss == Loss.CrossEntropy) {
       g=t - y;
     }

@@ -11,10 +11,18 @@ def upload_file(self, f, progress=None):
         try:
             try:
                 sftp.stat(dest)
-                print 'Skipping upload of file {0}. File {1} exists on remote side!'.format(f, dest)
+                print '{0} Skipping upload of file {1}. File {2} exists on remote side!'.format(self, f, dest)
             except IOError as e:
                 if (e.errno == errno.ENOENT):
+                    verboseprint('{0} uploading file {1}.'.format(self, f))
                     sftp.put(f, dest, callback=progress)
+                elif (e.errno == errno.EEXIST):
+                    pass
+                else:
+                    print ('Got unexpected errno: %s on paramiko sftp.' % e.errno)
+                    print 'Lookup here: https://docs.python.org/2/library/errno.html'
+                    exc_info = sys.exc_info()
+                    raise exc_info[1], None, exc_info[2]
         finally:
             sftp.close()
         self.uploaded[f] = dest
