@@ -1,5 +1,5 @@
 {
-  Futures fs=new Futures();
-  for (  Key key : _scope.get()._keys.pop())   UKV.remove(key,fs);
-  fs.blockForPending();
+  Stack<HashSet<Key>> keys=_scope.get()._keys;
+  if (keys.size() == 0)   return;
+  for (  Key key : keys.pop())   Lockable.delete(key);
 }

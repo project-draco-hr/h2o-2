@@ -1,0 +1,17 @@
+import unittest, sys, random, time
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_browse as h2b, h2o_import as h2i, h2o_hosts, h2o_jobs, h2o_exec as h2e
+import h2o_util
+import multiprocessing, os, signal, time
+from multiprocessing import Process, Queue
+print 'dueling increments'
+print 'a variant with ability to do just reads, plus just  use of c(0) style, except for compares'
+print 'restrict outstanding to # of nodes'
+NODES = 2
+OUTSTANDING = NODES
+OUTSTANDING = 1
+TRIALMAX = 10
+TEST_MUX = False
+READ_ONLY = True
+if (__name__ == '__main__'):
+    h2o.unit_main()

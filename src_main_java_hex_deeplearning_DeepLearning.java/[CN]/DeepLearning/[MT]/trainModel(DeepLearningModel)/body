@@ -13,7 +13,7 @@
     final long model_size=model.model_info().size();
     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
-    train=updateFrame(train,reBalance(train,mp.seed,mp.replicate_training_data,mp.force_load_balance,mp.shuffle_training_data));
+    train=updateFrame(train,reBalance(train,mp.replicate_training_data));
     float[] trainSamplingFactors;
     if (mp.classification && mp.balance_classes) {
       trainSamplingFactors=new float[train.lastVec().domain().length];
@@ -35,15 +35,15 @@
  else {
         validScoreFrame=updateFrame(adaptedValid,sampleFrame(adaptedValid,mp.score_validation_samples,mp.seed + 1));
       }
-      validScoreFrame=updateFrame(validScoreFrame,reBalance(validScoreFrame,mp.seed + 1,false,mp.force_load_balance,mp.shuffle_training_data));
+      validScoreFrame=updateFrame(validScoreFrame,reBalance(validScoreFrame,false));
       Log.info("Number of chunks of the validation data: " + validScoreFrame.anyVec().nChunks());
     }
-    mp.mini_batch=computeMiniBatchSize(mp.mini_batch,train.numRows(),mp.replicate_training_data,mp.single_node_mode);
-    if (mp.replicate_training_data && (mp.mini_batch == train.numRows() * H2O.CLOUD.size()) && !mp.shuffle_training_data&& H2O.CLOUD.size() > 1) {
+    mp.train_samples_per_iteration=computeTrainSamplesPerIteration(mp.train_samples_per_iteration,train.numRows(),mp.replicate_training_data,mp.single_node_mode);
+    if (mp.replicate_training_data && (mp.train_samples_per_iteration == train.numRows() * H2O.CLOUD.size()) && !mp.shuffle_training_data&& H2O.CLOUD.size() > 1) {
       Log.warn("Enabling training data shuffling, because all nodes train on the full dataset (replicated training data)");
       mp.shuffle_training_data=true;
     }
-    final float rowUsageFraction=computeRowUsageFraction(train.numRows(),mp.mini_batch,mp.replicate_training_data);
+    final float rowUsageFraction=computeRowUsageFraction(train.numRows(),mp.train_samples_per_iteration,mp.replicate_training_data);
     if (!mp.quiet_mode)     Log.info("Initial model:\n" + model.model_info());
     Log.info("Starting to train the Deep Learning model.");
     do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowUsageFraction).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowUsageFraction).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowUsageFraction).doAll(train).model_info());
