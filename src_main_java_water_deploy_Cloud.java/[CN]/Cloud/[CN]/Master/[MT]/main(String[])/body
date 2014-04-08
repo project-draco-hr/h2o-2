@@ -17,7 +17,7 @@
     w.start();
   }
   H2O.main(Utils.append(workerArgs,args));
-  TestUtil.stall_till_cloudsize(1 + workers.size());
+  stall_till_cloudsize(1 + workers.size(),10000);
   Log.unwrap(System.out,"");
   Log.unwrap(System.out,"Cloud is up, local port " + FORWARDED_LOCAL_PORT + " forwarded");
   Log.unwrap(System.out,"Go to http://127.0.0.1:" + FORWARDED_LOCAL_PORT);

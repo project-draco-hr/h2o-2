@@ -1,3 +1,5 @@
 {
-  return load_test_file(file,file.getPath());
+  Key key=VAUtils.loadFile(file);
+  if (key == null)   fail("failed load to " + file.getName());
+  return key;
 }
