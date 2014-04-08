@@ -172,9 +172,10 @@
                               numbiases++;
                             }
                           }
+                          water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
 {
                             Frame fpreds=mymodel.score(_train);
-                            water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
+                            CM=new water.api.ConfusionMatrix();
                             CM.actual=_train;
                             CM.vactual=_train.lastVec();
                             CM.predict=fpreds;
@@ -197,6 +198,7 @@
                             for (                            String s : sb.toString().split("\n"))                             Log.info(s);
                             fpreds2.delete();
                           }
+                          long[][] cm;
 {
                             Log.info("\nNeuralNet Scoring:");
                             NeuralNet.Errors train=NeuralNet.eval(ls,0,null);
@@ -208,7 +210,6 @@
                             input.vecs=data;
                             input._len=data[0].length();
                             ((Layer.VecSoftmax)ls[ls.length - 1]).vec=labels;
-                            long[][] cm;
                             int classes=ls[ls.length - 1].units;
                             cm=new long[classes][classes];
                             NeuralNet.Errors test=NeuralNet.eval(ls,0,cm);
@@ -217,6 +218,10 @@
                             reftesterr+=test.classification;
                             adapted[1].delete();
                           }
+                          Assert.assertEquals(cm[0][0],CM.cm[0][0]);
+                          Assert.assertEquals(cm[1][0],CM.cm[1][0]);
+                          Assert.assertEquals(cm[0][1],CM.cm[0][1]);
+                          Assert.assertEquals(cm[1][1],CM.cm[1][1]);
                           mymodel.delete();
                           refmodel.delete();
                           _train.delete();
