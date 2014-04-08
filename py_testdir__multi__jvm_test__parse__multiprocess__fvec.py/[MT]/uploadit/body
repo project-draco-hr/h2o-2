@@ -7,4 +7,5 @@ def uploadit(n, bucket, path, src_key, hex_key, timeoutSecs=60, retryDelaySecs=1
         np1 = n
     if DO_PARSE_ALSO:
         parseit(np1, importPattern, hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
+        h2o.nodes[0].rebalance(before=hex_key, after=(hex_key + '_2'), chunks=32)
     return (importPattern, hex_key)
