@@ -1,0 +1,8 @@
+{
+  DRFJob drfJob=new DRFJob(ntrees,modelKey);
+  DRFTask drfTask=create(drfJob,modelKey,response,ignored_cols,fr,ntrees,depth,binLimit,stat,seed,parallelTrees,classWt,numSplitFeatures,samplingStrategy,sample,strataSamples,verbose,exclusiveSplitLimit,useNonLocalData);
+  drfJob.start(drfTask);
+  drfTask._job=drfJob;
+  drfTask.dfork(drfTask._rfmodel._dataKey);
+  return drfJob;
+}

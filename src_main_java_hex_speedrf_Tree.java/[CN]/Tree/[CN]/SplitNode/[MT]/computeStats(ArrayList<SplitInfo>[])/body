@@ -1,0 +1,18 @@
+{
+  SplitInfo splitInfo=null;
+  for (  SplitInfo si : stats[_column]) {
+    if (si.splitNode()._split == _split) {
+      splitInfo=si;
+      break;
+    }
+  }
+  if (splitInfo == null) {
+    stats[_column].add(SplitInfo.info(this,_leaves));
+  }
+ else {
+    splitInfo._affectedLeaves+=leaves();
+    splitInfo._used+=1;
+  }
+  _l.computeStats(stats);
+  _r.computeStats(stats);
+}

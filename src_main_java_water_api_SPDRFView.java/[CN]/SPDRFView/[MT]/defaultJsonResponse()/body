@@ -1,0 +1,14 @@
+{
+  rf_model=DKV.get(destination_key).get();
+  JsonObject r=new JsonObject();
+  r.addProperty(DATA_KEY,rf_model._dataKey.toString());
+  r.addProperty(DEST_KEY,destination_key.toString());
+  r.addProperty(CLASS,rf_model.responseName());
+  r.addProperty(NUM_TREES,rf_model._totalTrees);
+  r.addProperty(MTRY,rf_model._splitFeatures);
+  r.addProperty(MTRY_NODES,Arrays.toString(rf_model._nodesSplitFeatures));
+  r.addProperty(OOBEE,out_of_bag_error_estimate);
+  r.addProperty(NO_CM,_noCM);
+  r.addProperty(JSON_REFRESH_THRESHOLD_CM,_refreshThresholdCM);
+  return r;
+}

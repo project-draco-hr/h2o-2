@@ -1,0 +1,9 @@
+{
+  if (json == null) {
+    return sb.append(" / / ");
+  }
+ else {
+    JsonObject obj=json.getAsJsonObject();
+    return sb.append(String.format("%4.1f / %4.1f / %4.1f",obj.get(MIN).getAsDouble(),obj.get(MAX).getAsDouble(),obj.get(MEAN).getAsDouble()));
+  }
+}

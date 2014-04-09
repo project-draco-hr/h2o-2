@@ -1,0 +1,63 @@
+{
+  int tasks=0;
+  int finished=0;
+  RFModel model=DKV.get(destination_key).get();
+  double[] weights=model._weights;
+  boolean done=false;
+  int classCol=model._fr.find(model._response);
+  tasks=model._totalTrees;
+  finished=model.size();
+  JsonObject response=defaultJsonResponse();
+  if (!_noCM && (finished == tasks || iterative_cm) && finished > 0) {
+    int modelSize=tasks * _refreshThresholdCM / 100;
+    modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
+    Job cmJob=ConfusionTask.make(model,modelSize,model._fr._key,classCol,weights,out_of_bag_error_estimate);
+    CMFinal confusion=UKV.get(cmJob.dest());
+    if (confusion != null && confusion.valid() && modelSize > 0) {
+      JsonObject cm=new JsonObject();
+      JsonArray cmHeader=new JsonArray();
+      JsonArray matrix=new JsonArray();
+      cm.addProperty(JSON_CM_TYPE,out_of_bag_error_estimate ? "OOB error estimate" : "full scoring");
+      cm.addProperty(JSON_CM_CLASS_ERR,confusion.classError());
+      cm.addProperty(JSON_CM_ROWS_SKIPPED,confusion.skippedRows());
+      cm.addProperty(JSON_CM_ROWS,confusion.rows());
+      for (      String s : cfDomain(confusion,1024))       cmHeader.add(new JsonPrimitive(s));
+      cm.add(JSON_CM_HEADER,cmHeader);
+      final int nclasses=confusion.dimension();
+      JsonArray classErrors=new JsonArray();
+      for (int crow=0; crow < nclasses; ++crow) {
+        JsonArray row=new JsonArray();
+        int classHitScore=0;
+        for (int ccol=0; ccol < nclasses; ++ccol) {
+          row.add(new JsonPrimitive(confusion.matrix(crow,ccol)));
+          if (crow != ccol)           classHitScore+=confusion.matrix(crow,ccol);
+        }
+        classErrors.add(new JsonPrimitive((float)classHitScore / (classHitScore + confusion.matrix(crow,crow))));
+        matrix.add(row);
+      }
+      cm.add(JSON_CM_CLASSES_ERRORS,classErrors);
+      cm.add(JSON_CM_MATRIX,matrix);
+      cm.addProperty(JSON_CM_TREES,modelSize);
+      response.add(JSON_CM,cm);
+      done=finished == tasks;
+    }
+  }
+ else   if (_noCM && finished == tasks)   done=true;
+  JsonObject trees=new JsonObject();
+  trees.addProperty(Constants.TREE_COUNT,model.size());
+  if (model.size() > 0) {
+    trees.add(Constants.TREE_DEPTH,model.depth().toJson());
+    trees.add(Constants.TREE_LEAVES,model.leaves().toJson());
+  }
+  response.add(Constants.TREES,trees);
+  Response r;
+  if (done) {
+    r=jobDone(response);
+    r.addHeader("<div class='alert'>" + GeneratePredictionsPage.link(model._key,"Predict!") + " </div>");
+  }
+ else {
+    r=Response.poll(response,finished,tasks);
+  }
+  r.setBuilder(JSON_CM,new ConfusionMatrixBuilder());
+  return r;
+}

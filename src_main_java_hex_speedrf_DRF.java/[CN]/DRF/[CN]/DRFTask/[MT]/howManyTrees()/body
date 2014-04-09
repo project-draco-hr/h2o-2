@@ -1,0 +1,15 @@
+{
+  Frame fr=_rfmodel._fr;
+  final long num_chunks=fr.anyVec().nChunks();
+  final int num_nodes=H2O.CLOUD.size();
+  HashSet<H2ONode> nodes=new HashSet();
+  for (int i=0; i < num_chunks; i++) {
+    nodes.add(fr.anyVec().chunkKey(i).home_node());
+    if (nodes.size() == num_nodes)     break;
+  }
+  H2ONode[] array=nodes.toArray(new H2ONode[nodes.size()]);
+  Arrays.sort(array);
+  int ntrees=_params._ntrees / nodes.size();
+  if (Arrays.binarySearch(array,H2O.SELF) < _params._ntrees - ntrees * nodes.size())   ++ntrees;
+  return ntrees;
+}
