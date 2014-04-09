@@ -1,20 +1,22 @@
 {
+  final long seed=0xc0ffee;
+  Random rng=new Random(seed);
   DeepLearning.Activation[] activations={DeepLearning.Activation.Maxout,DeepLearning.Activation.MaxoutWithDropout,DeepLearning.Activation.Tanh,DeepLearning.Activation.TanhWithDropout,DeepLearning.Activation.Rectifier,DeepLearning.Activation.RectifierWithDropout};
   DeepLearning.Loss[] losses={DeepLearning.Loss.MeanSquare,DeepLearning.Loss.CrossEntropy};
   DeepLearning.InitialWeightDistribution[] dists={DeepLearning.InitialWeightDistribution.Normal,DeepLearning.InitialWeightDistribution.Uniform,DeepLearning.InitialWeightDistribution.UniformAdaptive};
-  double[] initial_weight_scales={1e-3 + 1e-2 * new Random().nextFloat()};
-  double[] holdout_ratios={0.7 + 0.2 * new Random().nextFloat()};
-  int[][] hiddens={{1},{1 + new Random().nextInt(50)},{17,13},{20,10,5}};
-  double[] rates={0.005 + 1e-2 * new Random().nextFloat()};
-  int[] epochs={5 + new Random().nextInt(5)};
-  double[] input_dropouts={0,new Random().nextFloat() * 0.5};
-  double p0=0.5 * new Random().nextFloat();
-  long pR=1000 + new Random().nextInt(1000);
-  double p1=0.5 + 0.49 * new Random().nextFloat();
-  double l1=1e-5 * new Random().nextFloat();
-  double l2=1e-5 * new Random().nextFloat();
+  double[] initial_weight_scales={1e-3 + 1e-2 * rng.nextFloat()};
+  double[] holdout_ratios={0.7 + 0.2 * rng.nextFloat()};
+  int[][] hiddens={{1},{1 + rng.nextInt(50)},{17,13},{20,10,5}};
+  double[] rates={0.005 + 1e-2 * rng.nextFloat()};
+  int[] epochs={5 + rng.nextInt(5)};
+  double[] input_dropouts={0,rng.nextFloat() * 0.5};
+  double p0=0.5 * rng.nextFloat();
+  long pR=1000 + rng.nextInt(1000);
+  double p1=0.5 + 0.49 * rng.nextFloat();
+  double l1=1e-5 * rng.nextFloat();
+  double l2=1e-5 * rng.nextFloat();
   double max_w2=Double.POSITIVE_INFINITY;
-  double rate_annealing=1e-7 + new Random().nextFloat() * 1e-6;
+  double rate_annealing=1e-7 + rng.nextFloat() * 1e-6;
   boolean threaded=false;
   int num_repeats=1;
   String[] files={"smalldata/iris/iris.csv","smalldata/neural/two_spiral.data"};
@@ -37,7 +39,7 @@
                         float[] bb=new float[hidden.length + 2];
                         long numweights=0, numbiases=0;
                         for (int repeat=0; repeat < num_repeats; ++repeat) {
-                          long seed=new Random().nextLong();
+                          long myseed=seed + repeat;
                           Log.info("");
                           Log.info("STARTING.");
                           Log.info("Running with " + activation.name() + " activation function and "+ loss.name()+ " loss function.");
@@ -54,7 +56,7 @@
                             p.source=(Frame)_train.clone();
                             p.response=_train.lastVec();
                             p.ignored_cols=null;
-                            p.seed=seed;
+                            p.seed=myseed;
                             p.hidden=hidden;
                             p.adaptive_rate=false;
                             p.rho=0;
@@ -78,7 +80,7 @@
                             p.validation=null;
                             p.quiet_mode=true;
                             p.fast_mode=fast_mode;
-                            p.mini_batch=0;
+                            p.train_samples_per_iteration=0;
                             p.ignore_const_cols=false;
                             p.shuffle_training_data=false;
                             p.nesterov_accelerated_gradient=true;
@@ -96,7 +98,7 @@
 {
                             Vec[] data=Utils.remove(_train.vecs(),_train.vecs().length - 1);
                             Vec labels=_train.lastVec();
-                            p.seed=seed;
+                            p.seed=myseed;
                             p.hidden=hidden;
                             p.rate=rate;
                             p.max_w2=max_w2;
@@ -170,16 +172,16 @@
                               numbiases++;
                             }
                           }
+                          water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
 {
                             Frame fpreds=mymodel.score(_train);
-                            water.api.ConfusionMatrix CM=new water.api.ConfusionMatrix();
+                            CM=new water.api.ConfusionMatrix();
                             CM.actual=_train;
                             CM.vactual=_train.lastVec();
                             CM.predict=fpreds;
                             CM.vpredict=fpreds.vecs()[0];
                             CM.invoke();
                             StringBuilder sb=new StringBuilder();
-                            CM.toASCII(sb);
                             trainerr+=new ConfusionMatrix(CM.cm).err();
                             for (                            String s : sb.toString().split("\n"))                             Log.info(s);
                             fpreds.delete();
@@ -191,10 +193,12 @@
                             CM.vpredict=fpreds2.vecs()[0];
                             CM.invoke();
                             sb=new StringBuilder();
+                            CM.toASCII(sb);
                             testerr+=new ConfusionMatrix(CM.cm).err();
                             for (                            String s : sb.toString().split("\n"))                             Log.info(s);
                             fpreds2.delete();
                           }
+                          long[][] cm;
 {
                             Log.info("\nNeuralNet Scoring:");
                             NeuralNet.Errors train=NeuralNet.eval(ls,0,null);
@@ -206,7 +210,6 @@
                             input.vecs=data;
                             input._len=data[0].length();
                             ((Layer.VecSoftmax)ls[ls.length - 1]).vec=labels;
-                            long[][] cm;
                             int classes=ls[ls.length - 1].units;
                             cm=new long[classes][classes];
                             NeuralNet.Errors test=NeuralNet.eval(ls,0,cm);
@@ -215,6 +218,10 @@
                             reftesterr+=test.classification;
                             adapted[1].delete();
                           }
+                          Assert.assertEquals(cm[0][0],CM.cm[0][0]);
+                          Assert.assertEquals(cm[1][0],CM.cm[1][0]);
+                          Assert.assertEquals(cm[0][1],CM.cm[0][1]);
+                          Assert.assertEquals(cm[1][1],CM.cm[1][1]);
                           mymodel.delete();
                           refmodel.delete();
                           _train.delete();
@@ -225,8 +232,8 @@
                         reftrainerr/=(float)num_repeats;
                         testerr/=(float)num_repeats;
                         reftesterr/=(float)num_repeats;
-                        final float abseps=threaded ? 1e-2f : 1e-4f;
-                        final float releps=threaded ? 1e-2f : 1e-4f;
+                        final float abseps=threaded ? 1e-2f : 1e-7f;
+                        final float releps=threaded ? 1e-2f : 1e-5f;
                         Log.info("NeuralNet     train error " + reftrainerr);
                         Log.info("Deep Learning train error " + trainerr);
                         compareVal(reftrainerr,trainerr,abseps,releps);
