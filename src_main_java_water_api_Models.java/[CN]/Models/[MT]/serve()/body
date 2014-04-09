@@ -1,0 +1,33 @@
+{
+  Set<Key> keySet=H2O.globalKeySet(null);
+  Map map=new TreeMap();
+  for (  Key key : keySet) {
+    String keyString=key.toString();
+    ModelSummary summary=new ModelSummary();
+    Value value=DKV.get(key);
+    Iced pojo=value.get();
+    if (pojo instanceof hex.glm.GLMModel) {
+      summarizeGLMModel(summary,value,(hex.glm.GLMModel)pojo);
+    }
+ else     if (pojo instanceof hex.drf.DRF.DRFModel) {
+      summarizeDRFModel(summary,value,(hex.drf.DRF.DRFModel)pojo);
+    }
+ else     if (pojo instanceof hex.deeplearning.DeepLearningModel) {
+      summarizeDeepLearningModel(summary,value,(hex.deeplearning.DeepLearningModel)pojo);
+    }
+ else     if (pojo instanceof hex.gbm.GBM.GBMModel) {
+      summarizeGBMModel(summary,value,(hex.gbm.GBM.GBMModel)pojo);
+    }
+ else     if (pojo instanceof water.Model) {
+      summarizeModel(summary,value,(water.Model)pojo);
+    }
+ else {
+      continue;
+    }
+    map.put(keyString,summary);
+  }
+  String json=gson.toJson(map);
+  Log.info("Json for kv store: " + json);
+  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  return Response.done(result);
+}
