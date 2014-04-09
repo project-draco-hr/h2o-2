@@ -1,4 +1,5 @@
 {
+  long t0=System.nanoTime(), t2=0;
   if (_job != null && _job.self() != null && !Job.isRunning(_job.self()))   throw new JobCancelledException();
   final int nrows=chunks[0]._len;
   final long offset=chunks[0]._start;
@@ -28,6 +29,8 @@
     for (int i=0; i < shuf_map.length; ++i)     shuf_map[i]=start + i;
     Utils.shuffleArray(shuf_map,new Random().nextLong());
   }
+  long nanos=0;
+  long t1=System.nanoTime();
   OUTER:   for (int rr=start; rr < end; ++rr) {
     final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
     if ((_dinfo._nfolds > 0 && (r % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))     continue;
@@ -49,6 +52,11 @@
     }
     if (outputs != null && outputs.length > 0)     processRow(offset + r,nums,ncats,cats,response,outputs);
  else     processRow(offset + r,nums,ncats,cats,response);
+    t2=System.nanoTime();
+    nanos+=(t2 - t1);
+    t1=t2;
   }
   chunkDone();
+  System.out.println("FrameTask.map done, processRow took " + nanos + "ns, while while map took "+ (t2 - t0)+ "ns and compute2 took "+ (t2 - _t0)+ "ns");
+  System.out.println();
 }
