@@ -1,31 +1,36 @@
 {
   if (!isRunning(self()))   throw new JobCancelledException();
   boolean converged=false;
-  if (glmt._beta != null && glmt._val != null && _glm.family != Family.tweedie) {
+  if (glmt._val != null) {
     glmt._val.finalize_AIC_AUC();
     _model.setAndTestValidation(_lambdaIdx,glmt._val);
     _model.clone().update(self());
+    lastValidation=System.currentTimeMillis();
+  }
+  if (glmt._beta != null && line_search && _glm.family != Family.tweedie) {
     converged=true;
     double l1pen=alpha[0] * lambda[_lambdaIdx] * glmt._n;
     double l2pen=(1 - alpha[0]) * lambda[_lambdaIdx] * glmt._n;
     final double eps=1e-2;
-    for (int i=0; i < glmt._grad.length - 1; ++i) {
-      glmt._grad[i]+=l2pen * glmt._beta[i];
-      if (glmt._beta[i] < 0)       converged&=Math.abs(glmt._grad[i] - l1pen) < eps;
- else       if (glmt._beta[i] > 0)       converged&=Math.abs(glmt._grad[i] + l1pen) < eps;
- else       converged&=LSMSolver.shrinkage(glmt._grad[i],l1pen + eps) == 0;
+    if (line_search && glmt._val != null) {
+      for (int i=0; i < glmt._grad.length - 1; ++i) {
+        glmt._grad[i]+=l2pen * glmt._beta[i];
+        if (glmt._beta[i] < 0)         converged&=Math.abs(glmt._grad[i] - l1pen) < eps;
+ else         if (glmt._beta[i] > 0)         converged&=Math.abs(glmt._grad[i] + l1pen) < eps;
+ else         converged&=LSMSolver.shrinkage(glmt._grad[i],l1pen + eps) == 0;
+      }
+      if (converged)       Log.info("GLM converged by reaching 0 gradient/subgradient.");
+      double objval=glmt._val.residual_deviance + 0.5 * l2pen * l2norm(glmt._beta);
+      if (!converged && _lastResult != null && needLineSearch(glmt._beta,objval,1)) {
+        new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,new LineSearchIteration()).asyncExec(_dinfo._adaptedFrame);
+        return;
+      }
+      _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
     }
-    if (converged)     Log.info("GLM converged by reaching 0 gradient/subgradient.");
-    double objval=glmt._val.residual_deviance + 0.5 * l2pen * l2norm(glmt._beta);
-    if (!converged && _lastResult != null && needLineSearch(glmt._beta,objval,1)) {
-      new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,new LineSearchIteration()).asyncExec(_dinfo._adaptedFrame);
-      return;
-    }
-    _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
   }
   double[] newBeta=glmt._beta != null ? glmt._beta.clone() : MemoryManager.malloc8d(glmt._xy.length);
   double[] newBetaDeNorm=null;
-  ADMMSolver slvr=new ADMMSolver(lambda[_lambdaIdx],alpha[0],_addedL2);
+  ADMMSolver slvr=new ADMMSolver(lambda[_lambdaIdx],alpha[0],ADMM_GRAD_EPS,_addedL2);
   slvr.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
   _addedL2=slvr._addedL2;
   if (Utils.hasNaNsOrInfs(newBeta)) {
@@ -50,7 +55,8 @@
     }
     if (!converged && _glm.family != Family.gaussian && _iter < max_iter) {
       ++_iter;
-      new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,newBeta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
+      boolean validate=line_search || (System.currentTimeMillis() - lastValidation) > 8e3;
+      new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,validate,line_search,newBeta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
       return;
     }
   }
