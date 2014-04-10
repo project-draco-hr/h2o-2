@@ -1,5 +1,5 @@
 {
-  float[][] rate=parameters.adaptive_rate ? new float[units.length - 1][] : null;
+  float[][] rate=get_params().adaptive_rate ? new float[units.length - 1][] : null;
   for (int y=1; y < units.length; y++) {
     mean_rate[y]=rms_rate[y]=0;
     mean_bias[y]=rms_bias[y]=0;
@@ -11,8 +11,8 @@
     for (int u=0; u < get_weights(y - 1).raw().length; u++) {
       mean_weight[y]+=get_weights(y - 1).raw()[u];
       if (rate != null) {
-        final float RMS_dx=Utils.approxSqrt(ada[y - 1][2 * u] + (float)parameters.epsilon);
-        final float invRMS_g=Utils.approxInvSqrt(ada[y - 1][2 * u + 1] + (float)parameters.epsilon);
+        final float RMS_dx=Utils.approxSqrt(ada[y - 1][2 * u] + (float)get_params().epsilon);
+        final float invRMS_g=Utils.approxInvSqrt(ada[y - 1][2 * u + 1] + (float)get_params().epsilon);
         rate[y - 1][u]=RMS_dx * invRMS_g;
         mean_rate[y]+=rate[y - 1][u];
       }
