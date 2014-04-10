@@ -1,5 +1,5 @@
 {
-  gemv_row_optimized(_a.raw(),_w.raw(),_previous._a.raw(),_b.raw(),null);
+  gemv((DenseVector)_a,(DenseRowMatrix)_w,(DenseVector)_previous._a,_b,null);
   final float max=Utils.maxValue(_a.raw());
   float scale=0;
   for (int o=0; o < _a.size(); o++) {

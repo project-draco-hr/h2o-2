@@ -16,13 +16,13 @@
     try {
       Thread.sleep(100);
     }
- catch (    Exception _) {
+ catch (    Exception xe) {
     }
     try {
       fr.delete();
       H2O.fail();
     }
- catch (    IllegalArgumentException _) {
+ catch (    IllegalArgumentException xe) {
     }
 catch (    DException.DistributedException de) {
       assertTrue(de.getMessage().indexOf("java.lang.IllegalArgumentException") != -1);

@@ -1,4 +1,3 @@
 {
-  if (_w instanceof DenseRowMatrix)   gemv_row_optimized(_a.raw(),_w.raw(),_previous._a.raw(),_b.raw(),null);
- else   throw new UnsupportedOperationException("only row matrix");
+  gemv((DenseVector)_a,_w,_previous._a,_b,_dropout != null ? _dropout.bits() : null);
 }

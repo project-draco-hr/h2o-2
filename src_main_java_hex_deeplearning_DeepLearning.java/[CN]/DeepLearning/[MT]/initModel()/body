@@ -5,10 +5,12 @@
     final boolean del_enum_resp=(classification && !response.isEnum());
     final Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,classification,ignore_const_cols,true);
     final DataInfo dinfo=new FrameTask.DataInfo(train,1,true,!classification);
-    float[] priorDist=classification ? new MRUtils.ClassDist(dinfo._adaptedFrame.lastVec()).doAll(dinfo._adaptedFrame.lastVec()).rel_dist() : null;
+    final Vec resp=dinfo._adaptedFrame.lastVec();
+    assert(!classification ^ resp.isEnum());
+    float[] priorDist=classification ? new MRUtils.ClassDist(resp).doAll(resp).rel_dist() : null;
     final DeepLearningModel model=new DeepLearningModel(dest(),self(),source._key,dinfo,this,priorDist);
     model.model_info().initializeMembers();
-    if (del_enum_resp)     model.toDelete(dinfo._adaptedFrame.lastVec()._key);
+    if (del_enum_resp)     model.toDelete(resp._key);
     return model;
   }
   finally {

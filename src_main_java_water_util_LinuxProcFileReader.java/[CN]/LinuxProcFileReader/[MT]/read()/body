@@ -4,7 +4,7 @@
     pid=getProcessId();
     _pid=pid;
   }
- catch (  Exception _) {
+ catch (  Exception xe) {
   }
   File f=new File("/proc/stat");
   if (!f.exists()) {
@@ -17,6 +17,6 @@
     parseSystemProcFile(_systemData);
     parseProcessProcFile(_processData);
   }
- catch (  Exception _) {
+ catch (  Exception xe) {
   }
 }
