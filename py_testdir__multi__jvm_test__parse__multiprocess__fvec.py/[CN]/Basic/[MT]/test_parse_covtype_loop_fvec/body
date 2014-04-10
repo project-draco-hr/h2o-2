@@ -1,8 +1,6 @@
 def test_parse_covtype_loop_fvec(self):
     h2o.beta_features = True
-    global OUTSTANDING
-    if (not OUTSTANDING):
-        OUTSTANDING = min(10, len(h2o.nodes))
+    OUTSTANDING = min(10, len(h2o.nodes))
     if DO_IRIS:
         global DO_BIGFILE
         DO_BIGFILE = False
