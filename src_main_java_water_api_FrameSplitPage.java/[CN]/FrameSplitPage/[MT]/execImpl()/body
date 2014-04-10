@@ -1,0 +1,12 @@
+{
+  FrameSplitter fs=new FrameSplitter(source,ratio,42);
+  H2O.submitTask(fs).join();
+  Frame[] splits=fs.getResult();
+  long sum=0;
+  for (int i=0; i < splits.length; i++) {
+    sum+=splits[i].numRows();
+    System.err.println(i + "-split has " + splits[i].numRows()+ "rows ");
+  }
+  System.err.println("Input has: " + source.numRows());
+  System.err.println("Sum of splits has: " + sum);
+}
