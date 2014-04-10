@@ -2,6 +2,8 @@
   Set<Key> keySet=H2O.globalKeySet(null);
   Map modelsMap=new TreeMap();
   for (  Key key : keySet) {
+    if (!key.user_allowed())     continue;
+    if (H2O.get(key) == null)     continue;
     String keyString=key.toString();
     ModelSummary summary=new ModelSummary();
     Value value=DKV.get(key);
