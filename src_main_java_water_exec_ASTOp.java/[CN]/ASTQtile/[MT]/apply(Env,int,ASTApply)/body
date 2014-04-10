@@ -9,57 +9,31 @@
   if (xv.isEnum()) {
     throw new IllegalArgumentException("Quantile: column type cannot be Enum.");
   }
-  Futures fs=new Futures();
-  xv.rollupStats(fs);
-  fs.blockForPending();
-  Key key=Vec.VectorGroup.VG_LEN1.addVecs(1)[0];
-  AppendableVec av=new AppendableVec(key);
-  NewChunk nc=new NewChunk(av,0);
-  Quantiles[] qbins1=null;
-  Quantiles[] qbinsM=null;
+  Vec res=pv.makeCon(Double.NaN);
   final int MAX_ITERATIONS=16;
   final int MAX_QBINS=1000;
   final boolean MULTIPASS=true;
   final int INTERPOLATION=7;
-  double result;
-  double valStart=xv.min();
-  double valEnd=xv.max();
-  double[] quantiles_to_do=new double[1];
-  qbins1=new Quantiles.BinTask2(MAX_QBINS,valStart,valEnd).doAll(xv)._qbins;
-  for (  double quantile : p) {
-    result=Double.NaN;
-    for (int iteration=1; iteration <= MAX_ITERATIONS; iteration++) {
-      if (iteration == 1) {
-        if (qbins1 == null)         break;
-        quantiles_to_do[0]=quantile;
-        qbins1[0].finishUp(xv,quantiles_to_do,INTERPOLATION,MULTIPASS);
-        Log.debug("\nQ_ 1st multipass iteration: " + iteration + " valStart: "+ valStart+ " valEnd: "+ valEnd+ " valBinSize: "+ qbins1[0]._valBinSize);
-        if (qbins1[0]._done) {
-          result=qbins1[0]._pctile[0];
-          break;
-        }
-        valStart=qbins1[0]._newValStart;
-        valEnd=qbins1[0]._newValEnd;
-      }
-      if (iteration > 1) {
-        if (qbinsM == null)         break;
-        quantiles_to_do[0]=quantile;
-        qbinsM[0].finishUp(xv,quantiles_to_do,INTERPOLATION,MULTIPASS);
-        Log.debug("\nQ_ multipass iteration: " + iteration + " valStart: "+ valStart+ " valEnd: "+ valEnd+ " valBinSize: "+ qbinsM[0]._valBinSize);
-        if (qbinsM[0]._done) {
-          result=qbinsM[0]._pctile[0];
-          break;
-        }
-        valStart=qbinsM[0]._newValStart;
-        valEnd=qbinsM[0]._newValEnd;
-      }
-      qbinsM=new Quantiles.BinTask2(MAX_QBINS,valStart,valEnd).doAll(xv)._qbins;
+  final Quantiles[] qbins1=new Quantiles.BinTask2(MAX_QBINS,xv.min(),xv.max()).doAll(xv)._qbins;
+  for (int i=0; i < p.length; i++) {
+    double quantile=p[i];
+    qbins1[0].finishUp(xv,new double[]{quantile},INTERPOLATION,MULTIPASS);
+    if (qbins1[0]._done) {
+      res.set(i,qbins1[0]._pctile[0]);
     }
-    qbinsM=null;
-    nc.addNum(result);
+ else {
+      Quantiles[] qbinsM=new Quantiles.BinTask2(MAX_QBINS,qbins1[0]._newValStart,qbins1[0]._newValEnd).doAll(xv)._qbins;
+      for (int iteration=2; iteration <= MAX_ITERATIONS; iteration++) {
+        qbinsM[0].finishUp(xv,new double[]{quantile},INTERPOLATION,MULTIPASS);
+        if (qbinsM[0]._done) {
+          res.set(i,qbinsM[0]._pctile[0]);
+          break;
+        }
+        qbinsM=new Quantiles.BinTask2(MAX_QBINS,qbinsM[0]._newValStart,qbinsM[0]._newValEnd).doAll(xv)._qbins;
+      }
+    }
   }
-  qbins1=null;
-  nc.close(0,null);
-  Vec v=av.close(null);
-  env.poppush(argcnt,new Frame(new String[]{"Quantile"},new Vec[]{v}),null);
+  res.chunkForChunkIdx(0).close(0,null);
+  res.postWrite();
+  env.poppush(argcnt,new Frame(new String[]{"Quantile"},new Vec[]{res}),null);
 }
