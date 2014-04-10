@@ -25,11 +25,7 @@
     frTest=fnametest != null ? parseFrame(destTest,fnametest) : null;
     pred=drf.score(frTest != null ? frTest : drf.source);
   }
- catch (  Throwable t) {
-    t.printStackTrace();
-    throw t;
-  }
- finally {
+  finally {
     drf.source.delete();
     UKV.remove(drf.response._key);
     drf.remove();
