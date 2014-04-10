@@ -47,23 +47,23 @@
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
-    gemv_naive(dres,dca,dx,dy,bits);
+    gemv(dres,dca,dx,dy,bits);
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
-    gemv_naive(dres,dra,sx,dy,bits);
+    gemv(dres,dra,sx,dy,bits);
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
-    gemv_naive(dres,dca,sx,dy,bits);
+    gemv(dres,dca,sx,dy,bits);
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
-    gemv_naive(dres,sra,sx,dy,bits);
+    gemv(dres,sra,sx,dy,bits);
     sum+=res[rows / 2];
   }
   for (int l=0; l < warmup_loops; ++l) {
-    gemv_naive(dres,sca,sx,dy,bits);
+    gemv(dres,sca,sx,dy,bits);
     sum+=res[rows / 2];
   }
   try {
@@ -103,7 +103,7 @@
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
-    gemv_naive(dres,dca,dx,dy,bits);
+    gemv(dres,dca,dx,dy,bits);
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
@@ -112,7 +112,7 @@
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
-    gemv_naive(dres,dra,sx,dy,bits);
+    gemv(dres,dra,sx,dy,bits);
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
@@ -121,7 +121,7 @@
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
-    gemv_naive(dres,dca,sx,dy,bits);
+    gemv(dres,dca,sx,dy,bits);
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
@@ -130,7 +130,7 @@
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
-    gemv_naive(dres,sra,sx,dy,bits);
+    gemv(dres,sra,sx,dy,bits);
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
@@ -139,7 +139,7 @@
   sum=0;
   start=System.currentTimeMillis();
   for (int l=0; l < loops; ++l) {
-    gemv_naive(dres,sca,sx,dy,bits);
+    gemv(dres,sca,sx,dy,bits);
     sum+=res[rows / 2];
   }
   System.out.println("result: " + sum + " and "+ Utils.sum(res));
