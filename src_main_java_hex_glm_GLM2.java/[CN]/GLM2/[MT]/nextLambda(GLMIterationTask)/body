@@ -1,6 +1,8 @@
 {
+  System.out.println("computing validation at t = " + (System.currentTimeMillis() - start));
   H2OCallback fin=new H2OCallback<GLMValidationTask>(){
     @Override public void callback(    GLMValidationTask tsk){
+      System.out.println("validation computed at t = " + (System.currentTimeMillis() - start));
       boolean improved=_model.setAndTestValidation(_lambdaIdx,tsk._res);
       _model.clone().update(self());
       if ((improved || _runAllLambdas) && _lambdaIdx < (lambda.length - 1)) {
