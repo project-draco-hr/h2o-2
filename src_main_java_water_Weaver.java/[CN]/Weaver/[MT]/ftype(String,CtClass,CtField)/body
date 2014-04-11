@@ -24,7 +24,7 @@ if (argClass.subtypeOf(_pool.get("water.Freezable"))) return 9;
 if (argClass.subtypeOf(_pool.get("java.lang.Enum"))) return 10;
 break;
 case '[':
-return ftype(ct,sig.substring(1)) + 20;
+return ftype(sig.substring(1),ct,fld) + 20;
 }
-throw barf(ct,sig);
+throw barf(ct,fld);
 }
