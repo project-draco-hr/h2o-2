@@ -1,4 +1,6 @@
 {
   summarizeModel(summary,value,model);
   summary.model_algorithm="DRF";
+  JsonObject all_params=((DRF)model.get_params()).toJSON();
+  summary.parameters=whitelistJsonObject(all_params,DRF_whitelist);
 }

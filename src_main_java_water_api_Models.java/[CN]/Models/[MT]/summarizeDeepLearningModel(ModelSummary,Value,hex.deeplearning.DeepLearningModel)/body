@@ -1,4 +1,6 @@
 {
   summarizeModel(summary,value,model);
   summary.model_algorithm="DeepLearning";
+  JsonObject all_params=((DeepLearning)model.get_params()).toJSON();
+  summary.parameters=whitelistJsonObject(all_params,DL_whitelist);
 }
