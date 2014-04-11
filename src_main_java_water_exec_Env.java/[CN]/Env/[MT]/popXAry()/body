@@ -1,9 +1,8 @@
 {
   Frame fr=popAry();
   for (  Vec vec : fr.vecs()) {
-    int cnt=_refcnt.get(vec)._val - 1;
-    if (cnt > 0)     _refcnt.put(vec,new IcedInt(cnt));
- else     _refcnt.remove(vec);
+    popVec(vec);
+    if (vec.masterVec() != null)     popVec(vec.masterVec());
   }
   return fr;
 }
