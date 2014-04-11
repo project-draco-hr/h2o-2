@@ -1,0 +1,8 @@
+{
+  Map<String,ModelSummary> modelSummaries=Models.generateModelSummaries(null,modelsMap);
+  Map resultsMap=new HashMap();
+  resultsMap.put("models",modelSummaries);
+  String json=gson.toJson(resultsMap);
+  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  return Response.done(result);
+}

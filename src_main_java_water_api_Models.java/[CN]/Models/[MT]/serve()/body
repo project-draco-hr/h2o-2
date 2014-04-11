@@ -1,8 +1,11 @@
 {
   if (null == this.key) {
-    return serveAll();
+    return serveOneOrAll(fetchAll());
   }
  else {
-    return serveOne(this.key);
+    Model model=this.key;
+    Map<String,Model> modelsMap=new TreeMap();
+    modelsMap.put(model._key.toString(),model);
+    return serveOneOrAll(modelsMap);
   }
 }

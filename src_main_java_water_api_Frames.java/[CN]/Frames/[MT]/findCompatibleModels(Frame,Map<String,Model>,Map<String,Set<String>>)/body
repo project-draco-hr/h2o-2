@@ -1,0 +1,11 @@
+{
+  Map<String,Model> compatible_models=new TreeMap<String,Model>();
+  Set<String> frame_column_names=new HashSet(Arrays.asList(frame._names));
+  for (  Map.Entry<String,Set<String>> entry : all_models_cols.entrySet()) {
+    Set<String> model_cols=entry.getValue();
+    if (frame_column_names.containsAll(model_cols)) {
+      compatible_models.put(entry.getKey(),all_models.get(entry.getKey()));
+    }
+  }
+  return compatible_models;
+}

@@ -1,0 +1,12 @@
+{
+  Map<String,ModelSummary> modelSummaries=new TreeMap<String,ModelSummary>();
+  if (null == keys) {
+    keys=models.keySet();
+  }
+  for (  String key : keys) {
+    ModelSummary summary=new ModelSummary();
+    Models.summarizeAndEnhanceModel(summary,models.get(key));
+    modelSummaries.put(key,summary);
+  }
+  return modelSummaries;
+}

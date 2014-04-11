@@ -1,0 +1,12 @@
+{
+  Map<String,Model> all_models=null;
+  Map<String,Set<String>> all_models_cols=null;
+  if (this.find_compatible_models) {
+    all_models=(new Models()).fetchAll();
+    all_models_cols=new TreeMap<String,Set<String>>();
+    for (    Map.Entry<String,Model> entry : all_models.entrySet()) {
+      all_models_cols.put(entry.getKey(),new TreeSet<String>(Arrays.asList(entry.getValue()._names)));
+    }
+  }
+  return new Pair<Map<String,Model>,Map<String,Set<String>>>(all_models,all_models_cols);
+}
