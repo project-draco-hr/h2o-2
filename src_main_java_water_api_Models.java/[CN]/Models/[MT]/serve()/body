@@ -1,37 +1,8 @@
 {
-  Set<Key> keySet=H2O.globalKeySet("water.Model");
-  Map modelsMap=new TreeMap();
-  for (  Key key : keySet) {
-    if (!key.user_allowed())     continue;
-    if (H2O.get(key) == null)     continue;
-    String keyString=key.toString();
-    ModelSummary summary=new ModelSummary();
-    Value value=DKV.get(key);
-    Iced pojo=value.get();
-    if (pojo instanceof hex.glm.GLMModel) {
-      summarizeGLMModel(summary,value,(hex.glm.GLMModel)pojo);
-    }
- else     if (pojo instanceof hex.drf.DRF.DRFModel) {
-      summarizeDRFModel(summary,value,(hex.drf.DRF.DRFModel)pojo);
-    }
- else     if (pojo instanceof hex.deeplearning.DeepLearningModel) {
-      summarizeDeepLearningModel(summary,value,(hex.deeplearning.DeepLearningModel)pojo);
-    }
- else     if (pojo instanceof hex.gbm.GBM.GBMModel) {
-      summarizeGBMModel(summary,value,(hex.gbm.GBM.GBMModel)pojo);
-    }
- else     if (pojo instanceof water.Model) {
-      summarizeModel(summary,value,(water.Model)pojo);
-    }
- else {
-      continue;
-    }
-    modelsMap.put(keyString,summary);
+  if (null == this.key) {
+    return serveAll();
   }
-  Map resultsMap=new HashMap();
-  resultsMap.put("models",modelsMap);
-  String json=gson.toJson(resultsMap);
-  Log.info("Json for results: " + json);
-  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
-  return Response.done(result);
+ else {
+    return serveOne(this.key);
+  }
 }

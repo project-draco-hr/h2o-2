@@ -1,0 +1,11 @@
+{
+  Map modelsMap=new TreeMap();
+  ModelSummary summary=new ModelSummary();
+  summarizeModel(summary,(water.Model)model);
+  modelsMap.put(model._key.toString(),summary);
+  Map resultsMap=new HashMap();
+  resultsMap.put("models",modelsMap);
+  String json=gson.toJson(resultsMap);
+  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  return Response.done(result);
+}

@@ -1,0 +1,24 @@
+{
+  Set<Key> keySet=H2O.globalKeySet("water.Model");
+  Map modelsMap=new TreeMap();
+  for (  Key key : keySet) {
+    if (!key.user_allowed())     continue;
+    if (H2O.get(key) == null)     continue;
+    String keyString=key.toString();
+    ModelSummary summary=new ModelSummary();
+    Value value=DKV.get(key);
+    Iced pojo=value.get();
+    if (pojo instanceof water.Model) {
+      summarizeModel(summary,(water.Model)pojo);
+    }
+ else {
+      continue;
+    }
+    modelsMap.put(keyString,summary);
+  }
+  Map resultsMap=new HashMap();
+  resultsMap.put("models",modelsMap);
+  String json=gson.toJson(resultsMap);
+  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  return Response.done(result);
+}

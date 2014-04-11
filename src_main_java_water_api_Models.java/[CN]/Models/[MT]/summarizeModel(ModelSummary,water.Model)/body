@@ -1,0 +1,17 @@
+{
+  if (model instanceof hex.glm.GLMModel) {
+    summarizeGLMModel(summary,(hex.glm.GLMModel)model);
+  }
+ else   if (model instanceof hex.drf.DRF.DRFModel) {
+    summarizeDRFModel(summary,(hex.drf.DRF.DRFModel)model);
+  }
+ else   if (model instanceof hex.deeplearning.DeepLearningModel) {
+    summarizeDeepLearningModel(summary,(hex.deeplearning.DeepLearningModel)model);
+  }
+ else   if (model instanceof hex.gbm.GBM.GBMModel) {
+    summarizeGBMModel(summary,(hex.gbm.GBM.GBMModel)model);
+  }
+ else {
+    summarizeModelCommonFields(summary,(water.Model)model);
+  }
+}
