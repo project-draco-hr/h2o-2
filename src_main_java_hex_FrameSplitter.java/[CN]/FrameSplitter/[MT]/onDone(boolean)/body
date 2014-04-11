@@ -1,18 +1,12 @@
 {
-  System.err.println(getPendingCount());
   dataset.unlock(jobKey);
-  try {
-    for (    Frame s : splits) {
-      if (!exceptional) {
-        s.update(jobKey);
-        s.unlock(jobKey);
-      }
- else {
-        if (s != null)         s.delete(jobKey,0f);
-      }
+  for (  Frame s : splits) {
+    if (!exceptional) {
+      s.update(jobKey);
+      s.unlock(jobKey);
     }
-  }
- catch (  Throwable e) {
-    e.printStackTrace();
+ else {
+      if (s != null)       s.delete(jobKey,0f);
+    }
   }
 }
