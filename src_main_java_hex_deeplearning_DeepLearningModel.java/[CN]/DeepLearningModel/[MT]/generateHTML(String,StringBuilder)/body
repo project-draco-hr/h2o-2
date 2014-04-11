@@ -157,9 +157,8 @@
  else   if (error.train_hitratio != null) {
     error.train_hitratio.toHTML(sb);
   }
-  if (model_info().get_params().variable_importances) {
-    final float[] varimp=model_info().computeVariableImportances();
-    new VarImp(varimp,Arrays.copyOfRange(model_info().data_info().coefNames(),0,varimp.length)).toHTML(sb);
+  if (error.variable_importances != null) {
+    error.variable_importances.toHTML(sb);
   }
   DocGen.HTML.title(sb,"Scoring history");
   if (errors.length > 1) {
