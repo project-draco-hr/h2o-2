@@ -1,10 +1,10 @@
 {
-  Map framesMap=new TreeMap();
+  Map frameSummariesMap=new TreeMap();
   FrameSummary summary=new FrameSummary();
   summarizeFrame(summary,frame);
-  framesMap.put(frame._key.toString(),summary);
+  frameSummariesMap.put(frame._key.toString(),summary);
   Map resultsMap=new HashMap();
-  resultsMap.put("frames",framesMap);
+  resultsMap.put("frames",frameSummariesMap);
   String json=gson.toJson(resultsMap);
   JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
   return Response.done(result);

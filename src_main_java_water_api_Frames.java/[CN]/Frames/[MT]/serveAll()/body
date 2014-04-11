@@ -1,19 +1,15 @@
 {
-  Set<Key> keySet=H2O.globalKeySet("water.fvec.Frame");
-  Map framesMap=new TreeMap();
-  for (  Key key : keySet) {
-    if (!key.user_allowed())     continue;
-    if (H2O.get(key) == null)     continue;
-    String keyString=key.toString();
+  Map<String,FrameSummary> frameSummariesMap=new TreeMap<String,FrameSummary>();
+  Map<String,Frame> framesMap=fetchAll();
+  for (  Map.Entry<String,Frame> entry : framesMap.entrySet()) {
+    String keyString=entry.getKey();
     FrameSummary summary=new FrameSummary();
-    Value value=DKV.get(key);
-    Iced pojo=value.get();
-    if (!(pojo instanceof water.fvec.Frame))     continue;
-    summarizeFrame(summary,(water.fvec.Frame)pojo);
-    framesMap.put(keyString,summary);
+    Frame frame=entry.getValue();
+    summarizeFrame(summary,frame);
+    frameSummariesMap.put(keyString,summary);
   }
   Map resultsMap=new HashMap();
-  resultsMap.put("frames",framesMap);
+  resultsMap.put("frames",frameSummariesMap);
   String json=gson.toJson(resultsMap);
   JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
   return Response.done(result);
