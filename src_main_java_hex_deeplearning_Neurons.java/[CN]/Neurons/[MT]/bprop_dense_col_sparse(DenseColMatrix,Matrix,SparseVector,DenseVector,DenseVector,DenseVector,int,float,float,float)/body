@@ -3,63 +3,62 @@
   final float eps=(float)params.epsilon;
   final float l1=(float)params.l1;
   final float l2=(float)params.l2;
-  final float max_w2=params.max_w2;
   final boolean have_momenta=_wm != null;
   final boolean have_ada=_ada_dx != null && _ada_g != null;
   final boolean nesterov=params.nesterov_accelerated_gradient;
   final boolean update_prev=prev_e != null;
-  final boolean fast_mode=params.fast_mode;
   final int cols=prev_a.size();
-  final int idx=row * cols;
-  float avg_grad2=0;
-  for (int col=0; col < cols; col++) {
+  final int rows=_a.size();
+  for (int row=0; row < rows; row++) {
+    final float partial_grad=_e.get(row) * (1f - _a.get(row) * _a.get(row));
     final float weight=_w.get(row,col);
     if (update_prev)     prev_e.add(col,partial_grad * weight);
-    final float previous_a=prev_a.get(col);
-    if (fast_mode && previous_a == 0)     continue;
+    assert(previous_a != 0);
+    if (params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0)) {
+      if (partial_grad == 0f)       continue;
+    }
     final float grad=partial_grad * previous_a - Math.signum(weight) * l1 - weight * l2;
-    final int w=idx + col;
+    float grad2=0;
     if (have_ada) {
       assert(!have_momenta);
-      final float grad2=grad * grad;
-      avg_grad2+=grad2;
+      grad2=grad * grad;
       _ada_g.set(row,col,_ada_g.get(row,col) * rho);
       _ada_g.add(row,col,(1f - rho) * grad2);
       final float RMS_dx=Utils.approxSqrt(_ada_dx.get(row,col) + eps);
       final float invRMS_g=Utils.approxInvSqrt(_ada_g.get(row,col) + eps);
       rate=RMS_dx * invRMS_g;
       _ada_dx.set(row,col,rho * _ada_dx.get(row,col) + (1f - rho) * rate * rate* grad2);
-      _w.raw()[w]+=rate * grad;
+      _w.add(row,col,rate * grad);
     }
  else {
       if (!nesterov) {
         final float delta=rate * grad;
-        _w.raw()[w]+=delta;
+        _w.add(row,col,delta);
         if (have_momenta) {
-          _w.raw()[w]+=momentum * _wm.raw()[w];
-          _wm.raw()[w]=delta;
+          _w.add(row,col,momentum * _wm.get(row,col));
+          _wm.set(row,col,delta);
         }
       }
  else {
         float tmp=grad;
         if (have_momenta) {
-          _wm.raw()[w]*=momentum;
-          _wm.raw()[w]+=tmp;
-          tmp=_wm.raw()[w];
+          float val=_wm.get(row,col);
+          val*=momentum;
+          val+=tmp;
+          tmp=val;
+          _wm.set(row,col,val);
         }
-        _w.raw()[w]+=rate * tmp;
+        _w.add(row,col,rate * tmp);
       }
     }
+    if (have_ada) {
+      _bias_ada_g.set(row,_bias_ada_g.get(row) * rho);
+      _bias_ada_g.add(row,(1f - rho) * grad2);
+      final float RMS_dx=Utils.approxSqrt(_bias_ada_dx.get(row) + eps);
+      final float invRMS_g=Utils.approxInvSqrt(_bias_ada_g.get(row) + eps);
+      rate=RMS_dx * invRMS_g;
+      _bias_ada_dx.set(row,rho * _bias_ada_dx.get(row) + (1f - rho) * rate * rate* grad2);
+    }
+    update_bias(_b,_bm,row,partial_grad / cols,rate,momentum);
   }
-  if (max_w2 != Float.POSITIVE_INFINITY)   rescale_weights(row,cols);
-  if (have_ada) {
-    avg_grad2/=cols;
-    _bias_ada_g.set(row,_bias_ada_g.get(row) * rho);
-    _bias_ada_g.add(row,(1f - rho) * avg_grad2);
-    final float RMS_dx=Utils.approxSqrt(_bias_ada_dx.get(row) + eps);
-    final float invRMS_g=Utils.approxInvSqrt(_bias_ada_g.get(row) + eps);
-    rate=RMS_dx * invRMS_g;
-    _bias_ada_dx.set(row,rho * _bias_ada_dx.get(row) + (1f - rho) * rate * rate* avg_grad2);
-  }
-  update_bias(_b,_bm,row,partial_grad,rate,momentum);
 }

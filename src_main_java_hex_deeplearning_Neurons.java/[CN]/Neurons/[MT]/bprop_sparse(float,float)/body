@@ -1,0 +1,15 @@
+{
+  SparseVector prev_a=(SparseVector)_previous._a;
+  int start=prev_a.begin()._idx;
+  int end=prev_a.end()._idx;
+  for (int it=start; it < end; ++it) {
+    final int col=prev_a._indices[it];
+    final float previous_a=prev_a._values[it];
+    bprop_col(col,previous_a,r,m);
+  }
+  final int rows=_a.size();
+  final int cols=prev_a.size();
+  for (int row=0; row < rows; row++) {
+    if (params.max_w2 != Float.POSITIVE_INFINITY)     rescale_weights(row,cols);
+  }
+}
