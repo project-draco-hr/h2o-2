@@ -1,0 +1,18 @@
+{
+  if (n_folds > 1) {
+    xvalidate(_model,_lambdaIdx,new H2OCallback<GLMModel.GLMValidationTask>(GLM2.this){
+      @Override public void callback(      GLMModel.GLMValidationTask v){
+        nextLambda(glmt,v._res);
+      }
+    }
+);
+  }
+ else {
+    new GLMIterationTask(GLM2.this,_dinfo,_glm,false,true,false,newBeta,_ymu,_reg,new H2OCallback<GLMIterationTask>(GLM2.this){
+      @Override public void callback(      GLMIterationTask glmt2){
+        nextLambda(glmt,glmt2._val);
+      }
+    }
+).asyncExec(_dinfo._adaptedFrame);
+  }
+}

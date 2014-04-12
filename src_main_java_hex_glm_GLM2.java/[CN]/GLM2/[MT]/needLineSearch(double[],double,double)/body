@@ -2,9 +2,10 @@
   if (Double.isNaN(objval))   return true;
   double f_hat=0;
   double l2=0;
+  final double[] grad=_lastResult._glmt.gradient(lambda[_lambdaIdx] * (1 - alpha[0]));
   for (int i=0; i < beta.length; ++i) {
     double diff=beta[i] - _lastResult._glmt._beta[i];
-    f_hat+=_lastResult._glmt._grad[i] * diff;
+    f_hat+=grad[i] * diff;
     l2+=diff * diff;
   }
   f_hat=_lastResult._objval + f_hat + 0.001 * l2 / step;
