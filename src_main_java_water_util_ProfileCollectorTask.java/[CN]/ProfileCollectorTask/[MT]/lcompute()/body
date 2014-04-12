@@ -1,0 +1,43 @@
+{
+  int idx=H2O.SELF.index();
+  _result=new NodeProfile[H2O.CLOUD.size()];
+  Map<String,Integer> countedStackTraces=new HashMap<String,Integer>();
+  final int repeats=100;
+  for (int i=0; i < repeats; ++i) {
+    Map<Thread,StackTraceElement[]> allStackTraces=Thread.getAllStackTraces();
+    for (    Entry<Thread,StackTraceElement[]> el : allStackTraces.entrySet()) {
+      StringBuilder sb=new StringBuilder();
+      int j=0;
+      for (      StackTraceElement ste : el.getValue()) {
+        sb.append(ste.toString());
+        sb.append("\n");
+        j++;
+        if (j == 3)         break;
+      }
+      String st=sb.toString();
+      boolean found=false;
+      for (      Entry<String,Integer> entry : countedStackTraces.entrySet()) {
+        if (entry.getKey().equals(st)) {
+          entry.setValue(entry.getValue() + 1);
+          found=true;
+          break;
+        }
+      }
+      if (!found)       countedStackTraces.put(st,1);
+    }
+    try {
+      Thread.sleep(10);
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+  int i=0;
+  _result[idx]=new NodeProfile(countedStackTraces.size());
+  for (  Entry<String,Integer> entry : countedStackTraces.entrySet()) {
+    _result[idx]._stacktraces[i]=entry.getKey();
+    _result[idx]._counts[i]=entry.getValue();
+    i++;
+  }
+  tryComplete();
+}
