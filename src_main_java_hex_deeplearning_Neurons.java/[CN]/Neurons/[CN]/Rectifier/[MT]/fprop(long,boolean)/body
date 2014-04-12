@@ -1,6 +1,5 @@
 {
-  if (_previous instanceof Input && _previous._a instanceof SparseVector)   gemv_naive((DenseVector)_a,(DenseRowMatrix)_w,(SparseVector)_previous._a,_b,_dropout != null ? _dropout.bits() : null);
- else   gemv((DenseVector)_a,(DenseRowMatrix)_w,(DenseVector)_previous._a,_b,_dropout != null ? _dropout.bits() : null);
+  gemv((DenseVector)_a,_w,_previous._a,_b,_dropout != null ? _dropout.bits() : null);
   for (int o=0; o < _a.size(); o++) {
     _a.set(o,Math.max(_a.get(o),0f));
   }

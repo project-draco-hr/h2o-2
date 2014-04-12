@@ -1,0 +1,17 @@
+def test_exec2_quantile_na_scalar(self):
+    h2o.beta_features = True
+    for (execExpr, num) in exprList:
+        start = time.time()
+        (resultExec, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=180)
+        print 'exec end took', (time.time() - start), 'seconds'
+        print h2o.dump_json(resultExec)
+        kwargs = {'column': 0, 'quantile': 0.4, 'multiple_pass': 2, }
+        h2o.nodes[0].quantiles(source_key='nah', **kwargs)
+        inspect = h2o_cmd.runInspect(key='abc')
+        numCols = inspect['numCols']
+        numRows = inspect['numRows']
+        print 'numCols:', numCols
+        print 'numRows:', numRows
+        self.assertEqual(numCols, 1)
+        self.assertEqual(numRows, num)
+        h2o.check_sandbox_for_errors()
