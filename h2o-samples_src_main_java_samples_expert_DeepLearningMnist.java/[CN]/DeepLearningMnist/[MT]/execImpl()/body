@@ -8,8 +8,6 @@
   DeepLearning p=new DeepLearning();
   p.seed=seed;
   p.hidden=new int[]{1024,1024,2048};
-  p.rate=0.01;
-  p.rate_annealing=1e-6;
   p.activation=DeepLearning.Activation.RectifierWithDropout;
   p.loss=DeepLearning.Loss.CrossEntropy;
   p.input_dropout_ratio=0.2;
@@ -17,10 +15,9 @@
   p.epochs=10000;
   p.l1=1e-5;
   p.l2=0;
-  p.adaptive_rate=false;
-  p.momentum_start=0.5;
-  p.momentum_ramp=1800000;
-  p.momentum_stable=0.99;
+  p.adaptive_rate=true;
+  p.rho=0.99;
+  p.epsilon=1e-8;
   p.initial_weight_distribution=DeepLearning.InitialWeightDistribution.UniformAdaptive;
   p.classification=true;
   p.diagnostics=true;
