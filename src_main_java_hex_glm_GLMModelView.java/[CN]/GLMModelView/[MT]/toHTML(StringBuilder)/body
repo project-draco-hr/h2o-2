@@ -3,6 +3,7 @@
     sb.append("No model yet...");
     return true;
   }
+  glm_model.get_params().makeJsonBox(sb);
   DocGen.HTML.paragraph(sb,"Model Key: " + glm_model._key);
   if (glm_model.submodels != null)   DocGen.HTML.paragraph(sb,water.api.Predict.link(glm_model._key,"Predict!"));
   String succ=(glm_model.warnings == null || glm_model.warnings.length == 0) ? "alert-success" : "alert-warning";
