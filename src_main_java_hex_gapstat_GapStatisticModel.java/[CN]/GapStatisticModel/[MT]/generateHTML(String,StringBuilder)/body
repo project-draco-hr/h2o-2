@@ -62,28 +62,38 @@
     sb.append("<th>").append(i).append("</th>");
   }
   sb.append("</tr>");
+  double[] gaps=gaps();
   sb.append("<tr>");
-  double prev_val=Double.NEGATIVE_INFINITY;
-  int kmin=Integer.MAX_VALUE;
-  for (int i=0; i < log_wkbs.length; ++i) {
-    if (log_wkbs[i] == 0)     continue;
-    double val=log_wkbs[i] - log_wks[i];
-    if (i > 0) {
-      if (prev_val >= (val - sks[i])) {
-        if (kmin > (i)) {
-          kmin=i;
-        }
-      }
-    }
-    prev_val=val;
+  for (int i=0; i < gaps.length; ++i) {
+    if (gaps[i] == 0)     continue;
+    double val=gaps[i];
     sb.append("<td>").append(val).append("</td>");
   }
   sb.append("</tr>");
   sb.append("</table></span>");
+  int kmin=-1;
+  for (int i=0; i < gaps.length; ++i) {
+    int cur_k=i + 1;
+    if (gaps[cur_k] == 0) {
+      kmin=0;
+      k_best=kmin;
+      break;
+    }
+    if (i == gaps.length - 1) {
+      kmin=cur_k;
+      k_best=kmin;
+      break;
+    }
+    if (gaps[i] >= (gaps[i + 1] - sks[i + 1])) {
+      kmin=cur_k;
+      k_best=kmin;
+      break;
+    }
+  }
   if (log_wks[log_wks.length - 1] != 0) {
     DocGen.HTML.section(sb,"Best k:");
-    if (kmin == Integer.MAX_VALUE) {
-      sb.append("k = " + "NA");
+    if (kmin <= 0) {
+      sb.append("k = " + "No k computed yet...");
     }
  else {
       sb.append("k = " + kmin);
@@ -91,8 +101,8 @@
   }
  else {
     DocGen.HTML.section(sb,"Best k so far:");
-    if (kmin == Integer.MAX_VALUE) {
-      sb.append("k = " + "NA");
+    if (kmin <= 0) {
+      sb.append("k = " + "No k computed yet...");
     }
  else {
       sb.append("k = " + kmin);
