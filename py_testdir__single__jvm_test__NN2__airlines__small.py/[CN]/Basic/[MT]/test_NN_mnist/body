@@ -9,7 +9,7 @@ def test_NN_mnist(self):
     parseResultV = h2i.import_parse(bucket='smalldata', path=csvPathname_test, schema='put', hex_key=validation_key, timeoutSecs=timeoutSecs)
     inspect = h2o_cmd.runInspect(None, hex_key)
     print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
-    response = (inspect['numCols'] - 1)
+    response = 'IsDepDelayed'
     identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
     model_key = (('nn_' + identifier) + '.hex')
     colNames = [c['name'] for c in inspect['cols']]
@@ -22,8 +22,8 @@ def test_NN_mnist(self):
     ignoredColsString = ','.join(ignoredCols)
     print 'Telling h2o to ignore these cols:'
     print ignoredColsString
-    kwargs = {'ignored_cols': ignoredColsString, 'response': response, 'classification': 1, }
-    expectedErr = 0.057
+    kwargs = {'ignored_cols': ignoredColsString, 'response': response, 'classification': 1, 'destination_key': model_key, }
+    expectedErr = 0.45
     relTol = 0.2
     timeoutSecs = 600
     start = time.time()
