@@ -3,24 +3,35 @@
   if (!isRunning(self()))   throw new JobCancelledException();
   currentLambdaIter++;
   if (glmt._validate) {
+    if (!(glmt._val.residual_deviance < glmt._val.null_deviance)) {
+      if (!highAccuracy()) {
+        Log.info("GLM2 reached negative explained deviance without line-search, rerunning with high accuracy settings.");
+        setHighAccuracy();
+        if (_lastResult != null)         new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,true,true,_lastResult._glmt._beta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
+ else         if (_lambdaIdx > 2)         new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,true,true,_model.submodels[_lambdaIdx - 1].norm_beta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
+ else         new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,false,false,null,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
+        _lastResult=null;
+        return;
+      }
+    }
     _model.setAndTestValidation(_lambdaIdx,glmt._val);
     _model.clone().update(self());
   }
-  final double l2pen=(1 - alpha[0]) * lambda[_lambdaIdx];
   if (glmt._validate && glmt._computeGradient) {
-    final double[] grad=glmt.gradient(l2pen);
+    final double[] grad=glmt.gradient(l2pen());
     ADMMSolver.subgrad(alpha[0],lambda[_lambdaIdx],glmt._beta,grad);
     double err=0;
     for (    double d : grad)     if (d > err)     err=d;
  else     if (d < -err)     err=-d;
-    if (err <= GLM_GRAD_SUCC) {
-      Log.info("GLM2 converged with max |subgradient| = " + err);
-      nextLambda(glmt,glmt._val);
+    Log.info("GLM2 gradient afetr " + _iter + " iterations = "+ err);
+    if (err <= GLM_GRAD_EPS) {
+      Log.info("*GLM2 converged with max |subgradient| = " + err);
+      nextLambda(glmt,glmt._beta,glmt._val);
       return;
     }
   }
   if (glmt._beta != null && glmt._validate && glmt._computeGradient && _glm.family != Family.tweedie) {
-    double objval=glmt._val.residual_deviance / glmt._n + 0.5 * l2pen * l2norm(glmt._beta) + l1pen() * l1norm(glmt._beta);
+    double objval=glmt._val.residual_deviance / glmt._n + 0.5 * l2pen() * l2norm(glmt._beta) + l1pen() * l1norm(glmt._beta);
     if (_lastResult != null && needLineSearch(glmt._beta,objval,1)) {
       if (!highAccuracy()) {
         setHighAccuracy();
@@ -54,7 +65,7 @@
       }
       newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
     }
-    _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,_iter);
+    _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,(_iter + 1));
     if (_glm.family == Family.gaussian) {
       nextLambda(glmt,newBeta);
     }
@@ -66,12 +77,12 @@
               Log.info("GLM2 failed completely without high-accuracy mode, re-running in high-accuracy mode");
               setHighAccuracy();
               _iter=0;
-              new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,true,true,null,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
+              new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,false,false,null,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
               return;
             }
             checkGradient(newBeta,glmt2.gradient(l2pen()));
             if (n_folds > 1)             nextLambda(glmt,newBeta);
- else             nextLambda(glmt,glmt2._val);
+ else             nextLambda(glmt,newBeta,glmt2._val);
           }
         }
 ).asyncExec(_dinfo._adaptedFrame);
@@ -79,7 +90,7 @@
  else {
         checkGradient(newBeta,glmt.gradient(l2pen()));
         if (n_folds > 1)         nextLambda(glmt,newBeta);
- else         nextLambda(glmt,glmt._val);
+ else         nextLambda(glmt,glmt._beta,glmt._val);
       }
     }
  else {
