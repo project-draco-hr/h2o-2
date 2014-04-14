@@ -5,7 +5,7 @@ def delete_keys(node=None, pattern=None, timeoutSecs=120):
     deletedCnt = 0
     triedKeys = []
     while True:
-        storeViewResult = h2o_cmd.runStoreView(node, timeoutSecs=timeoutSecs, **kwargs)
+        storeViewResult = h2o_cmd.runStoreView(node, timeoutSecs=timeoutSecs, view=20, **kwargs)
         keys = storeViewResult['keys']
         if (not keys):
             break
