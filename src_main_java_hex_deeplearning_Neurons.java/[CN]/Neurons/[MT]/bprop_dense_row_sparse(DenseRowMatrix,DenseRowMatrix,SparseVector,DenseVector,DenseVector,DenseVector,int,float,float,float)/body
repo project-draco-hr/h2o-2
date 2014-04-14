@@ -53,7 +53,7 @@
       }
     }
   }
-  if (max_w2 != Float.POSITIVE_INFINITY)   rescale_weights(row,cols);
+  if (max_w2 != Float.POSITIVE_INFINITY)   rescale_weights(_w,row,max_w2);
   if (have_ada) {
     avg_grad2/=prev_a.nnz();
     _bias_ada_g.set(row,_bias_ada_g.get(row) * rho);

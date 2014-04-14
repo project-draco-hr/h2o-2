@@ -3,7 +3,7 @@
   final float eps=(float)params.epsilon;
   final float l1=(float)params.l1;
   final float l2=(float)params.l2;
-  final boolean have_momenta=_wm != null;
+  final boolean have_momenta=wm != null;
   final boolean have_ada=_ada_dx != null && _ada_g != null;
   final boolean nesterov=params.nesterov_accelerated_gradient;
   final boolean update_prev=prev_e != null;
@@ -11,7 +11,7 @@
   final int rows=_a.size();
   for (int row=0; row < rows; row++) {
     final float partial_grad=_e.get(row) * (1f - _a.get(row) * _a.get(row));
-    final float weight=_w.get(row,col);
+    final float weight=w.get(row,col);
     if (update_prev)     prev_e.add(col,partial_grad * weight);
     assert(previous_a != 0);
     if (params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0)) {
@@ -28,27 +28,27 @@
       final float invRMS_g=Utils.approxInvSqrt(_ada_g.get(row,col) + eps);
       rate=RMS_dx * invRMS_g;
       _ada_dx.set(row,col,rho * _ada_dx.get(row,col) + (1f - rho) * rate * rate* grad2);
-      _w.add(row,col,rate * grad);
+      w.add(row,col,rate * grad);
     }
  else {
       if (!nesterov) {
         final float delta=rate * grad;
-        _w.add(row,col,delta);
+        w.add(row,col,delta);
         if (have_momenta) {
-          _w.add(row,col,momentum * _wm.get(row,col));
-          _wm.set(row,col,delta);
+          w.add(row,col,momentum * wm.get(row,col));
+          wm.set(row,col,delta);
         }
       }
  else {
         float tmp=grad;
         if (have_momenta) {
-          float val=_wm.get(row,col);
+          float val=wm.get(row,col);
           val*=momentum;
           val+=tmp;
           tmp=val;
-          _wm.set(row,col,val);
+          wm.set(row,col,val);
         }
-        _w.add(row,col,rate * tmp);
+        w.add(row,col,rate * tmp);
       }
     }
     if (have_ada) {
@@ -59,6 +59,6 @@
       rate=RMS_dx * invRMS_g;
       _bias_ada_dx.set(row,rho * _bias_ada_dx.get(row) + (1f - rho) * rate * rate* grad2);
     }
-    update_bias(_b,_bm,row,partial_grad / cols,rate,momentum);
+    update_bias(b,bm,row,partial_grad / cols,rate,momentum);
   }
 }
