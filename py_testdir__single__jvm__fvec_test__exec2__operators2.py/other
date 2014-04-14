@@ -15,7 +15,7 @@ if DO_APPLY:
 if DO_FUNCTION:
     exprList += ['mean=function(x){99/nrow(x)};mean(r.hex)', 'mean=function(x){99/nrow(x)}', 'mean2=function(x){99/nrow(x)};mean2(r.hex)', 'mean2=function(x){99/nrow(x)}']
 if DO_TERNARY:
-    exprList += ['1 ? r.hex : (r.hex+1)', '(1 ? r.hex : (r.hex+1))[1,2]', 'apply(r.hex,2, function(x){x==-1 ? 1 : x})', '0 ? 1 : 2', '0 ? r.hex+1 : r.hex+2', 'r.hex>3 ? 99 : r.hex']
+    exprList += ['1 ? r.hex : (r.hex+1)', '1 ? (r.hex+1) : r.hex', '0 ? 1 : 2', '0 ? r.hex+1 : r.hex+2', 'r.hex>3 ? 99 : r.hex']
 if DO_IFELSE:
     exprList += ['apply(r.hex,2,function(x){ifelse(x==-1,1,x)})', 'ifelse(0,1,2)', 'ifelse(0,r.hex+1,r.hex+2)', 'ifelse(r.hex>3,99,r.hex)', 'ifelse(0,+,*)(1,2)']
 if DO_CAN_RETURN_NAN:
