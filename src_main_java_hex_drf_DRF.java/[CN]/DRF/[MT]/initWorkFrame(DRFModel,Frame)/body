@@ -1,3 +1,11 @@
 {
   if (classification)   initialModel.setModelClassDistribution(new MRUtils.ClassDist(response).doAll(response).rel_dist());
+  fr.add("OUT_BAG_TREES",response.makeZero());
+  new SetWrkTask().doAll(fr);
+  if (validation == null && checkpoint != null) {
+    Timer t=new Timer();
+    new OOBScorer(_ncols,_nclass,sample_rate,initialModel.treeKeys).doAll(fr);
+    Log.info(logTag(),"Reconstructing oob stats from checkpointed model took " + t);
+    debugPrintTreeColumns(fr);
+  }
 }
