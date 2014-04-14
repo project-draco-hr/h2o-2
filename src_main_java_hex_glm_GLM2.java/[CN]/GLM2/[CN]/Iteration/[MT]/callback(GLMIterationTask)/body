@@ -1,6 +1,7 @@
 {
   Log.info("GLM2 iteration(" + _iter + ") done in "+ (System.currentTimeMillis() - start)+ "ms");
   if (!isRunning(self()))   throw new JobCancelledException();
+  currentLambdaIter++;
   if (glmt._validate) {
     _model.setAndTestValidation(_lambdaIdx,glmt._val);
     _model.clone().update(self());
@@ -18,9 +19,16 @@
       return;
     }
   }
-  if (glmt._beta != null && higher_accuracy && _glm.family != Family.tweedie) {
+  if (glmt._beta != null && glmt._validate && glmt._computeGradient && _glm.family != Family.tweedie) {
     double objval=glmt._val.residual_deviance / glmt._n + 0.5 * l2pen * l2norm(glmt._beta) + l1pen() * l1norm(glmt._beta);
     if (_lastResult != null && needLineSearch(glmt._beta,objval,1)) {
+      if (!highAccuracy()) {
+        setHighAccuracy();
+        if (_lastResult._iter < (_iter - 2)) {
+          new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,true,true,_lastResult._glmt._beta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
+          return;
+        }
+      }
       new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,glmt._n,alpha[0],lambda[_lambdaIdx],new LineSearchIteration()).asyncExec(_dinfo._adaptedFrame);
       return;
     }
@@ -68,7 +76,7 @@
       }
     }
  else {
-      final boolean validate=higher_accuracy || (_iter % 5) == 0;
+      final boolean validate=higher_accuracy || (currentLambdaIter % 5) == 0;
       ++_iter;
       new GLMIterationTask(GLM2.this,_dinfo,glmt._glm,true,validate,validate,newBeta,_ymu,_reg,new Iteration()).asyncExec(_dinfo._adaptedFrame);
     }
