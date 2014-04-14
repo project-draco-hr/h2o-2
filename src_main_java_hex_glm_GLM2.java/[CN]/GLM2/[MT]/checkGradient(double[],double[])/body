@@ -4,6 +4,5 @@
   for (  double d : grad)   if (d > err)   err=d;
  else   if (d < -err)   err=-d;
   Log.info("GLM converged with max |subgradient| = " + err);
-  if (n_folds > 1)   nextLambda(glmt,newBeta);
- else   nextLambda(glmt,val);
+  return err;
 }

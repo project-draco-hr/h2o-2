@@ -4,8 +4,7 @@
     _model.setAndTestValidation(_lambdaIdx,glmt._val);
     _model.clone().update(self());
   }
-  final double l1pen=alpha[0] * lambda[_lambdaIdx] * glmt._n;
-  final double l2pen=(1 - alpha[0]) * lambda[_lambdaIdx] * glmt._n;
+  final double l2pen=(1 - alpha[0]) * lambda[_lambdaIdx];
   if (glmt._validate && glmt._computeGradient) {
     final double[] grad=glmt.gradient(l2pen);
     ADMMSolver.subgrad(alpha[0],lambda[_lambdaIdx],glmt._beta,grad);
@@ -20,9 +19,9 @@
     }
   }
   if (glmt._beta != null && higher_accuracy && _glm.family != Family.tweedie) {
-    double objval=glmt._val.residual_deviance / glmt._n + 0.5 * l2pen * l2norm(glmt._beta);
+    double objval=glmt._val.residual_deviance / glmt._n + 0.5 * l2pen * l2norm(glmt._beta) + l1pen() * l1norm(glmt._beta);
     if (_lastResult != null && needLineSearch(glmt._beta,objval,1)) {
-      new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,new LineSearchIteration()).asyncExec(_dinfo._adaptedFrame);
+      new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,glmt._n,alpha[0],lambda[_lambdaIdx],new LineSearchIteration()).asyncExec(_dinfo._adaptedFrame);
       return;
     }
     _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
@@ -56,13 +55,17 @@
       if (!glmt._validate || !glmt._computeGradient) {
         new GLMIterationTask(GLM2.this,_dinfo,_glm,false,true,_glm.family != Family.gaussian,newBeta,_ymu,_reg,new H2OCallback<GLMIterationTask>(){
           @Override public void callback(          GLMIterationTask glmt2){
-            checkGradient(glmt,newBeta,glmt2._val,glmt2.gradient(lambda[_lambdaIdx] * (1 - alpha[0])));
+            checkGradient(newBeta,glmt2.gradient(l2pen()));
+            if (n_folds > 1)             nextLambda(glmt,newBeta);
+ else             nextLambda(glmt,glmt._val);
           }
         }
 ).asyncExec(_dinfo._adaptedFrame);
       }
  else {
-        checkGradient(glmt,newBeta,glmt._val,glmt.gradient(lambda[_lambdaIdx] * (1 - alpha[0])));
+        checkGradient(newBeta,glmt.gradient(l2pen()));
+        if (n_folds > 1)         nextLambda(glmt,newBeta);
+ else         nextLambda(glmt,glmt._val);
       }
     }
  else {
