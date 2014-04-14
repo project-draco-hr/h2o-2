@@ -7,7 +7,6 @@
     double diff=beta[i] - _lastResult._glmt._beta[i];
     f_hat+=grad[i] * diff;
   }
-  System.out.println("LineSearch check( " + step + "): "+ objval+ " <= "+ _lastResult._objval+ " + "+ f_hat+ " = "+ (_lastResult._objval + f_hat));
   f_hat=_lastResult._objval + 0.5 * step * f_hat;
   return objval > f_hat;
 }

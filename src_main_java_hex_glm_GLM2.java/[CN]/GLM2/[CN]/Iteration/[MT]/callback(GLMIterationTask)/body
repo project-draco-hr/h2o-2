@@ -1,4 +1,5 @@
 {
+  Log.info("GLM2 iteration(" + _iter + ") done in "+ (System.currentTimeMillis() - start)+ "ms");
   if (!isRunning(self()))   throw new JobCancelledException();
   if (glmt._validate) {
     _model.setAndTestValidation(_lambdaIdx,glmt._val);
@@ -11,9 +12,8 @@
     double err=0;
     for (    double d : grad)     if (d > err)     err=d;
  else     if (d < -err)     err=-d;
-    System.out.println("glm grad = " + err);
     if (err <= GLM_GRAD_SUCC) {
-      Log.info("GLM converged by reaching small enough gradient/subgradient (grad = " + err + ").");
+      Log.info("GLM2 converged with max |subgradient| = " + err);
       nextLambda(glmt,glmt._val);
       return;
     }
@@ -32,7 +32,7 @@
   slvr.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
   _addedL2=slvr._addedL2;
   if (Utils.hasNaNsOrInfs(newBeta)) {
-    Log.info("GLM forcibly converged by getting NaNs and/or Infs in beta");
+    Log.info("GLM2 forcibly converged by getting NaNs and/or Infs in beta");
   }
  else {
     if (_dinfo._standardize) {
@@ -51,7 +51,6 @@
       nextLambda(glmt,newBeta);
     }
  else     if (beta_diff(glmt._beta,newBeta) < beta_epsilon || _iter == max_iter) {
-      Log.info("GLM converged.");
       if (!glmt._validate || !glmt._computeGradient) {
         new GLMIterationTask(GLM2.this,_dinfo,_glm,false,true,_glm.family != Family.gaussian,newBeta,_ymu,_reg,new H2OCallback<GLMIterationTask>(){
           @Override public void callback(          GLMIterationTask glmt2){
