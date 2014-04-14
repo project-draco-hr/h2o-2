@@ -1,0 +1,12 @@
+{
+  Timer t_extract=new Timer();
+  final DataAdapter dapt=DABuilder.create(this).build(_fr);
+  Log.debug(Log.Tag.Sys.RANDF,"Data adapter built in " + t_extract);
+  Data localData=Data.make(dapt);
+  int numSplitFeatures=howManySplitFeatures(localData);
+  int ntrees=howManyTrees();
+  int[] rowsPerChunks=howManyRPC(_fr);
+  updateRFModel(_job.dest(),numSplitFeatures);
+  SpeeDRF.build(_job,_params,localData,ntrees,numSplitFeatures,rowsPerChunks);
+  tryComplete();
+}

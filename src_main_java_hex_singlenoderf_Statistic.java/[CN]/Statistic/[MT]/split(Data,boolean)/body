@@ -1,0 +1,21 @@
+{
+  int[] dist=new int[d.classes()];
+  boolean valid=false;
+  for (  int f : _features)   valid|=f != -1;
+  if (!valid)   return Split.defaultSplit();
+  int distWeight=aggregateColumn(_features[0],dist);
+  int m=Utils.maxIndex(dist,_random);
+  if (expectLeaf || (dist[m] == distWeight))   return Split.constant(m);
+  Split bestSplit=Split.defaultSplit();
+  for (  int f : _features) {
+    if (f == -1)     continue;
+    Split s=pickAndSplit(d,f,dist,distWeight,_random);
+    if (s.betterThan(bestSplit))     bestSplit=s;
+  }
+  if (!bestSplit.isImpossible())   return bestSplit;
+  if (!rememberFeatures(d))   return bestSplit;
+  reset(d,_seed + (1L << 16));
+  for (  Row r : d)   addQ(r);
+  applyClassWeights();
+  return split(d,expectLeaf);
+}

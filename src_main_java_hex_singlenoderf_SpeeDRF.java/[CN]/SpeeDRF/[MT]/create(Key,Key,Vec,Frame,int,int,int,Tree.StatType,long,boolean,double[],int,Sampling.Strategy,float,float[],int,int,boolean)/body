@@ -1,0 +1,14 @@
+{
+  DRFTask drf=new DRFTask();
+  drf._fr=fr;
+  drf._jobKey=job;
+  drf._job=Job.findJob(job);
+  SpeeDRFModel rf_model=new SpeeDRFModel(job,modelKey,fr,numSplitFeatures,samplingStrategy,sample,strataSamples,fr.numCols(),ntrees,new Key[0],0,response,classWt);
+  drf._rfmodel=rf_model;
+  int numrows=(int)fr.numRows();
+  drf._params=DRFParams.create(fr.find(response),ntrees,depth,numrows,binLimit,stat,seed,parallelTrees,classWt,numSplitFeatures,samplingStrategy,sample,strataSamples,verbose,exclusiveSplitLimit,useNonLocalData);
+  drf.validateInputData();
+  drf._t_main=new Timer();
+  DKV.write_barrier();
+  return drf;
+}

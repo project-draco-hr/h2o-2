@@ -1,0 +1,8 @@
+{
+  SpeeDRFModel m=(SpeeDRFModel)old.clone();
+  m.t_keys=Arrays.copyOf(old.t_keys,old.t_keys.length + 1);
+  m.t_keys[m.t_keys.length - 1]=tkey;
+  m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
+  m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
+  return m;
+}
