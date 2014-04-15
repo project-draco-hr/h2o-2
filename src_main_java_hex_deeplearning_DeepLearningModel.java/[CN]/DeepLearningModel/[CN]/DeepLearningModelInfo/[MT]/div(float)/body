@@ -1,13 +1,14 @@
 {
-  for (  Neurons.Matrix weight : weights) {
-    Utils.div(weight.raw(),N);
-  }
+  for (int i=0; i < dense_row_weights.length; ++i)   Utils.div(get_weights(i).raw(),N);
   for (  Neurons.Vector bias : biases)   Utils.div(bias.raw(),N);
   if (has_momenta()) {
-    for (    Neurons.Matrix weight_momenta : weights_momenta)     Utils.div(weight_momenta.raw(),N);
+    for (int i=0; i < dense_row_weights_momenta.length; ++i)     Utils.div(get_weights_momenta(i).raw(),N);
     for (    Neurons.Vector bias_momenta : biases_momenta)     Utils.div(bias_momenta.raw(),N);
   }
   if (adaDelta()) {
-    for (    float[] dx2 : ada)     Utils.div(dx2,N);
+    for (int i=0; i < dense_row_ada_dx.length; ++i) {
+      Utils.div(get_ada_dx(i).raw(),N);
+      Utils.div(get_ada_g(i).raw(),N);
+    }
   }
 }

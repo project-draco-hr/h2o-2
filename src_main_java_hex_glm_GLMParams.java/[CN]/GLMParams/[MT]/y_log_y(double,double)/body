@@ -1,4 +1,5 @@
 {
-  mu=Math.max(Double.MIN_NORMAL,mu);
-  return (y != 0) ? (y * Math.log(y / mu)) : 0;
+  if (y == 0)   return 0;
+  if (mu < Double.MIN_NORMAL)   mu=Double.MIN_NORMAL;
+  return y * Math.log(y / mu);
 }

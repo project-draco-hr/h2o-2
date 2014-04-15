@@ -4,7 +4,11 @@
   for (int r=0; r < rows; r++) {
     res.set(r,0);
     if (row_bits != null && (row_bits[r / 8] & (1 << (r % 8))) == 0)     continue;
-    for (SparseVector.Iterator it=x.begin(); !it.equals(x.end()); it.next())     res.add(r,a.get(r,it.index()) * it.value());
+    int start=x.begin()._idx;
+    int end=x.end()._idx;
+    for (int it=start; it < end; ++it) {
+      res.add(r,a.get(r,x._indices[it]) * x._values[it]);
+    }
     res.add(r,y.get(r));
   }
 }
