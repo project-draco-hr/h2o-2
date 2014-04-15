@@ -3,6 +3,11 @@
     return serveAll();
   }
  else {
-    return serveOne(this.key);
+    if (null == this.score_model) {
+      return serveOne(this.key);
+    }
+ else {
+      return scoreOne(this.key,this.score_model,this.adapt);
+    }
   }
 }
