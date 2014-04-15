@@ -1,4 +1,4 @@
-def do_test(self):
+def do_test(self, object):
     '\n        This call is blocking.\n\n        Perform the test. Each phase is started by passing the ip and port.\n        We block until a phase completes.\n\n        Once a phase is complete, the stdouterr is scraped and the database\n        tables are updated.\n        '
     self.start_ms = int(round((time.time() * 1000)))
     self.parse_process.start(self.ip, self.port)
@@ -8,6 +8,7 @@ def do_test(self):
     self.model_process.start(self.ip, self.port)
     self.model_process.block()
     self.model_process.scrape_phase()
+    contamination = PerfUtils.run_contaminated(object)
     if self.predict_process:
         self.predict_process.start(self.ip, self.port)
         self.predict_process.block()
@@ -22,3 +23,4 @@ def do_test(self):
     self.test_run.row['total_nodes'] = self.total_nodes
     self.test_run.row['instance_type'] = self.instance_type
     self.test_is_complete = True
+    return contamination
