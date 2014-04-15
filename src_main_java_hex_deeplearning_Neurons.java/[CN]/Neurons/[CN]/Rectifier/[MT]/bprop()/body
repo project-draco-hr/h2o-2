@@ -5,7 +5,7 @@
   final int rows=_a.size();
   if (_w instanceof DenseRowMatrix) {
     for (int row=0; row < rows; row++) {
-      final float g=_a.get(row) > 0f ? _e.get(row) : 0;
+      final float g=_a.get(row) > 0f ? _e.get(row) : 0f;
       bprop(row,g,r,m);
     }
   }

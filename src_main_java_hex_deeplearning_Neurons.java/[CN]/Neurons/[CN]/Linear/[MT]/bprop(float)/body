@@ -4,6 +4,6 @@
   final float g=target - _a.get(row);
   final long processed=_minfo.get_processed_total();
   float m=momentum(processed);
-  float r=rate(processed) * (1 - m);
+  float r=rate(processed) * (1f - m);
   bprop(row,g,r,m);
 }

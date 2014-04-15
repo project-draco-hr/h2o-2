@@ -1,0 +1,19 @@
+def test_parse_manyfiles_1(self):
+    h2o.beta_features = True
+    csvDirname = 'manyfiles-nflx-gz'
+    timeoutSecs = 600
+    trial = 0
+    for iteration in range(ITERATIONS):
+        csvFilename = 'file_1.dat.gz'
+        csvPathname = ((csvDirname + '/') + csvFilename)
+        trialStart = time.time()
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        start = time.time()
+        h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120, doSummary=False)
+        elapsed = (time.time() - start)
+        print 'import', trial, 'end ', 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
+        print '\nTrying StoreView after the import'
+        for node in h2o.nodes:
+            h2o_cmd.runStoreView(node=node, timeoutSecs=30, view=10000)
+        print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
+        trial += 1
