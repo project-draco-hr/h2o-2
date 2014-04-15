@@ -26,7 +26,8 @@
     Log.info("GLM2 gradient after " + _iter + " iterations = "+ err);
     if (err <= GLM_GRAD_EPS) {
       Log.info("GLM2 converged with max |subgradient| = " + err);
-      nextLambda(glmt,glmt._beta,glmt._val);
+      if (n_folds > 1)       nextLambda(glmt,glmt._beta);
+ else       nextLambda(glmt,glmt._beta,glmt._val);
       return;
     }
   }
