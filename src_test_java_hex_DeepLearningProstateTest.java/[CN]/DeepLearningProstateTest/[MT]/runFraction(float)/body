@@ -1,4 +1,6 @@
 {
+  long seed=0xDECAF;
+  Random rng=new Random(seed);
   String[] datasets=new String[2];
   int[][] responses=new int[datasets.length][];
   datasets[0]="smalldata/./logreg/prostate.csv";
@@ -14,14 +16,15 @@
     Frame vframe=ParseDataset2.parse(Key.make(),new Key[]{vfile});
     for (    boolean replicate : new boolean[]{true,false}) {
       for (      boolean load_balance : new boolean[]{false}) {
-        for (        boolean shuffle : new boolean[]{false}) {
+        for (        boolean shuffle : new boolean[]{true,false}) {
           for (          boolean balance_classes : new boolean[]{true,false}) {
             for (            int resp : responses[i]) {
-              for (              DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified}) {
-                for (                int scoretraining : new int[]{200}) {
-                  for (                  int scorevalidation : new int[]{200}) {
+              for (              DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified,DeepLearning.ClassSamplingMethod.Uniform}) {
+                for (                int scoretraining : new int[]{200,0}) {
+                  for (                  int scorevalidation : new int[]{200,0}) {
                     for (                    int vf : new int[]{0,1,-1}) {
                       count++;
+                      if (fraction < rng.nextFloat())                       continue;
                       Log.info("**************************)");
                       Log.info("Starting test #" + count);
                       Log.info("**************************)");
@@ -30,12 +33,11 @@
  else                       if (vf == -1)                       valid=vframe;
                       Key dest=Key.make();
 {
-                        final long seed=new Random().nextLong();
                         Log.info("Using seed: " + seed);
                         DeepLearning p=new DeepLearning();
-                        p.epochs=1.0 + new Random(seed).nextDouble();
+                        p.epochs=1.0 + rng.nextDouble();
                         p.source=frame;
-                        p.hidden=new int[]{1 + new Random(seed).nextInt(4),1 + new Random(seed).nextInt(6)};
+                        p.hidden=new int[]{1 + rng.nextInt(4),1 + rng.nextInt(6)};
                         p.response=frame.vecs()[resp];
                         if (i == 0 && resp == 2)                         p.classification=false;
                         p.destination_key=dest;
@@ -133,6 +135,7 @@
                       }
                       mymodel.delete();
                       UKV.remove(dest);
+                      Log.info("Parameters combination " + count + ": PASS");
                     }
                   }
                 }
@@ -145,5 +148,4 @@
     frame.delete();
     vframe.delete();
   }
-  Log.info("Tested " + count + " parameter combinations.");
 }
