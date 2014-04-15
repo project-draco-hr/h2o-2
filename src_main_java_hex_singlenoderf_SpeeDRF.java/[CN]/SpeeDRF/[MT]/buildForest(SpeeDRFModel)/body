@@ -1,0 +1,29 @@
+{
+  try {
+    source.read_lock(self());
+    logStart();
+    if (model == null)     model=UKV.get(dest());
+    model.write_lock(self());
+    DRFTask drf=new DRFTask();
+    drf._jobKey=self();
+    drf._job=Job.findJob(self());
+    drf._rfmodel=model;
+    drf._params=DRFParams.create(model.fr.find(model.response),model.total_trees,model.depth,(int)model.fr.numRows(),model.bin_limit,Tree.StatType.ENTROPY,seed,parallel,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,1,_exclusiveSplitLimit,_useNonLocalData);
+    drf.validateInputData();
+    drf._t_main=new Timer();
+    DKV.write_barrier();
+    drf.dfork(model.fr._key);
+  }
+ catch (  JobCancelledException ex) {
+    Log.info("Random Forest building was cancelled.");
+  }
+catch (  Exception ex) {
+    ex.printStackTrace();
+    throw new RuntimeException(ex);
+  }
+ finally {
+    if (model != null)     model.unlock(self());
+    source.unlock(self());
+    emptyLTrash();
+  }
+}

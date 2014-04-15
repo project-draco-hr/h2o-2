@@ -1,12 +1,7 @@
 {
   logStart();
-  Frame fr=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,false,false,true);
-  fr=new Frame(source._key,fr._names,fr.vecs());
-  double[] weights=new double[(int)(response.max() - response.min() + 1)];
-  float[] samples=new float[(int)(response.max() - response.min() + 1)];
-  for (int i=0; i < samples.length; ++i)   samples[i]=(float)67.0;
-  for (int i=0; i < weights.length; ++i)   weights[i]=1.0;
-  DRFTask tsk=create(self(),dest(),response,fr,num_trees,max_depth,bin_limit,Tree.StatType.ENTROPY,seed,parallel,weights,mtry,Sampling.Strategy.RANDOM,(float)sample / 100f,samples,1,_exclusiveSplitLimit,_useNonLocalData);
-  start(tsk);
-  tsk.dfork(fr._key);
+  SpeeDRFModel rf_model=initModel();
+  buildForest(rf_model);
+  cleanup();
+  remove();
 }
