@@ -14,17 +14,29 @@
     error=auc.err();
   }
   if (cm != null) {
-    if (auc != null) {
-      cm.cm=auc.cm();
+    cm.actual=ftest;
+    cm.vactual=vactual;
+    cm.predict=fpreds;
+    cm.vpredict=fpreds.vecs()[0];
+    cm.invoke();
+    if (isClassifier()) {
+      if (auc != null) {
+        cm.cm=new long[3][3];
+        cm.cm[0][0]=auc.cm()[0][0];
+        cm.cm[1][0]=auc.cm()[1][0];
+        cm.cm[0][1]=auc.cm()[0][1];
+        cm.cm[1][1]=auc.cm()[1][1];
+        assert(new hex.ConfusionMatrix(cm.cm).err() == auc.err());
+      }
+ else {
+        error=new hex.ConfusionMatrix(cm.cm).err();
+      }
+      if (cm.cm.length <= max_conf_mat_size)       cm.toASCII(sb);
     }
  else {
-      cm.actual=ftest;
-      cm.vactual=vactual;
-      cm.predict=fpreds;
-      cm.vpredict=fpreds.vecs()[0];
-      cm.invoke();
-      if (cm.cm == null || cm.cm.length <= max_conf_mat_size)       cm.toASCII(sb);
-      error=isClassifier() ? new hex.ConfusionMatrix(cm.cm).err() : cm.mse;
+      assert(auc == null);
+      error=cm.mse;
+      cm.toASCII(sb);
     }
   }
   if (hr != null) {
