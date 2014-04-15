@@ -53,6 +53,8 @@
   _addedL2=slvr._addedL2;
   if (Utils.hasNaNsOrInfs(newBeta)) {
     Log.info("GLM2 forcibly converged by getting NaNs and/or Infs in beta");
+    nextLambda(glmt,glmt._beta);
+    return;
   }
  else {
     if (_dinfo._standardize) {
