@@ -13,7 +13,7 @@
     all_referenced_models.addAll(summary.compatible_models);
     frameSummariesMap.put(keyString,summary);
   }
-  Map resultsMap=new HashMap();
+  Map resultsMap=new LinkedHashMap();
   resultsMap.put("frames",frameSummariesMap);
   if (this.find_compatible_models) {
     Map<String,ModelSummary> modelSummaries=Models.generateModelSummaries(all_referenced_models,all_models);
