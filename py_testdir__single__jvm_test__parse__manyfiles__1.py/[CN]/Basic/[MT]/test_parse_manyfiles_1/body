@@ -9,7 +9,7 @@ def test_parse_manyfiles_1(self):
         trialStart = time.time()
         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         start = time.time()
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key=hex_key, delete_on_done=DELETE_ON_DONE, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120, doSummary=False)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema=SCHEMA, hex_key=hex_key, delete_on_done=DELETE_ON_DONE, importParentDir=IMPORT_PARENT_DIR, timeoutSecs=timeoutSecs, retryDelaySecs=10, pollTimeoutSecs=120, doSummary=False)
         elapsed = (time.time() - start)
         print 'parse', trial, 'end on ', parseResult['destination_key'], 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         start = time.time()
@@ -20,14 +20,13 @@ def test_parse_manyfiles_1(self):
         numCols = inspect['numCols']
         self.assertEqual(numCols, 542)
         self.assertEqual(numRows, 100000)
-        goodX = h2o_glm.goodXFromColumnInfo(y=54, key=parseResult['destination_key'], timeoutSecs=300)
         print '\nTrying StoreView after the parse'
         for node in h2o.nodes:
             h2o_cmd.runStoreView(node=node, timeoutSecs=30, view=10000)
-        execExpr = ('A.hex=%s' % parseResult['destination_key'])
-        h2e.exec_expr(execExpr=execExpr, timeoutSecs=20)
-        execExpr = 'A.hex[,378+1]=(A.hex[,378+1]>15)'
-        h2e.exec_expr(execExpr=execExpr, timeoutSecs=20)
-        aHack = {'destination_key': 'A.hex', }
+        if DO_EXEC:
+            execExpr = ('A.hex=%s' % parseResult['destination_key'])
+            h2e.exec_expr(execExpr=execExpr, timeoutSecs=20)
+        if DO_DELETE_MYSELF:
+            h2o_import.delete_keys_at_all_nodes()
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
         trial += 1

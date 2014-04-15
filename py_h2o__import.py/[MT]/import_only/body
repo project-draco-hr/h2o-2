@@ -1,4 +1,4 @@
-def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, doSummary=True, src_key=None, noPrint=False, **kwargs):
+def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=30, retryDelaySecs=0.5, initialDelaySecs=0.5, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, doSummary=True, src_key=None, noPrint=False, importParentDir=False, **kwargs):
     if (src_key and (schema != 'put')):
         raise Exception(("can only specify a 'src_key' param for schema='put'. You have %s %s" % (schema, src_key)))
     if (not node):
@@ -11,8 +11,11 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
         (head, pattern) = ('', path)
     h2o.verboseprint('head:', head)
     h2o.verboseprint('pattern:', pattern)
-    if re.search('[\\*<>{}[\\]~`]', head):
-        raise Exception(("h2o folder path %s can't be regex. path= was %s" % (head, path)))
+    if importParentDir:
+        if re.search('[\\*<>{}[\\]~`]', head):
+            raise Exception(("h2o folder path %s can't be regex. path= was %s" % (head, path)))
+    elif re.search('[\\*<>{}[\\]~`]', path):
+        raise Exception(("h2o path %s can't be regex. path= was %s" % (head, path)))
     if (schema == 'put'):
         if re.search('[/\\*<>{}[\\]~`]', pattern):
             raise Exception(("h2o putfile basename %s can't be regex. path= was %s" % (pattern, path)))
@@ -38,7 +41,10 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
         if h2o.abort_after_import:
             raise Exception("Aborting due to abort_after_import (-aai) argument's effect in import_only()")
         folderURI = ('nfs:/' + folderPath)
-        importResult = node.import_files(folderPath, timeoutSecs=timeoutSecs)
+        if importParentDir:
+            importResult = node.import_files(folderPath, timeoutSecs=timeoutSecs)
+        else:
+            importResult = node.import_files(((folderPath + '/') + pattern), timeoutSecs=timeoutSecs)
     else:
         if ((bucket is not None) and re.match('/', head)):
             h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", head)
@@ -64,7 +70,10 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
                 print ('use_hdfs: %s hdfs_version: %s hdfs_name_node: %s hdfs_config: %s' % (n.use_hdfs, n.hdfs_version, n.hdfs_name_node, n.hdfs_config))
                 print 'ERROR: Something was missing for s3n on the java -jar cmd line when the cloud was built'
             folderURI = ('s3n://' + folderOffset)
-            importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
+            if importParentDir:
+                importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
+            else:
+                importResult = node.import_hdfs(((folderURI + '/') + pattern), timeoutSecs=timeoutSecs)
         elif (schema == 'maprfs'):
             if (not n.use_maprfs):
                 print ('use_maprfs: %s' % n.use_maprfs)
@@ -73,7 +82,10 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
                 folderURI = ((('maprfs://' + n.hdfs_name_node) + '/') + folderOffset)
             else:
                 folderURI = ('maprfs:///' + folderOffset)
-            importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
+            if importParentDir:
+                importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
+            else:
+                importResult = node.import_hdfs(((folderURI + '/') + pattern), timeoutSecs=timeoutSecs)
         elif (schema == 'hdfs'):
             if (not (n.use_hdfs and ((n.hdfs_version and n.hdfs_name_node) or n.hdfs_config))):
                 print ('use_hdfs: %s hdfs_version: %s hdfs_name_node: %s hdfs_config: %s' % (n.use_hdfs, n.hdfs_version, n.hdfs_name_node, n.hdfs_config))
@@ -82,7 +94,10 @@ def import_only(node=None, schema='local', bucket=None, path=None, timeoutSecs=3
                 folderURI = ((('hdfs://' + n.hdfs_name_node) + '/') + folderOffset)
             else:
                 folderURI = ('hdfs://' + folderOffset)
-            importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
+            if importParentDir:
+                importResult = node.import_hdfs(folderURI, timeoutSecs=timeoutSecs)
+            else:
+                importResult = node.import_hdfs(((folderURI + '/') + pattern), timeoutSecs=timeoutSecs)
         else:
             raise Exception(('schema not understood: %s' % schema))
     importPattern = ((folderURI + '/') + pattern)
