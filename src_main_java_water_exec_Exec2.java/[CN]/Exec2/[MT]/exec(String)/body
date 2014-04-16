@@ -21,6 +21,7 @@
     if (val.isFrame()) {
       val=DKV.get(k);
       if (val == null)       continue;
+      if (val.isRawData())       continue;
       Frame fr=val.get();
       String kstr=k.toString();
       try {
