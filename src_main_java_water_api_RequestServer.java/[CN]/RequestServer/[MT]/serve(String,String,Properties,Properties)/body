@@ -8,7 +8,6 @@
     Request request=_requests.get(requestName);
     if (request == null)     return getResource(uri);
     request=request.create(parms);
-    System.out.println("<<<<<<DEBUG>>>>>>>:" + parms + "    "+ type);
     return request.serve(this,parms,type);
   }
  catch (  Exception e) {

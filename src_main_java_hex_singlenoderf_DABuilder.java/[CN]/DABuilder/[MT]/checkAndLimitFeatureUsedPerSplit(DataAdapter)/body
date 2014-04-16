@@ -1,7 +1,7 @@
 {
-  int validCols=_drf._rfmodel.fr.numCols() - 1;
-  if (validCols < _drf._params._numSplitFeatures) {
-    Log.warn(Log.Tag.Sys.RANDF,"Limiting features from " + _drf._params._numSplitFeatures + " to "+ validCols+ " because there are no more valid columns in the dataset");
-    _drf._params._numSplitFeatures=validCols;
+  int validCols=_drf.source.numCols() - 1;
+  if (validCols < _drf.drfParams._numSplitFeatures) {
+    Log.warn(Log.Tag.Sys.RANDF,"Limiting features from " + _drf.drfParams._numSplitFeatures + " to "+ validCols+ " because there are no more valid columns in the dataset");
+    _drf.drfParams._numSplitFeatures=validCols;
   }
 }

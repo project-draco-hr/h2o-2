@@ -1,9 +1,9 @@
 {
   Timer t_inhale=new Timer();
-  SpeeDRFModel rfmodel=_drf._rfmodel;
+  SpeeDRFModel rfmodel=_rfmodel;
   final int[] modelDataMap=colMap(fr._names,rfmodel._names);
   final int totalRows=getRowCount(fr);
-  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf._params._seed,_drf._params._binLimit,_drf._params._classWt);
+  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams._seed,_drf.drfParams._binLimit,_drf.drfParams._classWt);
   checkAndLimitFeatureUsedPerSplit(dapt);
   final int ncolumns=fr.numCols();
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
