@@ -1,0 +1,14 @@
+def test_A_all_junit(self):
+    try:
+        h2o.build_cloud(node_count=2, java_heap_GB=3)
+        (ps, stdout, stderr) = h2o.spawn_cmd('junit', ['java', '-Xms3G', '-Xmx3G', ('-Dh2o.arg.ice_root=' + h2o.tmp_dir('ice.')), ('-Dh2o.arg.name=' + h2o.cloud_name()), ('-Dh2o.arg.ip=' + h2o.get_ip_address()), '-Dh2o.arg.port=54666', '-ea', '-jar', h2o.find_file('target/h2o.jar'), '-mainClass', 'org.junit.runner.JUnitCore', 'water.suites.AllTestsSuite'])
+        rc = ps.wait(None)
+        out = file(stdout).read()
+        err = file(stderr).read()
+        if (rc is None):
+            ps.terminate()
+            raise Exception(('junit timed out.\nstdout:\n%s\n\nstderr:\n%s' % (out, err)))
+        elif (rc != 0):
+            raise Exception(('junit failed.\nstdout:\n%s\n\nstderr:\n%s' % (out, err)))
+    finally:
+        h2o.tear_down_cloud()
