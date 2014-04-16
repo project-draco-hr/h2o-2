@@ -18,7 +18,7 @@
       fr2.delete_and_lock(null).unlock(null);
       val=DKV.get(k);
     }
-    if (val.isFrame()) {
+    if (val.isFrame() && !val.isRawData()) {
       val=DKV.get(k);
       if (val == null)       continue;
       Frame fr=val.get();
@@ -30,7 +30,7 @@
         locked.add(fr._key);
       }
  catch (      Exception e) {
-        System.err.println("Exception while adding frame " + k + " to Exec env");
+        Log.err("Exception while adding frame " + k + " to Exec env");
       }
     }
   }
