@@ -1,9 +1,10 @@
 {
   long seed0=0xDECAF;
-  for (int repeat=0; repeat < 1; ++repeat) {
+  int num_runs=0;
+  for (int repeat=0; repeat < 5; ++repeat) {
     DeepLearning.Activation[] activations={DeepLearning.Activation.Tanh,DeepLearning.Activation.Rectifier};
     DeepLearning.Loss[] losses={DeepLearning.Loss.MeanSquare,DeepLearning.Loss.CrossEntropy};
-    DeepLearning.InitialWeightDistribution[] dists={DeepLearning.InitialWeightDistribution.UniformAdaptive};
+    DeepLearning.InitialWeightDistribution[] dists={DeepLearning.InitialWeightDistribution.Normal,DeepLearning.InitialWeightDistribution.Uniform,DeepLearning.InitialWeightDistribution.UniformAdaptive};
     final long seed=seed0 + repeat;
     Random rng=new Random(seed);
     double[] initial_weight_scales={1e-4 + rng.nextDouble()};
@@ -12,7 +13,6 @@
     int[] hiddens={1,2 + rng.nextInt(50)};
     int[] epochs={1,2 + rng.nextInt(50)};
     double[] rates={0.01,1e-5 + rng.nextDouble() * .1};
-    int num_runs=0;
     for (    DeepLearning.Activation activation : activations) {
       for (      DeepLearning.Loss loss : losses) {
         for (        DeepLearning.InitialWeightDistribution dist : dists) {
@@ -22,6 +22,8 @@
                 for (                int hidden : hiddens) {
                   for (                  int epoch : epochs) {
                     for (                    double rate : rates) {
+                      num_runs++;
+                      if (fraction < rng.nextFloat())                       continue;
                       Log.info("");
                       Log.info("STARTING.");
                       Log.info("Running with " + activation.name() + " activation function and "+ loss.name()+ " loss function.");
@@ -175,7 +177,6 @@
                       p.delete();
                       trainPredict.delete();
                       testPredict.delete();
-                      num_runs++;
                       Log.info("Parameters combination " + num_runs + ": PASS");
                     }
                   }
