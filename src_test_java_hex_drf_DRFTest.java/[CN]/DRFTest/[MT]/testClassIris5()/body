@@ -1,0 +1,8 @@
+{
+  basicDRFTestOOBE("./smalldata/iris/iris_train.csv","iris_train.hex",new PrepData(){
+    @Override int prep(    Frame fr){
+      return fr.numCols() - 1;
+    }
+  }
+,5,a(a(28,0,0),a(0,30,2),a(0,2,28)),s("Iris-setosa","Iris-versicolor","Iris-virginica"));
+}
