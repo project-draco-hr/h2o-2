@@ -1,10 +1,13 @@
 {
   if (null == this.key) {
-    return serveAll();
+    return serveOneOrAll(fetchAll());
   }
  else {
     if (null == this.score_model) {
-      return serveOne(this.key);
+      Frame frame=this.key;
+      Map<String,Frame> framesMap=new TreeMap();
+      framesMap.put(frame._key.toString(),frame);
+      return serveOneOrAll(framesMap);
     }
  else {
       return scoreOne(this.key,this.score_model,this.adapt);

@@ -14,10 +14,10 @@
   double error=0.0d;
   if (score_model.isClassifier()) {
     auc=new AUC();
-    error=score_model.calcError(frame,frame.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,auc,hr);
+    error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,auc,hr);
   }
  else {
-    error=score_model.calcError(frame,frame.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,null,null);
+    error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,null,null);
   }
   Map metrics=new LinkedHashMap();
   metrics.put("model",score_model._key.toString());

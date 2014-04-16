@@ -14,4 +14,8 @@
  else {
     summarizeModelCommonFields(summary,(Model)model);
   }
+  if (find_compatible_frames) {
+    Map<String,Frame> compatible_frames=findCompatibleFrames(model,all_frames,all_frames_cols);
+    summary.compatible_frames=compatible_frames.keySet();
+  }
 }

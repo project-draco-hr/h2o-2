@@ -1,0 +1,12 @@
+{
+  Map<String,FrameSummary> frameSummaries=new TreeMap<String,FrameSummary>();
+  if (null == keys) {
+    keys=frames.keySet();
+  }
+  for (  String key : keys) {
+    FrameSummary summary=new FrameSummary();
+    Frames.summarizeAndEnhanceFrame(summary,frames.get(key),find_compatible_models,all_models,all_models_cols);
+    frameSummaries.put(key,summary);
+  }
+  return frameSummaries;
+}
