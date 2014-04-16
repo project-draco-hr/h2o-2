@@ -18,7 +18,7 @@
       fr2.delete_and_lock(null).unlock(null);
       val=DKV.get(k);
     }
-    if (val.isFrame() && !val.isRawData()) {
+    if (val.isFrame()) {
       val=DKV.get(k);
       if (val == null)       continue;
       Frame fr=val.get();
