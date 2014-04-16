@@ -1,5 +1,6 @@
 {
   super.init();
+  if (lambda_search && lambda.length > 1)   throw new IllegalArgumentException("Can not supply both lambda_search and multiple lambdas. If lambda_search is on, GLM expects only one value of lambda, representing the lambda min (smallest lambda in the lambda search).");
   Frame fr=DataInfo.prepareFrame(source,response,ignored_cols,family == Family.binomial,true,true);
   _dinfo=new DataInfo(fr,1,standardize);
   if (higher_accuracy)   setHighAccuracy();
