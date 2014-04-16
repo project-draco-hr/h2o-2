@@ -6,7 +6,9 @@
   double[] holdout_ratios={0.8};
   double[] epochs={1,13 * 17};
   double[] rates={0.01};
-  NeuralNet.ExecutionMode[] trainers={NeuralNet.ExecutionMode.SingleThread,NeuralNet.ExecutionMode.SingleNode};
+  NeuralNet.ExecutionMode[] trainers={NeuralNet.ExecutionMode.SingleThread};
+  final long seed0=0xDECAF;
+  int count=0;
   int hogwild_runs=0;
   int hogwild_errors=0;
   for (  NeuralNet.ExecutionMode trainer : trainers) {
@@ -22,7 +24,7 @@
                   Log.info("Running in " + trainer.name() + " mode with "+ activation.name()+ " activation function and "+ loss.name()+ " loss function.");
                   Log.info("Initialization with " + dist.name() + " distribution and "+ scale+ " scale, holdout ratio "+ holdout_ratio);
                   NeuralNetMLPReference ref=new NeuralNetMLPReference();
-                  final long seed=new Random().nextLong();
+                  final long seed=seed0 + count;
                   Log.info("Using seed " + seed);
                   ref.init(activation,water.util.Utils.getDeterRNG(seed),holdout_ratio);
                   Key file=NFSFileVec.make(find_test_file(PATH));
@@ -156,6 +158,7 @@
                   if (trainer != NeuralNet.ExecutionMode.SingleThread) {
                     hogwild_runs++;
                   }
+                  count++;
                 }
               }
             }

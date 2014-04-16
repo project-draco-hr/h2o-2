@@ -4,7 +4,10 @@ def test_parse_manyfiles_1(self):
     timeoutSecs = 600
     trial = 0
     for iteration in range(ITERATIONS):
-        csvFilename = 'file_1.dat.gz'
+        if DO_UNCOMPRESSED:
+            csvFilename = 'a_1.dat'
+        else:
+            csvFilename = 'file_1.dat.gz'
         csvPathname = ((csvDirname + '/') + csvFilename)
         trialStart = time.time()
         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
@@ -15,5 +18,11 @@ def test_parse_manyfiles_1(self):
         print '\nTrying StoreView after the import'
         for node in h2o.nodes:
             h2o_cmd.runStoreView(node=node, timeoutSecs=30, view=10000)
+        if DO_EXEC:
+            execExpr = 'A.hex=c(0,1)'
+            h2e.exec_expr(execExpr=execExpr, timeoutSecs=20)
+            h2o_cmd.runInspect(key='A.hex')
+        print '\nTrying StoreView after the exec '
+        h2o_cmd.runStoreView(timeoutSecs=30, view=10000)
         print 'Trial #', trial, 'completed in', (time.time() - trialStart), 'seconds.'
         trial += 1
