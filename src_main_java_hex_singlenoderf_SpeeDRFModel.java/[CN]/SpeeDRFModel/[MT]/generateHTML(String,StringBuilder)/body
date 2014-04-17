@@ -3,7 +3,7 @@
   int finished=0;
   double[] weights=this.weights;
   boolean done=false;
-  int classCol=this.fr.find(this.response);
+  int classCol=this.classcol;
   tasks=this.total_trees;
   finished=this.size();
   if (title != null && !title.isEmpty())   DocGen.HTML.title(sb,title);
@@ -11,7 +11,7 @@
   DocGen.HTML.section(sb,"SpeeDRF Output:");
   int modelSize=tasks * 25 / 100;
   modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
-  Job cmJob=ConfusionTask.make(this,modelSize,this.fr._key,classCol,weights,this.oobee);
+  Job cmJob=ConfusionTask.make(this,modelSize,this.dataKey,classCol,weights,this.oobee);
   ConfusionTask.CMFinal confusion=UKV.get(cmJob.dest());
   if (confusion != null && confusion.valid() && modelSize > 0) {
     JsonObject cm=new JsonObject();

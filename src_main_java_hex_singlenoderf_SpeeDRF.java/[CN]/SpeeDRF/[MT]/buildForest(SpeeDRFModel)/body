@@ -6,28 +6,12 @@
     model.write_lock(self());
     drfParams=DRFParams.create(model.fr.find(model.response),model.total_trees,model.depth,(int)model.fr.numRows(),model.bin_limit,Tree.StatType.ENTROPY,seed,parallel,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,1,_exclusiveSplitLimit,_useNonLocalData);
     validateInputData();
-    final DataAdapter dapt=DABuilder.create(this,model).build(source);
-    Data localData=Data.make(dapt);
-    int numSplitFeatures=howManySplitFeatures(localData);
-    int ntrees=howManyTrees();
-    int[] rowsPerChunks=howManyRPC(source);
-    model.mtry=numSplitFeatures;
-    model.update(self());
-    Timer t_alltrees=new Timer();
-    Tree[] trees=new Tree[ntrees];
-    Log.debug(Log.Tag.Sys.RANDF,"Building " + ntrees + " trees");
-    Log.debug(Log.Tag.Sys.RANDF,"Number of split features: " + numSplitFeatures);
-    Log.debug(Log.Tag.Sys.RANDF,"Starting RF computation with " + localData.rows() + " rows ");
-    Random rnd=Utils.getRNG(localData.seed() + ROOT_SEED_ADD);
-    Sampling sampler=createSampler(drfParams,rowsPerChunks);
-    byte producerId=(byte)H2O.SELF.index();
-    for (int i=0; i < ntrees; ++i) {
-      long treeSeed=rnd.nextLong() + TREE_SEED_INIT;
-      trees[i]=new Tree(Job.findJob(self()),localData,producerId,drfParams._depth,drfParams._stat,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose,model);
-      if (!drfParams._parallel)       ForkJoinTask.invokeAll(new Tree[]{trees[i]});
-    }
-    if (drfParams._parallel)     DRemoteTask.invokeAll(trees);
-    Log.debug(Log.Tag.Sys.RANDF,"All trees (" + ntrees + ") done in "+ t_alltrees);
+    DRFTask tsk=new DRFTask();
+    tsk._job=Job.findJob(self());
+    tsk._params=drfParams;
+    tsk._rfmodel=model;
+    tsk._drf=this;
+    tsk.invokeOnAllNodes();
   }
  catch (  JobCancelledException ex) {
     Log.info("Random Forest building was cancelled.");
@@ -37,7 +21,10 @@ catch (  Exception ex) {
     throw new RuntimeException(ex);
   }
  finally {
-    if (model != null)     model.unlock(self());
+    if (model != null) {
+      model=UKV.get(dest());
+      model.unlock(self());
+    }
     source.unlock(self());
     emptyLTrash();
   }
