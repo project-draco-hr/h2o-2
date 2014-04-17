@@ -2,7 +2,7 @@
   final Key[] keys=new Key[n_folds];
   GLM2[] glms=new GLM2[n_folds];
   for (int i=0; i < n_folds; ++i)   glms[i]=new GLM2(this.description + "xval " + i,self(),keys[i]=Key.make(destination_key + "_" + _lambdaIdx+ "_xval"+ i),_dinfo.getFold(i,n_folds),_glm,new double[]{lambda[_lambdaIdx]},model.alpha,0,model.beta_eps,self(),model.norm_beta(lambdaIxd),higher_accuracy,0);
-  H2O.submitTask(new ParallelGLMs(glms,H2O.CLOUD.size(),new H2OCallback(GLM2.this){
+  H2O.submitTask(new ParallelGLMs(GLM2.this,glms,H2O.CLOUD.size(),new H2OCallback(GLM2.this){
     @Override public void callback(    H2OCountedCompleter t){
       GLMModel[] models=new GLMModel[keys.length];
       for (int i=0; i < models.length; ++i)       models[i]=DKV.get(keys[i]).get();
