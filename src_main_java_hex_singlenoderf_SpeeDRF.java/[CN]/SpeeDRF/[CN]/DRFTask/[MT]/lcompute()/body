@@ -5,20 +5,6 @@
   int ntrees=howManyTrees();
   int[] rowsPerChunks=howManyRPC(_rfmodel.fr);
   updateRFModel(_rfmodel._key,numSplitFeatures);
-  Timer t_alltrees=new Timer();
-  Tree[] trees=new Tree[ntrees];
-  Log.debug(Log.Tag.Sys.RANDF,"Building " + ntrees + " trees");
-  Log.debug(Log.Tag.Sys.RANDF,"Number of split features: " + numSplitFeatures);
-  Log.debug(Log.Tag.Sys.RANDF,"Starting RF computation with " + localData.rows() + " rows ");
-  Random rnd=Utils.getRNG(localData.seed() + ROOT_SEED_ADD);
-  Sampling sampler=createSampler(_params,rowsPerChunks);
-  byte producerId=(byte)H2O.SELF.index();
-  for (int i=0; i < ntrees; ++i) {
-    long treeSeed=rnd.nextLong() + TREE_SEED_INIT;
-    trees[i]=new Tree(_job,localData,producerId,_params._depth,_params._stat,numSplitFeatures,treeSeed,i,_params._exclusiveSplitLimit,sampler,_params._verbose,_rfmodel);
-    if (!_params._parallel)     ForkJoinTask.invokeAll(new Tree[]{trees[i]});
-  }
-  if (_params._parallel)   DRemoteTask.invokeAll(trees);
-  Log.debug(Log.Tag.Sys.RANDF,"All trees (" + ntrees + ") done in "+ t_alltrees);
+  SpeeDRF.build(_job,_params,localData,ntrees,numSplitFeatures,rowsPerChunks);
   tryComplete();
 }
