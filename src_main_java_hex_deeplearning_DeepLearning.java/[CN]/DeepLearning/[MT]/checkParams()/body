@@ -46,4 +46,8 @@
     UKV.put(self(),this);
     _fakejob=true;
   }
+  if (!sparse && col_major) {
+    if (!quiet_mode)     Log.info("Automatically setting col_major to false for non-sparse data.");
+    col_major=false;
+  }
 }
