@@ -9,6 +9,8 @@
  catch (      IOException e) {
         Log.err(e);
       }
+      byte[] res=_cache.putIfAbsent(uri,bytes);
+      if (res != null)       bytes=res;
     }
     Closeables.closeQuietly(resource);
   }
