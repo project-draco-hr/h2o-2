@@ -5,7 +5,8 @@
     float[] samples=new float[(int)(response.max() - response.min() + 1)];
     for (int i=0; i < samples.length; ++i)     samples[i]=(float)67.0;
     for (int i=0; i < weights.length; ++i)     weights[i]=1.0;
-    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,source,response,new Key[0]);
+    Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,false,false,false);
+    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0]);
     model.bin_limit=bin_limit;
     if (mtry == -1) {
       model.mtry=(int)Math.floor(Math.sqrt(source.numCols()));
