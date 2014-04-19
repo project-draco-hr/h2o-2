@@ -1,0 +1,10 @@
+{
+  final float grad2=grad * grad;
+  adaxg.set(2 * row + 1,col,adaxg.get(2 * row + 1,col) * rho);
+  adaxg.add(2 * row + 1,col,(1f - rho) * grad2);
+  final float RMS_dx=Utils.approxSqrt(adaxg.get(2 * row,col) + eps);
+  final float invRMS_g=Utils.approxInvSqrt(adaxg.get(2 * row + 1,col) + eps);
+  float rate=RMS_dx * invRMS_g;
+  adaxg.set(2 * row,col,rho * adaxg.get(2 * row,col) + (1f - rho) * rate * rate* grad2);
+  return rate;
+}

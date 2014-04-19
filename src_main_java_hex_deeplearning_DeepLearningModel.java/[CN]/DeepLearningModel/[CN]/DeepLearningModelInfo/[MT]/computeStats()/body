@@ -11,8 +11,8 @@
     for (int u=0; u < get_weights(y - 1).raw().length; u++) {
       mean_weight[y]+=get_weights(y - 1).raw()[u];
       if (rate != null) {
-        final float RMS_dx=Utils.approxSqrt(get_ada_dx(y - 1).raw()[u] + (float)get_params().epsilon);
-        final float invRMS_g=Utils.approxInvSqrt(get_ada_g(y - 1).raw()[u] + (float)get_params().epsilon);
+        final float RMS_dx=Utils.approxSqrt(get_ada_dx_g(y - 1).raw()[2 * u] + (float)get_params().epsilon);
+        final float invRMS_g=Utils.approxInvSqrt(get_ada_dx_g(y - 1).raw()[2 * u + 1] + (float)get_params().epsilon);
         rate[y - 1][u]=RMS_dx * invRMS_g;
         mean_rate[y]+=rate[y - 1][u];
       }

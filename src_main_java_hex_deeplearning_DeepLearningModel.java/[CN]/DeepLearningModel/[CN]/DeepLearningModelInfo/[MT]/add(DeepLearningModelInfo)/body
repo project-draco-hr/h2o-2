@@ -8,9 +8,8 @@
   }
   if (adaDelta()) {
     assert(other.adaDelta());
-    for (int i=0; i < dense_row_ada_dx.length; ++i) {
-      Utils.add(get_ada_dx(i).raw(),other.get_ada_dx(i).raw());
-      Utils.add(get_ada_g(i).raw(),other.get_ada_g(i).raw());
+    for (int i=0; i < dense_row_ada_dx_g.length; ++i) {
+      Utils.add(get_ada_dx_g(i).raw(),other.get_ada_dx_g(i).raw());
     }
   }
   add_processed_local(other.get_processed_local());

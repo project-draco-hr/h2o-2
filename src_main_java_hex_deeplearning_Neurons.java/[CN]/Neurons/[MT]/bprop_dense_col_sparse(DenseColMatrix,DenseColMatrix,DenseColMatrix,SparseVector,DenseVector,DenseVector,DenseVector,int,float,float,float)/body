@@ -4,7 +4,7 @@
   final float l1=(float)params.l1;
   final float l2=(float)params.l2;
   final boolean have_momenta=_minfo.has_momenta();
-  final boolean have_ada=_ada_dx != null && _ada_g != null;
+  final boolean have_ada=_minfo.adaDelta();
   final boolean nesterov=params.nesterov_accelerated_gradient;
   final boolean update_prev=prev_e != null;
   final int cols=prev_a.size();
@@ -18,7 +18,7 @@
     final float grad=partial_grad * previous_a - Math.signum(weight) * l1 - weight * l2;
     if (have_ada) {
       assert(!have_momenta);
-      float brate=computeAdaDeltaRateForWeight(grad,row,col,adax,adag,rho,eps);
+      float brate=computeAdaDeltaRateForWeight(grad,row,col,adaxg,rho,eps);
       w.add(row,col,brate * grad);
     }
  else {

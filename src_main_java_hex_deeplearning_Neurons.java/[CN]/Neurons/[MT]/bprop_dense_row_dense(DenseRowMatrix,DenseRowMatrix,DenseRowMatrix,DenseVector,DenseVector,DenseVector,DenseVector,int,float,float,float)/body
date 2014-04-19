@@ -4,28 +4,26 @@
   final float l1=(float)params.l1;
   final float l2=(float)params.l2;
   final float max_w2=params.max_w2;
-  final boolean have_momenta=_wm != null;
-  final boolean have_ada=_ada_dx != null && _ada_g != null;
+  final boolean have_momenta=_minfo.has_momenta();
+  final boolean have_ada=_minfo.adaDelta();
   final boolean nesterov=params.nesterov_accelerated_gradient;
   final boolean update_prev=prev_e != null;
+  final boolean fast_mode=params.fast_mode;
   final int cols=prev_a.size();
   final int idx=row * cols;
   float avg_grad2=0;
-  int start=prev_a.begin()._idx;
-  int end=prev_a.end()._idx;
-  for (int it=start; it < end; ++it) {
-    final int col=prev_a._indices[it];
+  for (int col=0; col < cols; col++) {
     final float weight=_w.get(row,col);
     if (update_prev)     prev_e.add(col,partial_grad * weight);
-    final float previous_a=prev_a._values[it];
-    assert(previous_a != 0);
+    final float previous_a=prev_a.get(col);
+    if (fast_mode && previous_a == 0)     continue;
     final float grad=partial_grad * previous_a - Math.signum(weight) * l1 - weight * l2;
     final int w=idx + col;
     if (have_ada) {
       assert(!have_momenta);
       final float grad2=grad * grad;
       avg_grad2+=grad2;
-      float brate=computeAdaDeltaRateForWeight(grad,w,adax,adag,rho,eps);
+      float brate=computeAdaDeltaRateForWeight(grad,w,adaxg,rho,eps);
       _w.raw()[w]+=brate * grad;
     }
  else {
@@ -49,6 +47,6 @@
     }
   }
   if (max_w2 != Float.POSITIVE_INFINITY)   rescale_weights(_w,row,max_w2);
-  if (have_ada)   avg_grad2/=prev_a.nnz();
+  if (have_ada)   avg_grad2/=cols;
   update_bias(_b,_bm,row,partial_grad,avg_grad2,rate,momentum);
 }

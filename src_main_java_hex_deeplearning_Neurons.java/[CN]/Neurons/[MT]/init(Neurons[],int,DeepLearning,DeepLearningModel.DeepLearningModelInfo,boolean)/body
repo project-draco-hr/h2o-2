@@ -19,10 +19,8 @@
       _bm=minfo.get_biases_momenta(index - 1);
     }
     if (minfo.adaDelta()) {
-      _ada_dx=minfo.get_ada_dx(index - 1);
-      _ada_g=minfo.get_ada_g(index - 1);
-      _bias_ada_dx=minfo.get_biases_ada_dx(index - 1);
-      _bias_ada_g=minfo.get_biases_ada_g(index - 1);
+      _ada_dx_g=minfo.get_ada_dx_g(index - 1);
+      _bias_ada_dx_g=minfo.get_biases_ada_dx_g(index - 1);
     }
     _shortcut=(params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0));
   }
