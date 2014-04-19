@@ -1,0 +1,32 @@
+{
+  final boolean have_momenta=_wm != null;
+  final boolean have_ada=_ada_dx != null && _ada_g != null;
+  if (have_ada) {
+    final float rho=(float)params.rho;
+    final float eps=(float)params.epsilon;
+    _bias_ada_g.set(row,_bias_ada_g.get(row) * rho);
+    _bias_ada_g.add(row,(1f - rho) * avg_grad2);
+    final float RMS_dx=Utils.approxSqrt(_bias_ada_dx.get(row) + eps);
+    final float invRMS_g=Utils.approxInvSqrt(_bias_ada_g.get(row) + eps);
+    rate=RMS_dx * invRMS_g;
+    _bias_ada_dx.set(row,rho * _bias_ada_dx.get(row) + (1f - rho) * rate * rate* avg_grad2);
+  }
+  if (!params.nesterov_accelerated_gradient) {
+    final float delta=rate * partial_grad;
+    _b.add(row,delta);
+    if (have_momenta) {
+      _b.add(row,momentum * _bm.get(row));
+      _bm.set(row,delta);
+    }
+  }
+ else {
+    float d=partial_grad;
+    if (have_momenta) {
+      _bm.set(row,_bm.get(row) * momentum);
+      _bm.add(row,d);
+      d=_bm.get(row);
+    }
+    _b.add(row,rate * d);
+  }
+  if (Float.isInfinite(_b.get(row)))   _minfo.set_unstable();
+}
