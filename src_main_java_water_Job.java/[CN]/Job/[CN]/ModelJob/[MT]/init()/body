@@ -1,8 +1,6 @@
 {
   super.init();
-  Argument a4class=find("classification");
-  String p4class=input("classification");
-  final boolean classificationFieldSpecified=a4class != null ? p4class != null : true;
+  final boolean classificationFieldSpecified=true;
   if (!classificationFieldSpecified) {
     classification=response.isEnum();
     Log.warn("Classification field is not specified - deriving according to response! The classification field set to " + classification);
