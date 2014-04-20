@@ -42,6 +42,6 @@
         w.add(row,col,rate * tmp);
       }
     }
-    update_bias(b,bm,row,partial_grad / cols,grad / cols,rate,momentum);
+    update_bias(b,bm,row,partial_grad / cols,grad * grad / cols,rate,momentum);
   }
 }
