@@ -4,7 +4,7 @@
   ada_dx_g.raw()[2 * w + 1]+=(1f - rho) * grad2;
   final float RMS_dx=Utils.approxSqrt(ada_dx_g.raw()[2 * w] + eps);
   final float invRMS_g=Utils.approxInvSqrt(ada_dx_g.raw()[2 * w + 1] + eps);
-  float rate=RMS_dx * invRMS_g;
+  final float rate=RMS_dx * invRMS_g;
   ada_dx_g.raw()[2 * w]=rho * ada_dx_g.raw()[2 * w] + (1f - rho) * rate * rate* grad2;
   return rate;
 }
