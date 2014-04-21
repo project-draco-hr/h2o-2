@@ -17,6 +17,7 @@ def scrape_port_from_stdout_remote(self):
                     self.pid = self.request_pid()
                     f.close()
                     print 'H2O Cloud {} Node {} started with output file {}'.format(self.cloud_num, self.node_num, self.output_file_name)
+                    time.sleep(1)
                     self.first_ticks = self.get_ticks()
                     return
             s = f.readline()

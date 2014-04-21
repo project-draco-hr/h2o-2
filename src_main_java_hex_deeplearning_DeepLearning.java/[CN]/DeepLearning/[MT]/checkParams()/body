@@ -24,16 +24,23 @@
     }
  else {
       Log.info("Using manual learning rate.  Ignoring the following input parameters:");
-      Log.info("  rho, epsilon");
+      Log.info("  rho, epsilon.");
     }
     if (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive) {
       Log.info("Ignoring initial_weight_scale for UniformAdaptive weight distribution.");
     }
   }
-  if (!classification && loss != Loss.MeanSquare) {
-    if (!quiet_mode)     Log.info("Automatically setting loss to MeanSquare for regression.");
-    loss=Loss.MeanSquare;
+  if (loss == Loss.Automatic) {
+    if (!classification) {
+      if (!quiet_mode)       Log.info("Automatically setting loss to MeanSquare for regression.");
+      loss=Loss.MeanSquare;
+    }
+ else {
+      if (!quiet_mode)       Log.info("Automatically setting loss to Cross-Entropy for classification.");
+      loss=Loss.CrossEntropy;
+    }
   }
+  if (!classification && loss == Loss.CrossEntropy)   throw new IllegalArgumentException("Cannot use CrossEntropy loss function for regression.");
   if (dest() == null) {
     destination_key=Key.make();
   }
@@ -45,5 +52,8 @@
     state=JobState.RUNNING;
     UKV.put(self(),this);
     _fakejob=true;
+  }
+  if (!sparse && col_major) {
+    if (!quiet_mode)     throw new IllegalArgumentException("Cannot use column major storage for non-sparse data handling.");
   }
 }
