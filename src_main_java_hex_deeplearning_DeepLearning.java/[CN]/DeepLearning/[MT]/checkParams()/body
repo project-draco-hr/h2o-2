@@ -30,10 +30,17 @@
       Log.info("Ignoring initial_weight_scale for UniformAdaptive weight distribution.");
     }
   }
-  if (!classification && loss != Loss.MeanSquare) {
-    if (!quiet_mode)     Log.info("Automatically setting loss to MeanSquare for regression.");
-    loss=Loss.MeanSquare;
+  if (loss == Loss.Automatic) {
+    if (!classification) {
+      if (!quiet_mode)       Log.info("Automatically setting loss to MeanSquare for regression.");
+      loss=Loss.MeanSquare;
+    }
+ else {
+      if (!quiet_mode)       Log.info("Automatically setting loss to Cross-Entropy for classification.");
+      loss=Loss.CrossEntropy;
+    }
   }
+  if (!classification && loss == Loss.CrossEntropy)   throw new IllegalArgumentException("Cannot use CrossEntropy loss function for regression.");
   if (dest() == null) {
     destination_key=Key.make();
   }
@@ -47,7 +54,6 @@
     _fakejob=true;
   }
   if (!sparse && col_major) {
-    if (!quiet_mode)     Log.info("Automatically setting col_major to false for non-sparse data.");
-    col_major=false;
+    if (!quiet_mode)     throw new IllegalArgumentException("Cannot use column major storage for non-sparse data handling.");
   }
 }
