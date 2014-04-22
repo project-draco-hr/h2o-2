@@ -11,6 +11,7 @@
     GLMParams glm=new GLMParams(Family.poisson,0,Family.poisson.defaultLink,0);
     new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
+    testHTML(model);
     HashMap<String,Double> coefs=model.coefficients();
     String[] cfs1=new String[]{"Intercept","economy (mpg)","cylinders","displacement (cc)","weight (lb)","0-60 mph (s)","year"};
     double[] vls1=new double[]{4.9504805,-0.0095859,-0.0063046,0.0004392,0.0001762,-0.0469810,0.0002891};
@@ -21,6 +22,7 @@
     glm=new GLMParams(Family.gamma,0,Family.gamma.defaultLink,0);
     new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
+    testHTML(model);
     coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls2[i],coefs.get(cfs1[i]),1e-4);
     model.delete();
@@ -29,6 +31,7 @@
     dinfo=new DataInfo(fr,1,false,true);
     new GLM2("GLM test on cars.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
     model=DKV.get(modelKey).get();
+    testHTML(model);
     coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls3[i],coefs.get(cfs1[i]),1e-4);
   }

@@ -1,0 +1,14 @@
+def test_exec2_function_phrases(self):
+    if DO_IRIS:
+        bucket = 'smalldata'
+        csvPathname = 'iris/iris2.csv'
+    else:
+        bucket = 'home-0xdiag-datasets'
+        csvPathname = 'standard/covtype.data'
+    hexKey = 'rhex'
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
+    execExpr = ''
+    for j in range(25):
+        execExpr += ((('a%s=' % j) + random.choice(phrases)) + ';\n')
+        execExprFull = ((('func%s = function(x,y,z,rhex){ ' % j) + execExpr) + ' }(0,0,0,rhex)')
+        h2e.exec_expr(h2o.nodes[0], execExprFull, resultKey=None, timeoutSecs=30)

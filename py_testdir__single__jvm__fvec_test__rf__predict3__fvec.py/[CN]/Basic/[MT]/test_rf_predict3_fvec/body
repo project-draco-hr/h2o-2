@@ -5,7 +5,7 @@ def test_rf_predict3_fvec(self):
     predictHexKey = 'predict_0.hex'
     predictCsv = 'predict_0.csv'
     actualCsv = 'actual_0.csv'
-    if (1 == 0):
+    if (1 == 1):
         y = 4
         response = 'response'
         skipSrcOutputHeader = 1
@@ -15,6 +15,7 @@ def test_rf_predict3_fvec(self):
         csvPathname = 'iris/iris2.csv'
         hexKey = 'iris2.csv.hex'
         translate = None
+        expectedPctWrong = 0.0
     elif (1 == 0):
         y = 54
         response = 'C54'
@@ -25,7 +26,8 @@ def test_rf_predict3_fvec(self):
         csvPathname = 'standard/covtype.shuffled.10pct.data'
         hexKey = 'covtype.shuffled.10pct.data.hex'
         translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
-    elif (1 == 1):
+        expectedPctWrong = 0.7
+    elif (1 == 0):
         y = 54
         response = 'C54'
         skipSrcOutputHeader = 1
@@ -35,6 +37,7 @@ def test_rf_predict3_fvec(self):
         csvPathname = 'standard/covtype.shuffled.10pct.data'
         hexKey = 'covtype.shuffled.10pct.data.hex'
         translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
+        expectedPctWrong = 0.7
     elif (1 == 0):
         y = 54
         response = 'C54'
@@ -45,6 +48,7 @@ def test_rf_predict3_fvec(self):
         csvPathname = 'standard/covtype.data'
         hexKey = 'covtype.data.hex'
         translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
+        expectedPctWrong = 0.7
     else:
         y = 0
         response = 'C1'
@@ -55,6 +59,7 @@ def test_rf_predict3_fvec(self):
         csvPathname = 'mnist/mnist_training.csv.gz'
         hexKey = 'mnist_training.hex'
         translate = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, }
+        expectedPctWrong = 0.7
     csvPredictPathname = ((SYNDATASETS_DIR + '/') + predictCsv)
     csvSrcOutputPathname = ((SYNDATASETS_DIR + '/') + actualCsv)
     csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
@@ -101,7 +106,7 @@ def test_rf_predict3_fvec(self):
             raise Exception("pctWrong too high. Expect < 2% error because it's reusing training data")
         return pctWrong
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
-    kwargs = {'destination_key': 'rf_model', 'response': response, 'ntrees': trees, }
+    kwargs = {'destination_key': 'rf_model', 'response': response, 'ntrees': trees, 'classification': 1, }
     rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
     print 'Use H2O GeneratePredictionsPage with a H2O generated model and the same data key.'
@@ -110,4 +115,4 @@ def test_rf_predict3_fvec(self):
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
     print 'y=', y
     pctWrong = predict_and_compare_csvs(model_key='rf_model', hex_key=hexKey, translate=translate, y=y)
-    self.assertAlmostEqual(pctWrong, 0.7, delta=0.2, msg=("predicted pctWrong: %s should be small because we're predicting with training data" % pctWrong))
+    self.assertAlmostEqual(pctWrong, expectedPctWrong, delta=0.2, msg=("predicted pctWrong: %s should be small because we're predicting with training data" % pctWrong))

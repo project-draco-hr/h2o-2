@@ -22,7 +22,7 @@
  catch (      IOException ohwell) {
         Log.err(ohwell);
       }
-      Closeables.closeQuietly(_udpSocket);
+      Utils.close(_udpSocket);
       _apiSocket=null;
       _udpSocket=null;
       if (OPT_ARGS.port != 0)       Log.die("On " + SELF_ADDRESS + " some of the required ports "+ (OPT_ARGS.port + 0)+ ", "+ (OPT_ARGS.port + 1)+ " are not available, change -port PORT and try again.");
