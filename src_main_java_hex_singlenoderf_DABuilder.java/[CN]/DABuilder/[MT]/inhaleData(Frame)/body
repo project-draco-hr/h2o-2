@@ -1,14 +1,17 @@
 {
   Timer t_inhale=new Timer();
   SpeeDRFModel rfmodel=_rfmodel;
+  boolean[] _isByteCol=new boolean[fr.numCols()];
+  for (int i=0; i < _isByteCol.length; ++i) {
+    _isByteCol[i]=DataAdapter.isByteCol(fr.vecs()[i],(int)fr.numRows(),i == _isByteCol.length - 1);
+  }
   final int[] modelDataMap=colMap(fr._names,rfmodel._names);
   final int totalRows=getRowCount(fr);
   final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams._seed,_drf.drfParams._binLimit,_drf.drfParams._classWt);
   checkAndLimitFeatureUsedPerSplit(dapt);
-  final int ncolumns=fr.numCols();
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   for (int i=0; i < fr.anyVec().nChunks(); ++i) {
-    dataInhaleJobs.add(loadChunkAction(dapt,fr,i,modelDataMap,totalRows));
+    dataInhaleJobs.add(loadChunkAction(dapt,fr,i,modelDataMap,totalRows,_isByteCol));
   }
   ForkJoinTask.invokeAll(dataInhaleJobs);
   dapt.shrink();
