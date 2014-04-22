@@ -5,7 +5,7 @@
   while (i < cols.length && cols[i] < _catOffsets[_catOffsets.length - 1]) {
     int[] levels=MemoryManager.malloc4(_catOffsets[j + 1] - _catOffsets[j]);
     int k=0;
-    while (i < cols.length && cols[i] < _catOffsets[j + 1])     levels[k++]=cols[i++];
+    while (i < cols.length && cols[i] < _catOffsets[j + 1])     levels[k++]=cols[i++] - _catOffsets[j];
     if (k > 0)     catLvls[j]=Arrays.copyOf(levels,k);
     ++j;
   }

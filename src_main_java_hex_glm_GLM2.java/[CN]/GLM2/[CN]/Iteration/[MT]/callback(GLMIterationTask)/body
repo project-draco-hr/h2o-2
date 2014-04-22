@@ -1,6 +1,11 @@
 {
   Log.info("GLM2 iteration(" + _iter + ") done in "+ (System.currentTimeMillis() - start)+ "ms");
   if (!isRunning(self()))   throw new JobCancelledException();
+  if (glmt._gram != null && _activeData.fullN() < 100) {
+    System.out.println("GRAM");
+    System.out.println(Utils.pprint(glmt._gram.getXX()));
+    System.out.println("   ");
+  }
   currentLambdaIter++;
   if (glmt._val != null) {
     if (!(glmt._val.residual_deviance < glmt._val.null_deviance)) {
