@@ -49,7 +49,7 @@
       new GLMTask.GLMLineSearchTask(GLM2.this,_dinfo,_glm,_lastResult._glmt._beta,glmt._beta,1e-8,glmt._n,alpha[0],lambda[_lambdaIdx],new LineSearchIteration()).asyncExec(_activeFrame);
       return;
     }
-    _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
+    _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt,_activeCols);
   }
   final double[] newBeta=glmt._beta != null ? glmt._beta.clone() : MemoryManager.malloc8d(glmt._xy.length);
   double[] newBetaDeNorm=null;
