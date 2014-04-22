@@ -12,7 +12,7 @@ def compare_csv_at_one_col(csvPathname, msg, colIndex=(-1), translate=None, skip
                 if translate:
                     output = translate[output]
                 if (rowNum < 10):
-                    print msg, 'raw output col:', row[(-1)], 'translated:', output
+                    print msg, 'raw output col:', row[colIndex], 'translated:', output
                 predictOutput.append(output)
             rowNum += 1
     return (rowNum, predictOutput)

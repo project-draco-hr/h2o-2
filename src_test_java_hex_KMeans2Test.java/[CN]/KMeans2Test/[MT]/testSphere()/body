@@ -11,6 +11,7 @@
   algo.invoke();
   Log.debug(Sys.KMEAN,"ms= " + t);
   KMeans2Model res=UKV.get(algo.dest());
+  testHTML(res);
   Assert.assertEquals(algo.k,res.centers.length);
   frame.delete();
   res.delete();

@@ -1,0 +1,32 @@
+def test_exec2_quantile_na_scalar(self):
+    h2o.beta_features = True
+    for execExpr in initList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=180)
+    for (execExpr, num) in exprList:
+        start = time.time()
+        (resultExec, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=180)
+        print 'exec end took', (time.time() - start), 'seconds'
+        h2p.blue_print('h2o exec quantiles result:', result)
+        self.assertEqual(result, expectedP, msg=('Checking exec quantiles median, expectedP: %s result: %s' % (expectedP, result)))
+        print h2o.dump_json(resultExec)
+        kwargs = {'column': 0, 'quantile': QUANTILE, 'multiple_pass': 2, 'max_qbins': 1000, }
+        q = h2o.nodes[0].quantiles(source_key='ddd', **kwargs)
+        qresult = q['result']
+        qresult_single = q['result_single']
+        qresult_iterations = q['iterations']
+        qresult_interpolated = q['interpolated']
+        h2p.blue_print('h2o quantiles result:', qresult)
+        h2p.blue_print('h2o quantiles result_single:', qresult_single)
+        h2p.blue_print('h2o quantiles iterations:', qresult_iterations)
+        h2p.blue_print('h2o quantiles interpolated:', qresult_interpolated)
+        print h2o.dump_json(q)
+        self.assertEqual(qresult_iterations, 3, msg='should take 3 iterations')
+        self.assertEqual(qresult, expectedP, msg=('Checking quantilespage median, expectedP: %s result: %s' % (expectedP, qresult)))
+        inspect = h2o_cmd.runInspect(key='abc')
+        numCols = inspect['numCols']
+        numRows = inspect['numRows']
+        print 'numCols:', numCols
+        print 'numRows:', numRows
+        self.assertEqual(numCols, 1)
+        self.assertEqual(numRows, num)
+        h2o.check_sandbox_for_errors()

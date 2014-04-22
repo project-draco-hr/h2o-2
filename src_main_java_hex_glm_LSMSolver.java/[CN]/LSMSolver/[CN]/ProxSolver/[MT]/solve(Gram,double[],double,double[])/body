@@ -1,5 +1,5 @@
 {
-  ADMMSolver admm=new ADMMSolver(_lambda,_alpha);
+  ADMMSolver admm=new ADMMSolver(_lambda,_alpha,1e-2);
   if (gram != null)   return admm.solve(gram,xy,yy,beta);
   Arrays.fill(beta,0);
   long t1=System.currentTimeMillis();
@@ -37,6 +37,5 @@
     converged=true;
   }
   System.out.println("Proximal solver done" + " in " + iter + " iterations and "+ (System.currentTimeMillis() - t1)+ "ms"+ ", objval reduced from "+ objval+ " to "+ lsm_objectiveVal(xy,yy,beta,xb));
-  converged=converged(gram,beta,xy);
   return converged;
 }

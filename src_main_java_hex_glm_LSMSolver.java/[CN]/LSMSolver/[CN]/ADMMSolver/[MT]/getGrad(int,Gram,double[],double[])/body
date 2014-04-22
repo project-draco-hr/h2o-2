@@ -1,0 +1,8 @@
+{
+  double[] g=grad(gram,beta,xy);
+  subgrad(_alpha,_lambda,beta,g);
+  double err=0;
+  for (  double d3 : g)   if (d3 > err)   err=d3;
+ else   if (d3 < -err)   err=-d3;
+  return err;
+}

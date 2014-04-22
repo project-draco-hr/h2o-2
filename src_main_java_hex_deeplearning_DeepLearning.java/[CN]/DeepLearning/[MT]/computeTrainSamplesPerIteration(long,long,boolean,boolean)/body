@@ -1,7 +1,0 @@
-{
-  assert(train_samples_per_iteration == 0 || train_samples_per_iteration == -1 || train_samples_per_iteration >= 1);
-  if (train_samples_per_iteration == 0 || (!replicate_training_data && (train_samples_per_iteration == -1 || train_samples_per_iteration > numRows)) || (replicate_training_data && single_node_mode))   Log.info("Setting train_samples_per_iteration (" + train_samples_per_iteration + ") to one epoch: #rows ("+ (train_samples_per_iteration=numRows)+ ").");
- else   if (train_samples_per_iteration == -1 || train_samples_per_iteration > H2O.CLOUD.size() * numRows)   Log.info("Setting train_samples_per_iteration (" + train_samples_per_iteration + ") to the largest possible number: #nodes x #rows ("+ (train_samples_per_iteration=H2O.CLOUD.size() * numRows)+ ").");
-  assert(train_samples_per_iteration != 0 && train_samples_per_iteration != -1 && train_samples_per_iteration >= 1);
-  return train_samples_per_iteration;
-}

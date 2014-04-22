@@ -1,0 +1,9 @@
+{
+  super.init();
+  float sum=0;
+  for (int i=0; i < ratios.length; i++) {
+    if (!(ratios[i] > 0 && ratios[i] < 1))     throw new IllegalArgumentException("Split ration has to be in (0,1) interval!");
+    sum+=ratios[i];
+  }
+  if (sum > 1)   throw new IllegalArgumentException("Sum of split ratios has to be less or equal to 1!");
+}

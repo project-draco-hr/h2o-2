@@ -1,13 +1,14 @@
 {
-  gemv_row_optimized(_a.raw(),_w.raw(),_previous._a.raw(),_b.raw(),null);
+  gemv((DenseVector)_a,(DenseRowMatrix)_w,(DenseVector)_previous._a,_b,null);
   final float max=Utils.maxValue(_a.raw());
-  float scale=0;
-  for (int o=0; o < _a.size(); o++) {
-    _a.set(o,(float)Math.exp(_a.get(o) - max));
-    scale+=_a.get(o);
+  float scale=0f;
+  final float rows=_a.size();
+  for (int row=0; row < rows; row++) {
+    _a.set(row,(float)Math.exp(_a.get(row) - max));
+    scale+=_a.get(row);
   }
-  for (int o=0; o < _a.size(); o++) {
-    if (Float.isNaN(_a.get(o)))     throw new RuntimeException("Numerical instability, predicted NaN.");
-    _a.raw()[o]/=scale;
+  for (int row=0; row < rows; row++) {
+    if (Float.isNaN(_a.get(row)))     throw new RuntimeException("Numerical instability, predicted NaN.");
+    _a.raw()[row]/=scale;
   }
 }

@@ -3,16 +3,17 @@
   float m=momentum(processed);
   float r=rate(processed) * (1 - m);
   float g;
-  for (int u=0; u < _a.size(); u++) {
-    final float t=(u == target ? 1 : 0);
-    final float y=_a.get(u);
+  final float rows=_a.size();
+  for (int row=0; row < rows; row++) {
+    final float t=(row == target ? 1f : 0f);
+    final float y=_a.get(row);
     if (params.loss == Loss.CrossEntropy) {
       g=t - y;
     }
  else {
       assert(params.loss == Loss.MeanSquare);
-      g=(t - y) * (1 - y) * y;
+      g=(t - y) * (1f - y) * y;
     }
-    bprop(u,g,r,m);
+    bprop(row,g,r,m);
   }
 }

@@ -1,0 +1,27 @@
+{
+  int nsplits=split_keys.length;
+  String[] headers=new String[nsplits + 1];
+  headers[0]="";
+  for (int i=0; i < nsplits; i++)   headers[i + 1]="Split #" + i;
+  DocGen.HTML.arrayHead(sb,headers);
+  sb.append("<tr><td>").append(DocGen.HTML.bold("Keys")).append("</td>");
+  for (int i=0; i < nsplits; i++) {
+    Key k=split_keys[i];
+    sb.append("<td>").append(Inspect2.link(k.toString(),k)).append("</td>");
+  }
+  sb.append("</tr>");
+  sb.append("<tr><td>").append(DocGen.HTML.bold("Rows")).append("</td>");
+  for (int i=0; i < nsplits; i++) {
+    long r=split_rows[i];
+    sb.append("<td>").append(String.format("%,d",r)).append("</td>");
+  }
+  sb.append("</tr>");
+  sb.append("<tr><td>").append(DocGen.HTML.bold("Ratios")).append("</td>");
+  for (int i=0; i < nsplits; i++) {
+    float r=100 * split_ratios[i];
+    sb.append("<td>").append(String.format("%.2f %%",r)).append("</td>");
+  }
+  sb.append("</tr>");
+  DocGen.HTML.arrayTail(sb);
+  return true;
+}

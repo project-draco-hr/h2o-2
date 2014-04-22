@@ -18,6 +18,7 @@
     drf.destination_key=Key.make("DRF_model_4_" + hexnametrain);
     drf.invoke();
     model=UKV.get(drf.dest());
+    testHTML(model);
     assertCM(expCM,model.cms[model.cms.length - 1]._arr);
     Assert.assertEquals("Number of trees differs!",ntree,model.errs.length - 1);
     String[] cmDom=model._domains[model._domains.length - 1];
@@ -25,11 +26,7 @@
     frTest=fnametest != null ? parseFrame(destTest,fnametest) : null;
     pred=drf.score(frTest != null ? frTest : drf.source);
   }
- catch (  Throwable t) {
-    t.printStackTrace();
-    throw t;
-  }
- finally {
+  finally {
     drf.source.delete();
     UKV.remove(drf.response._key);
     drf.remove();
