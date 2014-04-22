@@ -3,80 +3,83 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     trees = 15
     timeoutSecs = 120
+    predictHexKey = 'predict_0.hex'
+    predictCsv = 'predict_0.csv'
+    actualCsv = 'actual_0.csv'
     if (1 == 0):
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
         bucket = 'home-0xdiag-datasets'
         csvPathname = 'standard/covtype.data'
         hexKey = 'covtype.data.hex'
         y = 54
-    if (1 == 1):
+        expectedPctWrong = 0
+    if (1 == 0):
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
         bucket = 'home-0xdiag-datasets'
         csvPathname = 'standard/covtype.shuffled.10pct.data'
         hexKey = 'covtype.shuffled.10pct.data.hex'
         y = 54
-    if (1 == 0):
+        expectedPctWrong = 0
+    if (1 == 1):
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
         bucket = 'smalldata'
         csvPathname = 'iris/iris.csv'
+        hexKey = 'iris.hex'
         y = 4
-    predictHexKey = 'predict.hex'
-    predictCsv = 'predict.csv'
-    execHexKey = 'A.hex'
-    execCsv = 'exec.csv'
+        expectedPctWrong = 26
     csvPredictPathname = ((SYNDATASETS_DIR + '/') + predictCsv)
-    csvExecPathname = ((SYNDATASETS_DIR + '/') + execCsv)
+    csvSrcOutputPathname = ((SYNDATASETS_DIR + '/') + actualCsv)
     csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
 
-    def predict_and_compare_csvs(model_key):
+    def predict_and_compare_csvs(model_key, hex_key, translate=None, y=0):
+        dataKey = 'P.hex'
+        h2e.exec_expr(execExpr=((dataKey + '=') + hex_key), timeoutSecs=30)
+        if skipSrcOutputHeader:
+            print 'Has header in dataset, so should be able to chop out col 0 for predict and get right answer'
+            print "hack for now, can't chop out col 0 in Exec currently"
+            dataKey = hex_key
+        else:
+            print "No header in dataset, can't chop out cols, since col numbers are used for names"
+            dataKey = hex_key
+        h2e.exec_expr(execExpr=(((('Z.hex=' + hex_key) + '[,') + str((y + 1))) + ']'), timeoutSecs=30)
         start = time.time()
-        predict = h2o_cmd.runPredict(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
-        print 'runPredict end on ', hexKey, ' took', (time.time() - start), 'seconds'
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
+        print 'generate_predictions end on ', hexKey, ' took', (time.time() - start), 'seconds'
         h2o.check_sandbox_for_errors()
         inspect = h2o_cmd.runInspect(key=predictHexKey)
         h2o_cmd.infoFromInspect(inspect, 'predict.hex')
+        h2o.nodes[0].csv_download(src_key='Z.hex', csvPathname=csvSrcOutputPathname)
         h2o.nodes[0].csv_download(src_key=predictHexKey, csvPathname=csvPredictPathname)
-        h2o.nodes[0].csv_download(src_key=execHexKey, csvPathname=csvExecPathname)
         h2o.check_sandbox_for_errors()
         print 'Do a check of the original output col against predicted output'
-        translate = {1: 0.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, }
-        (rowNum1, originalOutput) = compare_csv_last_col(csvExecPathname, msg="Original, after being exec'ed", skipHeader=True)
-        (rowNum2, predictOutput) = compare_csv_last_col(csvPredictPathname, msg='Predicted', skipHeader=True)
-        if (rowNum1 != rowNum2):
-            raise Exception(('original rowNum1: %s not same as downloaded predict (w/header) rowNum2:                     %s' % (rowNum1, rowNum2)))
+        (rowNum1, originalOutput) = compare_csv_at_one_col(csvSrcOutputPathname, msg='Original', colIndex=0, translate=translate, skipHeader=skipSrcOutputHeader)
+        (rowNum2, predictOutput) = compare_csv_at_one_col(csvPredictPathname, msg='Predicted', colIndex=0, skipHeader=skipPredictHeader)
+        if ((rowNum1 - skipSrcOutputHeader) != (rowNum2 - skipPredictHeader)):
+            raise Exception(('original rowNum1: %s - %d not same as downloaded predict: rowNum2: %s - %d                     %s' % (rowNum1, skipSrcOutputHeader, rowNum2, skipPredictHeader)))
         wrong = 0
-        wrong0 = 0
-        wrong1 = 0
         for (rowNum, (o, p)) in enumerate(zip(originalOutput, predictOutput)):
-            o = float(o)
-            p = float(p)
-            if (o != p):
-                msg = ('Comparing original output col vs predicted. row %s differs.                         original: %s predicted: %s' % (rowNum, o, p))
-                if ((p == 0.0) and (wrong0 == 10)):
-                    print 'Not printing any more predicted=0 mismatches'
-                elif ((p == 0.0) and (wrong0 < 10)):
+            if (str(o) != str(p)):
+                if (wrong == 10):
+                    print 'Not printing any more mismatches\n'
+                elif (wrong < 10):
+                    msg = ('Comparing original output col vs predicted. row %s differs.                             original: %s predicted: %s' % (rowNum, o, p))
                     print msg
-                if ((p == 1.0) and (wrong1 == 10)):
-                    print 'Not printing any more predicted=1 mismatches'
-                elif ((p == 1.0) and (wrong1 < 10)):
-                    print msg
-                if (p == 0.0):
-                    wrong0 += 1
-                elif (p == 1.0):
-                    wrong1 += 1
                 wrong += 1
-        print 'wrong0:', wrong0
-        print 'wrong1:', wrong1
         print '\nTotal wrong:', wrong
         print 'Total:', len(originalOutput)
         pctWrong = ((100.0 * wrong) / len(originalOutput))
         print 'wrong/Total * 100 ', pctWrong
-        if (pctWrong > 16.0):
-            raise Exception(('pct wrong: %s too high. Expect < 16 pct error' % pctWrong))
+        return pctWrong
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     h2o_cmd.runSummary(key=hexKey)
     trainKey = parseResult['destination_key']
     ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
     h2o.beta_features = False
     CLASS = 1
-    kwargs = {'lsm_solver': LSM_SOLVER, 'standardize': STANDARDIZE, 'case': CLASS, 'case_mode': '=', 'y': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 1, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
+    kwargs = {'lsm_solver': LSM_SOLVER, 'standardize': STANDARDIZE, 'y': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 0, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, 'case': CLASS, 'case_mode': '=', }
     timeoutSecs = 120
     kwargs.update({'alpha': TRY_ALPHA, 'lambda': TRY_LAMBDA, })
     start = time.time()
@@ -92,14 +95,14 @@ def test_GLM1_GLM2_train_pred_fvec(self):
         classErr1 = glm['GLMModel']['validations'][0]['classErr']
         auc1 = glm['GLMModel']['validations'][0]['auc']
     h2o.beta_features = True
-    kwargs = {'standardize': STANDARDIZE, 'classification': (1 if (FAMILY == 'binomial') else 0), 'response': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 1, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
+    kwargs = {'standardize': STANDARDIZE, 'response': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 0, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
     timeoutSecs = 120
-    execExpr = ('B.hex=%s' % trainKey)
-    h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     if (FAMILY == 'binomial'):
-        execExpr = ('B.hex[,%s]=(B.hex[,%s]==%s)' % ((y + 1), (y + 1), CLASS))
+        execExpr = ('B.hex=%s; B.hex[,%s]=(%s[,%s]==%s)' % (trainKey, (y + 1), trainKey, (y + 1), CLASS))
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-    bHack = {'destination_key': 'B.hex', }
+        bHack = {'destination_key': 'B.hex', }
+    else:
+        bHack = parseResult
     kwargs.update({'alpha': TRY_ALPHA, 'lambda': TRY_LAMBDA, })
     start = time.time()
     glm = h2o_cmd.runGLM(parseResult=bHack, timeoutSecs=timeoutSecs, **kwargs)
@@ -118,22 +121,35 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     nullDevExpected = nullDev1
     self.assertAlmostEqual(nullDev, nullDevExpected, delta=2, msg=('GLM2 nullDev %s is too different from GLM1 %s' % (nullDev, nullDevExpected)))
     iterationExpected = iterations1
-    self.assertAlmostEqual(iteration, iterationExpected, delta=2, msg=('GLM2 iteration %s is too different from GLM1 %s' % (iteration, iterationExpected)))
     coeff0 = coefficients[0]
     coeff0Expected = coefficients1[0]
     print 'coeff0 pct delta:', ('%0.3f' % ((100.0 * (abs(coeff0) - abs(coeff0Expected))) / abs(coeff0Expected)))
-    self.assertTrue(h2o_util.fp_approx_equal(coeff0, coeff0Expected, rel=0.01), msg=('GLM2 coefficient 0 %s is too different from GLM1 %s' % (coeff0, coeff0Expected)))
+    self.assertTrue(h2o_util.approxEqual(coeff0, coeff0Expected, rel=0.5), msg=('GLM2 coefficient 0 %s is too different from GLM1 %s' % (coeff0, coeff0Expected)))
     coeff2 = coefficients[2]
     coeff2Expected = coefficients1[2]
     print 'coeff2 pct delta:', ('%0.3f' % ((100.0 * (abs(coeff2) - abs(coeff2Expected))) / abs(coeff2Expected)))
-    self.assertTrue(h2o_util.fp_approx_equal(coeff2, coeff2Expected, rel=0.01), msg=('GLM2 coefficient 2 %s is too different from GLM1 %s' % (coeff2, coeff2Expected)))
+    self.assertTrue(h2o_util.approxEqual(coeff2, coeff2Expected, rel=0.5), msg=('GLM2 coefficient 2 %s is too different from GLM1 %s' % (coeff2, coeff2Expected)))
     if (FAMILY == 'binomial'):
         aucExpected = auc1
         self.assertAlmostEqual(auc, aucExpected, delta=10, msg=('GLM2 auc %s is too different from GLM1 %s' % (auc, aucExpected)))
     interceptExpected = intercept1
     print 'intercept pct delta:', ((100.0 * (abs(intercept) - abs(interceptExpected))) / abs(interceptExpected))
-    self.assertTrue(h2o_util.fp_approx_equal(intercept, interceptExpected, rel=0.01), msg=('GLM2 intercept %s is too different from GLM1 %s' % (intercept, interceptExpected)))
+    self.assertTrue(h2o_util.approxEqual(intercept, interceptExpected, rel=0.5), msg=('GLM2 intercept %s is too different from GLM1 %s' % (intercept, interceptExpected)))
     avg_errExpected = err1
-    self.assertAlmostEqual(avg_err, avg_errExpected, delta=(0.05 * avg_errExpected), msg=('GLM2 avg_err %s is too different from GLM1 %s' % (avg_err, avg_errExpected)))
-    self.assertAlmostEqual(best_threshold, 0.35, delta=(0.01 * best_threshold), msg=('GLM2 best_threshold %s is too different from GLM1 %s' % (best_threshold, 0.35)))
-    predict_and_compare_csvs(model_key=modelKey)
+    self.assertAlmostEqual(avg_err, avg_errExpected, delta=(0.5 * avg_errExpected), msg=('GLM2 avg_err %s is too different from GLM1 %s' % (avg_err, avg_errExpected)))
+    interceptDelta = abs((abs(intercept1) - abs(intercept)))
+    cDelta = [abs((abs(a) - abs(b))) for (a, b) in zip(coefficients1, coefficients)]
+
+    def printit(self, a, b, c, d):
+        pctDiff = (abs((d / c)) * 100)
+        print ('%-20s %-20.5e %8s %5.2f%% %10s %-20.5e' % ((((('GLM2: ' + a) + ' ') + b) + ':'), c, 'pct. diff:', pctDiff, 'abs diff:', d))
+    printit(self, 'intercept', '', intercept1, interceptDelta)
+    print 'compare lengths coefficients1, coefficients, cDelta:', len(coefficients1), len(coefficients), len(cDelta)
+    print 'GLM1:', coefficients1
+    print 'GLM2:', coefficients
+    print 'cDelta:', cDelta
+    for (i, cValue) in enumerate(coefficients):
+        printit(self, 'coefficient', ('C' + str(i)), cValue, cDelta[i])
+    hexKey = 'B.hex'
+    pctWrong = predict_and_compare_csvs(model_key=modelKey, hex_key=hexKey, translate=None, y=y)
+    self.assertAlmostEqual(pctWrong, expectedPctWrong, delta=2.0, msg=("predicted pctWrong: %s should be small because we're predicting with training data %s" % (pctWrong, expectedPctWrong)))
