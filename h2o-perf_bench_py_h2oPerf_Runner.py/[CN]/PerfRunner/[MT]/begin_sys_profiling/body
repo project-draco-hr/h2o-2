@@ -1,0 +1,17 @@
+def begin_sys_profiling(self, test_name):
+    addr = ((self.pre + '.1.') + str(self.m))
+    print 
+    print 
+    ssh = paramiko.SSHClient()
+    policy = paramiko.AutoAddPolicy()
+    ssh.set_missing_host_key_policy(policy)
+    ssh.load_system_host_keys()
+    ssh.connect(addr, username='0xperf', password='0xperf')
+    ssh.get_transport().set_keepalive(300)
+    cmd = ['python', '/home/0xperf/HOUND/unleash_the_hounds.py', str(self.perfdb.this_test_run_id), self.cloud[0].all_pids(), self.cloud[0].all_ips(), test_name]
+    print 
+    print 'Unleashing the hounds!'
+    print ' '.join(cmd)
+    print 
+    ssh.exec_command(' '.join(cmd))
+    return ssh

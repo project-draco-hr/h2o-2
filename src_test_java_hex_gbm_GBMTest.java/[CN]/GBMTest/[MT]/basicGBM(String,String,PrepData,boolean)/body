@@ -26,6 +26,7 @@
     gbm.score_each_iteration=true;
     gbm.invoke();
     gbmmodel=UKV.get(gbm.dest());
+    testHTML(gbmmodel);
     Frame preds=gbm.score(gbm.source);
     preds.delete();
     return gbmmodel;

@@ -21,7 +21,7 @@ def test_GLM2_covtype_train(self):
     print 'Creating the key of the last 10% data, for scoring'
     trainDataKey = 'rTrain'
     testDataKey = 'rTest'
-    kwargs = {'response': ('C' + str(y)), 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', 'classification': 1, }
+    kwargs = {'response': ('C' + str(y)), 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', }
     timeoutSecs = 60
     for trial in range(10):
         rowsToUse = rowsForPct[(trial % 10)]
