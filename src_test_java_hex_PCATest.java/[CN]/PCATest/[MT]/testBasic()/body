@@ -9,6 +9,7 @@
     Key kpca=Key.make("basicdata.pca");
     new PCA("PCA on basic small dataset",kpca,fr,0.0,standardize).invoke();
     model=DKV.get(kpca).get();
+    testHTML(model);
   }
   finally {
     if (fr != null)     fr.delete();
