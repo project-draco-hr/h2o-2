@@ -1,0 +1,12 @@
+{
+  Map<String,Frame> all_frames=null;
+  Map<String,Set<String>> all_frames_cols=null;
+  if (this.find_compatible_frames) {
+    all_frames=Frames.fetchAll();
+    all_frames_cols=new TreeMap<String,Set<String>>();
+    for (    Map.Entry<String,Frame> entry : all_frames.entrySet()) {
+      all_frames_cols.put(entry.getKey(),new TreeSet<String>(Arrays.asList(entry.getValue()._names)));
+    }
+  }
+  return new Pair<Map<String,Frame>,Map<String,Set<String>>>(all_frames,all_frames_cols);
+}

@@ -39,6 +39,7 @@ def run_tests(self):
             test.test_run.row['contamination_message'] = contamination[1]
             test.test_run.update(True)
             self.stop_sys_profiling(ssh_ch)
+            ssh_ch = None
             PerfUtils.stop_cloud(self, test.remote_hosts)
             self.cloud.pop(0)
             self.perfdb.this_test_run_id += 1
