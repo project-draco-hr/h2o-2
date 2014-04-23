@@ -2,7 +2,7 @@
   Frame fr=_rfmodel.fr;
   final long num_chunks=fr.anyVec().nChunks();
   final int num_nodes=H2O.CLOUD.size();
-  HashSet<H2ONode> nodes=new HashSet();
+  HashSet<H2ONode> nodes=new HashSet<H2ONode>();
   for (int i=0; i < num_chunks; i++) {
     nodes.add(fr.anyVec().chunkKey(i).home_node());
     if (nodes.size() == num_nodes)     break;
