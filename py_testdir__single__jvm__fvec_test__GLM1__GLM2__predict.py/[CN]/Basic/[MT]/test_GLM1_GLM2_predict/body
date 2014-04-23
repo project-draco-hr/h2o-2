@@ -1,4 +1,4 @@
-def test_GLM1_GLM2_train_pred_fvec(self):
+def test_GLM1_GLM2_predict(self):
     h2o.beta_features = False
     SYNDATASETS_DIR = h2o.make_syn_dir()
     trees = 15
@@ -33,46 +33,6 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     csvPredictPathname = ((SYNDATASETS_DIR + '/') + predictCsv)
     csvSrcOutputPathname = ((SYNDATASETS_DIR + '/') + actualCsv)
     csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
-
-    def predict_and_compare_csvs(model_key, hex_key, translate=None, y=0):
-        dataKey = 'P.hex'
-        h2e.exec_expr(execExpr=((dataKey + '=') + hex_key), timeoutSecs=30)
-        if skipSrcOutputHeader:
-            print 'Has header in dataset, so should be able to chop out col 0 for predict and get right answer'
-            print "hack for now, can't chop out col 0 in Exec currently"
-            dataKey = hex_key
-        else:
-            print "No header in dataset, can't chop out cols, since col numbers are used for names"
-            dataKey = hex_key
-        h2e.exec_expr(execExpr=(((('Z.hex=' + hex_key) + '[,') + str((y + 1))) + ']'), timeoutSecs=30)
-        start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
-        print 'generate_predictions end on ', hexKey, ' took', (time.time() - start), 'seconds'
-        h2o.check_sandbox_for_errors()
-        inspect = h2o_cmd.runInspect(key=predictHexKey)
-        h2o_cmd.infoFromInspect(inspect, 'predict.hex')
-        h2o.nodes[0].csv_download(src_key='Z.hex', csvPathname=csvSrcOutputPathname)
-        h2o.nodes[0].csv_download(src_key=predictHexKey, csvPathname=csvPredictPathname)
-        h2o.check_sandbox_for_errors()
-        print 'Do a check of the original output col against predicted output'
-        (rowNum1, originalOutput) = compare_csv_at_one_col(csvSrcOutputPathname, msg='Original', colIndex=0, translate=translate, skipHeader=skipSrcOutputHeader)
-        (rowNum2, predictOutput) = compare_csv_at_one_col(csvPredictPathname, msg='Predicted', colIndex=0, skipHeader=skipPredictHeader)
-        if ((rowNum1 - skipSrcOutputHeader) != (rowNum2 - skipPredictHeader)):
-            raise Exception(('original rowNum1: %s - %d not same as downloaded predict: rowNum2: %s - %d                     %s' % (rowNum1, skipSrcOutputHeader, rowNum2, skipPredictHeader)))
-        wrong = 0
-        for (rowNum, (o, p)) in enumerate(zip(originalOutput, predictOutput)):
-            if (str(o) != str(p)):
-                if (wrong == 10):
-                    print 'Not printing any more mismatches\n'
-                elif (wrong < 10):
-                    msg = ('Comparing original output col vs predicted. row %s differs.                             original: %s predicted: %s' % (rowNum, o, p))
-                    print msg
-                wrong += 1
-        print '\nTotal wrong:', wrong
-        print 'Total:', len(originalOutput)
-        pctWrong = ((100.0 * wrong) / len(originalOutput))
-        print 'wrong/Total * 100 ', pctWrong
-        return pctWrong
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     h2o_cmd.runSummary(key=hexKey)
     trainKey = parseResult['destination_key']
@@ -151,5 +111,5 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     for (i, cValue) in enumerate(coefficients):
         printit(self, 'coefficient', ('C' + str(i)), cValue, cDelta[i])
     hexKey = 'B.hex'
-    pctWrong = predict_and_compare_csvs(model_key=modelKey, hex_key=hexKey, translate=None, y=y)
+    pctWrong = h2o_rf.predict_and_compare_csvs(modelKey, hexKey, predictHexKey, csvSrcOutputPathname, csvPredictPathname, skipSrcOutputHeader, skipPredictHeader, translate=None, y=y)
     self.assertAlmostEqual(pctWrong, expectedPctWrong, delta=2.0, msg=("predicted pctWrong: %s should be small because we're predicting with training data %s" % (pctWrong, expectedPctWrong)))
