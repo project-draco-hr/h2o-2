@@ -104,6 +104,13 @@
  else     if (s.equals("-ea")) {
       enableExceptions=true;
     }
+ else     if (s.equals("-license")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      licenseFileName=args[i];
+    }
  else {
       error("Unrecognized option " + s);
     }
@@ -166,5 +173,21 @@
   }
   if ((nthreads >= 0) && (nthreads < 4)) {
     error("nthreads invalid (must be >= 4): " + nthreads);
+  }
+  if (licenseFileName != null) {
+    try {
+      licenseData=readFile(licenseFileName);
+    }
+ catch (    Exception xe) {
+      StringBuilder sb=new StringBuilder();
+      sb.append("Failed to read license file: ");
+      if (xe.getLocalizedMessage() != null) {
+        sb.append(xe.getLocalizedMessage());
+      }
+ else {
+        sb.append(licenseFileName);
+      }
+      error(sb.toString());
+    }
   }
 }
