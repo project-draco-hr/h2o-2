@@ -7,6 +7,9 @@
       try {
         Frame frame=all_frames.get(entry.getKey());
         Frame[] outputs=model.adapt(frame,false);
+        Frame adapted=outputs[0];
+        Frame trash=outputs[1];
+        trash.delete();
         compatible_frames.put(entry.getKey(),frame);
       }
  catch (      Exception e) {

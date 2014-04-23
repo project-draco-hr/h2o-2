@@ -7,6 +7,9 @@
       try {
         Model model=all_models.get(entry.getKey());
         Frame[] outputs=model.adapt(frame,false);
+        Frame adapted=outputs[0];
+        Frame trash=outputs[1];
+        trash.delete();
         compatible_models.put(entry.getKey(),model);
       }
  catch (      Exception e) {

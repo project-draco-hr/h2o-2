@@ -1,10 +1,5 @@
 {
   Frame input=frame;
-  if (false && adapt) {
-    Frame[] inputs=score_model.adapt(frame,false);
-    input=inputs[0];
-    Frame vecTrash=inputs[1];
-  }
   long before=System.currentTimeMillis();
   Frame predictions=score_model.score(frame,true);
   long after=System.currentTimeMillis();
