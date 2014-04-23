@@ -14,6 +14,7 @@
     dataInhaleJobs.add(loadChunkAction(dapt,fr,i,_isByteCol));
   }
   _rfmodel.current_status="Inhaling Data";
+  _rfmodel.update(_rfmodel.jobKey);
   ForkJoinTask.invokeAll(dataInhaleJobs);
   dapt.shrink();
   Log.info(Log.Tag.Sys.RANDF,"Inhale done in " + t_inhale);
