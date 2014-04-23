@@ -1,0 +1,24 @@
+{
+  Value v=DKV.get(src_key);
+  if (v == null)   throw new IllegalArgumentException("Key " + src_key + " does not exist!");
+  String typename=v.className();
+  try {
+    Class klazz=Class.forName(typename);
+    if (REDIRECTS.containsKey(klazz)) {
+      String[] r=REDIRECTS.get(klazz);
+      return redirect(klazz.getSimpleName(),r[0],r[1]);
+    }
+ else {
+      for (      Class k : REDIRECTS.keySet()) {
+        if (k.isAssignableFrom(klazz)) {
+          String[] r=REDIRECTS.get(k);
+          return redirect(klazz.getSimpleName(),r[0],r[1]);
+        }
+      }
+    }
+  }
+ catch (  ClassNotFoundException e) {
+    return Response.error(e);
+  }
+  throw new IllegalArgumentException("Uknown key type! Key = " + src_key + " and type = "+ typename);
+}

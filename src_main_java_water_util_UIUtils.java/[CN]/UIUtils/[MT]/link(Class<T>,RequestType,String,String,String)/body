@@ -1,0 +1,9 @@
+{
+  RString rs=new RString("<a href='/2/%page%rtype?%keyPlaceholder=%$key'>%content</a>");
+  rs.replace("keyPlaceholder",keyPlaceholder);
+  rs.replace("rtype",rtype._suffix);
+  rs.replace("page",page.getSimpleName());
+  rs.replace("key",k);
+  rs.replace("content",content);
+  return rs.toString();
+}
