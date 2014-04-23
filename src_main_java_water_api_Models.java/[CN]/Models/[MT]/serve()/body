@@ -1,0 +1,16 @@
+{
+  if (null == this.key) {
+    return serveOneOrAll(fetchAll());
+  }
+ else {
+    if (null == this.score_frame) {
+      Model model=this.key;
+      Map<String,Model> modelsMap=new TreeMap();
+      modelsMap.put(model._key.toString(),model);
+      return serveOneOrAll(modelsMap);
+    }
+ else {
+      return scoreOne(this.score_frame,this.key,this.adapt);
+    }
+  }
+}

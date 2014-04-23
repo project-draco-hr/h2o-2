@@ -1,0 +1,18 @@
+{
+  _local=true;
+  OutputStream output=null;
+  try {
+    File f=new File(path);
+    if (!force && f.exists())     throw new IllegalArgumentException("File " + path + " already exists.");
+    output=new FileOutputStream(path.toString());
+    byte[] buffer=new byte[1024];
+    int len;
+    while ((len=csv.read(buffer)) > 0) {
+      output.write(buffer,0,len);
+    }
+    Log.info("Key '" + src_key.toString() + "' was written to "+ (_local && H2O.CLOUD.size() > 1 ? H2O.SELF_ADDRESS + ":" : "")+ path.toString()+ ".");
+  }
+  finally {
+    if (output != null)     output.close();
+  }
+}

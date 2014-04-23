@@ -1,0 +1,8 @@
+{
+  String[] names=model._names;
+  summary.model_algorithm=model.getClass().toString();
+  summary.state=((Job)model.job()).getState();
+  summary.model_category=model.getModelCategory();
+  summary.response_column_name=names[names.length - 1];
+  for (int i=0; i < names.length - 1; i++)   summary.input_column_names.add(names[i]);
+}

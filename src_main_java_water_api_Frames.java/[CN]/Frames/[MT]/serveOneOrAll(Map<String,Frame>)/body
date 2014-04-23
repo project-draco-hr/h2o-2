@@ -1,0 +1,20 @@
+{
+  Pair<Map<String,Model>,Map<String,Set<String>>> models_info=fetchModels();
+  Map<String,Model> all_models=models_info.getFirst();
+  Map<String,Set<String>> all_models_cols=models_info.getSecond();
+  Map<String,FrameSummary> frameSummaries=Frames.generateFrameSummaries(null,framesMap,find_compatible_models,all_models,all_models_cols);
+  Map resultsMap=new LinkedHashMap();
+  resultsMap.put("frames",frameSummaries);
+  if (this.find_compatible_models) {
+    Set<String> all_referenced_models=new TreeSet<String>();
+    for (    Map.Entry<String,FrameSummary> entry : frameSummaries.entrySet()) {
+      FrameSummary summary=entry.getValue();
+      all_referenced_models.addAll(summary.compatible_models);
+    }
+    Map<String,ModelSummary> modelSummaries=Models.generateModelSummaries(all_referenced_models,all_models,false,null,null);
+    resultsMap.put("models",modelSummaries);
+  }
+  String json=gson.toJson(resultsMap);
+  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  return Response.done(result);
+}

@@ -1,6 +1,7 @@
-def glm_R_and_compare(self, csvPathname, family, formula, y, header=False, h2oResults=None):
+def glm_R_and_compare(self, csvPathname, family, formula, y, h2oResults=None):
     df = ro.DataFrame.from_csvfile(csvPathname, header=False)
     cn = ro.r.colnames(df)
+    print df
     fit = ro.r.glm(formula=ro.r(formula), data=df, family=ro.r((family + '(link="logit")')))
     gsummary = ro.r.summary(fit)
     coef = ro.r.coef(fit)
@@ -31,7 +32,10 @@ def glm_R_and_compare(self, csvPathname, family, formula, y, header=False, h2oRe
     gsummaryIndexDesc = ['call', 'terms', 'family', 'deviance', 'aic', 'contrasts', 'df.residual', 'null.deviance', 'df.null', 'iter', 'deviance.resid', 'coefficients', 'aliased', 'dispersion', 'df', 'cov.unscaled', 'cov.scaled']
     whatIwant = ['family', 'deviance', 'aic', 'df.residual', 'null.deviance', 'df.null', 'iter']
     for (i, v) in enumerate(gsummary):
-        d = gsummaryIndexDesc[i]
-        if (d in whatIwant):
-            print ('%s %s %15s %s' % ('R gsummary', i, (d + ':\t'), gsummary[i][0]))
+        if (i >= len(gsummaryIndexDesc)):
+            print 'gsummary entry unexpected'
+        else:
+            d = gsummaryIndexDesc[i]
+            if (d in whatIwant):
+                print ('%s %s %15s %s' % ('R gsummary', i, (d + ':\t'), gsummary[i][0]))
     return (warningsR, cListR, interceptR)

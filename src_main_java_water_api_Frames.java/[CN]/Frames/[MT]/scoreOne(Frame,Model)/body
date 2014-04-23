@@ -1,0 +1,33 @@
+{
+  Frame input=frame;
+  long before=System.currentTimeMillis();
+  Frame predictions=score_model.score(frame,true);
+  long after=System.currentTimeMillis();
+  ConfusionMatrix cm=new ConfusionMatrix();
+  AUC auc=null;
+  HitRatio hr=null;
+  double error=0.0d;
+  if (score_model.isClassifier()) {
+    auc=new AUC();
+    error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,auc,hr);
+  }
+ else {
+    error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,null,null);
+  }
+  Map metrics=new LinkedHashMap();
+  metrics.put("model",score_model._key.toString());
+  metrics.put("frame",frame._key.toString());
+  metrics.put("model_category",score_model.getModelCategory());
+  metrics.put("duration_in_ms",after - before);
+  metrics.put("error",error);
+  if (score_model.isClassifier()) {
+    metrics.put("cm",cm.toJSON());
+    metrics.put("auc",auc.toJSON());
+    metrics.put("hr",hr);
+  }
+  Map resultsMap=new LinkedHashMap();
+  resultsMap.put("metrics",metrics);
+  String json=gson.toJson(resultsMap);
+  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  return Response.done(result);
+}

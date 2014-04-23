@@ -1,0 +1,12 @@
+{
+  if (_memary == null || _memary.length == 0)   return "[]";
+  int iMax=_memary.length - 1;
+  StringBuilder sb=new StringBuilder();
+  sb.append('[');
+  for (int i=0; ; i++) {
+    sb.append(String.valueOf(_memary[i]));
+    if (_memary[i] != null)     sb.append(" (").append(PrettyPrint.msecs(_memary[i].runtime(),false)).append(')');
+    if (i == iMax)     return sb.append(']').toString();
+    sb.append(", ");
+  }
+}
