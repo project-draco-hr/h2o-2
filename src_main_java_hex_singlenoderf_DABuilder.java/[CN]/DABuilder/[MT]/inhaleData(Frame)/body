@@ -8,13 +8,13 @@
   final int[] modelDataMap=colMap(fr._names,rfmodel._names);
   final int totalRows=getRowCount(fr);
   final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams._seed,_drf.drfParams._binLimit,_drf.drfParams._classWt);
-  checkAndLimitFeatureUsedPerSplit(dapt);
+  checkAndLimitFeatureUsedPerSplit();
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   for (int i=0; i < fr.anyVec().nChunks(); ++i) {
-    dataInhaleJobs.add(loadChunkAction(dapt,fr,i,modelDataMap,totalRows,_isByteCol));
+    dataInhaleJobs.add(loadChunkAction(dapt,fr,i,_isByteCol));
   }
   ForkJoinTask.invokeAll(dataInhaleJobs);
   dapt.shrink();
-  Log.debug(Log.Tag.Sys.RANDF,"Inhale done in " + t_inhale);
+  Log.info(Log.Tag.Sys.RANDF,"Inhale done in " + t_inhale);
   return dapt;
 }
