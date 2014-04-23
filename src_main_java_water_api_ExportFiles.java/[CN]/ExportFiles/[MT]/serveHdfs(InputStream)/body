@@ -2,11 +2,9 @@
   if (isBareS3NBucketWithoutTrailingSlash(path)) {
     path+="/";
   }
-  ArrayList<String> succ=new ArrayList<String>();
-  ArrayList<String> fail=new ArrayList<String>();
   Path p=new Path(path);
-  PersistHdfs.addFolder2(p,succ,fail);
   org.apache.hadoop.fs.FileSystem fs=org.apache.hadoop.fs.FileSystem.get(p.toUri(),PersistHdfs.CONF);
+  if (!force && fs.exists(p))   throw new IllegalArgumentException("File " + path + " already exists.");
   fs.mkdirs(p.getParent());
   FSDataOutputStream s=fs.create(p);
   byte[] buffer=new byte[1024];
@@ -18,6 +16,6 @@
   }
   finally {
     s.close();
-    Log.info("Key '" + src_key.toString() + "' was written to "+ path.toString());
+    Log.info("Key '" + src_key.toString() + "' was written to "+ path.toString()+ ".");
   }
 }
