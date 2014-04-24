@@ -72,6 +72,7 @@
  while (dinfo._adaptedFrame.lastVec().domain().length < 3);
                           DeepLearningMLPReference ref=new DeepLearningMLPReference();
                           ref.init(activation,Utils.getDeterRNG(seed),holdout_ratio,hidden);
+                          p.best_model_key=Key.make("best_DLIris.hex");
                           p.seed=seed;
                           p.hidden=new int[]{hidden};
                           p.adaptive_rate=false;
@@ -174,6 +175,7 @@
                           compareVal(trainErr,myTrainErr,abseps,releps);
                           compareVal(testErr,myTestErr,abseps,releps);
                           Log.info("Scoring: PASS");
+                          if (p.best_model_key != null)                           UKV.remove(p.best_model_key);
                           mymodel.delete();
                           _train.delete();
                           _test.delete();
