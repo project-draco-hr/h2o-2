@@ -2,5 +2,7 @@
   summarizeModelCommonFields(summary,model);
   summary.model_algorithm="GBM";
   JsonObject all_params=((GBM)model.get_params()).toJSON();
-  summary.parameters=whitelistJsonObject(all_params,GBM_whitelist);
+  summary.critical_parameters=whitelistJsonObject(all_params,GBM_critical_params);
+  summary.secondary_parameters=whitelistJsonObject(all_params,GBM_secondary_params);
+  summary.expert_parameters=whitelistJsonObject(all_params,GBM_expert_params);
 }
