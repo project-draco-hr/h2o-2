@@ -8,7 +8,7 @@ def test_c9_GLM_airlines_hdfs(self):
         elapsed = (time.time() - start)
         print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
-        params = {'lambda': 0.0001, 'alpha': 0.5, 'max_iter': 30, 'n_folds': 3, 'family': 'binomial', 'destination_key': 'GLMKEY', 'response': response, 'ignored_cols_by_name': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', }
+        params = {'lambda': 0.0001, 'alpha': 0.5, 'max_iter': 30, 'n_folds': 3, 'family': 'binomial', 'destination_key': 'GLMKEY', 'response': response, 'ignored_cols': 'CRSDepTime,CRSArrTime,ActualElapsedTime,CRSElapsedTime,AirTime,ArrDelay,DepDelay,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,NASDelay,SecurityDelay,LateAircraftDelay,IsArrDelayed', }
         kwargs = params.copy()
         timeoutSecs = 1800
         start = time.time()
