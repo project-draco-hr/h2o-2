@@ -1,0 +1,19 @@
+{
+  boolean featureAllowed=false;
+  try {
+    if (treeStats.numTrees <= 10) {
+      featureAllowed=true;
+    }
+ else {
+      if (getTreeModelType() == TreeModelType.GBM) {
+        H2O.licenseManager.isFeatureAllowed(LicenseManager.FEATURE_GBM_SCORING);
+      }
+ else       if (getTreeModelType() == TreeModelType.DRF) {
+        H2O.licenseManager.isFeatureAllowed(LicenseManager.FEATURE_RF_SCORING);
+      }
+    }
+  }
+ catch (  Exception xe) {
+  }
+  return featureAllowed;
+}

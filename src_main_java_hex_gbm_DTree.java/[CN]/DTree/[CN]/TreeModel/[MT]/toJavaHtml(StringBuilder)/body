@@ -1,7 +1,14 @@
 {
   if (treeStats == null)   return;
   sb.append("<br /><br /><div class=\"pull-right\"><a href=\"#\" onclick=\'$(\"#javaModel\").toggleClass(\"hide\");\'" + "class=\'btn btn-inverse btn-mini\'>Java Model</a></div><br /><div class=\"hide\" id=\"javaModel\">" + "<pre style=\"overflow-y:scroll;\"><code class=\"language-java\">");
-  if (ntrees() * treeStats.meanLeaves > 5000) {
+  boolean featureAllowed=isFeatureAllowed();
+  if (!featureAllowed) {
+    sb.append("You have requested a premium feature (> 10 trees) and your H2O software is unlicensed.\n");
+    sb.append("\n");
+    sb.append("Please email support@0xdata.com to request a trial license.\n");
+    sb.append("Then restart H2O with the -license option.\n");
+  }
+ else   if (ntrees() * treeStats.meanLeaves > 5000) {
     String modelName=JCodeGen.toJavaId(_key.toString());
     sb.append("/* Java code is too large to display, download it directly.\n");
     sb.append("   To obtain the code please invoke in your terminal:\n");
