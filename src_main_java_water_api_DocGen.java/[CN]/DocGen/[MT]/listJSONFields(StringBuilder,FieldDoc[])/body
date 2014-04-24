@@ -1,7 +1,7 @@
 {
   listHead(sb);
   for (  FieldDoc doc : docs)   if (doc.isJSON()) {
-    listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),doc._help + ".  " + doc.version(),0);
+    listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),doc._help + ".  " + doc.version()+ ", "+ doc.importance().title,0);
     Class c=doc._clazz.getComponentType();
     if (c == null)     c=doc._clazz;
     if (Iced.class.isAssignableFrom(c)) {

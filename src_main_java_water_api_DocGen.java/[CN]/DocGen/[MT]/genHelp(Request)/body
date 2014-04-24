@@ -21,6 +21,7 @@
       Argument arg=doc.arg(R);
       String help=doc._help;
       boolean required=doc._required;
+      ParamImportance importance=doc.importance();
       String[] errors=null;
       if (arg != null) {
         String description=arg.queryDescription();
@@ -28,7 +29,7 @@
         required|=arg._required;
         errors=arg.errors();
       }
-      listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName(),help + ".  " + doc.version(),0);
+      listBullet(sb,bold(doc._name) + ", a " + doc._clazz.getSimpleName()+ ", <i>"+ importance.title+ "</i>",help + ".  " + doc.version(),0);
       if (errors != null || required) {
         paragraph(sb,"");
         paragraph(sb,bold("Possible JSON error field returns:"));
