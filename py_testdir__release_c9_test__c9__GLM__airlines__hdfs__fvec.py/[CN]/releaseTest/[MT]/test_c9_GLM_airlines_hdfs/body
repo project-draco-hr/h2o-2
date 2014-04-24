@@ -12,7 +12,7 @@ def test_c9_GLM_airlines_hdfs(self):
         kwargs = params.copy()
         timeoutSecs = 1800
         start = time.time()
-        GLMResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'GLM training completed in', elapsed, 'seconds. On dataset: ', csvFilename
         h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
@@ -34,7 +34,7 @@ def test_c9_GLM_airlines_hdfs(self):
         predictKey = 'Predict.hex'
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key='airlines_all.hex', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='airlines_all.hex', vactual=('C' + str((y + 1))), predict=predictKey, vpredict='predict')
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='airlines_all.hex', vactual=response, predict=predictKey, vpredict='predict')
         cm = predictCMResult['cm']
         pctWrong = h2o_gbm.pp_cm_summary(cm)
         print '\nTest\n==========\n'
