@@ -4,7 +4,7 @@
     float[] samples=new float[(int)(response.max() - response.min() + 1)];
     for (int i=0; i < samples.length; ++i)     samples[i]=(float)67.0;
     Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,false,false,false);
-    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0]);
+    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0],seed);
     model.bin_limit=bin_limit;
     if (mtry == -1) {
       model.mtry=(int)Math.floor(Math.sqrt(source.numCols()));
@@ -17,6 +17,7 @@
     model.total_trees=num_trees;
     model.strata_samples=samples;
     model.depth=max_depth;
+    model.oobee=oobee;
     return model;
   }
   finally {
