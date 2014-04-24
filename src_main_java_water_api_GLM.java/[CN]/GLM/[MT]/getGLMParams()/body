@@ -18,7 +18,7 @@
   if (res._link._link == Link.familyDefault && res._link._link != Link.tweedie)   res._link=new LinkIced(res._family._family.defaultLink);
   res._maxIter=_maxIter.value();
   res._betaEps=_betaEps.value();
-  if (_caseWeight.valid())   res._caseWeight=_caseWeight.value();
+  if (_prior.valid())   res._caseWeight=_prior.value();
   if (_case.valid())   res._caseVal=_case.value();
   res._caseMode=_caseMode.valid() ? _caseMode.value() : CaseMode.none;
   return res;

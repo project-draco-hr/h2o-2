@@ -1,10 +1,46 @@
 {
-  Log.info("running GLM on " + data._ary._key + " with "+ data.expandedSz()+ " predictors in total, "+ (data.expandedSz() - data._dense)+ " of which are categoricals. Largest categorical has "+ data.largestCatSz()+ " levels");
+  Log.info("running GLM on " + data._ary._key + " with "+ data.expandedSz()+ " predictors in total, "+ (data.expandedSz() - data._dense)+ " of which are categoricals. Largest categorical has "+ data.largestCatSz()+ " levels, prior = "+ prior);
   ArrayList<String> warns=new ArrayList<String>();
   long t1=System.currentTimeMillis();
   int ycolId=data._modelDataMap[data._response];
   Column ycol=data._ary._cols[ycolId];
   params.checkResponseCol(ycol,warns);
+  final double ymu;
+  if (params._caseMode != CaseMode.none) {
+    final CaseMode caseMode=params._caseMode;
+    final double caseVal=params._caseVal;
+    ymu=new RowFunc<YMUVal>(){
+      @Override public YMUVal newResult(){
+        return new YMUVal();
+      }
+      @Override public void processRow(      YMUVal res,      double[] x,      int[] indexes){
+        double y=x[0];
+        if (caseMode != CaseMode.none)         y=caseMode.isCase(y,caseVal) ? 1 : 0;
+        res.add(y);
+      }
+      @Override public YMUVal reduce(      YMUVal x,      YMUVal y){
+        return x.add(y);
+      }
+    }
+.apply(null,new DataFrame(data._ary,new int[]{ycolId},null,false,false)).val();
+  }
+ else   ymu=ycol._mean;
+  final double iceptFix;
+  if (!Double.isNaN(prior) && prior != ymu) {
+    double ratio=prior / ymu;
+    double pi0=1, pi1=1;
+    if (ratio > 1) {
+      pi1=1.0 / ratio;
+    }
+ else     if (ratio < 1) {
+      pi0=ratio;
+    }
+    iceptFix=Math.log(pi0 / pi1);
+  }
+ else {
+    iceptFix=0;
+    prior=ycol._mean;
+  }
   GramMatrixFunc gramF=new GramMatrixFunc(data,params,oldBeta);
   double[] newBeta=MemoryManager.malloc8d(data.expandedSz());
   boolean converged=true;
@@ -15,7 +51,7 @@
   long t=System.currentTimeMillis();
   solve(lsm,gram,newBeta,warns);
   lsmSolveTime+=System.currentTimeMillis() - t;
-  GLMModel currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,null);
+  GLMModel currentModel=new GLMModel(Status.ComputingValidation,0.0f,resKey,data,prior,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,null);
   currentModel.delete_and_lock(job.self());
   if (params._family._family != Family.gaussian)   do {
     if (oldBeta == null)     oldBeta=MemoryManager.malloc8d(data.expandedSz());
@@ -33,7 +69,9 @@
     double betaDiff=betaDiff(oldBeta,newBeta);
     converged=(betaDiff < params._betaEps);
     float progress=Math.max((float)iter / params._maxIter,Math.min((float)(params._betaEps / betaDiff),1.0f));
-    currentModel=new GLMModel(Status.ComputingModel,progress,resKey,data,data.denormalizeBeta(newBeta),newBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,warnings);
+    double[] adjustedBeta=newBeta.clone();
+    adjustedBeta[adjustedBeta.length - 1]+=iceptFix;
+    currentModel=new GLMModel(Status.ComputingModel,progress,resKey,data,prior,data.denormalizeBeta(adjustedBeta),adjustedBeta,params,lsm,gram._nobs,newBeta.length,converged,iter,System.currentTimeMillis() - t1,warnings);
     currentModel._lsmSolveTime=lsmSolveTime;
     currentModel.store(job.self());
   }

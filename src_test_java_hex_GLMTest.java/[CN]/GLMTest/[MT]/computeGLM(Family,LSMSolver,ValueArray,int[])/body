@@ -14,6 +14,6 @@ glmp=new GLMParams(family,family.defaultLink,family.tweedieVariancePower,family.
 glmp._link=new LinkIced(glmp._family._family.defaultLink,family.defaultLink.tweedieLinkPower);
 glmp._betaEps=0.000001;
 glmp._maxIter=100;
-GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,0,true).get();
+GLMModel m=DGLM.startGLMJob(DGLM.getData(va,cols,null,true),lsms,glmp,null,Double.NaN,0,true).get();
 return m.toJson();
 }
