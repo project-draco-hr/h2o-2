@@ -1,0 +1,9 @@
+{
+  JsonObject filtered=new JsonObject();
+  Set<Map.Entry<String,JsonElement>> entries=unfiltered.entrySet();
+  for (  Map.Entry<String,JsonElement> entry : entries) {
+    String key=entry.getKey();
+    if (whitelist.contains(key))     filtered.add(key,entry.getValue());
+  }
+  return gson.fromJson(gson.toJson(filtered),Map.class);
+}

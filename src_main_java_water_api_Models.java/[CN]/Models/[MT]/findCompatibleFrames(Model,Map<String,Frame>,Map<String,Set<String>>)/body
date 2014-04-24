@@ -1,0 +1,20 @@
+{
+  Map<String,Frame> compatible_frames=new TreeMap<String,Frame>();
+  Set<String> model_column_names=new HashSet(Arrays.asList(model._names));
+  for (  Map.Entry<String,Set<String>> entry : all_frames_cols.entrySet()) {
+    Set<String> frame_cols=entry.getValue();
+    if (frame_cols.containsAll(model_column_names)) {
+      try {
+        Frame frame=all_frames.get(entry.getKey());
+        Frame[] outputs=model.adapt(frame,false);
+        Frame adapted=outputs[0];
+        Frame trash=outputs[1];
+        trash.delete();
+        compatible_frames.put(entry.getKey(),frame);
+      }
+ catch (      Exception e) {
+      }
+    }
+  }
+  return compatible_frames;
+}

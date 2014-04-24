@@ -1,0 +1,6 @@
+{
+  summarizeModelCommonFields(summary,model);
+  summary.model_algorithm="GBM";
+  JsonObject all_params=((GBM)model.get_params()).toJSON();
+  summary.parameters=whitelistJsonObject(all_params,GBM_whitelist);
+}

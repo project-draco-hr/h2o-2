@@ -1,0 +1,12 @@
+{
+  String s;
+  try {
+    s=readFile(fileName);
+  }
+ catch (  Exception e) {
+    Log.err("readFile failed",e);
+    return Result.FILE_ERROR;
+  }
+  _license=s;
+  return Result.OK;
+}
