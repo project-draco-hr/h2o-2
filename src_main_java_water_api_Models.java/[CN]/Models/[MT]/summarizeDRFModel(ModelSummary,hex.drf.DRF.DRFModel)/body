@@ -2,5 +2,7 @@
   summarizeModelCommonFields(summary,model);
   summary.model_algorithm="DRF";
   JsonObject all_params=((DRF)model.get_params()).toJSON();
-  summary.parameters=whitelistJsonObject(all_params,DRF_whitelist);
+  summary.critical_parameters=whitelistJsonObject(all_params,DRF_critical_params);
+  summary.secondary_parameters=whitelistJsonObject(all_params,DRF_secondary_params);
+  summary.expert_parameters=whitelistJsonObject(all_params,DRF_expert_params);
 }
