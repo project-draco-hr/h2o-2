@@ -1,0 +1,9 @@
+{
+  _dest.append("if (row.getColumnClass(").append(_cols[t._column]._name).append(") <= ");
+  _dest.append(Integer.toString(t._split)).append(")\n");
+  _dest.incrementIndent();
+  t._l.print(this);
+  _dest.decrementIndent().append("else\n").incrementIndent();
+  t._r.print(this);
+  _dest.decrementIndent();
+}

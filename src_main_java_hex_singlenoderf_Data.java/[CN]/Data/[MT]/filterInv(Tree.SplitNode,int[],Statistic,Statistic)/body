@@ -1,0 +1,24 @@
+{
+  final Row row=new Row();
+  int l=start(), r=end() - 1;
+  while (l <= r) {
+    int permIdx=row._index=permutation[l];
+    boolean putToLeft=true;
+    if (node.canDecideAbout(row)) {
+      putToLeft=node.isIn(row);
+    }
+ else {
+      putToLeft=_rng.nextBoolean();
+    }
+    if (putToLeft) {
+      ls.addQ(row);
+      ++l;
+    }
+ else {
+      rs.addQ(row);
+      permutation[l]=permutation[r];
+      permutation[r--]=permIdx;
+    }
+  }
+  return l;
+}

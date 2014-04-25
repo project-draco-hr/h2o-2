@@ -1,0 +1,13 @@
+{
+  short[] in=complement;
+  int size=(int)(rows() * bagSizePct);
+  Random r=Utils.getRNG(seed());
+  for (int i=0; i < size; ++i)   in[permute(r.nextInt(rows()))]++;
+  int[] sample=MemoryManager.malloc4(size);
+  for (int i=0, j=0; i < sample.length; ) {
+    while (in[j] == 0)     j++;
+    for (int k=0; k < in[j]; k++)     sample[i++]=j;
+    j++;
+  }
+  return new Subset(this,sample,0,sample.length);
+}
