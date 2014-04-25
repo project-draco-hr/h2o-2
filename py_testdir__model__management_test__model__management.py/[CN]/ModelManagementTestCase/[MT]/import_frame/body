@@ -1,5 +1,4 @@
-@classmethod
-def import_frame(cls, target_key, bucket, csvFilename, csvPathname, expected_rows, expected_cols):
+def import_frame(self, target_key, bucket, csvFilename, csvPathname, expected_rows, expected_cols):
     path = ((csvPathname + '/') + csvFilename)
     parseResult = h2i.import_parse(bucket=bucket, path=path, hex_key=target_key, schema='put')
     destination_key = parseResult['destination_key']
