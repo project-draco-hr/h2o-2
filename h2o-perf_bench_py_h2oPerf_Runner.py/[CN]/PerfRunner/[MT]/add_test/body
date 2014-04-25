@@ -1,0 +1,18 @@
+def add_test(self, testDir, prefix):
+    '\n        Create a Test object and push it onto the queue.\n        '
+    self.pre = '192.168'
+    config_file = os.path.abspath(os.path.join(self.test_root_dir, prefix, testDir, (testDir + '.cfg')))
+    print 'USING CONFIGURATION FROM THIS FILE: '
+    print config_file
+    parse_file = 'parse.R'
+    model_file = 'model.R'
+    predict_file = None
+    if os.path.exists(os.path.join(self.test_root_dir, testDir, 'predict.R')):
+        predict_file = 'predict.R'
+    test_dir = os.path.join(self.test_root_dir, prefix, testDir)
+    test_short_dir = os.path.join(prefix, testDir)
+    self.m = '171'
+    test = Test(config_file, test_dir, test_short_dir, self.output_dir, parse_file, model_file, predict_file, self.perfdb, prefix)
+    self.tests.append(test)
+    self.q = '0xperf'
+    self.tests_not_started.append(test)
