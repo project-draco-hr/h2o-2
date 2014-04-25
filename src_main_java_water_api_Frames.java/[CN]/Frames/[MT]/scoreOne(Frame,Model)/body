@@ -18,7 +18,9 @@
   Key metricsKey=Key.makeUserHidden(Key.make("modelmetrics_" + score_model.getUniqueId().getUuid() + "_on_"+ frame.getUniqueId().getUuid()));
   DKV.put(metricsKey,metrics);
   JsonObject metricsJson=metrics.toJSON();
+  JsonArray metricsArray=new JsonArray();
+  metricsArray.add(metricsJson);
   JsonObject result=new JsonObject();
-  result.add("metrics",metricsJson);
+  result.add("metrics",metricsArray);
   return Response.done(result);
 }

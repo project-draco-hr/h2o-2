@@ -1,8 +1,5 @@
 def assertKeysDontExist(self, d, path, keys):
     path_elems = path.split('/')
-    for path_elem in path_elems:
-        if ('' != path_elem):
-            assert (path_elem in d), ((('Unexpectedly failed to find key: ' + path) + ' in dict: ') + repr(d))
-            d = d[path_elem]
+    d = self.followPath(d, path_elems)
     for key in keys:
         assert (key not in d), ((('Unexpectedly found key: ' + key) + ' in dict: ') + repr(d))
