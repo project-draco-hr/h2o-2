@@ -2,6 +2,7 @@
   DocGen.HTML.title(sb,title);
   sb.append("<div class=\"alert\">").append("Actions: ");
   sb.append(Inspect2.link("Inspect training data (" + _dataKey.toString() + ")",_dataKey)).append(", ");
+  if (this.test_frame != null)   sb.append(Inspect2.link("Inspect testing data (" + testKey.toString() + ")",testKey)).append(", ");
   sb.append(Predict.link(_key,"Score on dataset"));
   if (this.size() > 0 && this.size() < total_trees) {
     sb.append(", ");
@@ -28,7 +29,7 @@
     DocGen.HTML.arrayHead(sb);
     sb.append("<tr style='min-width:60px'><th>Trees</th>");
     int last=this.size() - 1;
-    for (int i=last; i >= 0; i--)     sb.append("<td style='min-width:60px'>").append(i).append("</td>");
+    for (int i=last; i >= 0; i--)     sb.append("<td style='min-width:60px'>").append(i + 1).append("</td>");
     sb.append("</tr>");
     sb.append("<tr><th class='warning'>MSE</th>");
     for (int i=last; i >= 0; i--)     sb.append((!(Double.isNaN(errs[i]) || errs[i] <= 0.f)) ? String.format("<td style='min-width:60px'>%5.3f</td>",errs[i]) : "<td style='min-width:60px'>---</td>");

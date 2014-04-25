@@ -4,7 +4,7 @@
     logStart();
     if (model == null)     model=UKV.get(dest());
     model.write_lock(self());
-    drfParams=DRFParams.create(model.fr.find(model.response),model.total_trees,model.depth,(int)model.fr.numRows(),model.bin_limit,Tree.StatType.ENTROPY,seed,parallel,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,1,_exclusiveSplitLimit,_useNonLocalData);
+    drfParams=DRFParams.create(model.fr.find(model.response),model.total_trees,model.depth,(int)model.fr.numRows(),model.bin_limit,model.statType,seed,parallel,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,1,_exclusiveSplitLimit,_useNonLocalData);
     DRFTask tsk=new DRFTask();
     tsk._job=Job.findJob(self());
     tsk._params=drfParams;

@@ -6,17 +6,16 @@
   m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
   m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
   double f=(double)m.t_keys.length / (double)m.total_trees;
-  if (f > 0 & !m.p) {
+  if (m.t_keys.length == 1) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
-    cmTask.doAll(m.fr);
+    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame);
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
-    m.p=true;
   }
   if (f == 1.0) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
-    cmTask.doAll(m.fr);
+    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame);
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
   }
   if (!cm_update) {
