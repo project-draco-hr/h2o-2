@@ -1,0 +1,7 @@
+{
+  Key k=Key.make();
+  _createdKeys[i]=(_createdKeys[i] == null) ? new Key[1] : Arrays.copyOf(_createdKeys[i],_createdKeys[i].length + 1);
+  _createdKeys[i][_createdKeys[i].length - 1]=k;
+  Value v=new Value(k,bits);
+  DKV.put(k,v);
+}

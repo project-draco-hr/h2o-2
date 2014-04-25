@@ -1,0 +1,24 @@
+{
+  int nchks=fr.anyVec().nChunks();
+  long localBytes=0l;
+  for (int i=0; i < nchks; ++i) {
+    Key k=fr.anyVec().chunkKey(i);
+    if (k.home()) {
+      localBytes+=fr.anyVec().chunkForChunkIdx(i).byteSize();
+    }
+  }
+  long memForNonLocal=fr.byteSize() - localBytes;
+  for (int i=0; i < H2O.CLOUD._memary.length; i++) {
+    HeartBeat hb=H2O.CLOUD._memary[i]._heartbeat;
+    long nodeFreeMemory=(long)((hb.get_max_mem() - (hb.get_tot_mem() - hb.get_free_mem())) * OVERHEAD_MAGIC);
+    Log.debug(Log.Tag.Sys.RANDF,i + ": computed available mem: " + PrettyPrint.bytes(nodeFreeMemory));
+    Log.debug(Log.Tag.Sys.RANDF,i + ": remote chunks require: " + PrettyPrint.bytes(memForNonLocal));
+    if (nodeFreeMemory - memForNonLocal <= 0) {
+      cai.node=H2O.CLOUD._memary[i];
+      cai.availableMemory=nodeFreeMemory;
+      cai.requiredMemory=memForNonLocal;
+      return false;
+    }
+  }
+  return true;
+}

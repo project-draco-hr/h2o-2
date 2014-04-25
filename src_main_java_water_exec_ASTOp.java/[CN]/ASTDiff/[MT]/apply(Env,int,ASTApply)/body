@@ -1,0 +1,30 @@
+{
+  final int diffs=(int)env.popDbl();
+  if (diffs < 0)   throw new IllegalArgumentException("differences must be an integer >= 1");
+  final int lag=(int)env.popDbl();
+  if (lag < 0)   throw new IllegalArgumentException("lag must be an integer >= 1");
+  Frame fr=env.popAry();
+  String skey=env.key();
+  if (fr.vecs().length != 1 || fr.vecs()[0].isEnum())   throw new IllegalArgumentException("diff takes a single numeric column vector");
+  Frame fr2=new MRTask2(){
+    @Override public void map(    Chunk chk,    NewChunk nchk){
+      int rstart=(int)(diffs * lag - chk._start);
+      if (rstart > chk._len)       return;
+      rstart=Math.max(0,rstart);
+      for (int r=rstart; r < chk._len; r++) {
+        double x=chk.at0(r);
+        long row=chk._start + r;
+        for (int i=1; i <= diffs; i++) {
+          double x_lag=chk.at_slow(row - i * lag);
+          double coef=ArithmeticUtils.binomialCoefficient(diffs,i);
+          x+=(i % 2 == 0) ? coef * x_lag : -coef * x_lag;
+        }
+        nchk.addNum(x);
+      }
+    }
+  }
+.doAll(1,fr).outputFrame(fr.names(),fr.domains());
+  env.subRef(fr,skey);
+  env.pop();
+  env.push(fr2);
+}

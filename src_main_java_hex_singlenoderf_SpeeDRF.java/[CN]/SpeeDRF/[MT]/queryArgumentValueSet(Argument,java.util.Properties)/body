@@ -1,0 +1,24 @@
+{
+  super.queryArgumentValueSet(arg,inputArgs);
+  if (arg._name.equals("classification")) {
+    arg._hideInQuery=true;
+  }
+  if (arg._name.equals("class_weights")) {
+    if (source == null || response == null) {
+      arg.disable("Requires source and response to be specified.");
+    }
+  }
+  if (arg._name.equals("sampling_strategy")) {
+    arg.setRefreshOnChange();
+  }
+  if (arg._name.equals("strata_samples")) {
+    if (sampling_strategy != Sampling.Strategy.STRATIFIED_LOCAL) {
+      arg.disable("No Strata for Random sampling.");
+    }
+  }
+  if (arg._name.equals("class_weights")) {
+    if (source == null || response == null) {
+      arg.disable("Requires a dataset and response.");
+    }
+  }
+}

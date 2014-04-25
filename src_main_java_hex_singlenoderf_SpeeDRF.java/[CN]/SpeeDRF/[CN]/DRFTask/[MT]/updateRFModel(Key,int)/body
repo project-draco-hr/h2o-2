@@ -1,0 +1,12 @@
+{
+  final int idx=H2O.SELF.index();
+  new TAtomic<SpeeDRFModel>(){
+    @Override public SpeeDRFModel atomic(    SpeeDRFModel old){
+      if (old == null)       return null;
+      SpeeDRFModel newModel=(SpeeDRFModel)old.clone();
+      newModel.node_split_features[idx]=numSplitFeatures;
+      return newModel;
+    }
+  }
+.invoke(modelKey);
+}

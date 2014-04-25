@@ -1,0 +1,17 @@
+{
+  if (classWt != null)   for (int i=0; i < votes.length - 1; i++)   votes[i]=(int)(votes[i] * classWt[i]);
+  int result=0;
+  int tied=1;
+  for (int i=1; i < votes.length - 1; i++)   if (votes[i] > votes[result]) {
+    result=i;
+    tied=1;
+  }
+ else   if (votes[i] == votes[result]) {
+    tied++;
+  }
+  if (tied == 1)   return (short)result;
+  int j=rand == null ? 0 : rand.nextInt(tied);
+  int k=0;
+  for (int i=0; i < votes.length - 1; i++)   if (votes[i] == votes[result] && (k++ >= j))   return (short)i;
+  throw H2O.unimpl();
+}
