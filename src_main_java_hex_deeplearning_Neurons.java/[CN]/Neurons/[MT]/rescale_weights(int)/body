@@ -1,23 +1,2 @@
 {
-  if (_w instanceof DenseRowMatrix) {
-    final int cols=_previous._a.size();
-    final int idx=row * cols;
-    final double max_w2=params.max_w2;
-    double r2=Utils.sumSquares(_w.raw(),idx,idx + cols);
-    if (r2 > max_w2 * 2) {
-      final float scale=Utils.approxSqrt((float)(max_w2 / r2));
-      for (int c=0; c < cols; c++)       _w.raw()[idx + c]*=scale;
-    }
-  }
- else   if (_w instanceof DenseColMatrix) {
-    final int cols=_previous._a.size();
-    final double max_w2=params.max_w2;
-    double r2=0;
-    for (int col=0; col < cols; ++col)     r2+=_w.get(row,col) * _w.get(row,col);
-    if (r2 > max_w2 * 2) {
-      final float scale=Utils.approxSqrt((float)(max_w2 / r2));
-      for (int col=0; col < cols; col++)       _w.set(row,col,_w.get(row,col) * scale);
-    }
-  }
- else   throw new UnsupportedOperationException("rescale weights for " + _w.getClass().getSimpleName() + " not yet implemented.");
 }

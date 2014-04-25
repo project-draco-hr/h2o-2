@@ -26,19 +26,16 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         submodels = GLMModel['submodels']
         lambdas = GLMModel['lambdas']
         best_lambda_idx = GLMModel['best_lambda_idx']
-        lambdaMax = lambdas[0]
-        print 'lambdaMax:', lambdaMax
-        if (1 == 0):
-            if (len(submodels) < 2):
-                raise Exception('Always should have a minimum of 2 submodels in GLM2 response', len(submodels))
-            if (len(lambdas) < 2):
-                raise Exception('Always should have a minimum of 2 lambdas in GLM2 response', len(submodels))
-            if (best_lambda_idx != 1):
-                raise Exception(('best_lamda_idx %s should point to the one lamda we specified? %s' % (best_lamda_idx, lamdas[1])))
-            if (lambdaMax <= lambdas[(-1)]):
-                raise Exception(("lambdaMax %s should always be < the lambda result %s we're checking" % (lambdaMax, lambdas[1])))
-        submodels0 = submodels[0]
-        submodels1 = submodels[(-1)]
+        print 'best_lambda_idx:', best_lambda_idx
+        lambda_max = GLMModel['lambda_max']
+        print 'lambda_max:', lambda_max
+        if ((1 == 0) and (lambda_max <= lambdas[best_lambda_idx])):
+            raise Exception(("lambda_max %s should always be > the lambda result %s we're checking" % (lambda_max, lambdas[best_lambda_idx])))
+        if ((best_lambda_idx >= len(lambdas)) or (best_lambda_idx < 0)):
+            raise Exception(('best_lambda_idx: %s should point to one of lambdas (which has len %s)' % (best_lambda_idx, len(lambdas))))
+        if ((best_lambda_idx >= len(submodels)) or (best_lambda_idx < 0)):
+            raise Exception(('best_lambda_idx: %s should point to one of submodels (which has len %s)' % (best_lambda_idx, len(submodels))))
+        submodels1 = submodels[best_lambda_idx]
         iterations = submodels1['iteration']
     else:
         iterations = GLMModel['iterations']
@@ -69,10 +66,8 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
                 raise Exception((str(len(xval_models)) + ' cross validation models returned. Default should be 10'))
     if h2o.beta_features:
         print 'GLMModel/validations'
-        validations['avg_err'] = h2o_util.cleanseInfNan(validations['avg_err'])
         validations['null_deviance'] = h2o_util.cleanseInfNan(validations['null_deviance'])
         validations['residual_deviance'] = h2o_util.cleanseInfNan(validations['residual_deviance'])
-        print ('%15s %s' % ('avg_err:\t', validations['avg_err']))
         print ('%15s %s' % ('null_deviance:\t', validations['null_deviance']))
         print ('%15s %s' % ('residual_deviance:\t', validations['residual_deviance']))
     else:
@@ -86,11 +81,20 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if (family == 'binomial'):
         print ('%15s %s' % ('auc:\t', validations['auc']))
         if h2o.beta_features:
-            print ('%15s %s' % ('best_threshold:\t', validations['best_threshold']))
-            print "We're just going to print the middle '_cms' ..that must be threshold 0.5?. this isn't above best_threshold"
-            cms = glm['glm_model']['submodels'][0]['validation']['_cms']
-            mid = (len(cms) / 2)
-            cm = cms[mid]
+            best_threshold = validations['best_threshold']
+            thresholds = validations['thresholds']
+            print ('%15s %s' % ('best_threshold:\t', best_threshold))
+            best_index = None
+            for (i, t) in enumerate(thresholds):
+                if (t == best_threshold):
+                    best_index = i
+                    break
+            assert (best_index != None), ('%s %s' % (best_threshold, thresholds))
+            print ("Now printing the right 'best_threshold' %s from '_cms" % best_threshold)
+            submodels = glm['glm_model']['submodels']
+            cms = submodels[0]['validation']['_cms']
+            assert (best_index < len(cms)), ('%s %s' % (best_index, len(cms)))
+            cm = cms[best_index]
             print 'cm:', h2o.dump_json(cm['_arr'])
             predErr = cm['_predErr']
             classErr = cm['_classErr']

@@ -1,0 +1,26 @@
+{
+  Frame input=frame;
+  long before=System.currentTimeMillis();
+  Frame predictions=score_model.score(frame,true);
+  long after=System.currentTimeMillis();
+  ConfusionMatrix cm=new ConfusionMatrix();
+  AUC auc=null;
+  HitRatio hr=null;
+  double error=0.0d;
+  if (score_model.isClassifier()) {
+    auc=new AUC();
+    error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,auc,hr);
+  }
+ else {
+    error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,null,null);
+  }
+  ModelMetrics metrics=new ModelMetrics(score_model.getUniqueId(),score_model.getModelCategory(),frame.getUniqueId(),error,after - before,after,auc,cm);
+  Key metricsKey=Key.makeUserHidden(Key.make("modelmetrics_" + score_model.getUniqueId().getUuid() + "_on_"+ frame.getUniqueId().getUuid()));
+  DKV.put(metricsKey,metrics);
+  JsonObject metricsJson=metrics.toJSON();
+  JsonArray metricsArray=new JsonArray();
+  metricsArray.add(metricsJson);
+  JsonObject result=new JsonObject();
+  result.add("metrics",metricsArray);
+  return Response.done(result);
+}

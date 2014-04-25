@@ -56,6 +56,10 @@
                         p.delete();
                       }
                       final DeepLearningModel mymodel=UKV.get(dest);
+{
+                        StringBuilder sb=new StringBuilder();
+                        mymodel.generateHTML("test",sb);
+                      }
                       if (valid == null)                       valid=frame;
                       if (mymodel.isClassifier()) {
                         Frame pred=mymodel.score(valid);

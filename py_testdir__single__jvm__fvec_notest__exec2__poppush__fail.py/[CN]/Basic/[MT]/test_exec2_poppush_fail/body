@@ -1,0 +1,21 @@
+def test_exec2_poppush_fail(self):
+    bucket = 'smalldata'
+    csvPathname = 'iris/iris2.csv'
+    hexKey = 'i.hex'
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
+    exprList = []
+    while (len(exprList) != 20):
+        exprs = [random.choice(phrases) for j in range(random.randint(1, 2))]
+        functionFound = False
+        for e in exprs:
+            if ('function' in e):
+                functionFound = True
+            if (('mean2' in e) and (not functionFound)):
+                exprs = (['mean2=function(x){apply(x,1,sum)/nrow(x)};'] + exprs)
+        exprList.append(''.join(exprs))
+    exprList += 'r.hex-r.hex; mean2=function(x){apply(x,1,sum)/nrow(x)}; mean2(r.hex); r.hex[,ncol(r.hex)+1]=4;'
+    exprList += 'crunk=function(x){x+98};r.hex[,3]=4;'
+    for (resultKey, execExpr) in initList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=4)
+    for execExpr in exprList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)

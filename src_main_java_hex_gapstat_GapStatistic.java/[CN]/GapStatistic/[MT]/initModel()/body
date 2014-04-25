@@ -1,0 +1,13 @@
+{
+  try {
+    source.read_lock(self());
+    int ks=k_max;
+    double[] wks=new double[ks];
+    double[] wkbs=new double[ks];
+    double[] sk=new double[ks];
+    return new GapStatisticModel(destination_key,source._key,source,k_max,wks,wkbs,sk,k_max,b_max,0,0);
+  }
+  finally {
+    source.unlock(self());
+  }
+}

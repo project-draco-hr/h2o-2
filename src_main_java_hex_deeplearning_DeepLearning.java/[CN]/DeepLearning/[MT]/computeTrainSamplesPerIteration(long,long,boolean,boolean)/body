@@ -1,8 +1,2 @@
 {
-  long tspi=train_samples_per_iteration;
-  assert(tspi == 0 || tspi == -1 || tspi >= 1);
-  if (tspi == 0 || (!replicate_training_data && (tspi == -1 || tspi > numRows)) || (replicate_training_data && single_node_mode))   Log.info("Setting train_samples_per_iteration (" + tspi + ") to one epoch: #rows ("+ (tspi=numRows)+ ").");
- else   if (tspi == -1 || tspi > H2O.CLOUD.size() * numRows)   Log.info("Setting train_samples_per_iteration (" + tspi + ") to the largest possible number: #nodes x #rows ("+ (tspi=H2O.CLOUD.size() * numRows)+ ").");
-  assert(tspi != 0 && tspi != -1 && tspi >= 1);
-  return tspi;
 }

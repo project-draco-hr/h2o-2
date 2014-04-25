@@ -31,7 +31,9 @@ break;
 case GenGradient:
 lsm=new GeneralizedGradientSolver(_lambda.value(),_alpha.value());
 }
-GLMJob job=DGLM.startGLMJob(dest,data,lsm,glmParams,null,_xval.value(),true);
+Double prior=_prior.value();
+if (prior == null || prior == -1) prior=_prior.defaultValue();
+GLMJob job=DGLM.startGLMJob(dest,data,lsm,glmParams,null,prior,_xval.value(),true);
 JsonObject j=new JsonObject();
 j.addProperty(Constants.DEST_KEY,job.dest().toString());
 Response r=GLMProgressPage.redirect(j,job.self(),job.dest(),job.progressKey());

@@ -2,7 +2,16 @@ def test_GLM2_covtype_1(self):
     h2o.beta_features = True
     csvFilename = 'covtype.data'
     csvPathname = ('standard/' + csvFilename)
-    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=10)
+    hex_key = 'covtype.hex'
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, schema='local', timeoutSecs=10)
+    print 'Gratuitous use of frame splitting. result not used'
+    fs = h2o.nodes[0].frame_split(source=hex_key, ratios=0.75)
+    split0_key = fs['split_keys'][0]
+    split1_key = fs['split_keys'][1]
+    split0_row = fs['split_rows'][0]
+    split1_row = fs['split_rows'][1]
+    split0_ratio = fs['split_ratios'][0]
+    split1_ratio = fs['split_ratios'][1]
     x = ''
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
     max_iter = 8
