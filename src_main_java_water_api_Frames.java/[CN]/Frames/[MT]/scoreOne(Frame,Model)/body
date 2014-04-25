@@ -14,20 +14,11 @@
  else {
     error=score_model.calcError(input,input.vec(score_model.responseName()),predictions,predictions,"Prediction error:",true,20,cm,null,null);
   }
-  Map metrics=new LinkedHashMap();
-  metrics.put("model",score_model._key.toString());
-  metrics.put("frame",frame._key.toString());
-  metrics.put("model_category",score_model.getModelCategory());
-  metrics.put("duration_in_ms",after - before);
-  metrics.put("error",error);
-  if (score_model.isClassifier()) {
-    metrics.put("cm",cm.toJSON());
-    metrics.put("auc",auc.toJSON());
-    metrics.put("hr",hr);
-  }
-  Map resultsMap=new LinkedHashMap();
-  resultsMap.put("metrics",metrics);
-  String json=gson.toJson(resultsMap);
-  JsonObject result=gson.fromJson(json,JsonElement.class).getAsJsonObject();
+  ModelMetrics metrics=new ModelMetrics(score_model.getUniqueId(),score_model.getModelCategory(),frame.getUniqueId(),error,after - before,after,auc,cm);
+  Key metricsKey=Key.makeUserHidden(Key.make("modelmetrics_" + score_model.getUniqueId().getUuid() + "_on_"+ frame.getUniqueId().getUuid()));
+  DKV.put(metricsKey,metrics);
+  JsonObject metricsJson=metrics.toJSON();
+  JsonObject result=new JsonObject();
+  result.add("metrics",metricsJson);
   return Response.done(result);
 }
