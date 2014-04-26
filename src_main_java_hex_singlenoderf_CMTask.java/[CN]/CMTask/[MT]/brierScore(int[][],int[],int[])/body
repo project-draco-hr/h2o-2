@@ -1,0 +1,19 @@
+{
+  float sum=0.f;
+  for (int r=0; r < votes[0].length; ++r) {
+    int v_sum=0;
+    for (    int v : votes[r])     v_sum+=v;
+    for (    int v : votes[r]) {
+      float s;
+      if (v_sum == 0) {
+        s=1.f / _N;
+        s-=(actual[r] == pred[r] ? 1.f : 0.f);
+      }
+ else {
+        s=((float)v / (float)v_sum) - (actual[r] == pred[r] ? 1.f : 0.f);
+      }
+      sum+=s * s;
+    }
+  }
+  return sum;
+}

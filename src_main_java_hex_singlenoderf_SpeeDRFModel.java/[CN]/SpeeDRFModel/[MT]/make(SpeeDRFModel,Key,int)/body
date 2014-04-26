@@ -1,0 +1,32 @@
+{
+  boolean cm_update=false;
+  SpeeDRFModel m=(SpeeDRFModel)old.clone();
+  m.t_keys=Arrays.copyOf(old.t_keys,old.t_keys.length + 1);
+  m.t_keys[m.t_keys.length - 1]=tkey;
+  m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
+  m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
+  double f=(double)m.t_keys.length / (double)m.total_trees;
+  if (m.t_keys.length == 1) {
+    cm_update=true;
+    CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
+    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame);
+    m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
+    m.cm=cmTask._matrix._matrix;
+  }
+  if (f == 1.0) {
+    cm_update=true;
+    CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
+    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame);
+    m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
+    m.cm=cmTask._matrix._matrix;
+  }
+  if (!cm_update) {
+    m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
+    m.errs[m.t_keys.length - 1]=-1.f;
+  }
+ else {
+    m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
+    m.errs[m.t_keys.length - 1]=m.confusion.mse();
+  }
+  return m;
+}

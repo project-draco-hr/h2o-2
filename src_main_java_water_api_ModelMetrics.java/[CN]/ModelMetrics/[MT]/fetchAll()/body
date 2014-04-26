@@ -1,0 +1,14 @@
+{
+  Set<Key> keySet=H2O.globalKeySet("water.ModelMetrics");
+  List<water.ModelMetrics> list=new ArrayList();
+  for (  Key key : keySet) {
+    if (H2O.get(key) == null)     continue;
+    String keyString=key.toString();
+    Value value=DKV.get(key);
+    Iced pojo=value.get();
+    if (!(pojo instanceof water.ModelMetrics))     continue;
+    water.ModelMetrics modelMetrics=(water.ModelMetrics)pojo;
+    list.add(modelMetrics);
+  }
+  return list;
+}

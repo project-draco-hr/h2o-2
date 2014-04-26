@@ -75,6 +75,7 @@ def __do_json_request(self, jsonRequest=None, fullUrl=None, timeout=10, params=N
             if ignoreH2oError:
                 print emsg
             else:
+                print emsg
                 raise Exception(emsg)
     for w in ['warning', 'Warning', 'warnings', 'Warnings']:
         if ((w in rjson) and rjson[w]):

@@ -1,0 +1,67 @@
+def test_many_fp_formats_libsvm(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(10, 10, 'cA', 30, 'sparse50'), (100, 10, 'cB', 30, 'sparse'), (100000, 100, 'cC', 30, 'sparse'), (1000, 10, 'cD', 30, 'sparse50'), (100, 100, 'cE', 30, 'sparse'), (100, 100, 'cF', 30, 'sparse50')]
+    for (rowCount, colCount, hex_key, timeoutSecs, distribution) in tryList:
+        NUM_CASES = h2o_util.fp_format()
+        for sel in [random.randint(0, (NUM_CASES - 1))]:
+            SEEDPERFILE = random.randint(0, sys.maxint)
+            csvFilename = ('syn_%s_%s_%s_%s.csv' % (SEEDPERFILE, sel, rowCount, colCount))
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            print 'Creating random', csvPathname
+            (synColSumDict, colNumberMax) = write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distribution)
+            selKey2 = ((hex_key + '_') + str(sel))
+            parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=selKey2, timeoutSecs=timeoutSecs)
+            print "Parse result['destination_key']:", parseResult['destination_key']
+            inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
+            numCols = inspect['numCols']
+            numRows = inspect['numRows']
+            print ('\n' + csvFilename)
+            goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseResult['destination_key'], timeoutSecs=300)
+            if DO_SUMMARY:
+                summaryResult = h2o_cmd.runSummary(key=selKey2, timeoutSecs=360)
+                h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
+            print synColSumDict.keys(), colNumberMax
+            self.assertEqual((colNumberMax + 1), numCols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), numCols)))
+            h2e.exec_zero_list(zeroList)
+            colSumList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
+            self.assertEqual(rowCount, numRows, msg=('generated %s rows, parsed to %s rows' % (rowCount, numRows)))
+            print '\ncolSumList:', colSumList
+            print '\nsynColSumDict:', synColSumDict
+            for (k, v) in synColSumDict.iteritems():
+                if (k > colNumberMax):
+                    continue
+                self.assertTrue(((k >= 0) and (k < len(colSumList))), msg=('k: %s len(colSumList): %s numCols: %s' % (k, len(colSumList), numCols)))
+                syn = {}
+                if (k == 0):
+                    syn['name'] = 'C1'
+                    syn['type'] = {'Int'}
+                    syn['min'] = classMin
+                    syn['max'] = classMax
+                elif (k == 1):
+                    syn['name'] = 'C2'
+                    syn['type'] = {'Int'}
+                    syn['min'] = 0
+                    syn['max'] = 0
+                else:
+                    syn['name'] = ('C' + str((k + 1)))
+                    syn['type'] = {'Int', 'Real'}
+                    syn['min'] = valMin
+                    syn['max'] = valMax
+                syn['naCnt'] = 0
+                syn['cardinality'] = (-1)
+                cols = inspect['cols'][k]
+                for synKey in syn:
+                    if (synKey == 'min'):
+                        self.assertTrue((syn[synKey] <= cols[synKey]), msg=('col %s %s %s should be <= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    elif (synKey == 'max'):
+                        self.assertTrue((syn[synKey] >= cols[synKey]), msg=('col %s %s %s should be >= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    elif (synKey == 'type'):
+                        if (cols[synKey] not in syn[synKey]):
+                            print 'cols min/max:', cols['min'], cols['max']
+                            print 'syn min/max:', syn['min'], syn['max']
+                            raise Exception(('col %s %s %s should be in this allowed %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    else:
+                        self.assertEqual(syn[synKey], cols[synKey], msg=('col %s %s %s should be %s' % (k, synKey, cols[synKey], syn[synKey])))
+                colSum = colSumList[k]
+                print '\nComparing col', k, 'sums:', v, colSum
+                self.assertAlmostEqual(float(v), colSum, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, colSum)))
