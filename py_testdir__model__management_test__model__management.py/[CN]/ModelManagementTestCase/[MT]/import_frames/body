@@ -1,5 +1,5 @@
-@classmethod
-def import_frames(cls):
-    ModelManagementTestCase.prostate_hex = ModelManagementTestCase.import_frame('prostate.hex', 'smalldata', 'prostate.csv', 'logreg', 380, 9)
-    ModelManagementTestCase.airlines_train_hex = ModelManagementTestCase.import_frame('airlines_train.hex', 'smalldata', 'AirlinesTrain.csv.zip', 'airlines', 24421, 12)
-    ModelManagementTestCase.airlines_test_hex = ModelManagementTestCase.import_frame('airlines_test.hex', 'smalldata', 'AirlinesTest.csv.zip', 'airlines', 2691, 12)
+def import_frames(self):
+    prostate_hex = self.import_frame('prostate.hex', 'smalldata', 'prostate.csv', 'logreg', 380, 9)
+    airlines_train_hex = self.import_frame('airlines_train.hex', 'smalldata', 'AirlinesTrain.csv.zip', 'airlines', 24421, 12)
+    airlines_test_hex = self.import_frame('airlines_test.hex', 'smalldata', 'AirlinesTest.csv.zip', 'airlines', 2691, 12)
+    return (prostate_hex, airlines_train_hex, airlines_test_hex)

@@ -4,8 +4,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
     for i in range(rowCount):
         rowData = []
         for j in range(colCount):
-            ones = 1e-05
-            r = h2o_util.choice_with_probability([(1, ones), (0, (1 - ones))])
+            r = h2o_util.choice_with_probability([(1, ONE_RATE), (0, (1 - ONE_RATE))])
             rowData.append(('%.1f' % r))
         rowDataCsv = ','.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
