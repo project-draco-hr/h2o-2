@@ -5,6 +5,7 @@
   int ntrees=howManyTrees();
   int[] rowsPerChunks=howManyRPC(_rfmodel.fr);
   updateRFModel(_rfmodel._key,numSplitFeatures);
+  updateRFModelStatus(_rfmodel._key,"Building Forest");
   SpeeDRF.build(_job,_params,localData,ntrees,numSplitFeatures,rowsPerChunks);
   tryComplete();
 }

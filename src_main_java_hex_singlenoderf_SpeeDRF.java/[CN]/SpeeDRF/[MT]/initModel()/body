@@ -46,6 +46,9 @@
     if (mtry == -1) {
       model.mtry=(int)Math.floor(Math.sqrt(source.numCols()));
     }
+ else {
+      model.mtry=mtry;
+    }
     model.features=source.numCols();
     model.sampling_strategy=sampling_strategy;
     model.sample=(float)sample;
