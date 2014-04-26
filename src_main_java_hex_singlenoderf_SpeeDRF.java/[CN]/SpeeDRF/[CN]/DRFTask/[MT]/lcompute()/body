@@ -1,5 +1,9 @@
 {
   final DataAdapter dapt=DABuilder.create(_drf,_rfmodel).build(_rfmodel.fr);
+  if (dapt == null) {
+    tryComplete();
+    return;
+  }
   Data localData=Data.make(dapt);
   int numSplitFeatures=howManySplitFeatures();
   int ntrees=howManyTrees();
