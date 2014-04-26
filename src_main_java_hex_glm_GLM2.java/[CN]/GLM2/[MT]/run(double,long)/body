@@ -14,7 +14,7 @@
   if (highAccuracy() || lambda_search) {
     new LMAXTask(GLM2.this,_dinfo,_glm,ymu,alpha[0],new H2OCallback<LMAXTask>(GLM2.this){
       @Override public void callback(      LMAXTask t){
-        run(ymu,nobs,t.lmax(),t._val);
+        run(ymu,nobs,lambda_max=t.lmax(),t._val);
       }
     }
 ).asyncExec(_dinfo._adaptedFrame);
