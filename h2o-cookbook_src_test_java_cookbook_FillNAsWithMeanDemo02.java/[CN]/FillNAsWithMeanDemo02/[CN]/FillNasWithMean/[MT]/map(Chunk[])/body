@@ -1,0 +1,12 @@
+{
+  for (int j=0; j < xs.length / 2; j++) {
+    for (int l=0; l < xs[j]._len; l++) {
+      if (xs[j].isNA0(l)) {
+        xs[j + xs.length / 2].set0(l,_meanX[j]);
+      }
+ else {
+        xs[j + xs.length / 2].set0(l,xs[j].at0(l));
+      }
+    }
+  }
+}

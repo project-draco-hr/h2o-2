@@ -1,4 +1,6 @@
 {
+  _prior.addPrerequisite(_key);
+  _prior.addPrerequisite(_y);
   _requestHelp="Compute generalized linear model with penalized maximum likelihood. Penalties include the lasso (L1 penalty), ridge regression (L2 penalty) or elastic net penalty (combination of L1 and L2) penalties. The penalty function is defined as :<br/>" + "<pre>\n" + "       P(&beta;) = 0.5*(1 - &alpha;)*||&beta;||<sub>2</sub><sup>2</sup> + &alpha;*||&beta;||<sub>1</sub><br/>"+ "</pre>"+ "By setting &alpha; to 0, we get ridge regression, setting it to 1 gets us lasso. <p>See our <a href='https://github.com/0xdata/h2o/wiki/GLM#wiki-Details' target=\"_blank\">wiki</a> for details.<p>";
   _key._requestHelp="Dataset to be trained on.";
   _y._requestHelp="Response variable column name.";
@@ -11,7 +13,7 @@
   _alpha._requestHelp="Penalty distribution argument. Controls distribution of penalty between L1 and L2 norm according to the formula above.";
   _betaEps._requestHelp="Precision of the vector of coefficients. Computation stops when the maximal difference between two beta vectors is below than Beta epsilon.";
   _maxIter._requestHelp="Number of maximum iterations.";
-  _caseWeight._requestHelp="All rows for which the predicate is true will be weighted by weight. Weight=1 is neutral. Weight = 0.5 treats negative examples as twice more important than positive ones. Weight = 2.0 does the opposite.";
+  _prior._requestHelp="Prior probability of positive case (class = 1) for logistic regression. To be used if the data has been sampled.";
   _caseMode._requestHelp="Predicate selection.";
   _case._requestHelp="Value to be used to compare against using predicate given by case mode selector to turn the y column into boolean.";
   _thresholds._requestHelp="Sequence of decision thresholds to be evaluated during validation (used for ROC curce computation and for picking optimal decision threshold of the resulting classifier).";

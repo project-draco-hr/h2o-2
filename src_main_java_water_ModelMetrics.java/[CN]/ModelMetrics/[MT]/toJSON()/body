@@ -1,0 +1,7 @@
+{
+  final String json=new String(writeJSON(new AutoBuffer()).buf());
+  if (json.length() == 0)   return new JsonObject();
+  JsonObject jo=(JsonObject)new JsonParser().parse(json);
+  if (jo.has("model"))   jo.getAsJsonObject("model").addProperty("model_category",this.model_category.toString());
+  return jo;
+}

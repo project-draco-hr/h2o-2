@@ -1,0 +1,47 @@
+{
+  return new RecursiveAction(){
+    @Override protected void compute(){
+      try {
+        Chunk[] chks=new Chunk[fr.numCols()];
+        int ncolumns=chks.length;
+        for (int i=0; i < chks.length; ++i) {
+          chks[i]=fr.vecs()[i].chunkForChunkIdx(cidx);
+        }
+        for (int j=0; j < chks[0]._len; ++j) {
+          int rowNum=(int)chks[0]._start + j;
+          boolean rowIsValid=false;
+          for (int c=0; c < chks.length; ++c) {
+            fr.vecs()[1].isBad();
+            if (naCnts[c] > 0) {
+              if (chks[c].isNA0(j)) {
+                if (c == ncolumns - 1)                 rowIsValid=false;
+                dapt.addBad(rowNum,c);
+                continue;
+              }
+            }
+            if (isByteCol[c]) {
+              int val=(int)chks[c].at8(rowNum);
+              dapt.add1(val,rowNum,c);
+            }
+ else {
+              float f=(float)chks[c].at(rowNum);
+              if (!dapt.isValid(c,f)) {
+                dapt.addBad(rowNum,c);
+                continue;
+              }
+              dapt.add(f,rowNum,c);
+            }
+            if (c != ncolumns - 1) {
+              rowIsValid|=true;
+            }
+          }
+          if (!rowIsValid)           dapt.markIgnoredRow(j);
+        }
+      }
+ catch (      Throwable t) {
+        t.printStackTrace();
+      }
+    }
+  }
+;
+}

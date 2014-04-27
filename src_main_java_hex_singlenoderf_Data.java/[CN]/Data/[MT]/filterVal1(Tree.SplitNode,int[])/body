@@ -1,0 +1,20 @@
+{
+  int cidx=node._column;
+  DataAdapter.Col cs[]=_dapt._c;
+  short bins[]=cs[cidx]._binned;
+  byte binb[]=cs[cidx]._rawB;
+  int split=node._split;
+  int l=start(), r=end() - 1;
+  while (l <= r) {
+    int permIdx=permutation[l];
+    int val=bins == null ? (0xFF & binb[permIdx]) : bins[permIdx];
+    if (val <= split) {
+      ++l;
+    }
+ else {
+      permutation[l]=permutation[r];
+      permutation[r--]=permIdx;
+    }
+  }
+  return l;
+}

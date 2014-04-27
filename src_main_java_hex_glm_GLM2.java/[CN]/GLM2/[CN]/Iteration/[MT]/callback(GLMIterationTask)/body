@@ -47,7 +47,6 @@
     _lastResult=new IterationInfo(GLM2.this._iter - 1,objval,glmt);
   }
   final double[] newBeta=glmt._beta != null ? glmt._beta.clone() : MemoryManager.malloc8d(glmt._xy.length);
-  double[] newBetaDeNorm=null;
   ADMMSolver slvr=new ADMMSolver(lambda[_lambdaIdx],alpha[0],ADMM_GRAD_EPS,_addedL2);
   slvr.solve(glmt._gram,glmt._xy,glmt._yy,newBeta);
   _addedL2=slvr._addedL2;
@@ -57,18 +56,21 @@
     return;
   }
  else {
+    final double[] modelBeta=MemoryManager.arrayCopyOf(newBeta,newBeta.length);
+    modelBeta[modelBeta.length - 1]+=_iceptAdjust;
+    double[] modelBetaDeNorm=null;
     if (_dinfo._standardize) {
-      newBetaDeNorm=newBeta.clone();
+      modelBetaDeNorm=modelBeta.clone();
       double norm=0.0;
       final int numoff=newBeta.length - _dinfo._nums - 1;
       for (int i=numoff; i < newBeta.length - 1; i++) {
-        double b=newBetaDeNorm[i] * _dinfo._normMul[i - numoff];
+        double b=modelBetaDeNorm[i] * _dinfo._normMul[i - numoff];
         norm+=b * _dinfo._normSub[i - numoff];
-        newBetaDeNorm[i]=b;
+        modelBetaDeNorm[i]=b;
       }
-      newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
+      modelBetaDeNorm[modelBetaDeNorm.length - 1]-=norm;
     }
-    _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? newBeta : newBetaDeNorm,newBetaDeNorm == null ? null : newBeta,(_iter + 1));
+    _model.setLambdaSubmodel(_lambdaIdx,modelBetaDeNorm == null ? modelBeta : modelBetaDeNorm,modelBetaDeNorm == null ? null : modelBeta,(_iter + 1));
     if (_glm.family == Family.gaussian) {
       nextLambda(glmt,newBeta);
     }
@@ -84,16 +86,14 @@
               return;
             }
             checkGradient(newBeta,glmt2.gradient(l2pen()));
-            if (n_folds > 1)             nextLambda(glmt,newBeta);
- else             nextLambda(glmt,newBeta,glmt2._val);
+            nextLambda(glmt,newBeta);
           }
         }
 ).asyncExec(_dinfo._adaptedFrame);
       }
  else {
         checkGradient(newBeta,glmt.gradient(l2pen()));
-        if (n_folds > 1)         nextLambda(glmt,newBeta);
- else         nextLambda(glmt,glmt._beta,glmt._val);
+        nextLambda(glmt,newBeta);
       }
     }
  else {

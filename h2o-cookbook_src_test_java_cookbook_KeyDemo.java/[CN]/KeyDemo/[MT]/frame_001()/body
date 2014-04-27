@@ -1,0 +1,32 @@
+{
+  int initial_keycnt0=H2O.store_size();
+  Log.info("initial key count: should be One builtin jobkey and probably a log key:             " + initial_keycnt0);
+  String fileName="/Users/nidhimehta/h2o/smalldata/iris/iris.csv";
+  File file=new File(fileName);
+  Key fkey=NFSFileVec.make(file);
+  Key okey=Key.make("iris.hex");
+  Log.info("NFSFile key added to the key store, so should be plus one:  " + H2O.store_size());
+  Log.info("UKV fkey before parse:" + UKV.get(fkey));
+  Log.info("DKV fkey before parse:" + DKV.get(fkey));
+  Log.info("UKV okey before parse:" + UKV.get(okey));
+  Log.info("DKV okey before parse:" + DKV.get(okey));
+  Frame fr;
+  fr=ParseDataset2.parse(okey,new Key[]{fkey});
+  Log.info("-------After parse of file ---------");
+  Log.info("key count after frame parse: (5)vectors, (5)chunks, (1)vector group keys  + 2 keys (-1 NFSkey):  " + H2O.store_size());
+  Log.info("UKV fkey after parse:" + UKV.get(fkey));
+  Log.info("DKV fkey after parse:" + DKV.get(fkey));
+  Log.info("UKV okey after parse:" + UKV.get(okey));
+  Log.info("DKV okey after parse:" + DKV.get(okey));
+  Log.info("DKV okey get        :" + DKV.get(okey).get());
+  Log.info("Global Keyset count :" + H2O.globalKeySet(null).size());
+  Log.info("Sanity check:key count after a few prints should not change anything;But not so straightforward if more than 1 nodes: " + H2O.store_size());
+  Frame.delete(okey);
+  try {
+    Thread.sleep(3000);
+  }
+ catch (  InterruptedException _) {
+  }
+  ;
+  Log.info("After frame delete, just the job key, builtin job key, (and probably a log key and the vector group key) should remain: " + H2O.store_size());
+}
