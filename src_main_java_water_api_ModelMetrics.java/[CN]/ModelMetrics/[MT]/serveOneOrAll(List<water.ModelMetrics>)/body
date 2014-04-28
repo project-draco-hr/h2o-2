@@ -1,0 +1,10 @@
+{
+  JsonArray metricsArray=new JsonArray();
+  for (  water.ModelMetrics metrics : list) {
+    JsonObject metricsJson=metrics.toJSON();
+    metricsArray.add(metricsJson);
+  }
+  JsonObject result=new JsonObject();
+  result.add("metrics",metricsArray);
+  return Response.done(result);
+}
