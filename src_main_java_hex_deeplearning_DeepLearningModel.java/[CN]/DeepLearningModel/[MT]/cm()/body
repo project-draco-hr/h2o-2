@@ -10,7 +10,5 @@
       return new ConfMat(lasterror.train_err,lasterror.trainAUC != null ? lasterror.trainAUC.F1() : 0);
     }
   }
-  long[][] newcm=new long[cm.cm.length - 1][cm.cm.length - 1];
-  for (int i=0; i < newcm.length; ++i)   for (int j=0; j < newcm.length; ++j)   newcm[i][j]=cm.cm[i][j];
-  return new hex.ConfusionMatrix(newcm);
+  return new hex.ConfusionMatrix(cm.cm,cm.cm.length - 1);
 }
