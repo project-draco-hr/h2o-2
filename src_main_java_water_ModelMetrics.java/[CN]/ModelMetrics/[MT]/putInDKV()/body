@@ -1,5 +1,5 @@
 {
-  String keyname=this.keyName();
-  Key metricsKey=Key.makeUserHidden(Key.make(keyname));
+  Key metricsKey=this.buildKey();
+  Log.debug("Putting ModelMetrics: " + metricsKey.toString());
   DKV.put(metricsKey,this);
 }
