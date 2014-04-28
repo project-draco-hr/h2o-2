@@ -4,11 +4,12 @@
     if (!needLineSearch(glmt._betas[i],glmt._objvals[i],step)) {
       Log.info("GLM2 line search: found admissible step=" + step);
       _lastResult=null;
-      new GLMIterationTask(GLM2.this,_activeData,_glm,true,true,true,glmt._betas[i],_ymu,_reg,new Iteration()).asyncExec(_activeFrame);
+      new GLMIterationTask(GLM2.this,_activeData,_glm,true,true,true,glmt._betas[i],_ymu,_reg,new Iteration()).asyncExec(_activeData._adaptedFrame);
       return;
     }
     step*=0.5;
   }
   Log.info("GLM2 line search failed to find feasible step. Forcibly converged.");
-  nextLambda(_lastResult._glmt,_lastResult.beta(_activeCols));
+  _activeCols=_lastResult._activeCols;
+  nextLambda(_lastResult._glmt,_lastResult.beta(_activeCols,_dinfo.fullN()));
 }

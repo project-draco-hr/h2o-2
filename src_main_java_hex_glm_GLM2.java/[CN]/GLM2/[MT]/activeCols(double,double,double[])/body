@@ -1,17 +1,17 @@
 {
-  final double rhs=2 * l1 - l2;
+  final double rhs=alpha[0] * 2 * l1 - l2;
   int[] cols=MemoryManager.malloc4(_dinfo.fullN());
   int selected=0;
   for (int i=0; i < _dinfo.fullN(); ++i)   if (grad[i] > rhs || grad[i] < -rhs)   cols[selected++]=i;
-  if (selected == _dinfo.fullN()) {
+  if (!strong_rules_enabled || selected == _dinfo.fullN()) {
     _activeCols=null;
-    _activeFrame=_dinfo._adaptedFrame;
+    _activeData._adaptedFrame=_dinfo._adaptedFrame;
     _activeData=_dinfo;
   }
  else {
     _activeCols=Arrays.copyOf(cols,selected);
     _activeData=_dinfo.filterExpandedColumns(_activeCols);
-    _activeFrame=_activeData._adaptedFrame;
+    _activeData._adaptedFrame=_activeData._adaptedFrame;
   }
   Log.info("GLM2 strong rule at lambda=" + l1 + ", got "+ selected+ " active cols out of "+ _dinfo.fullN()+ " total.");
   return _activeCols;
