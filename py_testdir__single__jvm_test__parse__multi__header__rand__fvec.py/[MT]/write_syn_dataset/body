@@ -1,0 +1,18 @@
+def write_syn_dataset(csvPathname, rowCount, headerString, rList, commentFirst=False, sepChar=','):
+    dsf = open(csvPathname, 'w+')
+    if commentFirst:
+        h = "# random comment junk because we don't support commented headers yet"
+        dsf.write((h + '\n'))
+    headerRowsDone = 0
+    if (headerString is not None):
+        h = headerString
+        headerRowsDone += 1
+        dsf.write((h + '\n'))
+    if (rowCount is not None):
+        for i in range(rowCount):
+            r = ((rList[random.randint(0, 1)] + sepChar) + str(random.randint(0, 7)))
+            dsf.write((r + '\n'))
+        dsf.close()
+        return (headerRowsDone, rowCount)
+    else:
+        return (headerRowsDone, 0)

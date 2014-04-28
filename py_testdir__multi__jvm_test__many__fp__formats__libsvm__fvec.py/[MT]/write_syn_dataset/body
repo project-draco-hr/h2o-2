@@ -1,0 +1,47 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, sel, distribution):
+    r = random.Random(SEEDPERFILE)
+
+    def addRandValToRowStuff(colNumber, rowData, synColSumDict):
+        val = r.triangular(valMin, valMax, 0)
+        if ((colNumber == 1) or ((val > (valMin / 2)) and (val < (valMax / 2)))):
+            val = 0
+        a = addValToRowStuff(colNumber, val, rowData, synColSumDict)
+        return a
+
+    def addValToRowStuff(colNumber, val, rowData, synColSumDict):
+        if (colNumber in synColSumDict):
+            synColSumDict[colNumber] += val
+        else:
+            synColSumDict[colNumber] = val
+        valFormatted = h2o_util.fp_format(val, sel)
+        if (val == 0):
+            return None
+        else:
+            rowData.append(((str(colNumber) + ':') + valFormatted))
+            return val
+    dsf = open(csvPathname, 'w+')
+    synColSumDict = {0: 0, }
+    colNumberMax = 0
+    for i in range(rowCount):
+        rowData = []
+        d = random.randint(0, 2)
+        if (d != 0):
+            if (distribution == 'sparse'):
+                colNumber = random.randint(1, colCount)
+                val = addRandValToRowStuff(colNumber, rowData, synColSumDict)
+                if val:
+                    colNumberMax = max(colNumberMax, colNumber)
+            elif (distribution == 'sparse50'):
+                for colNumber in range(1, (colCount + 1)):
+                    val = addRandValToRowStuff(colNumber, rowData, synColSumDict)
+                    if val:
+                        colNumberMax = max(colNumberMax, colNumber)
+            else:
+                raise (Exception, ("Don't understand what you want here %s" % distribution))
+        val = random.randint(classMin, classMax)
+        rowData.insert(0, val)
+        synColSumDict[0] += val
+        rowDataCsv = ' '.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
+    return (synColSumDict, colNumberMax)

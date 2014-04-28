@@ -11,6 +11,7 @@
     Key kdst=Key.make("arrests.pca");
     new PCA("PCA test on USArrests",kdst,fr,tol,standardize).invoke();
     model=DKV.get(kdst).get();
+    testHTML(model);
     checkSdev(sdev_R,model.sdev());
     checkEigvec(eigv_R,model.eigVec());
   }

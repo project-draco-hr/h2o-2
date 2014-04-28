@@ -23,7 +23,7 @@ def test_PCA_ignore_enums_fvec(self):
         numRows = inspect['numRows']
         numCols = inspect['numCols']
         for tolerance in [(i / 10.0) for i in range(11)]:
-            params = {'ignored_cols': 'C1', 'destination_key': modelKey, 'tolerance': tolerance, 'standardize': 1, }
+            params = {'ignored_cols': 'C2', 'destination_key': modelKey, 'tolerance': tolerance, 'standardize': 1, }
             print 'Using these parameters for PCA: ', params
             kwargs = params.copy()
             PCAResult = {'python_elapsed': 0, 'python_%timeout': 0, }

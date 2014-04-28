@@ -1,7 +1,8 @@
 {
   checkArguments(args,type);
+  if (DKV.get(src_key) == null)   throw new IllegalArgumentException(src_key.toString() + " not found.");
   Object value=DKV.get(src_key).get();
-  InputStream csv=value instanceof ValueArray ? new CsvVAStream((ValueArray)value,null) : ((Frame)value).toCSV(true);
+  InputStream csv=value instanceof ValueArray ? new CsvVAStream((ValueArray)value,null) : ((Frame)value).toCSV(true,hex_string);
   NanoHTTPD.Response res=server.new Response(NanoHTTPD.HTTP_OK,NanoHTTPD.MIME_DEFAULT_BINARY,csv);
   String s=src_key.toString();
   if (DKV.isConvertedFrameKeyString(s))   s=DKV.unconvertFrameKeyString(s);

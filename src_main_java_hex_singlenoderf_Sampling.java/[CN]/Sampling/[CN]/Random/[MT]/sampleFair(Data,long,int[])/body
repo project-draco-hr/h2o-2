@@ -1,0 +1,23 @@
+{
+  java.util.Random rand=null;
+  int rows=data.rows();
+  int size=bagSize(rows,_bagSizePct);
+  int[] sample=MemoryManager.malloc4((int)(size * 1.10));
+  float f=(float)_bagSizePct;
+  int cnt=0;
+  int j=0;
+  int cidx=0;
+  for (int i=0; i < rows; i++) {
+    if (cnt-- == 0) {
+      long chunkSamplingSeed=chunkSampleSeed(seed,i);
+      rand=Utils.getDeterRNG(chunkSamplingSeed);
+      cnt=rowsPerChunks[cidx++] - 1;
+    }
+    float randFloat=rand.nextFloat();
+    if (randFloat < f) {
+      if (j == sample.length)       sample=Arrays.copyOfRange(sample,0,(int)(1 + sample.length * 1.2));
+      sample[j++]=i;
+    }
+  }
+  return Arrays.copyOf(sample,j);
+}

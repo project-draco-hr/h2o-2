@@ -1,0 +1,7 @@
+{
+  if (_isByte)   return idx;
+  if (idx == BAD)   return Float.NaN;
+  float flo=_binned2raw[idx];
+  float fhi=(idx + 1 < _binned2raw.length) ? _binned2raw[idx + 1] : flo + 1.f;
+  return (flo + fhi) / 2.0f;
+}

@@ -1,0 +1,96 @@
+def test_binary_classifiers(self):
+    self.create_models(self.import_frames())
+    node = h2o.nodes[0]
+    print '##############################################'
+    print 'Testing /2/Frames with various options. . .'
+    print '##############################################'
+    print ''
+    print '##############################################'
+    print 'Testing /2/Frames list. . .'
+    frames = node.frames()
+    self.assertKeysExist(frames, 'frames', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
+    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysDontExist(frames, '', ['models'])
+    print '##############################################'
+    print 'Testing /2/Frames?key=airlines_test.hex. . .'
+    frames = node.frames(key='airlines_test.hex')
+    self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
+    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
+    self.assertKeysDontExist(frames, '', ['models'])
+    print '##############################################'
+    print 'Testing /2/Frames?key=airlines_test.hex&find_compatible_models=true. . .'
+    frames = node.frames(key='airlines_test.hex', find_compatible_models=1)
+    self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
+    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
+    self.assertKeysExist(frames, '', ['models'])
+    self.assertKeysExist(frames, 'models', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A'])
+    self.assertKeysDontExist(frames, 'models', ['glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
+    print '##############################################'
+    print 'Testing /2/Frames with various options. . .'
+    print '##############################################'
+    print ''
+    print '##############################################'
+    print 'Testing /2/Models list. . .'
+    models = node.models()
+    self.assertKeysExist(models, 'models', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
+    self.assertKeysDontExist(models, '', ['frames'])
+    print '##############################################'
+    print 'Testing /2/Models?key=rf_Prostate_binary_1. . .'
+    models = node.models(key='rf_Prostate_binary_1')
+    self.assertKeysExist(models, 'models', ['rf_Prostate_binary_1'])
+    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysDontExist(models, '', ['frames'])
+    print '##############################################'
+    print 'Testing /2/Models?key=rf_Prostate_binary_1&find_compatible_frames=true. . .'
+    models = node.models(key='rf_Prostate_binary_1', find_compatible_frames=1)
+    self.assertKeysExist(models, 'models', ['rf_Prostate_binary_1'])
+    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysExist(models, '', ['frames'])
+    self.assertKeysExist(models, 'frames', ['prostate.hex'])
+    self.assertKeysDontExist(models, 'frames', ['airlines_train.hex', 'airlines_test.hex'])
+    print '##############################################'
+    print 'Testing /2/Models with scoring. . .'
+    print '##############################################'
+    print ''
+    print '##############################################'
+    print 'Scoring compatible frames for compatible models for /2/Models?key=airlines_train.hex&find_compatible_models=true. . .'
+    frames = node.frames(key='airlines_train.hex', find_compatible_models=1)
+    compatible_models = frames['frames']['airlines_train.hex']['compatible_models']
+    for model_key in compatible_models:
+        models = node.models(key=model_key, find_compatible_frames=1)
+        compatible_frames = models['models'][model_key]['compatible_frames']
+        for frame_key in compatible_frames:
+            print ((('Scoring: /2/Models?key=' + model_key) + '&score_frame=') + frame_key)
+            scoring_result = node.models(key=model_key, score_frame=frame_key)
+            self.assertKeysExist(scoring_result, '', ['metrics'])
+            self.assertKeysExist(scoring_result, 'metrics[0]', ['model', 'frame', 'duration_in_ms', 'error_measure'])
+            self.assertKeysExist(scoring_result, 'metrics[0]/model', ['key', 'model_category', 'uuid', 'creation_epoch_time_millis'])
+            model_category = scoring_result['metrics'][0]['model']['model_category']
+            self.assertEqual(scoring_result['metrics'][0]['model']['key'], model_key, ((('Expected model key: ' + model_key) + ' but got: ') + scoring_result['metrics'][0]['model']['key']))
+            self.assertEqual(scoring_result['metrics'][0]['frame']['key'], frame_key, ((('Expected frame key: ' + frame_key) + ' but got: ') + scoring_result['metrics'][0]['frame']['key']))
+            if (model_category is 'Binomial'):
+                self.assertKeysExist(scoring_result, 'metrics[0]', ['cm', 'auc'])
+            if (model_category is 'Regression'):
+                self.assertKeysDontExist(scoring_result, 'metrics[0]', ['cm', 'auc'])
+    print '##############################################'
+    print 'Testing /2/Frames with scoring. . .'
+    print '##############################################'
+    print ''
+    print '##############################################'
+    print 'Scoring compatible models for /2/Frames?key=prostate.hex&find_compatible_models=true. . .'
+    frames = node.frames(key='prostate.hex', find_compatible_models=1)
+    compatible_models = frames['frames']['prostate.hex']['compatible_models']
+    for model_key in compatible_models:
+        print ('Scoring: /2/Frames?key=prostate.hex&score_model=' + model_key)
+        scoring_result = node.frames(key='prostate.hex', score_model=model_key)
+        self.assertKeysExist(scoring_result, '', ['metrics'])
+        self.assertKeysExist(scoring_result, 'metrics[0]', ['model_category'])
+        model_category = scoring_result['metrics'][0]['model_category']
+        self.assertKeysExist(scoring_result, 'metrics[0]', ['model', 'frame', 'duration_in_ms', 'error_measure'])
+        self.assertEqual(scoring_result['metrics'][0]['model']['key'], model_key, ((('Expected model key: ' + model_key) + ' but got: ') + scoring_result['metrics'][0]['model']['key']))
+        self.assertEqual(scoring_result['metrics'][0]['frame']['key'], 'prostate.hex', ((('Expected frame key: ' + 'prostate.hex') + ' but got: ') + scoring_result['metrics'][0]['frame']['key']))
+        if (model_category is 'Binomial'):
+            self.assertKeysExist(scoring_result, 'metrics[0]', ['cm', 'auc'])
+        if (model_category is 'Regression'):
+            self.assertKeysDontExist(scoring_result, 'metrics[0]', ['cm', 'auc'])

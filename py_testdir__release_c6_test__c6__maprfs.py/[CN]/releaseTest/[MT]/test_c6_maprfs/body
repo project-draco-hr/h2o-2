@@ -1,11 +1,7 @@
 def test_c6_maprfs(self):
     h2o.beta_features = False
     print '\nLoad a list of files from maprfs, parse and do 1 RF tree'
-    csvFilenameAll = ['TEST-poker1000.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'covtype.4x.shuffle.data', 'covtype.data', 'covtype4x.shuffle.data', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp2.os.noisy.0_1.data', 'hhp2.os.noisy.9_4.data', 'hhp_9_14_12.data', 'leads.csv', 'prostate_long_1G.csv']
-    h2o.nodes[0].use_maprfs = True
-    h2o.nodes[0].use_hdfs = False
-    h2o.nodes[0].hdfs_version = ('mapr3.0.1',)
-    h2o.nodes[0].hdfs_name_node = 'mr-0x1.0xdata.loc:7222'
+    csvFilenameAll = ['TEST-poker1000.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'covtype.4x.shuffle.data', 'covtype.data', 'covtype4x.shuffle.data', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp2.os.noisy.9_4.data', 'hhp_9_14_12.data', 'leads.csv', 'prostate_long_1G.csv']
     h2o.setup_benchmark_log()
     benchmarkLogging = []
     if DO_RANDOM_SAMPLE:
@@ -28,13 +24,13 @@ def test_c6_maprfs(self):
                 break
         if (not foundIt):
             raise Exception(('Should have found %s in the imported keys for %s' % (importPattern, csvPathname)))
-        totalBytes = value_size_bytes
         print 'Loading', csvFilename, 'from maprfs'
         start = time.time()
         parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, pollTimeoutSecs=360, doSummary=True, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
         if h2o.beta_features:
             h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
         print 'parse result:', parseResult['destination_key']
+        totalBytes = 0
         elapsed = (time.time() - start)
         fileMBS = ((totalBytes / 1000000.0) / elapsed)
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, elapsed)

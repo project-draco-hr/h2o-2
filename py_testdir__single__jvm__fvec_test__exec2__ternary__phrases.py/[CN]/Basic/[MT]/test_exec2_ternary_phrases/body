@@ -4,6 +4,7 @@ def test_exec2_ternary_phrases(self):
     hexKey = 'i.hex'
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     exprList = []
+    bigExprList = []
     while (len(exprList) != 200):
         expr = ((random.choice(phrases) + ' : ') + random.choice(phrases))
         exprList.append(('1 ? ' + expr))
@@ -14,8 +15,8 @@ def test_exec2_ternary_phrases(self):
         bigExprList.append(execExpr)
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)
     for j in range(50):
-        execExpr = ((random.choice(bigExprList) + ' ; ') + random.choice(bigExprList))
+        execExpr = ((('a=' + random.choice(bigExprList)) + '; b= ') + random.choice(bigExprList))
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)
     for j in range(50):
-        execExpr = ((((random.choice(bigExprList) + ' ; ') + random.choice(bigExprList)) + ' ; ') + random.choice(bigExprList))
+        execExpr = ((((('a=' + random.choice(bigExprList)) + '; b= ') + random.choice(bigExprList)) + '; c=') + random.choice(bigExprList))
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)

@@ -4,9 +4,10 @@
   String sourceArg=input("source");
   Key sourceKey=null;
   if (sourceArg != null)   sourceKey=Key.make(sourceArg);
-  String[] names=new String[cols.length];
-  for (int i=0; i < cols.length; i++)   names[i]=source._names[cols[i]];
-  Vec[] vecs=selectVecs(source);
+  Frame fr=DataInfo.prepareFrame(source,ignored_cols,false,false,drop_na_cols);
+  String[] names=fr.names();
+  Vec[] vecs=fr.vecs();
+  if (vecs == null || vecs.length == 0)   throw new IllegalArgumentException("No columns selected. Check that selected columns have not been dropped due to too many NAs.");
   String[] domain=new String[k];
   for (int i=0; i < domain.length; i++)   domain[i]="Cluster " + i;
   String[] namesResp=Utils.append(names,"response");
