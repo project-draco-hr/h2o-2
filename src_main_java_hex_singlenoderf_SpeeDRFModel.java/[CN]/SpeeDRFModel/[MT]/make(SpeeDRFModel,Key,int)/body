@@ -9,14 +9,16 @@
   if (m.t_keys.length == 1) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
-    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame);
+    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
+    m.cm=cmTask._matrix._matrix;
   }
   if (f == 1.0) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
-    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame);
+    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
+    m.cm=cmTask._matrix._matrix;
   }
   if (!cm_update) {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);

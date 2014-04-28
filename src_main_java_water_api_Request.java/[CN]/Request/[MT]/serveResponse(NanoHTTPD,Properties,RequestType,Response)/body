@@ -1,6 +1,22 @@
 {
   if (this instanceof Request2)   ((Request2)this).fillResponseInfo(response);
   if (this instanceof Parse2)   ((Parse2)this).fillResponseInfo(response);
-  if (type == RequestType.json)   return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()),RequestType.json);
+  if (type == RequestType.json) {
+    return response._req == null ? wrap(server,response.toJson()) : wrap(server,new String(response._req.writeJSON(new AutoBuffer()).buf()),RequestType.json);
+  }
+ else   if (type == RequestType.xml) {
+    if (response._req == null) {
+      String xmlString=response.toXml();
+      NanoHTTPD.Response r=wrap(server,xmlString,RequestType.xml);
+      return r;
+    }
+ else {
+      String jsonString=new String(response._req.writeJSON(new AutoBuffer()).buf());
+      org.json.JSONObject jo2=new org.json.JSONObject(jsonString);
+      String xmlString=org.json.XML.toString(jo2);
+      NanoHTTPD.Response r=wrap(server,xmlString,RequestType.xml);
+      return r;
+    }
+  }
   return wrap(server,build(response));
 }

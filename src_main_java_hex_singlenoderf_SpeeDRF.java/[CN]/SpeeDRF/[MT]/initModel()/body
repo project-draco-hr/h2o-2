@@ -39,12 +39,15 @@
     Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,false,false,false);
     Frame test=null;
     if (validation != null) {
-      test=FrameTask.DataInfo.prepareFrame(validation,response,ignored_cols,false,false,false);
+      test=FrameTask.DataInfo.prepareFrame(validation,validation.vecs()[source.find(response)],ignored_cols,false,false,false);
     }
     SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0],seed);
     model.bin_limit=bin_limit;
     if (mtry == -1) {
       model.mtry=(int)Math.floor(Math.sqrt(source.numCols()));
+    }
+ else {
+      model.mtry=mtry;
     }
     model.features=source.numCols();
     model.sampling_strategy=sampling_strategy;
