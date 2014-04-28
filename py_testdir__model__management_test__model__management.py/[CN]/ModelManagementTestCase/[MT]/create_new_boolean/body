@@ -1,0 +1,7 @@
+def create_new_boolean(self, frame, old_col_name, new_col_name):
+    node = h2o.nodes[0]
+    (resultExec, ncols) = h2o_exec.exec_expr(execExpr=(('ncol(' + frame) + ')'))
+    (resultExec, dontcare) = h2o_exec.exec_expr(execExpr='{0}[, ncol({0}) + 1] = ({0}${1} == 1)'.format(frame, old_col_name))
+    (resultExec, ncols) = h2o_exec.exec_expr(execExpr='ncol({0})'.format(frame))
+    ncols = int(ncols)
+    node.set_column_names(source=frame, cols=('C' + str(ncols)), comma_separated_list=new_col_name)
