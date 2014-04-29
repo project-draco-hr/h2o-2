@@ -1,4 +1,4 @@
-def test_exec2_operators2(self):
+def test_exec2_operators4(self):
     bucket = 'smalldata'
     csvPathname = 'iris/iris2.csv'
     hexKey = 'i.hex'
@@ -9,11 +9,12 @@ def test_exec2_operators2(self):
     h2e.exec_expr_list_rand(len(h2o.nodes), exprList, None, maxTrials=200, timeoutSecs=10)
     bigExecExpr = ''
     expCnt = 0
-    for execExpr in exprList:
+    for t in range(200):
+        execExpr = random.choice(exprList)
         bigExecExpr += (execExpr + ';')
         h2e.exec_expr(h2o.nodes[0], bigExecExpr, resultKey=None, timeoutSecs=4)
         expCnt += 1
-        if (expCnt > 2):
+        if ((expCnt > 2) or ('function' in execExpr) or ('ifelse' in execExpr) or ('?' in execExpr)):
             bigExecExpr = ''
             expCnt = 0
     h2o.check_sandbox_for_errors()
