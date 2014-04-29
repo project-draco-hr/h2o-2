@@ -7,6 +7,7 @@
   responses[0]=new int[]{1,2,8};
   datasets[1]="smalldata/iris/iris.csv";
   responses[1]=new int[]{4};
+  int testcount=0;
   int count=0;
   for (int i=0; i < datasets.length; ++i) {
     String dataset=datasets[i];
@@ -29,7 +30,6 @@
                           if (fraction < rng.nextFloat())                           continue;
                           final double epochs=7 + rng.nextDouble() + rng.nextInt(4);
                           final int[] hidden=new int[]{1 + rng.nextInt(4),1 + rng.nextInt(6)};
-                          if (count != 870)                           continue;
                           Log.info("**************************)");
                           Log.info("Starting test #" + count);
                           Log.info("**************************)");
@@ -57,7 +57,7 @@
                             p.score_training_samples=scoretraining;
                             p.score_validation_samples=scorevalidation;
                             p.balance_classes=balance_classes;
-                            p.quiet_mode=false;
+                            p.quiet_mode=true;
                             p.score_validation_sampling=csm;
                             p.invoke();
                           }
@@ -182,7 +182,6 @@
                             Log.info("Actual best error : " + best_err + ".");
                             Log.info("Actual best training samples : " + best_samples + ".");
                             DeepLearningModel bestmodel=UKV.get(mymodel.get_params().best_model_key);
-                            Log.info("Best model\n" + bestmodel.toString());
                             final Frame fr=valid;
                             Frame bestPredict=bestmodel.score(fr);
                             double bestErr=bestmodel.calcError(fr,fr.vecs()[resp],bestPredict,bestPredict,validation ? "validation" : "training",true,bestmodel.get_params().max_confusion_matrix_size,new water.api.ConfusionMatrix(),bestmodel.nclasses() == 2 ? new AUC() : null,null);
@@ -190,9 +189,12 @@
                             Log.info("Best_model's samples : " + bestmodel.model_info().get_processed_total() + ".");
                             Log.info("Best_model's error : " + bestErr + ".");
                             Assert.assertEquals(bestmodel.model_info().get_processed_total(),best_samples);
-                            if (csm != DeepLearning.ClassSamplingMethod.Stratified && !balance_classes) {
-                              if (Math.abs(bestErr - best_err) > 1e-5)                               Log.info("BAD: " + bestErr + " but should be "+ best_err);
- else                               Log.info("GOOD: " + bestErr + " == "+ best_err);
+                            if (validation && (scorevalidation != 0 || csm != DeepLearning.ClassSamplingMethod.Uniform)) {
+                            }
+ else                             if (!validation && (scoretraining != 0 || balance_classes)) {
+                            }
+ else {
+                              Assert.assertEquals(bestErr,best_err,1e-5);
                             }
                             bestmodel.delete();
                             bestPredict.delete();
@@ -201,6 +203,7 @@
                           UKV.remove(dest);
                           UKV.remove(dest_tmp);
                           Log.info("Parameters combination " + count + ": PASS");
+                          testcount++;
                         }
                       }
                     }
@@ -215,4 +218,7 @@
     frame.delete();
     vframe.delete();
   }
+  Log.info("\n\n=============================================");
+  Log.info("Tested " + testcount + " out of "+ count+ " parameter combinations.");
+  Log.info("=============================================");
 }
