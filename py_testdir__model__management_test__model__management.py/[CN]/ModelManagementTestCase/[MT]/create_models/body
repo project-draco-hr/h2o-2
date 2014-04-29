@@ -8,32 +8,32 @@ def create_models(self, frame_keys):
     retryDelaySecs = 2
     print '##############################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model. . .'
-    glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
+    glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
     glm_AirlinesTrain_1 = node.GLM(airlines_train_hex, timeoutSecs, retryDelaySecs, **glm_AirlinesTrain_1_params)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_1, None, **glm_AirlinesTrain_1_params)
     print '####################################################################'
     print 'Generating AirlinesTrain simple GBM binary classification model. . .'
-    gbm_AirlinesTrain_1_params = {'destination_key': 'gbm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC', 'ntrees': 3, 'max_depth': 1, 'classification': 1, }
+    gbm_AirlinesTrain_1_params = {'destination_key': 'gbm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 3, 'max_depth': 1, 'classification': 1, }
     gbm_AirlinesTrain_1 = node.gbm(airlines_train_hex, timeoutSecs, retryDelaySecs, **gbm_AirlinesTrain_1_params)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex GBM binary classification model. . .'
-    gbm_AirlinesTrain_2_params = {'destination_key': 'gbm_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC', 'ntrees': 50, 'max_depth': 5, 'classification': 1, }
+    gbm_AirlinesTrain_2_params = {'destination_key': 'gbm_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 5, 'classification': 1, }
     gbm_AirlinesTrain_2 = node.gbm(airlines_train_hex, timeoutSecs, retryDelaySecs, **gbm_AirlinesTrain_2_params)
     print '####################################################################'
     print 'Generating AirlinesTrain simple DRF binary classification model. . .'
-    rf_AirlinesTrain_1_params = {'destination_key': 'rf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC', 'ntrees': 5, 'max_depth': 2, 'classification': 1, }
+    rf_AirlinesTrain_1_params = {'destination_key': 'rf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 5, 'max_depth': 2, 'classification': 1, }
     rf_AirlinesTrain_1 = node.random_forest(airlines_train_hex, timeoutSecs, retryDelaySecs, **rf_AirlinesTrain_1_params)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex DRF binary classification model. . .'
-    rf_AirlinesTrain_2_params = {'destination_key': 'rf_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
+    rf_AirlinesTrain_2_params = {'destination_key': 'rf_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
     rf_AirlinesTrain_2 = node.random_forest(airlines_train_hex, timeoutSecs, retryDelaySecs, **rf_AirlinesTrain_2_params)
     print '######################################################################'
     print 'Generating AirlinesTrain DeepLearning binary classification model. . .'
-    dl_AirlinesTrain_1_params = {'destination_key': 'dl_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC', 'hidden': [10, 10], 'classification': 1, }
+    dl_AirlinesTrain_1_params = {'destination_key': 'dl_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'hidden': [10, 10], 'classification': 1, }
     dl_AirlinesTrain_1 = node.deep_learning(airlines_train_hex, timeoutSecs, retryDelaySecs, **dl_AirlinesTrain_1_params)
     print '##############################################################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model with different response column. . .'
-    glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC', 'ignored_cols': 'IsDepDelayed', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
+    glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC_recoded', 'ignored_cols': 'IsDepDelayed, IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
     glm_AirlinesTrain_A = node.GLM(airlines_train_hex, timeoutSecs, retryDelaySecs, **glm_AirlinesTrain_A_params)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_A, None, **glm_AirlinesTrain_A_params)
     print '#########################################################'
