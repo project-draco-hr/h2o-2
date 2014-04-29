@@ -36,6 +36,9 @@
         class_weights=weights;
       }
     }
+    if (seed == -1) {
+      seed=_seedGenerator.nextLong();
+    }
     Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,false,false,false);
     Frame test=null;
     if (validation != null) {
