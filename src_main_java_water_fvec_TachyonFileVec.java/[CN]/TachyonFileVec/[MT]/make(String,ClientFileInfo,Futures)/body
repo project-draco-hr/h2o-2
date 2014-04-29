@@ -1,0 +1,10 @@
+{
+  String fname=tf.getPath();
+  Key k=Key.make(PersistTachyon.PREFIX + serverUri + fname);
+  long size=tf.getLength();
+  Key k2=Vec.newKey(k);
+  Vec v=new TachyonFileVec(k2,size);
+  DKV.put(k2,v,fs);
+  new Frame(k,new String[]{fname},new Vec[]{v}).delete_and_lock(null).unlock(null);
+  return k;
+}
