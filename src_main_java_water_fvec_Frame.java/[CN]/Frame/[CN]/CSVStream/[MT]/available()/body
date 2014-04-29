@@ -8,7 +8,17 @@
       if (!vs[i].isNA(_row)) {
         if (vs[i].isEnum())         sb.append('"' + vs[i]._domain[(int)vs[i].at8(_row)] + '"');
  else         if (vs[i].isInt())         sb.append(vs[i].at8(_row));
- else         sb.append(vs[i].at(_row));
+ else {
+          double d=vs[i].at(_row);
+          String s;
+          if (_hex_string) {
+            s=Double.toHexString(d);
+          }
+ else {
+            s=Double.toString(d);
+          }
+          sb.append(s);
+        }
       }
     }
     sb.append('\n');

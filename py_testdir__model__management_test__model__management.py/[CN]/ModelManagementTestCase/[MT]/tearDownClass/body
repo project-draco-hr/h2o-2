@@ -1,0 +1,6 @@
+@classmethod
+def tearDownClass(cls):
+    if (h2o.clone_cloud_json is None):
+        h2o.tear_down_cloud()
+    else:
+        h2o.check_sandbox_for_errors(sandboxIgnoreErrors=False, python_test_name='test_model_management')

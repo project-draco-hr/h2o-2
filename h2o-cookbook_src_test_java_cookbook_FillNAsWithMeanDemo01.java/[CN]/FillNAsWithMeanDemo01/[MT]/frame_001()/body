@@ -1,0 +1,16 @@
+{
+  String fileName="../cookbookData/iris_withNA.csv";
+  File file=new File(fileName);
+  Key fkey=NFSFileVec.make(file);
+  Key okey=Key.make("iris.hex");
+  Frame fr;
+  fr=ParseDataset2.parse(okey,new Key[]{fkey});
+  int len=fr.numCols();
+  for (int i=0; i < len; i++) {
+    Vec vv=fr.vec(i);
+    Vec output=vv.makeZero();
+    FillNasWithMean lr1=new FillNasWithMean(vv.mean()).doAll(vv,output);
+    fr.add("FilledNa" + i,output);
+  }
+  Log.info("frame              : " + fr);
+}

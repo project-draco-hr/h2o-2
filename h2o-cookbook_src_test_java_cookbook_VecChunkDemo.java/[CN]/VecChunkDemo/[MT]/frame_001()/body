@@ -1,0 +1,31 @@
+{
+  String fileName="/Users/nidhimehta/Desktop/iris.csv";
+  File file=new File(fileName);
+  Key fkey=NFSFileVec.make(file);
+  Key okey=Key.make("iris.hex");
+  Frame fr;
+  fr=ParseDataset2.parse(okey,new Key[]{fkey});
+  Value v=DKV.get(okey);
+  Frame f=v.get();
+  Log.info("frame              : " + f);
+  int len=f.numCols();
+  for (int i=0; i < len; i++) {
+    Log.info("vector                        :" + i);
+    Vec vv=f.vec(i);
+    Log.info("vector     summary                :" + vv);
+    Log.info("vector     length                 :" + vv.length());
+    Log.info("vector     group                  :" + vv.group());
+    Log.info("vector     na count               :" + vv.naCnt());
+    Log.info("vector     domain null if not enum:" + vv.domain());
+    int cardinality=vv.cardinality();
+    Log.info("vector     cardianlity            :" + vv.cardinality());
+    if (cardinality != -1) {
+      for (int j=0; j < cardinality; j++)       Log.info("labels                    :" + vv.domain(j));
+    }
+    Log.info("vector value at row 50            :" + vv.at(51));
+    int chunk_count=vv.nChunks();
+    Log.info("chunk     count                   :" + chunk_count);
+    Chunk c=vv.chunkForRow(100);
+    Log.info("chunk     for row 100             :" + c);
+  }
+}

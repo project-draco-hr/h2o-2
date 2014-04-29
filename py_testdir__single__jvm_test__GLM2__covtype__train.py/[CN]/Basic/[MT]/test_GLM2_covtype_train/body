@@ -21,7 +21,7 @@ def test_GLM2_covtype_train(self):
     print 'Creating the key of the last 10% data, for scoring'
     trainDataKey = 'rTrain'
     testDataKey = 'rTest'
-    kwargs = {'response': ('C' + str(y)), 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', }
+    kwargs = {'response': ('C' + str((y + 1))), 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', }
     timeoutSecs = 60
     for trial in range(10):
         rowsToUse = rowsForPct[(trial % 10)]
@@ -36,7 +36,7 @@ def test_GLM2_covtype_train(self):
         predictKey = 'Predict.hex'
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key=testDataKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=testDataKey, vactual=('C' + str(y)), predict=predictKey, vpredict='predict')
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=testDataKey, vactual=('C' + str((y + 1))), predict=predictKey, vpredict='predict')
         cm = predictCMResult['cm']
         pctWrong = h2o_gbm.pp_cm_summary(cm)
         self.assertLess(pctWrong, 8, 'Should see less than 7% error (class = 4)')

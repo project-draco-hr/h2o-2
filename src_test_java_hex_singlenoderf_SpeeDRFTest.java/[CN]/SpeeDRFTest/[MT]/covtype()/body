@@ -1,0 +1,17 @@
+{
+  Frame fr=parseFrame(Key.make("covtype.hex"),"smalldata/covtype/covtype.20k.data");
+  Vec response=fr.vecs()[54];
+  SpeeDRF spdrf=new SpeeDRF();
+  spdrf.source=fr;
+  spdrf.response=response;
+  spdrf.num_trees=8;
+  spdrf.max_depth=999;
+  spdrf.stat_type=StatType.ENTROPY;
+  spdrf.seed=42;
+  spdrf.invoke();
+  SpeeDRFModel m=UKV.get(spdrf.dest());
+  assertEquals("Number of classes",7,m.classes());
+  assertEquals("Number of trees",8,m.size());
+  m.delete();
+  fr.delete();
+}

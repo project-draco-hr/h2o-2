@@ -8,7 +8,8 @@
 );
   }
  else {
-    new GLMIterationTask(GLM2.this,_dinfo,_glm,false,true,false,newBeta,_ymu,_reg,new H2OCallback<GLMIterationTask>(GLM2.this){
+    final double[] b=_model.submodels[_lambdaIdx].norm_beta != null ? _model.submodels[_lambdaIdx].norm_beta : _model.submodels[_lambdaIdx].beta;
+    new GLMIterationTask(GLM2.this,_dinfo,_glm,false,true,false,b,prior,_reg,new H2OCallback<GLMIterationTask>(GLM2.this){
       @Override public void callback(      GLMIterationTask glmt2){
         nextLambda(glmt,newBeta,glmt2._val);
       }
