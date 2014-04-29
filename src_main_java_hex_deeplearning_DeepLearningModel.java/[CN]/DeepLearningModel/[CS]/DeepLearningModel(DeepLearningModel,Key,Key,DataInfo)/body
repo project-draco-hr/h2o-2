@@ -6,6 +6,7 @@
     model_info=cp.model_info.deep_clone();
     model_info.data_info=dataInfo.deep_clone();
     get_params().state=Job.JobState.DONE;
+    _modelClassDist=cp._modelClassDist != null ? cp._modelClassDist.clone() : null;
   }
  else {
     model_info=(DeepLearningModelInfo)cp.model_info.clone();
