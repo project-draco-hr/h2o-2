@@ -1,0 +1,14 @@
+def process(line):
+    global params
+    if (line.strip()[0] == '_'):
+        return
+    line = line.split('=')
+    if (len(line) == 1):
+        value = None
+        name = line[0].split()[(-1)].strip().strip(';')
+    else:
+        value = parseValue(line[(-1)].strip().strip(';'))
+        name = line[0].split()[(-1)].strip()
+    if (name[0] == '_'):
+        return
+    params[name] = value

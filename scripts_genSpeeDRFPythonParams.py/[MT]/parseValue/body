@@ -1,0 +1,12 @@
+def parseValue(v):
+    if (v == 'true'):
+        return 1
+    if (v == 'false'):
+        return 0
+    try:
+        float(v)
+        return float(v)
+    except ValueError:
+        if ('.' in v):
+            return v.split('.')[(-1)]
+        return v
