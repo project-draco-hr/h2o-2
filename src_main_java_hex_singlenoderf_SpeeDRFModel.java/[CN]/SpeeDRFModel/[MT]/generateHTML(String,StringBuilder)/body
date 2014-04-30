@@ -33,8 +33,8 @@
     DocGen.HTML.section(sb,"Mean Squared Error by Tree");
     DocGen.HTML.arrayHead(sb);
     sb.append("<tr style='min-width:60px'><th>Trees</th>");
-    int last=this.size() - 1;
-    for (int i=last; i >= 0; i--)     sb.append("<td style='min-width:60px'>").append(i + 1).append("</td>");
+    int last=this.size();
+    for (int i=last; i >= 0; i--)     sb.append("<td style='min-width:60px'>").append(i).append("</td>");
     sb.append("</tr>");
     sb.append("<tr><th class='warning'>MSE</th>");
     for (int i=last; i >= 0; i--)     sb.append((!(Double.isNaN(errs[i]) || errs[i] <= 0.f)) ? String.format("<td style='min-width:60px'>%5.5f</td>",errs[i]) : "<td style='min-width:60px'>---</td>");
@@ -49,4 +49,5 @@
     trees.add(Constants.TREE_LEAVES,this.leaves().toJson());
   }
   generateHTMLTreeStats(sb,trees);
+  if (validAUC != null)   generateHTMLAUC(sb);
 }
