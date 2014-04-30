@@ -3,7 +3,7 @@
   ClusterDist cd=new ClusterDist();
   for (int row=0; row < cs[0]._len; row++) {
     data(values,cs,row,_means,_mults);
-    closest(_clusters,values,cd);
+    closest(_clusters,values,_ncats,cd);
     int clu=cd._cluster;
     ncs.addEnum(clu);
   }
