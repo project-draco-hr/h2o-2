@@ -7,7 +7,7 @@ def test_exec2_runif(self):
     csvPathname = 'standard/covtype.data'
     hexKey = 'r.hex'
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
-    execExprList = ['r0.hex = r.hex[,1]', 's0.hex = runif(r.hex[,1])', 's1.hex = runif(r.hex[,1])', 's2.hex = runif(r.hex[,1])']
+    execExprList = ['r0.hex = r.hex[,1]', 's0.hex = runif(r.hex[,1],-1)', 's1.hex = runif(r.hex[,1],-1)', 's2.hex = runif(r.hex[,1],-1)']
     results = []
     for execExpr in execExprList:
         start = time.time()

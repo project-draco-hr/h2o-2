@@ -1,4 +1,6 @@
 {
+  double temp=env.popDbl();
+  final long seed=(temp == -1) ? System.currentTimeMillis() : (long)temp;
   Frame fr=env.popAry();
   String skey=env.key();
   long[] espc=fr.anyVec()._espc;
@@ -16,7 +18,6 @@
   DKV.put(randVec._key,randVec,fs);
   for (int i=0; i < espc.length - 1; ++i)   DKV.put(randVec.chunkKey(i),new C0DChunk(0,(int)(espc[i + 1] - espc[i])),fs);
   fs.blockForPending();
-  final long seed=System.currentTimeMillis();
   new MRTask2(){
     @Override public void map(    Chunk c){
       Random rng=new Random(seed * c.cidx());

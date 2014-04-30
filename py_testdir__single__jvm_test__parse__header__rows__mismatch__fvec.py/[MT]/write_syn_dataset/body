@@ -1,0 +1,7 @@
+def write_syn_dataset(csvPathname, rowCount, headerData, rList):
+    dsf = open(csvPathname, 'w+')
+    dsf.write((headerData + '\n'))
+    for i in range(rowCount):
+        r = ((rList[random.randint(0, 1)] + ',') + str(random.randint(0, 7)))
+        dsf.write((r + '\n'))
+    dsf.close()

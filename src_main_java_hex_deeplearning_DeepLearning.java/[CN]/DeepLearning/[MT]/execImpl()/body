@@ -15,7 +15,7 @@
       ignored_cols=previous.model_info().get_params().ignored_cols;
       Log.warn("Automatically re-using ignored_cols from the checkpointed model.");
     }
-    if ((validation != null) != (previous.model_info().get_params().validation != null) || (validation != null && !Arrays.equals(validation._key._kb,previous.model_info().get_params().validation._key._kb))) {
+    if ((validation != null) != (previous.model_info().get_params().validation != null) || (validation != null && validation._key != null && previous.model_info().get_params().validation._key != null && !Arrays.equals(validation._key._kb,previous.model_info().get_params().validation._key._kb))) {
       throw new IllegalArgumentException("validation must be the same as for the checkpointed model.");
     }
     if (classification != previous.model_info().get_params().classification) {
@@ -36,7 +36,8 @@
           for (          Field fB : B.getClass().getDeclaredFields()) {
             if (fA.equals(fB)) {
               try {
-                if (!fA.get(A).toString().equals(fB.get(B).toString())) {
+                if (fB.get(B) == null || fA.get(A) == null || !fA.get(A).toString().equals(fB.get(B).toString())) {
+                  if (fA.get(A) == null && fB.get(B) == null)                   continue;
                   Log.info("Applying user-requested modification of '" + fA.getName() + "': "+ fA.get(A)+ " -> "+ fB.get(B));
                   fA.set(A,fB.get(B));
                 }
