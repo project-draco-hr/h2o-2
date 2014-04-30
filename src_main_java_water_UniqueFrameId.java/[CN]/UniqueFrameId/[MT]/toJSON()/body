@@ -1,0 +1,7 @@
+{
+  final String json=new String(writeJSON(new AutoBuffer()).buf());
+  if (json.length() == 0)   return new JsonObject();
+  JsonObject jo=(JsonObject)new JsonParser().parse(json);
+  jo.addProperty("id",this.getId());
+  return jo;
+}
