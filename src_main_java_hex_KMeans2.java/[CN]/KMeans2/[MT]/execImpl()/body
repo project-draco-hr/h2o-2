@@ -8,6 +8,7 @@
   String[] names=fr.names();
   Vec[] vecs=fr.vecs();
   if (vecs == null || vecs.length == 0)   throw new IllegalArgumentException("No columns selected. Check that selected columns have not been dropped due to too many NAs.");
+  DataInfo dinfo=new DataInfo(fr,0,false,normalize,false);
   String[] domain=new String[k];
   for (int i=0; i < domain.length; i++)   domain[i]="Cluster " + i;
   String[] namesResp=Utils.append(names,"response");
@@ -23,7 +24,7 @@
     means[i]=(float)vecs[i].mean();
     if (mults != null) {
       double sigma=vecs[i].sigma();
-      mults[i]=normalize(sigma) ? 1 / sigma : 1;
+      mults[i]=normalize(sigma) ? 1.0 / sigma : 1.0;
     }
   }
   Random rand=Utils.getRNG(seed - 1);
@@ -64,6 +65,8 @@
     task._clusters=clusters;
     task._means=means;
     task._mults=mults;
+    task._ncats=dinfo._cats;
+    task._nnums=dinfo._nums;
     task.doAll(vecs);
     model.centers=clusters=normalize ? denormalize(task._cMeans,vecs) : task._cMeans;
     model.between_cluster_variances=task._betwnSqrs;
