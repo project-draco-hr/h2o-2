@@ -9,6 +9,6 @@
     _model.update(self());
   }
   _model.unlock(self());
-  if (_dinfo._nfolds == 0)   remove();
+  if (_dinfo._nfolds == 0 && !_grid)   remove();
   if (_fjtask != null)   _fjtask.tryComplete();
 }
