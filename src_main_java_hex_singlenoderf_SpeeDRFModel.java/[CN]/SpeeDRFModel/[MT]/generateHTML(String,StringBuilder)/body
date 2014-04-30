@@ -18,11 +18,13 @@
     if (this.size() == N) {
       sb.append("Current Status: ").append("Complete.");
     }
- else     if (Job.findJob(jobKey).isCancelledOrCrashed()) {
-      sb.append("Current Status: ").append("Cancelled.");
-    }
  else {
-      sb.append("Current Status: ").append(this.current_status);
+      if (Job.findJob(jobKey).isCancelledOrCrashed()) {
+        sb.append("Current Status: ").append("Cancelled.");
+      }
+ else {
+        sb.append("Current Status: ").append(this.current_status);
+      }
     }
   }
   buildCM(sb);
