@@ -7,7 +7,7 @@ def add_test(self, testDir, prefix):
     parse_file = 'parse.R'
     model_file = 'model.R'
     predict_file = None
-    if os.path.exists(os.path.join(self.test_root_dir, testDir, 'predict.R')):
+    if os.path.exists(os.path.join(self.test_root_dir, prefix, testDir, 'predict.R')):
         predict_file = 'predict.R'
     test_dir = os.path.join(self.test_root_dir, prefix, testDir)
     test_short_dir = os.path.join(prefix, testDir)
