@@ -11,5 +11,5 @@
   }
   Log.info("GLM2 line search failed to find feasible step. Forcibly converged.");
   _activeCols=_lastResult._activeCols;
-  nextLambda(_lastResult._glmt,_lastResult.beta(_activeCols,_dinfo.fullN()));
+  nextLambda(_lastResult._glmt.clone(),_lastResult.beta(_activeCols,_dinfo.fullN()));
 }

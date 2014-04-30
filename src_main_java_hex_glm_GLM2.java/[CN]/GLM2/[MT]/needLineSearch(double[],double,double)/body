@@ -16,6 +16,6 @@
     double diff=beta[i] - oldBeta[i];
     f_hat+=grad[i] * diff;
   }
-  f_hat=_lastResult._objval + 0.5 * step * f_hat;
+  f_hat=objval(_lastResult._glmt) + 0.5 * step * f_hat;
   return objval > f_hat;
 }
