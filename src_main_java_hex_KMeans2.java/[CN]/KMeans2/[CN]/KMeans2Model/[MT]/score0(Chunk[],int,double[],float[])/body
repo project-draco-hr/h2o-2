@@ -19,7 +19,7 @@
   }
   data(tmp,chunks,rowInChunk,_means,_mults);
   Arrays.fill(preds,0);
-  int cluster=closest(cs,tmp,new ClusterDist())._cluster;
+  int cluster=closest(cs,tmp,_ncats,new ClusterDist())._cluster;
   preds[0]=cluster;
   preds[1 + cluster]=1;
   return preds;
