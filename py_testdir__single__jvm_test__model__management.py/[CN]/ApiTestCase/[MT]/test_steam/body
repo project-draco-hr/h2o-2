@@ -3,6 +3,9 @@ def test_steam(self):
     print '                    Testing Steam...                      '
     print '----------------------------------------------------------'
     client_dir = os.path.join(os.path.split(os.path.split(os.path.dirname(os.path.realpath(__file__)))[0])[0], 'client')
+    node0 = h2o.nodes[0]
+    os.environ['STEAM_NODE_ADDR'] = node0.http_addr
+    os.environ['STEAM_NODE_PORT'] = str(node0.port)
     command_string = ('make test -C ' + client_dir)
     (ps, outpath, errpath) = h2o.spawn_cmd('steam_tests', command_string.split())
     h2o.spawn_wait(ps, outpath, errpath, timeout=1000)
