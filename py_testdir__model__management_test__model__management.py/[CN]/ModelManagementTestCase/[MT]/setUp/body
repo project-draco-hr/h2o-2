@@ -1,0 +1,5 @@
+def setUp(self):
+    if ModelManagementTestCase.already_set_up:
+        return
+    self.create_models(self.import_frames())
+    ModelManagementTestCase.already_set_up = True
