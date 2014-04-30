@@ -1,4 +1,4 @@
-def checkScalarResult(resultExec, resultKey, allowEmptyResult=False):
+def checkScalarResult(resultExec, resultKey, allowEmptyResult=False, nanOkay=False):
     h2o.verboseprint('checkScalarResult resultExec:', h2o.dump_json(resultExec))
     if ('funstr' not in resultExec):
         emsg = "checkScalarResult: 'funstr' missing"
@@ -28,12 +28,12 @@ def checkScalarResult(resultExec, resultKey, allowEmptyResult=False):
         scalar = resultExec['scalar']
         if (scalar is None):
             raise Exception(('both cols and scalar are null: %s %s' % (cols, scalar)))
-        checkForBadFP(scalar, json=resultExec)
+        checkForBadFP(scalar, json=resultExec, nanOkay=(nanOkay or (stype == 'Enum')))
         return scalar
     metaDict = cols[0]
     for (key, value) in metaDict.items():
         print 'Inspect metaDict:', key, value
     min_value = metaDict['min']
     stype = metaDict['type']
-    checkForBadFP(min_value, nanOkay=(stype == 'Enum'), json=metaDict)
+    checkForBadFP(min_value, json=metaDict, nanOkay=(nanOkay or (stype == 'Enum')))
     return min_value
