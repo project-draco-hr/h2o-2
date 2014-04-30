@@ -1,5 +1,5 @@
 {
-  int tasks=this.total_trees;
+  int tasks=this.N;
   int finished=this.size();
   int modelSize=tasks * 25 / 100;
   modelSize=modelSize == 0 || finished == tasks ? finished : modelSize * (finished / modelSize);
@@ -29,7 +29,7 @@
     cm.add(JSON_CM_MATRIX,matrix);
     cm.addProperty(JSON_CM_TREES,modelSize);
     DocGen.HTML.section(sb,"Confusion Matrix:");
-    if (testKey != null)     sb.append("<div class=\"alert\">Reported on ").append(Inspect2.link(testKey.toString(),testKey));
+    if (testKey != null)     sb.append("<div class=\"alert\">Reported on ").append(Inspect2.link(testKey.toString(),testKey)).append("</div>");
  else     sb.append("<div class=\"alert\">Reported on ").append(cm.get(JSON_CM_TYPE).getAsString()).append(" data</div>");
     if (cm.has(JSON_CM_MATRIX)) {
       sb.append("<dl class='dl-horizontal'>");
