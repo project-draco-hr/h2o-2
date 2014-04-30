@@ -2,14 +2,14 @@
   double step=0.5;
   for (int i=0; i < glmt._objvals.length; ++i) {
     if (!needLineSearch(glmt._betas[i],glmt._objvals[i],step)) {
-      Log.info("GLM2 line search: found admissible step=" + step);
+      Log.info("GLM2 (iteration=" + _iter + ") line search: found admissible step="+ step);
       _lastResult=null;
       new GLMIterationTask(GLM2.this,_activeData,_glm,true,true,true,glmt._betas[i],_ymu,_reg,new Iteration()).asyncExec(_activeData._adaptedFrame);
       return;
     }
     step*=0.5;
   }
-  Log.info("GLM2 line search failed to find feasible step. Forcibly converged.");
+  Log.info("GLM2 (iteration=" + _iter + ") line search failed to find feasible step. Forcibly converged.");
   _activeCols=_lastResult._activeCols;
   nextLambda(_lastResult._glmt.clone(),_lastResult.beta(_activeCols,_dinfo.fullN()));
 }
