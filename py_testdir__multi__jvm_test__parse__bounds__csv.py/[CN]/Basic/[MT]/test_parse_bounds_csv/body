@@ -28,10 +28,10 @@ def test_parse_bounds_csv(self):
             iOffset = iColDict['offset']
             iColNameToOffset[iName] = iOffset
             num_missing_values = iColDict['num_missing_values']
-            iMin = iColDict['min']
-            iMax = iColDict['max']
-            iMean = iColDict['mean']
-            iVariance = iColDict['variance']
+            iMin = float(iColDict['min'])
+            iMax = float(iColDict['max'])
+            iMean = float(iColDict['mean'])
+            iVariance = float(iColDict['variance'])
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_column_display=colCount, timeoutSecs=timeoutSecs)
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))

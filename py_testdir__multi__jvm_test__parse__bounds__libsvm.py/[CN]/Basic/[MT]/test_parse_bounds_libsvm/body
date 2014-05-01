@@ -45,10 +45,12 @@ def test_parse_bounds_libsvm(self):
             nbins = histogram['bins']
             zeros = columns['zeros']
             na = columns['na']
+            print h2o.dump_json(columns)
+            print columns['max'], columns['min'], columns['mean'], columns['sigma']
             smax = columns['max']
             smin = columns['min']
-            mean = columns['mean']
-            sigma = columns['sigma']
+            mean = float(columns['mean'])
+            sigma = float(columns['sigma'])
             if (name == ('V' + str(colNumberMax))):
                 synZeros = (num_rows - 1)
                 synSigma = None
