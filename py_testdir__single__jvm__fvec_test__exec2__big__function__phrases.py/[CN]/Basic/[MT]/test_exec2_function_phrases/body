@@ -9,6 +9,6 @@ def test_exec2_function_phrases(self):
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
     execExpr = ''
     for j in range(25):
-        execExpr += ((('a%s=' % j) + random.choice(phrases)) + ';\n')
-        execExprFull = ((('func%s = function(x,y,z,rhex){ ' % j) + execExpr) + ' }(0,0,0,rhex)')
+        execExpr += ((('a%s=' % j) + random.choice(phrases)) + '; ')
+        execExprFull = ((('func%s = function(x,y,z,rhex){ ' % j) + execExpr) + ' }(1,1,1,rhex)')
         h2e.exec_expr(h2o.nodes[0], execExprFull, resultKey=None, timeoutSecs=30)
