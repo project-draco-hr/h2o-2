@@ -37,7 +37,7 @@ def test_many_fp_formats_libsvm_2(self):
                     print '\nComparing col sums:', v, compare
                     self.assertAlmostEqual(v, compare, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, compare)))
                 synMean = ((v + 0.0) / rowCount)
-                mean = inspect['cols'][k]['mean']
+                mean = float(inspect['cols'][k]['mean'])
                 self.assertAlmostEqual(mean, synMean, places=0, msg=('col %s mean %0.6f is not equal to generated mean %0.6f' % (k, mean, synMean)))
                 num_missing_values = inspect['cols'][k]['num_missing_values']
                 self.assertEqual(0, num_missing_values, msg=('col %s num_missing_values %d should be 0' % (k, num_missing_values)))
