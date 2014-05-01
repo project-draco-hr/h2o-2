@@ -61,9 +61,11 @@ def test_many_fp_formats_libsvm(self):
                 cols = inspect['cols'][k]
                 for synKey in syn:
                     if (synKey == 'min'):
-                        self.assertTrue((syn[synKey] <= cols[synKey]), msg=('col %s %s %s should be <= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                        self.assertTrue((syn[synKey] <= float(cols[synKey])), msg=('col %s %s %s should be <= %s' % (k, synKey, cols[synKey], syn[synKey])))
                     elif (synKey == 'max'):
-                        self.assertTrue((syn[synKey] >= cols[synKey]), msg=('col %s %s %s should be >= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                        self.assertTrue((syn[synKey] >= float(cols[synKey])), msg=('col %s %s %s should be >= %s' % (k, synKey, cols[synKey], syn[synKey])))
+                    elif (synKey == 'variance'):
+                        self.assertTrue((syn[synKey] == float(cols[synKey])), msg=('col %s %s %s should be == %s' % (k, synKey, cols[synKey], syn[synKey])))
                     elif ((synKey == 'size') or (synKey == 'scale') or (synKey == 'type')):
                         if (cols[synKey] not in syn[synKey]):
                             print 'cols size/min/max:', cols['size'], cols['min'], cols['max']
