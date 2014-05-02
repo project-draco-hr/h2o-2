@@ -8,7 +8,7 @@
   sb.append("<tr><th>Depth</th>").append("<td>").append(depth_stats != null ? depth_stats[0] : NA).append("</td>").append("<td>").append(depth_stats != null ? depth_stats[1] : NA).append("</td>").append("<td>").append(depth_stats != null ? depth_stats[2] : NA).append("</td></tr>");
   sb.append("<th>Leaves</th>").append("<td>").append(leaf_stats != null ? leaf_stats[0] : NA).append("</td>").append("<td>").append(leaf_stats != null ? leaf_stats[1] : NA).append("</td>").append("<td>").append(leaf_stats != null ? leaf_stats[2] : NA).append("</td></tr>");
   DocGen.HTML.arrayTail(sb);
-  if (depth_stats != null) {
+  if (depth_stats != null && leaf_stats != null) {
     treeStats.minDepth=(int)depth_stats[0];
     treeStats.meanDepth=(float)depth_stats[1];
     treeStats.maxDepth=(int)depth_stats[2];
