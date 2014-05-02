@@ -2,7 +2,12 @@
   final double rhs=alpha[0] * (2 * l1 - l2);
   int[] cols=MemoryManager.malloc4(_dinfo.fullN());
   int selected=0;
-  for (int i=0; i < _dinfo.fullN(); ++i)   if (grad[i] > rhs || grad[i] < -rhs)   cols[selected++]=i;
+  int j=0;
+  if (_activeCols == null)   _activeCols=new int[]{-1};
+  for (int i=0; i < _dinfo.fullN(); ++i)   if ((j < _activeCols.length && i == _activeCols[j]) || grad[i] > rhs || grad[i] < -rhs) {
+    cols[selected++]=i;
+    if (j < _activeCols.length && i == _activeCols[j])     ++j;
+  }
   if (!strong_rules_enabled || selected == _dinfo.fullN()) {
     _activeCols=null;
     _activeData._adaptedFrame=_dinfo._adaptedFrame;

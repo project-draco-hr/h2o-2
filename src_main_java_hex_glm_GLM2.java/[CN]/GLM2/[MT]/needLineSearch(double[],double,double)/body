@@ -1,21 +1,13 @@
 {
   if (Double.isNaN(objval))   return true;
-  final double[] beta, grad;
-  if (_activeCols != _lastResult._activeCols) {
-    beta=expandVec(b,_activeCols);
-    grad=_lastResult._fullGrad;
-  }
- else {
-    beta=b;
-    grad=_lastResult._glmt.gradient(l2pen());
-  }
+  final double[] grad=_activeCols == _lastResult._activeCols ? _lastResult._glmt.gradient(l2pen()) : contractVec(_lastResult._fullGrad,_activeCols);
   double f_hat=0;
   ADMMSolver.subgrad(alpha[0],lambda[_lambdaIdx],beta,grad);
-  final double[] oldBeta=expandVec(_lastResult._glmt._beta,_lastResult._activeCols);
+  final double[] oldBeta=resizeVec(_lastResult._glmt._beta,_activeCols,_lastResult._activeCols);
   for (int i=0; i < beta.length; ++i) {
     double diff=beta[i] - oldBeta[i];
     f_hat+=grad[i] * diff;
   }
-  f_hat=objval(_lastResult._glmt) + 0.5 * step * f_hat;
+  f_hat=objval(_lastResult._glmt) + 0.25 * step * f_hat;
   return objval > f_hat;
 }
