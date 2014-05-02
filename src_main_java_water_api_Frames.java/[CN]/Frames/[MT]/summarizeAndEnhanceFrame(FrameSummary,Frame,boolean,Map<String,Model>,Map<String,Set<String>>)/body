@@ -2,6 +2,7 @@
   summary.creation_epoch_time_millis=frame.getUniqueId().getCreationEpochTimeMillis();
   summary.id=frame.getUniqueId().getId();
   summary.column_names=frame._names;
+  summary.is_raw_frame=frame.isRawData();
   if (find_compatible_models) {
     Map<String,Model> compatible_models=findCompatibleModels(frame,all_models,all_models_cols);
     summary.compatible_models=compatible_models.keySet();
