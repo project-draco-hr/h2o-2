@@ -10,5 +10,5 @@
       return new ConfMat(lasterror.train_err,lasterror.trainAUC != null ? lasterror.trainAUC.F1() : 0);
     }
   }
-  return new hex.ConfusionMatrix(cm.cm);
+  return new hex.ConfusionMatrix(cm.cm,cm.cm.length - 1);
 }

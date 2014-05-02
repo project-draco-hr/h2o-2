@@ -5,28 +5,58 @@
   m.t_keys[m.t_keys.length - 1]=tkey;
   m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
   m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
-  double f=(double)m.t_keys.length / (double)m.total_trees;
+  double f=(double)m.t_keys.length / (double)m.N;
   if (m.t_keys.length == 1) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
     cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
-    m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
+    m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum,cmTask._cms);
     m.cm=cmTask._matrix._matrix;
   }
   if (f == 1.0) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
     cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
-    m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum);
+    m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum,cmTask._cms);
     m.cm=cmTask._matrix._matrix;
   }
   if (!cm_update) {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
-    m.errs[m.t_keys.length - 1]=-1.f;
+    m.errs[m.errs.length - 1]=-1.f;
+    m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
+    m.cms[m.cms.length - 1]=null;
   }
  else {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
-    m.errs[m.t_keys.length - 1]=m.confusion.mse();
+    m.errs[m.errs.length - 1]=m.confusion.mse();
+    m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
+    ConfusionMatrix new_cm=new ConfusionMatrix(m.confusion._matrix);
+    m.cms[m.cms.length - 1]=new_cm;
+    if (m.classes() == 2) {
+      m.validAUC=makeAUC(toCMArray(m.confusion._cms),ModelUtils.DEFAULT_THRESHOLDS);
+    }
+    if (m.importance)     m.varimp=m.doVarImpCalc(m);
   }
+  JsonObject trees=new JsonObject();
+  trees.addProperty(Constants.TREE_COUNT,m.size());
+  if (m.size() > 0) {
+    trees.add(Constants.TREE_DEPTH,m.depth().toJson());
+    trees.add(Constants.TREE_LEAVES,m.leaves().toJson());
+  }
+  TreeStats treeStats=new TreeStats();
+  double[] depth_stats=stats(trees.get(Constants.TREE_DEPTH));
+  double[] leaf_stats=stats(trees.get(Constants.TREE_LEAVES));
+  if (depth_stats != null) {
+    treeStats.minDepth=(int)depth_stats[0];
+    treeStats.meanDepth=(float)depth_stats[1];
+    treeStats.maxDepth=(int)depth_stats[2];
+    treeStats.minLeaves=(int)leaf_stats[0];
+    treeStats.meanLeaves=(float)leaf_stats[1];
+    treeStats.maxLeaves=(int)leaf_stats[2];
+  }
+ else {
+    treeStats=null;
+  }
+  m.treeStats=treeStats;
   return m;
 }

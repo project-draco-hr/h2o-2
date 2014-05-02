@@ -3,6 +3,16 @@
     return NumberSequence.parse(input,_multiplicative,_defaultStep);
   }
  catch (  NumberFormatException e) {
-    throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+    if (input.contains("(") && input.contains(")")) {
+      try {
+        String[] s=input.replaceAll("[()]","").split(",");
+        for (        String num : s)         Double.parseDouble(num);
+        return NumberSequence.parse(s[0],_multiplicative,_defaultStep);
+      }
+ catch (      NumberFormatException e2) {
+        throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
+      }
+    }
+ else     throw new IllegalArgumentException("Value " + input + " is not a valid number sequence.");
   }
 }

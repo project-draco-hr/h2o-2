@@ -1,0 +1,14 @@
+{
+  _ncols=ncols;
+  _rate=rate;
+  _var=variable;
+  _model=model;
+  _validation=model.test_frame == null;
+  _oob=true;
+  _ntrees=trees;
+  _nclasses=nclasses;
+  _classification=(nclasses > 1);
+  _classcol=model.test_frame == null ? (model.fr.numCols() - 1) : (model.test_frame.numCols() - 1);
+  _data=_model.test_frame == null ? _model.fr : _model.test_frame;
+  init();
+}

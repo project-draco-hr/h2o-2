@@ -5,7 +5,7 @@ def createTestTrain(srcKey, trainDstKey, testDstKey, trainPercent, outputClass=N
         print 'change class', outputClass, 'to 1, everything else to 0. factor() to turn real to int (for rf)'
     boundary = ((trainPercent + 0.0) / 100)
     execExpr = ''
-    execExpr += ('cct.hex=runif(%s);' % srcKey)
+    execExpr += ('cct.hex=runif(%s,-1);' % srcKey)
     execExpr += ('%s=%s[cct.hex<=%s,];' % (trainDstKey, srcKey, boundary))
     if changeToBinomial:
         execExpr += ('%s[,%s]=%s[,%s]==%s;' % (trainDstKey, (outputCol + 1), trainDstKey, (outputCol + 1), outputClass))

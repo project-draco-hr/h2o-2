@@ -36,13 +36,16 @@
         class_weights=weights;
       }
     }
+    if (seed == -1) {
+      seed=_seedGenerator.nextLong();
+    }
     Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,false,false,false);
     Frame test=null;
     if (validation != null) {
       test=FrameTask.DataInfo.prepareFrame(validation,validation.vecs()[source.find(response)],ignored_cols,false,false,false);
     }
-    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0],seed);
-    model.bin_limit=bin_limit;
+    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0],seed,getCMDomain());
+    model.nbins=bin_limit;
     if (mtry == -1) {
       model.mtry=(int)Math.floor(Math.sqrt(source.numCols()));
     }
@@ -54,13 +57,14 @@
     model.sample=(float)sample;
     model.weights=class_weights;
     model.time=0;
-    model.total_trees=num_trees;
+    model.N=num_trees;
     model.strata_samples=samps;
-    model.depth=max_depth;
+    model.max_depth=max_depth;
     model.oobee=validation == null && oobee;
     model.statType=stat_type;
     model.test_frame=test;
     model.testKey=validation == null ? null : validation._key;
+    model.importance=importance;
     return model;
   }
   finally {

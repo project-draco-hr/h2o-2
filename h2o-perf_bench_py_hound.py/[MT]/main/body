@@ -1,0 +1,6 @@
+def main(test_run_id, ips, pids, name):
+    split_pids = pids.split(',')
+    ssh = ssh_connect()
+    cmd = ['python', '/home/0xperf/HOUND/unleash_the_hounds.py', str(test_run_id), pids, ips, name]
+    cmd = ' '.join(cmd)
+    ssh.ssh.exec_command(cmd)

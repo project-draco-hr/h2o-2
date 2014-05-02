@@ -1,0 +1,6 @@
+def __init__(self):
+    self.ssh = paramiko.SSHClient()
+    policy = paramiko.AutoAddPolicy()
+    self.ssh.set_missing_host_key_policy(policy)
+    self.ssh.load_system_host_keys()
+    self.ssh.connect('192.168.1.171', username='0xperf', password='0xperf')

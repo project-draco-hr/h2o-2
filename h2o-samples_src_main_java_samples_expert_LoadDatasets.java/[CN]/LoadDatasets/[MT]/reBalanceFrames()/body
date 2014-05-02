@@ -1,0 +1,20 @@
+{
+  final Set<Key> keySet=H2O.globalKeySet(null);
+  for (  Key key : keySet) {
+    final Value val=DKV.get(key);
+    if (val == null || !val.isFrame())     continue;
+    final Frame fr=val.get();
+    if (!fr._key.toString().contains("balanced")) {
+      final int splits=Math.min((int)fr.numRows(),4 * H2O.NUMCPUS * H2O.CLOUD.size());
+      final String name=fr._key.toString() + ".rebalanced";
+      Log.info("Load balancing frame under key '" + fr._key.toString() + "' into "+ splits+ " splits.");
+      try {
+        final Key frHexBalanced=Key.make(name);
+        new RebalanceDataSet(fr,frHexBalanced,splits).invoke();
+      }
+ catch (      Exception ex) {
+        Log.err(ex.getMessage());
+      }
+    }
+  }
+}
