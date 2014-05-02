@@ -35,6 +35,7 @@
     if (m.classes() == 2) {
       m.validAUC=makeAUC(toCMArray(m.confusion._cms),ModelUtils.DEFAULT_THRESHOLDS);
     }
+    if (m.importance)     m.varimp=m.doVarImpCalc(m);
   }
   JsonObject trees=new JsonObject();
   trees.addProperty(Constants.TREE_COUNT,m.size());
