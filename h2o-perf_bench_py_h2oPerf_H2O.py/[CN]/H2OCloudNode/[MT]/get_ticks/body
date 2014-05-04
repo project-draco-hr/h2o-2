@@ -5,6 +5,8 @@ def get_ticks(self):
     got_url_sys = False
     got_url_proc = False
     while (m < max_retries):
+        r_sys = ''
+        r_proc = ''
         print ((('Performing try : ' + str(m)) + ' out of total tries = ') + str(max_retries))
         url_sys = 'http://{}:{}/stat'.format(self.ip, 8000)
         url_proc = 'http://{}:{}/{}/stat'.format(self.ip, 8000, self.pid)
@@ -12,7 +14,9 @@ def get_ticks(self):
             r_sys = requests.get(url_sys, timeout=120).text.split('\n')[0]
             r_proc = requests.get(url_proc, timeout=120).text.strip().split()
         except:
-            pass
+            continue
+        if ((r_sys == '') or (r_proc == '')):
+            continue
         if (not got_url_sys):
             if (not (('404' and 'not' and 'found') in r_sys)):
                 got_url_sys = True
