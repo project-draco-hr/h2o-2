@@ -24,7 +24,7 @@ def test_DeepLearning_twovalues(self):
         start = time.time()
         h2o_cmd.runDeepLearning(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'trial #', trial, 'Deep Learning end on ', csvFilename, ' took', (time.time() - start), 'seconds'
-        expectedErr = 0.001
+        expectedErr = 0.0
         relTol = 0.01
         predict_key = 'Predict.hex'
         kwargs = {'data_key': validation_key, 'destination_key': predict_key, 'model_key': model_key, }
