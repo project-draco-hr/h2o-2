@@ -1,6 +1,8 @@
 {
-  summary.creation_epoch_time_millis=frame.getUniqueId().getCreationEpochTimeMillis();
-  summary.id=frame.getUniqueId().getId();
+  UniqueId unique_id=frame.getUniqueId();
+  summary.id=unique_id.getId();
+  summary.key=unique_id.getKey();
+  summary.creation_epoch_time_millis=unique_id.getCreationEpochTimeMillis();
   summary.column_names=frame._names;
   summary.is_raw_frame=frame.isRawData();
   if (find_compatible_models) {

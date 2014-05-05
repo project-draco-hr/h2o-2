@@ -2,9 +2,12 @@
   String[] names=model._names;
   summary.model_algorithm=model.getClass().toString();
   summary.state=((Job)model.job()).getState();
+  Log.info("For model: " + model._key + " job key is: "+ model.job().toString());
   summary.model_category=model.getModelCategory();
-  summary.creation_epoch_time_millis=model.getUniqueId().getCreationEpochTimeMillis();
-  summary.id=model.getUniqueId().getId();
+  UniqueId unique_id=model.getUniqueId();
+  summary.id=unique_id.getId();
+  summary.key=unique_id.getKey();
+  summary.creation_epoch_time_millis=unique_id.getCreationEpochTimeMillis();
   summary.response_column_name=names[names.length - 1];
   for (int i=0; i < names.length - 1; i++)   summary.input_column_names.add(names[i]);
 }
