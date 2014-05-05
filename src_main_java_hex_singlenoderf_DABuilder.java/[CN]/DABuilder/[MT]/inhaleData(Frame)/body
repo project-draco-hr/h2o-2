@@ -13,7 +13,7 @@
   }
   final int[] modelDataMap=colMap(fr._names,rfmodel._names);
   final int totalRows=getRowCount(fr);
-  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams._seed,_drf.drfParams._binLimit,_drf.drfParams._classWt);
+  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams.seed,_drf.drfParams.bin_limit,_drf.drfParams.class_weights);
   checkAndLimitFeatureUsedPerSplit();
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   for (int i=0; i < fr.anyVec().nChunks(); ++i) {
