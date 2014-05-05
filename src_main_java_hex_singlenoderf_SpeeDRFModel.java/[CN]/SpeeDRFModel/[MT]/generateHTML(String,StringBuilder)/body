@@ -1,4 +1,6 @@
 {
+  String style="<style>\n" + "td, th { min-width:60px;}\n" + "</style>\n";
+  sb.append(style);
   DocGen.HTML.title(sb,title);
   sb.append("<div class=\"alert\">").append("Actions: ");
   sb.append(Inspect2.link("Inspect training data (" + _dataKey.toString() + ")",_dataKey)).append(", ");
@@ -10,7 +12,7 @@
   }
   sb.append("</div>");
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
-  DocGen.HTML.paragraph(sb,"Max max_depth: " + max_depth + ", Nbins:"+ nbins+ ", Trees: "+ this.size());
+  DocGen.HTML.paragraph(sb,"Max max_depth: " + max_depth + ", Nbins: "+ nbins+ ", Trees: "+ this.size());
   DocGen.HTML.paragraph(sb,"Sample Rate: " + sample + ", Seed: "+ zeed+ ", mtry: "+ mtry);
   sb.append("</pre>");
   if (this.size() > 0 && this.size() < N)   sb.append("Current Status: ").append("Building Random Forest");
@@ -49,6 +51,11 @@
     trees.add(Constants.TREE_LEAVES,this.leaves().toJson());
   }
   generateHTMLTreeStats(sb,trees);
-  if (validAUC != null)   generateHTMLAUC(sb);
-  if (varimp != null)   generateHTMLVarImp(sb);
+  if (validAUC != null) {
+    generateHTMLAUC(sb);
+  }
+  if (varimp != null) {
+    generateHTMLVarImp(sb);
+    sb.append("<button id=\"sortBars\" class=\"btn btn-primary\">Sort</button>\n");
+  }
 }

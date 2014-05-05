@@ -3,12 +3,10 @@
     source.read_lock(self());
     float[] samps=new float[(int)(response.max() - response.min() + 1)];
     for (int i=0; i < samps.length; ++i)     samps[i]=67;
+    if (strata_samples == null)     samps=null;
     if (strata_samples != null) {
       int[] _samples=new int[(int)(response.max() - response.min() + 1)];
       for (int i=0; i < _samples.length; ++i)       _samples[i]=67;
-      if (class_weights == null) {
-        strata_samples=_samples;
-      }
       if (strata_samples.length > _samples.length) {
         System.arraycopy(_samples,0,strata_samples,0,_samples.length);
         strata_samples=_samples;
@@ -44,7 +42,7 @@
     if (validation != null) {
       test=FrameTask.DataInfo.prepareFrame(validation,validation.vecs()[source.find(response)],ignored_cols,false,false,false);
     }
-    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0],seed,getCMDomain());
+    SpeeDRFModel model=new SpeeDRFModel(dest(),self(),source._key,train,response,new Key[0],seed,getCMDomain(),this);
     model.nbins=bin_limit;
     if (mtry == -1) {
       model.mtry=(int)Math.floor(Math.sqrt(source.numCols()));

@@ -24,7 +24,6 @@
   fs.blockForPending();
   final float[] varimp=new float[ncols - 1];
   float[] varimpSD=new float[ncols - 1];
-  final float[][] vote_diffs=new float[ncols - 1][trees];
   for (int var=0; var < ncols - 1; var++) {
     long[] votesOOB=asVotes(_treeMeasuresOnOOB[var]).votes();
     long[] votesSOOB=asVotes(_treeMeasuresOnSOOB[var]).votes();
