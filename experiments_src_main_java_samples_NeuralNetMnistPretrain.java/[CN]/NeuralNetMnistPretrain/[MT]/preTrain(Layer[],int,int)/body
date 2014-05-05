@@ -1,0 +1,23 @@
+{
+  Layer[] pre=new Layer[index + 2];
+  VecsInput input=(VecsInput)ls[0];
+  pre[0]=new VecsInput(input.vecs,input);
+  pre[0].init(pre,0,ls[0].params);
+  for (int i=1; i < index; i++) {
+    pre[i]=new Layer.Tanh(ls[i].units);
+    Layer.shareWeights(ls[i],pre[i]);
+    pre[i].init(pre,i,ls[i].params);
+    pre[i].params.rate=0;
+  }
+  pre[index]=new Layer.Tanh(ls[index].units);
+  pre[index].init(pre,index,ls[index].params);
+  pre[index].params.rate=1e-5;
+  pre[index + 1]=new Layer.TanhPrime(ls[index - 1].units);
+  pre[index + 1].init(pre,index + 1,pre[index].params);
+  pre[index + 1].params.rate=1e-5;
+  Layer.shareWeights(ls[index],pre[index]);
+  Layer.shareWeights(ls[index],pre[index + 1]);
+  _trainer=new Trainer.Direct(pre,epochs,self());
+  _trainer.start();
+  _trainer.join();
+}

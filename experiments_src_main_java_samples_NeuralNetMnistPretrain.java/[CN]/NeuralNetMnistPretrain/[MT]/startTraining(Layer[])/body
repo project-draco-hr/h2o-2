@@ -1,5 +1,10 @@
 {
-  preTrain(ls);
-  _trainer=new Trainer.Threaded(ls,0,self(),-1);
-  _trainer.start();
+  int pretrain_epochs=4;
+  preTrain(ls,pretrain_epochs);
+  int epochs=0;
+  if (epochs > 0) {
+    _trainer=new Trainer.Threaded(ls,epochs,self(),-1);
+    _trainer.start();
+    _trainer.join();
+  }
 }
