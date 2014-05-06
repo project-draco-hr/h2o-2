@@ -1,21 +1,43 @@
 {
-  int[] dist=new int[d.classes()];
-  boolean valid=false;
-  for (  int f : _features)   valid|=f != -1;
-  if (!valid)   return Split.defaultSplit();
-  int distWeight=aggregateColumn(_features[0],dist);
-  int m=Utils.maxIndex(dist,_random);
-  if (expectLeaf || (dist[m] == distWeight))   return Split.constant(m);
-  Split bestSplit=Split.defaultSplit();
-  for (  int f : _features) {
-    if (f == -1)     continue;
-    Split s=pickAndSplit(d,f,dist,distWeight,_random);
-    if (s.betterThan(bestSplit))     bestSplit=s;
+  if (!_regression) {
+    int[] dist=new int[d.classes()];
+    boolean valid=false;
+    for (    int f : _features)     valid|=f != -1;
+    if (!valid)     return Split.defaultSplit();
+    int distWeight=aggregateColumn(_features[0],dist);
+    int m=Utils.maxIndex(dist,_random);
+    if (expectLeaf || (dist[m] == distWeight))     return Split.constant(m);
+    Split bestSplit=Split.defaultSplit();
+    for (    int f : _features) {
+      if (f == -1)       continue;
+      Split s=pickAndSplit(d,f,dist,distWeight,_random);
+      if (s.betterThan(bestSplit))       bestSplit=s;
+    }
+    if (!bestSplit.isImpossible())     return bestSplit;
+    if (!rememberFeatures(d))     return bestSplit;
+    reset(d,_seed + (1L << 16),_regression);
+    for (    Row r : d)     addQ(r,_regression);
+    applyClassWeights();
+    return split(d,expectLeaf);
   }
-  if (!bestSplit.isImpossible())   return bestSplit;
-  if (!rememberFeatures(d))   return bestSplit;
-  reset(d,_seed + (1L << 16));
-  for (  Row r : d)   addQ(r);
-  applyClassWeights();
-  return split(d,expectLeaf);
+ else {
+    float[] dist=new float[d.columnArityOfClassCol()];
+    boolean valid=false;
+    for (    int f : _features)     valid|=f != -1;
+    if (!valid)     return Split.defaultSplit();
+    float unweightedMean=aggregateColumn(_features[0],dist);
+    int m=Utils.maxIndex(dist,_random);
+    if (expectLeaf || (dist[m] == unweightedMean))     return Split.constant(m);
+    Split bestSplit=Split.defaultSplit();
+    for (    int f : _features) {
+      if (f == -1)       continue;
+      Split s=pickAndSplit(d,f,dist,unweightedMean,_random);
+      if (s.betterThan(bestSplit))       bestSplit=s;
+    }
+    if (!bestSplit.isImpossible())     return bestSplit;
+    if (!rememberFeatures(d))     return bestSplit;
+    reset(d,_seed + (1L << 16),_regression);
+    for (    Row r : d)     addQ(r,_regression);
+    return split(d,expectLeaf);
+  }
 }

@@ -9,7 +9,7 @@
   byte producerId=(byte)H2O.SELF.index();
   for (int i=0; i < ntrees; ++i) {
     long treeSeed=rnd.nextLong() + TREE_SEED_INIT;
-    trees[i]=new Tree(job,localData,producerId,drfParams.max_depth,drfParams.stat_type,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose);
+    trees[i]=new Tree(job,localData,producerId,drfParams.max_depth,drfParams.stat_type,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose,drfParams.regression);
     if (!drfParams.parallel)     ForkJoinTask.invokeAll(new Tree[]{trees[i]});
   }
   if (drfParams.parallel)   DRemoteTask.invokeAll(trees);
