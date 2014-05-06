@@ -27,33 +27,19 @@ def test_rf_covtype20x_fvec(self):
     dataKeyTest = parseResultTest['destination_key']
     print 'Parse end', dataKeyTest
     execExpr = ((dataKeyTest2 + '=') + dataKeyTest)
-    if h2o.beta_features:
-        kwargs = {'str': execExpr, 'timeoutSecs': 15, }
-    else:
-        kwargs = {'expression': execExpr, 'timeoutSecs': 15, }
+    kwargs = {'str': execExpr, 'timeoutSecs': 15, }
     resultExec = h2o_cmd.runExec(**kwargs)
-    if h2o.beta_features:
-        paramDict = drf2ParamDict
-        params = {'ntrees': 20, 'destination_key': 'RF_model', }
-    else:
-        paramDict = drf1ParamDict
-        params = {'ntree': 20, 'out_of_bag_error_estimate': 1, 'model_key': 'RF_model', }
+    paramDict = drf2ParamDict
+    params = {'ntrees': 20, 'destination_key': 'RF_model', }
     colX = h2o_rf.pickRandRfParams(paramDict, params)
     kwargs = params.copy()
-    if h2o.beta_features:
-        timeoutSecs = (30 + (kwargs['ntrees'] * 60))
-    else:
-        timeoutSecs = (30 + (kwargs['ntree'] * 60))
+    timeoutSecs = (30 + (kwargs['ntrees'] * 60))
     start = time.time()
     rf = h2o_cmd.runRF(parseResult=parseResultTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, **kwargs)
     print 'rf job end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
     print '\nRFView start after job completion'
-    if h2o.beta_features:
-        model_key = kwargs['destination_key']
-        ntree = kwargs['ntrees']
-    else:
-        model_key = kwargs['model_key']
-        ntree = kwargs['ntree']
+    model_key = kwargs['destination_key']
+    ntree = kwargs['ntrees']
     start = time.time()
     h2o_cmd.runRFView(None, dataKeyTrain, model_key, ntree=ntree, timeoutSecs=timeoutSecs)
     print 'First rfview end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
@@ -71,7 +57,7 @@ def test_rf_covtype20x_fvec(self):
         predictKey = 'Predict.hex'
         start = time.time()
         predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual='C54', predict=predictKey, vpredict='predict')
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual='C55', predict=predictKey, vpredict='predict')
         cm = predictCMResult['cm']
         pctWrong = h2o_gbm.pp_cm_summary(cm)
         print '\nTest\n==========\n'

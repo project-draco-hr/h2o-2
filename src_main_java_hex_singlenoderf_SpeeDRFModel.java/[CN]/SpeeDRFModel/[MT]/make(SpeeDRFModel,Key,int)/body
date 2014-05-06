@@ -13,14 +13,14 @@
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum,cmTask._cms);
     m.cm=cmTask._matrix._matrix;
   }
-  if (f == 1.0) {
+  if (f == 1.0 && !m.regression) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
     cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum,cmTask._cms);
     m.cm=cmTask._matrix._matrix;
   }
-  if (!cm_update) {
+  if (!cm_update || m.regression) {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
     m.errs[m.errs.length - 1]=-1.f;
     m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);

@@ -7,5 +7,5 @@ def test_GBM_covtype_train_test(self):
     modelKey = 'GBMModelKey'
     timeoutSecs = 1800
     parseTrainResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + trainFilename), schema='local', hex_key=trainKey, timeoutSecs=timeoutSecs)
-    kwargs = {'max_depth': 7, 'ntrees': 2, 'response': 'C54', }
+    kwargs = {'max_depth': 7, 'ntrees': 2, 'response': 'C55', }
     h2o_cmd.runGBM(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
