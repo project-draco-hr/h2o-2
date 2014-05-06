@@ -1,8 +1,9 @@
 {
   String[] names=model._names;
   summary.model_algorithm=model.getClass().toString();
-  summary.state=((Job)model.job()).getState();
-  Log.info("For model: " + model._key + " job key is: "+ model.job().toString());
+  Key job_key=((Job)model.job()).self();
+  Job job=DKV.get(job_key).get();
+  summary.state=job.getState();
   summary.model_category=model.getModelCategory();
   UniqueId unique_id=model.getUniqueId();
   summary.id=unique_id.getId();
