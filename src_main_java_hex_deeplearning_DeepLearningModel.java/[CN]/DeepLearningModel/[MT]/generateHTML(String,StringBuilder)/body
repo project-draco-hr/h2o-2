@@ -158,8 +158,7 @@
     error.train_hitratio.toHTML(sb);
   }
   if (error.variable_importances != null) {
-    error.variable_importances.toHTML(sb);
-    sb.append("<button id=\"sortBars\" class=\"btn btn-primary\">Sort</button>\n");
+    error.variable_importances.toHTML(this,sb);
   }
   DocGen.HTML.title(sb,"Scoring history");
   if (errors.length > 1) {

@@ -24,7 +24,7 @@
     long freed=0;
     Object[] kvs=STORE.raw_array();
     for (int i=2; i < kvs.length; i+=2) {
-      Object ok=kvs[i + 0], ov=kvs[i + 1];
+      Object ok=kvs[i], ov=kvs[i + 1];
       if (!(ok instanceof Key))       continue;
       Key key=(Key)ok;
       if (!(ov instanceof Value))       continue;
@@ -33,6 +33,7 @@
       Object p=val.rawPOJO();
       if (m == null && p == null)       continue;
       if (val.isLockable())       continue;
+      boolean isChunk=p instanceof Chunk;
       if (val.isArray() && (val._persist & Value.BACKEND_MASK) != Value.ICE) {
         if (m != null && p != null) {
           val.freeMem();
@@ -42,7 +43,7 @@
       }
       long touched=val._lastAccessedTime;
       if (touched > clean_to_age) {
-        if (val.isPersisted() && m != null && p != null) {
+        if (val.isPersisted() && m != null && p != null && !isChunk) {
           val.freeMem();
           freed+=val._max;
         }
@@ -68,8 +69,9 @@
         val.freePOJO();
         if (p != null)         freed+=val._max;
         p=null;
+        if (isChunk)         freed-=val._max;
       }
-      if (m != null && p != null) {
+      if (m != null && p != null && !isChunk) {
         val.freeMem();
         freed+=val._max;
       }
