@@ -18,6 +18,13 @@
   Layer.shareWeights(ls[index],pre[index]);
   Layer.shareWeights(ls[index],pre[index + 1]);
   _trainer=new Trainer.Direct(pre,epochs,self());
+  JFrame frame=new JFrame("H2O Pre-Training");
+  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+  MnistCanvas canvas=new MnistCanvas(_trainer);
+  frame.setContentPane(canvas.init());
+  frame.pack();
+  frame.setLocationRelativeTo(null);
+  frame.setVisible(true);
   _trainer.start();
   _trainer.join();
 }

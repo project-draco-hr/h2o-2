@@ -1,9 +1,16 @@
 {
-  int pretrain_epochs=4;
+  int pretrain_epochs=2;
   preTrain(ls,pretrain_epochs);
   int epochs=0;
   if (epochs > 0) {
     _trainer=new Trainer.Threaded(ls,epochs,self(),-1);
+    JFrame frame=new JFrame("H2O Training");
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    MnistCanvas canvas=new MnistCanvas(_trainer);
+    frame.setContentPane(canvas.init());
+    frame.pack();
+    frame.setLocationRelativeTo(null);
+    frame.setVisible(true);
     _trainer.start();
     _trainer.join();
   }
