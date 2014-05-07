@@ -1,7 +1,7 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
   if (arg._name.equals("classification")) {
-    arg._hideInQuery=true;
+    regression=!this.classification;
   }
   if (arg._name.equals("class_weights")) {
     if (source == null || response == null) {
@@ -10,15 +10,29 @@
   }
   if (arg._name.equals("sampling_strategy")) {
     arg.setRefreshOnChange();
+    if (regression) {
+      arg.disable("Random Sampling for regression trees.");
+    }
+  }
+  if (arg._name.equals("stat_type")) {
+    if (regression) {
+      arg.disable("Minimize MSE for regression.");
+    }
   }
   if (arg._name.equals("strata_samples")) {
     if (sampling_strategy != Sampling.Strategy.STRATIFIED_LOCAL) {
       arg.disable("No Strata for Random sampling.");
     }
+    if (regression) {
+      arg.disable("No strata for regression.");
+    }
   }
   if (arg._name.equals("class_weights")) {
     if (source == null || response == null) {
       arg.disable("Requires a dataset and response.");
+    }
+    if (regression) {
+      arg.disable("No class weights for regression.");
     }
   }
 }

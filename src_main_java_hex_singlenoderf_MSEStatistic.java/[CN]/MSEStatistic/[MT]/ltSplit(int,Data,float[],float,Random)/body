@@ -1,0 +1,22 @@
+{
+  float bestSoFar=0.f;
+  int bestSplit=-1;
+  for (int j=0; j < _columnDistsRegression[colIndex].length - 1; ++j) {
+    float Y_R=distWeight;
+    float Y_L=0.f;
+    int nobs_R=d.rows();
+    int nobs_L=0;
+    for (    float aDist : dist) {
+      Y_L+=aDist;
+      Y_R-=aDist;
+      nobs_L++;
+      nobs_R--;
+      float newSplitValue=(Y_L * Y_L / (float)nobs_L) + (Y_R * Y_R / (float)nobs_R);
+      if (newSplitValue > bestSoFar) {
+        bestSoFar=newSplitValue;
+        bestSplit=j;
+      }
+    }
+  }
+  return bestSplit == -1 ? Split.impossible(Utils.maxIndex(dist,_random)) : Split.split(colIndex,bestSplit,bestSoFar);
+}
