@@ -1,0 +1,69 @@
+def test_export_import(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    h2o.beta_features = True
+    importFolderPath = 'standard'
+    csvTrainFilename = 'covtype.shuffled.90pct.data'
+    csvTrainPathname = ((importFolderPath + '/') + csvTrainFilename)
+    trainKey = (csvTrainFilename + '.hex')
+    parseTrainResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvTrainPathname, hex_key=trainKey, timeoutSecs=180, doSummary=False)
+    inspect = h2o_cmd.runInspect(None, trainKey)
+    csvTestFilename = 'covtype.shuffled.10pct.data'
+    csvTestPathname = ((importFolderPath + '/') + csvTestFilename)
+    testKey = (csvTestFilename + '.hex')
+    parseTestResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvTestPathname, hex_key=testKey, timeoutSecs=180)
+    inspect = h2o_cmd.runInspect(None, testKey)
+    trial = 0
+    ntreesList = [5, 10, 20, 30]
+    nbinsList = [10, 100, 1000]
+    if (TRY == 'max_depth'):
+        tryList = depthList
+    elif (TRY == 'ntrees'):
+        tryList = ntreesList
+    elif (TRY == 'nbins'):
+        tryList = nbinsList
+    else:
+        raise Exception(('huh? %s' % TRY))
+    for d in tryList:
+        if (TRY == 'max_depth'):
+            paramDict['max_depth'] = d
+        elif (TRY == 'ntrees'):
+            paramDict['ntrees'] = d
+        elif (TRY == 'nbins'):
+            paramDict['nbins'] = d
+        else:
+            raise Exception(('huh? %s' % TRY))
+        if DO_OOBE:
+            paramDict['validation'] = None
+        else:
+            paramDict['validation'] = parseTestResult['destination_key']
+        timeoutSecs = (30 + (paramDict['ntrees'] * 200))
+        trial += 1
+        kwargs = paramDict.copy()
+        modelKey = ('RFModel_' + str(trial))
+        kwargs['destination_key'] = modelKey
+        start = time.time()
+        rfResult = h2o_cmd.runRF(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, **kwargs)
+        trainElapsed = (time.time() - start)
+        print 'rf train end on', csvTrainPathname, 'took', trainElapsed, 'seconds'
+        h2o.nodes[0].export_files(src_key=testKey, path=((SYNDATASETS_DIR + '/') + testKey), force=1)
+        h2o.nodes[0].export_files(src_key=trainKey, path=((SYNDATASETS_DIR + '/') + trainKey), force=1)
+        rf_model = rfResult['drf_model']
+        cms = rf_model['cms']
+        ntrees = rf_model['N']
+        errs = rf_model['errs']
+        N = rf_model['N']
+        varimp = rf_model['varimp']
+        treeStats = rf_model['treeStats']
+        print 'maxDepth:', treeStats['maxDepth']
+        print 'maxLeaves:', treeStats['maxLeaves']
+        print 'minDepth:', treeStats['minDepth']
+        print 'minLeaves:', treeStats['minLeaves']
+        print 'meanLeaves:', treeStats['meanLeaves']
+        print 'meanDepth:', treeStats['meanDepth']
+        print 'errs[0]:', errs[0]
+        print 'errs[-1]:', errs[(-1)]
+        print 'errs:', errs
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
+        print 'classErrorPctList:', classErrorPctList
+        self.assertEqual(len(classErrorPctList), 7, 'Should be 7 output classes, so should have 7 class error percentages from a reasonable predict')
+        predict = h2o.nodes[0].generate_predictions(model_key=modelKey, data_key=testKey)
