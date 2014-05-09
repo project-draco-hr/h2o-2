@@ -9,5 +9,5 @@ def test_exec2_apply_phrases(self):
         for (resultKey, execExpr) in initList:
             h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=60)
         for p in phrases:
-            execExpr = (('apply(r.hex, 2, ' + p) + ')')
+            execExpr = (('sapply(r.hex, ' + p) + ')')
             h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
