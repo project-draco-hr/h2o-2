@@ -1,6 +1,14 @@
 {
   Chunk ys=chk_resp(chks);
-  if (_nclass > 1) {
+  if (family == Family.bernoulli) {
+    for (int row=0; row < ys._len; row++) {
+      if (ys.isNA0(row))       continue;
+      int y=(int)ys.at80(row);
+      Chunk wk=chk_work(chks,0);
+      wk.set0(row,y - 1f + (float)wk.at0(row));
+    }
+  }
+ else   if (_nclass > 1) {
     for (int row=0; row < ys._len; row++) {
       if (ys.isNA0(row))       continue;
       int y=(int)ys.at80(row);
