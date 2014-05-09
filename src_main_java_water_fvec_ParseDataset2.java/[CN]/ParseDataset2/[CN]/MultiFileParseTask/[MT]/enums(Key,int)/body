@@ -1,0 +1,8 @@
+{
+  if (!_enums.containsKey(eKey)) {
+    Enum[] enums=new Enum[ncols];
+    for (int i=0; i < enums.length; ++i)     enums[i]=new Enum();
+    _enums.putIfAbsent(eKey,enums);
+  }
+  return _enums.get(eKey);
+}
