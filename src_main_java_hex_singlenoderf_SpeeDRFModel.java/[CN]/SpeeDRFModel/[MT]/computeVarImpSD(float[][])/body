@@ -1,0 +1,14 @@
+{
+  float[] res=new float[vote_diffs.length];
+  for (int var=0; var < vote_diffs.length; ++var) {
+    float mean_diffs=0.f;
+    float r=0.f;
+    for (    float d : vote_diffs[var])     mean_diffs+=d / (float)vote_diffs.length;
+    for (    float d : vote_diffs[var]) {
+      r+=(d - mean_diffs) * (d - mean_diffs);
+    }
+    r*=1.f / (float)vote_diffs[var].length;
+    res[var]=(float)Math.sqrt(r);
+  }
+  return res;
+}

@@ -17,13 +17,14 @@ def test_DeepLearning_twovalues(self):
         print ('using outputTrue: %s outputFalse: %s' % (outputTrue, outputFalse))
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
-        response = (inspect['numCols'] - 1)
-        kwargs = {'ignored_cols': None, 'response': ('C' + str(response)), 'classification': 1, 'activation': 'Tanh', 'hidden': '500', 'rate': 0.01, 'rate_annealing': 1e-06, 'momentum_start': 0, 'momentum_stable': 0, 'l1': 0.0, 'l2': 0.0001, 'seed': 80023842348, 'loss': 'CrossEntropy', 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 1.0, 'destination_key': model_key, 'validation': hex_key, }
+        response = inspect['numCols']
+        response = ('C' + str(response))
+        kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'activation': 'Tanh', 'hidden': '113,71,54', 'rate': 0.01, 'rate_annealing': 1e-06, 'momentum_start': 0, 'momentum_stable': 0, 'l1': 0.0, 'l2': 1e-06, 'seed': 80023842348, 'loss': 'CrossEntropy', 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 100, 'destination_key': model_key, 'validation': hex_key, }
         timeoutSecs = 60
         start = time.time()
         h2o_cmd.runDeepLearning(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         print 'trial #', trial, 'Deep Learning end on ', csvFilename, ' took', (time.time() - start), 'seconds'
-        expectedErr = 0.001
+        expectedErr = 0.0
         relTol = 0.01
         predict_key = 'Predict.hex'
         kwargs = {'data_key': validation_key, 'destination_key': predict_key, 'model_key': model_key, }

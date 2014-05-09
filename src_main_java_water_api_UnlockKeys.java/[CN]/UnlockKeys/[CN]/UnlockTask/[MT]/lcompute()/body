@@ -1,0 +1,26 @@
+{
+  final Set<Key> keySet=H2O.globalKeySet(null);
+  for (  Key key : keySet) {
+    if (!key.home())     continue;
+    final Value val=DKV.get(key);
+    if (val == null)     continue;
+    if (val.rawPOJO() == null)     continue;
+    if (!val.isLockable())     continue;
+    final Object obj=val.rawPOJO();
+    assert(obj instanceof Lockable<?>);
+    final Lockable<?> lockable=(Lockable<?>)(obj);
+    final Key[] lockers=((Lockable)obj)._lockers;
+    if (lockers != null) {
+      for (      Key locker : lockers) {
+        if (locker != null && locker.type() == Key.JOB) {
+          final Job job=UKV.get(locker);
+          if (job != null && job.isRunning())           throw new UnsupportedOperationException("Cannot unlock all keys since locking jobs are still running.");
+        }
+      }
+      lockable.unlock_all();
+      Log.info("Unlocked key '" + key + "' from "+ lockers.length+ " lockers.");
+    }
+  }
+  Log.info("All keys are now unlocked.");
+  tryComplete();
+}

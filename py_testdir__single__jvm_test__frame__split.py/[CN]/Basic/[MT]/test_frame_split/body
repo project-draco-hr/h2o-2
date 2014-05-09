@@ -10,6 +10,9 @@ def test_frame_split(self):
     origNumRows = inspect['numRows']
     origNumCols = inspect['numCols']
     for s in range(20):
+        inspect = h2o_cmd.runInspect(key=splitMe)
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
         fs = h2o.nodes[0].frame_split(source=splitMe, ratios=0.5)
         split0_key = fs['split_keys'][0]
         split1_key = fs['split_keys'][1]
@@ -19,6 +22,8 @@ def test_frame_split(self):
         split1_ratio = fs['split_ratios'][1]
         print 'Iteration', s, 'split0_rows:', split0_rows, 'split1_rows:', split1_rows
         splitMe = split1_key
-        self.assertLess(abs((split1_rows - split0_rows)), 2)
+        self.assertLess(abs((split1_rows - split0_rows)), 20)
         self.assertEqual(numRows, (split1_rows + split0_rows))
         self.assertEqual(numCols, origNumCols)
+        if (split0_rows <= 2):
+            break

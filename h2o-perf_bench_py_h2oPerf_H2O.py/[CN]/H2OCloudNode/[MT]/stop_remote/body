@@ -7,6 +7,18 @@ def stop_remote(self):
         except Exception as e:
             pass
     except Exception as e:
-        print 'Successfully shutdown h2o!'
         pass
+    try:
+        try:
+            self.channel.exec_command('exit')
+            self.ssh.close()
+        except:
+            pass
+        try:
+            self.stop_local()
+        except:
+            pass
+    except OSError:
+        pass
+    print 'Successfully shutdown h2o!'
     self.pid = (-1)

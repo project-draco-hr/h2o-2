@@ -8,16 +8,16 @@
   boolean[] _isByteCol=new boolean[fr.numCols()];
   long[] _naCnts=new long[fr.numCols()];
   for (int i=0; i < _isByteCol.length; ++i) {
-    _isByteCol[i]=DataAdapter.isByteCol(fr.vecs()[i],(int)fr.numRows(),i == _isByteCol.length - 1);
+    _isByteCol[i]=DataAdapter.isByteCol(fr.vecs()[i],(int)fr.numRows(),i == _isByteCol.length - 1,rfmodel.regression);
     _naCnts[i]=fr.vecs()[i].naCnt();
   }
   final int[] modelDataMap=colMap(fr._names,rfmodel._names);
   final int totalRows=getRowCount(fr);
-  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams._seed,_drf.drfParams._binLimit,_drf.drfParams._classWt);
+  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams.seed,_drf.drfParams.bin_limit,_drf.drfParams.class_weights);
   checkAndLimitFeatureUsedPerSplit();
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   for (int i=0; i < fr.anyVec().nChunks(); ++i) {
-    dataInhaleJobs.add(loadChunkAction(dapt,fr,i,_isByteCol,_naCnts));
+    dataInhaleJobs.add(loadChunkAction(dapt,fr,i,_isByteCol,_naCnts,rfmodel.regression));
   }
   _rfmodel.current_status="Inhaling Data";
   _rfmodel.update(_rfmodel.jobKey);

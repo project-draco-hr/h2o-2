@@ -79,7 +79,6 @@ def test_GLM1_GLM2_predict(self):
     self.assertLess(iterations1, (MAX_ITER - 1), msg=("GLM1: Too many iterations, didn't converge %s" % iterations1))
     self.assertLess(iteration, (MAX_ITER - 1), msg=("GLM2: Too many iterations, didn't converge %s" % iteration))
     nullDevExpected = nullDev1
-    self.assertAlmostEqual(nullDev, nullDevExpected, delta=2, msg=('GLM2 nullDev %s is too different from GLM1 %s' % (nullDev, nullDevExpected)))
     iterationExpected = iterations1
     coeff0 = coefficients[0]
     coeff0Expected = coefficients1[0]

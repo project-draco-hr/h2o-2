@@ -1,0 +1,12 @@
+{
+  ArrayList<String> featureNameList=new ArrayList<String>();
+  featureNameList.add(FEATURE_DEEPLEARNING_SCORING);
+  featureNameList.add(FEATURE_GBM_SCORING);
+  featureNameList.add(FEATURE_GLM_SCORING);
+  featureNameList.add(FEATURE_RF_SCORING);
+  boolean silent=true;
+  for (  String featureName : featureNameList) {
+    boolean b=isFeatureAllowed(featureName,silent);
+    Log.info("isFeatureAllowed(" + featureName + "): "+ b);
+  }
+}
