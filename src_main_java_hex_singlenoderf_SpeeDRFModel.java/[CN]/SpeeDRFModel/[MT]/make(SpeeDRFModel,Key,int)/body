@@ -6,7 +6,7 @@
   m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
   m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
   double f=(double)m.t_keys.length / (double)m.N;
-  if (m.t_keys.length == 1) {
+  if (m.t_keys.length == 1 && !m.regression) {
     cm_update=true;
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
     cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);

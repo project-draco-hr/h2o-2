@@ -1,6 +1,11 @@
 {
-  return new TreeVisitor<RuntimeException>(tbits){
+  return new TreeVisitor<RuntimeException>(tbits,regression){
     int _maxdepth, _depth, _leaves;
+    protected TreeVisitor leafFloat(    float fv){
+      _leaves++;
+      if (_depth > _maxdepth)       _maxdepth=_depth;
+      return this;
+    }
     protected TreeVisitor leaf(    int tclass){
       _leaves++;
       if (_depth > _maxdepth)       _maxdepth=_depth;
