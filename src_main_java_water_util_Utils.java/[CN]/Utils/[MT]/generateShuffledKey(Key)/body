@@ -1,0 +1,9 @@
+{
+  String n=mk != null ? mk.toString() : "noname";
+  String suffix="";
+  if (n.endsWith(".hex")) {
+    n=n.substring(0,n.length() - 4);
+    suffix=".hex";
+  }
+  return Key.make(n + "_shuffled" + suffix);
+}

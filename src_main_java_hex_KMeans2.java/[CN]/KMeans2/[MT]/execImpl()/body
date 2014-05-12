@@ -4,7 +4,7 @@
   String sourceArg=input("source");
   Key sourceKey=null;
   if (sourceArg != null)   sourceKey=Key.make(sourceArg);
-  Frame fr=DataInfo.prepareFrame(source,ignored_cols,false,false,drop_na_cols);
+  Frame fr=DataInfo.prepareFrame(source,ignored_cols,false,drop_na_cols);
   String[] names=fr.names();
   Vec[] vecs=fr.vecs();
   if (vecs == null || vecs.length == 0)   throw new IllegalArgumentException("No columns selected. Check that selected columns have not been dropped due to too many NAs.");
