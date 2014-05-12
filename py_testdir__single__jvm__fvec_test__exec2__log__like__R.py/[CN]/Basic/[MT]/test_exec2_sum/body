@@ -4,7 +4,7 @@ def test_exec2_sum(self):
     if localhost:
         csvPathname = '1B/reals_100000x1000_15f.data'
     else:
-        csvPathname = '1B/reals_1000000x1000_15f.data'
+        csvPathname = '1B/reals_1000000x1_15f.data'
     hex_key = 'r1'
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=3000, retryDelaySecs=2, doSummary=False)
     inspect = h2o_cmd.runInspect(key=hex_key)
@@ -15,6 +15,8 @@ def test_exec2_sum(self):
     xList = []
     eList = []
     fList = []
+    for execExpr in initList:
+        (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=300)
     for trial in range(300):
         for execExpr in exprList:
             execExpr = re.sub('Last.value', ('Last.value%s' % trial), execExpr)
@@ -22,6 +24,10 @@ def test_exec2_sum(self):
             (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=300)
             execTime = (time.time() - start)
             print 'exec took', execTime, 'seconds'
+            c = h2o.nodes[0].get_cloud()
+            c = c['nodes']
+            print ('keys: %s %s' % (c[0]['num_keys'], c[1]['num_keys']))
+            print ('value_size_bytes: %s %s' % (c[0]['value_size_bytes'], c[1]['value_size_bytes']))
             if ('r1' in execExpr):
                 xList.append(trial)
                 eList.append(execTime)
