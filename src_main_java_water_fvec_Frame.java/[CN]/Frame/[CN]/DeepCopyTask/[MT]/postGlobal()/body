@@ -1,0 +1,9 @@
+{
+  Futures fs=new Futures();
+  _res=new Vec[_vs.length];
+  for (int i=0; i < _vs.length; ++i) {
+    _res[i]=new Vec(_newVecKeys[i],_vs[i]._espc.clone(),_vs[i]._domain == null ? null : _vs[i]._domain.clone());
+    DKV.put(_newVecKeys[i],_res[i],fs);
+  }
+  fs.blockForPending();
+}
