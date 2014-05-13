@@ -110,6 +110,14 @@
  else     if (s.equals("-XX:+PrintGCDetails")) {
       enablePrintGCDetails=true;
     }
+ else     if (s.equals("-XX:+PrintGCTimeStamps")) {
+      enablePrintGCTimeStamps=true;
+    }
+ else     if (s.equals("-gc")) {
+      enableVerboseGC=true;
+      enablePrintGCDetails=true;
+      enablePrintGCTimeStamps=true;
+    }
  else     if (s.equals("-license")) {
       i++;
       if (i >= args.length) {

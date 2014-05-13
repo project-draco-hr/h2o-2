@@ -1,6 +1,11 @@
 {
   Chunk ys=chk_resp(chks);
-  if (_nclass > 1) {
+  if (family == Family.bernoulli) {
+    Chunk tr=chk_tree(chks,0);
+    Chunk wk=chk_work(chks,0);
+    for (int row=0; row < ys._len; row++)     wk.set0(row,1.0f / (1f + Math.exp(tr.at0(row))));
+  }
+ else   if (_nclass > 1) {
     float fs[]=new float[_nclass + 1];
     for (int row=0; row < ys._len; row++) {
       float sum=score1(chks,fs,row);
