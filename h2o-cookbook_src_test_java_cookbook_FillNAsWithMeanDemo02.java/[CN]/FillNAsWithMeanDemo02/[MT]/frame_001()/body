@@ -1,5 +1,5 @@
 {
-  String fileName="../cookbookData/iris_withNA.csv";
+  String fileName="./cookbookData/iris_withNA.csv";
   File file=new File(fileName);
   Key fkey=NFSFileVec.make(file);
   Key okey=Key.make("iris.hex");
@@ -18,4 +18,5 @@
   f.add(output,newcolnames);
   FillNasWithMean lr1=new FillNasWithMean(arrayofMeans).doAll(f);
   Log.info("frame              : " + f);
+  Frame.delete(okey);
 }

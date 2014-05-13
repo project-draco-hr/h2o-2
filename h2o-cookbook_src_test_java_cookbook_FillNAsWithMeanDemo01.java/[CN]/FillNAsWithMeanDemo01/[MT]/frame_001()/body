@@ -1,5 +1,5 @@
 {
-  String fileName="../cookbookData/iris_withNA.csv";
+  String fileName="./cookbookData/iris_withNA.csv";
   File file=new File(fileName);
   Key fkey=NFSFileVec.make(file);
   Key okey=Key.make("iris.hex");
@@ -13,4 +13,5 @@
     fr.add("FilledNa" + i,output);
   }
   Log.info("frame              : " + fr);
+  Frame.delete(okey);
 }
