@@ -18,4 +18,6 @@
   DKV.put(fk,outputFrame,fs);
   fs.blockForPending();
   Log.info(" new output frame        : " + outputFrame);
+  Frame.delete(okey);
+  outputFrame.delete();
 }
