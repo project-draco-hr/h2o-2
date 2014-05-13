@@ -1,7 +1,0 @@
-{
-  for (int i=0; i < chks.length; ++i) {
-    Chunk nc=chks[i].clone();
-    if (nc._mem == chks[i]._mem)     nc._mem=chks[i]._mem.clone();
-    DKV.put(new Vec(_newVecKeys[i],new long[0]).chunkKey(chks[i].cidx()),nc,_fs);
-  }
-}
