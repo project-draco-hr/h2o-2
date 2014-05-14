@@ -1,6 +1,8 @@
 {
   SpeeDRFModel rf_model=initModel();
+  rf_model.start_training(null);
   buildForest(rf_model);
+  DRFTask.updateRFModelStopTraining(rf_model._key);
   cleanup();
   remove();
 }
