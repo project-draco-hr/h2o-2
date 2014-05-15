@@ -1,11 +1,7 @@
 def test_exec2_cbind_fail2(self):
     for i in range(5):
-        execExpr = 'b=c(0,0,0,0,0,0,0,0,0,0,0,0)'
+        execExpr = 'a=c(0,0,0); b=c(0,0,0)'
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-        execExpr = 'a=b'
-        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-        execExpr = 'd=b'
-        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
-        execExpr = 'cbind(a,b,d)'
+        execExpr = 'h <- cbind(a, b)'
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     h2o.check_sandbox_for_errors()
