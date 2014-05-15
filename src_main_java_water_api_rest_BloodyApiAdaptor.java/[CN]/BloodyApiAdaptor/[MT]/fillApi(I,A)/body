@@ -1,0 +1,7 @@
+{
+  Field[] fields=listAPIFields(api,false);
+  for (  Field f : fields) {
+    if (!fillField(api,f,impl))     System.err.println("fillApi: Field " + f + " was not filled!");
+  }
+  return api;
+}
