@@ -1,0 +1,10 @@
+{
+  new TAtomic<SpeeDRFModel>(){
+    @Override public SpeeDRFModel atomic(    SpeeDRFModel m){
+      if (m == null)       return null;
+      m.stop_training();
+      return m;
+    }
+  }
+.invoke(modelKey);
+}
