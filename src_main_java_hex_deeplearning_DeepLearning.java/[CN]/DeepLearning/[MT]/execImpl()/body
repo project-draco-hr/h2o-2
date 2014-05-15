@@ -1,6 +1,9 @@
 {
   DeepLearningModel cp=null;
-  if (checkpoint == null)   cp=initModel();
+  if (checkpoint == null) {
+    cp=initModel();
+    cp.start_training(null);
+  }
  else {
     final DeepLearningModel previous=UKV.get(checkpoint);
     if (previous == null)     throw new IllegalArgumentException("Checkpoint not found.");
@@ -21,6 +24,7 @@
     if (classification != previous.model_info().get_params().classification) {
       Log.warn("Automatically switching to " + ((classification=!classification) ? "classification" : "regression") + " (same as the checkpointed model).");
     }
+    cp.start_training(previous);
     epochs+=previous.epoch_counter;
     Log.info("Adding " + String.format("%.3f",previous.epoch_counter) + " epochs from the checkpointed model.");
     try {
@@ -56,5 +60,6 @@
     }
   }
   trainModel(cp);
+  cp.stop_training();
   delete();
 }

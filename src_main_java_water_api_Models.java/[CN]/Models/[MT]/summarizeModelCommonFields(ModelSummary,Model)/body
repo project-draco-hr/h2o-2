@@ -1,10 +1,24 @@
 {
   String[] names=model._names;
   summary.model_algorithm=model.getClass().toString();
-  summary.state=((Job)model.job()).getState();
+  Key job_key=((Job)model.job()).self();
+  Job job=DKV.get(job_key).get();
+  summary.state=job.getState();
   summary.model_category=model.getModelCategory();
-  summary.creation_epoch_time_millis=model.getUniqueId().getCreationEpochTimeMillis();
-  summary.uuid=model.getUniqueId().getUuid();
+  UniqueId unique_id=model.getUniqueId();
+  summary.id=unique_id.getId();
+  summary.key=unique_id.getKey();
+  summary.creation_epoch_time_millis=unique_id.getCreationEpochTimeMillis();
+  summary.training_duration_in_ms=model.training_duration_in_ms;
   summary.response_column_name=names[names.length - 1];
   for (int i=0; i < names.length - 1; i++)   summary.input_column_names.add(names[i]);
+  VarImp vi=model.varimp();
+  if (null != vi) {
+    summary.variable_importances=new LinkedHashMap();
+    summary.variable_importances.put("varimp",vi.varimp);
+    summary.variable_importances.put("variables",vi.getVariables());
+    summary.variable_importances.put("method",vi.method);
+    summary.variable_importances.put("max_var",vi.max_var);
+    summary.variable_importances.put("scaled",vi.scaled());
+  }
 }
