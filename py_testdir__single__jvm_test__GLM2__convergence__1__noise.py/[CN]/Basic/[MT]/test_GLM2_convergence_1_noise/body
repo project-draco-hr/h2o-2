@@ -1,4 +1,5 @@
-def test_GLM_convergence_1_noise(self):
+def test_GLM2_convergence_1_noise(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(10000, 50, 'cD', 300), (10000, 100, 'cE', 300), (10000, 200, 'cF', 300), (10000, 300, 'cG', 300), (10000, 400, 'cH', 300), (10000, 500, 'cI', 300)]
     lenNodes = len(h2o.nodes)
@@ -13,16 +14,15 @@ def test_GLM_convergence_1_noise(self):
             csvFilename = 'failtoconverge_100x50.csv'
             csvPathname = ('logreg/' + csvFilename)
         parseResult = h2i.import_parse(path=csvPathname, hex_key=hex_key, timeoutSecs=10, schema='put')
-        print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'max_iter': 40, 'lambda': 0.0001, 'alpha': 0.5, 'link': 'familyDefault', 'n_folds': 2, 'beta_epsilon': 0.0001, 'thresholds': '0.5', }
+        kwargs = {'max_iter': 40, 'lambda': 0.0001, 'alpha': 0, 'n_folds': 2, 'beta_epsilon': 0.0001, }
         if USEKNOWNFAILURE:
-            kwargs['y'] = 50
+            kwargs['response'] = 50
         else:
-            kwargs['y'] = y
+            kwargs['response'] = y
         emsg = None
         for i in range(1):
             start = time.time()
