@@ -5,5 +5,5 @@
     av+=r.getRawClassColumnValueFromBin();
     nobs++;
   }
-  return av / (float)(nobs);
+  return nobs == 0 ? 0.f : av / (float)(nobs);
 }
