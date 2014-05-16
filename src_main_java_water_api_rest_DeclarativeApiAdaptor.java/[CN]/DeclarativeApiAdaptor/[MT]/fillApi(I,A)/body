@@ -1,4 +1,5 @@
 {
+  RestUtils.fillAPIFields(impl,api,REST.VAL_TRANSF);
   for (  Map.Entry<String,String> e : getImpl2API().entrySet()) {
     boolean res=RestUtils.fillAPIField(impl,e.getValue(),api,e.getKey(),REST.VAL_TRANSF);
     if (!res)     Log.warn("The field was not filled: " + e.getValue() + " --> "+ e.getKey());

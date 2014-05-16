@@ -1,0 +1,7 @@
+{
+  Field[] fields=RestUtils.listAPIFields(source,true);
+  for (  Field ffrom : fields) {
+    Field fto=safeField(target.getClass(),ffrom.getName());
+    if (ffrom != null)     fillField(source,ffrom,target,fto,valueTransformers,true);
+  }
+}

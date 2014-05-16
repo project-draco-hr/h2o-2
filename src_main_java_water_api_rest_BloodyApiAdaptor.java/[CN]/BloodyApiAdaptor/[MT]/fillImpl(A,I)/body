@@ -1,7 +1,4 @@
 {
-  Field[] fields=listAPIFields(api,true);
-  for (  Field f : fields) {
-    if (!fillField(impl,f,api))     System.err.println("fillImpl: Field " + f + " was not filled!");
-  }
+  RestUtils.fillImplFields(api,impl,REST.VAL_TRANSF);
   return impl;
 }

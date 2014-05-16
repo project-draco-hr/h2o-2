@@ -4,24 +4,9 @@
     ff.setAccessible(true);
     Field ft=field(target.getClass(),fto);
     ft.setAccessible(true);
-    API apiano=direction ? ff.getAnnotation(API.class) : ft.getAnnotation(API.class);
-    if (apiano == null)     throw new IllegalArgumentException("Cannot transfer field: " + ffrom + " from: "+ source+ " to field "+ fto+ " on "+ target+ " since API annotation is not specified.");
-    if (direction && apiano.direction() != Direction.IN)     return false;
-    if (!direction && apiano.direction() == Direction.IN)     return false;
-    if (ft.getType().isAssignableFrom(ff.getType())) {
-      ft.set(target,ff.get(source));
-      return true;
-    }
- else {
-      TransfSig transfSig=tsig(ff.getType(),ft.getType());
-      if (valueTransformers.containsKey(transfSig)) {
-        ft.set(target,valueTransformers.get(transfSig).from(ff.get(source)));
-        return true;
-      }
-      return false;
-    }
+    return fillField(source,ff,target,ft,valueTransformers,direction);
   }
- catch (  Throwable t) {
+ catch (  NoSuchFieldException t) {
     throw new IllegalArgumentException("Cannot transfer field: " + ffrom + " from: "+ System.identityHashCode(source)+ " to field "+ fto+ " on "+ System.identityHashCode(target),t);
   }
 }

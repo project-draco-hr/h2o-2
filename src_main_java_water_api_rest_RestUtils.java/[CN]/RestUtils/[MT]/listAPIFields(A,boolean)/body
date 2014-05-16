@@ -1,8 +1,9 @@
 {
-  Field[] fields=api.getClass().getFields();
+  Field[] fields=api.getClass().getDeclaredFields();
   List<Field> fs=new ArrayList<Field>(fields.length);
-  for (  Field field : fields) {
-    API apiano=field.getAnnotation(API.class);
+  for (  Field f : fields) {
+    f.setAccessible(true);
+    API apiano=f.getAnnotation(API.class);
     if (apiano != null) {
       boolean add=false;
 switch (apiano.direction()) {
@@ -16,7 +17,7 @@ case OUT:
 add=!in;
 break;
 }
-if (add) fs.add(field);
+if (add) fs.add(f);
 }
 }
 return fs.toArray(new Field[fs.size()]);

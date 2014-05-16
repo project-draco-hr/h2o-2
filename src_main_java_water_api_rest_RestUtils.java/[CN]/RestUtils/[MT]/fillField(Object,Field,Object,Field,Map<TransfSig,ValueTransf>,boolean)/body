@@ -1,0 +1,23 @@
+{
+  try {
+    API apiano=direction ? ffrom.getAnnotation(API.class) : fto.getAnnotation(API.class);
+    if (apiano == null)     throw new IllegalArgumentException("Cannot transfer field: " + ffrom + " from: "+ source+ " to field "+ fto+ " on "+ target+ " since API annotation is not specified.");
+    if (direction && apiano.direction() != Direction.IN)     return false;
+    if (!direction && apiano.direction() == Direction.IN)     return false;
+    if (fto.getType().isAssignableFrom(ffrom.getType())) {
+      fto.set(target,ffrom.get(source));
+      return true;
+    }
+ else {
+      TransfSig transfSig=tsig(ffrom.getType(),fto.getType());
+      if (valueTransformers.containsKey(transfSig)) {
+        fto.set(target,valueTransformers.get(transfSig).from(ffrom.get(source)));
+        return true;
+      }
+      return false;
+    }
+  }
+ catch (  Throwable t) {
+    throw new IllegalArgumentException("Cannot transfer field: " + ffrom + " from: "+ System.identityHashCode(source)+ " to field "+ fto+ " on "+ System.identityHashCode(target),t);
+  }
+}
