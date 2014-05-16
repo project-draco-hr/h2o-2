@@ -1,0 +1,8 @@
+{
+  Class apiClass=adaptor.getApiClass();
+  Class implClass=adaptor.getImplClass();
+  ApiAdaptor old=API_MAPPING.get(apiClass);
+  API_MAPPING.put(apiClass,adaptor);
+  REVERSE_API_MAPPING.put(implClass,adaptor);
+  return old;
+}

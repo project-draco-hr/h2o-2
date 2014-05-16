@@ -1,0 +1,9 @@
+{
+  for (  Map.Entry<Pattern,AbstractHandler> entry : _routes.entrySet()) {
+    Matcher m=entry.getKey().matcher(path);
+    if (m.matches()) {
+      return entry.getValue();
+    }
+  }
+  return null;
+}
