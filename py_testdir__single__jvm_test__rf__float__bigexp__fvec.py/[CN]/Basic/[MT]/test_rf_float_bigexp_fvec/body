@@ -1,5 +1,5 @@
-def test_rf_float_bigexp(self):
-    h2o.beta_features = False
+def test_rf_float_bigexp_fvec(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilename = 'syn_prostate.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
@@ -14,7 +14,7 @@ def test_rf_float_bigexp(self):
         totalRows += num
         hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
         ntree = 2
-        kwargs = {'ntree': ntree, 'features': None, 'depth': 20, 'sample': 67, 'model_key': None, 'bin_limit': 1024, 'seed': 784834182943470027, }
+        kwargs = {'ntrees': ntree, 'mtries': None, 'max_depth': 20, 'sample_rate': 0.67, 'destination_key': None, 'nbins': 1024, 'seed': 784834182943470027, }
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, doSummary=True)
         start = time.time()
         rfView = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=15, pollTimeoutSecs=5, **kwargs)
