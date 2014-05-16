@@ -7,7 +7,7 @@
     if (ta != null && !hasExisting("getVersion","()" + ta.getType().encode(),ccms)) {
       String typeName=ta.toString();
       String valueName=getValueFromType(typeName);
-      cc.addMethod(CtNewMethod.make("public " + typeName + " getVersion() {"+ "  return "+ valueName+ ";"+ "}",cc));
+      cc.addMethod(CtNewMethod.make("public water.api.rest.Version getVersion() {" + "  return " + valueName + ";"+ "}",cc));
     }
   }
 }

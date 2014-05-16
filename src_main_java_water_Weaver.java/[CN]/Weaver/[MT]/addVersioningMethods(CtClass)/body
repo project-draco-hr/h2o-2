@@ -1,7 +1,6 @@
 {
-  if (cc.subclassOf(_apiSchema)) {
+  if (cc.subclassOf(_apiSchema) || cc.subtypeOf(_apiAdaptor) || cc.subclassOf(_apiHandler)) {
     ensureVersion(cc);
   }
-  cc.freeze();
   return cc;
 }
