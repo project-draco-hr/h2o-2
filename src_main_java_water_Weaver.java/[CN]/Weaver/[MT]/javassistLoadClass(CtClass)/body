@@ -6,5 +6,7 @@
     while (base.isArray())     base=base.getComponentType();
     if (base.subclassOf(_enum) && base != cc)     javassistLoadClass(base);
   }
-  return addSerializationMethods(cc);
+  CtClass ccr=addVersioningMethods(addSerializationMethods(cc));
+  ccr.freeze();
+  return ccr;
 }
