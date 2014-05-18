@@ -1,7 +1,12 @@
 {
   double eta=0.0;
   final double[] b=beta();
-  for (int i=0; i < data_info._catOffsets.length - 1; ++i)   if (data[i] != 0)   eta+=b[data_info._catOffsets[i] + (int)(data[i] - 1)];
+  if (!useAllFactorLevels) {
+    for (int i=0; i < data_info._catOffsets.length - 1; ++i)     if (data[i] != 0)     eta+=b[data_info._catOffsets[i] + (int)(data[i] - 1)];
+  }
+ else {
+    for (int i=0; i < data_info._catOffsets.length - 1; ++i)     eta+=b[data_info._catOffsets[i] + (int)data[i]];
+  }
   final int noff=data_info.numStart() - data_info._cats;
   for (int i=data_info._cats; i < data.length; ++i)   eta+=b[noff + i] * data[i];
   eta+=b[b.length - 1];

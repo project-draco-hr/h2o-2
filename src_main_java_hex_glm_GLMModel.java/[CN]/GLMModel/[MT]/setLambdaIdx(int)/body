@@ -1,8 +1,8 @@
 {
   best_lambda_idx=l;
   threshold=submodels[l].validation.best_threshold;
-  if (beta == null)   beta=MemoryManager.malloc8d(this.coefficients_names.length);
- else   Arrays.fill(beta,0);
+  if (global_beta == null)   global_beta=MemoryManager.malloc8d(this.coefficients_names.length);
+ else   Arrays.fill(global_beta,0);
   int j=0;
-  for (  int i : submodels[l].idxs)   beta[i]=submodels[l].beta[j++];
+  for (  int i : submodels[l].idxs)   global_beta[i]=submodels[l].beta[j++];
 }
