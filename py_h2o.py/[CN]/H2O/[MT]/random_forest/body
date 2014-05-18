@@ -23,7 +23,7 @@ def random_forest(self, data_key, trees=None, timeoutSecs=300, retryDelaySecs=1.
         return rf
     if beta_features:
         time.sleep(5)
-        print 'right ebfore call to poll_url, timeoutSec: ', timeoutSecs
+        print 'right before call to poll_url, timeoutSec: ', timeoutSecs
         rfView = self.poll_url(rf, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, noPrint=noPrint)
         return rfView
     else:
