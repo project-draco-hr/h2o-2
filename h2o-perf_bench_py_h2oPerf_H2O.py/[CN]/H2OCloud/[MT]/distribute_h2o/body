@@ -1,0 +1,27 @@
+def distribute_h2o(self):
+    '\n        Distribute the H2O to the remote hosts.\n        @return: none.\n        '
+    f = self.h2o_jar
+
+    def prog(sofar, total):
+        username = getpass.getuser()
+        if (username != 'jenkins'):
+            p = int(((10.0 * sofar) / total))
+            sys.stdout.write(('\rUploading jar [%s%s] %02d%%' % (('#' * p), (' ' * (10 - p)), ((100 * sofar) / total))))
+            sys.stdout.flush()
+    for node in self.nodes:
+        m = md5.new()
+        m.update(open(f).read())
+        m.update(getpass.getuser())
+        dest = ((('/tmp/' + m.hexdigest()) + '-') + os.path.basename(f))
+        print ((('Uploading h2o jar to: ' + dest) + 'on ') + node.ip)
+        sftp = node.ssh.open_sftp()
+        try:
+            try:
+                sftp.stat(dest)
+                print 'Skipping upload of file {0}. File {1} exists on remote side!'.format(f, dest)
+            except IOError as e:
+                if (e.errno == errno.ENOENT):
+                    sftp.put(f, dest, callback=prog)
+        finally:
+            sftp.close()
+        node.uploaded[f] = dest

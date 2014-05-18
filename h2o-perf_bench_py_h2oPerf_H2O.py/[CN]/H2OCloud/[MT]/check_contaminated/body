@@ -1,0 +1,6 @@
+def check_contaminated(self):
+    '\n        Each node checks itself for contamination.\n        @return: True if contaminated, False if _not_ contaminated\n        '
+    for node in self.nodes:
+        if node.is_contaminated():
+            return [1, (('Node ' + node.ip) + ' was contaminated.')]
+    return [0, ' ']
