@@ -1,2 +1,6 @@
 {
+  if (Arrays.equals(activeCols,oldActiveCols))   return beta;
+  double[] full=expandVec(beta,oldActiveCols);
+  if (activeCols == null)   return full;
+  return contractVec(full,activeCols);
 }
