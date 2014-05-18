@@ -1,6 +1,6 @@
 def get_ticks(self):
     '\n        Get process_total_ticks, system_total_ticks, sys_idle_ticks.\n        '
-    max_retries = 30
+    max_retries = 5
     m = 0
     got_url_sys = False
     got_url_proc = False
@@ -40,7 +40,8 @@ def get_ticks(self):
         m += 1
         time.sleep(1)
     if (not (got_url_proc and got_url_sys)):
-        raise Exception('Max retries on /proc scrape exceeded! Did the JVM properly start?')
+        print 'Max retries on /proc scrape exceeded! Did the JVM properly start?'
+        return
     url_sys = 'http://{}:{}/stat'.format(self.ip, 8000)
     url_proc = 'http://{}:{}/{}/stat'.format(self.ip, 8000, self.pid)
     r_sys = requests.get(url_sys, timeout=120).text.split('\n')[0]
