@@ -1,0 +1,22 @@
+{
+  long l=0;
+  for (int i=0; i < _sysnkeys + _usernkeys; i++) {
+    byte[] kb=new byte[2 + 4 + 8];
+    kb[0]=i < _sysnkeys ? Key.BUILT_IN_KEY : (byte)'_';
+    kb[1]=0;
+    kb[2]='A';
+    kb[3]='B';
+    kb[4]='C';
+    kb[5]='D';
+    while (true) {
+      UDP.set8(kb,6,l++);
+      Key k=Key.make(kb);
+      if (k.home()) {
+        if (_insert)         DKV.put(k,new Value(k,kb),_fs);
+ else         DKV.remove(k,_fs);
+        break;
+      }
+    }
+  }
+  tryComplete();
+}

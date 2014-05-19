@@ -4,10 +4,9 @@
     if (!key.home())     continue;
     final Value val=DKV.get(key);
     if (val == null)     continue;
-    if (val.rawPOJO() == null)     continue;
-    if (!val.isLockable())     continue;
     final Object obj=val.rawPOJO();
-    assert(obj instanceof Lockable<?>);
+    if (obj == null)     continue;
+    if (!val.isLockable())     continue;
     final Lockable<?> lockable=(Lockable<?>)(obj);
     final Key[] lockers=((Lockable)obj)._lockers;
     if (lockers != null) {
