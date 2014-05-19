@@ -1,0 +1,21 @@
+{
+  _columnDistsRegression=new float[data.columns() - 1][][];
+  _columnDists=new int[data.columns() - 1][][];
+  _regression=regression;
+  if (!regression) {
+    _random=Utils.getRNG(seed);
+    for (int i=0; i < _columnDists.length; ++i)     if (!data.isIgnored(i))     _columnDists[i]=new int[data.columnArity(i) + 1][data.classes()];
+    _features=new int[featuresPerSplit];
+    _remembered=null;
+    _classWt=data.classWt();
+    _exclusiveSplitLimit=exclusiveSplitLimit;
+  }
+ else {
+    _random=Utils.getRNG(seed);
+    for (int i=0; i < _columnDistsRegression.length; ++i)     if (!data.isIgnored(i))     _columnDistsRegression[i]=new float[data.columnArity(i) + 1][data.columnArityOfClassCol()];
+    _features=new int[featuresPerSplit];
+    _remembered=null;
+    _classWt=data.classWt();
+    _exclusiveSplitLimit=exclusiveSplitLimit;
+  }
+}

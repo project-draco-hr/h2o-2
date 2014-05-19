@@ -1,11 +1,20 @@
 {
   int numClasses=classes();
-  int votes[]=new int[numClasses + 1];
-  preds=new float[numClasses + 1];
-  for (int i=0; i < treeCount(); i++)   votes[(int)Tree.classify(new AutoBuffer(tree(i)),data,numClasses)]++;
-  float s=0.f;
-  for (  int v : votes)   s+=(float)v;
-  for (int i=0; i < votes.length - 1; ++i)   preds[i + 1]=(float)votes[i] / s;
-  preds[0]=(float)(classify(votes,null,null) + get_response().min());
-  return preds;
+  if (numClasses == 1) {
+    float p=0.f;
+    for (int i=0; i < treeCount(); ++i) {
+      p+=Tree.classify(new AutoBuffer(tree(i)),data,numClasses,true);
+    }
+    return new float[]{p / (float)(1. * treeCount())};
+  }
+ else {
+    int votes[]=new int[numClasses + 1];
+    preds=new float[numClasses + 1];
+    for (int i=0; i < treeCount(); i++)     votes[(int)Tree.classify(new AutoBuffer(tree(i)),data,numClasses,false)]++;
+    float s=0.f;
+    for (    int v : votes)     s+=(float)v;
+    for (int i=0; i < votes.length - 1; ++i)     preds[i + 1]=(float)votes[i] / s;
+    preds[0]=(float)(classify(votes,null,null) + get_response().min());
+    return preds;
+  }
 }

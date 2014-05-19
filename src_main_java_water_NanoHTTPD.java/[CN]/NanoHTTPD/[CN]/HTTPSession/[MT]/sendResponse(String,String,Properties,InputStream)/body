@@ -22,7 +22,11 @@
       while (pending > 0) {
         int read=data.read(buff,0,((pending > theBufferSize) ? theBufferSize : pending));
         if (read <= 0)         break;
-        out.write(buff,0,read);
+        try {
+          out.write(buff,0,read);
+        }
+ catch (        SocketException ex) {
+        }
         pending=data.available();
       }
     }

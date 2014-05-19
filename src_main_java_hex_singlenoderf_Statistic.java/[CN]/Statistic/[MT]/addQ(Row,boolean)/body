@@ -1,0 +1,16 @@
+{
+  final int cls=regression ? -1 : row.classOf();
+  for (  int f : _features)   if (f != -1) {
+    if (row.isValid() && row.hasValidValue(f)) {
+      if (!regression) {
+        short val=row.getEncodedColumnValue(f);
+        _columnDists[f][val][cls]++;
+      }
+ else {
+        short val=row.getEncodedColumnValue(f);
+        short val2=row.getEncodedClassColumnValue();
+        _columnDistsRegression[f][val][val2]=row.getRawClassColumnValueFromBin();
+      }
+    }
+  }
+}

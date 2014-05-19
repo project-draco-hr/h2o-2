@@ -1,6 +1,9 @@
 {
   DeepLearningModel cp=null;
-  if (checkpoint == null)   cp=initModel();
+  if (checkpoint == null) {
+    cp=initModel();
+    cp.start_training(null);
+  }
  else {
     final DeepLearningModel previous=UKV.get(checkpoint);
     if (previous == null)     throw new IllegalArgumentException("Checkpoint not found.");
@@ -27,6 +30,7 @@
       final DataInfo dataInfo=prepareDataInfo();
       cp=new DeepLearningModel(previous,destination_key,job_key,dataInfo);
       cp.write_lock(self());
+      cp.start_training(previous);
       assert(state == JobState.RUNNING);
       final DeepLearning mp=cp.model_info().get_params();
       Object A=mp, B=this;
@@ -56,5 +60,6 @@
     }
   }
   trainModel(cp);
+  cp.stop_training();
   delete();
 }

@@ -1,0 +1,22 @@
+{
+  int bestSplit=-1;
+  float bestSoFar=0.f;
+  for (int i=0; i < _columnDists[colIndex].length - 1; ++i) {
+    float Y_incl=0.f;
+    float Y_excl=distWeight;
+    int nobs_incl=0;
+    int nobs_excl=d.rows();
+    for (    float aDist : dist) {
+      Y_incl+=aDist;
+      Y_excl-=aDist;
+      nobs_incl++;
+      nobs_excl--;
+      float newSplitValue=(Y_incl * Y_incl / (float)nobs_incl) + (Y_excl * Y_excl / (float)nobs_excl);
+      if (newSplitValue > bestSoFar) {
+        bestSoFar=newSplitValue;
+        bestSplit=i;
+      }
+    }
+  }
+  return bestSplit == -1 ? Split.impossible(Utils.maxIndex(dist,_random)) : Split.exclusion(colIndex,bestSplit,bestSoFar);
+}

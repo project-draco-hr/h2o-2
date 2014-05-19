@@ -1,0 +1,9 @@
+{
+  float av=0.f;
+  int nobs=0;
+  for (  Row r : this) {
+    av+=r.getRawClassColumnValueFromBin();
+    nobs++;
+  }
+  return nobs == 0 ? 0.f : av / (float)(nobs);
+}
