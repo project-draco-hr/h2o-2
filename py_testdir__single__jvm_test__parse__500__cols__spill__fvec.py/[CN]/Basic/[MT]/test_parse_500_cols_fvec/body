@@ -1,12 +1,16 @@
 def test_parse_500_cols_fvec(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100000, 500, 'cA', 1800, 1800)]
+    tryList = [(1000, 500, 'cA', 1800, 1800)]
     h2b.browseTheCloud()
     for (rowCount, colCount, orig_hex_key, timeoutSecs, timeoutSecs2) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        multifile = 1000
+        for p in range(1, multifile):
+            csvPathnameLink = ((csvPathname + '_') + str(p))
+            os.symlink(csvFilename, csvPathnameLink)
         print '\nCreating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
         for trial in range(3):
@@ -20,4 +24,4 @@ def test_parse_500_cols_fvec(self):
             h2o_cmd.infoFromInspect(inspect, csvPathname)
             print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
             self.assertEqual(inspect['numCols'], colCount, ('parse created result with the wrong number of cols %s %s' % (inspect['numCols'], colCount)))
-            self.assertEqual(inspect['numRows'], rowCount, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['numRows'], rowCount)))
+            self.assertEqual(inspect['numRows'], (rowCount * multifile), ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['numRows'], (rowCount * multifile))))
