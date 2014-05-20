@@ -1,5 +1,6 @@
 {
   if (!_firstException.getAndSet(true)) {
+    ex.printStackTrace();
     _dt.setException(ex);
     onCompletion(caller);
   }
