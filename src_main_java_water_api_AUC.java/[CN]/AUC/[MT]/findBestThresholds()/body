@@ -17,6 +17,7 @@
   precision_for_criteria=new float[hs.size()];
   recall_for_criteria=new float[hs.size()];
   specificity_for_criteria=new float[hs.size()];
+  mcc_for_criteria=new float[hs.size()];
   max_per_class_error_for_criteria=new float[hs.size()];
   for (  ThresholdCriterion criter : hs) {
     final int id=criter.ordinal();
@@ -37,6 +38,7 @@
     precision_for_criteria[id]=(float)_cms[idxCriter[id]].precision();
     recall_for_criteria[id]=(float)_cms[idxCriter[id]].recall();
     specificity_for_criteria[id]=(float)_cms[idxCriter[id]].specificity();
+    mcc_for_criteria[id]=(float)_cms[idxCriter[id]].mcc();
     max_per_class_error_for_criteria[id]=(float)_cms[idxCriter[id]].max_per_class_error();
   }
 }
