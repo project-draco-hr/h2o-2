@@ -12,12 +12,8 @@
   for (int i=0; i < nodes.length; ++i) {
     sb.append("<div class='tab-pane").append(i == 0 ? " active" : "").append("' ");
     sb.append("id='tab").append(i).append("'>\n");
-    Map<Integer,String> sorted=new TreeMap<Integer,String>(Collections.reverseOrder());
-    for (int j=0; j < nodes[i].profile._counts.length; ++j) {
-      if (nodes[i].profile._stacktraces[j].length() > 0 && !nodes[i].profile._stacktraces[j].split("\n")[0].equals("sun.misc.Unsafe.park(Native Method)") && !nodes[i].profile._stacktraces[j].split("\n")[0].equals("java.lang.Object.wait(Native Method)") && !nodes[i].profile._stacktraces[j].split("\n")[0].equals("java.lang.Thread.sleep(Native Method)") && !nodes[i].profile._stacktraces[j].split("\n")[0].equals("java.lang.Thread.yield(Native Method)") && !nodes[i].profile._stacktraces[j].split("\n")[0].equals("java.net.PlainSocketImpl.socketAccept(Native Method)"))       sorted.put(nodes[i].profile._counts[j],nodes[i].profile._stacktraces[j]);
-    }
-    for (    Map.Entry<Integer,String> e : sorted.entrySet()) {
-      sb.append("<pre>").append(e.getKey()).append("\n").append(e.getValue()).append("</pre>");
+    for (int j=0; j < nodes[i].profile.counts.length; ++j) {
+      sb.append("<pre>").append(nodes[i].profile.counts[j]).append("\n").append(nodes[i].profile.stacktraces[j]).append("</pre>");
     }
     sb.append("</div>");
   }
