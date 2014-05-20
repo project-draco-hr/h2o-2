@@ -8,6 +8,7 @@
   precision=new float[_cms.length];
   recall=new float[_cms.length];
   specificity=new float[_cms.length];
+  mcc=new float[_cms.length];
   max_per_class_error=new float[_cms.length];
   for (int i=0; i < _cms.length; ++i) {
     confusion_matrices[i]=_cms[i]._arr;
@@ -19,6 +20,7 @@
     precision[i]=(float)_cms[i].precision();
     recall[i]=(float)_cms[i].recall();
     specificity[i]=(float)_cms[i].specificity();
+    mcc[i]=(float)_cms[i].mcc();
     max_per_class_error[i]=(float)_cms[i].max_per_class_error();
   }
 }
