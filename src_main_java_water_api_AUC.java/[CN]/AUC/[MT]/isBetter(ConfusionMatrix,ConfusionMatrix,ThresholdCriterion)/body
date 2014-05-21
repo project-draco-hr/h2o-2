@@ -23,6 +23,9 @@
  else   if (criter == ThresholdCriterion.maximum_Specificity) {
     return (!Double.isNaN(a.specificity()) && (Double.isNaN(b.specificity()) || a.specificity() > b.specificity()));
   }
+ else   if (criter == ThresholdCriterion.maximum_absolute_MCC) {
+    return (!Double.isNaN(a.mcc()) && (Double.isNaN(b.mcc()) || Math.abs(a.mcc()) > Math.abs(b.mcc())));
+  }
  else {
     throw new IllegalArgumentException("Unknown threshold criterion.");
   }

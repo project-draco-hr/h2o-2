@@ -13,5 +13,5 @@
     long now=System.currentTimeMillis();
     System.out.println("(put+get+remove+get)/sec=" + (now - start) + "ms / "+ ITERS+ " = "+ ((double)(now - start) / ITERS));
   }
-  for (int i=0; i < keys.length; i++)   DKV.remove(keys[i]);
+  for (  Key key : keys)   DKV.remove(key);
 }
