@@ -3,7 +3,7 @@ def test_rf_params_rand2_fvec(self):
     csvPathname = 'standard/covtype.data'
     hex_key = 'covtype.data.hex'
     for trial in range(10):
-        params = {'ntrees': 13, 'mtries': 7, }
+        params = {'ntrees': 13, 'mtries': 7, 'balance_classes': 0, 'importance': 0, }
         colX = h2o_rf.pickRandRfParams(paramDict, params)
         if (('cols' in params) and params['cols']):
             pass

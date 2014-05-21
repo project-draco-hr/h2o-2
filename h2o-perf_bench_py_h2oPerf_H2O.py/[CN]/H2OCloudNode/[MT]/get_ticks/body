@@ -1,10 +1,20 @@
 def get_ticks(self):
     '\n        Get process_total_ticks, system_total_ticks, sys_idle_ticks.\n        '
-    max_retries = 30
+    max_retries = 5
     m = 0
     got_url_sys = False
     got_url_proc = False
     while (m < max_retries):
+        if (m != 0):
+            print 'DEBUG: Restarting serve_proc!'
+            print 'Stopping service'
+            cmd_serve = "ps -efww | grep 0xdiag | awk '{print %2}' | xargs kill"
+            tryKill = self.open_channel()
+            tryKill.exec_command(cmd_serve)
+            print 'Starting service'
+            cmd_serve = ['python', '/home/0xdiag/serve_proc.py']
+            self.channelServe = self.open_channel()
+            self.channelServe.exec_command(' '.join(cmd_serve))
         r_sys = ''
         r_proc = ''
         print ((('Performing try : ' + str(m)) + ' out of total tries = ') + str(max_retries))
@@ -14,8 +24,10 @@ def get_ticks(self):
             r_sys = requests.get(url_sys, timeout=120).text.split('\n')[0]
             r_proc = requests.get(url_proc, timeout=120).text.strip().split()
         except:
+            m += 1
             continue
         if ((r_sys == '') or (r_proc == '')):
+            m += 1
             continue
         if (not got_url_sys):
             if (not (('404' and 'not' and 'found') in r_sys)):
@@ -28,7 +40,8 @@ def get_ticks(self):
         m += 1
         time.sleep(1)
     if (not (got_url_proc and got_url_sys)):
-        raise Exception('Max retries on /proc scrape exceeded! Did the JVM properly start?')
+        print 'Max retries on /proc scrape exceeded! Did the JVM properly start?'
+        return (-1)
     url_sys = 'http://{}:{}/stat'.format(self.ip, 8000)
     url_proc = 'http://{}:{}/{}/stat'.format(self.ip, 8000, self.pid)
     r_sys = requests.get(url_sys, timeout=120).text.split('\n')[0]

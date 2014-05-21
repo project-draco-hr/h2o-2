@@ -7,7 +7,11 @@ def tryThemAll(self, set, rows):
                 newRows2 = self.changeSep(newRows1, sepCase)
                 csvPathname = (((((((((SYNDATASETS_DIR + '/parsetmp_') + str(set)) + '_') + str(eolCase)) + '_') + str(tokenCase)) + '_') + str(sepCase)) + '.data')
                 self.writeRows(csvPathname, newRows2, eol)
-                parseResult = h2i.import_parse(path=csvPathname, schema='local', noPrint=(not h2o.verbose))
+                if ("'" in self.tokenChangeDict[tokenCase]):
+                    single_quotes = 1
+                else:
+                    single_quotes = 0
+                parseResult = h2i.import_parse(path=csvPathname, schema='local', single_quotes=single_quotes, noPrint=(not h2o.verbose))
                 inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
                 print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
                 num_rows = inspect['num_rows']
