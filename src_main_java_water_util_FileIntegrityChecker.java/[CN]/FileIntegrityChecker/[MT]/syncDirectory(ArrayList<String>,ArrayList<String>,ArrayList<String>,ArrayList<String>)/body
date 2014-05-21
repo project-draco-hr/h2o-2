@@ -1,8 +1,4 @@
 {
-  for (  Key k : H2O.localKeySet())   if (k.toString().startsWith(_root)) {
-    dels.add(k.toString());
-    Lockable.delete(k);
-  }
   Futures fs=new Futures();
   Key k=null;
   for (int i=0; i < _files.length; ++i) {
@@ -15,6 +11,7 @@
       if (files != null)       files.add(_files[i]);
       if (keys != null)       keys.add(k.toString());
       if (_newApi) {
+        if (DKV.get(k) != null)         dels.add(k.toString());
         new Frame(k).delete_and_lock(null);
         NFSFileVec nfs=DKV.get(NFSFileVec.make(f,fs)).get();
         Frame fr=new Frame(k,new String[]{"0"},new Vec[]{nfs});
