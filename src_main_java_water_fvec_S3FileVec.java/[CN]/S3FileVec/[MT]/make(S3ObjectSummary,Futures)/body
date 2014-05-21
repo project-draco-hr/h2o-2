@@ -3,7 +3,7 @@
   Key k=Key.make("s3://" + obj.getBucketName() + "/"+ fname);
   long size=obj.getSize();
   Key k2=Vec.newKey(k);
-  new Frame(k2).delete_and_lock(null);
+  new Frame(k).delete_and_lock(null);
   Vec v=new S3FileVec(k2,size);
   DKV.put(k2,v,fs);
   Frame fr=new Frame(k,new String[]{fname},new Vec[]{v});
