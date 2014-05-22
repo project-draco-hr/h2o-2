@@ -21,9 +21,10 @@
     gbm.score_each_iteration=true;
     gbm.invoke();
     gbmmodel=UKV.get(gbm.dest());
-    testHTML(gbmmodel);
-    System.out.println(gbmmodel.toJava());
     Frame preds=gbm.score(gbm.source);
+    double sq_err=new CompErr().doAll(gbm.response,preds.vecs()[0])._sum;
+    double mse=sq_err / preds.numRows();
+    assertEquals(79152.1233,mse,0.1);
     preds.delete();
   }
   finally {
