@@ -2,10 +2,9 @@
   File file=TestUtil.find_test_file("./smalldata/gbm_test/Mfgdata_gaussian_GBM_testing.csv");
   Key fkey=NFSFileVec.make(file);
   Key dest=Key.make("mfg.hex");
-  GBM gbm=null;
+  GBM gbm=new GBM();
   GBM.GBMModel gbmmodel=null;
   try {
-    gbm=new GBM();
     Frame fr=gbm.source=ParseDataset2.parse(dest,new Key[]{fkey});
     UKV.remove(fkey);
     gbm.classification=false;
@@ -14,7 +13,7 @@
     gbm.ntrees=1;
     gbm.max_depth=1;
     gbm.min_rows=1;
-    gbm.nbins=1000;
+    gbm.nbins=20;
     gbm.cols=new int[]{2};
     gbm.validation=null;
     gbm.learn_rate=1.0f;
