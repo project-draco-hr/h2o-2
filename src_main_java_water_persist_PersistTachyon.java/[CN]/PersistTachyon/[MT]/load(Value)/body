@@ -1,7 +1,9 @@
 {
-  long start_io_ms=System.currentTimeMillis();
-  byte[] b=MemoryManager.malloc1(v._max);
   Key k=v._key;
+  if (k._kb[0] != Key.DVEC)   throw H2O.unimpl();
+  long skip=FileVec.chunkOffset(k);
+  long start_io_ms=System.currentTimeMillis();
+  final byte[] b=MemoryManager.malloc1(v._max);
   String[] keyComp=decodeKey(k);
   String clientUri=keyComp[0];
   String fpath=keyComp[1];
@@ -11,6 +13,7 @@
     tfs=(TachyonFS)(Persist.I[Value.TACHYON].createClient(clientUri));
     long start_ns=System.nanoTime();
     is=tfs.getFile(fpath).getInStream(ReadType.NO_CACHE);
+    ByteStreams.skipFully(is,skip);
     ByteStreams.readFully(is,b);
     TimeLine.record_IOclose(start_ns,start_io_ms,1,v._max,Value.TACHYON);
     return b;
