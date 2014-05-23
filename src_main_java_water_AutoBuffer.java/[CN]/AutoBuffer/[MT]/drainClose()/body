@@ -1,5 +1,11 @@
 {
   try {
+    try {
+      Log.info("drain-closing channel to " + ((SocketChannel)_chan).socket().getInetAddress());
+    }
+ catch (    Throwable t) {
+      Log.info("drain-closing channel to unknown node");
+    }
     _chan.close();
     restorePriority();
     bbFree();

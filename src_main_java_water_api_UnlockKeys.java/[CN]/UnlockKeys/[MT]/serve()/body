@@ -1,8 +1,7 @@
 {
   try {
     Log.info("Unlocking all locked keys on the cluster.");
-    UnlockTask cleanup=new UnlockTask();
-    cleanup.invokeOnAllNodes();
+    new UnlockTask().invokeOnAllNodes();
   }
  catch (  Throwable e) {
     return Response.error(e);

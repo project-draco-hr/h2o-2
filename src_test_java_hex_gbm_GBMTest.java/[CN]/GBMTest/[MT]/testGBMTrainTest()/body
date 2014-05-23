@@ -6,11 +6,10 @@
   File file2=TestUtil.find_test_file("smalldata/gbm_test/ecology_eval.csv");
   Key fkey2=NFSFileVec.make(file2);
   Key dest2=Key.make("test.hex");
-  GBM gbm=null;
+  GBM gbm=new GBM();
   GBM.GBMModel gbmmodel=null;
   Frame ftest=null, fpreds=null;
   try {
-    gbm=new GBM();
     Frame fr=ParseDataset2.parse(dest1,new Key[]{fkey1});
     UKV.remove(fr.remove("Site")._key);
     gbm.response=fr.vecs()[fr.find("Angaus")];
