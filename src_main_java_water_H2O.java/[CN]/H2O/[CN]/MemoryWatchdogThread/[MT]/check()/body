@@ -1,0 +1,11 @@
+{
+  water.util.LinuxProcFileReader r=new LinuxProcFileReader();
+  r.read();
+  long rss=-1;
+  try {
+    rss=r.getProcessRss();
+  }
+ catch (  AssertionError xe) {
+  }
+  Log.info("RSS: " + rss);
+}

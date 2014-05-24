@@ -57,12 +57,13 @@ def test_parse_multi_header_rand_fvec(self):
         print 'PARSE_PATTERN_INCLUDES_HEADER', PARSE_PATTERN_INCLUDES_HEADER
         print 'DATA_FIRST_IS_COMMENT:', DATA_FIRST_IS_COMMENT
         print 'HEADER_FIRST_IS_COMMENT:', HEADER_FIRST_IS_COMMENT
-        print 'SEP_CHAR_GEN:', SEP_CHAR_GEN
-        print 'HEADER_SEP_CHAR_GEN:', HEADER_SEP_CHAR_GEN
+        print 'SEP_CHAR_GEN:', (('->' + SEP_CHAR_GEN) + '<-')
+        print 'HEADER_SEP_CHAR_GEN:', (('->' + HEADER_SEP_CHAR_GEN) + '<-')
         print 'GZIP_DATA:', GZIP_DATA
         print 'GZIP_HEADER:', GZIP_HEADER
         hfhList = (random.sample(headerChoices, colCount) + ['output'])
         headerForHeader = HEADER_SEP_CHAR_GEN.join(hfhList)
+        print 'headerForHeader:', headerForHeader
         hfdList = hfhList
         headerForData = SEP_CHAR_GEN.join(hfdList)
         for fileN in range(fileNum):

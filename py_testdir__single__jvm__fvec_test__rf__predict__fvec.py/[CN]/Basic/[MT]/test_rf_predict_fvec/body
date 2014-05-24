@@ -1,4 +1,5 @@
 def test_rf_predict_fvec(self):
+    h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
     h2o.beta_features = True
     trees = 6
@@ -20,7 +21,7 @@ def test_rf_predict_fvec(self):
     diffKeys = [k for k in expectedCols if (predictCols[k] != expectedCols[k])]
     for k in diffKeys:
         raise Exception(('Checking H2O summary results, wrong %s: %s, should be: %s' % (k, predictCols[k], expectedCols[k])))
-    expected = {'numRows': 150, 'numCols': 4, 'byteSize': 2843, }
+    expected = {'numRows': 150, 'numCols': 4, }
     diffKeys = [k for k in expected if (inspect[k] != expected[k])]
     print 'diffKeys', diffKeys
     for k in diffKeys:
