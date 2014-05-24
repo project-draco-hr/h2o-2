@@ -1,3 +1,6 @@
 {
-  return chunkForRow(i).set(i,l);
+  Chunk ck=chunkForRow(i);
+  long ret=ck.set(i,l);
+  ck.close(ck.cidx(),null);
+  return ret;
 }

@@ -1,3 +1,6 @@
 {
-  return chunkForRow(i).setNA(i);
+  Chunk ck=chunkForRow(i);
+  boolean ret=ck.setNA(i);
+  ck.close(ck.cidx(),null);
+  return ret;
 }
