@@ -7,7 +7,7 @@ def tryThemAll(self, set, rows):
                 newRows2 = self.changeSep(newRows1, sepCase)
                 csvPathname = (((((((((SYNDATASETS_DIR + '/parsetmp_') + str(set)) + '_') + str(eolCase)) + '_') + str(tokenCase)) + '_') + str(sepCase)) + '.data')
                 self.writeRows(csvPathname, newRows2, eol)
-                if ("'" in self.tokenChangeDict[tokenCase]):
+                if ("'" in self.tokenChangeDict[tokenCase][0]):
                     single_quotes = 1
                 else:
                     single_quotes = 0

@@ -5,10 +5,9 @@
   File file2=TestUtil.find_test_file("./smalldata/kaggle/KDDTest.arff.gz");
   Key fkey2=NFSFileVec.make(file2);
   Key dest2=Key.make("KDDTest.hex");
-  GBM gbm=null;
+  GBM gbm=new GBM();
   GBM.GBMModel gbmmodel=null;
   try {
-    gbm=new GBM();
     gbm.source=ParseDataset2.parse(dest1,new Key[]{fkey1});
     gbm.response=gbm.source.vecs()[41];
     gbm.ntrees=2;
