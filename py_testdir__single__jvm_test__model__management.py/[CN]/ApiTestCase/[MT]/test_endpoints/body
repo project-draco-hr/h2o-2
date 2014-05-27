@@ -17,7 +17,7 @@ def test_endpoints(self):
     self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
     self.assertKeysDontExist(frames, '', ['models'])
     self.assertKeysExist(frames, 'frames/airlines_test.hex', ['creation_epoch_time_millis', 'id', 'key', 'column_names', 'compatible_models'])
-    self.assertEqual(frames['frames']['airlines_test.hex']['id'], '88e9f821080b1221', msg='The airlines_test.hex frame hash should be deterministic.')
+    self.assertEqual(frames['frames']['airlines_test.hex']['id'], 'd5ab56adc992254a', msg=('The airlines_test.hex frame hash should be deterministic.  Expected d5ab56adc992254a, got: ' + frames['frames']['airlines_test.hex']['id']))
     self.assertEqual(frames['frames']['airlines_test.hex']['key'], 'airlines_test.hex', msg='The airlines_test.hex key should be airlines_test.hex.')
     print '##############################################'
     print 'Testing /2/Frames?key=airlines_test.hex&find_compatible_models=true. . .'

@@ -1,7 +1,24 @@
 def import_frames(self):
+    node = h2o.nodes[0]
     prostate_hex = self.import_frame('prostate.hex', 'smalldata', 'prostate.csv', 'logreg', 380, 9)
     airlines_train_hex = self.import_frame('airlines_train.hex', 'smalldata', 'AirlinesTrain.csv.zip', 'airlines', 24421, 12)
     airlines_test_hex = self.import_frame('airlines_test.hex', 'smalldata', 'AirlinesTest.csv.zip', 'airlines', 2691, 12)
+    frames = node.frames()
+    self.assertKeysExist(frames, 'frames', ['airlines_train.hex'])
+    self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
+    self.assertKeysExist(frames, 'frames/airlines_test.hex', ['id'])
+    test_hash_before = frames['frames']['airlines_test.hex']['id']
+    train_hash_before = frames['frames']['airlines_train.hex']['id']
     self.create_new_boolean('airlines_train.hex', 'IsDepDelayed_REC', 'IsDepDelayed_REC_recoded')
     self.create_new_boolean('airlines_test.hex', 'IsDepDelayed_REC', 'IsDepDelayed_REC_recoded')
+    frames = node.frames()
+    self.assertKeysExist(frames, 'frames', ['airlines_train.hex'])
+    self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
+    self.assertKeysExist(frames, 'frames/airlines_test.hex', ['id'])
+    train_hash_after = frames['frames']['airlines_train.hex']['id']
+    test_hash_after = frames['frames']['airlines_test.hex']['id']
+    self.assertNotEqual(train_hash_before, train_hash_after, ('Expected airlines_train hash to change. . .  Before and after were both: ' + train_hash_after))
+    self.assertNotEqual(test_hash_before, test_hash_after, ('Expected airlines_test hash to change. . .  Before and after were both: ' + test_hash_after))
+    print 'airlines_train hash before: ', train_hash_before, ', after: ', train_hash_after
+    print 'airlines_test hash before: ', test_hash_before, ', after: ', test_hash_after
     return (prostate_hex, airlines_train_hex, airlines_test_hex)

@@ -1,0 +1,9 @@
+{
+  long _start=c._start;
+  for (int i=0; i < c._len; i++) {
+    long l=c.at80(i);
+    long global_row=_start + i;
+    hash^=(17 * global_row);
+    hash^=(23 * l);
+  }
+}

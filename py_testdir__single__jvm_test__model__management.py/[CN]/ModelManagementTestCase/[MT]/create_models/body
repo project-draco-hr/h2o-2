@@ -8,7 +8,6 @@ def create_models(self, frame_keys):
     print 'Generating AirlinesTrain GLM2 binary classification model. . .'
     glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
     glm_AirlinesTrain_1 = node.GLM(airlines_train_hex, **glm_AirlinesTrain_1_params)
-    h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_1, None, **glm_AirlinesTrain_1_params)
     print '####################################################################'
     print 'Generating AirlinesTrain simple GBM binary classification model. . .'
     gbm_AirlinesTrain_1_params = {'destination_key': 'gbm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 3, 'max_depth': 1, 'classification': 1, }
@@ -37,12 +36,10 @@ def create_models(self, frame_keys):
     print 'Generating AirlinesTrain GLM2 binary classification model with different response column. . .'
     glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC_recoded', 'ignored_cols': 'IsDepDelayed, IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
     glm_AirlinesTrain_A = node.GLM(airlines_train_hex, **glm_AirlinesTrain_A_params)
-    h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_A, None, **glm_AirlinesTrain_A_params)
     print '#########################################################'
     print 'Generating Prostate GLM2 binary classification model. . .'
     glm_Prostate_1_params = {'destination_key': 'glm_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, }
     glm_Prostate_1 = node.GLM(prostate_hex, **glm_Prostate_1_params)
-    h2o_glm.simpleCheckGLM(self, glm_Prostate_1, None, **glm_Prostate_1_params)
     print '###############################################################'
     print 'Generating Prostate simple DRF binary classification model. . .'
     rf_Prostate_1_params = {'destination_key': 'rf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 10, 'max_depth': 5, 'classification': 1, }
@@ -55,4 +52,3 @@ def create_models(self, frame_keys):
     print 'Generating Prostate GLM2 regression model. . .'
     glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, }
     glm_Prostate_regression_1 = node.GLM(prostate_hex, **glm_Prostate_regression_1_params)
-    h2o_glm.simpleCheckGLM(self, glm_Prostate_regression_1, None, **glm_Prostate_regression_1_params)

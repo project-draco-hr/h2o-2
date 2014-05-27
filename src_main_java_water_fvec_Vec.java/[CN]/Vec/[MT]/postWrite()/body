@@ -5,6 +5,7 @@
     new TAtomic<Vec>(){
       @Override public Vec atomic(      Vec v){
         if (v != null && v._naCnt == -2)         v._naCnt=-1;
+        v._timestamp=System.currentTimeMillis();
         return v;
       }
     }
