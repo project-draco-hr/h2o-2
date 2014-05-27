@@ -1,4 +1,6 @@
 {
-  _vec.close();
+  Futures fs=new Futures();
+  _vec.close(fs);
+  fs.blockForPending();
   _vec.postWrite();
 }
