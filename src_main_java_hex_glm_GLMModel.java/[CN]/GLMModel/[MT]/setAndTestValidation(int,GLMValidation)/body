@@ -1,14 +1,10 @@
 {
   submodels[lambdaIdx].validation=val;
-  if (lambdaIdx == 0 || rank(lambdaIdx) == 1) {
-    threshold=val.best_threshold;
+  if (best_lambda_idx == lambdaIdx || lambdaIdx == 0 || rank(lambdaIdx) == 1) {
+    setLambdaIdx(lambdaIdx);
     return true;
   }
-  double diff=(submodels[lambdaIdx - 1].validation.residual_deviance - val.residual_deviance) / val.null_deviance;
-  if (diff >= 0.01) {
-    best_lambda_idx=lambdaIdx;
-    threshold=val.best_threshold;
-    System.out.println("setting threshold to " + threshold);
-  }
+  double diff=(submodels[best_lambda_idx].validation.residual_deviance - val.residual_deviance) / val.null_deviance;
+  if (diff >= 0.01)   setLambdaIdx(lambdaIdx);
   return true;
 }

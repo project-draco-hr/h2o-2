@@ -1,0 +1,18 @@
+{
+  Value v=DKV.get(_modelKey);
+  if (v != null) {
+    glm_model=v.get();
+    glm_model.write_lock(null);
+    int id=0;
+    for (int i=0; i < glm_model.lambdas.length; ++i)     if (lambda == glm_model.lambdas[i]) {
+      id=i;
+      threshold=glm_model.submodels[i].validation.best_threshold;
+      break;
+    }
+    glm_model.best_lambda_idx=id;
+    if (!Double.isNaN(threshold))     glm_model.threshold=threshold;
+    glm_model.update(null);
+    glm_model.unlock(null);
+  }
+  return GLMModelView.redirect(this,_modelKey);
+}
