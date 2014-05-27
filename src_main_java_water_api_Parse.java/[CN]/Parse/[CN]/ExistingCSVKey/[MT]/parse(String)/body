@@ -4,14 +4,14 @@
   if (_hdrFrom.specified())   _header.setValue(true);
   if (_excludeExpression.specified())   exclude=makePattern(_excludeExpression.value());
   ArrayList<Key> keys=new ArrayList();
-  for (  Key key : H2O.globalKeySet(null)) {
-    if (!key.user_allowed())     continue;
-    String ks=key.toString();
+  for (  H2O.KeyInfo kinfo : H2O.globalKeySet(null,100)) {
+    if (!kinfo._rawData)     continue;
+    String ks=kinfo._key.toString();
     if (!p.matcher(ks).matches())     continue;
     if (exclude != null && exclude.matcher(ks).matches())     continue;
-    Value v2=DKV.get(key);
+    Value v2=DKV.get(kinfo._key);
     if (!v2.isRawData())     continue;
-    keys.add(key);
+    keys.add(kinfo._key);
   }
   if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
   Collections.sort(keys);

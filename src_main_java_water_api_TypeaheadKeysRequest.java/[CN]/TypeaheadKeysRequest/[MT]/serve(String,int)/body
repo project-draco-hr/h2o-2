@@ -1,18 +1,3 @@
 {
-  JsonArray array=new JsonArray();
-  Key[] keys=new Key[limit];
-  int len=0;
-  for (  Key key : H2O.globalKeySet(_cname)) {
-    if (!key.user_allowed())     continue;
-    if (filter != null && key.toString().indexOf(filter) == -1)     continue;
-    Value val=DKV.get(key);
-    if (val == null)     continue;
-    if (!matchesType(val))     continue;
-    if (!shouldIncludeKey(key))     continue;
-    keys[len++]=key;
-    if (len == keys.length)     break;
-  }
-  Arrays.sort(keys,0,len);
-  for (int i=0; i < len; ++i)   array.add(new JsonPrimitive(keys[i].toString()));
-  return array;
+  return serve(filter,limit,2000);
 }
