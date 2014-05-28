@@ -1,0 +1,22 @@
+{
+  DRF drf=new DRF();
+  Key destTrain=Key.make("data.hex");
+  DRFModel model=null;
+  try {
+    drf.source=parseFrame(destTrain,"../smalldata/dhisttest.csv");
+    drf.response=drf.source.vecs()[1];
+    drf.classification=true;
+    drf.ntrees=1;
+    drf.max_depth=1;
+    drf.min_rows=1;
+    drf.nbins=100;
+    drf.destination_key=Key.make("DRF_model_dhist.hex");
+    drf.invoke();
+    model=UKV.get(drf.dest());
+  }
+  finally {
+    drf.source.delete();
+    drf.remove();
+    if (model != null)     model.delete();
+  }
+}
