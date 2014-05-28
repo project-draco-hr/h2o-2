@@ -5,11 +5,15 @@ def test_50_nongz_fvec(self):
     importFolderPath = 'manyfiles-nflx'
     importFolderPath = 'airlines'
     print "Using non-gz'ed files in", importFolderPath
-    csvFilenameList = [('*[1][0][0].dat', 'file_1_A.dat', (1 * avgMichalSize), 1800)]
+    csvFilenameList = [('*[1][0-4][0-9].dat', 'file_50_A.dat', (50 * avgMichalSize), 1800)]
     pollTimeoutSecs = 120
     retryDelaySecs = 10
     for (trial, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
         csvPathname = ((importFolderPath + '/') + csvFilepattern)
+        (importResult, importPattern) = h2i.import_only(bucket=bucket, path=csvPathname, schema='local')
+        (importResult, importPattern) = h2i.import_only(bucket=bucket, path=csvPathname, schema='local')
+        (importResult, importPattern) = h2i.import_only(bucket=bucket, path=csvPathname, schema='local')
+        (importResult, importPattern) = h2i.import_only(bucket=bucket, path=csvPathname, schema='local')
         (importResult, importPattern) = h2i.import_only(bucket=bucket, path=csvPathname, schema='local')
         importFullList = importResult['files']
         importFailList = importResult['fails']
