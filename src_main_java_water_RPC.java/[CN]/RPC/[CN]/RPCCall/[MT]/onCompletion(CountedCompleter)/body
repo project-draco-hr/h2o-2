@@ -21,6 +21,10 @@
  catch (      InterruptedException ie) {
       }
     }
+catch (    Exception e) {
+      Log.err(e);
+      if (ab != null)       ab.close(true,true);
+    }
   }
  while ((dt=_dt) != null);
   if (dt == null)   Log.info("Cancelled remote task#" + _tsknum + " "+ origDt.getClass()+ " to "+ _client+ " has been cancelled by remote");

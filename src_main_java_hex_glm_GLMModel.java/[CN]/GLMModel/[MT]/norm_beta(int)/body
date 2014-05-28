@@ -1,3 +1,7 @@
 {
-  return submodels[i].norm_beta;
+  if (submodels[lambdaIdx].norm_beta == null)   return beta();
+  double[] res=beta().clone();
+  int j=0;
+  for (  int i : submodels[lambdaIdx].idxs)   res[i]=submodels[lambdaIdx].norm_beta[j++];
+  return res;
 }

@@ -1,0 +1,31 @@
+{
+  long t=System.currentTimeMillis();
+  KeyInfo[] res=null;
+  if (((res=GlobalUKeySetTask._cache) == null) || t - GlobalUKeySetTask._lastUpdate > timeTolerance) {
+    final GlobalUKeySetTask tsk=new GlobalUKeySetTask();
+    if (GlobalUKeySetTask._gbt.compareAndSet(null,tsk) || timeTolerance == -1) {
+      res=tsk.invokeOnAllNodes()._res;
+    }
+ else {
+      GlobalUKeySetTask t2=GlobalUKeySetTask._gbt.get();
+      if (t2 != null)       t2.join();
+      res=GlobalUKeySetTask._cache;
+    }
+  }
+ else   if (t - GlobalUKeySetTask._lastUpdate > 1000) {
+    final GlobalUKeySetTask tsk=new GlobalUKeySetTask();
+    if (GlobalUKeySetTask._gbt.compareAndSet(null,tsk))     H2O.submitTask(new H2OCountedCompleter(){
+      @Override public void compute2(){
+        tsk.invokeOnAllNodes();
+        tryComplete();
+      }
+    }
+);
+  }
+  if (f != null) {
+    ArrayList<KeyInfo> filteredRes=new ArrayList<KeyInfo>();
+    for (    KeyInfo ki : res)     if (f.filter(ki))     filteredRes.add(ki);
+    if (filteredRes.size() != res.length)     res=filteredRes.toArray(new KeyInfo[filteredRes.size()]);
+  }
+  return res;
+}
