@@ -1,6 +1,8 @@
 {
-  if (submodels[lambdaIdx].norm_beta == null)   return beta();
-  double[] res=beta().clone();
+  if (submodels[lambdaIdx].norm_beta == null) {
+    return beta();
+  }
+  double[] res=MemoryManager.malloc8d(data_info.fullN() + 1);
   int j=0;
   for (  int i : submodels[lambdaIdx].idxs)   res[i]=submodels[lambdaIdx].norm_beta[j++];
   return res;
