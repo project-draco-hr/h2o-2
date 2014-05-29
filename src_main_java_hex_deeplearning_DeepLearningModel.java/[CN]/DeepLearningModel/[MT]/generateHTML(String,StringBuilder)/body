@@ -88,14 +88,14 @@
   }
   if (isClassifier()) {
     DocGen.HTML.section(sb,"Classification error on training data: " + formatPct(error.train_err));
-    if (error.validation) {
-      DocGen.HTML.section(sb,"Classification error on validation data: " + formatPct(error.valid_err));
+    if (error.validation || (error.num_folds > 0 && get_params().state == Job.JobState.DONE)) {
+      DocGen.HTML.section(sb,"Classification error on " + (error.num_folds > 0 ? error.num_folds + "-fold cross-" : "") + "validation data: "+ formatPct(error.valid_err));
     }
   }
  else {
     DocGen.HTML.section(sb,"MSE on training data: " + String.format(mse_format,error.train_mse));
-    if (error.validation) {
-      DocGen.HTML.section(sb,"MSE on validation data: " + String.format(mse_format,error.valid_mse));
+    if (error.validation || (error.num_folds > 0 && get_params().state == Job.JobState.DONE)) {
+      DocGen.HTML.section(sb,"MSE on " + (error.num_folds > 0 ? error.num_folds + "-fold cross-" : "") + "validation data: "+ String.format(mse_format,error.valid_mse));
     }
   }
   DocGen.HTML.paragraph(sb,"Training samples: " + String.format("%,d",model_info().get_processed_total()));
@@ -114,7 +114,7 @@
   long score_train=error.score_training_samples;
   long score_valid=error.score_validation_samples;
   final boolean fulltrain=score_train == 0 || score_train == training_rows;
-  final boolean fullvalid=score_valid == 0 || score_valid == get_params().validation.numRows();
+  final boolean fullvalid=get_params().num_folds == 0 && (score_valid == 0 || score_valid == get_params().validation.numRows());
   final String toolarge=" Confusion matrix not shown here - too large: number of classes (" + model_info.units[model_info.units.length - 1] + ") is greater than the specified limit of "+ get_params().max_confusion_matrix_size+ ".";
   boolean smallenough=model_info.units[model_info.units.length - 1] <= get_params().max_confusion_matrix_size;
   if (isClassifier()) {
@@ -129,6 +129,18 @@
         RString v_rs=new RString("<a href='Inspect2.html?src_key=%$key'>%key</a>");
         v_rs.replace("key",get_params().validation._key != null ? get_params().validation._key : "");
         String cmTitle="<div class=\"alert\">Scoring results reported on validation data " + v_rs.toString() + (fullvalid ? "" : " (" + score_valid + " samples)")+ ":</div>";
+        sb.append("<h5>" + cmTitle);
+        if (error.valid_confusion_matrix != null && smallenough) {
+          sb.append("</h5>");
+          error.valid_confusion_matrix.toHTML(sb);
+        }
+ else         if (smallenough)         sb.append(" Confusion matrix not yet computed.</h5>");
+ else         sb.append(toolarge + "</h5>");
+      }
+ else       if (error.num_folds > 0) {
+        RString v_rs=new RString("<a href='Inspect2.html?src_key=%$key'>%key</a>");
+        v_rs.replace("key",get_params().source._key);
+        String cmTitle="<div class=\"alert\">Scoring results reported for " + error.num_folds + "-fold cross-validation on training data "+ v_rs.toString()+ ":</div>";
         sb.append("<h5>" + cmTitle);
         if (error.valid_confusion_matrix != null && smallenough) {
           sb.append("</h5>");
@@ -231,6 +243,15 @@
       sb.append("<th>Validation MSE</th>");
     }
   }
+ else   if (error.num_folds > 0) {
+    if (isClassifier()) {
+      sb.append("<th>Cross-Validation Error</th>");
+      if (nclasses() == 2)       sb.append("<th>Cross-Validation AUC</th>");
+    }
+ else {
+      sb.append("<th>Cross-Validation MSE</th>");
+    }
+  }
   sb.append("</tr>");
   for (int i=errors.length - 1; i >= 0; i--) {
     final Errors e=errors[i];
@@ -258,6 +279,24 @@
       }
  else {
         sb.append("<td>" + String.format(mse_format,e.valid_mse) + "</td>");
+      }
+    }
+ else     if (e.num_folds > 0) {
+      if (i == errors.length - 1) {
+        if (isClassifier()) {
+          sb.append("<td>" + formatPct(e.valid_err) + "</td>");
+          if (nclasses() == 2) {
+            if (e.validAUC != null)             sb.append("<td>" + formatPct(e.validAUC.AUC()) + "</td>");
+ else             sb.append("<td>" + "N/A" + "</td>");
+          }
+        }
+ else {
+          sb.append("<td>" + String.format(mse_format,e.valid_mse) + "</td>");
+        }
+      }
+ else {
+        sb.append("<td>N/A</td>");
+        if (nclasses() == 2)         sb.append("<td>N/A</td>");
       }
     }
     sb.append("</tr>");

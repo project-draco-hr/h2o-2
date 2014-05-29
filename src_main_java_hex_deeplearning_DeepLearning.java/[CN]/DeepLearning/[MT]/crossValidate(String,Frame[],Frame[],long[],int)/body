@@ -1,0 +1,6 @@
+{
+  DeepLearning cvdl=(DeepLearning)this.clone();
+  cvdl.best_model_key=null;
+  cvdl.genericCrossValidation(basename,splits,offsets,i);
+  cv_preds[i]=((DeepLearningModel)UKV.get(cvdl.dest())).score(cvdl.validation);
+}
