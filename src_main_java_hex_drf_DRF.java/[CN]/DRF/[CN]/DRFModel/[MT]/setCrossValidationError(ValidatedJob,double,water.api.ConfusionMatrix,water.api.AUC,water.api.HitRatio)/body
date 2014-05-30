@@ -1,4 +1,5 @@
 {
   DRFModel drfm=((DRF)job).makeModel(this,cv_error,new ConfusionMatrix(cm.cm,cms[0].nclasses()),this.varimp,auc);
+  drfm._have_cv_results=true;
   DKV.put(this._key,drfm);
 }
