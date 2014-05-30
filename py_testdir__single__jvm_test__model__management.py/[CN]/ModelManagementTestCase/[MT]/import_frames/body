@@ -9,6 +9,10 @@ def import_frames(self):
     self.assertKeysExist(frames, 'frames/airlines_test.hex', ['id'])
     test_hash_before = frames['frames']['airlines_test.hex']['id']
     train_hash_before = frames['frames']['airlines_train.hex']['id']
+    self.assertNotEqual('ffffffffffffffff', test_hash_before)
+    self.assertNotEqual('ffffffffffffffff', train_hash_before)
+    self.assertNotEqual('0', test_hash_before)
+    self.assertNotEqual('0', train_hash_before)
     self.create_new_boolean('airlines_train.hex', 'IsDepDelayed_REC', 'IsDepDelayed_REC_recoded')
     self.create_new_boolean('airlines_test.hex', 'IsDepDelayed_REC', 'IsDepDelayed_REC_recoded')
     frames = node.frames()
