@@ -92,7 +92,7 @@
       DocGen.HTML.section(sb,"Classification error on validation data: " + formatPct(error.valid_err));
     }
  else     if (error.num_folds > 0) {
-      DocGen.HTML.section(sb,"Classification error on " + error.num_folds + "-fold cross-validated training data: "+ (_have_cv_results ? formatPct(error.valid_err) : "not yet available"));
+      DocGen.HTML.section(sb,"Classification error on " + error.num_folds + "-fold cross-validated training data"+ (_have_cv_results ? ": " + formatPct(error.valid_err) : " is being computed - please reload this page later."));
     }
   }
  else {
@@ -101,7 +101,7 @@
       DocGen.HTML.section(sb,"MSE on validation data: " + formatPct(error.valid_err));
     }
  else     if (error.num_folds > 0) {
-      DocGen.HTML.section(sb,"MSE on " + error.num_folds + "-fold cross-validated training data: "+ (_have_cv_results ? String.format(mse_format,error.valid_mse) : "not yet available"));
+      DocGen.HTML.section(sb,"MSE on " + error.num_folds + "-fold cross-validated training data"+ (_have_cv_results ? ": " + String.format(mse_format,error.valid_mse) : " is being computed - please reload this page later."));
     }
   }
   DocGen.HTML.paragraph(sb,"Training samples: " + String.format("%,d",model_info().get_processed_total()));
@@ -159,18 +159,21 @@
           error.valid_confusion_matrix.toHTML(sb);
         }
  else         if (smallenough)         sb.append("<h5>Confusion matrix on validation data is not yet computed.</h5>");
+ else         sb.append(toolarge);
       }
  else       if (_have_cv_results) {
         if (error.valid_confusion_matrix != null && smallenough) {
           error.valid_confusion_matrix.toHTML(sb);
         }
  else         if (smallenough)         sb.append("<h5>Confusion matrix on " + error.num_folds + "-fold cross-validated training data is not yet computed.</h5>");
+ else         sb.append(toolarge);
       }
  else {
         if (error.train_confusion_matrix != null && smallenough) {
           error.train_confusion_matrix.toHTML(sb);
         }
  else         if (smallenough)         sb.append("<h5>Confusion matrix on training data is not yet computed.</h5>");
+ else         sb.append(toolarge);
       }
     }
   }
