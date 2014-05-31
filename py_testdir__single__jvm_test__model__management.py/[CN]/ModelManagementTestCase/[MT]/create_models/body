@@ -27,7 +27,6 @@ def create_models(self, frame_keys):
     print '#####################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model. . .'
     speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
-    speedrf_AirlinesTrain_1 = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_1_params)
     print '######################################################################'
     print 'Generating AirlinesTrain DeepLearning binary classification model. . .'
     dl_AirlinesTrain_1_params = {'destination_key': 'dl_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'hidden': [10, 10], 'classification': 1, }
@@ -47,7 +46,6 @@ def create_models(self, frame_keys):
     print '#####################################################################'
     print 'Generating Prostate complex SpeeDRF binary classification model. . .'
     speedrf_Prostate_1_params = {'destination_key': 'speedrf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
-    speedrf_Prostate_1 = node.speedrf(prostate_hex, **speedrf_Prostate_1_params)
     print '##############################################'
     print 'Generating Prostate GLM2 regression model. . .'
     glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, }

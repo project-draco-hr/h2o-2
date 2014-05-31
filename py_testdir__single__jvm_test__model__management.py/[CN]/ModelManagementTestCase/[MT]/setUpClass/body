@@ -6,7 +6,7 @@ def setUpClass(cls):
         print ('NOTE: Connecting to existing cloud, and leaving the cloud running afterwards: ' + os.path.abspath(h2o.clone_cloud_json))
     localhost = h2o.decide_if_localhost()
     if localhost:
-        print 'Calling h2o.build_cloud(cloud_size). . .'
+        print (('Calling h2o.build_cloud(' + str(cloud_size)) + '). . .')
         h2o.build_cloud(cloud_size)
     else:
         h2o_hosts.build_cloud_with_hosts(1)
