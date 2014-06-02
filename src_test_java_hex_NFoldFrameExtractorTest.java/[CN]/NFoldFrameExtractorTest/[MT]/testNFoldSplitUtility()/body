@@ -1,5 +1,9 @@
 {
   for (int i=0; i < 10; i++) {
-    assertArrayEquals(ar(i,12L),nfold(10,10,i));
+    assertArrayEquals("10 fold of 10 elements : " + i + "-th failed!",ar(i,1L),nfold(10,10,i));
   }
+  for (int i=0; i < 9; i++) {
+    assertArrayEquals("10 fold of 11 elements : " + i + "-th failed!",ar(i,1L),nfold(11,10,i));
+  }
+  assertArrayEquals("10 fold of 11 elements : 9-th failed!",ar(9,2L),nfold(11,10,9));
 }
