@@ -18,6 +18,7 @@
     CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
     cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
     m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum,cmTask._cms);
+    _domain=cmTask.domain();
     m.cm=cmTask._matrix._matrix;
   }
   if (!cm_update || m.regression) {

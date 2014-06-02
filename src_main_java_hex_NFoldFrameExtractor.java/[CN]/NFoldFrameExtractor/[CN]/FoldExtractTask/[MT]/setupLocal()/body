@@ -1,0 +1,14 @@
+{
+  Vec anyInVec=_vecs[0];
+  long[] folds=Utils.nfold(anyInVec.length(),_nfolds,_afold);
+  long startRow=folds[0];
+  long endRow=startRow + folds[1];
+  long espc[]=anyInVec._espc;
+  int c=0;
+  for (; c < espc.length - 1 && espc[c + 1] <= startRow; c++)   ;
+  _startChkIdx=c;
+  _startRow=(int)(startRow - espc[c]);
+  for (; c < espc.length - 1 && espc[c + 1] <= endRow; c++)   ;
+  _endChkIdx=c;
+  _endRow=(int)(endRow - espc[c]);
+}

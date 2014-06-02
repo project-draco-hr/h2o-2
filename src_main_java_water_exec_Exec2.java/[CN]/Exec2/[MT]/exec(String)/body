@@ -3,36 +3,35 @@
   ArrayList<ASTId> global=new ArrayList<ASTId>();
   ArrayList<Key> locked=new ArrayList<Key>();
   Env env=new Env(locked);
-  H2O.globalKeySet("water.fvec.Frame");
-  H2O.globalKeySet("water.ValueArray");
-  for (  Key k : H2O.localKeySet()) {
-    Value val=H2O.raw_get(k);
-    if (val == null)     continue;
-    if (val.isArray()) {
-      val=DKV.get(k);
-      if (val == null)       continue;
-      Frame frAuto=ValueArray.asFrame(val);
-      Frame fr2=new Frame(k,frAuto._names,frAuto.vecs());
-      frAuto.remove(0,fr2.numCols());
-      frAuto.delete();
-      fr2.delete_and_lock(null).unlock(null);
-      val=DKV.get(k);
+  final Key[] frameKeys=H2O.KeySnapshot.globalSnapshot().filter(new H2O.KVFilter(){
+    @Override public boolean filter(    H2O.KeyInfo k){
+      if (k._type == TypeMap.VALUE_ARRAY) {
+        Value v=DKV.get(k._key);
+        if (v == null)         return false;
+        Frame frAuto=ValueArray.asFrame(v);
+        Frame fr2=new Frame(k._key,frAuto._names,frAuto.vecs());
+        frAuto.remove(0,fr2.numCols());
+        frAuto.delete();
+        fr2.delete_and_lock(null).unlock(null);
+        return true;
+      }
+ else       return k._type == TypeMap.FRAME;
     }
-    if (val.isFrame()) {
-      val=DKV.get(k);
-      if (val == null)       continue;
-      if (val.isRawData())       continue;
-      Frame fr=val.get();
-      String kstr=k.toString();
-      try {
-        env.push(fr,kstr);
-        global.add(new ASTId(Type.ARY,kstr,0,global.size()));
-        fr.read_lock(null);
-        locked.add(fr._key);
-      }
- catch (      Exception e) {
-        Log.err("Exception while adding frame " + k + " to Exec env");
-      }
+  }
+).keys();
+  for (  Key k : frameKeys) {
+    Value val=DKV.get(k);
+    if (val == null || !val.isFrame())     continue;
+    Frame fr=val.get();
+    String kstr=k.toString();
+    try {
+      env.push(fr,kstr);
+      global.add(new ASTId(Type.ARY,kstr,0,global.size()));
+      fr.read_lock(null);
+      locked.add(fr._key);
+    }
+ catch (    Exception e) {
+      Log.err("Exception while adding frame " + k + " to Exec env");
     }
   }
   global.add(new ASTId(Type.DBL,"T",0,global.size()));

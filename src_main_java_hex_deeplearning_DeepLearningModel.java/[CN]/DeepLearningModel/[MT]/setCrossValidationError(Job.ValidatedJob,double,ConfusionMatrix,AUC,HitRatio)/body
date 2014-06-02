@@ -1,0 +1,10 @@
+{
+  _have_cv_results=true;
+  if (!get_params().classification)   last_scored().valid_mse=cv_error;
+ else   last_scored().valid_err=cv_error;
+  last_scored().score_validation_samples=last_scored().score_training_samples / get_params().n_folds;
+  last_scored().num_folds=get_params().n_folds;
+  last_scored().valid_confusion_matrix=cm;
+  last_scored().validAUC=auc;
+  last_scored().valid_hitratio=hr;
+}

@@ -28,7 +28,7 @@ def probe_node(line, h2oNodes):
         node_id = len(h2oNodes)
         use_maprfs = ('mapr' in args.hdfs_version)
         use_hdfs = (not use_maprfs)
-        node = {'http_addr': ip, 'port': int(port), 'java_heap_GB': java_heap_GB, 'node_id': node_id, 'remoteH2O': 'true', 'sandbox_error_was_reported': 'false', 'sandbox_ignore_errors': 'false', 'username': '0xcustomer', 'redirect_import_folder_to_s3_path': 'false', 'redirect_import_folder_to_s3n_path': 'false', 'delete_keys_at_teardown': 'true', 'use_hdfs': use_hdfs, 'use_maprfs': use_maprfs, 'hdfs_version': args.hdfs_version, 'hdfs_name_node': args.hdfs_name_node, }
+        node = {'http_addr': ip, 'port': int(port), 'java_heap_GB': java_heap_GB, 'node_id': node_id, 'remoteH2O': 'true', 'sandbox_error_was_reported': 'false', 'sandbox_ignore_errors': 'false', 'username': '0xcustomer', 'redirect_import_folder_to_s3_path': 'false', 'redirect_import_folder_to_s3n_path': 'false', 'delete_keys_at_teardown': 'true', 'use_hdfs': use_hdfs, 'use_maprfs': use_maprfs, 'h2o_remote_buckets_root': 'false', 'hdfs_version': args.hdfs_version, 'hdfs_name_node': args.hdfs_name_node, }
         if (name not in h2oNodes):
             h2oNodes[name] = node
             print ('Added node %s to probes' % name)

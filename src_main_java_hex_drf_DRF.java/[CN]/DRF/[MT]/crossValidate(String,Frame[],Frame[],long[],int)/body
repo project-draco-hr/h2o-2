@@ -1,0 +1,5 @@
+{
+  DRF cv=(DRF)this.clone();
+  cv.genericCrossValidation(basename,splits,offsets,i);
+  cv_preds[i]=((DRFModel)UKV.get(cv.dest())).score(cv.validation);
+}
