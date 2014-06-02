@@ -1,0 +1,15 @@
+{
+  if (job() == null)   return;
+  Job.ValidatedJob job=(Job.ValidatedJob)job();
+  if (job.xval_models != null && job.xval_models.length > 0) {
+    sb.append("<h4>Cross Validation Models</h4>");
+    sb.append("<table class='table table-bordered table-condensed'>");
+    sb.append("<tr><th>Model</th></tr>");
+    for (    Key k : job.xval_models) {
+      sb.append("<tr>");
+      sb.append("<td>" + Inspector.link(k.toString(),k.toString()) + "</td>");
+      sb.append("</tr>");
+    }
+    sb.append("</table>");
+  }
+}

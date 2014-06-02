@@ -1,5 +1,5 @@
 {
   GBM cv=(GBM)this.clone();
-  cv.genericCrossValidation(basename,splits,offsets,i);
+  cv.genericCrossValidation(splits,offsets,i);
   cv_preds[i]=((GBMModel)UKV.get(cv.dest())).score(cv.validation);
 }
