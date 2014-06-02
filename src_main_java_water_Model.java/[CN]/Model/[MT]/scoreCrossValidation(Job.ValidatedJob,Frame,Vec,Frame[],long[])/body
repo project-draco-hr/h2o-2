@@ -1,0 +1,39 @@
+{
+  assert(offsets[0] == 0);
+  assert(offsets[offsets.length - 1] == source.numRows());
+  Frame cv_pred=score(source);
+  for (int i=0; i < cv_preds.length; ++i) {
+    for (int c=(isClassifier() ? 1 : 0); c < cv_preds[i].numCols(); ++c) {
+      Vec.Writer vw=cv_pred.vec(c).open();
+      try {
+        for (int r=0; r < cv_preds[i].numRows(); ++r) {
+          vw.set(offsets[i] + r,cv_preds[i].vec(c).at(r));
+        }
+      }
+  finally {
+        vw.close();
+      }
+    }
+    if (isClassifier()) {
+      float[] probs=new float[cv_preds[i].numCols()];
+      Vec.Writer vw=cv_pred.vec(0).open();
+      try {
+        for (int r=0; r < cv_preds[i].numRows(); ++r) {
+          for (int c=1; c < cv_preds[i].numCols(); ++c) {
+            probs[c]=(float)cv_preds[i].vec(c).at(r);
+          }
+          final int label=ModelUtils.getPrediction(probs,r);
+          vw.set(offsets[i] + r,label);
+        }
+      }
+  finally {
+        vw.close();
+      }
+    }
+  }
+  AUC auc=nclasses() == 2 ? new AUC() : null;
+  water.api.ConfusionMatrix cm=new water.api.ConfusionMatrix();
+  HitRatio hr=isClassifier() ? new HitRatio() : null;
+  double cv_error=calcError(source,response,cv_pred,cv_pred,"cross-validated",true,10,cm,auc,hr);
+  setCrossValidationError(job,cv_error,cm,auc,hr);
+}

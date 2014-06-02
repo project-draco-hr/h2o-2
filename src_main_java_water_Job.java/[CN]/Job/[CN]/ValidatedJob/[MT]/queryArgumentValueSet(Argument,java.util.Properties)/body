@@ -1,0 +1,7 @@
+{
+  super.queryArgumentValueSet(arg,inputArgs);
+  if (arg._name.equals("n_folds") && validation != null) {
+    arg.disable("Only if no validation dataset is provided.");
+    n_folds=0;
+  }
+}

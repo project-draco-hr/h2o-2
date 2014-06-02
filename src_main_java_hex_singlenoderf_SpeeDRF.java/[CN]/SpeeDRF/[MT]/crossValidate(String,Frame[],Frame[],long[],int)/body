@@ -1,0 +1,5 @@
+{
+  SpeeDRF cv=(SpeeDRF)this.clone();
+  cv.genericCrossValidation(basename,splits,offsets,i);
+  cv_preds[i]=((SpeeDRFModel)UKV.get(cv.dest())).score(cv.validation);
+}
