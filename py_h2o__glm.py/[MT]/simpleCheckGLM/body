@@ -86,7 +86,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
             print ('%15s %s' % ('best_threshold:\t', best_threshold))
             best_index = None
             for (i, t) in enumerate(thresholds):
-                if (t == best_threshold):
+                if (t >= best_threshold):
                     best_index = i
                     break
             assert (best_index != None), ('%s %s' % (best_threshold, thresholds))
