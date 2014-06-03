@@ -1,0 +1,38 @@
+{
+  ArrayList<Key> keys=new ArrayList<Key>();
+  try {
+    for (int i=0; i < 1e2; ++i) {
+      Key k=Key.makeUserHidden(Key.make());
+      keys.add(k);
+      DKV.put(k,new Value(k,new Utils.IcedInt(i)));
+    }
+    for (int i=0; i < 1e2; ++i) {
+      Key k=Key.make("key" + i);
+      keys.add(k);
+      DKV.put(k,new Value(k,new Utils.IcedInt(i)));
+    }
+    for (int i=0; i < 1e2; ++i) {
+      Key k=Key.make("kei" + i);
+      keys.add(k);
+      DKV.put(k,new Value(k,new Utils.IcedInt(i)));
+    }
+    for (int i=0; i < 1e2; ++i) {
+      Key k=Key.make();
+      if (k.toString().startsWith("k"))       k=Key.make();
+      keys.add(k);
+      DKV.put(k,new Utils.IcedInt(i));
+    }
+    long t=System.currentTimeMillis();
+    H2O.KeySnapshot.globalSnapshot();
+    for (int i=0; i < 1e2; ++i) {
+      Assert.assertEquals(200,new TypeAheadReqestTest("k").doTest().size());
+      Assert.assertEquals(200,new TypeAheadReqestTest("ke").doTest().size());
+      Assert.assertEquals(100,new TypeAheadReqestTest("key").doTest().size());
+      Assert.assertEquals(0 < i && i < 10 ? 11 : 1,new TypeAheadReqestTest("key" + i).doTest().size());
+    }
+    Assert.assertTrue((System.currentTimeMillis() - t) < 1000);
+  }
+  finally {
+    for (    Key k : keys)     DKV.remove(k);
+  }
+}
