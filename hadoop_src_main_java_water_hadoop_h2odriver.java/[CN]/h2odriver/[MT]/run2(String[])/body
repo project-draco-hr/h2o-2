@@ -85,6 +85,8 @@
   job.submit();
   System.out.println("Job name '" + jobtrackerName + "' submitted");
   System.out.println("JobTracker job ID is '" + job.getJobID() + "'");
+  String applicationID=job.getJobID().toString().replace("job_","application_");
+  System.out.println("For YARN users, logs command is 'yarn logs -applicationId " + applicationID + "'");
   ctrlc=new CtrlCHandler();
   Runtime.getRuntime().addShutdownHook(ctrlc);
   System.out.printf("Waiting for H2O cluster to come up...\n",numNodes);

@@ -1,0 +1,10 @@
+{
+  Neurons[] neurons=DeepLearningTask.makeNeuronsForTesting(dlm.model_info());
+  frame.dispose();
+  frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+  DeepLearningVisualization canvas=new DeepLearningVisualization(neurons);
+  frame.setContentPane(canvas.init());
+  frame.pack();
+  frame.setLocationRelativeTo(null);
+  frame.setVisible(true);
+}

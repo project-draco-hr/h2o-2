@@ -1,7 +1,7 @@
 {
   JsonArray array=new JsonArray();
   int len=0;
-  for (  H2O.KeyInfo kinfo : H2O.globalKeySet(null,timetolerance)) {
+  for (  H2O.KeyInfo kinfo : H2O.KeySnapshot.globalSnapshot(2000)._keyInfos) {
     if (filter != null && kinfo._key.toString().indexOf(filter) == -1)     continue;
     if (!matchesType(kinfo))     continue;
     if (!shouldIncludeKey(kinfo))     continue;
