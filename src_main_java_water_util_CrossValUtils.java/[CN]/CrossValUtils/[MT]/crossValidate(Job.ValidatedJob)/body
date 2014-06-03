@@ -1,4 +1,5 @@
 {
+  if (job.state != Job.JobState.DONE)   return;
   if (job.validation != null)   throw new IllegalArgumentException("Cannot provide validation dataset and n_folds > 0 at the same time.");
   if (job.n_folds <= 1)   throw new IllegalArgumentException("n_folds must be >= 2 for cross-validation.");
   final String basename=job.destination_key.toString();
