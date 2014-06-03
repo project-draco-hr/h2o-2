@@ -12,7 +12,7 @@ def test_parse_multi_header_rand_fvec(self):
             headerName = ''.join([random.choice(allowedLetters) for _ in range(l)])
             done = (headerName not in headerChoices)
         headerChoices.append(headerName)
-    tryList = [(3, 5, 9, 'cA', 60, 0), (3, 5, 25, 'cA', 60, 0), (10, 100, 500, 'cA', 60, 0)]
+    tryList = [(3, 5, 9, 'cA', 60, 0)]
     for trial in range(20):
         (fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader) = random.choice(tryList)
         print fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader
