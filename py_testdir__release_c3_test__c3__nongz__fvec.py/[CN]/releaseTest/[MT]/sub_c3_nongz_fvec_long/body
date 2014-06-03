@@ -41,6 +41,7 @@ def sub_c3_nongz_fvec_long(self, csvFilenameList):
             x = ','.join(map((lambda x: ('C' + str((x + 1)))), x))
             ignore_x = ','.join(map((lambda x: ('C' + str((x + 1)))), ignore_x))
             GLMkwargs = {'ignored_cols': ignore_x, 'response': 'C379', 'max_iter': 4, 'n_folds': 1, 'family': 'binomial', 'alpha': 0.2, 'lambda': 1e-05, }
+            h2i.delete_keys_at_all_nodes(pattern='manyfile')
             execExpr = 'A.hex[,378+1]=(A.hex[,378+1]>15)'
             h2e.exec_expr(execExpr=execExpr, timeoutSecs=180)
             aHack = {'destination_key': 'A.hex', }
