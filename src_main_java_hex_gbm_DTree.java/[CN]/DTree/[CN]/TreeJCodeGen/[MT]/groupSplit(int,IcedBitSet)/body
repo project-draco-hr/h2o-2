@@ -1,14 +1,16 @@
 {
-  _sb.p(" (Double.isNaN(data[").p(col).p("]) ||");
+  StringBuilder group=new StringBuilder();
   boolean first=true;
   for (int i=0; i < gcmp._val.length; i++) {
     if (gcmp._val[i] == 0)     continue;
     for (int j=0; j < 8; j++) {
-      if ((gcmp._val[i] & (1 << j)) == 1) {
-        if (first)         _sb.p(" (int) data[").p(col).p(" /* ").p(_tm._names[col]).p(" */").p("] !=").p((i << 3) + j);
- else         _sb.p(" && (int) data[").p(col).p("] !=").p((i << 3) + j);
+      if ((gcmp._val[i] & (1 << j)) != 0) {
+        if (first)         group.append("(int) data[").append(col).append(" /* ").append(_tm._names[col]).append(" */").append("] != ").append((i << 3) + j);
+ else         group.append(" && (int) data[").append(col).append("] != ").append((i << 3) + j);
         first=false;
       }
     }
   }
+  _sb.p(" (Double.isNaN(data[").p(col).p("])");
+  if (group.length() > 0)   _sb.p(" || (").p(group.toString()).p(")");
 }
