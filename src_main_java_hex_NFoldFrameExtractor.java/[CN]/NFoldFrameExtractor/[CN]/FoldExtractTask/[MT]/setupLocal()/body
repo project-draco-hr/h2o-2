@@ -6,9 +6,10 @@
   long espc[]=anyInVec._espc;
   int c=0;
   for (; c < espc.length - 1 && espc[c + 1] <= startRow; c++)   ;
-  _startChkIdx=c;
-  _startRow=(int)(startRow - espc[c]);
+  _startFoldChkIdx=c;
+  _startFoldRow=(int)(startRow - espc[c]);
+  _precedingChks=_startFoldRow > 0 ? c + 1 : c;
   for (; c < espc.length - 1 && espc[c + 1] <= endRow; c++)   ;
-  _endChkIdx=c;
-  _endRow=(int)(endRow - espc[c]);
+  _startRestChkIdx=c;
+  _startRestRow=(int)(endRow - espc[c]);
 }
