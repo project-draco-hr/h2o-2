@@ -61,7 +61,7 @@ def create_models(self, frame_keys):
     glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, }
     glm_Prostate_regression_1 = node.GLM(prostate_hex, **glm_Prostate_regression_1_params)
     num_models = (num_models + 1)
-    print (('Checking ' + str(len(h2o.nodes))) + ' nodes: ')
+    print (('Checking ' + str(len(h2o.nodes))) + ' nodes for models: ')
     for a_node in h2o.nodes:
         print ((('  ' + a_node.http_addr) + ':') + str(a_node.port))
     found_problem = False
