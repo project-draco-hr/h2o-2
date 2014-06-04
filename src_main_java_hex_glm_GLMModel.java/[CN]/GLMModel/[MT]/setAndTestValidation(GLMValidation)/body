@@ -1,0 +1,13 @@
+{
+  submodels[submodels.length - 1].validation=val;
+  if (best_lambda_idx == submodels.length - 1 || submodels.length == 1) {
+    setSubmodelIdx(submodels.length - 1);
+    return true;
+  }
+  double diff=(submodels[best_lambda_idx].validation.residual_deviance - val.residual_deviance) / val.null_deviance;
+  if (diff >= 0.01) {
+    setSubmodelIdx(submodels.length - 1);
+    return true;
+  }
+  return false;
+}

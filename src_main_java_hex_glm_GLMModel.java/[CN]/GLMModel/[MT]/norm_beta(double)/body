@@ -1,0 +1,11 @@
+{
+  int i=submodels.length - 1;
+  for (; i >= 0; --i)   if (submodels[i].lambda == lambda) {
+    if (submodels[i].norm_beta == null)     return beta();
+    double[] res=MemoryManager.malloc8d(beta().length);
+    int k=0;
+    for (    int j : submodels[i].idxs)     res[j]=submodels[i].norm_beta[k++];
+    return res;
+  }
+  throw new RuntimeException("No submodel for lambda = " + lambda);
+}
