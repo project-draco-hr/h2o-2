@@ -4,36 +4,33 @@
   Request.RequestType type=Request.RequestType.requestType(uri);
   String requestName=type.requestName(uri);
   maybeLogRequest(uri,method,parms);
-  AbstractHandler handler=getRoute(uri);
-  if (null != handler) {
-    if ("get".equalsIgnoreCase(method)) {
-      return handler.get(this,uri,header,parms);
-    }
- else     if ("post".equalsIgnoreCase(method)) {
-      return handler.post(this,uri,header,parms);
-    }
- else     if ("put".equalsIgnoreCase(method)) {
-      return handler.put(this,uri,header,parms);
-    }
- else     if ("delete".equalsIgnoreCase(method)) {
-      return handler.delete(this,uri,header,parms);
-    }
- else {
-      Log.warn("Unknown http method, request ignored: " + method);
-      return _http500.serve(this,parms,type);
+  int version=parseVersion(uri);
+  int idx=version >> 16;
+  version&=0xFFFF;
+  String uripath=uri.substring(idx);
+  String path=requestName(uripath);
+  Method meth=null;
+  try {
+    meth=lookup(method,path);
+    if (meth != null) {
+      return wrap(HTTP_OK,handle(type,meth,version,parms),type);
     }
   }
- else {
-    try {
-      Request request=_requests.get(requestName);
-      if (request == null)       return getResource(uri);
-      request=request.create(parms);
-      return request.serve(this,parms,type);
-    }
- catch (    Exception e) {
-      if (!(e instanceof ExpectedExceptionForDebug))       e.printStackTrace();
-      parms.setProperty(Request.ERROR,e.getClass().getSimpleName() + ": " + e.getMessage());
-      return _http500.serve(this,parms,type);
-    }
+ catch (  IllegalArgumentException e) {
+    return wrap(HTTP_BADREQUEST,new HTTP404V1(e.getMessage(),uri),type);
+  }
+catch (  Exception e) {
+    return wrap(e.getMessage() != "unimplemented" ? HTTP_INTERNALERROR : HTTP_NOTIMPLEMENTED,new HTTP500V1(e),type);
+  }
+  try {
+    Request request=_requests.get(requestName);
+    if (request == null)     return getResource(uri);
+    request=request.create(parms);
+    return request.serve(this,parms,type);
+  }
+ catch (  Exception e) {
+    if (!(e instanceof ExpectedExceptionForDebug))     e.printStackTrace();
+    parms.setProperty(Request.ERROR,e.getClass().getSimpleName() + ": " + e.getMessage());
+    return _http500.serve(this,parms,type);
   }
 }

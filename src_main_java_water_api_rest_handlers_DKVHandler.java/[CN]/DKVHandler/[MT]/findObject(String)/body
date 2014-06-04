@@ -1,7 +1,0 @@
-{
-  if (-1 == path.lastIndexOf("/"))   return null;
-  String key=path.substring(path.lastIndexOf("/") + 1);
-  Value v=DKV.get(Key.make(key));
-  if (null == v)   return null;
-  return v.get();
-}

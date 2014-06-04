@@ -1,8 +1,0 @@
-{
-  RestUtils.fillImplFields(api,impl,REST.VAL_TRANSF);
-  for (  Map.Entry<String,String> e : getAPI2Impl().entrySet()) {
-    boolean res=RestUtils.fillImplField(api,e.getValue(),impl,e.getKey(),REST.VAL_TRANSF);
-    if (!res)     Log.warn("The field was not filled: " + e.getValue() + " --> "+ e.getKey());
-  }
-  return fillI(api,impl);
-}
