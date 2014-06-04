@@ -1,7 +1,7 @@
 {
-  if (_inFold)   return _startChkIdx == _endChkIdx ? _startChkIdx : coutidx + _startChkIdx;
+  if (_inFold)   return _startFoldChkIdx == _startRestChkIdx ? _startFoldChkIdx : coutidx + _startFoldChkIdx;
  else {
-    if (coutidx <= _startChkIdx)     return coutidx;
- else     return (_endChkIdx - _startChkIdx - 1) + coutidx;
+    if (coutidx < _precedingChks)     return coutidx;
+ else     return _startRestChkIdx + (coutidx - _precedingChks);
   }
 }
