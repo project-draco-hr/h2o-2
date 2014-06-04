@@ -31,6 +31,7 @@ def sub_c3_nongz_fvec_long(self, csvFilenameList):
         print msg
         h2o.cloudPerfH2O.message(msg)
         h2o_cmd.checkKeyDistribution()
+        h2i.delete_keys_at_all_nodes(pattern='manyfile')
         execExpr = 'B.hex=A.hex'
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=180)
         h2o_cmd.checkKeyDistribution()
