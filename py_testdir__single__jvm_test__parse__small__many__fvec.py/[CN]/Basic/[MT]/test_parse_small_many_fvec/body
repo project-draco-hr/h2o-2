@@ -1,0 +1,19 @@
+def test_parse_small_many_fvec(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    eol = '\n'
+    row = 'a,b,c,d,e,f,g'
+    timeoutSecs = 10
+    node = h2o.nodes[0]
+    for sizeTrial in range(10):
+        size = random.randint(2, 129)
+        print '\nparsing with rows:', size
+        csvFilename = (('p' + '_') + str(size))
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        writeRows(csvPathname, row, eol, size)
+        src_key = csvFilename
+        for trial in range(5):
+            hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+            parseResult = h2i.import_parse(path=csvPathname, schema='put', src_key=src_key, hex_key=hex_key)
+            sys.stdout.write('.')
+            sys.stdout.flush()
