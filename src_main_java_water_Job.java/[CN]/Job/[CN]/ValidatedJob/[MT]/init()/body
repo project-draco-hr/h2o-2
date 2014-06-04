@@ -1,8 +1,9 @@
 {
-  if (validation != null && num_folds != 0)   throw new UnsupportedOperationException("Cannot specify a validation dataset and non-zero number of cross-validation folds.");
-  if (num_folds < 0)   throw new UnsupportedOperationException("The number of cross-validation folds must be >= 0.");
-  if (num_folds != 2 && num_folds != 0)   throw new UnsupportedOperationException("The number of cross-validation folds must be either 0 or 2.");
+  if (validation != null && n_folds != 0)   throw new UnsupportedOperationException("Cannot specify a validation dataset and non-zero number of cross-validation folds.");
+  if (n_folds < 0)   throw new UnsupportedOperationException("The number of cross-validation folds must be >= 0.");
   super.init();
+  xval_models=new Key[n_folds];
+  for (int i=0; i < xval_models.length; ++i)   xval_models[i]=Key.make(dest().toString() + "_xval" + i);
   int rIndex=0;
   for (int i=0; i < source.vecs().length; i++)   if (source.vecs()[i] == response)   rIndex=i;
   _responseName=source._names != null && rIndex >= 0 ? source._names[rIndex] : "response";

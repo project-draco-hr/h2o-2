@@ -12,7 +12,7 @@ def test_parse_multi_header_rand_fvec(self):
             headerName = ''.join([random.choice(allowedLetters) for _ in range(l)])
             done = (headerName not in headerChoices)
         headerChoices.append(headerName)
-    tryList = [(3, 5, 9, 'cA', 60, 0), (3, 5, 25, 'cA', 60, 0), (10, 100, 500, 'cA', 60, 0)]
+    tryList = [(3, 5, 9, 'cA', 60, 0)]
     for trial in range(20):
         (fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader) = random.choice(tryList)
         print fileNum, rowCount, colCount, hex_key, timeoutSecs, dataRowsWithHeader
@@ -32,13 +32,15 @@ def test_parse_multi_header_rand_fvec(self):
         HEADER_SEP_CHAR_GEN = random.choice(paramsDict['hdr_separator'])
         if (HEADER_SEP_CHAR_GEN == 'same'):
             HEADER_SEP_CHAR_GEN = SEP_CHAR_GEN
-        if (DATA_HAS_HDR_ROW and HEADER_HAS_HDR_ROW and (SEP_CHAR_GEN != HEADER_SEP_CHAR_GEN)):
+        if (DATA_HAS_HDR_ROW and HEADER_HAS_HDR_ROW):
             HEADER_SEP_CHAR_GEN = SEP_CHAR_GEN
+        if (DATA_HAS_HDR_ROW and HEADER_HAS_HDR_ROW):
+            HEADER_SEP_CHAR_GEN = SEP_CHAR_GEN
+        if (HEADER_SEP_CHAR_GEN != SEP_CHAR_GEN):
+            HEADER_SEP_CHAR_GEN = ','
+        HEADER_SEP_CHAR_GEN = SEP_CHAR_GEN
         if (HEADER_SEP_CHAR_GEN in (',', ' ')):
-            if random.randint(0, 1):
-                HEADER_SEP_CHAR_GEN = (' ' + HEADER_SEP_CHAR_GEN)
-            if random.randint(0, 1):
-                HEADER_SEP_CHAR_GEN = (HEADER_SEP_CHAR_GEN + ' ')
+            pass
         kwargs = {}
         for (k, v) in paramsDict.items():
             kwargs[k] = random.choice(v)

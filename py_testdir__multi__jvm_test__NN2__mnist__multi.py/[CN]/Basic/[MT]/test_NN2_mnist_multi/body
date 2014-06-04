@@ -18,8 +18,8 @@ def test_NN2_mnist_multi(self):
     start = time.time()
     nn = h2o_cmd.runDeepLearning(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
-    expectedErr = 0.04
-    relTol = 0.01
+    expectedErr = 0.046
+    relTol = 0.1
     predict_key = 'Predict.hex'
     kwargs = {'data_key': validation_key, 'destination_key': predict_key, 'model_key': model_key, }
     predictResult = h2o_cmd.runPredict(timeoutSecs=timeoutSecs, **kwargs)
