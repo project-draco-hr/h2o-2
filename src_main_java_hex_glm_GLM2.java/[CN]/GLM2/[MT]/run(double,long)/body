@@ -12,7 +12,7 @@
   }
  else   prior=ymu;
   if (Double.isNaN(lambda_max) && (highAccuracy() || lambda_search)) {
-    new LMAXTask(GLM2.this,_dinfo,_glm,ymu,nobs,alpha[0],new H2OCallback<LMAXTask>(GLM2.this){
+    new LMAXTask(GLM2.this,_dinfo,_glm,ymu,nobs,alpha[0],thresholds,new H2OCallback<LMAXTask>(GLM2.this){
       @Override public void callback(      LMAXTask t){
         run(ymu,nobs,t);
       }
