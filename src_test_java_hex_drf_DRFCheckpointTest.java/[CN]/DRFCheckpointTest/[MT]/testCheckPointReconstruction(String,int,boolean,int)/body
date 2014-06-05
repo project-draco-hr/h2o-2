@@ -1,0 +1,33 @@
+{
+  Frame f=parseFrame(dataset);
+  DRFModel model=null;
+  DRFModel modelFromCheckpoint=null;
+  try {
+    Vec respVec=f.vec(response);
+    DRFWithHooks drf=new DRFWithHooks();
+    drf.source=f;
+    drf.response=respVec;
+    drf.classification=classification;
+    drf.ntrees=ntreesInPriorModel;
+    drf.collectPoint=WhereToCollect.AFTER_BUILD;
+    drf.invoke();
+    model=UKV.get(drf.dest());
+    DRFWithHooks drfFromCheckpoint=new DRFWithHooks();
+    drfFromCheckpoint.source=f;
+    drfFromCheckpoint.response=respVec;
+    drfFromCheckpoint.classification=classification;
+    drfFromCheckpoint.ntrees=1;
+    drfFromCheckpoint.collectPoint=WhereToCollect.AFTER_RECONSTRUCTION;
+    drfFromCheckpoint.checkpoint=drf.dest();
+    drfFromCheckpoint.invoke();
+    modelFromCheckpoint=UKV.get(drf.dest());
+    System.err.println(Arrays.deepToString(drf.treesCols));
+    System.err.println(Arrays.deepToString(drfFromCheckpoint.treesCols));
+    Assert.assertArrayEquals("Tree data produced by drf run and reconstructed from a model do not match!",drf.treesCols,drfFromCheckpoint.treesCols);
+  }
+  finally {
+    if (f != null)     f.delete();
+    if (model != null)     model.delete();
+    if (modelFromCheckpoint != null)     modelFromCheckpoint.delete();
+  }
+}
