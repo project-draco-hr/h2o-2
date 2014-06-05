@@ -1,0 +1,7 @@
+def add(self, sig):
+    '\n        Prepend an incoming signal value to the signal history.\n        '
+    if (self.length() < self.order):
+        self.signal.insert(0, sig)
+    else:
+        self.pop()
+        self.signal.insert(0, sig)
