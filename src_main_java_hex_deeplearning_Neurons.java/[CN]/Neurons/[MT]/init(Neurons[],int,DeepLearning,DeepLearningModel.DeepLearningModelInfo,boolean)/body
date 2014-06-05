@@ -12,14 +12,14 @@
   if (!(this instanceof Input)) {
     _previous=neurons[index - 1];
     _minfo=minfo;
-    _w=minfo.get_weights(index - 1);
+    _w=minfo.get_weights(index - 1 - (params.autoencoder && index == neurons.length - 1 ? 1 : 0));
     _b=minfo.get_biases(index - 1);
     if (minfo.has_momenta()) {
-      _wm=minfo.get_weights_momenta(index - 1);
+      _wm=minfo.get_weights_momenta(index - 1 - (params.autoencoder && index == neurons.length - 1 ? 1 : 0));
       _bm=minfo.get_biases_momenta(index - 1);
     }
     if (minfo.adaDelta()) {
-      _ada_dx_g=minfo.get_ada_dx_g(index - 1);
+      _ada_dx_g=minfo.get_ada_dx_g(index - 1 - (params.autoencoder && index == neurons.length - 1 ? 1 : 0));
       _bias_ada_dx_g=minfo.get_biases_ada_dx_g(index - 1);
     }
     _shortcut=(params.fast_mode || (!_minfo.get_params().adaptive_rate && !_minfo.has_momenta() && params.l1 == 0.0 && params.l2 == 0.0));
