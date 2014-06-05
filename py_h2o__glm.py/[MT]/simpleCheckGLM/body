@@ -120,6 +120,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if h2o.beta_features:
         coefficients_names = GLMModel['coefficients_names']
         idxs = submodels1['idxs']
+        print 'idxs:', idxs
         column_names = coefficients_names
         norm_beta = submodels1['norm_beta']
         beta = submodels1['beta']
@@ -128,16 +129,18 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         else:
             beta_used = beta
         coefficients = {}
-        if ('Intercept' not in column_names):
-            raise Exception("'Intercept' not in column_names")
-        else:
-            coefficients['Intercept'] = 0
-        for (n, b) in zip(column_names, beta_used):
-            coefficients[n] = b
+        for (i, b) in zip(idxs, beta_used[:(-1)]):
+            name = coefficients_names[i]
+            coefficients[name] = b
+        print 'len(idxs)', len(idxs), 'len(beta_used)', len(beta_used)
         print 'coefficients:', coefficients
         print 'beta:', beta
         print 'norm_beta:', norm_beta
-        print 'intercept demapping info:', 'column_names[-i]:', column_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficients_names[[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta_used[-1]:', beta_used[(-1)], "coefficients['Intercept']", coefficients['Intercept']
+        coefficients['Intercept'] = beta_used[(-1)]
+        print 'intercept demapping info:', 'column_names[-i]:', column_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficients_names[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta_used[-1]:', beta_used[(-1)], "coefficients['Intercept']", coefficients['Intercept']
+        interceptName = coefficients_names[idxs[(-1)]]
+        if ((interceptName != 'Intercept') or (abs(beta_used[(-1)]) < 1e-26)):
+            raise Exception(("'Intercept' should be last in coefficient_names and beta %s %s %s" % (idxs[(-1)], beta_used[(-1)], (('-' + interceptName) + '-'))))
         if (len(idxs) > len(beta_used)):
             raise Exception(("idxs shouldn't be longer than beta_used %s %s" % (len(idxs), len(beta_used))))
         intercept = coefficients.pop('Intercept', None)

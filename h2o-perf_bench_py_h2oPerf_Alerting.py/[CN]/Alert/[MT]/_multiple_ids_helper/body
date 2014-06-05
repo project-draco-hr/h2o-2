@@ -1,0 +1,8 @@
+def _multiple_ids_helper(self, test_name):
+    test_build_number = self._get_test_build_number(test_name, True).strip('"')
+    query = QUERIES['multiple_ids'].format(test_build_number, test_name.strip('"'))
+    self.cursor.execute(query)
+    res = self.cursor.fetchall()
+    if (len(res) != 0):
+        return True
+    return False
