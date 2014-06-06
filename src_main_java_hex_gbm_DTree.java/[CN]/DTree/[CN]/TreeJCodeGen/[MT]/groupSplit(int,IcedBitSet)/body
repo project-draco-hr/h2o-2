@@ -1,11 +1,11 @@
 {
-  StringBuilder grp=new StringBuilder();
   boolean cntSet=gcmp.cardinality() >= gcmp.size() / 2;
+  _sb.p(" (Double.isNaN(data[").p(col).p("])");
   int idx=cntSet ? gcmp.firstSetBit() : gcmp.firstClearBit();
   if (idx != -1) {
-    grp.append("(int) data[").append(col).append(" /* ").append(_tm._names[col]).append(" */").append("] == ").append(idx);
-    while ((idx=cntSet ? gcmp.nextSetBit(idx) : gcmp.nextClearBit(idx)) != -1)     grp.append(" || (int) data[").append(col).append("] == ").append(idx);
+    _sb.p(" || ").p(cntSet ? "!(" : "(");
+    _sb.p("(int) data[").p(col).p(" /* ").p(_tm._names[col]).p(" */").p("] == ").p(idx);
+    while ((idx=cntSet ? gcmp.nextSetBit(idx) : gcmp.nextClearBit(idx)) != -1)     _sb.p(" || (int) data[").p(col).p("] == ").p(idx);
+    _sb.p(")");
   }
-  _sb.p(" (Double.isNaN(data[").p(col).p("])");
-  if (grp.length() > 0)   _sb.p(" || ").p(cntSet ? "!(" : "(").p(grp.toString()).p(")");
 }
