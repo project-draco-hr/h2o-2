@@ -150,7 +150,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
             coefficients = GLMModel['normalized_coefficients'].copy()
         else:
             coefficients = GLMModel['coefficients'].copy()
-        coefficients_names = GLMModel['coefficients_names']
+        coefficients_names = GLMModel['column_names']
         intercept = coefficients.pop('Intercept', None)
         print 'First intercept:', intercept
     if h2o.beta_features:
