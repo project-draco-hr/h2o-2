@@ -9,7 +9,7 @@
   if (get_params().autoencoder) {
     assert(preds.length == out.length);
     for (int i=0; i < out.length; ++i) {
-      preds[i]=out[i];
+      preds[i]=(float)(out[i] / model_info().data_info()._normMul[i] + model_info().data_info()._normSub[i]);
     }
   }
  else {
