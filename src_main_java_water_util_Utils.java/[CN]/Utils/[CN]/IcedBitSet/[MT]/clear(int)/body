@@ -1,5 +1,4 @@
 {
-  int sz=size();
-  if (idx < 0 || idx >= sz)   throw new IndexOutOfBoundsException("Must have 0 <= idx < " + sz + ": "+ idx);
+  if (idx < 0 || idx > _nbits - 1)   throw new IndexOutOfBoundsException("Must have 0 <= idx <= " + Integer.toString(_nbits - 1) + ": "+ idx);
   _val[idx >> 3]&=~((byte)1 << idx);
 }
