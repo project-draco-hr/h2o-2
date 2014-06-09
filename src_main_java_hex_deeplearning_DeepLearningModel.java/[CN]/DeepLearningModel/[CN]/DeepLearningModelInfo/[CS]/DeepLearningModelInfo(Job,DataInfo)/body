@@ -11,7 +11,7 @@
   units[0]=num_input;
   System.arraycopy(get_params().hidden,0,units,1,layers);
   units[layers + 1]=num_output;
-  final boolean ae=get_params().autoencoder;
+  final boolean ae=false;
   dense_row_weights=new Neurons.DenseRowMatrix[ae ? 1 : layers + 1];
   dense_col_weights=new Neurons.DenseColMatrix[ae ? 1 : layers + 1];
   if (get_params().col_major) {
