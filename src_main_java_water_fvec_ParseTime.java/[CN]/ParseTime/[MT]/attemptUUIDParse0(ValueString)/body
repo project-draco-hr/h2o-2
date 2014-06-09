@@ -1,0 +1,15 @@
+{
+  final byte[] buf=str.get_buf();
+  int i=str.get_off();
+  long lo=0;
+  lo=get2(lo,buf,(i+=2) - 2);
+  lo=get2(lo,buf,(i+=2) - 2);
+  lo=get2(lo,buf,(i+=2) - 2);
+  lo=get2(lo,buf,(i+=2) - 2);
+  if (buf[i++] != '-')   return badUUID(str);
+  lo=get2(lo,buf,(i+=2) - 2);
+  lo=get2(lo,buf,(i+=2) - 2);
+  if (buf[i++] != '-')   return badUUID(str);
+  lo=get2(lo,buf,(i+=2) - 2);
+  return attemptUUIDParseLast(str,lo,buf,i);
+}
