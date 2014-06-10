@@ -1,0 +1,8 @@
+def sigma(self):
+    '\n        Compute the standard deviation of the signal.\n        '
+    ybar = self.mean()
+    num = (sum([((y - ybar) ** 2) for y in self.signal]) * 1.0)
+    denom = (self.length() * 1.0)
+    if (denom <= 0):
+        raise Exception('DIVISION BY ZERO')
+    return sqrt((num / denom))

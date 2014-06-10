@@ -1,0 +1,6 @@
+{
+  Key[][] treeKeys=null;
+  if (!overwriteCheckpoint)   throw H2O.unimpl("Cloning of model trees is not implemented yet!");
+ else   treeKeys=checkpoint.treeKeys;
+  return new DRFModel(model,treeKeys,checkpoint.errs,checkpoint.cms,checkpoint.treeStats,checkpoint.varimp,checkpoint.validAUC);
+}

@@ -1,0 +1,5 @@
+def _is_correct(self, test_name):
+    query = QUERIES['correct'].format(test_name.strip('"'))
+    self.cursor.execute(query)
+    res = self.cursor.fetchone()
+    return (res[0] == 0)

@@ -1,0 +1,59 @@
+{
+  String fileName="./cookbookData/iris_withNA.csv";
+  File file=new File(fileName);
+  Key fkey=NFSFileVec.make(file);
+  Key okey=Key.make("iris.hex");
+  Frame fr;
+  fr=ParseDataset2.parse(okey,new Key[]{fkey});
+  Vec vv=fr.vec(0);
+  int loop_indx=0;
+  if (vv.length() > 4) {
+    loop_indx=3;
+  }
+  for (int i=0; i < loop_indx; i++) {
+    long k=i;
+    double elemnt_D=vv.at(k);
+    System.out.println("element at index " + k + " as double: "+ elemnt_D);
+    if (!Double.isNaN(elemnt_D)) {
+      long elemnt_L=vv.at8(k);
+      System.out.println("element at index " + k + " as integer: "+ elemnt_L);
+    }
+  }
+  for (int i=0; i < fr.numCols(); i++) {
+    Vec vvec=fr.vec(i);
+    boolean b=vvec.isInt();
+    System.out.println("Is " + i + " an integer column ?"+ "  "+ b);
+    if (b == true) {
+      int cardinality=vvec.cardinality();
+      if (cardinality != -1) {
+        System.out.println("The vector " + i + " is an enum with cardinality "+ cardinality+ " and domain names: ");
+        for (int j=0; j < cardinality; j++)         System.out.println(vvec.domain(j));
+      }
+    }
+  }
+  for (int i=0; i < loop_indx; i++) {
+    long k=i;
+    double d=1.23;
+    vv.set(k,d);
+    System.out.println("setting element at index " + k + " as double: "+ vv.at(k));
+    float f=1.23f;
+    vv.set(k,f);
+    System.out.println("setting element at index " + k + " as float: "+ vv.at(k));
+    long l=12345678910L;
+    vv.set(k,l);
+    System.out.println("setting element at index " + k + " as long: "+ vv.at(k));
+    vv.setNA(k);
+    System.out.println("setting element at index " + k + " as NAN: "+ vv.at(k));
+  }
+  Vec vvenum=fr.vec(4);
+  final String[] newDomain=new String[]{"x","y","z"};
+  vvenum.changeDomain(newDomain);
+  System.out.println("The changed domain names are: ");
+  for (int i=0; i < vvenum.cardinality(); i++)   System.out.println(vvenum.domain(i));
+  System.out.println("Min for vector 0: " + vv.min());
+  System.out.println("Max for vector 0: " + vv.max());
+  System.out.println("Mean for vector 0: " + vv.mean());
+  System.out.println("Standard deviation for vector 0: " + vv.sigma());
+  System.out.println("NA count for vector 0: " + vv.naCnt());
+  Frame.delete(okey);
+}

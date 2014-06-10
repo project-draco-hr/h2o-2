@@ -1,0 +1,5 @@
+def _check_contaminated(self, test_name):
+    query = QUERIES['contaminated'].format(test_name.strip('"'))
+    self.cursor.execute(query)
+    res = self.cursor.fetchone()
+    return (res[0] == 0)
