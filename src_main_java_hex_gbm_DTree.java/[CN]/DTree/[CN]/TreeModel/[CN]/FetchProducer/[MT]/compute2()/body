@@ -1,0 +1,5 @@
+{
+  Lockable l=UKV.get(_key);
+  _producer=l != null && l._lockers != null && l._lockers.length > 0 ? l._lockers[0] : null;
+  tryComplete();
+}
