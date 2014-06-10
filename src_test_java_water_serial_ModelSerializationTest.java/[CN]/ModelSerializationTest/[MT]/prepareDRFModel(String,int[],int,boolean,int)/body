@@ -1,0 +1,17 @@
+{
+  Frame f=parseFrame(dataset);
+  try {
+    DRF drf=new DRF();
+    Vec respVec=f.vec(response);
+    drf.source=f;
+    drf.response=respVec;
+    drf.classification=classification;
+    drf.ntrees=ntrees;
+    drf.score_each_iteration=true;
+    drf.invoke();
+    return UKV.get(drf.dest());
+  }
+  finally {
+    if (f != null)     f.delete();
+  }
+}

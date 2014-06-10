@@ -1,6 +1,6 @@
 {
   JsonObject jo=super.toJSON();
-  if (!jo.has("source"))   return jo;
+  if (!jo.has("source") || source == null)   return jo;
   HashMap<String,int[]> map=new HashMap<String,int[]>();
   map.put("used_cols",cols);
   map.put("ignored_cols",ignored_cols);
