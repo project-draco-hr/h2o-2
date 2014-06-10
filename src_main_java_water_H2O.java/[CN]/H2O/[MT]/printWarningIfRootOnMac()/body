@@ -1,0 +1,9 @@
+{
+  String os_name=System.getProperty("os.name");
+  if (os_name.equals("Mac OS X")) {
+    String user_name=System.getProperty("user.name");
+    if (user_name.equals("root")) {
+      Log.warn("Running as root on MacOS; check if java binary is unintentionally setuid");
+    }
+  }
+}

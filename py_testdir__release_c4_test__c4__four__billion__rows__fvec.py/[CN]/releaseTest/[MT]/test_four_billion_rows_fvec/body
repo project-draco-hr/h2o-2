@@ -30,9 +30,9 @@ def test_four_billion_rows_fvec(self):
         kwargs = {'response': 'C1', 'n_folds': 0, 'family': 'binomial', }
         colX = 1
         execExpr = ('A.hex=%s' % parseResult['destination_key'])
-        h2e.exec_expr(execExpr=execExpr, timeoutSecs=60)
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=180)
         execExpr = ('A.hex[,%s]=(A.hex[,%s]==%s)' % ('C1', 'C1', 1))
-        h2e.exec_expr(execExpr=execExpr, timeoutSecs=60)
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=180)
         aHack = {'destination_key': 'A.hex', }
         timeoutSecs = 900
         kwargs.update({'alpha': 0, 'lambda': 0, })

@@ -1,0 +1,4 @@
+def is_recent(self, test_name):
+    cur_bn = Alert._get_build_number('master')
+    test_bn = self._get_test_build_number(test_name)
+    return (cur_bn == test_bn)

@@ -8,6 +8,7 @@
   arguments.extract(OPT_ARGS);
   ARGS=arguments.toStringArray();
   printAndLogVersion();
+  printWarningIfRootOnMac();
   if (OPT_ARGS.baseport != 0) {
     DEFAULT_PORT=OPT_ARGS.baseport;
   }
@@ -35,6 +36,10 @@
   Log.POST(350,"");
   startApiIpPortWatchdog();
   Log.POST(360,"");
+  if (OPT_ARGS.mem_watchdog != null) {
+    startMemoryWatchdog();
+    Log.POST(370,"");
+  }
   startupFinalize();
   Log.POST(380,"");
 }

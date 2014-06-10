@@ -1,0 +1,13 @@
+def _is_ontime(self, test_name):
+    '\n        The input stream is an incoming stream of elapsed times from the last `order` runs of the given test_name.\n        The input stream is initially sorted by most recent to furthest back in time. Therefore, exclude the first\n        entry, and perform the LMS on the next `order - 1` data points.\n        '
+    input_stream = self._get_input_stream(test_name)
+    if (input_stream == 'NA'):
+        return False
+    if (len(input_stream) == 1):
+        return True
+    query_point = input_stream[0]
+    data_points = input_stream[1:]
+    fil = LMSAdaptiveFilter(len(data_points))
+    for t in data_points:
+        fil.X.add(t)
+    return fil.is_signal_outlier(query_point)

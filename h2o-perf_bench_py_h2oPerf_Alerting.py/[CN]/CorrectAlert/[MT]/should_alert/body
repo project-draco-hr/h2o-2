@@ -1,0 +1,4 @@
+def should_alert(self, test_name):
+    if ((not self.was_contaminated(test_name)) and (not self.has_multiple_ids(test_name)) and self.is_recent(test_name)):
+        return self._is_correct(test_name)
+    return False

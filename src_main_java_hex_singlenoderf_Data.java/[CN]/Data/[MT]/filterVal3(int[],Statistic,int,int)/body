@@ -52,7 +52,7 @@
           int val=bins[permIdx];
           if (val == DataAdapter.BAD)           continue;
           float resp=response[permIdx];
-          int response_bin=cols[_dapt.classColIdx()]._binned == null ? permIdx : cols[_dapt.classColIdx()]._binned[permIdx];
+          int response_bin=cols[_dapt.classColIdx()]._binned == null ? (cols[_dapt.classColIdx()]._rawB[permIdx] & 0xFF) : cols[_dapt.classColIdx()]._binned[permIdx];
           if (resp == DataAdapter.BAD)           continue;
           cdsf[val][response_bin]=resp;
         }
@@ -63,7 +63,7 @@
           int permIdx=permutation[i];
           int val=(0xFF & raw[permIdx]);
           float resp=response[permIdx];
-          int response_bin=cols[_dapt.classColIdx()]._binned == null ? permIdx : cols[_dapt.classColIdx()]._binned[permIdx];
+          int response_bin=cols[_dapt.classColIdx()]._binned == null ? (cols[_dapt.classColIdx()]._rawB[permIdx] & 0xFF) : cols[_dapt.classColIdx()]._binned[permIdx];
           cdsf[val][response_bin]=resp;
         }
       }
