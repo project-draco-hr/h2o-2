@@ -1,0 +1,7 @@
+def _get_test_build_number(self, test_name, full=False):
+    query = QUERIES['test_build_num'].format(test_name.strip('"'))
+    self.cursor.execute(query)
+    bn = self.cursor.fetchone()
+    if full:
+        return bn[0].strip()
+    return bn[0].strip().split('.')[(-1)]

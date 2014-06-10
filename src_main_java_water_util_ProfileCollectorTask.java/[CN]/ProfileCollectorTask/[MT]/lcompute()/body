@@ -9,10 +9,14 @@
       StringBuilder sb=new StringBuilder();
       int j=0;
       for (      StackTraceElement ste : el.getValue()) {
+        String val=ste.toString();
+        if (j == 0 && (val.equals("sun.misc.Unsafe.park(Native Method)") || val.equals("java.lang.Object.wait(Native Method)") || val.equals("java.lang.Thread.sleep(Native Method)")|| val.equals("java.lang.Thread.yield(Native Method)")|| val.equals("java.net.PlainSocketImpl.socketAccept(Native Method)")|| val.equals("sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)")|| val.equals("sun.nio.ch.DatagramChannelImpl.receive0(Native Method)")|| val.equals("java.lang.Thread.dumpThreads(Native Method)"))) {
+          break;
+        }
         sb.append(ste.toString());
         sb.append("\n");
         j++;
-        if (j == 5)         break;
+        if (j == _stack_depth)         break;
       }
       String st=sb.toString();
       boolean found=false;
@@ -35,9 +39,23 @@
   int i=0;
   _result[idx]=new NodeProfile(countedStackTraces.size());
   for (  Entry<String,Integer> entry : countedStackTraces.entrySet()) {
-    _result[idx]._stacktraces[i]=entry.getKey();
-    _result[idx]._counts[i]=entry.getValue();
+    _result[idx].stacktraces[i]=entry.getKey();
+    _result[idx].counts[i]=entry.getValue();
     i++;
   }
+  Map<Integer,String> sorted=new TreeMap<Integer,String>(Collections.reverseOrder());
+  for (int j=0; j < _result[idx].counts.length; ++j) {
+    if (_result[idx].stacktraces[j] != null && _result[idx].stacktraces[j].length() > 0)     sorted.put(_result[idx].counts[j],_result[idx].stacktraces[j]);
+  }
+  String[] sorted_stacktraces=new String[sorted.entrySet().size()];
+  int[] sorted_counts=new int[sorted.entrySet().size()];
+  i=0;
+  for (  Map.Entry<Integer,String> e : sorted.entrySet()) {
+    sorted_stacktraces[i]=e.getValue();
+    sorted_counts[i]=e.getKey();
+    i++;
+  }
+  _result[idx].stacktraces=sorted_stacktraces;
+  _result[idx].counts=sorted_counts;
   tryComplete();
 }

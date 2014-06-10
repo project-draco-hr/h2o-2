@@ -1,5 +1,5 @@
-def speedrf(self, data_key, trees, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, print_params=True, noPrint=False, **kwargs):
-    params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'cols': None, 'ignored_cols_by_name': None, 'classification': 1, 'validation': None, 'bin_limit': 1024.0, 'class_weights': None, 'max_depth': trees, 'mtry': (-1.0), 'num_trees': 50.0, 'oobee': 0, 'sample': 0.67, 'sampling_strategy': 'RANDOM', 'seed': (-1.0), 'stat_type': 'ENTROPY', 'strata_samples': None, }
+def speedrf(self, data_key, ntrees=50, max_depth=10, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, print_params=True, noPrint=False, **kwargs):
+    params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'cols': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'classification': 1, 'validation': None, 'bin_limit': 1024.0, 'class_weights': None, 'max_depth': max_depth, 'mtry': (-1.0), 'num_trees': ntrees, 'oobee': 0, 'sample': 0.67, 'sampling_strategy': 'RANDOM', 'seed': (-1.0), 'select_stat_type': 'ENTROPY', 'strata_samples': None, }
     check_params_update_kwargs(params_dict, kwargs, 'random_forest', print_params)
     if print_params:
         print ('\n%s parameters:' % 'SpeeDRF'), params_dict

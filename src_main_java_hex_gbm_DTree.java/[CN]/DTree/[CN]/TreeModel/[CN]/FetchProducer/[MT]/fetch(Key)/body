@@ -1,0 +1,6 @@
+{
+  FetchProducer fp=new FetchProducer(key);
+  if (key.home())   fp.compute2();
+ else   fp=RPC.call(key.home_node(),fp).get();
+  return fp._producer;
+}

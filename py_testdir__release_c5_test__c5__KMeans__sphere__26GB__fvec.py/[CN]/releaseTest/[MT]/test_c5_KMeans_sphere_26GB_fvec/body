@@ -29,6 +29,11 @@ def test_c5_KMeans_sphere_26GB_fvec(self):
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, fileMBS, elapsed)
         print ('\n' + l)
         h2o.cloudPerfH2O.message(l)
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
+        summary = h2o_cmd.runSummary(key=parseResult['destination_key'], numRows=numRows, numCols=numCols)
+        h2o_cmd.infoFromSummary(summary)
         if (not DO_KMEANS):
             continue
         print (('col 0 is enum in ' + csvFilename) + ' but KMeans should skip that automatically?? or no?')
@@ -53,4 +58,5 @@ def test_c5_KMeans_sphere_26GB_fvec(self):
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         allowedDelta = (0.01, 0.01, 0.01)
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, allowError=True, trial=trial)
-        h2i.delete_keys_at_all_nodes()
+        if DELETE_KEYS_EACH_ITER:
+            h2i.delete_keys_at_all_nodes()

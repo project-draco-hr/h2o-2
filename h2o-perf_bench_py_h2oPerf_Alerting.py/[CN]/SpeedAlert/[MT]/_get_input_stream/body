@@ -1,0 +1,10 @@
+def _get_input_stream(self, test_name):
+    query = QUERIES['timing'].format(test_name.strip('"'), self.order)
+    self.cursor.execute(query)
+    res = self.cursor.fetchall()
+    if (len(res) == 0):
+        return 'NA'
+    if (len(res) == 1):
+        return [int(res[0])]
+    if (len(res) > 1):
+        return [int(res[i][0]) for i in range(len(res))]

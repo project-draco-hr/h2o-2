@@ -10,6 +10,5 @@
   RebalanceDataSet rb=new RebalanceDataSet(fr,newKey,chunks);
   H2O.submitTask(rb);
   rb.join();
-  Frame rebalanced=UKV.get(newKey);
-  return rebalanced;
+  return UKV.get(newKey);
 }

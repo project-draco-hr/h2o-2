@@ -1,0 +1,19 @@
+def test_exec2_cbind_fail3(self):
+    for i in range(5):
+        execExpr = 'h <- cbind(c(0,0,0), c(1,1,1))'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'a=c(0,0,0); b=c(0,0,0); d=c(0,0,0); e=c(0,0,0); f=c(0,0,0); g= c(0,0,0);'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'b=a; d=a; f=a; g=a;'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'h <- cbind(a, b)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'h <- cbind(a, b, d)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'h <- cbind(a, b, d, e)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'h <- cbind(a, b, d, e, f)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'h <- cbind(a, b, d, e, f, g)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+    h2o.check_sandbox_for_errors()

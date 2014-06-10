@@ -2,6 +2,7 @@
   _size=c.byteSize();
   for (int i=0; i < c._len; i++) {
     double d=c.at0(i);
+    long v=Double.doubleToRawLongBits(d);
     if (Double.isNaN(d))     _naCnt++;
  else {
       if (d < _min)       _min=d;

@@ -1,5 +1,5 @@
 def naive_bayes(self, timeoutSecs=300, print_params=True, **kwargs):
-    params_dict = {'destination_key': None, 'source_key': None, 'response': None, 'ignored_cols': None, 'classification': None, 'laplace': None, }
+    params_dict = {'destination_key': None, 'source_key': None, 'response': None, 'cols': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'classification': None, 'laplace': None, }
     check_params_update_kwargs(params_dict, kwargs, 'naive_bayes', print_params)
     a = self.__do_json_request('2/NaiveBayes.json', timeout=timeoutSecs, params=params_dict)
     verboseprint('\nnaive_bayes result:', dump_json(a))

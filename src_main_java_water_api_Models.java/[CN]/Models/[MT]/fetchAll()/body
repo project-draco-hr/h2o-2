@@ -1,15 +1,3 @@
 {
-  Set<Key> keySet=H2O.globalKeySet("water.Model");
-  Map<String,Model> modelsMap=new TreeMap();
-  for (  Key key : keySet) {
-    if (!key.user_allowed())     continue;
-    if (H2O.get(key) == null)     continue;
-    String keyString=key.toString();
-    Value value=DKV.get(key);
-    Iced pojo=value.get();
-    if (!(pojo instanceof Model))     continue;
-    Model model=(Model)pojo;
-    modelsMap.put(keyString,model);
-  }
-  return modelsMap;
+  return H2O.KeySnapshot.globalSnapshot().fetchAll(water.Model.class);
 }

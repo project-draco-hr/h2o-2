@@ -9,7 +9,7 @@
  else           get_weights(w).set(i,j,(float)uniformDist(rng,-range,range));
         }
  else         if (get_params().initial_weight_distribution == DeepLearning.InitialWeightDistribution.Uniform) {
-          get_weights(w).set(i,j,(float)uniformDist(rng,-get_params().initial_weight_scale,parameters.initial_weight_scale));
+          get_weights(w).set(i,j,(float)uniformDist(rng,-get_params().initial_weight_scale,get_params().initial_weight_scale));
         }
  else         if (get_params().initial_weight_distribution == DeepLearning.InitialWeightDistribution.Normal) {
           get_weights(w).set(i,j,(float)(rng.nextGaussian() * get_params().initial_weight_scale));

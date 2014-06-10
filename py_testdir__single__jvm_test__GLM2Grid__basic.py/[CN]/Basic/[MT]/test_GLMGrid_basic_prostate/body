@@ -1,0 +1,11 @@
+def test_GLMGrid_basic_prostate(self):
+    csvFilename = 'prostate.csv'
+    print '\nStarting', csvFilename
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    y = '1'
+    print 'y:', y
+    kwargs = {'ignored_cols': 0, 'response': y, 'n_folds': 2, 'lambda': '1e-8:1e3:100', 'alpha': '0,0.5,1', }
+    gg = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=120, **kwargs)
+    colNames = ['D', 'CAPSULE', 'AGE', 'RACE', 'DPROS', 'DCAPS', 'PSA', 'VOL', 'GLEASON']
+    h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)

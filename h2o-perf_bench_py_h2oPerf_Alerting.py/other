@@ -1,0 +1,16 @@
+import abc
+import MySQLdb
+import requests
+import os
+from datetime import datetime, timedelta
+from LMSAdaptiveFilter import LMSAdaptiveFilter
+TEST_NAMES_QUERY = "\nSELECT DISTINCT tr.test_name\nFROM test_run tr\nINNER JOIN test_run_phase_result tp\nUSING(test_run_id)\nWHERE tp.end_epoch_ms >= {}\nAND tp.phase_name = 'model';\n"
+MOST_RECENTLY_RUN_TEST_NAME = "\nSELECT build_version\nFROM test_run\nWHERE test_name = '{}'\nORDER BY build_version DESC\nLIMIT 1;\n"
+CONTAMINATED = "\nSELECT contaminated\nFROM test_run\nWHERE test_name = '{}'\nORDER BY build_version DESC\n"
+MULTIPLE_IDS = "\nSELECT tr.test_run_id, COUNT(*) cnt\nFROM test_run tr\nINNER JOIN test_run_phase_result tp\nUSING(test_run_id)\nWHERE tp.phase_name = 'model'\nAND tr.build_version LIKE '%{}%'\nAND tr.test_name = '{}'\nGROUP BY tr.test_run_id\nHAVING cnt > 1;\n"
+CORRECT = "\nSELECT correctness_passed\nFROM test_run\nWHERE test_name = '{}'\nORDER BY build_version DESC;\n"
+TIMING = "\nSELECT (tp.end_epoch_ms - tp.start_epoch_ms) / 1000 elapsed\nFROM test_run tr\nINNER JOIN test_run_phase_result tp\nUSING (test_run_id)\nWHERE tr.timing_passed = 1\nAND tr.test_name = '{}'\nORDER BY tr.start_epoch_ms DESC\nLIMIT {};\n"
+QUERIES = {'test_names': TEST_NAMES_QUERY, 'test_build_num': MOST_RECENTLY_RUN_TEST_NAME, 'contaminated': CONTAMINATED, 'multiple_ids': MULTIPLE_IDS, 'correct': CORRECT, 'timing': TIMING, }
+CORRECT_ALERT_HEADER = '\nCorrectness Alerts\n------------------\n'
+TIMING_ALERT_HEADER = '\nTiming Alerts\n-------------\n'
+INFRASTRUCTURE_ALERT_HEADER = '\nInfrastructure Alerts\n---------------------\n'

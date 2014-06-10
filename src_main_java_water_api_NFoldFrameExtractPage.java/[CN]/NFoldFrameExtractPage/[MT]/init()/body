@@ -1,0 +1,5 @@
+{
+  super.init();
+  if (nfolds > source.numRows())   throw new IllegalArgumentException("Cannot provide more folds than number of rows in dataset!");
+  if (afold >= nfolds)   throw new IllegalArgumentException("Request fold (" + afold + ") is greater than number of folds ("+ nfolds+ ")!");
+}

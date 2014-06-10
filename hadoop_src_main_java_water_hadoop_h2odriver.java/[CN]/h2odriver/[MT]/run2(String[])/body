@@ -41,7 +41,7 @@
     conf.set("mapreduce.job.ubertask.enable","false");
     String mapreduceMapMemoryMb=Long.toString(processTotalPhysicalMemoryMegabytes);
     conf.set("mapreduce.map.memory.mb",mapreduceMapMemoryMb);
-    String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx+ (enableExceptions ? " -ea" : "")+ (enableVerboseGC ? " -verbose:gc" : "")+ (enablePrintGCDetails ? " -XX:+PrintGCDetails" : "");
+    String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx+ (enableExceptions ? " -ea" : "")+ (enableVerboseGC ? " -verbose:gc" : "")+ (enablePrintGCDetails ? " -XX:+PrintGCDetails" : "")+ (enablePrintGCTimeStamps ? " -XX:+PrintGCTimeStamps" : "");
     conf.set("mapred.child.java.opts",mapChildJavaOpts);
     conf.set("mapred.map.child.java.opts",mapChildJavaOpts);
     System.out.println("Memory Settings:");
@@ -85,6 +85,8 @@
   job.submit();
   System.out.println("Job name '" + jobtrackerName + "' submitted");
   System.out.println("JobTracker job ID is '" + job.getJobID() + "'");
+  String applicationID=job.getJobID().toString().replace("job_","application_");
+  System.out.println("For YARN users, logs command is 'yarn logs -applicationId " + applicationID + "'");
   ctrlc=new CtrlCHandler();
   Runtime.getRuntime().addShutdownHook(ctrlc);
   System.out.printf("Waiting for H2O cluster to come up...\n",numNodes);

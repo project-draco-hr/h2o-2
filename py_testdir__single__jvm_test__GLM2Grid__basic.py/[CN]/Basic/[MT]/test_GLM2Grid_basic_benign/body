@@ -1,0 +1,13 @@
+def test_GLM2Grid_basic_benign(self):
+    h2o.beta_features = True
+    csvFilename = 'benign.csv'
+    print '\nStarting', csvFilename
+    csvPathname = ('logreg/' + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put')
+    y = '3'
+    print 'y:', y
+    kwargs = {'ignored_cols': '0,1', 'response': y, 'n_folds': 0, 'lambda': '1e-8:1e-2:100', 'alpha': '0,0.5,1', }
+    print "Not doing n_folds with benign. Fails with 'unable to solve?'"
+    gg = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=120, **kwargs)
+    colNames = ['STR', 'OBS', 'AGMT', 'FNDX', 'HIGD', 'DEG', 'CHK', 'AGP1', 'AGMN', 'NLV', 'LIV', 'WT', 'AGLP', 'MST']
+    h2o_glm.simpleCheckGLMGrid(self, gg, None, **kwargs)
