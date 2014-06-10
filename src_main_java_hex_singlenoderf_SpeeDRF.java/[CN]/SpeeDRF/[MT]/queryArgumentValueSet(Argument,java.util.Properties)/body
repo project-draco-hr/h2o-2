@@ -1,9 +1,12 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
   if (arg._name.equals("classification")) {
+    arg.setRefreshOnChange();
+  }
+  if (arg._name.equals("classification")) {
     regression=!this.classification;
   }
-  if (arg._name.equals("stat_type")) {
+  if (arg._name.equals("select_stat_type")) {
     if (regression) {
       arg.disable("Minimize MSE for regression.");
     }
@@ -28,6 +31,11 @@
     }
     if (regression) {
       arg.disable("No strata for regression.");
+    }
+  }
+  if (arg._name.equals("importance")) {
+    if (regression) {
+      arg.disable("Variable Importance not supported in SpeeDRF regression.");
     }
   }
 }
