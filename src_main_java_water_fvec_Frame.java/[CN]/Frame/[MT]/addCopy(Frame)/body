@@ -1,0 +1,8 @@
+{
+  if (numRows() == 0)   return add(f,f.names());
+  Key k=Key.make();
+  H2O.submitTask(new RebalanceDataSet(this,f,k)).join();
+  Frame f2=DKV.get(k).get();
+  DKV.remove(k);
+  return add(f2,true);
+}
