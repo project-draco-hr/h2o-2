@@ -3,7 +3,7 @@ def random_forest(self, data_key, trees=None, timeoutSecs=300, retryDelaySecs=1.
     algo = ('2/DRF' if beta_features else 'RF')
     algoView = ('2/DRFView' if beta_features else 'RFView')
     if beta_features:
-        params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'balance_classes': 1, 'classification': 1, 'cols': None, 'ignored_cols_by_name': None, 'importance': 1, 'max_after_balance_size': 7, 'max_depth': None, 'min_rows': None, 'mtries': None, 'nbins': None, 'ntrees': trees, 'sample_rate': None, 'score_each_iteration': None, 'seed': None, 'validation': None, }
+        params_dict = {'destination_key': None, 'source': data_key, 'response': None, 'balance_classes': 1, 'classification': 1, 'cols': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'importance': 1, 'max_after_balance_size': 7, 'max_depth': None, 'min_rows': None, 'mtries': None, 'nbins': None, 'ntrees': trees, 'sample_rate': None, 'score_each_iteration': None, 'seed': None, 'validation': None, }
         if ('model_key' in kwargs):
             kwargs['destination_key'] = kwargs['model_key']
     else:
@@ -23,7 +23,6 @@ def random_forest(self, data_key, trees=None, timeoutSecs=300, retryDelaySecs=1.
         return rf
     if beta_features:
         time.sleep(5)
-        print 'right ebfore call to poll_url, timeoutSec: ', timeoutSecs
         rfView = self.poll_url(rf, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, noPrint=noPrint)
         return rfView
     else:
