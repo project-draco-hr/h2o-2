@@ -1,0 +1,22 @@
+def test_GLM2_airline(self):
+    h2o.beta_features = True
+    csvFilename = 'AirlinesTrain.csv.zip'
+    csvPathname = (('airlines' + '/') + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=15)
+    params = {'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC', 'family': 'binomial', }
+    kwargs = params.copy()
+    starttime = time.time()
+    glmtest = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+    elapsedtime = (time.time() - starttime)
+    print ('ELAPSED TIME TRAIN DATA ', elapsedtime)
+    h2o_glm.simpleCheckGLM(self, glmtest, None, **kwargs)
+    csvFilename = 'AirlinesTest.csv.zip'
+    csvPathname = (('airlines' + '/') + csvFilename)
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=15)
+    params = {'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC', 'family': 'binomial', }
+    kwargs = params.copy()
+    starttime = time.time()
+    glmtrain = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+    elapsedtime = (time.time() - starttime)
+    print ('ELAPSED TIME TEST DATA ', elapsedtime)
+    h2o_glm.simpleCheckGLM(self, glmtrain, None, **kwargs)

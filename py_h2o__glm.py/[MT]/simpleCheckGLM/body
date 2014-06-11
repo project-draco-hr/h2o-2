@@ -137,6 +137,9 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print 'beta:', beta
         print 'norm_beta:', norm_beta
         coefficients['Intercept'] = beta_used[(-1)]
+        print 'len(coefficients_names)', len(coefficients_names)
+        print 'len(idxs)', len(idxs)
+        print 'idxs[-1]', idxs[(-1)]
         print 'intercept demapping info:', 'coefficients_names[-i]:', coefficients_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficients_names[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta_used[-1]:', beta_used[(-1)], "coefficients['Intercept']", coefficients['Intercept']
         interceptName = coefficients_names[idxs[(-1)]]
         if ((interceptName != 'Intercept') or (abs(beta_used[(-1)]) < 1e-26)):
