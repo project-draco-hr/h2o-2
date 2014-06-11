@@ -6,7 +6,9 @@
     if (minfo.get_params().autoencoder) {
       neurons[neurons.length - 1].fprop(seed,training);
       if (training) {
-        for (int i=1; i < neurons.length - 1; i++)         neurons[neurons.length - 1].bprop();
+        for (int i=neurons.length - 1; i > 0; --i) {
+          neurons[i].bprop();
+        }
       }
     }
  else {
