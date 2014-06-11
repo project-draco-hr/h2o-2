@@ -1,7 +1,6 @@
 {
   float err;
-  float sum=0.f;
-  for (  int v : votes)   sum+=v;
+  float sum=doSum(votes);
   if (sum == 0) {
     err=1f - (1f / (votes.length - 1f));
     return err * err;
