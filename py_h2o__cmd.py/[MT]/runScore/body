@@ -5,7 +5,6 @@ def runScore(node=None, dataKey=None, modelKey=None, predictKey='Predict.hex', v
     if doAUC:
         resultAUC = h2o.nodes[0].generate_auc(thresholds=None, actual=dataKey, predict='Predict.hex', vactual=vactual, vpredict=vpredict)
         auc = resultAUC['AUC']
-        raise Exception()
         h2o_util.assertApproxEqual(auc, expectedAuc, tol=0.15, msg=('actual auc: %s not close enough to %s' % (auc, expectedAuc)))
     predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=dataKey, predict=predictKey, vactual=vactual, vpredict='predict')
     if doAUC:
