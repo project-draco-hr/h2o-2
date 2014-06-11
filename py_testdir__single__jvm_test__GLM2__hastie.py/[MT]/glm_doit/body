@@ -1,0 +1,15 @@
+def glm_doit(self, csvFilename, bucket, csvPathname, timeoutSecs=30):
+    print '\nStarting GLM of', csvFilename
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, hex_key=(csvFilename + '.hex'), schema='put', timeoutSecs=30)
+    y = 10
+    kwargs = {'response': y, 'alpha': 0, 'family': 'binomial', }
+    start = time.time()
+    h2o.nodes[0].to_enum(src_key=parseResult['destination_key'], column_index=(y + 1))
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+    print 'GLM in', (time.time() - start), 'secs (python)'
+    h2o_glm.simpleCheckGLM(self, glm, 'C8', **kwargs)
+    validation = glm['glm_model']['submodels'][0]['validation']
+    if self.validation1:
+        h2o_glm.compareToFirstGlm(self, 'auc', validation, self.validation1)
+    else:
+        self.validation1 = copy.deepcopy(validation)

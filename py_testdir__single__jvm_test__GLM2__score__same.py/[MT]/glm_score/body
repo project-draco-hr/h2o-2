@@ -1,0 +1,13 @@
+def glm_score(self, csvFilename, bucket, csvPathname, modelKey, timeoutSecs=30, pollTimeoutSecs=30):
+    print '\nStarting GLM score of', csvFilename
+    hex_key = (csvFilename + '.hex')
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, pollTimeoutSecs=pollTimeoutSecs)
+    y = '10'
+    start = time.time()
+    glmScore = h2o_cmd.runScore(dataKey=parseResult['destination_key'], modelKey=modelKey, vactual=y, vpredict=1, expectedAuc=0.5, doAUC=False)
+    print 'GLMScore in', (time.time() - start), 'secs (python)'
+    h2o.verboseprint(h2o.dump_json(glmScore))
+    if self.glmScore1:
+        h2o_glm.compareToFirstGlm(self, 'mse', glmScore, self.glmScore1)
+    else:
+        self.glmScore1 = copy.deepcopy(glmScore)
