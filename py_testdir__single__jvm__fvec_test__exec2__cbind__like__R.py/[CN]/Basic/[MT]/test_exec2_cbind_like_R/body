@@ -1,0 +1,32 @@
+def test_exec2_cbind_like_R(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    SEEDPERFILE = random.randint(0, sys.maxint)
+    rowCount = 30000
+    colCount = 150
+    timeoutSecs = 60
+    hex_key = 'df'
+    csvPathname = ((SYNDATASETS_DIR + '/') + 'df.csv')
+    write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+    parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=3000, retryDelaySecs=2, doSummary=False)
+    colCount = 1
+    hex_key = 'indx'
+    csvPathname = ((SYNDATASETS_DIR + '/') + 'indx.csv')
+    write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
+    parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=3000, retryDelaySecs=2, doSummary=False)
+    inspect = h2o_cmd.runInspect(key=hex_key)
+    print 'numRows:', inspect['numRows']
+    print 'numCols:', inspect['numCols']
+    for trial in range(3):
+        for execExpr in exprList:
+            start = time.time()
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=300)
+            execTime = (time.time() - start)
+            print 'exec took', execTime, 'seconds'
+            c = h2o.nodes[0].get_cloud()
+            c = c['nodes']
+            k = [i['num_keys'] for i in c]
+            v = [i['value_size_bytes'] for i in c]
+            print ('keys: %s' % ' '.join(map(str, k)))
+            print ('value_size_bytes: %s' % ' '.join(map(str, v)))
+    h2o.check_sandbox_for_errors()
