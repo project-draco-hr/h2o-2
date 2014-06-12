@@ -1,0 +1,24 @@
+def test_GLM2_from_import_hosts(self):
+    h2o.beta_features = True
+    csvFilenameList = ['covtype.data', 'covtype20x.data']
+    importFolderPath = 'standard'
+    validation1 = {}
+    for csvFilename in csvFilenameList:
+        csvPathname = ((importFolderPath + '/') + csvFilename)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key='A.hex', timeoutSecs=2000)
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+        print ('\n' + csvFilename)
+        start = time.time()
+        case = 1
+        y = 54
+        execExpr = ('A.hex[,%s]=(A.hex[,%s]==%s)' % ((y + 1), (y + 1), case))
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        kwargs = {'response': y, 'n_folds': 2, 'family': 'binomial', }
+        glm = h2o_cmd.runGLM(parseResult={'destination_key': 'A.hex', }, timeoutSecs=2000, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        validation = glm['glm_model']['submodels'][0]['validation']
+        if validation1:
+            h2o_glm.compareToFirstGlm(self, 'auc', validation, validation1)
+        else:
+            validation1 = copy.deepcopy(validation)

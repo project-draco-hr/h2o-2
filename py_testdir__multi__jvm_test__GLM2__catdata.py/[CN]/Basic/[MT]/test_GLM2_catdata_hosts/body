@@ -1,0 +1,19 @@
+def test_GLM2_catdata_hosts(self):
+    h2o.beta_features = True
+    csvFilenameList = ['1_100kx7_logreg.data.gz', '2_100kx7_logreg.data.gz']
+    validation1 = {}
+    for csvFilename in csvFilenameList:
+        csvPathname = csvFilename
+        parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+        print ('\n' + csvPathname)
+        start = time.time()
+        kwargs = {'response': 7, 'family': 'binomial', 'n_folds': 3, 'lambda': 0.0001, }
+        timeoutSecs = 200
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, 'C7', **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        validation = glm['glm_model']['submodels'][0]['validation']
+        if validation1:
+            h2o_glm.compareToFirstGlm(self, 'auc', validation, validation1)
+        else:
+            validation1 = copy.deepcopy(validation)
