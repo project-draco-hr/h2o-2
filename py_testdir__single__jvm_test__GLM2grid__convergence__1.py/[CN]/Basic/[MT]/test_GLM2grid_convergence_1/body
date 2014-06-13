@@ -21,4 +21,4 @@ def test_GLM2grid_convergence_1(self):
             glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
             print 'glm grid result', h2o.dump_json(glm)
             print 'glm #', i, 'end on', csvPathname, 'took', (time.time() - start), 'seconds'
-            h2o_glm.simpleCheckGLMGrid(self, glm, None, allowFailWarning=True, **kwargs)
+            h2o_glm.simpleCheckGLMGrid(self, glm, None, **kwargs)
