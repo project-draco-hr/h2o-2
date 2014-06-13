@@ -18,7 +18,8 @@
       }
  else {
         try {
-          sb.append(String.format(fs[c],vec.at8(idx)));
+          if (vec.isUUID())           sb.append(PrettyPrint.UUID(vec.at16l(idx),vec.at16h(idx)));
+ else           sb.append(String.format(fs[c],vec.at8(idx)));
         }
  catch (        IllegalFormatException ife) {
           System.out.println("Format: " + fs[c] + " col="+ c+ " not for ints");

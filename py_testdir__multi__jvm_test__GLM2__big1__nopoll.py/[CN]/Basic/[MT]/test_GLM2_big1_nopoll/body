@@ -1,0 +1,31 @@
+def test_GLM2_big1_nopoll(self):
+    h2o.beta_features = True
+    csvPathname = 'hhp_107_01.data.gz'
+    print ('\n' + csvPathname)
+    y = '106'
+    x = ''
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=15)
+    glmInitial = []
+    start = time.time()
+    for jobDispatch in range(5):
+        kwargs = {'response': y, 'n_folds': 1, 'family': 'binomial', }
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=300, noPoll=True, **kwargs)
+        glmInitial.append(glm)
+        print 'glm job dispatch end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print '\njobDispatch #', jobDispatch
+        timeoutSecs = 200
+    h2o_jobs.pollWaitJobs(pattern='GLM', timeoutSecs=timeoutSecs, retryDelaySecs=10)
+    elapsed = (time.time() - start)
+    print ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+    for g in glmInitial:
+        print 'Checking completed job, with no polling using initial response:'
+        modelKey = g['destination_key']
+        glm = h2o.nodes[0].glm_view(_modelKey=modelKey)
+        h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
+        print 'glm', h2o.dump_json(glm)
+        cm = glm['glm_model']['submodels'][0]['validation']['_cms'][(-1)]['_arr']
+        print 'cm:', cm
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        print '\nTrain\n==========\n'
+        print h2o_gbm.pp_cm(cm)
+        h2o_glm.simpleCheckGLM(self, glm, 'C58', **kwargs)
