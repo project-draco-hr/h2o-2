@@ -23,7 +23,7 @@
         for (int i=lo; i < hi; i++) {
           int permIdx=permutation[i];
           int val=(0xFF & raw[permIdx]);
-          int cls=classs[permIdx];
+          int cls=classs[permIdx] & 0xFF;
           cdsf[val][cls]++;
         }
       }
