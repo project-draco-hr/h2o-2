@@ -21,26 +21,6 @@ def test_GLM2_convergence_1(self):
             start = time.time()
             glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
             print 'glm #', i, 'end on', csvPathname, 'took', (time.time() - start), 'seconds'
-            (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, allowFailWarning=True, **kwargs)
-            if (1 == 0):
-                print '\n', '\ncoefficients in col order:'
-                showCols = colCount
-                for c in range(showCols):
-                    print ('%s:\t%.6e' % (c, coefficients[c]))
-                print ('intercept:\t %.6e' % intercept)
-            x = re.compile('[Ff]ailed')
-            if warnings:
-                for w in warnings:
-                    if re.search(x, w):
-                        if (emsg is None):
-                            emsg = w
-                        print w
-            if emsg:
-                break
-        if (not h2o.browse_disable):
-            h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
-            time.sleep(5)
-            h2b.browseJsonHistoryAsUrlLastMatch('GLM')
-            time.sleep(5)
+            (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
         if (emsg is not None):
             raise Exception(emsg)
