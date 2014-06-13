@@ -1,5 +1,6 @@
 {
   super.init();
+  if (_cv)   return;
   int specified=0;
   if (!isEmpty(cols)) {
     specified++;
@@ -11,6 +12,12 @@
     specified++;
   }
   if (specified > 1)   throw new IllegalArgumentException("Arguments 'cols', 'ignored_cols_by_name', and 'ignored_cols' are exclusive");
+  Vec[] vecs=source.vecs();
+  for (int i=0; i < vecs.length; i++)   if (vecs[i].isUUID()) {
+    if (ignored_cols == null)     ignored_cols=new int[0];
+    ignored_cols=Arrays.copyOf(ignored_cols,ignored_cols.length + 1);
+    ignored_cols[ignored_cols.length - 1]=i;
+  }
   if (isEmpty(cols)) {
     cols=new int[source.vecs().length];
     for (int i=0; i < cols.length; i++)     cols[i]=i;

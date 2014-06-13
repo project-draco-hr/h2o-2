@@ -21,7 +21,7 @@ def sub_c3_nongz_fvec_long(self, csvFilenameList):
         h2o.cloudPerfH2O.message('')
         h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
         start = time.time()
-        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging)
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key='A.hex', timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging)
         elapsed = (time.time() - start)
         print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print "Parse result['destination_key']:", parseResult['destination_key']
@@ -41,10 +41,9 @@ def sub_c3_nongz_fvec_long(self, csvFilenameList):
             x = ','.join(map((lambda x: ('C' + str((x + 1)))), x))
             ignore_x = ','.join(map((lambda x: ('C' + str((x + 1)))), ignore_x))
             GLMkwargs = {'ignored_cols': ignore_x, 'response': 'C379', 'max_iter': 4, 'n_folds': 1, 'family': 'binomial', 'alpha': 0.2, 'lambda': 1e-05, }
-            execExpr = ('A.hex=%s' % parseResult['destination_key'])
-            h2e.exec_expr(execExpr=execExpr, timeoutSecs=60)
+            h2i.delete_keys_at_all_nodes(pattern='manyfile')
             execExpr = 'A.hex[,378+1]=(A.hex[,378+1]>15)'
-            h2e.exec_expr(execExpr=execExpr, timeoutSecs=60)
+            h2e.exec_expr(execExpr=execExpr, timeoutSecs=180)
             aHack = {'destination_key': 'A.hex', }
             start = time.time()
             glm = h2o_cmd.runGLM(parseResult=aHack, timeoutSecs=timeoutSecs, **GLMkwargs)

@@ -1,0 +1,10 @@
+{
+  float err;
+  float sum=doSum(votes);
+  if (sum == 0) {
+    err=1f - (1f / (votes.length - 1f));
+    return err * err;
+  }
+  err=Float.isInfinite(sum) ? (Float.isInfinite(preds[cclass + 1]) ? 0f : 1f) : 1f - preds[cclass + 1] / sum;
+  return err * err;
+}

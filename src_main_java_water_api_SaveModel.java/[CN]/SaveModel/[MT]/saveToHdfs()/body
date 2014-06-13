@@ -1,0 +1,13 @@
+{
+  if (FSUtils.isBareS3NBucketWithoutTrailingSlash(path)) {
+    path+="/";
+  }
+  Path f=new Path(path);
+  try {
+    FileSystem fs=FileSystem.get(f.toUri(),PersistHdfs.CONF);
+    new Model2HDFSBinarySerializer(fs,force).save(model,f);
+  }
+ catch (  IOException e) {
+    throw new IllegalArgumentException("Cannot save file " + path,e);
+  }
+}

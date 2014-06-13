@@ -1,0 +1,8 @@
+{
+  super(selfKey,dataKey,fr);
+  this.dest_key=selfKey;
+  this.parameters=params;
+  score_each=params.score_each_iteration;
+  regression=!(params.classification);
+  _domain=regression ? null : fr.lastVec().toEnum().domain();
+}

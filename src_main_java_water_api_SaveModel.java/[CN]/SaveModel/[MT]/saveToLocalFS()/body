@@ -1,0 +1,10 @@
+{
+  File f=new File(path);
+  if (!force && f.exists())   throw new IllegalArgumentException("The file " + path + " already exists!");
+  try {
+    new Model2FileBinarySerializer().save(model,new File(path));
+  }
+ catch (  IOException e) {
+    throw new IllegalArgumentException("Cannot save file " + path,e);
+  }
+}

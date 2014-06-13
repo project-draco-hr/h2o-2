@@ -1,0 +1,5 @@
+def was_contaminated(self, test_name):
+    '\n        Check the most recent run of this test_name.\n        If not recent, returns "NA".\n\n        Expect that the InfrastructureAlert object will handle the alerting for inconsistent build numbers.\n        '
+    if self.is_recent(test_name):
+        return self._check_contaminated(test_name)
+    return False
