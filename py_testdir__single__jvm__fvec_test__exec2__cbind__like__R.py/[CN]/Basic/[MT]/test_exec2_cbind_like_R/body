@@ -17,7 +17,7 @@ def test_exec2_cbind_like_R(self):
     inspect = h2o_cmd.runInspect(key=hex_key)
     print 'numRows:', inspect['numRows']
     print 'numCols:', inspect['numCols']
-    for trial in range(3):
+    for trial in range(10):
         for execExpr in exprList:
             start = time.time()
             (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=300)
