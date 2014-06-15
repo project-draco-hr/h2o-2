@@ -1,6 +1,6 @@
 {
   super(selfKey,null,dinfo._adaptedFrame);
-  parameters=job;
+  parameters=Job.hygiene((GLM2)job.clone());
   job_key=job.self();
   this.ymu=ymu;
   this.prior=prior;
@@ -13,8 +13,9 @@
   this.lambdas=lambda;
   this.beta_eps=beta_eps;
   submodels=new Submodel[lambda.length];
-  for (int i=0; i < submodels.length; ++i)   submodels[i]=new Submodel(null,null,0,0);
+  for (int i=0; i < submodels.length; ++i)   submodels[i]=new Submodel(null,null,0,0,true);
   run_time=0;
   start_time=System.currentTimeMillis();
   coefficients_names=coefNames();
+  useAllFactorLevels=dinfo._useAllFactorLevels;
 }

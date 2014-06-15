@@ -1,0 +1,6 @@
+{
+  Key[][] treeKeys=null;
+  if (!overwriteCheckpoint)   throw H2O.unimpl("Cloning of tree models is not implemented yet!");
+ else   treeKeys=checkpoint.treeKeys;
+  return new GBMModel(additionModel,treeKeys,checkpoint.errs,checkpoint.cms,checkpoint.treeStats,checkpoint.varimp,checkpoint.validAUC);
+}

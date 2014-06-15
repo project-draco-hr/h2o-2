@@ -1,0 +1,27 @@
+{
+  return new ModelAutobufferSerializer(){
+    @Override protected AutoBuffer postSave(    Model m,    AutoBuffer ab){
+      int ntrees=treeKeys.length;
+      ab.put4(ntrees);
+      for (int i=0; i < ntrees; i++) {
+        CompressedTree[] ts=ctree(i);
+        ab.putA(ts);
+      }
+      return ab;
+    }
+    @Override protected AutoBuffer postLoad(    Model m,    AutoBuffer ab){
+      int ntrees=ab.get4();
+      Futures fs=new Futures();
+      for (int i=0; i < ntrees; i++) {
+        CompressedTree[] ts=ab.getA(CompressedTree.class);
+        for (int j=0; j < ts.length; j++) {
+          Key k=((TreeModel)m).treeKeys[i][j];
+          UKV.put(k,ts[j],fs);
+        }
+      }
+      fs.blockForPending();
+      return ab;
+    }
+  }
+;
+}

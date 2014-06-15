@@ -1,0 +1,9 @@
+{
+  int coutidx=cs[0].cidx();
+  int cinidx=getInChunkIdx(coutidx);
+  int startRow=getStartRow(coutidx);
+  int nrows=cs[0]._len;
+  for (int i=0; i < cs.length; i++) {
+    ChunkSplitter.extractChunkPart(_vecs[i].chunkForChunkIdx(cinidx),cs[i],startRow,nrows,_fs);
+  }
+}

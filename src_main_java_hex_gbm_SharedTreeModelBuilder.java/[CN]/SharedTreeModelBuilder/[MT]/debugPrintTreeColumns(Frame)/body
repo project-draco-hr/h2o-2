@@ -1,0 +1,16 @@
+{
+  new MRTask2(){
+    @Override public void map(    Chunk[] cs){
+      for (int r=0; r < cs[0]._len; r++) {
+        System.err.print("Row " + r + ": ");
+        for (int i=0; i < _nclass; i++) {
+          Chunk c=chk_tree(cs,i);
+          System.err.print(c.at0(r));
+          System.err.print(',');
+        }
+        System.err.println();
+      }
+    }
+  }
+.doAll(fr);
+}

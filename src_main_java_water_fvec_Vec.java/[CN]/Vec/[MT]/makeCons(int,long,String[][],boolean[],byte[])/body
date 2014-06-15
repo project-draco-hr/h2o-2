@@ -1,0 +1,38 @@
+{
+  if (_espc == null)   throw H2O.unimpl();
+  final int nchunks=nChunks();
+  Key[] keys=group().addVecs(n);
+  final Vec[] vs=new Vec[keys.length];
+  for (int i=0; i < vs.length; ++i)   vs[i]=new Vec(keys[i],_espc,domain == null ? null : domain[i],uuids == null ? false : uuids[i],times == null ? (byte)-1 : times[i]);
+  new DRemoteTask(){
+    @Override public void lcompute(){
+      addToPendingCount(vs.length);
+      for (int i=0; i < vs.length; ++i) {
+        final int fi=i;
+        new H2O.H2OCountedCompleter(this){
+          @Override public void compute2(){
+            long row=0;
+            Key k;
+            for (int i=0; i < nchunks; i++) {
+              long nrow=chunk2StartElem(i + 1);
+              if ((k=vs[fi].chunkKey(i)).home())               DKV.put(k,new C0LChunk(l,(int)(nrow - row)),_fs);
+              row=nrow;
+            }
+            tryComplete();
+          }
+        }
+.fork();
+      }
+      tryComplete();
+    }
+    @Override public final void lonCompletion(    CountedCompleter caller){
+      Futures fs=new Futures();
+      for (      Vec v : vs)       if (v._key.home())       DKV.put(v._key,v,fs);
+      fs.blockForPending();
+    }
+    @Override public void reduce(    DRemoteTask drt){
+    }
+  }
+.invokeOnAllNodes();
+  return vs;
+}

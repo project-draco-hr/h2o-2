@@ -1,0 +1,10 @@
+{
+  float[][] r=new float[(int)_nrows][_nclass];
+  for (int c=0; c < _nclass; c++) {
+    Vec ctree=vec_tree(fr,c);
+    for (int row=0; row < _nrows; row++) {
+      r[row][c]=ctree.at8(row);
+    }
+  }
+  return r;
+}

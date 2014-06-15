@@ -7,11 +7,11 @@
   Log.info("Done.");
   DeepLearning p=new DeepLearning();
   p.seed=seed;
-  p.hidden=new int[]{1024,1024,2048};
+  p.hidden=new int[]{128,128,256};
   p.activation=DeepLearning.Activation.RectifierWithDropout;
   p.loss=DeepLearning.Loss.CrossEntropy;
   p.input_dropout_ratio=0.2;
-  p.epochs=10000;
+  p.epochs=10;
   p.l1=1e-5;
   p.l2=0;
   if (true) {
@@ -44,10 +44,11 @@
   p.score_interval=30;
   p.variable_importances=false;
   p.fast_mode=true;
-  p.ignore_const_cols=true;
+  p.ignore_const_cols=false;
   p.shuffle_training_data=false;
   p.force_load_balance=true;
   p.replicate_training_data=true;
   p.quiet_mode=false;
-  p.execImpl();
+  p.invoke();
+  visualize((DeepLearningModel)UKV.get(p.dest()));
 }

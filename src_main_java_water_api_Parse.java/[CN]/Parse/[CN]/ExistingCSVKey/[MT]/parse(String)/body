@@ -1,20 +1,20 @@
 {
-  Pattern p=makePattern(input);
-  Pattern exclude=null;
+  final Pattern p=makePattern(input);
+  final Pattern exclude;
   if (_hdrFrom.specified())   _header.setValue(true);
-  if (_excludeExpression.specified())   exclude=makePattern(_excludeExpression.value());
-  ArrayList<Key> keys=new ArrayList();
-  for (  Key key : H2O.globalKeySet(null)) {
-    if (!key.user_allowed())     continue;
-    String ks=key.toString();
-    if (!p.matcher(ks).matches())     continue;
-    if (exclude != null && exclude.matcher(ks).matches())     continue;
-    Value v2=DKV.get(key);
-    if (!v2.isRawData())     continue;
-    keys.add(key);
+  exclude=_excludeExpression.specified() ? makePattern(_excludeExpression.value()) : null;
+  final Key[] keyAry=H2O.KeySnapshot.globalSnapshot().filter(new H2O.KVFilter(){
+    @Override public boolean filter(    H2O.KeyInfo k){
+      if (k._rawData) {
+        String ks=k._key.toString();
+        return (p.matcher(ks).matches() && (exclude == null || !exclude.matcher(ks).matches()));
+      }
+      return false;
+    }
   }
-  if (keys.size() == 0)   throw new IllegalArgumentException("I did not find any keys matching this pattern!");
-  Collections.sort(keys);
+).keys();
+  ArrayList<Key> keys=new ArrayList<Key>(keyAry.length);
+  for (  Key k : keyAry)   keys.add(k);
   Key hKey=null;
   if (_hdrFrom.specified()) {
     hKey=_hdrFrom.value()._key;

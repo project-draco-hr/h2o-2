@@ -1,6 +1,7 @@
 {
   this.name=name;
-  this.type=vec.isEnum() ? ColType.Enum : vec.isInt() ? (vec.isTime() ? ColType.Time : ColType.Int) : ColType.Real;
+  this.type=vec.isEnum() ? ColType.Enum : vec.isUUID() ? ColType.UUID : (vec.isInt() ? (vec.isTime() ? ColType.Time : ColType.Int) : ColType.Real);
+  boolean numeric=!vec.isEnum() && !vec.isUUID();
   this.min=vec.isEnum() ? Double.NaN : vec.min();
   this.max=vec.isEnum() ? Double.NaN : vec.max();
   this.mean=vec.isEnum() ? Double.NaN : vec.mean();

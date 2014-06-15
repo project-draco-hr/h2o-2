@@ -1,0 +1,9 @@
+{
+  if (anyVec() == null || numRows() <= 1e4)   return f;
+  if (f.anyVec() == null || f.anyVec().group().equals(anyVec().group()))   return f;
+  Key k=Key.make();
+  H2O.submitTask(new RebalanceDataSet(this,f,k)).join();
+  Frame f2=DKV.get(k).get();
+  DKV.remove(k);
+  return f2;
+}

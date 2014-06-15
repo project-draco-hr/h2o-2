@@ -3,6 +3,7 @@
   rf_model.start_training(null);
   buildForest(rf_model);
   DRFTask.updateRFModelStopTraining(rf_model._key);
+  if (n_folds > 0)   CrossValUtils.crossValidate(this);
   cleanup();
   remove();
 }
