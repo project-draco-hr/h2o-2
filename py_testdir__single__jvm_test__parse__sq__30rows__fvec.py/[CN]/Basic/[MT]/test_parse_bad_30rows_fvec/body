@@ -1,0 +1,17 @@
+def test_parse_bad_30rows_fvec(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvPathname = (SYNDATASETS_DIR + '/bad.data')
+    dsf = open(csvPathname, 'w+')
+    dsf.write(datalines)
+    dsf.close()
+    for i in range(20):
+        single_quotes = 1
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', single_quotes=single_quotes, hex_key=(('trial' + str(i)) + '.hex'))
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
+        self.assertEqual(numCols, 4, ('Parsed wrong number of cols: %s' % numCols))
+        self.assertNotEqual(numRows, 30, ("Parsed wrong number of rows. Should be 29.                 Didn't deduce header?: %s" % numRows))
+        self.assertEqual(numRows, 29, ('Parsed wrong number of rows: %s' % numRows))

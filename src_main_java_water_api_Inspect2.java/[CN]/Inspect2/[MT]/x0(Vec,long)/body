@@ -1,3 +1,5 @@
 {
-  return x1(v,row,v.at(row));
+  if (!v.isUUID())   return x1(v,row,v.at(row));
+  if (v.isNA(row))   return x1(v,row,Double.NaN);
+  return "<b style=\"font-family:monospace;\">" + PrettyPrint.UUID(v.at16l(row),v.at16h(row)) + "</b>";
 }

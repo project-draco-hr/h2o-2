@@ -1,0 +1,8 @@
+def __init__(self, order):
+    '\n        Every Alert object will have a list of test names that have runs from the last N days.\n        :param order: The order is the number of days back to look back (this is the `N` above).\n        :return:\n        '
+    self.order = order
+    self.host = '192.168.1.171'
+    self.db = MySQLdb.connect(host=self.host, user='spencer', passwd='spencer', db='PerfDB', port=3306)
+    self.cursor = self.db.cursor()
+    self.test_names = self._get_test_names()
+    self.alert_list = {}

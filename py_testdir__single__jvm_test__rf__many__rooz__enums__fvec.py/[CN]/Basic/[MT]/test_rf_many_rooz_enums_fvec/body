@@ -1,0 +1,46 @@
+def test_rf_many_rooz_enums_fvec(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    if ((1 == 0) and localhost):
+        n = 4000
+        tryList = [(n, 999, 'cI', 300)]
+    else:
+        n = 100
+        tryList = [(n, 1, 'cD', 300), (n, 2, 'cE', 300), (n, 3, 'cF', 300), (n, 4, 'cG', 300), (n, 5, 'cH', 300), (n, 6, 'cI', 300), (n, 7, 'cJ', 300), (n, 9, 'cK', 300), (n, 10, 'cLA', 300), (n, 11, 'cDA', 300), (n, 12, 'cEA', 300), (n, 13, 'cFA', 300), (n, 14, 'cGA', 300), (n, 15, 'cHA', 300), (n, 16, 'cIA', 300), (n, 17, 'cJA', 300), (n, 19, 'cKA', 300), (n, 20, 'cLA', 300)]
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
+        colSepCase = 1
+        if (colSepCase == 0):
+            colSepHexString = '01'
+        else:
+            colSepHexString = '2c'
+        colSepChar = colSepHexString.decode('hex')
+        colSepInt = int(colSepHexString, base=16)
+        print 'colSepChar:', colSepChar
+        print 'colSepInt', colSepInt
+        rowSepCase = random.randint(0, 1)
+        if (rowSepCase == 0):
+            rowSepHexString = '0a'
+        else:
+            rowSepHexString = '0d0a'
+        rowSepChar = rowSepHexString.decode('hex')
+        print 'rowSepChar:', rowSepChar
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        if DO_TEN_INTEGERS:
+            csvFilename = (((('syn_rooz_int10_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        else:
+            csvFilename = (((('syn_rooz_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        print 'Creating random', csvPathname
+        write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE, colSepChar=colSepChar, rowSepChar=rowSepChar)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, separator=colSepInt)
+        print ('\n' + csvFilename)
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
+        y = colCount
+        ntrees = 5
+        kwargs = {'response': y, 'classification': 1, 'ntrees': ntrees, }
+        start = time.time()
+        rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+        print 'rf end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult, ntree=ntrees)
+        modelKey = rfView['drf_model']['_key']
+        h2o_cmd.runScore(dataKey=parseResult['destination_key'], modelKey=modelKey, vactual=(colCount + 1), vpredict=1, expectedAuc=0.5, doAUC=False)

@@ -23,7 +23,7 @@
         for (int i=lo; i < hi; i++) {
           int permIdx=permutation[i];
           int val=(0xFF & raw[permIdx]);
-          int cls=classs[permIdx];
+          int cls=classs[permIdx] & 0xFF;
           cdsf[val][cls]++;
         }
       }
@@ -40,11 +40,11 @@
       response=new float[cols[_dapt.classColIdx()]._binned.length];
       for (int f=0; f < response.length; ++f)       response[f]=cols[_dapt.classColIdx()]._binned2raw[cols[_dapt.classColIdx()]._binned[f]];
     }
-    float cds[][][]=s._columnDistsRegression;
+    int cds[][][]=s._columnDistsRegression;
     int fs[]=s._features;
     for (    int f : fs) {
       if (f == -1)       break;
-      float cdsf[][]=cds[f];
+      int cdsf[][]=cds[f];
       short[] bins=cols[f]._binned;
       if (bins != null) {
         for (int i=lo; i < hi; i++) {
@@ -52,9 +52,9 @@
           int val=bins[permIdx];
           if (val == DataAdapter.BAD)           continue;
           float resp=response[permIdx];
-          int response_bin=cols[_dapt.classColIdx()]._binned == null ? permIdx : cols[_dapt.classColIdx()]._binned[permIdx];
+          int response_bin=_dapt.getEncodedClassColumnValue(permIdx);
           if (resp == DataAdapter.BAD)           continue;
-          cdsf[val][response_bin]=resp;
+          cdsf[val][response_bin]++;
         }
       }
  else {
@@ -62,9 +62,8 @@
         for (int i=lo; i < hi; i++) {
           int permIdx=permutation[i];
           int val=(0xFF & raw[permIdx]);
-          float resp=response[permIdx];
-          int response_bin=cols[_dapt.classColIdx()]._binned == null ? permIdx : cols[_dapt.classColIdx()]._binned[permIdx];
-          cdsf[val][response_bin]=resp;
+          int response_bin=_dapt.getEncodedClassColumnValue(permIdx);
+          cdsf[val][response_bin]++;
         }
       }
     }
