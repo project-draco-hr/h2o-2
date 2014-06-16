@@ -1,0 +1,8 @@
+{
+switch (type) {
+case json:
+    return new Response(http_code,MIME_JSON,new String(S.writeJSON(new AutoBuffer()).buf()));
+default :
+  throw H2O.fail();
+}
+}

@@ -22,10 +22,8 @@ def test_GLM2_big1_nopoll(self):
         modelKey = g['destination_key']
         glm = h2o.nodes[0].glm_view(_modelKey=modelKey)
         h2o_glm.simpleCheckGLM(self, glm, None, noPrint=True, **kwargs)
-        print 'glm', h2o.dump_json(glm)
         cm = glm['glm_model']['submodels'][0]['validation']['_cms'][(-1)]['_arr']
         print 'cm:', cm
         pctWrong = h2o_gbm.pp_cm_summary(cm)
         print '\nTrain\n==========\n'
         print h2o_gbm.pp_cm(cm)
-        h2o_glm.simpleCheckGLM(self, glm, 'C58', **kwargs)
