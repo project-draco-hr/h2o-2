@@ -42,5 +42,5 @@ def test_rf_many_rooz_enums_fvec(self):
         rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
         print 'rf end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult, ntree=ntrees)
-        modelKey = rfView['drf_model']['_key']
-        h2o_cmd.runScore(dataKey=parseResult['destination_key'], modelKey=modelKey, vactual=(colCount + 1), vpredict=1, expectedAuc=0.5, doAUC=False)
+        modelKey = rfResult['drf_model']['_key']
+        h2o_cmd.runScore(dataKey=parseResult['destination_key'], modelKey=modelKey, vactual=colCount, vpredict=1, expectedAuc=0.5, doAUC=False)
