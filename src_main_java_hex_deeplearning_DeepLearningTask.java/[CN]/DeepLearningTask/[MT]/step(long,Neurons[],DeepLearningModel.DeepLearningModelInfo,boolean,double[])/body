@@ -33,7 +33,7 @@
         for (int i=neurons.length - 2; i > 0; --i)         neurons[i].bprop();
       }
     }
-    minfo.add_processed_local(1);
+    if (training)     minfo.add_processed_local(1);
   }
  catch (  RuntimeException ex) {
     Log.warn(ex.getMessage());
