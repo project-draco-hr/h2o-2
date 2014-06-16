@@ -1,0 +1,11 @@
+{
+  int sessionTimeoutMillis=Constants.SESSION_TIMEOUT_MILLIS;
+  ZooKeeper z=new ZooKeeper(_zk,sessionTimeoutMillis,null);
+  byte[] payload;
+  payload=z.getData(_zkroot,null,null);
+  ClusterPayload cp=ClusterPayload.fromPayload(payload,ClusterPayload.class);
+  assert(cp.numNodes > 0);
+  System.out.println("cp numNodes: " + cp.numNodes);
+  payload=z.getData(_zkroot + "/master",null,null);
+  MasterPayload mp=MasterPayload.fromPayload(payload,MasterPayload.class);
+}

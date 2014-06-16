@@ -1,0 +1,9 @@
+{
+  int sessionTimeoutMillis=Constants.SESSION_TIMEOUT_MILLIS;
+  ZooKeeper z=new ZooKeeper(_zk,sessionTimeoutMillis,null);
+  ClusterPayload cp=new ClusterPayload();
+  cp.numNodes=_numNodes;
+  byte[] payload=cp.toPayload();
+  z.create(_zkroot,payload,ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+  z.create(_zkroot + "/nodes",new byte[0],ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+}

@@ -1,3 +1,21 @@
 {
-  System.out.println("hi");
+  parseArgs(args);
+  if (g_start) {
+    h2odriver d=new h2odriver();
+    d.setZk(g_zk);
+    d.setZkroot(g_zkroot);
+    d.setNumNodes(g_numNodes);
+    d.doStart();
+  }
+ else   if (g_wait) {
+    h2odriver d=new h2odriver();
+    d.setZk(g_zk);
+    d.setZkroot(g_zkroot);
+    d.setCloudFormationTimeoutSeconds(g_cloudFormationTimeoutSeconds);
+    d.doWait();
+  }
+ else {
+    assert(false);
+    System.exit(1);
+  }
 }
