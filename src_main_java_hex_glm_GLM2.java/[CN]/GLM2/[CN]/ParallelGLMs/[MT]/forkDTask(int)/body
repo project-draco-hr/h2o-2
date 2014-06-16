@@ -1,10 +1,4 @@
 {
   int nodeId=i % H2O.CLOUD.size();
-  final GLM2 glm=_glms[i];
-  new RPC(H2O.CLOUD._memary[nodeId],new DTask(){
-    @Override public void compute2(){
-      glm.run(this);
-    }
-  }
-).addCompleter(new Callback()).call();
+  forkDTask(i,H2O.CLOUD._memary[nodeId]);
 }

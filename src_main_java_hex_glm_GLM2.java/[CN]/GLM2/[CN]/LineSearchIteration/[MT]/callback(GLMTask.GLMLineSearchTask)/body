@@ -9,6 +9,6 @@
     }
     step*=0.5;
   }
-  Log.info("GLM2 (iteration=" + _iter + ") line search failed to find feasible step. Forcibly converged.");
+  Log.info("GLM2 (iteration=" + _iter + ") line search did not find feasible step. Converged.");
   nextLambda(_lastResult._glmt.clone(),resizeVec(_lastResult._glmt._beta,_activeCols,_lastResult._activeCols));
 }
