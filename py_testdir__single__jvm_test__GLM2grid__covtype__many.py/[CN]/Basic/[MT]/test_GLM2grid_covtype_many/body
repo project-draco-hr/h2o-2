@@ -15,17 +15,18 @@ def test_GLM2grid_covtype_many(self):
     for i in range(3):
         glmResult = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=300, noPoll=True, **kwargs)
         job_key = glmResult['job_key']
-        model_key = glmResult['destination_key']
-        jobs.append((job_key, model_key))
+        grid_key = glmResult['destination_key']
+        jobs.append((job_key, grid_key))
         totalGLMGridJobs += 1
-    for i in range(10):
+    for i in range(4):
         time.sleep(3)
         hex_key = (str(i) + '.hex')
         src_key = (str(i) + '.src')
         parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', src_key=src_key, hex_key=hex_key, timeoutSecs=10, noPoll=True, doSummary=False)
     h2o_jobs.pollWaitJobs(timeoutSecs=300)
     elapsed = (time.time() - start)
-    for (job_key, model_key) in jobs:
-        h2o_glm.simpleCheckGLMGrid(self, glmResult, **kwargs)
+    for (job_key, grid_key) in jobs:
+        gridResult = h2o.nodes[0].glm_grid_view(grid_key=grid_key)
+        h2o_glm.simpleCheckGLMGrid(self, gridResult, **kwargs)
     print 'All GLMGrid jobs completed in', elapsed, 'seconds.'
     print 'totalGLMGridJobs:', totalGLMGridJobs
