@@ -1,23 +1,56 @@
 {
   long seed=0xDECAF;
   Key file=NFSFileVec.make(find_test_file(PATH));
-  Frame frame=ParseDataset2.parse(Key.make("iris_nn2"),new Key[]{file});
+  Frame frame=ParseDataset2.parse(Key.make("Original"),new Key[]{file});
   DeepLearning p=new DeepLearning();
   p.source=frame;
   p.autoencoder=true;
-  p.response=frame.lastVec();
+  p.response=frame.vecs()[0];
   p.seed=seed;
-  p.hidden=new int[]{10,10};
+  p.hidden=new int[]{10,5};
   p.adaptive_rate=true;
+  p.l1=1e-4;
+  p.l2=1e-4;
   p.activation=DeepLearning.Activation.Tanh;
   p.loss=DeepLearning.Loss.MeanSquare;
   p.epochs=1000;
   p.force_load_balance=true;
   p.invoke();
   DeepLearningModel mymodel=UKV.get(p.dest());
-  Frame reconstructed=mymodel.score(frame);
+  Vec resp=frame.remove(0);
+  final Frame reconstructed=mymodel.score(frame);
+  Frame recon=new Frame(Key.make("Reconstruction"),reconstructed.names(),reconstructed.vecs());
+  recon.delete_and_lock(null);
+  recon.unlock(null);
+  Env ev=Exec2.exec("Difference = Original - Reconstruction");
+  Frame diff=ev.popAry();
+  ev.remove_and_unlock();
+  final Vec l2=MRUtils.getL2(diff,mymodel.model_info().data_info()._normMul);
+  Frame l2_frame=new Frame(Key.make("l2_frame"),new String[]{"L2"},new Vec[]{l2});
+  QuantilesPage qp=new QuantilesPage();
+  qp.column=l2_frame.vec(0);
+  qp.source_key=l2_frame;
+  double quantile=0.95;
+  qp.quantile=quantile;
+  qp.invoke();
+  double thres=qp.result;
+  Log.info("L2 norm of reconstruction error (in normalized space):");
+  StringBuilder sb=new StringBuilder();
+  sb.append("Mean reconstruction error: " + l2.mean() + "\n");
+  sb.append("The following points are reconstructed with an error above the " + quantile * 100 + "-th percentile - outliers?\n");
+  for (int i=0; i < l2.length(); i++) {
+    if (l2.at(i) > thres) {
+      sb.append(String.format("row %d : l2 error = %5f\n",i,l2.at(i)));
+    }
+  }
+  Log.info(sb);
   mymodel.delete();
   frame.delete();
   p.delete();
+  l2_frame.delete();
+  recon.delete();
   reconstructed.delete();
+  ((Frame)DKV.get(Key.make("Difference")).get()).delete();
+  diff.delete();
+  resp.remove(null);
 }
