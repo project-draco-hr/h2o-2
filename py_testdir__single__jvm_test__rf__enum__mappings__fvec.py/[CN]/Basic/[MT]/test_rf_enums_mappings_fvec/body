@@ -9,6 +9,7 @@ def test_rf_enums_mappings_fvec(self):
     enumHistory = []
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         enumList = create_enum_list(listSize=10)
+        enumList.reverse()
         colSepHexString = '2c'
         colSepChar = colSepHexString.decode('hex')
         colSepInt = int(colSepHexString, base=16)
@@ -33,13 +34,18 @@ def test_rf_enums_mappings_fvec(self):
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=True)
         y = colCount
         modelKey = 'enums'
-        kwargs = {'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, }
+        if SPEEDRF:
+            kwargs = {'destination_key': modelKey, 'response': y, 'num_trees': 1, 'max_depth': 100, 'oobee': 1, 'seed': 123456789, }
+        else:
+            kwargs = {'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, }
         for r in range(4):
             start = time.time()
-            rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+            if SPEEDRF:
+                rfResult = h2o_cmd.runSpeeDRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+            else:
+                rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
             print 'rf end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
             (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
-            predictKey = 'Predict.hex'
             h2o_cmd.runScore(dataKey=scoreDataKey, modelKey=modelKey, vactual=y, vpredict=1, doAUC=(not MULTINOMIAL))
             errorHistory.append(classification_error)
             enumHistory.append(enumList)
