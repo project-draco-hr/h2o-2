@@ -1,0 +1,9 @@
+def is_signal_outlier(self, sig):
+    X = np.array(self.X.signal)
+    weights = np.array(self.weights)
+    yest = weights.dot(X)
+    c = ((1.0 * (sig - yest)) / (1.0 * X.dot(X)))
+    weights = (weights + ((self.damping * c) * X))
+    self.X.add(sig)
+    self.weights = list(weights)
+    return self._check_est(yest)

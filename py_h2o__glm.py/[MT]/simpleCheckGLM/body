@@ -121,7 +121,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         coefficients_names = GLMModel['coefficients_names']
         idxs = submodels1['idxs']
         print 'idxs:', idxs
-        column_names = coefficients_names
+        coefficients_names = coefficients_names
         norm_beta = submodels1['norm_beta']
         beta = submodels1['beta']
         if doNormalized:
@@ -137,20 +137,23 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print 'beta:', beta
         print 'norm_beta:', norm_beta
         coefficients['Intercept'] = beta_used[(-1)]
-        print 'intercept demapping info:', 'column_names[-i]:', column_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficients_names[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta_used[-1]:', beta_used[(-1)], "coefficients['Intercept']", coefficients['Intercept']
+        print 'len(coefficients_names)', len(coefficients_names)
+        print 'len(idxs)', len(idxs)
+        print 'idxs[-1]', idxs[(-1)]
+        print 'intercept demapping info:', 'coefficients_names[-i]:', coefficients_names[(-1)], 'idxs[-1]:', idxs[(-1)], 'coefficients_names[idxs[-1]]:', coefficients_names[idxs[(-1)]], 'beta_used[-1]:', beta_used[(-1)], "coefficients['Intercept']", coefficients['Intercept']
         interceptName = coefficients_names[idxs[(-1)]]
         if ((interceptName != 'Intercept') or (abs(beta_used[(-1)]) < 1e-26)):
-            raise Exception(("'Intercept' should be last in coefficient_names and beta %s %s %s" % (idxs[(-1)], beta_used[(-1)], (('-' + interceptName) + '-'))))
+            raise Exception(("'Intercept' should be last in coefficients_names and beta %s %s %s" % (idxs[(-1)], beta_used[(-1)], (('-' + interceptName) + '-'))))
         if (len(idxs) > len(beta_used)):
             raise Exception(("idxs shouldn't be longer than beta_used %s %s" % (len(idxs), len(beta_used))))
         intercept = coefficients.pop('Intercept', None)
-        column_names.pop()
+        coefficients_names.pop()
     else:
         if doNormalized:
             coefficients = GLMModel['normalized_coefficients'].copy()
         else:
             coefficients = GLMModel['coefficients'].copy()
-        column_names = GLMModel['column_names']
+        coefficients_names = GLMModel['column_names']
         intercept = coefficients.pop('Intercept', None)
         print 'First intercept:', intercept
     if h2o.beta_features:
@@ -172,14 +175,14 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         return (cString + cValueString)
     cString = ''
     cList = []
-    for c in column_names:
+    for c in coefficients_names:
         cString = add_to_coefficient_list_and_string(c, cList, cString)
     if prettyPrint:
         print ('\nH2O intercept:\t\t%.5e' % intercept)
         print cString
     elif (not noPrint):
         print '\nintercept:', intercept, cString
-    print '\nTotal # of coefficients:', len(column_names)
+    print '\nTotal # of coefficients:', len(coefficients_names)
     if ((not allowZeroCoeff) and (colX is not None)):
         absXCoeff = abs(float(coefficients[str(colX)]))
         self.assertGreater(absXCoeff, 1e-26, ((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)))
