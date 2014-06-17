@@ -1,0 +1,47 @@
+{
+  Log.info("before: " + H2O.store_size());
+  Frame fr=frame;
+  boolean adapt=true;
+  int ridx=fr.find(responseName());
+  if (ridx != -1) {
+    fr=new Frame(fr);
+    fr.remove(ridx);
+  }
+  Frame[] adaptFrms=adapt ? adapt(fr,false) : null;
+  Frame adaptFrm=adapt ? adaptFrms[0] : fr;
+  Frame onlyAdaptFrm=adapt ? adaptFrms[1] : null;
+  final int len=_names.length - 1;
+  String prefix="reconstr_";
+  for (int c=0; c < len; c++)   adaptFrm.add(prefix + adaptFrm.names()[c],adaptFrm.anyVec().makeZero());
+  new MRTask2(){
+    @Override public void map(    Chunk chks[]){
+      double tmp[]=new double[len];
+      float preds[]=new float[len];
+      for (int row=0; row < chks[0]._len; row++) {
+        for (int i=0; i < _names.length - 1; i++)         tmp[i]=chks[i].at0(row);
+        float p[]=score0(tmp,preds);
+        for (int c=0; c < preds.length; c++)         chks[len + c].set0(row,p[c]);
+      }
+    }
+  }
+.doAll(adaptFrm);
+  int x=_names.length - 1, y=adaptFrm.numCols();
+  Frame reconstructed=adaptFrm.extractFrame(x,y);
+  if (adapt)   onlyAdaptFrm.delete();
+  Frame orig=new Frame(Key.make("Original"),fr.names(),fr.vecs());
+  orig.delete_and_lock(null);
+  orig.unlock(null);
+  Frame recon=new Frame(Key.make("Reconstruction"),reconstructed.names(),reconstructed.vecs());
+  recon.delete_and_lock(null);
+  recon.unlock(null);
+  Env ev=water.exec.Exec2.exec("Difference = Original - Reconstruction");
+  Frame diff=ev.popAry();
+  ev.remove_and_unlock();
+  final Vec l2=MRUtils.getL2(diff,model_info().data_info()._normMul);
+  ((Frame)DKV.get(Key.make("Difference")).get()).delete();
+  diff.delete();
+  ((Frame)DKV.get(Key.make("Original")).get()).delete();
+  recon.delete();
+  Log.info("after: " + H2O.store_size());
+  return l2;
+}
