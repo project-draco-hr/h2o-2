@@ -25,6 +25,9 @@
 catch (  CannotCompileException e) {
     throw new RuntimeException(e);
   }
+catch (  BadBytecode e) {
+    throw new RuntimeException(e);
+  }
  finally {
     Thread.currentThread().setContextClassLoader(ccl);
   }

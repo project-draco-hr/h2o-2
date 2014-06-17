@@ -1,0 +1,8 @@
+{
+switch (version) {
+case 1:
+    return new ModelBuildersMetadataV1();
+default :
+  throw H2O.fail("Unknown schema version: " + version + " for handler class: "+ this.getClass());
+}
+}
