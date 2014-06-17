@@ -6,10 +6,7 @@
     final int rows=_a.size();
     for (int row=0; row < rows; row++) {
       float g=_e.get(row) * (1f - _a.get(row) * _a.get(row));
-      if (_minfo.get_params().autoencoder && _index == _minfo.get_params().hidden.length) {
-        if (params.loss != Loss.MeanSquare)         throw new UnsupportedOperationException("Auto-Encoder is only implemented for MeanSquare error.");
-        g=(_input._a.get(row) - _a.get(row));
-      }
+      g=autoEncoderError(g,row);
       bprop(row,g,r,m);
     }
   }
