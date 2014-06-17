@@ -4,7 +4,12 @@
     _naCnt=vthis._naCnt=-1;
     new TAtomic<Vec>(){
       @Override public Vec atomic(      Vec v){
-        if (v != null && v._naCnt == -2)         v._naCnt=-1;
+        if (v != null) {
+          v._last_write_timestamp=System.currentTimeMillis();
+          if (v._naCnt == -2) {
+            v._naCnt=-1;
+          }
+        }
         return v;
       }
     }
