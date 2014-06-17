@@ -1,20 +1,30 @@
 {
   System.out.printf("EmbeddedH2OConfig: fetchFlatfile called\n");
-  int sessionTimeoutMillis=Constants.SESSION_TIMEOUT_MILLIS;
-  ZooKeeper z=new ZooKeeper(_zk,sessionTimeoutMillis,null);
-  String flatfile="";
+  StringBuffer flatfile=new StringBuffer();
+  long startMillis=System.currentTimeMillis();
   while (true) {
+    ZooKeeper z=ZooKeeperFactory.makeZk(_zk);
     List<String> list=z.getChildren(_zkroot + "/nodes",true);
+    z.close();
     if (list.size() == _numNodes) {
       for (      String child : list) {
-        System.out.println("TOM CHILD " + child);
+        byte[] payload;
+        String zkpath=_zkroot + "/nodes/" + child;
+        z=ZooKeeperFactory.makeZk(_zk);
+        payload=z.getData(zkpath,null,null);
+        WorkerPayload wp=WorkerPayload.fromPayload(payload,WorkerPayload.class);
+        flatfile.append(wp.ip).append(":").append(wp.port).append("\n");
+        z.close();
       }
-      System.out.println("TOM EXITING");
-      System.exit(1);
       break;
     }
  else     if (list.size() > _numNodes) {
       System.out.println("EmbeddedH2OConfig: fetchFlatfile sees too many nodes (" + list.size() + " > "+ _numNodes+ ")");
+      System.exit(1);
+    }
+    long now=System.currentTimeMillis();
+    if (Math.abs(now - startMillis) > (_cloudFormationTimeoutSeconds * 1000)) {
+      System.out.printf("EmbeddedH2OConfig: fetchFlatfile timed out waiting for cloud to form\n");
       System.exit(1);
     }
     Thread.sleep(1000);
@@ -23,5 +33,5 @@
   System.out.println("------------------------------------------------------------");
   System.out.println(flatfile);
   System.out.println("------------------------------------------------------------");
-  return flatfile;
+  return flatfile.toString();
 }

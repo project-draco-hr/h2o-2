@@ -1,6 +1,7 @@
 {
   String zk=null;
   String zkroot=null;
+  long timeout=Constants.DEFAULT_CLOUD_FORMATION_TIMEOUT_SECONDS;
   for (int i=0; i < args.length; i++) {
     if (args[i].equals("-zk")) {
       i++;
@@ -9,6 +10,10 @@
  else     if (args[i].equals("-zkroot")) {
       i++;
       zkroot=args[i];
+    }
+ else     if (args[i].equals("-timeout")) {
+      i++;
+      timeout=Long.parseLong(args[i]);
     }
   }
   if (zk == null) {
@@ -19,8 +24,12 @@
     System.out.println("\nERROR: -zkroot must be specified\n");
     usage();
   }
+  if (timeout < 0) {
+    timeout=Integer.MAX_VALUE;
+  }
   _embeddedH2OConfig=new EmbeddedH2OConfig();
   _embeddedH2OConfig.setZk(zk);
   _embeddedH2OConfig.setZkRoot(zkroot);
+  _embeddedH2OConfig.setCloudFormationTimeoutSeconds(timeout);
   H2O.setEmbeddedH2OConfig(_embeddedH2OConfig);
 }
