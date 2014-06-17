@@ -1,5 +1,24 @@
 {
+  System.out.printf("EmbeddedH2OConfig: fetchFlatfile called\n");
+  int sessionTimeoutMillis=Constants.SESSION_TIMEOUT_MILLIS;
+  ZooKeeper z=new ZooKeeper(_zk,sessionTimeoutMillis,null);
   String flatfile="";
+  while (true) {
+    List<String> list=z.getChildren(_zkroot + "/nodes",true);
+    if (list.size() == _numNodes) {
+      for (      String child : list) {
+        System.out.println("TOM CHILD " + child);
+      }
+      System.out.println("TOM EXITING");
+      System.exit(1);
+      break;
+    }
+ else     if (list.size() > _numNodes) {
+      System.out.println("EmbeddedH2OConfig: fetchFlatfile sees too many nodes (" + list.size() + " > "+ _numNodes+ ")");
+      System.exit(1);
+    }
+    Thread.sleep(1000);
+  }
   System.out.printf("EmbeddedH2OConfig: fetchFlatfile returned\n");
   System.out.println("------------------------------------------------------------");
   System.out.println(flatfile);

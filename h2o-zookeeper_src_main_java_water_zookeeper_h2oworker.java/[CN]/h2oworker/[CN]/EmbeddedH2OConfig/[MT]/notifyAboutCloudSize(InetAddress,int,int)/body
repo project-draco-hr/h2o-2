@@ -1,4 +1,27 @@
 {
   _embeddedWebServerIp=ip.getHostAddress();
   _embeddedWebServerPort=port;
+  System.out.printf("EmbeddedH2OConfig: notifyAboutCloudSize called (%s, %d, %d)\n",ip.getHostAddress(),port,size);
+  if (size == _numNodes) {
+    System.out.printf("EmbeddedH2OConfig: notifyAboutCloudSize claiming master...\n");
+    try {
+      int sessionTimeoutMillis=Constants.SESSION_TIMEOUT_MILLIS;
+      ZooKeeper z=new ZooKeeper(_zk,sessionTimeoutMillis,null);
+      MasterPayload mp=new MasterPayload();
+      mp.ip=ip.getHostAddress();
+      mp.port=port;
+      mp.pid=getProcessId();
+      byte[] payload;
+      payload=mp.toPayload();
+      z.create(_zkroot + "/master",payload,ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+      System.out.printf("EmbeddedH2OConfig: notifyAboutCloudSize claimed master\n");
+    }
+ catch (    KeeperException.NodeExistsException e) {
+      System.out.printf("EmbeddedH2OConfig: notifyAboutCloudSize lost claiming race to another node (this is normal)\n");
+    }
+catch (    Exception e) {
+      System.out.println(e);
+      System.exit(1);
+    }
+  }
 }
