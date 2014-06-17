@@ -1,0 +1,8 @@
+{
+  File file=File.createTempFile("H2O_ModelSerializationTest",".model");
+  file.deleteOnExit();
+  new Model2FileBinarySerializer().save(model,file);
+  if (deleteModel)   model.delete();
+  M m=(M)new Model2FileBinarySerializer().load(file);
+  return m;
+}

@@ -1,0 +1,10 @@
+{
+  File f=new File(path);
+  if (!f.exists())   throw new IllegalArgumentException("File " + path + " does not exist!");
+  try {
+    model=new Model2FileBinarySerializer().load(f);
+  }
+ catch (  IOException e) {
+    throw new IllegalArgumentException("Cannot load file " + path,e);
+  }
+}

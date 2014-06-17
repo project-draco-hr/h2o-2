@@ -1,0 +1,13 @@
+{
+  GLMModel model=null, loadedModel=null;
+  try {
+    model=prepareGLMModel("smalldata/cars.csv",EIA,4,Family.poisson);
+    loadedModel=saveAndLoad(model);
+    assertModelBinaryEquals(model,loadedModel);
+    GLMTest2.testHTML(loadedModel);
+  }
+  finally {
+    if (model != null)     model.delete();
+    if (loadedModel != null)     loadedModel.delete();
+  }
+}

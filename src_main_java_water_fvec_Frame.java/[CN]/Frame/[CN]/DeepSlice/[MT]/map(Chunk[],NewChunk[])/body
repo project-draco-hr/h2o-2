@@ -43,7 +43,8 @@
       Chunk oc=chks[_cols[i]];
       NewChunk nc=nchks[i];
       if (_isInt[i] == 1) {
-        for (int j=rlo; j < rhi; j++)         if (oc.isNA0(j))         nc.addNA();
+        for (int j=rlo; j < rhi; j++)         if (oc._vec.isUUID())         nc.addUUID(oc,j);
+ else         if (oc.isNA0(j))         nc.addNA();
  else         nc.addNum(oc.at80(j),0);
       }
  else {

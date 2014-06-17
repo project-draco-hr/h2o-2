@@ -4,6 +4,24 @@
   Request.RequestType type=Request.RequestType.requestType(uri);
   String requestName=type.requestName(uri);
   maybeLogRequest(uri,method,parms);
+  int version=parseVersion(uri);
+  int idx=version >> 16;
+  version&=0xFFFF;
+  String uripath=uri.substring(idx);
+  String path=requestName(uripath);
+  Method meth=null;
+  try {
+    meth=lookup(method,path);
+    if (meth != null) {
+      return wrap(HTTP_OK,handle(type,meth,version,parms),type);
+    }
+  }
+ catch (  IllegalArgumentException e) {
+    return wrap(HTTP_BADREQUEST,new HTTP404V1(e.getMessage(),uri),type);
+  }
+catch (  Exception e) {
+    return wrap(e.getMessage() != "unimplemented" ? HTTP_INTERNALERROR : HTTP_NOTIMPLEMENTED,new HTTP500V1(e),type);
+  }
   try {
     Request request=_requests.get(requestName);
     if (request == null)     return getResource(uri);

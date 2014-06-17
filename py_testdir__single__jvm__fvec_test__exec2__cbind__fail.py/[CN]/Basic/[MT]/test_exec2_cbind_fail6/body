@@ -1,0 +1,12 @@
+def test_exec2_cbind_fail6(self):
+    print 'fails with argument exception if rows are unequal size'
+    for i in range(5):
+        execExpr = 'b=c(0,0,0,0,0,0,0,0,0,0,0,0)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'a=c(0,0,0,0,0,0,0,0,0,0,0,NA)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'd=b'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+        execExpr = 'cbind(a,b,d)'
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
+    h2o.check_sandbox_for_errors()
