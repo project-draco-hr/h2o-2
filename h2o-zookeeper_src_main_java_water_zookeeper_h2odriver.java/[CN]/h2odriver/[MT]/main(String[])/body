@@ -12,10 +12,11 @@
     d.setZk(g_zk);
     d.setZkroot(g_zkroot);
     d.setCloudFormationTimeoutSeconds(g_cloudFormationTimeoutSeconds);
-    d.doWait();
+    MasterPayload mp=d.doWait();
+    System.out.println(mp.ip + ":" + mp.port);
   }
  else {
-    assert(false);
+    System.out.println("bad path");
     System.exit(1);
   }
 }
