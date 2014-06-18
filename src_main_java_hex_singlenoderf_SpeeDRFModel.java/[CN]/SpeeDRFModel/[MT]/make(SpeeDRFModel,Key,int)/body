@@ -4,30 +4,13 @@
   m.t_keys[m.t_keys.length - 1]=tkey;
   m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
   m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
-  boolean shouldScore=doScore(m);
+  boolean shouldScore=shouldDoScore(m);
   if (shouldScore) {
-    CMTask cmTask=new CMTask(m,m.size(),m.weights,m.oobee);
-    cmTask.doAll(m.test_frame == null ? m.fr : m.test_frame,true);
-    if (m.regression) {
-      float mse=cmTask._ss / ((float)(cmTask._rowcnt));
-      m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
-      m.errs[m.errs.length - 1]=mse;
-      m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
-      m.cms[m.cms.length - 1]=null;
+    if (m.test_frame != null) {
+      scoreOnTest(m,old);
     }
  else {
-      _domain=cmTask.domain();
-      m.confusion=CMTask.CMFinal.make(cmTask._matrix,m,cmTask.domain(),cmTask._errorsPerTree,m.oobee,cmTask._sum,cmTask._cms);
-      m.cm=cmTask._matrix._matrix;
-      m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
-      m.errs[m.errs.length - 1]=m.confusion.mse();
-      m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
-      ConfusionMatrix new_cm=new ConfusionMatrix(m.confusion._matrix);
-      m.cms[m.cms.length - 1]=new_cm;
-      if (m.classes() == 2) {
-        m.validAUC=makeAUC(toCMArray(m.confusion._cms),ModelUtils.DEFAULT_THRESHOLDS,m.cmDomain);
-      }
-      if (m.importance && !m.regression)       m.varimp=m.doVarImpCalc(m);
+      scoreOnTrain(m,old);
     }
   }
  else {
