@@ -3,6 +3,12 @@
   if (arg._name.equals("classification")) {
     arg.setRefreshOnChange();
   }
+  if (arg._name.equals("balance_classes")) {
+    arg.setRefreshOnChange();
+    if (regression) {
+      arg.disable("Class balancing is only for classification.");
+    }
+  }
   if (arg._name.equals("classification")) {
     regression=!this.classification;
   }
@@ -36,6 +42,11 @@
   if (arg._name.equals("importance")) {
     if (regression) {
       arg.disable("Variable Importance not supported in SpeeDRF regression.");
+    }
+  }
+  if (classification) {
+    if (arg._name.equals("max_after_balance_size") && !balance_classes) {
+      arg.disable("Requires balance_classes.",inputArgs);
     }
   }
 }

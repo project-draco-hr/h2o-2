@@ -1,0 +1,11 @@
+{
+  GLM2 params=get_params();
+  this.variable_importances=null;
+  if (!params.use_all_factor_levels)   return;
+  final double[] b=beta();
+  if (params.variable_importances && null != b) {
+    float[] coefs_abs_value=new float[b.length];
+    for (int i=0; i < b.length; ++i)     coefs_abs_value[i]=(float)Math.abs(b[i]);
+    this.variable_importances=new VarImp(coefs_abs_value,coefficients_names);
+  }
+}
