@@ -28,9 +28,9 @@ def test_GLM2_ints_unbalanced(self):
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=True)
         y = colCount
         modelKey = 'xyz'
-        kwargs = {'destination_key': modelKey, 'response': y, 'max_iter': 200, 'family': 'binomial', 'n_folds': 10, 'alpha': 0, 'lambda': 0, }
+        kwargs = {'n_folds': 0, 'destination_key': modelKey, 'response': y, 'max_iter': 200, 'family': 'binomial', 'alpha': 0, 'lambda': 0, }
         start = time.time()
-        updateList = [{'alpha': 0.5, 'lambda': 0.0001, }, {'alpha': 0.25, 'lambda': 1e-06, }, {'alpha': 0.0, 'lambda': 1e-08, }, {'alpha': 0.5, 'lambda': 0.0, }, {'alpha': 0.0, 'lambda': 0.0, }]
+        updateList = [{'alpha': 0.5, 'lambda': 1e-05, }]
         for updateDict in updateList:
             print '\n#################################################################'
             print updateDict
@@ -39,10 +39,4 @@ def test_GLM2_ints_unbalanced(self):
             print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
             h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
             parseResult = h2i.import_parse(path=csvScorePathname, schema='put', hex_key='B.hex', timeoutSecs=30, separator=colSepInt)
-            predictKey = 'Predict.hex'
-            predictResult = h2o_cmd.runPredict(data_key='B.hex', model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-            predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual='B.hex', vactual=('C' + str((y + 1))), predict=predictKey, vpredict='predict')
-            cm = predictCMResult['cm']
-            pctWrong = h2o_gbm.pp_cm_summary(cm)
-            print '\nTest\n==========\n'
-            print h2o_gbm.pp_cm(cm)
+            h2o_cmd.runScore(dataKey='B.hex', modelKey=modelKey, vactual=('C' + str((y + 1))), vpredict=1, expectedAuc=0.6)

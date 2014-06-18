@@ -1,0 +1,10 @@
+{
+  Path f=new Path(path);
+  try {
+    FileSystem fs=FileSystem.get(f.toUri(),PersistHdfs.CONF);
+    model=new Model2HDFSBinarySerializer(fs,false).load(f);
+  }
+ catch (  IOException e) {
+    throw new IllegalArgumentException("Cannot load file " + path,e);
+  }
+}

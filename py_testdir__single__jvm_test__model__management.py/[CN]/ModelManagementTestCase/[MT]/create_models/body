@@ -4,55 +4,80 @@ def create_models(self, frame_keys):
     self.assertIsNotNone(airlines_train_hex)
     self.assertIsNotNone(airlines_test_hex)
     node = h2o.nodes[0]
+    num_models = 0
     print '##############################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model. . .'
-    glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
+    glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, 'use_all_factor_levels': 1, }
     glm_AirlinesTrain_1 = node.GLM(airlines_train_hex, **glm_AirlinesTrain_1_params)
+    num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_1, None, **glm_AirlinesTrain_1_params)
     print '####################################################################'
     print 'Generating AirlinesTrain simple GBM binary classification model. . .'
     gbm_AirlinesTrain_1_params = {'destination_key': 'gbm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 3, 'max_depth': 1, 'classification': 1, }
     gbm_AirlinesTrain_1 = node.gbm(airlines_train_hex, **gbm_AirlinesTrain_1_params)
+    num_models = (num_models + 1)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex GBM binary classification model. . .'
     gbm_AirlinesTrain_2_params = {'destination_key': 'gbm_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 5, 'classification': 1, }
     gbm_AirlinesTrain_2 = node.gbm(airlines_train_hex, **gbm_AirlinesTrain_2_params)
+    num_models = (num_models + 1)
     print '####################################################################'
     print 'Generating AirlinesTrain simple DRF binary classification model. . .'
     rf_AirlinesTrain_1_params = {'destination_key': 'rf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 5, 'max_depth': 2, 'classification': 1, }
     rf_AirlinesTrain_1 = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_1_params)
+    num_models = (num_models + 1)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex DRF binary classification model. . .'
     rf_AirlinesTrain_2_params = {'destination_key': 'rf_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
     rf_AirlinesTrain_2 = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_2_params)
+    num_models = (num_models + 1)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model. . .'
     speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
-    speedrf_AirlinesTrain_1 = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_1_params)
     print '######################################################################'
     print 'Generating AirlinesTrain DeepLearning binary classification model. . .'
-    dl_AirlinesTrain_1_params = {'destination_key': 'dl_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'hidden': [10, 10], 'classification': 1, }
+    dl_AirlinesTrain_1_params = {'destination_key': 'dl_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'hidden': [10, 10], 'classification': 1, 'variable_importances': 1, }
     dl_AirlinesTrain_1 = node.deep_learning(airlines_train_hex, **dl_AirlinesTrain_1_params)
+    num_models = (num_models + 1)
     print '##############################################################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model with different response column. . .'
-    glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC_recoded', 'ignored_cols': 'IsDepDelayed, IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, }
+    glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC_recoded', 'ignored_cols': 'IsDepDelayed, IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, 'use_all_factor_levels': 1, }
     glm_AirlinesTrain_A = node.GLM(airlines_train_hex, **glm_AirlinesTrain_A_params)
+    num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_A, None, **glm_AirlinesTrain_A_params)
     print '#########################################################'
     print 'Generating Prostate GLM2 binary classification model. . .'
-    glm_Prostate_1_params = {'destination_key': 'glm_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, }
+    glm_Prostate_1_params = {'destination_key': 'glm_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 1, }
     glm_Prostate_1 = node.GLM(prostate_hex, **glm_Prostate_1_params)
+    num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_Prostate_1, None, **glm_Prostate_1_params)
     print '###############################################################'
     print 'Generating Prostate simple DRF binary classification model. . .'
     rf_Prostate_1_params = {'destination_key': 'rf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 10, 'max_depth': 5, 'classification': 1, }
     rf_Prostate_1 = node.random_forest(prostate_hex, **rf_Prostate_1_params)
+    num_models = (num_models + 1)
     print '#####################################################################'
     print 'Generating Prostate complex SpeeDRF binary classification model. . .'
     speedrf_Prostate_1_params = {'destination_key': 'speedrf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
-    speedrf_Prostate_1 = node.speedrf(prostate_hex, **speedrf_Prostate_1_params)
     print '##############################################'
     print 'Generating Prostate GLM2 regression model. . .'
-    glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, }
+    glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 1, }
     glm_Prostate_regression_1 = node.GLM(prostate_hex, **glm_Prostate_regression_1_params)
+    num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_Prostate_regression_1, None, **glm_Prostate_regression_1_params)
+    print (('Checking ' + str(len(h2o.nodes))) + ' nodes for models: ')
+    for a_node in h2o.nodes:
+        print ((('  ' + a_node.http_addr) + ':') + str(a_node.port))
+    found_problem = False
+    for a_node in h2o.nodes:
+        models = a_node.models()
+        got = len(models['models'])
+        print (((('For node: ' + a_node.http_addr) + ':') + str(a_node.port)) + ' checking that we got '), str(num_models), ' models. . .'
+        if (num_models != got):
+            print 'p00p, not enough. . .'
+            found_problem = True
+            print ('Got these models: ' + repr(models['models'].keys()))
+            print ((('Expected ' + str(num_models)) + ', got: ') + str(got))
+        for (key, value) in models['models'].iteritems():
+            self.assertEquals(value['state'], 'DONE', ('Expected state to be DONE for model: ' + key))
+    self.assertNotEqual(found_problem, True, 'Missing models on at least one node.')

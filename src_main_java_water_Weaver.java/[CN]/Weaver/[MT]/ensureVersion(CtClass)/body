@@ -1,0 +1,13 @@
+{
+  CtMethod ccms[]=cc.getDeclaredMethods();
+  if (!javassist.Modifier.isAbstract(cc.getModifiers())) {
+    String gsig=cc.getGenericSignature();
+    ClassSignature csig=SignatureAttribute.toClassSignature(gsig);
+    TypeArgument ta=getTypeArg(csig.getSuperClass().getTypeArguments(),"Lwater/api/rest/Version");
+    if (ta != null && !hasExisting("getVersion","()" + ta.getType().encode(),ccms)) {
+      String typeName=ta.toString();
+      String valueName=getValueFromType(typeName);
+      cc.addMethod(CtNewMethod.make("public water.api.rest.Version getVersion() {" + "  return " + valueName + ";"+ "}",cc));
+    }
+  }
+}

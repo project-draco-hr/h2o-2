@@ -3,7 +3,7 @@
   int[] res=new int[vecs.length];
   int j=0;
   for (int i=0; i < vecs.length; ++i) {
-    if (!(vecs[i].min() < vecs[i].max()) || (_filterNAs && ((double)vecs[i].naCnt()) / vecs[i].length() > 0.1))     res[j++]=i;
+    if (!(vecs[i].min() < vecs[i].max()) || (_filterNAs && ((double)vecs[i].naCnt()) / vecs[i].length() > 0.1) || vecs[i].isUUID())     res[j++]=i;
   }
   return Arrays.copyOf(res,j);
 }

@@ -28,9 +28,15 @@
     cm.add(JSON_CM_CLASSES_ERRORS,classErrors);
     cm.add(JSON_CM_MATRIX,matrix);
     cm.addProperty(JSON_CM_TREES,modelSize);
-    DocGen.HTML.section(sb,"Confusion Matrix:");
-    if (testKey != null)     sb.append("<div class=\"alert\">Reported on ").append(Inspect2.link(testKey.toString(),testKey)).append("</div>");
- else     sb.append("<div class=\"alert\">Reported on ").append(cm.get(JSON_CM_TYPE).getAsString()).append(" data</div>");
+    if (_have_cv_results) {
+      DocGen.HTML.section(sb,"Confusion Matrix:");
+      sb.append("<div class=\"alert\">Scoring results reported for ").append(this.parameters.n_folds + "-fold cross-validated training data ").append(Inspect2.link(_dataKey.toString(),_dataKey)).append("</div>");
+    }
+ else {
+      DocGen.HTML.section(sb,"Confusion Matrix:");
+      if (testKey != null)       sb.append("<div class=\"alert\">Reported on ").append(Inspect2.link(testKey.toString(),testKey)).append("</div>");
+ else       sb.append("<div class=\"alert\">Reported on ").append(cm.get(JSON_CM_TYPE).getAsString()).append(" data</div>");
+    }
     if (cm.has(JSON_CM_MATRIX)) {
       sb.append("<dl class='dl-horizontal'>");
       sb.append("<dt>classification error</dt><dd>").append(String.format("%5.5f %%",100 * cm.get(JSON_CM_CLASS_ERR).getAsFloat())).append("</dd>");

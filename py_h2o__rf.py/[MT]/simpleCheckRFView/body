@@ -9,10 +9,16 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
             if (('Failed' in w) or ('failed' in w)):
                 raise Exception(w)
     if h2o.beta_features:
+        if ('drf_model' in rfv):
+            rf_model = rfv['drf_model']
+        if ('speedrf_model' in rfv):
+            rf_model = rfv['speedrf_model']
+        if ('rf_model' in rfv):
+            rf_model = rfv['rf_model']
         if ('cm' in rfv):
             cm = rfv['cm']
         else:
-            cms = rfv['drf_model']['cms']
+            cms = rf_model['cms']
             print 'number of cms:', len(cms)
             print "FIX! need to add reporting of h2o's _perr per class error"
             print "cms[-1]['_arr']:", cms[(-1)]['_arr']
@@ -21,7 +27,6 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
             cm = cms[(-1)]['_arr']
         scoresList = cm
         if (not checkScoringOnly):
-            rf_model = rfv['drf_model']
             used_trees = rf_model['N']
             errs = rf_model['errs']
             print 'errs[0]:', errs[0]
@@ -119,6 +124,6 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         if ((number_built <= 0) or (number_built > 20000)):
             raise Exception('number_built in RFView seems wrong. number_built:', number_built)
         h2o.verboseprint('RFView response: number_built:', number_built, 'leaves:', leaves, 'depth:', depth)
-    dataInspect = node.inspect(data_key)
+    dataInspect = h2o_cmd.runInspect(key=data_key)
     h2o.check_sandbox_for_errors()
     return (round(classification_error, 2), classErrorPctList, totalScores)

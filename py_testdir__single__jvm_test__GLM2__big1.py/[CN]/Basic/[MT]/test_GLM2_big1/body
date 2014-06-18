@@ -1,0 +1,16 @@
+def test_GLM2_big1(self):
+    h2o.beta_features = True
+    csvPathname = 'hhp_107_01.data.gz'
+    print ('\n' + csvPathname)
+    y = '106'
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, timeoutSecs=15, schema='put')
+    for trial in xrange(3):
+        sys.stdout.write('.')
+        sys.stdout.flush()
+        print 'response:', y
+        start = time.time()
+        kwargs = {'response': y, 'n_folds': 6, 'alpha': 0.0, }
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=300, **kwargs)
+        h2o_glm.simpleCheckGLM(self, glm, 'C58', **kwargs)
+        print 'glm end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print '\nTrial #', trial
