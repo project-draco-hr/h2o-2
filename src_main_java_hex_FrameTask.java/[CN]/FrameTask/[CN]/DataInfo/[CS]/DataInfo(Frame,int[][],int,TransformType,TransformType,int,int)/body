@@ -11,7 +11,7 @@
   _responses=responses;
   _cats=catLevels.length;
   _nums=fr.numCols() - _cats - responses;
-  if ((_standardize=standardize) && _nums > 0) {
+  if ((_predictor_transform=predictor_transform) == TransformType.STANDARDIZE && _nums > 0) {
     _normMul=MemoryManager.malloc8d(_nums);
     _normSub=MemoryManager.malloc8d(_nums);
     for (int i=0; i < _nums; ++i) {
@@ -20,16 +20,34 @@
       _normSub[i]=v.mean();
     }
   }
+ else   if ((_predictor_transform=predictor_transform) == TransformType.NORMALIZE && _nums > 0) {
+    _normMul=MemoryManager.malloc8d(_nums);
+    _normSub=MemoryManager.malloc8d(_nums);
+    for (int i=0; i < _nums; ++i) {
+      Vec v=fr.vec(catLevels.length + i);
+      _normMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
+      _normSub[i]=v.mean();
+    }
+  }
  else {
     _normMul=null;
     _normSub=null;
   }
-  if ((_standardize_response=standardizeResponse) && responses > 0) {
+  if ((_response_transform=response_transform) == TransformType.STANDARDIZE && responses > 0) {
     _normRespMul=MemoryManager.malloc8d(responses);
     _normRespSub=MemoryManager.malloc8d(responses);
     for (int i=0; i < responses; ++i) {
       Vec v=fr.vec(fr.numCols() - responses + i);
       _normRespSub[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
+      _normRespSub[i]=v.mean();
+    }
+  }
+ else   if ((_response_transform=response_transform) == TransformType.NORMALIZE && responses > 0) {
+    _normRespMul=MemoryManager.malloc8d(responses);
+    _normRespSub=MemoryManager.malloc8d(responses);
+    for (int i=0; i < responses; ++i) {
+      Vec v=fr.vec(fr.numCols() - responses + i);
+      _normRespSub[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
       _normRespSub[i]=v.mean();
     }
   }
