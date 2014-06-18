@@ -61,5 +61,8 @@
   if (glm_model.beta() != null)   coefs2html(sm,sb);
   GLMValidation val=sm.validation;
   if (val != null)   val2HTML(sm,val,sb);
+  if (glm_model.varimp() != null) {
+    glm_model.varimp().toHTML(glm_model,sb);
+  }
   return true;
 }
