@@ -13,6 +13,6 @@
     newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
   }
  else   newBetaDeNorm=null;
-  _model.updateSubmodel(lambda[_lambdaIdx],newBetaDeNorm == null ? fullBeta : newBetaDeNorm,newBetaDeNorm == null ? null : fullBeta,(_iter + 1),_dinfo.fullN() >= sparseCoefThreshold);
+  _model.updateSubmodel(_currentLambda,newBetaDeNorm == null ? fullBeta : newBetaDeNorm,newBetaDeNorm == null ? null : fullBeta,(_iter + 1),_dinfo.fullN() >= sparseCoefThreshold);
   return fullBeta;
 }
