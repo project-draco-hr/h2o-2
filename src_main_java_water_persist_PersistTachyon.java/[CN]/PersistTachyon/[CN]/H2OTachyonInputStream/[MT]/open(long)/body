@@ -1,0 +1,6 @@
+{
+  TachyonFS tfs=(TachyonFS)(Persist.I[Value.TACHYON].createClient(clientURI));
+  InputStream is=tfs.getFile(fpath).getInStream(ReadType.NO_CACHE);
+  is.skip(offset);
+  return is;
+}
