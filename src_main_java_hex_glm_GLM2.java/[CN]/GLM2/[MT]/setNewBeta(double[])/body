@@ -1,7 +1,7 @@
 {
   final double[] fullBeta=(_activeCols == null) ? newBeta : expandVec(newBeta,_activeCols);
   final double[] newBetaDeNorm;
-  if (_dinfo._standardize) {
+  if (_dinfo._predictor_transform == DataInfo.TransformType.STANDARDIZE) {
     newBetaDeNorm=fullBeta.clone();
     double norm=0.0;
     final int numoff=_dinfo.numStart();

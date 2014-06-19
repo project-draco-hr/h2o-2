@@ -16,7 +16,7 @@ break;
 default :
 }
 Frame fr=DataInfo.prepareFrame(source,response,ignored_cols,family == Family.binomial,true,true);
-_dinfo=new DataInfo(fr,1,use_all_factor_levels || lambda_search,standardize,false);
+_dinfo=new DataInfo(fr,1,use_all_factor_levels || lambda_search,standardize ? DataInfo.TransformType.STANDARDIZE : DataInfo.TransformType.NONE,DataInfo.TransformType.NONE);
 _activeData=_dinfo;
 if (higher_accuracy) setHighAccuracy();
 }
