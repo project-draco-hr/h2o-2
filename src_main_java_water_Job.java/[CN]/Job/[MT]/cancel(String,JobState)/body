@@ -1,5 +1,11 @@
 {
-  if (state == JobState.CANCELLED)   Log.info("Job " + self() + "("+ description+ ") was cancelled.");
+  if (resultingState == JobState.CANCELLED) {
+    Log.info("Job " + self() + "("+ description+ ") was cancelled.");
+  }
+ else {
+    Log.err("Job " + self() + "("+ description+ ") failed.");
+    Log.err(msg);
+  }
   exception=msg;
   state=resultingState;
   replaceByJobHandle();

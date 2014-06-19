@@ -1,7 +1,7 @@
 {
   final double[] fullBeta=(_activeCols == null) ? newBeta : expandVec(newBeta,_activeCols);
   final double[] newBetaDeNorm;
-  if (_dinfo._standardize) {
+  if (_dinfo._predictor_transform == DataInfo.TransformType.STANDARDIZE) {
     newBetaDeNorm=fullBeta.clone();
     double norm=0.0;
     final int numoff=_dinfo.numStart();
@@ -13,7 +13,6 @@
     newBetaDeNorm[newBetaDeNorm.length - 1]-=norm;
   }
  else   newBetaDeNorm=null;
-  _model.setLambdaSubmodel(_lambdaIdx,newBetaDeNorm == null ? fullBeta : newBetaDeNorm,newBetaDeNorm == null ? null : fullBeta,(_iter + 1),_dinfo.fullN() >= sparseCoefThreshold);
-  _model.clone().update(self());
+  _model.updateSubmodel(_currentLambda,newBetaDeNorm == null ? fullBeta : newBetaDeNorm,newBetaDeNorm == null ? null : fullBeta,(_iter + 1),_dinfo.fullN() >= sparseCoefThreshold);
   return fullBeta;
 }
