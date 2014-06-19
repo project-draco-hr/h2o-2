@@ -33,7 +33,6 @@
     sb.append("<div class=\"alert\">Scoring results reported for ").append(this.parameters.n_folds).append("-fold cross-validated training data ").append(Inspect2.link(_dataKey.toString(),_dataKey)).append("</div>");
   }
  else {
-    DocGen.HTML.section(sb,"Confusion Matrix:");
     if (testKey != null)     sb.append("<div class=\"alert\">Reported on ").append(Inspect2.link(testKey.toString(),testKey)).append("</div>");
  else     sb.append("<div class=\"alert\">Reported on ").append(oobee ? "OOB data" : "training").append(" data</div>");
   }
