@@ -6,6 +6,7 @@
     final int rows=_a.size();
     for (int row=0; row < rows; row++) {
       float g=_e.get(row);
+      g=autoEncoderError(g,row);
       bprop(row,g,r,m);
     }
   }
