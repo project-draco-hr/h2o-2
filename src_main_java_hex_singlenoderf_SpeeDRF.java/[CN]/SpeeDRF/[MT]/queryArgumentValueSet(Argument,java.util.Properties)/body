@@ -31,14 +31,6 @@
       arg.disable("Random Sampling for regression trees.");
     }
   }
-  if (arg._name.equals("strata_samples")) {
-    if (sampling_strategy != Sampling.Strategy.STRATIFIED_LOCAL) {
-      arg.disable("No Strata for Random sampling.");
-    }
-    if (regression) {
-      arg.disable("No strata for regression.");
-    }
-  }
   if (arg._name.equals("importance")) {
     if (regression) {
       arg.disable("Variable Importance not supported in SpeeDRF regression.");
