@@ -1,16 +1,21 @@
 {
-  if (!get_params().autoencoder)   return super.scoreImpl(adaptFrm);
+  if (!get_params().autoencoder) {
+    return super.scoreImpl(adaptFrm);
+  }
  else {
-    final int len=_names.length - 1;
+    final int len=model_info().data_info().fullN();
     String prefix="reconstr_";
-    for (int c=0; c < len; c++)     adaptFrm.add(prefix + adaptFrm.names()[c],adaptFrm.anyVec().makeZero());
+    String[] coefnames=model_info().data_info().coefNames();
+    assert(len == coefnames.length);
+    for (int c=0; c < len; c++)     adaptFrm.add(prefix + coefnames[c],adaptFrm.anyVec().makeZero());
     new MRTask2(){
       @Override public void map(      Chunk chks[]){
-        double tmp[]=new double[len];
+        double tmp[]=new double[_names.length - 1];
         float preds[]=new float[len];
+        final Neurons[] neurons=DeepLearningTask.makeNeuronsForTesting(model_info);
         for (int row=0; row < chks[0]._len; row++) {
-          float p[]=score0(chks,row,tmp,preds);
-          for (int c=0; c < preds.length; c++)           chks[len + c].set0(row,p[c]);
+          float p[]=score_autoencoder(chks,row,tmp,preds,neurons);
+          for (int c=0; c < preds.length; c++)           chks[_names.length - 1 + c].set0(row,p[c]);
         }
       }
     }
