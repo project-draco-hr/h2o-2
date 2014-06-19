@@ -2,6 +2,7 @@
   init();
   link=family.defaultLink;
   tweedie_link_power=1 - tweedie_variance_power;
+  if (tweedie_link_power == 0)   link=Link.log;
   _glm=new GLMParams(family,tweedie_variance_power,link,tweedie_link_power);
   if (alpha.length > 1) {
     if (destination_key == null)     destination_key=Key.make("GLMGridResults_" + Key.make());
