@@ -1,4 +1,5 @@
 def test_dkv(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     csvFilenameAll = [('syn_10x8.csv', 'cA', 5)]
     csvFilenameList = csvFilenameAll
@@ -9,7 +10,6 @@ def test_dkv(self):
         print 'Creating random 10x8 csv'
         write_syn_dataset(csvPathname, 10, SEEDPERFILE)
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=2000)
-        print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
