@@ -1,29 +1,22 @@
 {
-  Frame fr=frame;
-  boolean adapt=true;
-  int ridx=fr.find(responseName());
-  if (ridx != -1) {
-    fr=new Frame(fr);
-    fr.remove(ridx);
-  }
-  Frame[] adaptFrms=adapt ? adapt(fr,false) : null;
-  Frame adaptFrm=adapt ? adaptFrms[0] : fr;
-  Frame onlyAdaptFrm=adapt ? adaptFrms[1] : null;
-  final int len=_names.length - 1;
+  final int len=_names.length;
+  Frame[] adaptFrms=adapt(frame,false,false);
+  Frame adaptFrm=adaptFrms[0];
+  Frame onlyAdaptFrm=adaptFrms[1];
   adaptFrm.add("L2",adaptFrm.anyVec().makeZero());
   new MRTask2(){
     @Override public void map(    Chunk chks[]){
       double tmp[]=new double[len];
       final Neurons[] neurons=DeepLearningTask.makeNeuronsForTesting(model_info);
       for (int row=0; row < chks[0]._len; row++) {
-        for (int i=0; i < _names.length - 1; i++)         tmp[i]=chks[i].at0(row);
+        for (int i=0; i < _names.length; i++)         tmp[i]=chks[i].at0(row);
         chks[len].set0(row,score_autoencoder(tmp,null,neurons));
       }
     }
   }
 .doAll(adaptFrm);
-  int x=_names.length - 1, y=adaptFrm.numCols();
+  int x=_names.length, y=adaptFrm.numCols();
   final Frame l2=adaptFrm.extractFrame(x,y);
-  if (adapt)   onlyAdaptFrm.delete();
+  onlyAdaptFrm.delete();
   return l2;
 }
