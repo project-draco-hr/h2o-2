@@ -1,0 +1,11 @@
+{
+  if (dropout) {
+    seed+=params.seed + 0xDA7A6000;
+    _dropout.fillBytes(seed);
+    super.fprop(seed,true,computeSparsity);
+  }
+ else {
+    super.fprop(seed,false,computeSparsity);
+    Utils.mult(_a.raw(),(float)params.hidden_dropout_ratios[_index]);
+  }
+}
