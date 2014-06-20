@@ -46,6 +46,11 @@
   }
   if (!classification && loss == Loss.CrossEntropy)   throw new IllegalArgumentException("Cannot use CrossEntropy loss function for regression.");
   if (autoencoder && loss != Loss.MeanSquare)   throw new IllegalArgumentException("Must use MeanSquare loss function for auto-encoder.");
+  if (autoencoder && classification) {
+    classification=false;
+    Log.info("Using regression mode for auto-encoder.");
+  }
+  if (autoencoder && validation != null)   throw new UnsupportedOperationException("Cannot specify a validation dataset for auto-encoder.");
   if (dest() == null) {
     destination_key=Key.make();
   }
