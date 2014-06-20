@@ -49,7 +49,7 @@
       _normMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
     }
   }
-  if (response_transform != TransformType.NONE) {
+  if (response_transform != TransformType.NONE && _responses > 0) {
     _normRespSub=MemoryManager.malloc8d(_responses);
     _normRespMul=MemoryManager.malloc8d(_responses);
     Arrays.fill(_normRespMul,1);
