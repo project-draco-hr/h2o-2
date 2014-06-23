@@ -1,4 +1,4 @@
-def test_GLM2_params_rand2(self):
+def test_GLM2_lambda_search(self):
     h2o.beta_features = True
     csvPathname = 'covtype/covtype.20k.data'
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key='covtype.20k')
@@ -7,8 +7,9 @@ def test_GLM2_params_rand2(self):
     h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     paramDict = define_params()
     for trial in range(20):
-        params = {'response': 54, 'alpha': 0.1, 'lambda': 0, 'lambda_search': 1, 'n_folds': 1, }
+        params = {}
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
+        params = {'response': 54, 'alpha': 0.1, 'max_iter': 8, 'lambda': None, 'lambda_search': 1, 'n_folds': 1, }
         kwargs = params.copy()
         if (('family' not in kwargs) or (kwargs['family'] == 'binomial')):
             bHack = {'destination_key': 'B.hex', }
