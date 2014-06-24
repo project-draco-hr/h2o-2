@@ -7,7 +7,7 @@ def test_GLM2_params_rand2(self):
     h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
     paramDict = define_params()
     for trial in range(20):
-        params = {'response': 54, 'alpha': 0.1, 'lambda': 0, 'lambda_search': 1, 'n_folds': 1, }
+        params = {'response': 54, 'alpha': 0.1, 'lambda': 0, 'n_folds': 1, }
         colX = h2o_glm.pickRandGlmParams(paramDict, params)
         kwargs = params.copy()
         if (('family' not in kwargs) or (kwargs['family'] == 'binomial')):
