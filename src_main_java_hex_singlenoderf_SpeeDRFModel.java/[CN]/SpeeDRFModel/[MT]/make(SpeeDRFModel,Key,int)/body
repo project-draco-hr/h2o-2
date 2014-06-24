@@ -6,7 +6,12 @@
   m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
   boolean shouldScore=shouldDoScore(m);
   if (shouldScore) {
-    scoreOnTrain(m,old);
+    if (m.test_frame != null) {
+      scoreOnTest(m,old);
+    }
+ else {
+      scoreOnTrain(m,old);
+    }
   }
  else {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
