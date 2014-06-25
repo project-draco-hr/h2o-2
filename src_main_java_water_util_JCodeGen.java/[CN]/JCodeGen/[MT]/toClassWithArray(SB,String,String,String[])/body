@@ -7,19 +7,18 @@
     int s=0;
     int remain=values.length;
     int its=0;
-    do {
-      sb.i().p("static {").ii(1).nl();
+    SB sb4fillers=new SB().ci(sb);
+    sb.i().p("static {").ii(1).nl();
+    while (remain > 0) {
+      String subClzName=className + "_" + its++;
       int len=Math.min(MAX_STRINGS_IN_CONST_POOL,remain);
-      toArrayFill(sb,"VALUES",values,s,len);
+      toClassWithArrayFill(sb4fillers,subClzName,values,s,len);
+      sb.i().p(subClzName).p(".fill(VALUES);").nl();
       s+=len;
       remain-=len;
-      sb.di(1).i().p("}").nl();
-      if (its > 0)       sb.di(1).i().p('}').nl();
-      if (remain > 0) {
-        sb.i().p("static final class ").p(className).p("_").p(its++).p(" {").ii(1).nl();
-      }
     }
- while (remain > 0);
+    sb.di(1).i().p("}").nl();
+    sb.p(sb4fillers);
   }
   return sb.di(1).p("}").nl();
 }
