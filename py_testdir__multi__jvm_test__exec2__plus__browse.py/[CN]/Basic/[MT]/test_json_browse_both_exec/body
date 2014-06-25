@@ -20,7 +20,11 @@ def test_json_browse_both_exec(self):
             randNode = random.randint(0, (lenNodes - 1))
             print '\nexecExpr:', execExpr, 'on node', randNode
             start = time.time()
-            resultExec = h2o_cmd.runExec(node=h2o.nodes[randNode], execExpr=execExpr, timeoutSecs=15)
+            kwargs = {'str': execExpr, }
+            if RAND_EXEC_NODE:
+                resultExec = h2o_cmd.runExec(node=h2o.nodes[randNode], timeoutSecs=15, **kwargs)
+            else:
+                resultExec = h2o_cmd.runExec(timeoutSecs=15, **kwargs)
             h2o.verboseprint(h2o.dump_json(resultExec))
             if (trial > 1):
                 inspectMe = random.choice(inspectList)
@@ -30,7 +34,7 @@ def test_json_browse_both_exec(self):
                 h2o.verboseprint(h2o.dump_json(resultInspect))
                 resultInspect = h2o.nodes[2].inspect(inspectMe)
                 h2o.verboseprint(h2o.dump_json(resultInspect))
-            h2b.browseJsonHistoryAsUrlLastMatch('Exec')
+            h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
             h2o.check_sandbox_for_errors()
             print 'exec end on ', 'covtype.data', 'took', (time.time() - start), 'seconds'
             print 'Trial #', trial, 'completed\n'
