@@ -1,16 +1,16 @@
 {
   sb.nl();
-  sb.i(1).p("// Column domains. The last array contains domain of response column.").nl();
-  sb.i(1).p("public static final Map<String,Integer>[] DOMAINS = new Map[] {").nl();
+  sb.i().p("// Column domains. The last array contains domain of response column.").nl();
+  sb.i().p("public static final Map<String,Integer>[] DOMAINS = new Map[] {").nl();
   for (int i=0; i < _domains.length; i++) {
     String[] dom=_domains[i];
     String colInfoClazz="ColInfo_" + i;
-    sb.i(2).p("/* ").p(_names[i]).p(" */ ");
+    sb.i(1).p("/* ").p(_names[i]).p(" */ ");
     sb.p(colInfoClazz).p(".VALUES");
     if (i != _domains.length - 1)     sb.p(',');
     sb.nl();
     fileContextSB.i().p("// The class representing column ").p(_names[i]).nl();
     JCodeGen.toClassWithMap(fileContextSB,null,colInfoClazz,dom);
   }
-  return sb.i(1).p("};").nl();
+  return sb.i().p("};").nl();
 }
