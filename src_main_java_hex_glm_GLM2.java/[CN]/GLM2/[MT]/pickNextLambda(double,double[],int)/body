@@ -5,5 +5,6 @@
     for (    int i : _activeCols)     g[i]*=-1;
   }
   Arrays.sort(g);
-  return 0.5 * (-g[maxNewVars] / alpha[0] + oldLambda);
+  double res=0.5 * (-g[maxNewVars] / alpha[0] + oldLambda);
+  return res < oldLambda ? res : 0.99 * oldLambda;
 }

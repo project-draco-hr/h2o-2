@@ -1,3 +1,3 @@
 {
-  return pickNextLambda(oldLambda,grad,Math.max((int)(_dinfo.fullN() * 0.05),1));
+  return pickNextLambda(oldLambda,grad,Math.max((int)(Math.min(_dinfo.fullN(),_nobs) * 0.05),1));
 }
