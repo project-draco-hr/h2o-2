@@ -1,16 +1,16 @@
 {
   sb.i().p(modifiers != null ? modifiers + " " : "").p("class ").p(className).p(" {").nl().ii(1);
-  sb.i().p("public static final Map<String, Integer> VALUES = ");
+  sb.i().p("public static final String[] VALUES = ");
   if (values == null)   sb.p("null;").nl();
  else {
-    sb.p("new java.util.HashMap<String, Integer>(").p((int)(values.length * 1.25f + 1)).p(");").nl();
+    sb.p("new String[").p(values.length).p("];").nl();
     int s=0;
     int remain=values.length;
     int its=0;
     do {
       sb.i().p("static {").ii(1).nl();
       int len=Math.min(MAX_STRINGS_IN_CONST_POOL,remain);
-      toHashMap(sb,"VALUES",values,s,len);
+      toArrayFill(sb,"VALUES",values,s,len);
       s+=len;
       remain-=len;
       sb.di(1).i().p("}").nl();
