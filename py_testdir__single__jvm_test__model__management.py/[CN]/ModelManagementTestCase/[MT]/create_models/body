@@ -47,7 +47,7 @@ def create_models(self, frame_keys):
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_A, None, **glm_AirlinesTrain_A_params)
     print '#########################################################'
     print 'Generating Prostate GLM2 binary classification model. . .'
-    glm_Prostate_1_params = {'destination_key': 'glm_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 1, }
+    glm_Prostate_1_params = {'destination_key': 'glm_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 0, }
     glm_Prostate_1 = node.GLM(prostate_hex, **glm_Prostate_1_params)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_Prostate_1, None, **glm_Prostate_1_params)
