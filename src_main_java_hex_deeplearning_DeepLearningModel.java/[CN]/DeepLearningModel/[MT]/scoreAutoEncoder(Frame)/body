@@ -1,0 +1,22 @@
+{
+  final int len=_names.length;
+  Frame[] adaptFrms=adapt(frame,false,false);
+  Frame adaptFrm=adaptFrms[0];
+  Frame onlyAdaptFrm=adaptFrms[1];
+  adaptFrm.add("L2",adaptFrm.anyVec().makeZero());
+  new MRTask2(){
+    @Override public void map(    Chunk chks[]){
+      double tmp[]=new double[len];
+      final Neurons[] neurons=DeepLearningTask.makeNeuronsForTesting(model_info);
+      for (int row=0; row < chks[0]._len; row++) {
+        for (int i=0; i < _names.length; i++)         tmp[i]=chks[i].at0(row);
+        chks[len].set0(row,score_autoencoder(tmp,null,neurons));
+      }
+    }
+  }
+.doAll(adaptFrm);
+  int x=_names.length, y=adaptFrm.numCols();
+  final Frame l2=adaptFrm.extractFrame(x,y);
+  onlyAdaptFrm.delete();
+  return l2;
+}

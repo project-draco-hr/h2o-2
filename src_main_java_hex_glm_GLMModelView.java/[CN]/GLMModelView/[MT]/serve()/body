@@ -4,7 +4,7 @@
   Value v=DKV.get(_modelKey);
   if (v != null) {
     glm_model=v.get();
-    if (Double.isNaN(lambda))     lambda=glm_model.lambdas[glm_model.best_lambda_idx];
+    if (Double.isNaN(lambda))     lambda=glm_model.submodels[glm_model.best_lambda_idx].lambda_value;
   }
   if (jjob == null || jjob.end_time > 0 || jjob.isCancelledOrCrashed())   return Response.done(this);
   return Response.poll(this,(int)(100 * jjob.progress()),100,"_modelKey",_modelKey.toString());

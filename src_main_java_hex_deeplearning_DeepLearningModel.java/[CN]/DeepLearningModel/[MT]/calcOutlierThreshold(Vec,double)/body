@@ -1,0 +1,10 @@
+{
+  Frame l2_frame=new Frame(Key.make(),new String[]{"L2"},new Vec[]{l2});
+  QuantilesPage qp=new QuantilesPage();
+  qp.column=l2_frame.vec(0);
+  qp.source_key=l2_frame;
+  qp.quantile=quantile;
+  qp.invoke();
+  DKV.remove(l2_frame._key);
+  return qp.result;
+}

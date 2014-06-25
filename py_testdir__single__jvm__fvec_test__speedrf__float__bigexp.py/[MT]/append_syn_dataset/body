@@ -1,0 +1,5 @@
+def append_syn_dataset(csvPathname, colCount, num):
+    with open(csvPathname, 'a') as dsf:
+        for i in range(num):
+            rowData = rand_rowData(colCount)
+            dsf.write((rowData + '\n'))

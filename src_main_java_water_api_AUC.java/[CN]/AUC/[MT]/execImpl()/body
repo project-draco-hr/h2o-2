@@ -29,7 +29,7 @@
       if (_cms.length != thresholds.length)       throw new IllegalArgumentException("Number of thresholds differs from number of confusion matrices.");
     }
  else {
-      AUCTask at=new AUCTask(thresholds).doAll(va,vp);
+      AUCTask at=new AUCTask(thresholds,va.mean()).doAll(va,vp);
       _cms=at.getCMs();
     }
     computeAUC();

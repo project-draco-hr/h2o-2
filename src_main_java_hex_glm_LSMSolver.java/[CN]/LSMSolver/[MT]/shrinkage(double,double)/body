@@ -1,3 +1,6 @@
 {
-  return Math.max(0,x - kappa) - Math.max(0,-x - kappa);
+  double sign=x < 0 ? -1 : 1;
+  double sx=x * sign;
+  if (sx <= kappa)   return 0;
+  return sign * (sx - kappa);
 }

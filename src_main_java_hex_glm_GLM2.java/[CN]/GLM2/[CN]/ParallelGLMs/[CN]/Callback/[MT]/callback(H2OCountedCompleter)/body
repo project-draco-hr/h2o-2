@@ -1,5 +1,5 @@
 {
   int i;
-  if ((i=_remCnt.getAndDecrement()) > 0)   forkDTask(_glms.length - i);
+  if ((i=_remCnt.getAndDecrement()) > 0)   forkDTask(_glms.length - i,n);
  else   if (_doneCnt.getAndDecrement() == 0)   ParallelGLMs.this.tryComplete();
 }

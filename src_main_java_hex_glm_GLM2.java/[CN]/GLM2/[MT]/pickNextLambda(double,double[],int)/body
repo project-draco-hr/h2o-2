@@ -1,0 +1,10 @@
+{
+  double[] g=grad.clone();
+  for (int i=0; i < g.length; ++i)   g[i]=g[i] < 0 ? g[i] : -g[i];
+  if (_activeCols != null) {
+    for (    int i : _activeCols)     g[i]*=-1;
+  }
+  Arrays.sort(g);
+  double res=0.5 * (-g[maxNewVars] / alpha[0] + oldLambda);
+  return res < oldLambda ? res : 0.99 * oldLambda;
+}

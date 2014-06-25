@@ -1,0 +1,35 @@
+def test_create_frame_rand1(self):
+    h2o.beta_features = True
+    params = {'rows': 1, 'cols': 1, }
+    for trial in range(10):
+        h2o_util.pickRandParams(paramDict, params)
+        i = params.get('integer_fraction', None)
+        c = params.get('categorical_fraction', None)
+        r = params.get('randomize', None)
+        v = params.get('value', None)
+        if r:
+            if (not i):
+                i = 0
+            if (not c):
+                c = 0
+            if ((i and c) and ((i + c) >= 1.0)):
+                params['integer_fraction'] = i
+                params['categorical_fraction'] = (1.0 - i)
+            params['value'] = None
+        else:
+            params['randomize'] = 0
+            params['integer_fraction'] = 0
+            params['categorical_fraction'] = 0
+        kwargs = params.copy()
+        print kwargs
+        timeoutSecs = 300
+        parseResult = h2i.import_parse(bucket='smalldata', path='poker/poker1000', hex_key='temp1000.hex', schema='put', timeoutSecs=timeoutSecs)
+        cfResult = h2o.nodes[0].create_frame(key='temp1000.hex', timeoutSecs=timeoutSecs, **kwargs)
+        if DO_DOWNLOAD:
+            csvPathname = ((SYNDATASETS_DIR + '/') + 'temp1000.csv')
+            h2o.nodes[0].csv_download(src_key='temp1000.hex', csvPathname=csvPathname, timeoutSecs=60)
+        if DO_INSPECT:
+            h2o_cmd.runInspect(key='temp1000.hex')
+        h2o_cmd.runSummary(key='temp1000.hex')
+        print h2o.dump_json(cfResult)
+        print 'Trial #', trial, 'completed'

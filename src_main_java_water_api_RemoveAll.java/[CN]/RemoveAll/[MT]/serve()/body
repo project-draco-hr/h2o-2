@@ -1,8 +1,15 @@
 {
   try {
     Log.info("Removing all keys for the cluster");
+    Log.info("Cancelling all jobs...");
+    for (    Job job : Job.all()) {
+      job.cancel();
+      Job.waitUntilJobEnded(job.self());
+    }
+    Log.info("Finished cancelling all jobs");
     RemoveAllKeysTask collector=new RemoveAllKeysTask();
     collector.invokeOnAllNodes();
+    Log.info("Finished removing keys");
   }
  catch (  Throwable e) {
     return Response.error(e);

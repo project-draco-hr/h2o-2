@@ -8,7 +8,7 @@
   String[] names=fr.names();
   Vec[] vecs=fr.vecs();
   if (vecs == null || vecs.length == 0)   throw new IllegalArgumentException("No columns selected. Check that selected columns have not been dropped due to too many NAs.");
-  DataInfo dinfo=new DataInfo(fr,0,false,normalize,false);
+  DataInfo dinfo=new DataInfo(fr,0,false,DataInfo.TransformType.STANDARDIZE,DataInfo.TransformType.NONE);
   String[] domain=new String[k];
   for (int i=0; i < domain.length; i++)   domain[i]="Cluster " + i;
   String[] namesResp=Utils.append(names,"response");
