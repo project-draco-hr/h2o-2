@@ -4,7 +4,7 @@ def test_NN2_params_rand2(self):
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, hex_key=hex_key, schema='put')
     paramDict = define_params()
     for trial in range(3):
-        params = {'response': 'C55', }
+        params = {'response': 'C55', 'epochs': '1', }
         h2o_nn.pickRandDeepLearningParams(paramDict, params)
         kwargs = params.copy()
         start = time.time()
