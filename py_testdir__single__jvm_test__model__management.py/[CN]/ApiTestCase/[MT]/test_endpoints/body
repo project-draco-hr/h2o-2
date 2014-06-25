@@ -35,7 +35,8 @@ def test_endpoints(self):
     print 'Testing /2/Models list. . .'
     models = node.models()
     self.assertKeysExist(models, 'models', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
-    self.assertKeysExist(models, 'models/glm_AirlinesTrain_binary_1', ['id', 'key', 'creation_epoch_time_millis', 'model_category', 'state', 'input_column_names', 'response_column_name', 'critical_parameters', 'secondary_parameters', 'expert_parameters', 'compatible_frames'])
+    self.assertKeysExist(models, 'models/glm_AirlinesTrain_binary_1', ['id', 'key', 'creation_epoch_time_millis', 'model_category', 'state', 'input_column_names', 'response_column_name', 'critical_parameters', 'secondary_parameters', 'expert_parameters', 'compatible_frames', 'warnings'])
+    self.assertEqual(0, len(models['models']['glm_AirlinesTrain_binary_1']['warnings']), msg='Expect no warnings for glm_AirlinesTrain_binary_1.')
     self.assertEqual(models['models']['glm_AirlinesTrain_binary_1']['key'], 'glm_AirlinesTrain_binary_1', ('key should equal our key: ' + 'glm_AirlinesTrain_binary_1'))
     self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
     self.assertKeysDontExist(models, '', ['frames'])
@@ -43,6 +44,8 @@ def test_endpoints(self):
     print 'Testing /2/Models?key=rf_Prostate_binary_1. . .'
     models = node.models(key='rf_Prostate_binary_1')
     self.assertKeysExist(models, 'models', ['rf_Prostate_binary_1'])
+    self.assertKeysExist(models, 'models/rf_Prostate_binary_1', ['warnings'])
+    self.assertEqual(0, len(models['models']['rf_Prostate_binary_1']['warnings']), msg='Expect no warnings for rf_Prostate_binary_1.')
     self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'glm_Prostate_regression_1'])
     self.assertKeysDontExist(models, '', ['frames'])
     print '##############################################'
@@ -53,3 +56,10 @@ def test_endpoints(self):
     self.assertKeysExist(models, '', ['frames'])
     self.assertKeysExist(models, 'frames', ['prostate.hex'])
     self.assertKeysDontExist(models, 'frames', ['airlines_train.hex', 'airlines_test.hex'])
+    print '##############################################'
+    print 'Testing /2/Models?key=glm_Prostate_binary_1 variable importance warning. . .'
+    models = node.models(key='glm_Prostate_binary_1')
+    self.assertKeysExist(models, 'models', ['glm_Prostate_binary_1'])
+    self.assertKeysExist(models, 'models/glm_Prostate_binary_1', ['warnings'])
+    self.assertEqual(1, len(models['models']['glm_Prostate_binary_1']['warnings']), msg='Expect one warning for glm_Prostate_binary_1.')
+    self.assertTrue(('use_all_factor_levels' in models['models']['glm_Prostate_binary_1']['warnings'][0]), "Expect variable importances warning since we aren't using use_all_factor_levels.")
