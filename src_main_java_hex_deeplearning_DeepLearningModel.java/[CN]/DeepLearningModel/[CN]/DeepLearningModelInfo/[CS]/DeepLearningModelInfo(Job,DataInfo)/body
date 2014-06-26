@@ -20,6 +20,7 @@
   for (int i=0; i <= layers; ++i)   biases[i]=new Neurons.DenseVector(units[i + 1]);
   if (get_params().autoencoder) {
     avg_activations=new Neurons.DenseVector[layers];
+    mean_a=new float[layers];
     for (int i=0; i < layers; ++i)     avg_activations[i]=new Neurons.DenseVector(units[i + 1]);
   }
   fillHelpers();

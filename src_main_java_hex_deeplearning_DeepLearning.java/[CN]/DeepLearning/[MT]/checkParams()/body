@@ -44,6 +44,11 @@
       loss=Loss.CrossEntropy;
     }
   }
+  if (autoencoder && sparsity_beta > 0) {
+    if (activation == Activation.Tanh || activation == Activation.TanhWithDropout)     average_activation=-0.9;
+ else     if (activation == Activation.Rectifier || activation == Activation.RectifierWithDropout)     average_activation=0.1;
+ else     average_activation=0;
+  }
   if (!classification && loss == Loss.CrossEntropy)   throw new IllegalArgumentException("Cannot use CrossEntropy loss function for regression.");
   if (autoencoder && loss != Loss.MeanSquare)   throw new IllegalArgumentException("Must use MeanSquare loss function for auto-encoder.");
   if (autoencoder && classification) {

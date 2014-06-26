@@ -7,25 +7,26 @@
   DeepLearning p=new DeepLearning();
   p.source=train;
   p.autoencoder=true;
+  p.sparsity_beta=0;
   p.response=train.lastVec();
   p.classification=false;
   p.seed=seed;
-  p.hidden=new int[]{20};
+  p.hidden=new int[]{50};
   p.adaptive_rate=true;
-  p.l1=1e-4;
   p.activation=DeepLearning.Activation.Tanh;
   p.loss=DeepLearning.Loss.MeanSquare;
-  p.epochs=100;
+  p.epochs=500;
   p.force_load_balance=true;
   p.invoke();
   DeepLearningModel mymodel=UKV.get(p.dest());
   StringBuilder sb=new StringBuilder();
-  sb.append("Verifying results.");
+  sb.append("Verifying results.\n");
   double quantile=0.95;
   final Frame l2_frame_train=mymodel.scoreAutoEncoder(train);
   final Vec l2_train=l2_frame_train.anyVec();
   sb.append("Mean reconstruction error: " + l2_train.mean() + "\n");
   Assert.assertEquals(mymodel.mse(),l2_train.mean(),1e-7);
+  Assert.assertTrue(l2_train.mean() < 1e-1);
   Frame reconstr=mymodel.score(train);
   double mean_l2=0;
   for (int r=0; r < reconstr.numRows(); ++r) {
@@ -68,8 +69,8 @@
   Assert.assertTrue(outliers.size() == 3);
   p.delete();
   mymodel.delete();
-  train.delete();
   l2_frame_train.delete();
-  test.delete();
   l2_frame_test.delete();
+  train.delete();
+  test.delete();
 }

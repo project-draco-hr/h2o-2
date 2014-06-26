@@ -14,6 +14,7 @@
     _minfo=minfo;
     _w=minfo.get_weights(_index);
     _b=minfo.get_biases(_index);
+    if (minfo.get_params().autoencoder && _index < params.hidden.length)     _avg_a=minfo.get_avg_activations(_index);
     if (minfo.has_momenta()) {
       _wm=minfo.get_weights_momenta(_index);
       _bm=minfo.get_biases_momenta(_index);
