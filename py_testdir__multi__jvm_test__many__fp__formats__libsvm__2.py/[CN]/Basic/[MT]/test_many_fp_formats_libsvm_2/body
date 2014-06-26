@@ -1,4 +1,5 @@
 def test_many_fp_formats_libsvm_2(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 10000, 'cA', 300, 'sparse50'), (100, 10000, 'cB', 300, 'sparse')]
     for (rowCount, colCount, hex_key, timeoutSecs, distribution) in tryList:
@@ -15,21 +16,21 @@ def test_many_fp_formats_libsvm_2(self):
             print csvFilename, 'parse time:', parseResult['response']['time']
             print "Parse result['destination_key']:", parseResult['destination_key']
             inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)
-            num_cols = inspect['num_cols']
-            num_rows = inspect['num_rows']
+            numCols = inspect['numCols']
+            numRows = inspect['numRows']
             print ('\n' + csvFilename)
             goodX = h2o_glm.goodXFromColumnInfo(y=0, key=parseResult['destination_key'], timeoutSecs=300, noPrint=True)
             if DO_SUMMARY:
                 summaryResult = h2o_cmd.runSummary(key=selKey2, max_column_display=(colNumberMax + 1), timeoutSecs=timeoutSecs)
                 h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
-            self.assertEqual((colNumberMax + 1), num_cols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), num_cols)))
+            self.assertEqual((colNumberMax + 1), numCols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), numCols)))
             if DO_COMPARE_SUM:
                 h2e.exec_zero_list(zeroList)
                 colResultList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
                 print '\n*************'
                 print 'colResultList', colResultList
                 print '*************'
-            self.assertEqual(rowCount, num_rows, msg=('generated %s rows, parsed to %s rows' % (rowCount, num_rows)))
+            self.assertEqual(rowCount, numRows, msg=('generated %s rows, parsed to %s rows' % (rowCount, numRows)))
             for (k, v) in synColSumDict.iteritems():
                 if DO_COMPARE_SUM:
                     self.assertTrue(((k >= 0) and (k < len(colResultList))))

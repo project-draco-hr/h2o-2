@@ -1,0 +1,41 @@
+def test_exec2_plus_browse(self):
+    h2o.beta_features = True
+    lenNodes = len(h2o.nodes)
+    csvPathname = 'standard/covtype.data'
+    hex_key = 'c.hex'
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10)
+    print '\nParse key is:', parseResult['destination_key']
+    trial = 0
+    while (trial < 100):
+        for exprTemplate in exprList:
+            trial = (trial + 1)
+            n = trial
+            colX = random.randint(1, 54)
+            row = random.randint(1, 400000)
+            execExpr = exprTemplate
+            execExpr = re.sub('<col1>', str(colX), execExpr)
+            execExpr = re.sub('<col2>', str((colX + 1)), execExpr)
+            execExpr = re.sub('<n>', str(n), execExpr)
+            execExpr = re.sub('<row>', str(row), execExpr)
+            execExpr = re.sub('<keyX>', str(hex_key), execExpr)
+            randNode = random.randint(0, (lenNodes - 1))
+            print '\nexecExpr:', execExpr, 'on node', randNode
+            start = time.time()
+            kwargs = {'str': execExpr, }
+            if RAND_EXEC_NODE:
+                resultExec = h2o_cmd.runExec(node=h2o.nodes[randNode], timeoutSecs=15, **kwargs)
+            else:
+                resultExec = h2o_cmd.runExec(timeoutSecs=15, **kwargs)
+            h2o.verboseprint(h2o.dump_json(resultExec))
+            if (trial > 1):
+                inspectMe = random.choice(inspectList)
+                resultInspect = h2o.nodes[0].inspect(inspectMe)
+                h2o.verboseprint(h2o.dump_json(resultInspect))
+                resultInspect = h2o.nodes[1].inspect(inspectMe)
+                h2o.verboseprint(h2o.dump_json(resultInspect))
+                resultInspect = h2o.nodes[2].inspect(inspectMe)
+                h2o.verboseprint(h2o.dump_json(resultInspect))
+            h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
+            h2o.check_sandbox_for_errors()
+            print 'exec end on ', 'covtype.data', 'took', (time.time() - start), 'seconds'
+            print 'Trial #', trial, 'completed\n'
