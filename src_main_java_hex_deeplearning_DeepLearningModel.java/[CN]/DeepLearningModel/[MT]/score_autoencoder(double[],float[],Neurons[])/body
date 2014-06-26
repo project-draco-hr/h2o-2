@@ -8,7 +8,6 @@
   float[] in=neurons[0]._a.raw();
   float[] out=neurons[neurons.length - 1]._a.raw();
   assert(in.length == out.length);
-  model_info().data_info().softMaxCategoricals(out,out);
   double l2=0;
   for (int i=0; i < in.length; ++i)   l2+=Math.pow((out[i] - in[i]),2);
   l2/=in.length;
