@@ -1,0 +1,24 @@
+{
+  Frame f=TestUtil.parseFromH2OFolder("smalldata/logreg/syn_2659x1049.csv");
+  Frame fr1=new Frame(Key.make(),f.names(),f.vecs());
+  Frame fr2=new Frame(Key.make(),f.names(),f.vecs());
+  fr1.delete_and_lock(null);
+  fr2.delete_and_lock(null);
+  int i=0;
+  try {
+    fr1.delete();
+    fr2.delete();
+  }
+ catch (  Throwable t) {
+    Log.info("Correctly caught exception: " + t.getClass());
+    i++;
+  }
+ finally {
+    new UnlockKeys().serve();
+    fr1.delete();
+    fr2.delete();
+    f.delete();
+    Log.info("Able to delete after unlocking.");
+  }
+  Assert.assertTrue(i == 1);
+}

@@ -102,6 +102,10 @@
                               threshold=auc.threshold();
                               error=auc.err();
                               Log.info(sb);
+                              Assert.assertTrue(auc.AUC > 0.81);
+                              Assert.assertTrue(auc.AUC < 0.86);
+                              Assert.assertTrue(auc.threshold() > 0.16);
+                              Assert.assertTrue(auc.threshold() < 0.54);
                               Assert.assertEquals(new ConfusionMatrix(auc.cm()).err(),error,1e-15);
                               Assert.assertEquals(mymodel.calcError(valid,valid.lastVec(),pred,pred,"training",false,0,null,auc,null),error,1e-15);
                             }
