@@ -7,6 +7,8 @@
   for (int i=0; i < _jobs.length; ++i) {
     _jobs[i]=new GLM2("GLM grid(" + i + ")",self(),Key.make(dstKey.toString() + "_" + i),dinfo,glm,lambdas,alphas[i],nfolds,betaEpsilon,self());
     _jobs[i]._grid=true;
+    _jobs[i].nlambdas=nlambdas;
+    _jobs[i].lambda_min_ratio=lambda_min_ratio;
     _jobs[i].lambda_search=lambda_search;
     _jobs[i].higher_accuracy=high_accuracy;
   }

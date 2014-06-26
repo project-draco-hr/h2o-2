@@ -1,6 +1,7 @@
 {
   _model.maybeComputeVariableImportances();
   _model.stop_training();
+  _model.pickBestXval();
   if (_addedL2 > 0) {
     String warn="Added L2 penalty (rho = " + _addedL2 + ")  due to non-spd matrix. ";
     _model.addWarning(warn);
