@@ -11,7 +11,6 @@ def test_summary2_unifiles(self):
         csvPathname = csvFilename
         csvPathnameFull = h2i.find_folder_and_filename('smalldata', csvPathname, returnFullPath=True)
         parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, doSummary=False)
-        print csvFilename, 'parse time:', parseResult['response']['time']
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
