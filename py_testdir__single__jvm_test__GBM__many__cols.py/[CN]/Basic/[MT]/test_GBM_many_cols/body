@@ -1,4 +1,5 @@
 def test_GBM_many_cols(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     if localhost:
         tryList = [(10000, 100, 'cA', 300)]
@@ -12,7 +13,6 @@ def test_GBM_many_cols(self):
         hdrPathname = ((SYNDATASETS_DIR + '/') + hdrFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        h2o.beta_features = False
         start = time.time()
         xList = []
         eList = []
@@ -33,9 +33,9 @@ def test_GBM_many_cols(self):
         print l
         h2o.cloudPerfH2O.message(l)
         inspect = h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
-        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-        num_rows = inspect['num_rows']
-        num_cols = inspect['num_cols']
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
         ntrees = 5
         prefixList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
         for max_depth in [5, 10, 20]:
