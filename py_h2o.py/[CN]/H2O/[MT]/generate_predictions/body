@@ -1,10 +1,7 @@
 def generate_predictions(self, data_key, model_key, destination_key=None, timeoutSecs=300, print_params=True, **kwargs):
-    algo = ('2/Predict' if beta_features else 'GeneratePredictionsPage')
-    algoView = ('2/Inspect2' if beta_features else 'Inspect')
-    if beta_features:
-        params_dict = {'data': data_key, 'model': model_key, 'prediction': destination_key, }
-    else:
-        params_dict = {'data_key': data_key, 'model_key': model_key, 'destination_key': destination_key, }
+    algo = '2/Predict'
+    algoView = '2/Inspect2'
+    params_dict = {'data': data_key, 'model': model_key, 'prediction': destination_key, }
     browseAlso = kwargs.pop('browseAlso', False)
     check_params_update_kwargs(params_dict, kwargs, 'generate_predictions', print_params)
     if print_params:

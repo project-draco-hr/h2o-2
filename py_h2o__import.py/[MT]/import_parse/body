@@ -9,6 +9,7 @@ def import_parse(node=None, schema='local', bucket=None, path=None, src_key=None
     if (doSummary and (not noPoll)):
         h2o.check_sandbox_for_errors()
         inspect = node.inspect(parseResult['destination_key'], timeoutSecs=timeoutSecs)
+        print 'h2o.beta_features', h2o.beta_features
         if h2o.beta_features:
             numRows = inspect['numRows']
             numCols = inspect['numCols']
