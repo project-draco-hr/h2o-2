@@ -12,7 +12,11 @@
   }
  else {
     _random=Utils.getRNG(seed);
-    for (int i=0; i < _columnDistsRegression.length; ++i)     if (!data.isIgnored(i))     _columnDistsRegression[i]=new int[data.columnArity(i) + 1][data.columnArityOfClassCol()];
+    for (int i=0; i < _columnDistsRegression.length; ++i)     if (!data.isIgnored(i)) {
+      DataAdapter.Col c=data._dapt._c[i];
+      int colBins=c._isByte ? Utils.maxValue(c._rawB) : c._binned.length;
+      _columnDistsRegression[i]=new int[colBins + 1][data.columnArityOfClassCol()];
+    }
     _features=new int[featuresPerSplit];
     _remembered=null;
     _classWt=data.classWt();
