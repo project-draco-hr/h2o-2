@@ -51,6 +51,7 @@
     Log.info("Using regression mode for auto-encoder.");
   }
   if (autoencoder && validation != null)   throw new UnsupportedOperationException("Cannot specify a validation dataset for auto-encoder.");
+  if (autoencoder && activation == Activation.Maxout)   throw new UnsupportedOperationException("Maxout activation is not supported for auto-encoder.");
   if (dest() == null) {
     destination_key=Key.make();
   }
