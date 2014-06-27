@@ -1,7 +1,7 @@
 {
   DeepLearningModel dlm=UKV.get(dl_autoencoder_model);
-  if (dlm == null)   throw new InvalidArgumentException("Deep Learning Model not found.");
-  if (!dlm.get_params().autoencoder)   throw new InvalidArgumentException("Deep Learning Model must be build with autoencoder = true.");
+  if (dlm == null)   throw new IllegalArgumentException("Deep Learning Model not found.");
+  if (!dlm.get_params().autoencoder)   throw new IllegalArgumentException("Deep Learning Model must be build with autoencoder = true.");
   if (thresh == -1) {
     Log.info("Mean reconstruction error (MSE) of model on training data: " + dlm.mse());
     thresh=10 * dlm.mse();
