@@ -17,7 +17,3 @@ def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=
                 self.assertAlmostEqual(a, b, delta=absAllowedDelta, msg=('Trial %d Center value expected: %s actual: %s delta > %s' % (trial, a, b, absAllowedDelta)))
             absAllowedDelta = abs((allowedDelta[1] * expRows))
             self.assertAlmostEqual(expRows, actRows, delta=absAllowedDelta, msg=('Trial %d Rows expected: %s actual: %s delta > %s' % (trial, expRows, actRows, absAllowedDelta)))
-            if (not h2o.beta_features):
-                if (expError is not None):
-                    absAllowedDelta = abs((allowedDelta[2] * expError))
-                    self.assertAlmostEqual(expError, actError, delta=absAllowedDelta, msg=('Trial %d Error expected: %s actual: %s delta > %s' % (trial, expError, actError, absAllowedDelta)))
