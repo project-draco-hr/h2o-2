@@ -4,6 +4,10 @@
   m.t_keys[m.t_keys.length - 1]=tkey;
   m.local_forests[nodeIdx]=Arrays.copyOf(old.local_forests[nodeIdx],old.local_forests[nodeIdx].length + 1);
   m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
+  if (old.verbose_output.length < 2) {
+    m.verbose_output=Arrays.copyOf(old.verbose_output,old.verbose_output.length + 1);
+    m.verbose_output[m.verbose_output.length - 1]=tString;
+  }
   boolean shouldScore=shouldDoScore(m);
   if (shouldScore) {
     if (m.test_frame != null) {
