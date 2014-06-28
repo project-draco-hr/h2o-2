@@ -4,4 +4,6 @@
     _appendables=new AppendableVec[_setup._ncols];
     for (int i=0; i < _setup._ncols; ++i)     _appendables[i]=new AppendableVec(_vg.vecKey(_vecIdStart + i));
   }
+  _visited=new AtomicBoolean[_nchunks];
+  for (int i=0; i < _visited.length; ++i)   _visited[i]=new AtomicBoolean();
 }

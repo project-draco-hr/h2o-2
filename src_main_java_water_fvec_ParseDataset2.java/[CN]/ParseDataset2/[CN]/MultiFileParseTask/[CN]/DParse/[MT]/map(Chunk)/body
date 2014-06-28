@@ -18,4 +18,19 @@ throw H2O.unimpl();
 p.parallelParse(in.cidx(),din,dout);
 (_dout=dout).close(_fs);
 onProgress(in._len,_progress);
+final int cidx=in.cidx();
+if (_visited[cidx].getAndSet(true)) {
+Value v=DKV.get(in._vec.chunkKey(cidx));
+if (v.isPersisted()) {
+v.freePOJO();
+v.freeMem();
+}
+}
+if (cidx + 1 < _visited.length && _visited[cidx + 1].getAndSet(true)) {
+Value v=DKV.get(in._vec.chunkKey(cidx + 1));
+if (v.isPersisted()) {
+v.freePOJO();
+v.freeMem();
+}
+}
 }
