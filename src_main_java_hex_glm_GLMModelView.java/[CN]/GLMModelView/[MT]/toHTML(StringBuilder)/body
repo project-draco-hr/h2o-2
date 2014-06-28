@@ -5,7 +5,10 @@
   }
   glm_model.get_params().makeJsonBox(sb);
   DocGen.HTML.paragraph(sb,"Model Key: " + glm_model._key);
-  if (glm_model.submodels != null)   DocGen.HTML.paragraph(sb,water.api.Predict.link(glm_model._key,"Predict!"));
+  if (glm_model.submodels != null) {
+    DocGen.HTML.paragraph(sb,water.api.Predict.link(glm_model._key,"Predict!"));
+    DocGen.HTML.paragraph(sb,UIUtils.qlink(SaveModel.class,"model",glm_model._key,"Save model"));
+  }
   String succ=(glm_model.warnings == null || glm_model.warnings.length == 0) ? "alert-success" : "alert-warning";
   sb.append("<div class='alert " + succ + "'>");
   pprintTime(sb.append(glm_model.iteration() + " iterations computed in "),glm_model.run_time);
@@ -15,9 +18,9 @@
     sb.append("</ul>");
   }
   sb.append("</div>");
-  if (!Double.isNaN(lambda) && lambda != glm_model.lambdas[glm_model.best_lambda_idx]) {
+  if (!Double.isNaN(lambda) && lambda != glm_model.submodels[glm_model.best_lambda_idx].lambda_value) {
     sb.append("<div class='alert alert-warning'>\n");
-    sb.append(GLMModelUpdate.link("Set lambda to current value!",_modelKey,lambda) + "\n");
+    sb.append(GLMModelUpdate.link("Set lambda_value to current value!",_modelKey,lambda) + "\n");
     sb.append("</div>");
   }
   sb.append("<h4>Parameters</h4>");
@@ -36,11 +39,17 @@
     for (int i=0; i < glm_model.submodels.length; ++i) {
       final Submodel sm=glm_model.submodels[i];
       if (sm.validation == null)       break;
-      if (glm_model.lambdas[i] == lambda)       firstRow.append("\t\t<td><b>" + DFORMAT2.format(glm_model.lambdas[i]) + "</b></td>\n");
- else       firstRow.append("\t\t<td>" + link(DFORMAT2.format(glm_model.lambdas[i]),glm_model._key,glm_model.lambdas[i]) + "</td>\n");
+      if (glm_model.submodels[i].lambda_value == lambda)       firstRow.append("\t\t<td><b>" + DFORMAT2.format(glm_model.submodels[i].lambda_value) + "</b></td>\n");
+ else       firstRow.append("\t\t<td>" + link(DFORMAT2.format(glm_model.submodels[i].lambda_value),glm_model._key,glm_model.submodels[i].lambda_value) + "</td>\n");
       secondRow.append("\t\t<td>" + (sm.rank - 1) + "</td>\n");
-      thirdRow.append("\t\t<td>" + DFORMAT.format(1 - sm.validation.residual_deviance / sm.validation.null_deviance) + "</td>\n");
-      fourthRow.append("\t\t<td>" + DFORMAT.format(glm_model.glm.family == Family.binomial ? sm.validation.auc : sm.validation.aic) + "</td>\n");
+      if (sm.xvalidation != null) {
+        thirdRow.append("\t\t<td>" + DFORMAT.format(1 - sm.xvalidation.residual_deviance / sm.validation.null_deviance) + "<sub>x</sub>("+ DFORMAT.format(1 - sm.validation.residual_deviance / sm.validation.null_deviance)+ ")"+ "</td>\n");
+        fourthRow.append("\t\t<td>" + DFORMAT.format(glm_model.glm.family == Family.binomial ? sm.xvalidation.auc : sm.xvalidation.aic) + "<sub>x</sub>("+ DFORMAT.format(glm_model.glm.family == Family.binomial ? sm.validation.auc : sm.validation.aic)+ ")</td>\n");
+      }
+ else {
+        thirdRow.append("\t\t<td>" + DFORMAT.format(1 - sm.validation.residual_deviance / sm.validation.null_deviance) + "</td>\n");
+        fourthRow.append("\t\t<td>" + DFORMAT.format(glm_model.glm.family == Family.binomial ? sm.validation.auc : sm.validation.aic) + "</td>\n");
+      }
     }
     sb.append(firstRow.append("\t</tr>\n"));
     sb.append(secondRow.append("\t</tr>\n"));
@@ -49,14 +58,17 @@
     sb.append("</table>\n");
   }
   Submodel sm=glm_model.submodels[glm_model.best_lambda_idx];
-  if (!Double.isNaN(lambda) && glm_model.lambdas[glm_model.best_lambda_idx] != lambda) {
+  if (!Double.isNaN(lambda) && glm_model.submodels[glm_model.best_lambda_idx].lambda_value != lambda) {
     int ii=0;
     sm=glm_model.submodels[0];
-    while (glm_model.lambdas[ii] != lambda && ++ii < glm_model.submodels.length)     sm=glm_model.submodels[ii];
+    while (glm_model.submodels[ii].lambda_value != lambda && ++ii < glm_model.submodels.length)     sm=glm_model.submodels[ii];
     if (ii == glm_model.submodels.length)     throw new IllegalArgumentException("Unexpected value of lambda '" + lambda + "'");
   }
   if (glm_model.beta() != null)   coefs2html(sm,sb);
-  GLMValidation val=sm.validation;
-  if (val != null)   val2HTML(sm,val,sb);
+  if (sm.xvalidation != null)   val2HTML(sm,sm.xvalidation,sb);
+ else   if (sm.validation != null)   val2HTML(sm,sm.validation,sb);
+  if (glm_model.varimp() != null) {
+    glm_model.varimp().toHTML(glm_model,sb);
+  }
   return true;
 }

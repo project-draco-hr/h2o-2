@@ -8,7 +8,7 @@
       boolean isCategorical=v.isEnum();
       boolean isConstant=(v.min() == v.max());
       String CStr=String.format("C%d:",i + 1);
-      String typeStr=String.format("%s",(isCategorical ? "categorical" : "numeric"));
+      String typeStr=String.format("%s",(v._isUUID ? "UUID" : (isCategorical ? "categorical" : "numeric")));
       String minStr=String.format("min(%f)",v.min());
       String maxStr=String.format("max(%f)",v.max());
       long numNAs=v.naCnt();
@@ -16,7 +16,7 @@
       String isConstantStr=isConstant ? "constant" : "";
       String numLevelsStr=isCategorical ? String.format("numLevels(%d)",v.domain().length) : "";
       boolean printLogSeparatorToStdout=false;
-      boolean printColumnToStdout=false;
+      boolean printColumnToStdout;
 {
         final int MAX_HEAD_TO_PRINT_ON_STDOUT=10;
         final int MAX_TAIL_TO_PRINT_ON_STDOUT=10;
@@ -48,6 +48,6 @@
       }
     }
   }
- catch (  Exception xe) {
+ catch (  Exception ignore) {
   }
 }

@@ -1,0 +1,21 @@
+{
+  FileInputStream fi=null;
+  AutoBuffer ab=null;
+  Model m=null;
+  try {
+    fi=new FileInputStream(f);
+    m=loadHeader(ab=ab4read(fi.getChannel()));
+    m.getModelSerializer().load(m,ab);
+    if (m._key != null) {
+      DKV.put(m._key,m);
+    }
+  }
+ catch (  FileNotFoundException e) {
+    throw new IllegalArgumentException("Cannot open given file!",e);
+  }
+ finally {
+    if (ab != null)     ab.close();
+    Utils.close(fi);
+  }
+  return m;
+}

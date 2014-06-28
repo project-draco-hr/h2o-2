@@ -20,12 +20,14 @@
  else {
       _tree=new FJBuild(spl,d,0,_seed).compute();
     }
-    if (_verbose > 1)     Log.info(Sys.RANDF,computeStatistics().toString());
     _stats=null;
-    appendKey(_job.dest(),toKey());
+    appendKey(_job.dest(),toKey(),_verbose > 10 ? _tree.toString(new StringBuilder(""),Integer.MAX_VALUE).toString() : "");
     StringBuilder sb=new StringBuilder("[RF] Tree : ").append(_data_id + 1);
     sb.append(" d=").append(_tree.depth()).append(" leaves=").append(_tree.leaves()).append(" done in ").append(timer).append('\n');
     Log.info(sb.toString());
+    if (_verbose > 10) {
+      Log.info(Sys.RANDF,_tree.toString(sb,Integer.MAX_VALUE).toString());
+    }
   }
   tryComplete();
 }

@@ -1,0 +1,10 @@
+{
+  Frame mse_frame=new Frame(Key.make(),new String[]{"Reconstruction.MSE"},new Vec[]{mse});
+  QuantilesPage qp=new QuantilesPage();
+  qp.column=mse_frame.vec(0);
+  qp.source_key=mse_frame;
+  qp.quantile=quantile;
+  qp.invoke();
+  DKV.remove(mse_frame._key);
+  return qp.result;
+}

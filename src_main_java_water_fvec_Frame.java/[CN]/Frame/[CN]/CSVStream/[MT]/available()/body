@@ -7,6 +7,7 @@
       if (i > 0)       sb.append(',');
       if (!vs[i].isNA(_row)) {
         if (vs[i].isEnum())         sb.append('"' + vs[i]._domain[(int)vs[i].at8(_row)] + '"');
+ else         if (vs[i].isUUID())         sb.append(PrettyPrint.UUID(vs[i].at16l(_row),vs[i].at16h(_row)));
  else         if (vs[i].isInt())         sb.append(vs[i].at8(_row));
  else {
           double d=vs[i].at(_row);

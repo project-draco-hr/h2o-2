@@ -9,10 +9,11 @@
   job().toHTML(sb);
   final Key val_key=get_params().validation != null ? get_params().validation._key : null;
   final Key bestModelKey=_actual_best_model_key;
-  sb.append("<div class='alert'>Actions: " + (jobKey != null && UKV.get(jobKey) != null && Job.isRunning(jobKey) ? "<i class=\"icon-stop\"></i>" + Cancel.link(jobKey,"Stop training") + ", " : "") + Inspect2.link("Inspect training data (" + _dataKey + ")",_dataKey)+ ", "+ (val_key != null ? (Inspect2.link("Inspect validation data (" + val_key + ")",val_key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ DeepLearning.link(_dataKey,"Compute new model",null,responseName(),val_key)+ (bestModelKey != null && UKV.get(bestModelKey) != null && bestModelKey != _key ? ", " + DeepLearningModelView.link("Go to best model",bestModelKey) : "")+ (jobKey == null || (UKV.get(jobKey) != null && Job.isEnded(jobKey)) ? ", <i class=\"icon-play\"></i>" + DeepLearning.link(_dataKey,"Continue training this model",_key,responseName(),val_key) : "")+ "</div>");
+  sb.append("<div class='alert'>Actions: " + (jobKey != null && UKV.get(jobKey) != null && Job.isRunning(jobKey) ? "<i class=\"icon-stop\"></i>" + Cancel.link(jobKey,"Stop training") + ", " : "") + Inspect2.link("Inspect training data (" + _dataKey + ")",_dataKey)+ ", "+ (val_key != null ? (Inspect2.link("Inspect validation data (" + val_key + ")",val_key) + ", ") : "")+ water.api.Predict.link(_key,"Score on dataset")+ ", "+ DeepLearning.link(_dataKey,"Compute new model",null,responseName(),val_key)+ (bestModelKey != null && UKV.get(bestModelKey) != null && bestModelKey != _key ? ", " + DeepLearningModelView.link("Go to best model",bestModelKey) : "")+ (((jobKey != null && UKV.get(jobKey) == null)) || UKV.get(jobKey) != null && Job.isEnded(jobKey) ? ", <i class=\"icon-play\"></i>" + DeepLearning.link(_dataKey,"Continue training this model",_key,responseName(),val_key) : "")+ "</div>");
   DocGen.HTML.paragraph(sb,"Model Key: " + _key);
   if (jobKey != null)   DocGen.HTML.paragraph(sb,"Job Key: " + jobKey);
-  DocGen.HTML.paragraph(sb,"Model type: " + (get_params().classification ? " Classification" : " Regression") + ", predicting: "+ responseName());
+  if (!get_params().autoencoder)   DocGen.HTML.paragraph(sb,"Model type: " + (get_params().classification ? " Classification" : " Regression") + ", predicting: "+ responseName());
+ else   DocGen.HTML.paragraph(sb,"Model type: Auto-Encoder");
   DocGen.HTML.paragraph(sb,"Number of model parameters (weights/biases): " + String.format("%,d",model_info().size()));
   if (model_info.unstable()) {
     final String msg="Job was aborted due to observed numerical instability (exponential growth)." + " Try a bounded activation function or regularization with L1, L2 or max_w2 and/or use a smaller learning rate or faster annealing.";
@@ -51,7 +52,7 @@
       sb.append("<td>").append(neurons[i].getClass().getSimpleName()).append("</td>");
       if (i == 0) {
         sb.append("<td>");
-        sb.append(formatPct(neurons[i].params.input_dropout_ratio));
+        sb.append(Utils.formatPct(neurons[i].params.input_dropout_ratio));
         sb.append("</td>");
         sb.append("<td></td>");
         sb.append("<td></td>");
@@ -64,7 +65,7 @@
       }
  else       if (i < neurons.length - 1) {
         sb.append("<td>");
-        sb.append(formatPct(neurons[i].params.hidden_dropout_ratios[i - 1]));
+        sb.append(Utils.formatPct(neurons[i].params.hidden_dropout_ratios[i - 1]));
         sb.append("</td>");
       }
  else {
@@ -86,13 +87,13 @@
     }
     sb.append("</table>");
   }
-  if (isClassifier()) {
-    DocGen.HTML.section(sb,"Classification error on training data: " + formatPct(error.train_err));
+  if (isClassifier() && !get_params().autoencoder) {
+    DocGen.HTML.section(sb,"Classification error on training data: " + Utils.formatPct(error.train_err));
     if (error.validation) {
-      DocGen.HTML.section(sb,"Classification error on validation data: " + formatPct(error.valid_err));
+      DocGen.HTML.section(sb,"Classification error on validation data: " + Utils.formatPct(error.valid_err));
     }
  else     if (error.num_folds > 0) {
-      DocGen.HTML.section(sb,"Classification error on " + error.num_folds + "-fold cross-validated training data"+ (_have_cv_results ? ": " + formatPct(error.valid_err) : " is being computed - please reload this page later."));
+      DocGen.HTML.section(sb,"Classification error on " + error.num_folds + "-fold cross-validated training data"+ (_have_cv_results ? ": " + Utils.formatPct(error.valid_err) : " is being computed - please reload this page later."));
     }
   }
  else {
@@ -242,7 +243,7 @@
   sb.append("<th>Training Time</th>");
   sb.append("<th>Training Epochs</th>");
   sb.append("<th>Training Samples</th>");
-  if (isClassifier()) {
+  if (isClassifier() && !get_params().autoencoder) {
     sb.append("<th>Training Error</th>");
     if (nclasses() == 2)     sb.append("<th>Training AUC</th>");
   }
@@ -274,10 +275,10 @@
     sb.append("<td>" + PrettyPrint.msecs(e.training_time_ms,true) + "</td>");
     sb.append("<td>" + String.format("%g",e.epoch_counter) + "</td>");
     sb.append("<td>" + String.format("%,d",e.training_samples) + "</td>");
-    if (isClassifier()) {
-      sb.append("<td>" + formatPct(e.train_err) + "</td>");
+    if (isClassifier() && !get_params().autoencoder) {
+      sb.append("<td>" + Utils.formatPct(e.train_err) + "</td>");
       if (nclasses() == 2) {
-        if (e.trainAUC != null)         sb.append("<td>" + formatPct(e.trainAUC.AUC()) + "</td>");
+        if (e.trainAUC != null)         sb.append("<td>" + Utils.formatPct(e.trainAUC.AUC()) + "</td>");
  else         sb.append("<td>" + "N/A" + "</td>");
       }
     }
@@ -286,9 +287,9 @@
     }
     if (e.validation) {
       if (isClassifier()) {
-        sb.append("<td>" + formatPct(e.valid_err) + "</td>");
+        sb.append("<td>" + Utils.formatPct(e.valid_err) + "</td>");
         if (nclasses() == 2) {
-          if (e.validAUC != null)           sb.append("<td>" + formatPct(e.validAUC.AUC()) + "</td>");
+          if (e.validAUC != null)           sb.append("<td>" + Utils.formatPct(e.validAUC.AUC()) + "</td>");
  else           sb.append("<td>" + "N/A" + "</td>");
         }
       }
@@ -299,9 +300,9 @@
  else     if (e.num_folds > 0) {
       if (i == errors.length - 1 && _have_cv_results) {
         if (isClassifier()) {
-          sb.append("<td>" + formatPct(e.valid_err) + "</td>");
+          sb.append("<td>" + Utils.formatPct(e.valid_err) + "</td>");
           if (nclasses() == 2) {
-            if (e.validAUC != null)             sb.append("<td>" + formatPct(e.validAUC.AUC()) + "</td>");
+            if (e.validAUC != null)             sb.append("<td>" + Utils.formatPct(e.validAUC.AUC()) + "</td>");
  else             sb.append("<td>" + "N/A" + "</td>");
           }
         }

@@ -1,0 +1,9 @@
+{
+  final Vec[] vecs=fr().vecs();
+  String[] names=new String[vecs.length];
+  int j=0;
+  for (int i=0; i < vecs.length; ++i) {
+    if (!vecs[i].isUUID())     names[j++]=fr()._names[i];
+  }
+  return Arrays.copyOf(names,j);
+}

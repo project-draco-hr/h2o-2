@@ -1,0 +1,17 @@
+{
+  FSDataInputStream is=_hfs.open(f);
+  byte buf[]=MemoryManager.malloc1((int)_hfs.getContentSummary(f).getLength());
+  try {
+    is.readFully(buf);
+  }
+  finally {
+    is.close();
+  }
+  AutoBuffer ab=ab4read(buf);
+  Model m=loadHeader(ab);
+  m.getModelSerializer().load(m,ab);
+  if (m._key != null) {
+    DKV.put(m._key,m);
+  }
+  return m;
+}

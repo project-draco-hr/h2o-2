@@ -1,0 +1,14 @@
+{
+  double[] g=grad.clone();
+  for (int i=0; i < g.length; ++i)   g[i]=g[i] < 0 ? g[i] : -g[i];
+  if (_activeCols != null) {
+    for (    int i : _activeCols)     g[i]*=-1;
+  }
+  Arrays.sort(g);
+  if (maxNewVars < (g.length - 1) && g[maxNewVars] == g[maxNewVars + 1]) {
+    double x=g[maxNewVars];
+    while (maxNewVars > 0 && g[maxNewVars] == x)     --maxNewVars;
+  }
+  double res=0.5 * (-g[maxNewVars] / Math.max(1e-3,alpha[0]) + oldLambda);
+  return res < oldLambda ? res : 0.9545 * oldLambda;
+}

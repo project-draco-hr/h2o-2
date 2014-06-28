@@ -1,0 +1,16 @@
+{
+  int smId=ab.get4();
+  String smCN=ab.getStr();
+  Class klazz=null;
+  T m=null;
+  try {
+    klazz=Class.forName(smCN);
+    m=(T)klazz.newInstance();
+  }
+ catch (  Exception e) {
+    throw new IllegalArgumentException("Cannot instantiate the type " + smCN,e);
+  }
+  int amId=id(m);
+  if (amId != smId)   throw new IllegalArgumentException("Trying to load incompatible model! Actual model id = " + amId + ", stored id = "+ smId+ ", type="+ smCN);
+  return m;
+}

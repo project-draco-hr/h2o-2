@@ -1,6 +1,7 @@
 {
   for (int i=0; i < dense_row_weights.length; ++i)   Utils.div(get_weights(i).raw(),N);
   for (  Neurons.Vector bias : biases)   Utils.div(bias.raw(),N);
+  if (avg_activations != null)   for (  Neurons.Vector avgac : avg_activations)   Utils.div(avgac.raw(),N);
   if (has_momenta()) {
     for (int i=0; i < dense_row_weights_momenta.length; ++i)     Utils.div(get_weights_momenta(i).raw(),N);
     for (    Neurons.Vector bias_momenta : biases_momenta)     Utils.div(bias_momenta.raw(),N);

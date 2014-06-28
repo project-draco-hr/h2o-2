@@ -1,0 +1,17 @@
+{
+  Frame f=parseFrame(dataset);
+  try {
+    GBM gbm=new GBM();
+    Vec respVec=f.vec(response);
+    gbm.source=f;
+    gbm.response=respVec;
+    gbm.classification=classification;
+    gbm.ntrees=ntrees;
+    gbm.score_each_iteration=true;
+    gbm.invoke();
+    return UKV.get(gbm.dest());
+  }
+  finally {
+    if (f != null)     f.delete();
+  }
+}

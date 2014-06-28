@@ -12,6 +12,37 @@
     specified++;
   }
   if (specified > 1)   throw new IllegalArgumentException("Arguments 'cols', 'ignored_cols_by_name', and 'ignored_cols' are exclusive");
+{
+    if (!isEmpty(ignored_cols_by_name)) {
+      assert(isEmpty(ignored_cols));
+      ignored_cols=ignored_cols_by_name;
+      ignored_cols_by_name=EMPTY;
+    }
+    if (ignored_cols == null) {
+      ignored_cols=new int[0];
+    }
+  }
+  assert(isEmpty(ignored_cols_by_name));
+  HashMap<Integer,Integer> ignoredColsMap=new HashMap<Integer,Integer>();
+  for (int i=0; i < ignored_cols.length; i++) {
+    int value=ignored_cols[i];
+    ignoredColsMap.put(new Integer(value),new Integer(1));
+  }
+  Vec[] vecs=source.vecs();
+  for (int i=0; i < vecs.length; i++) {
+    if (vecs[i].isUUID()) {
+      ignoredColsMap.put(new Integer(i),new Integer(1));
+    }
+  }
+{
+    ignored_cols=new int[ignoredColsMap.size()];
+    int j=0;
+    for (    Integer key : ignoredColsMap.keySet()) {
+      ignored_cols[j]=key.intValue();
+      j++;
+    }
+    Arrays.sort(ignored_cols);
+  }
   if (isEmpty(cols)) {
     cols=new int[source.vecs().length];
     for (int i=0; i < cols.length; i++)     cols[i]=i;
@@ -19,12 +50,14 @@
  else {
     if (!checkIdx(source,cols))     throw new IllegalArgumentException("Argument 'cols' specified invalid column!");
   }
-  if (!isEmpty(ignored_cols) || !isEmpty(ignored_cols_by_name)) {
+  if (!isEmpty(ignored_cols)) {
     int[] icols=!isEmpty(ignored_cols) ? ignored_cols : ignored_cols_by_name;
-    if (!checkIdx(source,icols))     throw new IllegalArgumentException("Argument '" + (!isEmpty(ignored_cols) ? "ignored_cols" : "ignored_cols_by_name") + "' specified invalid column!");
+    if (!checkIdx(source,icols))     throw new IllegalArgumentException("Argument 'ignored_cols' or 'ignored_cols_by_name' specified invalid column!");
     cols=difference(cols,icols);
     ignored_cols=icols;
     ignored_cols_by_name=icols;
   }
-  if (cols.length == 0)   throw new IllegalArgumentException("No column selected");
+  if (cols.length == 0) {
+    throw new IllegalArgumentException("No column selected");
+  }
 }
