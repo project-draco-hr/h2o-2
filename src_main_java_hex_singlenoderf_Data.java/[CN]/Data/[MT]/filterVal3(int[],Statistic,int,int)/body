@@ -61,7 +61,10 @@
         byte[] raw=cols[f]._rawB;
         for (int i=lo; i < hi; i++) {
           int permIdx=permutation[i];
-          int val=(0xFF & raw[permIdx]);
+          int val=raw[permIdx] & 0xFF;
+          if (val == DataAdapter.BAD)           continue;
+          short resp=cols[cols.length - 1]._binned[permIdx];
+          if (resp == DataAdapter.BAD)           continue;
           int response_bin=_dapt.getEncodedClassColumnValue(permIdx);
           cdsf[val][response_bin]++;
         }
