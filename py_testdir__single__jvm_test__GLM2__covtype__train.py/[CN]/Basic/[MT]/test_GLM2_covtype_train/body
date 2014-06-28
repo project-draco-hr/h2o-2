@@ -22,7 +22,7 @@ def test_GLM2_covtype_train(self):
     trainDataKey = 'rTrain'
     testDataKey = 'rTest'
     kwargs = {'response': ('C' + str((y + 1))), 'max_iter': 20, 'n_folds': 0, 'alpha': 0.1, 'lambda': 1e-05, 'family': 'binomial', }
-    timeoutSecs = 60
+    timeoutSecs = 180
     for trial in range(10):
         rowsToUse = rowsForPct[(trial % 10)]
         h2o_cmd.createTestTrain(srcKey='A.hex', trainDstKey=trainDataKey, testDstKey=testDataKey, trainPercent=90)

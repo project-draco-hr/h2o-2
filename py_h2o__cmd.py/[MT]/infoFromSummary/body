@@ -1,123 +1,60 @@
 def infoFromSummary(summaryResult, noPrint=False, numCols=None, numRows=None):
     if (not summaryResult):
         raise Exception('summaryResult is empty for infoFromSummary')
-    if h2o.beta_features:
-        summaries = summaryResult['summaries']
-        if ((1 == 0) and numCols and (len(summaries) != numCols)):
-            raise Exception(('Expected numCols: %s cols in summary. Got %s' % (numCols, len(summaries))))
-        for column in summaries:
-            colname = column['colname']
-            coltype = column['type']
-            nacnt = column['nacnt']
-            stats = column['stats']
-            stattype = stats['type']
-            h2o_exec.checkForBadFP(nacnt, ('nacnt for colname: %s stattype: %s' % (colname, stattype)))
-            if (stattype == 'Enum'):
-                cardinality = stats['cardinality']
-                h2o_exec.checkForBadFP(cardinality, ('cardinality for colname: %s stattype: %s' % (colname, stattype)))
+    summaries = summaryResult['summaries']
+    if ((1 == 0) and numCols and (len(summaries) != numCols)):
+        raise Exception(('Expected numCols: %s cols in summary. Got %s' % (numCols, len(summaries))))
+    for column in summaries:
+        colname = column['colname']
+        coltype = column['type']
+        nacnt = column['nacnt']
+        stats = column['stats']
+        stattype = stats['type']
+        h2o_exec.checkForBadFP(nacnt, ('nacnt for colname: %s stattype: %s' % (colname, stattype)))
+        if (stattype == 'Enum'):
+            cardinality = stats['cardinality']
+            h2o_exec.checkForBadFP(cardinality, ('cardinality for colname: %s stattype: %s' % (colname, stattype)))
+        else:
+            mean = stats['mean']
+            sd = stats['sd']
+            zeros = stats['zeros']
+            mins = stats['mins']
+            maxs = stats['maxs']
+            pct = stats['pct']
+            pctile = stats['pctile']
+            h2o_exec.checkForBadFP(mean, ('mean for colname: %s stattype: %s' % (colname, stattype)), nanOkay=True, infOkay=True)
+            h2o_exec.checkForBadFP(sd, ('sd for colname: %s stattype %s' % (colname, stattype)), nanOkay=True, infOkay=True)
+            h2o_exec.checkForBadFP(zeros, ('zeros for colname: %s stattype %s' % (colname, stattype)))
+            if (numRows and (nacnt == numRows)):
+                print ('%s is all NAs with type: %s. no checking for min/max/mean/sigma' % (colname, stattype))
             else:
-                mean = stats['mean']
-                sd = stats['sd']
-                zeros = stats['zeros']
-                mins = stats['mins']
-                maxs = stats['maxs']
-                pct = stats['pct']
-                pctile = stats['pctile']
-                h2o_exec.checkForBadFP(mean, ('mean for colname: %s stattype: %s' % (colname, stattype)), nanOkay=True, infOkay=True)
-                h2o_exec.checkForBadFP(sd, ('sd for colname: %s stattype %s' % (colname, stattype)), nanOkay=True, infOkay=True)
-                h2o_exec.checkForBadFP(zeros, ('zeros for colname: %s stattype %s' % (colname, stattype)))
-                if (numRows and (nacnt == numRows)):
-                    print ('%s is all NAs with type: %s. no checking for min/max/mean/sigma' % (colname, stattype))
-                else:
-                    if (not mins):
-                        print h2o.dump_json(column)
-                        print ('Why is min[] empty for a %s col (%s) ? %s %s %s' % (mins, stattype, colname, nacnt, numRows))
-                    if (not maxs):
-                        print h2o.dump_json(column)
-                        print ('Why is max[] empty for a %s col? (%s) ? %s %s %s' % (maxs, stattype, colname, nacnt, numRows))
-            hstart = column['hstart']
-            hstep = column['hstep']
-            hbrk = column['hbrk']
-            hcnt = column['hcnt']
-            if (not noPrint):
-                print '\n\n************************'
-                print 'colname:', colname
-                print 'coltype:', coltype
-                print 'nacnt:', nacnt
-                print 'stattype:', stattype
-                if (stattype == 'Enum'):
-                    print 'cardinality:', cardinality
-                else:
-                    print 'mean:', mean
-                    print 'sd:', sd
-                    print 'zeros:', zeros
-                    print 'mins:', mins
-                    print 'maxs:', maxs
-                    print 'pct:', pct
-                    print 'pctile:', pctile
-                print 'hstart:', hstart
-                print 'hstep:', hstep
-                print 'hbrk:', hbrk
-                print 'hcnt:', hcnt
-    else:
-        summary = summaryResult['summary']
-        columnList = summary['columns']
-        if ((1 == 0) and numCols and (len(columnList) != numCols)):
-            raise Exception(('Expected numCols: %s cols in summary. Got %s' % (numCols, len(columnList))))
-        for column in columnList:
-            N = column['N']
-            name = column['name']
-            stype = column['type']
-            histogram = column['histogram']
-            bin_size = histogram['bin_size']
-            bin_names = histogram['bin_names']
-            bins = histogram['bins']
-            nbins = histogram['bins']
-            if (not noPrint):
-                print '\n\n************************'
-                print 'N:', N
-                print 'name:', name
-                print 'type:', stype
-                print 'bin_size:', bin_size
-                print 'len(bin_names):', len(bin_names), bin_names
-                print 'len(bins):', len(bins), bins
-                print 'len(nbins):', len(nbins), nbins
-            if (stype != 'enum'):
-                zeros = column['zeros']
-                na = column['na']
-                maxs = column['max']
-                mins = column['min']
-                mean = column['mean']
-                sigma = column['sigma']
-                if (not noPrint):
-                    print 'zeros:', zeros
-                    print 'na:', na
-                    print 'maxs:', maxs
-                    print 'mins:', mins
-                    print 'mean:', mean
-                    print 'sigma:', sigma
-                if (numRows and (na == numRows)):
-                    print ('%s is all NAs with type: %s. no checking for min/max/mean/sigma' % (name, stype))
-                else:
-                    if (not mins):
-                        print h2o.dump_json(column)
-                        raise Exception(('Why is min[] empty for a %s col (%s) ? %s %s %s' % (mins, stype, N, na, numRows)))
-                    if (not maxs):
-                        print h2o.dump_json(column)
-                        print ('Why is max[] empty for a %s col? (%s) ? %s %s %s' % (maxs, stype, N, na, numRows))
-                if (len(bins) >= 2):
-                    percentiles = column['percentiles']
-                    thresholds = percentiles['thresholds']
-                    values = percentiles['values']
-                    if (not noPrint):
-                        print 'len(max):', len(maxs), maxs
-                        print 'len(min):', len(mins), mins
-                        print 'len(thresholds):', len(thresholds), thresholds
-                        print 'len(values):', len(values), values
-                    for v in values:
-                        if (not (v >= mins[0])):
-                            m = ('Percentile value %s should all be >= the min dataset value %s' % (v, mins[0]))
-                            raise Exception(m)
-                        if (not (v <= maxs[0])):
-                            m = ('Percentile value %s should all be <= the max dataset value %s' % (v, maxs[0]))
-                            raise Exception(m)
+                if (not mins):
+                    print h2o.dump_json(column)
+                    print ('Why is min[] empty for a %s col (%s) ? %s %s %s' % (mins, stattype, colname, nacnt, numRows))
+                if (not maxs):
+                    print h2o.dump_json(column)
+                    print ('Why is max[] empty for a %s col? (%s) ? %s %s %s' % (maxs, stattype, colname, nacnt, numRows))
+        hstart = column['hstart']
+        hstep = column['hstep']
+        hbrk = column['hbrk']
+        hcnt = column['hcnt']
+        if (not noPrint):
+            print '\n\n************************'
+            print 'colname:', colname
+            print 'coltype:', coltype
+            print 'nacnt:', nacnt
+            print 'stattype:', stattype
+            if (stattype == 'Enum'):
+                print 'cardinality:', cardinality
+            else:
+                print 'mean:', mean
+                print 'sd:', sd
+                print 'zeros:', zeros
+                print 'mins:', mins
+                print 'maxs:', maxs
+                print 'pct:', pct
+                print 'pctile:', pctile
+            print 'hstart:', hstart
+            print 'hstep:', hstep
+            print 'hbrk:', hbrk
+            print 'hcnt:', hcnt

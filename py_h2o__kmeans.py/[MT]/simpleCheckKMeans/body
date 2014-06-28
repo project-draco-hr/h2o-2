@@ -7,25 +7,15 @@ def simpleCheckKMeans(self, kmeans, **kwargs):
             print '\nwarning:', w
             if re.search(x, w):
                 raise Exception(w)
-    if h2o.beta_features:
-        destination_key = kmeans['model']['_key']
-        kmeansResult = kmeans
-    else:
-        destination_key = kmeans['destination_key']
-        kmeansResult = h2o_cmd.runInspect(key=destination_key)
-    if h2o.beta_features:
-        model = kmeansResult['model']
-        clusters = model['centers']
-        cluster_variances = model['within_cluster_variances']
-        error = model['total_within_SS']
-        iterations = model['iterations']
-        normalized = model['normalized']
-        max_iter = model['max_iter']
-    else:
-        h2o.verboseprint('kmeans result:', h2o.dump_json(kmeansResult))
-        model = kmeansResult['KMeansModel']
-        clusters = model['clusters']
-        error = model['error']
+    destination_key = kmeans['model']['_key']
+    kmeansResult = kmeans
+    model = kmeansResult['model']
+    clusters = model['centers']
+    cluster_variances = model['within_cluster_variances']
+    error = model['total_within_SS']
+    iterations = model['iterations']
+    normalized = model['normalized']
+    max_iter = model['max_iter']
     for (i, c) in enumerate(clusters):
         for n in c:
             if math.isnan(float(n)):
