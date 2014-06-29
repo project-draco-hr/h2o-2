@@ -11,7 +11,7 @@ def test_csv_download_libsvm(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
         start = time.time()
-        parseResultA = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
+        parseResultA = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, doSummary=False)
         print '\nA Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         inspect = h2o_cmd.runInspect(key=hex_key, timeoutSecs=timeoutSecs)
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)

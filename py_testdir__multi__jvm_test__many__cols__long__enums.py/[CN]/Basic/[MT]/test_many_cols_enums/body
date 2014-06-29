@@ -1,6 +1,8 @@
-def test_many_cols_enum(self):
+def test_many_cols_enums(self):
+    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100, 11000, 'cA', 50), (100, 10000, 'cB', 50), (100, 9000, 'cC', 50), (100, 8000, 'cD', 50), (100, 7000, 'cE', 50), (100, 6000, 'cF', 50), (100, 5000, 'cG', 50)]
+    tryList = [(5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5), (5, 100, 'cA', 5)]
+    h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
     cnum = 0
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
@@ -9,13 +11,12 @@ def test_many_cols_enum(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=60)
+        SEPARATOR = ord(',')
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=10, header=0, separator=SEPARATOR)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         if (not h2o.browse_disable):
             h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
             time.sleep(5)
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], offset=100, view=100)
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], offset=99, view=89)
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], offset=(-1), view=53)
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])

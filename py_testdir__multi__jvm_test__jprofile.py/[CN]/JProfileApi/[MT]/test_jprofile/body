@@ -27,13 +27,12 @@ def test_jprofile(self):
                     procs = statsString.split(' ')
                     i = 0
                     while (i < len(procs)):
-                        if True:
-                            print ('\n' + procs[i])
-                            for j in range(10):
-                                print procs[(i + j)]
-                            i = (i + 10)
-                        else:
-                            i = (i + 1)
+                        print ('\n' + procs[i])
+                        for j in range(10):
+                            if ((i + j) > (len(procs) - 1)):
+                                break
+                            print procs[(i + j)]
+                        i = (i + 10)
                 h2o.verboseprint(json.dumps(stats, indent=2))
                 if (i == NODE):
                     sList.append(len(statsString))

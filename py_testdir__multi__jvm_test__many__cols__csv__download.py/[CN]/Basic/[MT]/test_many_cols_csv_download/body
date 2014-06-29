@@ -1,4 +1,4 @@
-def test_many_cols_with_syn(self):
+def test_many_cols_csv_download(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(5000, 10000, 'cK', 60), (10000, 10000, 'cL', 60), (100, 8500, 'cF', 15), (100, 9000, 'cG', 15), (100, 10000, 'cI', 15), (100, 11000, 'cH', 15), (1000, 10000, 'cI', 15), (3000, 10000, 'cJ', 15)]
@@ -17,7 +17,7 @@ def test_many_cols_with_syn(self):
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
         numColsA = inspect['numCols']
         numRowsA = inspect['numRows']
-        sizeBytesA = inspect['sizeBytes']
+        byteSizeA = inspect['byteSize']
         csvDownloadPathname = (SYNDATASETS_DIR + '/csvDownload.csv')
         print '\nStarting csv download to', csvDownloadPathname, 'rowCount:', rowCount, 'colCount:', colCount
         start = time.time()
@@ -31,7 +31,7 @@ def test_many_cols_with_syn(self):
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
         numColsB = inspect['numCols']
         numRowsB = inspect['numRows']
-        sizeBytesB = inspect['sizeBytes']
+        byteSizeB = inspect['byteSize']
         self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
         self.assertEqual(numColsA, numColsB, ('numCols mismatches after re-parse of downloadCsv result %d %d' % (numColsA, numColsB)))
         self.assertEqual(numRowsA, numRowsB, ('numRows mismatches after re-parse of downloadCsv result %d %d' % (numRowsA, numRowsB)))
