@@ -18,7 +18,7 @@ def test_poisson_covtype20x(self):
         print 'WARNING: max_iter set to 8 for benchmark comparisons'
         max_iter = 8
         y = '54'
-        kwargs = {'x': x, 'response': y, 'family': 'poisson', 'link': 'log', 'n_folds': 0, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
+        kwargs = {'response': y, 'family': 'poisson', 'n_folds': 0, 'max_iter': max_iter, 'beta_epsilon': 0.001, }
         kwargs.update({'alpha': 0, 'lambda': 0, })
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)

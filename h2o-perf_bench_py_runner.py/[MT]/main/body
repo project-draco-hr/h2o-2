@@ -21,4 +21,4 @@ def main(argv):
     signal.signal(signal.SIGINT, PerfUtils.signal_handler)
     signal.signal(signal.SIGTERM, PerfUtils.signal_handler)
     perf_runner.run_tests()
-    Alerter(order=10).alert()
+    Alerter(order=10, names=perf_runner.names).alert()
