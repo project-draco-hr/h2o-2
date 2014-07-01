@@ -1,4 +1,4 @@
-def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, **kwargs):
+def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, conservative=False, **kwargs):
     clean_sandbox()
     log('#*********************************************************************')
     log((('Starting new test: ' + python_test_name) + ' at build_cloud()'))
@@ -15,8 +15,6 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
         if (hosts is None):
             write_flatfile(node_count=node_count, base_port=base_port)
             hostCount = 1
-            if rand_shuffle:
-                random.shuffle(portList)
             for p in portList:
                 verboseprint('psutil starting node', i)
                 newNode = LocalH2O(port=p, node_id=totalNodes, **kwargs)
@@ -28,8 +26,6 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
             for h in hosts:
                 for port in portList:
                     hostPortList.append((h, port))
-            if rand_shuffle:
-                random.shuffle(hostPortList)
             for (h, p) in hostPortList:
                 verboseprint('ssh starting node', totalNodes, 'via', h)
                 newNode = h.remote_h2o(port=p, node_id=totalNodes, **kwargs)

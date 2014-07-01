@@ -17,19 +17,17 @@ def get_ip_address():
         ip = socket.getaddrinfo(hostname, None)[0][4][0]
         verboseprint('get_ip case 3:', ip)
     ipa = None
-    badHosts = ['lg1', 'ch-0', 'ch-63']
-    if (hostname not in badHosts):
-        try:
-            ghbx = socket.gethostbyname_ex(hostname)
-            for ips in ghbx[2]:
-                if ((ipa is None) and (not ips.startswith('127.'))):
-                    ipa = ips[:]
-                    verboseprint('get_ip case 4:', ipa)
-                    if (ip != ipa):
-                        print '\nAssuming', ip, 'is the ip address h2o will use but', ipa, 'is probably the real ip?'
-                        print (("You might have a vpn active. Best to use '-ip " + ipa) + "' to get python and h2o the same.")
-        except:
-            pass
+    try:
+        ghbx = socket.gethostbyname_ex(hostname)
+        for ips in ghbx[2]:
+            if ((ipa is None) and (not ips.startswith('127.'))):
+                ipa = ips[:]
+                verboseprint('get_ip case 4:', ipa)
+                if (ip != ipa):
+                    print '\nAssuming', ip, 'is the ip address h2o will use but', ipa, 'is probably the real ip?'
+                    print (("You might have a vpn active. Best to use '-ip " + ipa) + "' to get python and h2o the same.")
+    except:
+        pass
     verboseprint('get_ip_address:', ip)
     socket.setdefaulttimeout(5)
     return ip
