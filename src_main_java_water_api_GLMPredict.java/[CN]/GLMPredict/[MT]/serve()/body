@@ -1,0 +1,18 @@
+{
+  try {
+    if (model == null)     throw new IllegalArgumentException("Model is required to perform validation!");
+    if (!Double.isNaN(lambda)) {
+      model=model.clone();
+      model.setSubmodelIdx(model.submodelIdForLambda(lambda));
+    }
+    if (prediction == null)     prediction=Key.make("__Prediction_" + Key.make());
+    Frame fr=new Frame(prediction,new String[0],new Vec[0]).delete_and_lock(null);
+    if (model instanceof Model)     fr=((Model)model).score(data);
+    fr=new Frame(prediction,fr._names,fr.vecs());
+    fr.unlock(null);
+    return Inspect2.redirect(this,prediction.toString());
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+}
