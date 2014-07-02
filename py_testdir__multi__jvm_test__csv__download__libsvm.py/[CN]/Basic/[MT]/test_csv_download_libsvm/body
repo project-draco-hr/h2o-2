@@ -17,8 +17,7 @@ def test_csv_download_libsvm(self):
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
         numColsA = inspect['numCols']
         numRowsA = inspect['numRows']
-        sizeBytesA = inspect['sizeBytes']
-        value_size_bytesA = inspect['value_size_bytes']
+        byteSizeA = inspect['byteSize']
         csvDownloadPathname = (SYNDATASETS_DIR + '/csvDownload.csv')
         print '\nStarting csv download to', csvDownloadPathname, 'rowCount:', rowCount, 'colCount:', colCount
         start = time.time()
@@ -32,9 +31,9 @@ def test_csv_download_libsvm(self):
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
         numColsB = inspect['numCols']
         numRowsB = inspect['numRows']
-        sizeBytesB = inspect['sizeBytes']
+        byteSizeB = inspect['byteSize']
         self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
         self.assertEqual(numColsA, numColsB, ('numCols mismatches after re-parse of downloadCsv result %d %d' % (numColsA, numColsB)))
         self.assertEqual(numRowsA, numRowsB, ('numRows mismatches after re-parse of downloadCsv result %d %d' % (numRowsA, numRowsB)))
-        self.assertEqual(sizeBytesA, sizeBytesB, ('sizeBytes mismatches after re-parse of downloadCsv result %d %d' % (sizeBytesA, sizeBytesB)))
+        self.assertEqual(byteSizeA, byteSizeB, ('byteSize mismatches after re-parse of downloadCsv result %d %d' % (byteSizeA, byteSizeB)))
         h2o.check_sandbox_for_errors()

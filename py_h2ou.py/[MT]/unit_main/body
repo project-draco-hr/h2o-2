@@ -1,9 +1,0 @@
-def unit_main():
-    global python_test_name, python_cmd_args, python_cmd_line, python_cmd_ip, python_username
-    python_test_name = inspect.stack()[1][1]
-    python_cmd_args = ' '.join(sys.argv[1:])
-    python_cmd_line = ('python %s %s' % (python_test_name, python_cmd_args))
-    python_username = getpass.getuser()
-    print ('\nTest: %s    command line: %s' % (python_test_name, python_cmd_line))
-    parse_our_args()
-    unittest.main()
