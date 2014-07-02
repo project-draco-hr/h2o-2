@@ -1,4 +1,4 @@
-def write_flatfile(node_count=2, base_port=54321, hosts=None, rand_shuffle=True):
+def write_flatfile(node_count=2, base_port=54321, hosts=None):
     ports_per_node = 2
     pff = open(flatfile_name(), 'w+')
     hostPortList = []
@@ -10,8 +10,6 @@ def write_flatfile(node_count=2, base_port=54321, hosts=None, rand_shuffle=True)
         for h in hosts:
             for i in range(node_count):
                 hostPortList.append(((h.addr + ':') + str((base_port + (ports_per_node * i)))))
-    if rand_shuffle:
-        random.shuffle(hostPortList)
     for hp in hostPortList:
         pff.write((hp + '\n'))
     pff.close()
