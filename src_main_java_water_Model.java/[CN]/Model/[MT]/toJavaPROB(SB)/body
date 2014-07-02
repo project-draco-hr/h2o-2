@@ -1,7 +1,6 @@
 {
-  sb.i().p("// Prior class distribution").nl();
-  JCodeGen.toField(sb,"public static final","float[]","PRIOR_CLASS_DISTRIB",new SB().toJavaStringInit(_priorClassDist).toString());
-  sb.i().p("// Class distribution used for model building").nl();
-  JCodeGen.toField(sb,"public static final","float[]","MODEL_CLASS_DISTRIB",new SB().toJavaStringInit(_modelClassDist).toString());
+  sb.di(1);
+  toStaticVar(sb,"PRIOR_CLASS_DISTRIB",_priorClassDist,"Prior class distribution");
+  toStaticVar(sb,"MODEL_CLASS_DISTRIB",_modelClassDist,"Class distribution used for model building");
   return sb;
 }

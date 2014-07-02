@@ -17,7 +17,7 @@
 switch (cpr) {
 case NONE:
       if (localSetup._pType.parallelParseSupported) {
-        DParse dp=new DParse(_vg,localSetup,_vecIdStart,chunkStartIdx,this);
+        DParse dp=new DParse(_vg,localSetup,_vecIdStart,chunkStartIdx,this,vec.nChunks());
         addToPendingCount(1);
         dp._removeKey=vec._key;
         dp.exec(new Frame(vec));

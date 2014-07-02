@@ -34,7 +34,7 @@ def test_GBM_with_cancels(self):
         start = time.time()
         GBMFirstResult = h2o_cmd.runGBM(parseResult=parseResult, noPoll=True, **kwargs)
         print '\nGBMFirstResult:', h2o.dump_json(GBMFirstResult)
-        for i in range(20):
+        for i in range(15):
             jobids = []
             for j in range(5):
                 kwargs['destination_key'] = (('GBMBad' + str(i)) + str(j))

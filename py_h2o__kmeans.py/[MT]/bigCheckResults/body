@@ -1,37 +1,17 @@
 def bigCheckResults(self, kmeans, csvPathname, parseResult, applyDestinationKey, **kwargs):
     simpleCheckKMeans(self, kmeans, **kwargs)
-    if h2o.beta_features:
-        model = kmeans['model']
-        model_key = model['_key']
-        centers = model['centers']
-        cluster_variances = model['within_cluster_variances']
-        error = model['total_within_SS']
-        kmeansResult = kmeans
-    else:
-        model_key = kmeans['destination_key']
-        kmeansResult = h2o_cmd.runInspect(key=model_key)
-        h2o.verboseprint('kmeans result:', h2o.dump_json(kmeansResult))
-        model = kmeansResult['KMeansModel']
-        centers = model['clusters']
-        error = model['error']
-    if h2o.beta_features:
-        pass
-        predictKey = applyDestinationKey
-        predictResult = h2o.nodes[0].generate_predictions(data_key=parseResult['destination_key'], model_key=model_key, destination_key=predictKey)
-        summaryResult = h2o.nodes[0].summary_page(key=predictKey)
-        hcnt = summaryResult['summaries'][0]['hcnt']
-        rows_per_cluster = hcnt
-        sqr_error_per_cluster = cluster_variances
-    else:
-        kmeansApplyResult = h2o.nodes[0].kmeans_apply(data_key=parseResult['destination_key'], model_key=model_key, destination_key=applyDestinationKey)
-        inspect = h2o_cmd.runInspect(None, applyDestinationKey)
-        h2o_cmd.infoFromInspect(inspect, csvPathname)
-        summaryResult = h2o_cmd.runSummary(key=applyDestinationKey)
-        h2o_cmd.infoFromSummary(summaryResult, noPrint=False)
-        kmeansScoreResult = h2o.nodes[0].kmeans_score(key=parseResult['destination_key'], model_key=model_key)
-        score = kmeansScoreResult['score']
-        rows_per_cluster = score['rows_per_cluster']
-        sqr_error_per_cluster = score['sqr_error_per_cluster']
+    model = kmeans['model']
+    model_key = model['_key']
+    centers = model['centers']
+    cluster_variances = model['within_cluster_variances']
+    error = model['total_within_SS']
+    kmeansResult = kmeans
+    predictKey = applyDestinationKey
+    predictResult = h2o.nodes[0].generate_predictions(data_key=parseResult['destination_key'], model_key=model_key, destination_key=predictKey)
+    summaryResult = h2o.nodes[0].summary_page(key=predictKey)
+    hcnt = summaryResult['summaries'][0]['hcnt']
+    rows_per_cluster = hcnt
+    sqr_error_per_cluster = cluster_variances
     tupleResultList = []
     print '\nerror: ', error
     for (i, c) in enumerate(centers):

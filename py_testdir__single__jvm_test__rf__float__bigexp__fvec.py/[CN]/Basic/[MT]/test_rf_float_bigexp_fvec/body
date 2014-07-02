@@ -22,9 +22,9 @@ def test_rf_float_bigexp_fvec(self):
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
         inspect = h2o_cmd.runInspect(key=hex_key)
         cols = inspect['cols']
-        num_cols = inspect['num_cols']
+        numCols = inspect['numCols']
         for (i, c) in enumerate(cols):
-            if (i < (num_cols - 1)):
+            if (i < (numCols - 1)):
                 colType = c['type']
                 self.assertEqual(colType, 'float', msg=('col %d should be type Real: %s' % (i, colType)))
         h2o.check_sandbox_for_errors()
