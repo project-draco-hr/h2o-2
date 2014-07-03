@@ -1,9 +1,0 @@
-def terminate_self_only(self):
-    try:
-        if self.is_alive():
-            self.ps.kill()
-        if self.is_alive():
-            self.ps.terminate()
-        return self.wait(0.5)
-    except psutil.NoSuchProcess:
-        return (-1)
