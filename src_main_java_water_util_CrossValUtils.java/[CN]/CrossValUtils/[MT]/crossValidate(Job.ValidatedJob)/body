@@ -13,6 +13,7 @@
     Frame[] splits=nffe.getResult();
     job.crossValidate(splits,cv_preds,offsets,i);
     if (!job.keep_cross_validation_splits)     for (    Frame f : splits)     f.delete();
+    job._cv_count++;
   }
   if (job.state != Job.JobState.RUNNING)   return;
   boolean put_back=UKV.get(job.response._key) == null;

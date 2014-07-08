@@ -21,6 +21,7 @@
     DocGen.HTML.section(sb,msg);
     DocGen.HTML.section(sb,"=======================================================================================");
   }
+  if (error == null)   return true;
   DocGen.HTML.title(sb,"Progress");
   epoch_counter=training_rows > 0 ? (float)model_info().get_processed_total() / training_rows : 0;
   final double progress=get_params().progress();
