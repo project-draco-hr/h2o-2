@@ -6,7 +6,9 @@
   nv._xs=xs;
   nv._len=nv._len2=ls.length;
   Chunk bv=nv.compress();
-  bv._vec=av.close(new Futures());
+  Futures fs=new Futures();
+  bv._vec=av.close(fs);
+  fs.blockForPending();
   assertTrue("Found chunk class " + bv.getClass() + " but expected "+ C,C.isInstance(bv));
   assertEquals(hasFloat,bv.hasFloat());
   for (int i=0; i < ls.length; i++)   if (ls[i] == Long.MAX_VALUE && xs[i] == Integer.MIN_VALUE)   assertTrue(bv.isNA0(i));
