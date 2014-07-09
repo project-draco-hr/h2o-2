@@ -5,5 +5,10 @@
     for (    int i : _activeCols)     g[i]*=-1;
   }
   Arrays.sort(g);
-  return 0.5 * (-g[maxNewVars] / alpha[0] + oldLambda);
+  if (maxNewVars < (g.length - 1) && g[maxNewVars] == g[maxNewVars + 1]) {
+    double x=g[maxNewVars];
+    while (maxNewVars > 0 && g[maxNewVars] == x)     --maxNewVars;
+  }
+  double res=0.5 * (-g[maxNewVars] / Math.max(1e-3,alpha[0]) + oldLambda);
+  return res < oldLambda ? res : 0.9545 * oldLambda;
 }

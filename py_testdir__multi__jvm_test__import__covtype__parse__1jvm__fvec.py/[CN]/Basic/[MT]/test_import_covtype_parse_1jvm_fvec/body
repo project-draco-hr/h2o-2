@@ -1,0 +1,18 @@
+def test_import_covtype_parse_1jvm_fvec(self):
+    h2o.beta_features = True
+    csvFilename = 'covtype.data'
+    importFolderPath = 'standard'
+    trialMax = 2
+    localhost = h2o.decide_if_localhost()
+    for tryHeap in [4, 3, 2, 1]:
+        print '\n', tryHeap, "GB heap, 1 jvms, import folder, then loop parsing 'covtype.data' to unique keys"
+        if localhost:
+            h2o.build_cloud(node_count=1, java_heap_GB=tryHeap)
+        else:
+            h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap)
+        for trial in range(trialMax):
+            csvPathname = ((importFolderPath + '/') + csvFilename)
+            hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+            parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=20)
+        h2o.tear_down_cloud()
+        time.sleep(2)

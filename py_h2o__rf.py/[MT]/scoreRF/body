@@ -1,24 +1,17 @@
 def scoreRF(scoreParseResult, trainResult, vactual=None, timeoutSecs=120, **kwargs):
     parseKey = scoreParseResult['destination_key']
-    if h2o.beta_features:
-        rfModelKey = trainResult['drf_model']['_key']
-        predictKey = 'Predict.hex'
-        start = time.time()
-        predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs, **kwargs)
-        h2o_cmd.runInspect(key='Predict.hex', verbose=True)
-        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual=vactual, predict=predictKey, vpredict='predict', timeoutSecs=timeoutSecs, **kwargs)
-        rftime = (time.time() - start)
-        cm = predictCMResult['cm']
-        pctWrong = h2o_gbm.pp_cm_summary(cm)
-        print '\nTest\n==========\n'
-        print h2o_gbm.pp_cm(cm)
-        scoreResult = predictCMResult
-    else:
-        ntree = trainResult['ntree']
-        rfModelKey = trainResult['model_key']
-        start = time.time()
-        kwargs['out_of_bag_error_estimate'] = 0
-        scoreResult = h2o_cmd.runRFView(None, parseKey, rfModelKey, ntree=ntree, timeoutSecs=timeoutSecs, **kwargs)
+    rfModelKey = trainResult['drf_model']['_key']
+    predictKey = 'Predict.hex'
+    start = time.time()
+    predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs, **kwargs)
+    h2o_cmd.runInspect(key='Predict.hex', verbose=True)
+    predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual=vactual, predict=predictKey, vpredict='predict', timeoutSecs=timeoutSecs, **kwargs)
+    rftime = (time.time() - start)
+    cm = predictCMResult['cm']
+    pctWrong = h2o_gbm.pp_cm_summary(cm)
+    print '\nTest\n==========\n'
+    print h2o_gbm.pp_cm(cm)
+    scoreResult = predictCMResult
     rftime = (time.time() - start)
     h2o.verboseprint('RF score results: ', scoreResult)
     h2o.verboseprint('RF computation took {0} sec'.format(rftime))

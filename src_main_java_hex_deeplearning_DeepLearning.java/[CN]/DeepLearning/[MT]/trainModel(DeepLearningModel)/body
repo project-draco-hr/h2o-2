@@ -45,6 +45,7 @@
     }
     final float rowUsageFraction=computeRowUsageFraction(train.numRows(),mp.actual_train_samples_per_iteration,mp.replicate_training_data);
     if (!mp.quiet_mode)     Log.info("Initial model:\n" + model.model_info());
+    if (autoencoder)     model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor());
     Log.info("Starting to train the Deep Learning model.");
     do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowUsageFraction).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowUsageFraction).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowUsageFraction).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor()));

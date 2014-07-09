@@ -1,7 +1,7 @@
 {
   GLM2 params=get_params();
   this.variable_importances=null;
-  if (!params.use_all_factor_levels)   return;
+  if (!params.use_all_factor_levels)   this.addWarning("Variable Importance may be missing important variables: because use_all_factor_levels is off the importance of base categorical levels will NOT be included.");
   final double[] b=beta();
   if (params.variable_importances && null != b) {
     float[] coefs_abs_value=new float[b.length - 1];

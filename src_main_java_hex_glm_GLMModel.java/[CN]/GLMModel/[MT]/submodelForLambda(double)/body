@@ -1,5 +1,4 @@
 {
-  int i=submodels.length - 1;
-  for (; i >= 0; --i)   if (submodels[i].lambda_value == lambda)   return submodels[i];
-  return null;
+  int i=submodelIdForLambda(lambda);
+  return i < 0 ? null : submodels[i];
 }
