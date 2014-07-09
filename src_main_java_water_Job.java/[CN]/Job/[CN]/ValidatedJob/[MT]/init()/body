@@ -5,7 +5,10 @@
   xval_models=new Key[n_folds];
   for (int i=0; i < xval_models.length; ++i)   xval_models[i]=Key.make(dest().toString() + "_xval" + i);
   int rIndex=0;
-  for (int i=0; i < source.vecs().length; i++)   if (source.vecs()[i] == response)   rIndex=i;
+  for (int i=0; i < source.vecs().length; i++)   if (source.vecs()[i] == response) {
+    rIndex=i;
+    break;
+  }
   _responseName=source._names != null && rIndex >= 0 ? source._names[rIndex] : "response";
   _train=selectVecs(source);
   _names=new String[cols.length];
