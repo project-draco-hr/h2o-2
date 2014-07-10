@@ -1,0 +1,38 @@
+{
+  StringBuilder sb=new StringBuilder("Key { type: ");
+switch (k._kb[0]) {
+case 0:
+    sb.append("arraylet chunk");
+  break;
+case 2:
+sb.append("build-in");
+break;
+case 3:
+sb.append("job");
+break;
+case 4:
+sb.append("vec");
+break;
+case 5:
+sb.append("dvec");
+break;
+case 6:
+sb.append("vgroup");
+break;
+case 7:
+sb.append("DFJ internal");
+break;
+case 31:
+sb.append("hidden user");
+break;
+case 32:
+sb.append("user");
+break;
+default :
+sb.append("UNKNOWN");
+break;
+}
+sb.append(",replicas: ").append(k._kb[1]).append(",");
+sb.append(k.toString()).append("}");
+return sb.toString();
+}
