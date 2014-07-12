@@ -8,6 +8,7 @@
     throw Log.errRTExcept(e);
   }
   Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+  int counter=0;
   while (true) {
     try {
       Thread.sleep(SLEEP);
@@ -25,6 +26,7 @@
     hb._keys=(H2O.STORE.size());
     hb.set_valsz(myHisto.histo(false)._cached);
     hb._num_cpus=(char)run.availableProcessors();
+    if (counter % 300 == 0)     hb._gflops=new Linpack().run();
     Object load=null;
     try {
       load=mbs.getAttribute(os,"SystemLoadAverage");
@@ -75,5 +77,6 @@
         h2o._announcedLostContact=false;
       }
     }
+    counter++;
   }
 }
