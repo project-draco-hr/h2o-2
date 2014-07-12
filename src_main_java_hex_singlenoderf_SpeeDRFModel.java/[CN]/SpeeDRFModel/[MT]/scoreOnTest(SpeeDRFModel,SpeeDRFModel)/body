@@ -19,7 +19,7 @@
     m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
     ConfusionMatrix new_cm=new ConfusionMatrix(m.cm);
     m.cms[m.cms.length - 1]=new_cm;
-    if (m.classes() == 2) {
+    if (m.classes() == 2 && !scored.lastVec().isInt()) {
       AUC auc_calc=new AUC();
       auc_calc.vactual=cm.vactual;
       auc_calc.vpredict=scored.lastVec();
