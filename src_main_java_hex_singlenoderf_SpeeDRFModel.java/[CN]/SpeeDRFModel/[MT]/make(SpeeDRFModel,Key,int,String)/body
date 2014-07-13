@@ -10,12 +10,7 @@
   }
   boolean shouldScore=shouldDoScore(m);
   if (shouldScore) {
-    if (m.test_frame != null) {
-      scoreOnTest(m,old);
-    }
- else {
-      scoreOnTrain(m,old);
-    }
+    scoreIt(m,old);
   }
  else {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
