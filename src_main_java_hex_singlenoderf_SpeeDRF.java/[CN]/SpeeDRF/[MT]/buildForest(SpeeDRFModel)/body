@@ -3,7 +3,7 @@
     source.read_lock(self());
     if (model == null)     model=UKV.get(dest());
     model.write_lock(self());
-    drfParams=DRFParams.create(model.fr.find(model.response),model.N,model.max_depth,(int)model.fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,_useNonLocalData,regression);
+    drfParams=DRFParams.create(model.fr.find(model.response),model.N,model.max_depth,(int)model.fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
     logStart();
     DRFTask tsk=new DRFTask();
     tsk._job=Job.findJob(self());
@@ -27,5 +27,6 @@ catch (  Exception ex) {
     }
     source.unlock(self());
     emptyLTrash();
+    cleanup();
   }
 }
