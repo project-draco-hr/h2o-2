@@ -1,9 +1,9 @@
 {
   Timer t_alltrees=new Timer();
   Tree[] trees=new Tree[ntrees];
-  Log.debug(Log.Tag.Sys.RANDF,"Building " + ntrees + " trees");
-  Log.debug(Log.Tag.Sys.RANDF,"Number of split features: " + numSplitFeatures);
-  Log.debug(Log.Tag.Sys.RANDF,"Starting RF computation with " + localData.rows() + " rows ");
+  Log.info(Log.Tag.Sys.RANDF,"Building " + ntrees + " trees");
+  Log.info(Log.Tag.Sys.RANDF,"Number of split features: " + numSplitFeatures);
+  Log.info(Log.Tag.Sys.RANDF,"Starting RF computation with " + localData.rows() + " rows ");
   Random rnd=Utils.getRNG(localData.seed() + ROOT_SEED_ADD);
   Sampling sampler=createSampler(drfParams,rowsPerChunks);
   byte producerId=(byte)H2O.SELF.index();
@@ -11,6 +11,7 @@
     long treeSeed=rnd.nextLong() + TREE_SEED_INIT;
     trees[i]=new Tree(job,localData,producerId,drfParams.max_depth,drfParams.stat_type,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose,drfParams.regression);
   }
+  Log.info("Invoking the tree build tasks on all nodes.");
   DRemoteTask.invokeAll(trees);
-  Log.debug(Log.Tag.Sys.RANDF,"All trees (" + ntrees + ") done in "+ t_alltrees);
+  Log.info(Log.Tag.Sys.RANDF,"All trees (" + ntrees + ") done in "+ t_alltrees);
 }

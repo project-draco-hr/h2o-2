@@ -10,5 +10,9 @@
   }
   if (_params.num_split_features != -1 && (_params.num_split_features < 1 || _params.num_split_features > vecs.length - 1))   throw new IllegalArgumentException("Number of split features exceeds available data. Should be in [1," + (vecs.length - 1) + "]");
   ChunkAllocInfo cai=new ChunkAllocInfo();
-  if (_params._useNonLocalData && !canLoadAll(_rfmodel.fr,cai))   throw new IllegalArgumentException("Cannot load all data from remote nodes - " + "the node " + cai.node + " requires "+ PrettyPrint.bytes(cai.requiredMemory)+ " to load all data and perform computation but there is only "+ PrettyPrint.bytes(cai.availableMemory)+ " of available memory. "+ "Please provide more memory for JVMs or disable the option '"+ Constants.USE_NON_LOCAL_DATA+ "' (however, it may affect resulting accuracy).");
+  if (_params._useNonLocalData && !canLoadAll(_rfmodel.fr,cai)) {
+    Log.warn("Cannot load all data from remote nodes - " + "the node " + cai.node + " requires "+ PrettyPrint.bytes(cai.requiredMemory)+ " to load all data and perform computation but there is only "+ PrettyPrint.bytes(cai.availableMemory)+ " of available memory. "+ "Please provide more memory for JVMs or disable the option '"+ Constants.USE_NON_LOCAL_DATA+ "' (however, it may affect resulting accuracy).");
+    Log.warn("Automatically disabling fast mode.");
+    _params._useNonLocalData=false;
+  }
 }
