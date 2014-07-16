@@ -1,17 +1,7 @@
 {
   Futures fs=new Futures();
   final SpeeDRFModel score_model=m;
-  final CMTask[] cmTask=new CMTask[1];
-  H2O.H2OCountedCompleter task4var=new H2O.H2OCountedCompleter(){
-    @Override public void compute2(){
-      cmTask[0]=CMTask.scoreTask(score_model.test_frame == null ? score_model.fr : score_model.test_frame,score_model,score_model.size(),score_model.weights,score_model.oobee,score_model._priorClassDist,score_model._modelClassDist);
-      tryComplete();
-    }
-  }
-;
-  H2O.submitTask(task4var);
-  fs.add(task4var);
-  fs.blockForPending();
+  CMTask[] cmTask=new CMTask[]{CMTask.scoreTask(score_model.test_frame == null ? score_model.fr : score_model.test_frame,score_model,score_model.size(),score_model.weights,score_model.oobee,score_model._priorClassDist,score_model._modelClassDist)};
   if (m.regression) {
     float mse=cmTask[0]._ss / ((float)(cmTask[0]._rowcnt));
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
@@ -23,6 +13,7 @@
     _domain=cmTask[0].domain();
     m.confusion=CMTask.CMFinal.make(cmTask[0]._matrix,m,cmTask[0].domain(),cmTask[0]._errorsPerTree,m.oobee,cmTask[0]._sum,cmTask[0]._cms);
     m.cm=cmTask[0]._matrix._matrix;
+    m.errorsPerTree=cmTask[0]._errorsPerTree;
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
     m.errs[m.errs.length - 1]=m.confusion.mse();
     m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);

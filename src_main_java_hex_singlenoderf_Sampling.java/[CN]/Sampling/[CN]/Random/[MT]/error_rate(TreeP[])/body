@@ -1,0 +1,9 @@
+{
+  int total_errrs=0;
+  int total_train=0;
+  for (  TreeP t : localTrees) {
+    total_errrs+=t.get_numErrs();
+    total_train+=t.get_trainSize();
+  }
+  return (float)total_errrs / (float)total_train;
+}
