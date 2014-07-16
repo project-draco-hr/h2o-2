@@ -1,7 +1,6 @@
 {
   Futures fs=new Futures();
-  final SpeeDRFModel score_model=m;
-  CMTask[] cmTask=new CMTask[]{CMTask.scoreTask(score_model.test_frame == null ? score_model.fr : score_model.test_frame,score_model,score_model.size(),score_model.weights,score_model.oobee,score_model._priorClassDist,score_model._modelClassDist)};
+  CMTask[] cmTask=new CMTask[]{CMTask.scoreTask(m.test_frame == null ? m.fr : m.test_frame,m,m.size(),m.weights,m.oobee,m._priorClassDist,m._modelClassDist,score_new_only)};
   if (m.regression) {
     float mse=cmTask[0]._ss / ((float)(cmTask[0]._rowcnt));
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
@@ -9,7 +8,7 @@
     m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
     m.cms[m.cms.length - 1]=null;
   }
- else {
+ else   if (!score_new_only) {
     _domain=cmTask[0].domain();
     m.confusion=CMTask.CMFinal.make(cmTask[0]._matrix,m,cmTask[0].domain(),cmTask[0]._errorsPerTree,m.oobee,cmTask[0]._sum,cmTask[0]._cms);
     m.cm=cmTask[0]._matrix._matrix;
@@ -23,5 +22,13 @@
       m.validAUC=makeAUC(toCMArray(m.confusion._cms),ModelUtils.DEFAULT_THRESHOLDS,m.cmDomain);
     }
     if (m.importance && !m.regression)     m.varimp=m.doVarImpCalc(m);
+  }
+ else {
+    m.errorsPerTree=old.errorsPerTree == null ? cmTask[0]._errorsPerTree : Arrays.copyOf(old.errorsPerTree,old.errorsPerTree.length + 1);
+    m.errorsPerTree[m.errorsPerTree.length - 1]=cmTask[0]._errorsPerTree[cmTask[0]._errorsPerTree.length - 1];
+    m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
+    m.errs[m.errs.length - 1]=-1.f;
+    m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
+    m.cms[m.cms.length - 1]=null;
   }
 }

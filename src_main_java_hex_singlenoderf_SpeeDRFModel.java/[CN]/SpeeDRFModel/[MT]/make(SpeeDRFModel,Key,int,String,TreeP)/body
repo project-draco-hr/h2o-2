@@ -12,7 +12,12 @@
   }
   boolean shouldScore=shouldDoScore(m);
   if (shouldScore) {
-    scoreIt(m,old);
+    if (shouldDoScore0(m)) {
+      scoreIt(m,old,false);
+    }
+ else {
+      scoreIt(m,old,m.get_params().local_mode);
+    }
   }
  else {
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
