@@ -14,7 +14,7 @@
     Assert.assertTrue(cc.isNA(vals.length + l));
     nc=new NewChunk(null,0);
     cc.inflate_impl(nc);
-    Assert.assertEquals(vals.length + l + 1,nc.len2());
+    Assert.assertEquals(vals.length + l + 1,nc.sparseLen());
     Assert.assertEquals(vals.length + l + 1,nc.len());
     Iterator<NewChunk.Value> it=nc.values(0,vals.length + 1 + l);
     for (int i=0; i < vals.length + 1 + l; ++i)     Assert.assertTrue(it.next().rowId0() == i);
