@@ -1,0 +1,16 @@
+{
+  try {
+    Key fkey0=NFSFileVec.make(new File("smalldata/parse_folder_test/prostate_0.csv"));
+    Key fkey1=NFSFileVec.make(new File("smalldata/parse_folder_test/prostate_1.csv"));
+    Vec vec=DKV.get(fkey1).get();
+    Chunk chk=vec.chunkForChunkIdx(0);
+    chk._len=9999;
+    chk._mem=null;
+    Key okey=Key.make("junk.hex");
+    Frame fr=ParseDataset2.parse(okey,new Key[]{fkey0,fkey1});
+    System.out.println("Number of chunks: " + fr.anyVec().nChunks());
+    fr.delete();
+  }
+  finally {
+  }
+}
