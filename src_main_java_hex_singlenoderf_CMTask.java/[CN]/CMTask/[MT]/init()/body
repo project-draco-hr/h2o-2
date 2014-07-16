@@ -10,7 +10,7 @@
   int cidx=0;
   for (int i=0; i < _data.anyVec().nChunks(); ++i) {
     if (_data.anyVec().chunkKey(i).home()) {
-      _chunk_row_mapping[cidx++]=_data.anyVec().chunkForChunkIdx(i)._start;
+      _chunk_row_mapping[cidx++]=_data.anyVec().chunk2StartElem(i);
     }
   }
   _rowsPerNode=new int[H2O.CLOUD.size()];

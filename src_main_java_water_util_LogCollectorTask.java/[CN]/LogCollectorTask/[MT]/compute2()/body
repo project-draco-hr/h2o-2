@@ -1,0 +1,21 @@
+{
+  int idx=H2O.SELF.index();
+  baos=new ByteArrayOutputStream();
+  ZipOutputStream zos=new ZipOutputStream(baos);
+  try {
+    zipDir(Log.LOG_DIR,zos);
+  }
+ catch (  IOException e) {
+    H2O.ignore(e);
+  }
+ finally {
+    try {
+      zos.close();
+      baos.close();
+    }
+ catch (    Exception xe) {
+    }
+    _result=baos.toByteArray();
+    tryComplete();
+  }
+}

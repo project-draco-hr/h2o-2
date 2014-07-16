@@ -1,0 +1,7 @@
+{
+  if (nbits < 0)   throw new NegativeArraySizeException("nbits < 0: " + nbits);
+  if (offset < 0)   throw new IndexOutOfBoundsException("offset < 0: " + offset);
+  _nbits=nbits;
+  _offset=offset;
+  _val=new byte[((nbits - 1) >> 3) + 1];
+}
