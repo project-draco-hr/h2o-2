@@ -1,4 +1,9 @@
 {
+  System.out.println("start ukv remove of " + _keys[1]);
+  for (  Key k : _keys)   UKV.remove(k);
+  System.out.println("done ukv remove of " + _keys[1]);
+  UKV.remove(_job.destination_key);
+  UKV.remove(_job._progress);
   if (_job != null)   _job.cancel(ex);
   return true;
 }

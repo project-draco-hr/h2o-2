@@ -14,15 +14,8 @@
   ParserFJTask fjt=new ParserFJTask(job,keys,setup,delete_on_done);
   H2OCountedCompleter cleanup=new H2OCountedCompleter(){
     @Override public void compute2(){
-      System.out.println("cleanup compute2");
-    }
-    @Override public void onCompletion(    CountedCompleter caller){
-      System.out.println("cleanup completion");
     }
     @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
-      System.out.println("parser canceled, removing keys1");
-      for (      Key k : keys)       UKV.remove(k);
-      System.out.println("parser canceled, removing keys2");
       return true;
     }
   }
