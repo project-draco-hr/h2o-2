@@ -6,5 +6,6 @@
     DKV.remove(vkey,fs);
     for (int c=0; c < nchunks; ++c)     DKV.remove(Vec.chunkKey(vkey,c),fs);
   }
+  cancel(true);
   return fs;
 }
