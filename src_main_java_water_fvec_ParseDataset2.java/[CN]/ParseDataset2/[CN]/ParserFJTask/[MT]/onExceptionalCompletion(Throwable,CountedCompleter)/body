@@ -1,6 +1,12 @@
 {
+  Futures fs=new Futures();
   if (_job != null) {
-    _job.cancel(ex);
+    UKV.remove(_job.destination_key,fs);
+    UKV.remove(_job._progress,fs);
+    if (_job._mfpt != null)     _job._mfpt.onExceptionCleanup(fs);
   }
+  for (  Key k : _keys)   UKV.remove(k,fs);
+  fs.blockForPending();
+  if (_job != null)   _job.cancel(ex);
   return true;
 }
