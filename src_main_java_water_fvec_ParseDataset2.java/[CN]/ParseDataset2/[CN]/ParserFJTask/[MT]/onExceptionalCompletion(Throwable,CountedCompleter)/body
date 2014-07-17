@@ -1,9 +1,12 @@
 {
-  System.out.println("start ukv remove of " + _keys[1]);
-  for (  Key k : _keys)   UKV.remove(k);
-  System.out.println("done ukv remove of " + _keys[1]);
-  UKV.remove(_job.destination_key);
-  UKV.remove(_job._progress);
+  Futures fs=new Futures();
+  for (  Key k : _keys)   UKV.remove(k,fs);
+  if (_job != null) {
+    UKV.remove(_job.destination_key,fs);
+    UKV.remove(_job._progress,fs);
+    if (_job._mfpt != null)     _job._mfpt.onExceptionCleanup(fs);
+  }
+  fs.blockForPending();
   if (_job != null)   _job.cancel(ex);
   return true;
 }
