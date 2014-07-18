@@ -3,7 +3,7 @@
     @Override public GLMModel atomic(    GLMModel old){
       old.submodels=old.submodels.clone();
       int id=old.submodelIdForLambda(lambda);
-      old.submodels[id]=old.submodels[id].clone();
+      old.submodels[id]=(Submodel)old.submodels[id].clone();
       old.submodels[id].xvalidation=val;
       old.pickBestModel(false);
       return old;

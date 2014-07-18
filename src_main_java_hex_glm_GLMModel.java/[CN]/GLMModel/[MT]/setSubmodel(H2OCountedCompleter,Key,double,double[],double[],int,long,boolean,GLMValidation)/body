@@ -8,14 +8,14 @@
         old.submodels=new Submodel[]{sm};
       }
  else {
-        old.submodels=old.submodels.clone();
         int id=old.submodelIdForLambda(lambda);
         if (id < 0) {
           id=-id - 1;
           old.submodels=Arrays.copyOf(old.submodels,old.submodels.length + 1);
           for (int i=old.submodels.length - 1; i > id; --i)           old.submodels[i]=old.submodels[i - 1];
         }
- else         if (old.submodels[id].iteration >= sm.iteration)         return old;
+ else         if (old.submodels[id].iteration > sm.iteration)         return old;
+ else         old.submodels=old.submodels.clone();
         old.submodels[id]=sm;
         old.run_time=Math.max(old.run_time,sm.run_time);
       }
