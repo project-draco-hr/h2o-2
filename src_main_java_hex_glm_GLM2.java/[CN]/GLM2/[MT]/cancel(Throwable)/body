@@ -1,6 +1,7 @@
 {
   if (isCancelledOrCrashed())   return;
-  if (_model != null)   _model.unlock(self());
+  Value v=DKV.get(dest());
+  if (v != null)   v.<GLMModel>get().unlock(self());
   if (ex instanceof JobCancelledException) {
     if (!isCancelledOrCrashed())     cancel();
   }

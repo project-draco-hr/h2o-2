@@ -1,3 +1,6 @@
 {
-  return new Submodel(lambda_value,beta == null ? null : beta.clone(),norm_beta == null ? null : norm_beta.clone(),run_time,iteration,sparseCoef);
+  Submodel sm=new Submodel(lambda_value,beta == null ? null : beta.clone(),norm_beta == null ? null : norm_beta.clone(),run_time,iteration,sparseCoef);
+  sm.validation=validation;
+  sm.xvalidation=xvalidation;
+  return sm;
 }

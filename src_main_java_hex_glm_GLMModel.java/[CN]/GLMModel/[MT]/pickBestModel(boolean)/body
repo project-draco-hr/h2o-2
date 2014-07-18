@@ -1,0 +1,20 @@
+{
+  int bestId=0;
+  if (submodels.length > 1) {
+    final boolean xval=submodels[0].xvalidation != null;
+    GLMValidation bestVal=xval ? submodels[0].xvalidation : submodels[0].validation;
+    for (int i=1; i < submodels.length; ++i) {
+      GLMValidation val=xval ? submodels[i].xvalidation : submodels[i].validation;
+      if (val == null)       continue;
+      if ((useAuc && val.auc > bestVal.auc) || (xval && val.residual_deviance < bestVal.residual_deviance) || (((bestVal.residual_deviance - val.residual_deviance) / val.null_deviance) >= 0.01)) {
+        bestVal=val;
+        bestId=i;
+      }
+    }
+  }
+  best_lambda_idx=bestId;
+  Submodel sm=submodels[bestId];
+  double[] beta=MemoryManager.malloc8d(coefficients_names.length);
+  for (int i=0; i < sm.beta.length; ++i)   beta[sm.idxs[i]]=sm.beta[i];
+  global_beta=beta;
+}
