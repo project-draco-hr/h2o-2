@@ -25,7 +25,7 @@ def test_many_cols_csv_download(self):
         print 'csv_download end.', 'took', (time.time() - start), 'seconds. Originally from:', csvFilename
         h2o.nodes[0].remove_key(hex_key)
         start = time.time()
-        parseResultB = h2i.import_parse(path=csvDownloadPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
+        parseResultB = h2i.import_parse(path=csvDownloadPathname, schema='put', hex_key=hex_key, timeoutSecs=(3 * timeoutSecs))
         print '\nB Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         inspect = h2o_cmd.runInspect(key=hex_key)
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
