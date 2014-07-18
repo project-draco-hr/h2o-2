@@ -8,6 +8,6 @@
     }
     step*=0.5;
   }
-  LogInfo("Line search did not find feasible step, go forward with step = " + step + ".");
-  new GLMIterationTask(GLM2.this.self(),_activeData,_glm,true,true,true,glmt._betas[glmt._betas.length - 1],_ymu,1.0 / _nobs,thresholds,new Iteration(false)).asyncExec(_activeData._adaptedFrame);
+  LogInfo("Line search did not find feasible step. Converged.");
+  checkKKTAndComplete(_lastResult._glmt,glmt._betas[glmt._betas.length - 1]);
 }
