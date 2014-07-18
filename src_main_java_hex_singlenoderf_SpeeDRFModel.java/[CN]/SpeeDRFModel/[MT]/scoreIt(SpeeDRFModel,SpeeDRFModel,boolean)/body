@@ -1,6 +1,17 @@
 {
   Futures fs=new Futures();
-  CMTask[] cmTask=new CMTask[]{CMTask.scoreTask(m.test_frame == null ? m.fr : m.test_frame,m,m.size(),m.weights,m.oobee,m._priorClassDist,m._modelClassDist,score_new_only)};
+  final CMTask[] cmTask=new CMTask[1];
+  final SpeeDRFModel score_model=(SpeeDRFModel)m.clone();
+  H2O.H2OCountedCompleter task4var=new H2O.H2OCountedCompleter(){
+    @Override public void compute2(){
+      cmTask[0]=CMTask.scoreTask(score_model.test_frame == null ? score_model.fr : score_model.test_frame,score_model,score_model.size(),score_model.weights,score_model.oobee,score_model._priorClassDist,score_model._modelClassDist,score_new_only);
+      tryComplete();
+    }
+  }
+;
+  H2O.submitTask(task4var);
+  fs.add(task4var);
+  fs.blockForPending();
   if (m.regression) {
     float mse=cmTask[0]._ss / ((float)(cmTask[0]._rowcnt));
     m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
