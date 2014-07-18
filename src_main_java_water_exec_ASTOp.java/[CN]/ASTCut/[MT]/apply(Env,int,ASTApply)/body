@@ -50,7 +50,7 @@
       @Override public void map(      Chunk chk,      NewChunk nchk){
         for (int r=0; r < chk._len; r++) {
           double x=chk.at0(r);
-          if (x <= cutoffs[0] || x > cutoffs[cutoffs.length - 1])           nchk.addNum(Double.NaN);
+          if (Double.isNaN(x) || x <= cutoffs[0] || x > cutoffs[cutoffs.length - 1])           nchk.addNum(Double.NaN);
  else {
             for (int i=1; i < cutoffs.length; i++) {
               if (x <= cutoffs[i]) {
