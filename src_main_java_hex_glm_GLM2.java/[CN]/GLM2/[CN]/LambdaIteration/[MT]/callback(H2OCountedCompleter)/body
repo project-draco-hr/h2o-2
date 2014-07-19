@@ -1,5 +1,8 @@
 {
   boolean done=_iter == max_iter || _currentLambda <= lambda_min || (max_predictors != -1 && nzs(_beta) > max_predictors);
-  if (!done)   nextLambda(nextLambdaValue(),new LambdaIteration());
- else   GLM2.this.complete();
+  if (!done) {
+    H2OCountedCompleter cmp=(H2OCountedCompleter)getCompleter();
+    cmp.addToPendingCount(1);
+    nextLambda(nextLambdaValue(),new LambdaIteration(cmp));
+  }
 }

@@ -1,6 +1,7 @@
 {
+  _computed=true;
   if (!_firstException.getAndSet(true)) {
-    _dt.setException(ex);
+    if (_dt == null)     _dt.setException(ex);
     onCompletion(caller);
   }
   return false;

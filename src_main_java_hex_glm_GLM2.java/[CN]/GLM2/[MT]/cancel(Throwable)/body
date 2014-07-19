@@ -1,9 +1,10 @@
 {
-  if (isCancelledOrCrashed())   return;
-  Value v=DKV.get(dest());
-  if (v != null)   v.<GLMModel>get().unlock(self());
-  if (ex instanceof JobCancelledException) {
-    if (!isCancelledOrCrashed())     cancel();
-  }
+  if (ex instanceof JobCancelledException)   cancel();
  else   super.cancel(ex);
+  JobCancelTask t=new JobCancelTask(this);
+  t.invoke(self());
+  if (t._res) {
+    Value v=DKV.get(dest());
+    if (v != null)     v.<GLMModel>get().unlock(self());
+  }
 }
