@@ -7,12 +7,14 @@
   DeepLearning p=new DeepLearning();
   p.source=train;
   p.autoencoder=true;
-  p.sparsity_beta=0;
   p.response=train.lastVec();
   p.classification=false;
   p.seed=seed;
-  p.hidden=new int[]{50};
+  p.hidden=new int[]{100,100};
   p.adaptive_rate=true;
+  p.sparsity_beta=1e-1;
+  p.average_activation=-0.7;
+  p.l1=1e-4;
   p.activation=DeepLearning.Activation.Tanh;
   p.loss=DeepLearning.Loss.MeanSquare;
   p.epochs=500;
