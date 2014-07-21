@@ -1,10 +1,4 @@
 {
-  if (ex instanceof JobCancelledException)   cancel();
- else   super.cancel(ex);
-  JobCancelTask t=new JobCancelTask(this);
-  t.invoke(self());
-  if (t._res) {
-    Value v=DKV.get(dest());
-    if (v != null)     v.<GLMModel>get().unlock(self());
-  }
+  super.cancel(ex);
+  DKV.remove(dest());
 }

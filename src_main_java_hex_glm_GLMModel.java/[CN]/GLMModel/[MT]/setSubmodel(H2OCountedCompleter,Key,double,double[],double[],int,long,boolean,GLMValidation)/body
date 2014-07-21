@@ -4,6 +4,7 @@
   cmp.addToPendingCount(1);
   new TAtomic<GLMModel>(cmp){
     @Override public GLMModel atomic(    GLMModel old){
+      if (old == null)       return old;
       if (old.submodels == null) {
         old.submodels=new Submodel[]{sm};
       }

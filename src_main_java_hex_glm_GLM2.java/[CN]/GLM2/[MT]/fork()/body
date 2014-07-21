@@ -13,7 +13,7 @@
       GLM2.this.complete();
     }
     @Override public boolean onExceptionalCompletion(    Throwable t,    CountedCompleter cmp){
-      if (!(t instanceof JobCancelledException))       GLM2.this.cancel(t);
+      if (!(t instanceof JobCancelledException) && !t.getMessage().contains("JobCancelled"))       GLM2.this.cancel(t);
       return true;
     }
   }

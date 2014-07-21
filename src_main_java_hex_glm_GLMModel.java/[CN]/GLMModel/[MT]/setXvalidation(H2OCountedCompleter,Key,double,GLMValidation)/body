@@ -1,6 +1,7 @@
 {
   new TAtomic<GLMModel>(cmp){
     @Override public GLMModel atomic(    GLMModel old){
+      if (old == null)       return old;
       old.submodels=old.submodels.clone();
       int id=old.submodelIdForLambda(lambda);
       old.submodels[id]=(Submodel)old.submodels[id].clone();
