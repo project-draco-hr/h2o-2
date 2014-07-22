@@ -10,7 +10,9 @@
       _computed=true;
       boolean t=ab.hasTCP();
       dt._repliedTcp=t;
-      ab.close(t,false);
+      AutoBuffer ab2=ab;
+      ab=null;
+      ab2.close(t,false);
       break;
     }
  catch (    AutoBuffer.TCPIsUnreliableException e) {
