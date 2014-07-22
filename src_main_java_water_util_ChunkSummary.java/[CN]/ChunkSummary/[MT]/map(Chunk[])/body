@@ -1,13 +1,12 @@
 {
-  for (int col=0; col < cs.length; ++col) {
+  for (  Chunk c : cs) {
     boolean found=false;
     for (int j=0; j < chunkTypes.length; ++j) {
-      Chunk ck=cs[col];
-      if (ck.getClass().getSimpleName().equals(chunkTypes[j])) {
+      if (c.getClass().getSimpleName().equals(chunkTypes[j])) {
         found=true;
         chunk_counts[j]++;
-        chunk_byte_sizes[j]+=ck.byteSize();
-        byte_size_per_node[H2O.SELF.index()]+=ck.byteSize();
+        chunk_byte_sizes[j]+=c.byteSize();
+        byte_size_per_node[H2O.SELF.index()]+=c.byteSize();
       }
     }
     if (!found) {
