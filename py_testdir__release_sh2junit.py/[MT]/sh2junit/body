@@ -28,6 +28,7 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, shdir=None, **kwa
         while line:
             lineBurstCnt += 1
             sys.stdout.write(('R->' + line))
+            sys.stdout.flush()
             os.write(outfd, line)
             elapsed = (time.time() - start)
             if (elapsed > timeout):
@@ -44,6 +45,7 @@ def sh2junit(name='NoName', cmd_string='/bin/ls', timeout=300, shdir=None, **kwa
         while line:
             lineBurstCnt += 1
             sys.stdout.write(('Re->' + line))
+            sys.stdout.flush()
             os.write(errfd, line)
             line = ps.stderr.readline()
         print 'lineBurstCnt:', lineBurstCnt
