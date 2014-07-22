@@ -93,21 +93,22 @@
                             double error=0;
                             if (mymodel.nclasses() == 2) {
                               auc.actual=valid;
+                              assert(resp == 1);
                               auc.vactual=valid.vecs()[resp];
                               auc.predict=pred;
                               auc.vpredict=pred.vecs()[2];
-                              auc.threshold_criterion=AUC.ThresholdCriterion.maximum_F1;
                               auc.invoke();
                               auc.toASCII(sb);
-                              threshold=auc.threshold();
-                              error=auc.err();
+                              AUCData aucd=auc.data();
+                              threshold=aucd.threshold();
+                              error=aucd.err();
                               Log.info(sb);
-                              Assert.assertTrue(auc.AUC > 0.75);
-                              Assert.assertTrue(auc.AUC < 0.9);
-                              Assert.assertTrue(auc.threshold() > 0.1);
-                              Assert.assertTrue(auc.threshold() < 0.6);
-                              Assert.assertEquals(new ConfusionMatrix(auc.cm()).err(),error,1e-15);
-                              Assert.assertEquals(mymodel.calcError(valid,valid.lastVec(),pred,pred,"training",false,0,null,auc,null),error,1e-15);
+                              Assert.assertTrue(aucd.AUC > 0.75);
+                              Assert.assertTrue(aucd.AUC < 0.9);
+                              Assert.assertTrue(aucd.threshold() > 0.1);
+                              Assert.assertTrue(aucd.threshold() < 0.6);
+                              Assert.assertEquals(new ConfusionMatrix(aucd.cm()).err(),error,1e-15);
+                              Assert.assertEquals(mymodel.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
                             }
                             double CMerrorOrig;
 {
