@@ -1,6 +1,7 @@
 def parse_args(argv):
     global g_base_port
     global g_num_clouds
+    global g_nodes_per_cloud
     global g_wipe_test_state
     global g_wipe_output_dir
     global g_test_to_run
@@ -27,6 +28,11 @@ def parse_args(argv):
             if (i > len(argv)):
                 usage()
             g_num_clouds = int(argv[i])
+        elif (s == '--numnodes'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            g_nodes_per_cloud = int(argv[i])
         elif (s == '--wipeall'):
             g_wipe_test_state = True
             g_wipe_output_dir = True
@@ -85,3 +91,5 @@ def parse_args(argv):
         else:
             unknown_arg(s)
         i += 1
+    if ((g_num_clouds > 1) and (g_nodes_per_cloud > 1)):
+        error('num clouds and nodes per cloud cannot both be greater than 1')

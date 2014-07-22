@@ -22,12 +22,12 @@ def run_tests(self):
             sys.exit(1)
         out.close()
     num_tests = len(self.tests)
-    num_nodes = len((self.clouds * self.nodes_per_cloud))
+    num_nodes = (self.num_clouds * self.nodes_per_cloud)
     self._log('')
     if self.use_cloud:
         self._log('Starting {} tests...'.format(num_tests))
     else:
-        self._log('Starting {} tests on {} total H2O nodes...'.format(num_tests, num_nodes))
+        self._log('Starting {} tests on {} clouds with {} total H2O nodes...'.format(num_tests, self.num_clouds, num_nodes))
     self._log('')
     start_count = min(len(self.tests_not_started), len(self.clouds))
     for i in range(start_count):
