@@ -24,7 +24,7 @@
       }
       sort(thresholds);
     }
-    _aucdata=new AUCData().compute(new AUCTask(thresholds,va.mean()).doAll(va,vp).getCMs(),thresholds,va._domain,threshold_criterion);
+    aucdata=new AUCData().compute(new AUCTask(thresholds,va.mean()).doAll(va,vp).getCMs(),thresholds,va._domain,threshold_criterion);
   }
   finally {
     if (va != null)     UKV.remove(va._key);
