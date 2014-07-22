@@ -1,0 +1,17 @@
+{
+  for (int col=0; col < cs.length; ++col) {
+    boolean found=false;
+    for (int j=0; j < chunkTypes.length; ++j) {
+      Chunk ck=cs[col];
+      if (ck.getClass().getSimpleName().equals(chunkTypes[j])) {
+        found=true;
+        chunk_counts[j]++;
+        chunk_byte_sizes[j]+=ck.byteSize();
+        byte_size_per_node[H2O.SELF.index()]+=ck.byteSize();
+      }
+    }
+    if (!found) {
+      throw H2O.unimpl();
+    }
+  }
+}
