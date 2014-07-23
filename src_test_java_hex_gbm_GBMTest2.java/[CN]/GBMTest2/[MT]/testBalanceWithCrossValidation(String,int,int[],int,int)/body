@@ -15,6 +15,7 @@
     gbm.invoke();
     Assert.assertEquals("Number of cross validation model is wrond!",nfolds,gbm.xval_models.length);
     model=UKV.get(gbm.dest());
+    Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
   }
   finally {
     if (f != null)     f.delete();

@@ -20,6 +20,7 @@
     gbm.score_each_iteration=true;
     gbm.invoke();
     gbmmodel=UKV.get(gbm.dest());
+    Assert.assertTrue(gbmmodel.get_params().state == Job.JobState.DONE);
     Frame preds=gbm.score(gbm.source);
     double sq_err=new CompErr().doAll(gbm.response,preds.vecs()[0])._sum;
     double mse=sq_err / preds.numRows();
