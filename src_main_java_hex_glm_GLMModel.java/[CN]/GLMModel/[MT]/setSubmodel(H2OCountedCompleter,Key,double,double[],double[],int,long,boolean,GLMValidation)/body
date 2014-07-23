@@ -1,7 +1,7 @@
 {
   final Submodel sm=new Submodel(lambda,beta,norm_beta,runtime,iteration,sparseCoef);
   sm.validation=val;
-  cmp.addToPendingCount(1);
+  cmp=null;
   new TAtomic<GLMModel>(cmp){
     @Override public GLMModel atomic(    GLMModel old){
       if (old == null)       return old;

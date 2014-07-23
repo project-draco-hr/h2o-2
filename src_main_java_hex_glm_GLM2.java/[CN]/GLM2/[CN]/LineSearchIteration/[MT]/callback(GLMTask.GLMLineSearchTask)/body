@@ -1,13 +1,2 @@
 {
-  double step=0.5;
-  for (int i=0; i < glmt._objvals.length; ++i) {
-    if (!needLineSearch(glmt._betas[i],glmt._objvals[i],step)) {
-      LogInfo("line search: found admissible step = " + step);
-      new GLMIterationTask(GLM2.this.self(),_activeData,_glm,true,true,true,glmt._betas[i],_ymu,1.0 / _nobs,thresholds,new Iteration(getCompleter(),false,false)).asyncExec(_activeData._adaptedFrame);
-      return;
-    }
-    step*=0.5;
-  }
-  LogInfo("Line search did not find feasible step, go forward with step = " + step + ".");
-  new GLMIterationTask(GLM2.this.self(),_activeData,_glm,true,true,true,glmt._betas[glmt._betas.length - 1],_ymu,1.0 / _nobs,thresholds,new Iteration(getCompleter(),false,false)).asyncExec(_activeData._adaptedFrame);
 }
