@@ -11,11 +11,11 @@
   double[] tmpd=_ds;
   _ds=nc._ds;
   nc._ds=tmpd;
-  int tmp=_len;
+  int tmp=_sparseLen;
+  _sparseLen=nc._sparseLen;
+  nc._sparseLen=tmp;
+  tmp=_len;
   _len=nc._len;
   nc._len=tmp;
-  tmp=_len2;
-  _len2=nc._len2;
-  nc._len2=tmp;
   add(nc);
 }

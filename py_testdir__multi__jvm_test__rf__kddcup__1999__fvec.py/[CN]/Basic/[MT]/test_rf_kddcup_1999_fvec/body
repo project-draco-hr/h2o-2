@@ -12,9 +12,9 @@ def test_rf_kddcup_1999_fvec(self):
         if (trials == 0):
             kwargs = {}
         else:
-            kwargs = {'response': 'classifier', 'ntrees': 200, 'mtry': 7, 'sample_rate': 0.67, 'nbins': 1024, 'max_depth': 2147483647, 'seed': 784834182943470027, }
+            kwargs = {'response': 'classifier', 'ntrees': 1, 'mtry': 7, 'sample_rate': 0.67, 'nbins': 1024, 'max_depth': 2147483647, 'seed': 784834182943470027, }
         if (trials == 2):
             kwargs['validation']
         start = time.time()
-        RFview = h2o_cmd.runRF(parseResult=parseResult, ntrees=5, timeoutSecs=300, retryDelaySecs=1.0, **kwargs)
+        RFview = h2o_cmd.runRF(parseResult=parseResult, ntrees=1, timeoutSecs=300, retryDelaySecs=1.0, **kwargs)
         print 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
