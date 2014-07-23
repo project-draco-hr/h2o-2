@@ -10,5 +10,5 @@
     while (maxNewVars > 0 && g[maxNewVars] == x)     --maxNewVars;
   }
   double res=0.5 * (-g[maxNewVars] / Math.max(1e-3,alpha[0]) + oldLambda);
-  return res < oldLambda ? res : 0.9545 * oldLambda;
+  return res < oldLambda ? res : oldLambda * 0.9;
 }

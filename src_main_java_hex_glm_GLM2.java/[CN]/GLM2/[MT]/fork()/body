@@ -1,5 +1,25 @@
 {
-  start(new H2O.H2OEmptyCompleter());
-  run(true);
-  return this;
+  Futures fs=new Futures();
+  _progressKey=Key.make(dest().toString() + "_progress",(byte)1,Key.HIDDEN_USER_KEY,dest().home_node());
+  int total=max_iter;
+  if (lambda_search)   total=3 * nlambdas;
+  DKV.put(_progressKey,new GLM2_Progress(total * (n_folds + 1)),fs);
+  fs.blockForPending();
+  H2OCountedCompleter fjtask=new H2OCountedCompleter(){
+    @Override public void compute2(){
+      run(true,this);
+    }
+    @Override public void onCompletion(    CountedCompleter cmp){
+      GLM2.this.complete();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable t,    CountedCompleter cmp){
+      if (!(t instanceof JobCancelledException) && (t.getMessage() == null || !t.getMessage().contains("JobCancelled")))       GLM2.this.cancel(t);
+      return true;
+    }
+  }
+;
+  GLM2 j=(GLM2)clone();
+  j.start(fjtask);
+  H2O.submitTask(fjtask);
+  return j;
 }

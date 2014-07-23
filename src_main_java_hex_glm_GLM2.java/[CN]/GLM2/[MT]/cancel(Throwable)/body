@@ -1,8 +1,5 @@
 {
-  if (isCancelledOrCrashed())   return;
-  if (_model != null)   _model.unlock(self());
-  if (ex instanceof JobCancelledException) {
-    if (!isCancelledOrCrashed())     cancel();
-  }
- else   super.cancel(ex);
+  LogInfo(ex.toString());
+  super.cancel(ex);
+  DKV.remove(dest());
 }

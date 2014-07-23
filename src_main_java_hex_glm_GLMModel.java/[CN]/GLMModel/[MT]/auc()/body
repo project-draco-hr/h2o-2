@@ -1,4 +1,7 @@
 {
-  if (glm.family == Family.binomial && submodels != null && submodels[best_lambda_idx].validation != null)   return submodels[best_lambda_idx].validation.auc;
+  if (glm.family == Family.binomial && submodels != null && submodels[best_lambda_idx].validation != null) {
+    Submodel sm=submodels[best_lambda_idx];
+    return sm.xvalidation != null ? sm.xvalidation.auc : sm.validation.auc;
+  }
   return -1;
 }

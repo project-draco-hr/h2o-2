@@ -1,7 +1,10 @@
 {
   if (_fullGrad == null)   return null;
   double[] res=_fullGrad.clone();
-  double l2=(1 - alpha) * lambda * 0.5;
-  for (int i=0; i < _glmt._beta.length - 1; ++i)   res[_activeCols[i]]+=_glmt._beta[i] * l2;
+  double l2=(1 - alpha) * lambda;
+  if (_activeCols != null)   for (int i=0; i < _glmt._beta.length - 1; ++i)   res[_activeCols[i]]+=_glmt._beta[i] * l2;
+ else   for (int i=0; i < _glmt._beta.length; ++i) {
+    res[i]+=_glmt._beta[i] * l2;
+  }
   return res;
 }
