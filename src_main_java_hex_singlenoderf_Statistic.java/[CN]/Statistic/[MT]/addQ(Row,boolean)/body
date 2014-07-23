@@ -8,7 +8,10 @@
       }
  else {
         short val=row.getEncodedColumnValue(f);
-        _columnDistsRegression[f][val][cls]++;
+        if (val == DataAdapter.BAD)         continue;
+        int resp=row.getEncodedClassColumnValue();
+        if (resp == DataAdapter.BAD)         continue;
+        _columnDistsRegression[f][val][resp]++;
       }
     }
   }

@@ -1,6 +1,6 @@
 def usage():
     print ''
-    print (('Usage:  ' + g_script_name) + ' [--wipeall] [--wipe] [--baseport port] [--numclouds n] [--test path/to/test.R] [--testlist path/to/list/file] [--testgroup group] [--testsize (s|m|l)] [--usecloud ip:port] [--norun]')
+    print (('Usage:  ' + g_script_name) + ' [--wipeall] [--wipe] [--baseport port] [--numclouds n] [--nodespercloud n] [--test path/to/test.R] [--testlist path/to/list/file] [--testgroup group] [--testsize (s|m|l)] [--usecloud ip:port] [--norun]')
     print ''
     print (('    (Output dir is: ' + g_output_dir) + ')')
     print (('    (Default number of clouds is: ' + str(g_num_clouds)) + ')')
@@ -16,6 +16,9 @@ def usage():
     print ''
     print '    --numclouds   The number of clouds to start.'
     print '                  Each test is randomly assigned to a cloud.'
+    print ''
+    print '    --numnodes    The number of nodes in the cloud.'
+    print '                  When this is specified, numclouds must be 1.'
     print ''
     print '    --test        If you only want to run one test, specify it like this.'
     print ''

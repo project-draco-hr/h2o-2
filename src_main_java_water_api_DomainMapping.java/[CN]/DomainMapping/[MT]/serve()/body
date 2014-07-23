@@ -1,0 +1,14 @@
+{
+  if (src_key == null)   return RequestServer._http404.serve();
+  Vec v=src_key.anyVec();
+  if (v.isEnum()) {
+    map=Arrays.asList(v.domain()).indexOf(str);
+  }
+ else   if (v.masterVec() != null && v.masterVec().isEnum()) {
+    map=Arrays.asList(v.masterVec().domain()).indexOf(str);
+  }
+ else {
+    map=-1;
+  }
+  return Response.done(this);
+}

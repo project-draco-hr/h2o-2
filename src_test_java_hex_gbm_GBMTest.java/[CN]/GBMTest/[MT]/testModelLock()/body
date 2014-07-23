@@ -28,6 +28,7 @@ catch (    DException.DistributedException de) {
       assertTrue(de.getMessage().contains("java.lang.IllegalArgumentException"));
     }
     GBM.GBMModel model=gbm.get();
+    Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
     if (model != null)     model.delete();
   }
   finally {

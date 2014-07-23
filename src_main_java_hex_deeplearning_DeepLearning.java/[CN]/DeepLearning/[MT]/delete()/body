@@ -2,10 +2,4 @@
   cleanup();
   if (_fakejob)   UKV.remove(job_key);
   remove();
-  Value v=DKV.get(dest());
-  if (v != null) {
-    DeepLearningModel m=v.get();
-    m.get_params().state=state;
-    DKV.put(dest(),m);
-  }
 }

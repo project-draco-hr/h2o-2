@@ -1,0 +1,6 @@
+import unittest, random, sys, time, os
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_exec as h2e
+zeroList = ['Result0 = c(0)', 'Result1 = c(0) + Result0', 'Result2 = c(0) + Result1', 'Result3 = c(0) + Result2', 'Result4 = rep_len(0,1000000)', 'Result5 = rep_len(0,1000000) + Result4', 'Result6 = rep_len(0,1000000) + Result5', 'Result7 = rep_len(0,1000000) + Result6', 'Result8 = rep_len(0,1000000) + Result7', 'Result9 = rep_len(0,1000000) + Result8', 'Result.hex = c(0)']
+if (__name__ == '__main__'):
+    h2o.unit_main()

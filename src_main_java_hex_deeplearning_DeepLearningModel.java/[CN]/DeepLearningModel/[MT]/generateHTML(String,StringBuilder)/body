@@ -21,6 +21,7 @@
     DocGen.HTML.section(sb,msg);
     DocGen.HTML.section(sb,"=======================================================================================");
   }
+  if (error == null)   return true;
   DocGen.HTML.title(sb,"Progress");
   epoch_counter=training_rows > 0 ? (float)model_info().get_processed_total() / training_rows : 0;
   final double progress=get_params().progress();
@@ -65,7 +66,8 @@
       }
  else       if (i < neurons.length - 1) {
         sb.append("<td>");
-        sb.append(Utils.formatPct(neurons[i].params.hidden_dropout_ratios[i - 1]));
+        if (neurons[i].params.hidden_dropout_ratios == null)         sb.append(Utils.formatPct(0));
+ else         sb.append(Utils.formatPct(neurons[i].params.hidden_dropout_ratios[i - 1]));
         sb.append("</td>");
       }
  else {

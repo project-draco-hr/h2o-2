@@ -6,7 +6,7 @@
 switch (_setup._pType) {
 case CSV:
     p=new CsvParser(_setup);
-  dout=new FVecDataOut(_vg,_startChunkIdx + in.cidx(),_setup._ncols,_vecIdStart,enums,_appendables);
+  dout=new FVecDataOut(_vg,_startChunkIdx + in.cidx(),_setup._ncols,_vecIdStart,enums,_appendables,_setup._forceEnumCol);
 break;
 case SVMLight:
 p=new SVMLightParser(_setup);
@@ -18,4 +18,19 @@ throw H2O.unimpl();
 p.parallelParse(in.cidx(),din,dout);
 (_dout=dout).close(_fs);
 onProgress(in._len,_progress);
+final int cidx=in.cidx();
+if (!_visited.add(cidx)) {
+Value v=H2O.get(in._vec.chunkKey(cidx));
+if (v != null && v.isPersisted()) {
+v.freePOJO();
+v.freeMem();
+}
+}
+if (!_visited.add(cidx + 1)) {
+Value v=H2O.get(in._vec.chunkKey(cidx + 1));
+if (v != null && v.isPersisted()) {
+v.freePOJO();
+v.freeMem();
+}
+}
 }

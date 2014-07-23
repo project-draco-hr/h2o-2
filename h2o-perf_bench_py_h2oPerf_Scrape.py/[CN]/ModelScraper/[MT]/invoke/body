@@ -6,6 +6,12 @@ def invoke(self):
         self.test_run_clustering_result = TableRow('test_run_clustering_result', self.perfdb)
         self.test_run_clustering_result.row.update(kmeans_result)
         self.test_run_clustering_result.update()
-    self.test_run_model_result.row['model_json'] = MySQLdb.escape_string(str(self.__scrape_model_result__()))
-    self.test_run_model_result.update()
+    comp_result = self.__scrape_comparison_result__()
+    if (comp_result != ''):
+        self.test_run_binomial_comparison_result = TableRow('test_run_binomial_comparison', self.perfdb)
+        self.test_run_binomial_comparison_result.row.update(comp_result['comparison_result'])
+        self.test_run_binomial_comparison_result.update()
+    else:
+        self.test_run_model_result.row['model_json'] = MySQLdb.escape_string(str(self.__scrape_model_result__()))
+        self.test_run_model_result.update()
     return None

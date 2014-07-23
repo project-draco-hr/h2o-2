@@ -1,9 +1,31 @@
 {
-  SpeeDRFModel rf_model=initModel();
-  rf_model.start_training(null);
-  buildForest(rf_model);
-  rf_model.stop_training();
-  if (n_folds > 0)   CrossValUtils.crossValidate(this);
-  cleanup();
-  remove();
+  SpeeDRFModel rf_model=null;
+  try {
+    source.read_lock(self());
+    rf_model=initModel();
+    rf_model.start_training(null);
+    rf_model.write_lock(self());
+    buildForest(rf_model);
+    rf_model.stop_training();
+  }
+ catch (  JobCancelledException ex) {
+    Log.info("Random Forest building was cancelled.");
+    throw ex;
+  }
+catch (  Exception ex) {
+    ex.printStackTrace();
+    throw new RuntimeException(ex);
+  }
+ finally {
+    source.unlock(self());
+    if (n_folds > 0)     CrossValUtils.crossValidate(this);
+    remove();
+    if (rf_model != null) {
+      rf_model=UKV.get(dest());
+      rf_model.get_params().state=UKV.<Job>get(self()).state;
+      rf_model.unlock(self());
+    }
+    emptyLTrash();
+    cleanup();
+  }
 }

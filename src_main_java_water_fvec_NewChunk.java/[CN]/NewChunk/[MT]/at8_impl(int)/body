@@ -1,9 +1,10 @@
 {
-  if (_len2 != _len) {
-    int idx=Arrays.binarySearch(_id,0,_len,i);
+  if (_len != _sparseLen) {
+    int idx=Arrays.binarySearch(_id,0,_sparseLen,i);
     if (idx >= 0)     i=idx;
  else     return 0;
   }
+  if (isNA2(i))   throw new RuntimeException("Attempting to access NA as integer value.");
   if (_ls == null)   return (long)_ds[i];
   return _ls[i] * DParseTask.pow10i(_xs[i]);
 }

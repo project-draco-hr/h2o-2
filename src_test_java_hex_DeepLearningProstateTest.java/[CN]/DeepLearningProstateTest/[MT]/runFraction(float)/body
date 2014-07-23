@@ -65,6 +65,7 @@
 {
                             DeepLearning p=new DeepLearning();
                             final DeepLearningModel tmp_model=UKV.get(dest_tmp);
+                            Assert.assertTrue(tmp_model.get_params().state == Job.JobState.DONE);
                             assert(tmp_model != null);
                             assert(!Arrays.equals(p.job_key._kb,tmp_model.get_params().job_key._kb));
                             p.checkpoint=dest_tmp;
@@ -80,6 +81,7 @@
                             p.invoke();
                           }
                           final DeepLearningModel mymodel=UKV.get(dest);
+                          Assert.assertTrue(mymodel.get_params().state == Job.JobState.DONE);
 {
                             StringBuilder sb=new StringBuilder();
                             mymodel.generateHTML("test",sb);
@@ -93,21 +95,22 @@
                             double error=0;
                             if (mymodel.nclasses() == 2) {
                               auc.actual=valid;
+                              assert(resp == 1);
                               auc.vactual=valid.vecs()[resp];
                               auc.predict=pred;
                               auc.vpredict=pred.vecs()[2];
-                              auc.threshold_criterion=AUC.ThresholdCriterion.maximum_F1;
                               auc.invoke();
                               auc.toASCII(sb);
-                              threshold=auc.threshold();
-                              error=auc.err();
+                              AUCData aucd=auc.data();
+                              threshold=aucd.threshold();
+                              error=aucd.err();
                               Log.info(sb);
-                              Assert.assertTrue(auc.AUC > 0.75);
-                              Assert.assertTrue(auc.AUC < 0.9);
-                              Assert.assertTrue(auc.threshold() > 0.1);
-                              Assert.assertTrue(auc.threshold() < 0.6);
-                              Assert.assertEquals(new ConfusionMatrix(auc.cm()).err(),error,1e-15);
-                              Assert.assertEquals(mymodel.calcError(valid,valid.lastVec(),pred,pred,"training",false,0,null,auc,null),error,1e-15);
+                              Assert.assertTrue(aucd.AUC > 0.75);
+                              Assert.assertTrue(aucd.AUC < 0.9);
+                              Assert.assertTrue(aucd.threshold() > 0.1);
+                              Assert.assertTrue(aucd.threshold() < 0.6);
+                              Assert.assertEquals(new ConfusionMatrix(aucd.cm()).err(),error,1e-15);
+                              Assert.assertEquals(mymodel.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
                             }
                             double CMerrorOrig;
 {
@@ -186,6 +189,7 @@
                             Log.info("Actual best error : " + best_err + ".");
                             Log.info("Actual best training samples : " + best_samples + ".");
                             DeepLearningModel bestmodel=UKV.get(mymodel.get_params().best_model_key);
+                            Assert.assertTrue(bestmodel.get_params().state == Job.JobState.DONE);
                             final Frame fr=valid;
                             Frame bestPredict=bestmodel.score(fr);
                             double bestErr=bestmodel.calcError(fr,fr.vecs()[resp],bestPredict,bestPredict,validation ? "validation" : "training",true,bestmodel.get_params().max_confusion_matrix_size,new water.api.ConfusionMatrix(),bestmodel.nclasses() == 2 ? new AUC() : null,null);

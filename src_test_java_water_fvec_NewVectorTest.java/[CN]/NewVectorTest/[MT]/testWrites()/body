@@ -4,13 +4,13 @@
   NewChunk nv=new NewChunk(av,0);
   nv._ls=new long[]{0,0,0,0};
   nv._xs=new int[]{0,0,0,0};
-  nv._len=nv._len2=nv._ls.length;
+  nv._len=nv._sparseLen=nv._ls.length;
   long[] ls=nv._ls;
   nv.close(0,null);
   Futures fs=new Futures();
   Vec vec=av.close(fs);
   fs.blockForPending();
-  assertEquals(nv._len2,vec.length());
+  assertEquals(nv._len,vec.length());
   Chunk c0=vec.chunkForChunkIdx(0);
   assertTrue("Found chunk class " + c0.getClass() + " but expected C0LChunk",c0 instanceof C0LChunk);
   assertEquals(false,c0.hasFloat());

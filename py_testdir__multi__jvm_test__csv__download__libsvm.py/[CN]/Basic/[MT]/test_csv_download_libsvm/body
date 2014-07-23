@@ -11,14 +11,13 @@ def test_csv_download_libsvm(self):
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEED)
         start = time.time()
-        parseResultA = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs)
+        parseResultA = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, doSummary=False)
         print '\nA Trial #', trial, 'rowCount:', rowCount, 'colCount:', colCount, 'parse end on ', csvFilename, 'took', (time.time() - start), 'seconds'
         inspect = h2o_cmd.runInspect(key=hex_key, timeoutSecs=timeoutSecs)
         missingValuesListA = h2o_cmd.infoFromInspect(inspect, csvPathname)
         numColsA = inspect['numCols']
         numRowsA = inspect['numRows']
-        sizeBytesA = inspect['sizeBytes']
-        value_size_bytesA = inspect['value_size_bytes']
+        byteSizeA = inspect['byteSize']
         csvDownloadPathname = (SYNDATASETS_DIR + '/csvDownload.csv')
         print '\nStarting csv download to', csvDownloadPathname, 'rowCount:', rowCount, 'colCount:', colCount
         start = time.time()
@@ -32,9 +31,9 @@ def test_csv_download_libsvm(self):
         missingValuesListB = h2o_cmd.infoFromInspect(inspect, csvPathname)
         numColsB = inspect['numCols']
         numRowsB = inspect['numRows']
-        sizeBytesB = inspect['sizeBytes']
+        byteSizeB = inspect['byteSize']
         self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
         self.assertEqual(numColsA, numColsB, ('numCols mismatches after re-parse of downloadCsv result %d %d' % (numColsA, numColsB)))
         self.assertEqual(numRowsA, numRowsB, ('numRows mismatches after re-parse of downloadCsv result %d %d' % (numRowsA, numRowsB)))
-        self.assertEqual(sizeBytesA, sizeBytesB, ('sizeBytes mismatches after re-parse of downloadCsv result %d %d' % (sizeBytesA, sizeBytesB)))
+        self.assertEqual(byteSizeA, byteSizeB, ('byteSize mismatches after re-parse of downloadCsv result %d %d' % (byteSizeA, byteSizeB)))
         h2o.check_sandbox_for_errors()

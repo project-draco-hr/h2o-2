@@ -66,4 +66,8 @@
     arg.disable("Only for multi-node operation with replication.");
     single_node_mode=false;
   }
+  if (arg._name.equals("use_all_factor_levels") && autoencoder) {
+    arg.disable("Automatically enabled for auto-encoders.");
+    use_all_factor_levels=true;
+  }
 }

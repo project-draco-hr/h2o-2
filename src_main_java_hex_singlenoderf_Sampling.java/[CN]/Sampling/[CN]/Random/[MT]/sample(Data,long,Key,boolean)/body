@@ -1,0 +1,8 @@
+{
+  SpeeDRFModel m=UKV.get(modelKey);
+  TreeP[] localTrees=getLocalTrees(m);
+  int[] sample;
+  sample=localTrees != null && local_mode ? biteDIVotes(data,seed,localTrees,m) : sampleFair(data,seed,_rowsPerChunks);
+  Arrays.sort(sample);
+  return new Subset(data,sample,0,sample.length);
+}

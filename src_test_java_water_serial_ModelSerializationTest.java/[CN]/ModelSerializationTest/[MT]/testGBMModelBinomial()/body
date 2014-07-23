@@ -1,0 +1,13 @@
+{
+  GBMModel model=null, loadedModel=null;
+  try {
+    model=prepareGBMModel("smalldata/logreg/prostate.csv",ari(0),1,true,5);
+    loadedModel=saveAndLoad(model);
+    assertTreeModelEquals(model,loadedModel);
+    assertModelBinaryEquals(model,loadedModel);
+  }
+  finally {
+    if (model != null)     model.delete();
+    if (loadedModel != null)     loadedModel.delete();
+  }
+}
