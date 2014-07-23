@@ -18,6 +18,7 @@
   Log.info("Invoking the SpeeDRF task.");
   spdrf.invoke();
   SpeeDRFModel m=UKV.get(spdrf.dest());
+  Assert.assertTrue(m.get_params().state == Job.JobState.DONE);
   assertEquals("Number of classes",2,m.classes());
   assertEquals("Number of trees",3,m.size());
   m.delete();
