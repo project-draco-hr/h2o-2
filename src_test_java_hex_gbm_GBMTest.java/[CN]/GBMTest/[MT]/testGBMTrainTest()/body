@@ -22,6 +22,7 @@
     gbm.invoke();
     gbmmodel=UKV.get(gbm.dest());
     testHTML(gbmmodel);
+    Assert.assertTrue(gbmmodel.get_params().state == Job.JobState.DONE);
     ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
     fpreds=gbm.score(ftest);
     ConfusionMatrix CM=new ConfusionMatrix();
