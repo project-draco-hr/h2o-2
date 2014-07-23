@@ -65,6 +65,7 @@
 {
                             DeepLearning p=new DeepLearning();
                             final DeepLearningModel tmp_model=UKV.get(dest_tmp);
+                            Assert.assertTrue(tmp_model.get_params().state == Job.JobState.DONE);
                             assert(tmp_model != null);
                             assert(!Arrays.equals(p.job_key._kb,tmp_model.get_params().job_key._kb));
                             p.checkpoint=dest_tmp;
@@ -80,6 +81,7 @@
                             p.invoke();
                           }
                           final DeepLearningModel mymodel=UKV.get(dest);
+                          Assert.assertTrue(mymodel.get_params().state == Job.JobState.DONE);
 {
                             StringBuilder sb=new StringBuilder();
                             mymodel.generateHTML("test",sb);
@@ -187,6 +189,7 @@
                             Log.info("Actual best error : " + best_err + ".");
                             Log.info("Actual best training samples : " + best_samples + ".");
                             DeepLearningModel bestmodel=UKV.get(mymodel.get_params().best_model_key);
+                            Assert.assertTrue(bestmodel.get_params().state == Job.JobState.DONE);
                             final Frame fr=valid;
                             Frame bestPredict=bestmodel.score(fr);
                             double bestErr=bestmodel.calcError(fr,fr.vecs()[resp],bestPredict,bestPredict,validation ? "validation" : "training",true,bestmodel.get_params().max_confusion_matrix_size,new water.api.ConfusionMatrix(),bestmodel.nclasses() == 2 ? new AUC() : null,null);
