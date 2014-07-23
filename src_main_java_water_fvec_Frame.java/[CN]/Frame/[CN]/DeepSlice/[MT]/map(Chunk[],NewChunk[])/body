@@ -4,32 +4,32 @@
   int rx=0;
   int rlo=0;
   int rhi=rlen;
-  while (true) {
-    if (_rows != null) {
-      if (rx >= _rows.length)       break;
-      long r=_rows[rx++] - 1;
-      if (r < 0) {
-        if (rx > 0 && _rows[rx - 1] < _rows[rx])         throw H2O.unimpl();
-        long er=Math.abs(r) - 2;
-        if (er < rstart)         continue;
-        if (rx == 1 && ((int)(er + 1 - rstart)) > 0 && _ex) {
-          rlo=(int)rstart;
-          rhi=(int)(er - rstart);
-          _ex=false;
-          rx--;
-        }
- else {
-          rlo=(int)(er + 1 - rstart);
-          while (rx < _rows.length && (_rows[rx] + 1 == _rows[rx - 1] && rlo < rlen)) {
-            if (rx < _rows.length - 1 && _rows[rx] < _rows[rx + 1])             throw H2O.unimpl();
-            rx++;
-            rlo++;
-          }
-          rhi=rx >= _rows.length ? rlen : (int)Math.abs(_rows[rx] - 1) - 2;
-          if (rx < _rows.length - 1 && _rows[rx] < _rows[rx + 1])           throw H2O.unimpl();
+  if (_rows != null && _rows[0] < 0) {
+    Chunk select_vec=chks[chks.length - 1];
+    for (int i=0; i < _cols.length; i++) {
+      Chunk oc=chks[_cols[i]];
+      NewChunk nc=nchks[i];
+      if (_isInt[i] == 1) {
+        for (int j=0; j < oc._len; j++) {
+          if (select_vec.at80(j) == 1)           continue;
+          if (oc._vec.isUUID())           nc.addUUID(oc,j);
+ else           if (oc.isNA0(j))           nc.addNA();
+ else           nc.addNum(oc.at80(j),0);
         }
       }
  else {
+        for (int j=0; j < oc._len; j++) {
+          if (select_vec.at80(j) == 1)           continue;
+          nc.addNum(oc.at0(j));
+        }
+      }
+    }
+  }
+ else {
+    while (true) {
+      if (_rows != null) {
+        if (rx >= _rows.length)         break;
+        long r=_rows[rx++] - 1;
         if (r < rstart)         continue;
         rlo=(int)(r - rstart);
         rhi=rlo + 1;
@@ -38,20 +38,20 @@
           rhi++;
         }
       }
-    }
-    for (int i=0; i < _cols.length; i++) {
-      Chunk oc=chks[_cols[i]];
-      NewChunk nc=nchks[i];
-      if (_isInt[i] == 1) {
-        for (int j=rlo; j < rhi; j++)         if (oc._vec.isUUID())         nc.addUUID(oc,j);
- else         if (oc.isNA0(j))         nc.addNA();
- else         nc.addNum(oc.at80(j),0);
-      }
+      for (int i=0; i < _cols.length; i++) {
+        Chunk oc=chks[_cols[i]];
+        NewChunk nc=nchks[i];
+        if (_isInt[i] == 1) {
+          for (int j=rlo; j < rhi; j++)           if (oc._vec.isUUID())           nc.addUUID(oc,j);
+ else           if (oc.isNA0(j))           nc.addNA();
+ else           nc.addNum(oc.at80(j),0);
+        }
  else {
-        for (int j=rlo; j < rhi; j++)         nc.addNum(oc.at0(j));
+          for (int j=rlo; j < rhi; j++)           nc.addNum(oc.at0(j));
+        }
       }
+      rlo=rhi;
+      if (_rows == null)       break;
     }
-    rlo=rhi;
-    if (_rows == null)     break;
   }
 }

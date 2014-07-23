@@ -14,6 +14,10 @@
       _x+=2;
       return "%*%";
     }
+    if (_buf[_x] == '/') {
+      _x+=2;
+      return "%/%";
+    }
   }
   if (_x >= _buf.length)   return _str.substring(_x - 1,_x);
   char c2=_buf[_x];
