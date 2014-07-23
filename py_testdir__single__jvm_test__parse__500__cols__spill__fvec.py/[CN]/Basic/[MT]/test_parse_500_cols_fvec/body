@@ -1,19 +1,19 @@
 def test_parse_500_cols_fvec(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(1000, 500, 'cA', 1800, 1800)]
+    tryList = [(100, 500, 'cA', 1800, 1800)]
     h2b.browseTheCloud()
     for (rowCount, colCount, orig_hex_key, timeoutSecs, timeoutSecs2) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-        multifile = 1000
+        multifile = 100
         for p in range(1, multifile):
             csvPathnameLink = ((csvPathname + '_') + str(p))
             os.symlink(csvFilename, csvPathnameLink)
         print '\nCreating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-        for trial in range(10):
+        for trial in range(5):
             hex_key = (orig_hex_key + str(trial))
             start = time.time()
             parseResult = h2i.import_parse(path=(csvPathname + '*'), schema='local', hex_key=hex_key, delete_on_done=1, timeoutSecs=timeoutSecs, doSummary=False)
