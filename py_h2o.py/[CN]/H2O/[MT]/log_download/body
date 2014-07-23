@@ -16,4 +16,5 @@ def log_download(self, logDir=None, timeoutSecs=30, **kwargs):
     z.extractall(logDir)
     for zname in nameList:
         resultList = h2o_util.flat_unzip(((logDir + '/') + zname), logDir)
+        print 'resultList:', resultList
     return resultList

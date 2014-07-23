@@ -1,5 +1,17 @@
 {
-  buildModel();
-  if (n_folds > 0)   CrossValUtils.crossValidate(this);
-  delete();
+  try {
+    buildModel();
+    if (n_folds > 0)     CrossValUtils.crossValidate(this);
+  }
+  finally {
+    delete();
+    state=UKV.<Job>get(self()).state;
+    new TAtomic<DeepLearningModel>(){
+      @Override public DeepLearningModel atomic(      DeepLearningModel m){
+        if (m != null)         m.get_params().state=state;
+        return m;
+      }
+    }
+.invoke(dest());
+  }
 }
