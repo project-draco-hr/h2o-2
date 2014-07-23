@@ -11,6 +11,7 @@
   spdrf.invoke();
   SpeeDRFModel m=UKV.get(spdrf.dest());
   Assert.assertTrue(m.get_params().state == Job.JobState.DONE);
+  testHTML(m);
   assertEquals("Number of classes",7,m.classes());
   assertEquals("Number of trees",8,m.size());
   m.delete();
