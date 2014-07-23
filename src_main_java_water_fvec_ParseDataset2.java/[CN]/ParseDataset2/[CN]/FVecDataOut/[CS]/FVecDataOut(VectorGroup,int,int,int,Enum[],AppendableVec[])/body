@@ -7,5 +7,6 @@
   _vg=vg;
   _vecIdStart=vecIdStart;
   _ctypes=MemoryManager.malloc1(ncols);
+  if (H2O.OPT_ARGS.forceEnumCol != 0 && H2O.OPT_ARGS.forceEnumCol <= ncols)   _ctypes[H2O.OPT_ARGS.forceEnumCol - 1]=ECOL;
   for (int i=0; i < ncols; ++i)   _nvs[i]=(NewChunk)_vecs[i].chunkForChunkIdx(_cidx);
 }
