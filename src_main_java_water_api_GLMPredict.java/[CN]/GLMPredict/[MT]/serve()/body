@@ -1,8 +1,8 @@
 {
   try {
-    if (modelKey == null)     throw new IllegalArgumentException("Model is required to perform validation!");
+    if (model == null)     throw new IllegalArgumentException("Model is required to perform validation!");
     final Key predictionKey=(prediction == null) ? Key.make("__Prediction_" + Key.make()) : prediction;
-    GLMModel.GetScoringModelTask task=new GLMModel.GetScoringModelTask(null,null,modelKey,lambda);
+    GLMModel.GetScoringModelTask task=new GLMModel.GetScoringModelTask(null,null,model,lambda);
     H2O.submitTask(task);
     task.get();
     GLMModel model=task._res;
