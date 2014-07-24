@@ -1,6 +1,7 @@
 {
   super.init();
   if (source.numRows() == 0)   throw new H2OIllegalArgumentException(find("source"),"Cannot build a model on empty dataset!");
+  if (response == null)   throw new H2OIllegalArgumentException(find("response"),"Response is not specified!");
   Vec[] vecs=source.vecs();
   for (int i=cols.length - 1; i >= 0; i--)   if (vecs[cols[i]] == response)   cols=Utils.remove(cols,i);
   final boolean has_constant_response=response.isEnum() ? response.domain().length <= 1 : response.min() == response.max();
