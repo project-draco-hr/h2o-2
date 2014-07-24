@@ -29,10 +29,10 @@ def test_c5_KMeans_sphere_26GB_fvec(self):
         l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'Parse', csvPathname, fileMBS, elapsed)
         print ('\n' + l)
         h2o.cloudPerfH2O.message(l)
-        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'], timeoutSecs=300)
         numRows = inspect['numRows']
         numCols = inspect['numCols']
-        summary = h2o_cmd.runSummary(key=parseResult['destination_key'], numRows=numRows, numCols=numCols)
+        summary = h2o_cmd.runSummary(key=parseResult['destination_key'], numRows=numRows, numCols=numCols, timeoutSecs=300)
         h2o_cmd.infoFromSummary(summary)
         if (not DO_KMEANS):
             continue
