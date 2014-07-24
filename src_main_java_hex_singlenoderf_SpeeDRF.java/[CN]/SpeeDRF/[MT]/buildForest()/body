@@ -1,0 +1,23 @@
+{
+  SpeeDRFModel model=null;
+  try {
+    model=initModel();
+    model.start_training(null);
+    model.write_lock(self());
+    drfParams=DRFParams.create(model.fr.find(model.response),model.N,model.max_depth,(int)model.fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
+    DRFTask tsk=new DRFTask();
+    tsk._job=Job.findJob(self());
+    tsk._params=drfParams;
+    tsk._rfmodel=model;
+    tsk._drf=this;
+    tsk.validateInputData();
+    tsk.invokeOnAllNodes();
+    model=UKV.get(dest());
+  }
+  finally {
+    if (model != null) {
+      model.unlock(self());
+      model.stop_training();
+    }
+  }
+}
