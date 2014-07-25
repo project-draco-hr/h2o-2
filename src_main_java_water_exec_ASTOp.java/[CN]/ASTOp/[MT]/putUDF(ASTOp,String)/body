@@ -1,3 +1,5 @@
 {
+  if (isReserved(fn))   throw new IllegalArgumentException("Trying to overload a reserved method: " + fn + ". Must not overload a reserved method with a user-defined function.");
+  if (UDF_OPS.containsKey(fn))   removeUDF(fn);
   UDF_OPS.put(fn,ast);
 }
