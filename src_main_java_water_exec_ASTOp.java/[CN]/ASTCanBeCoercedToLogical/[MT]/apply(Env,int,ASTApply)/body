@@ -9,7 +9,7 @@
   Vec[] v=fr.vecs();
   for (  Vec aV : v) {
     if (aV.isInt()) {
-      if (aV.min() == 0 && aV.max() == 1) {
+      if ((aV.min() == 0 && aV.max() == 1) || (aV.min() == 0 && aV.min() == aV.max()) || (aV.min() == 1 && aV.min() == aV.max())) {
         d=1;
         break;
       }
