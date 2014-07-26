@@ -9,33 +9,8 @@
  else {
         Key k=Key.make(pfs.toString());
         long size=file.getLen();
-        Value val=null;
-        if (pfs.getName().endsWith(Extensions.JSON)) {
-          JsonParser parser=new JsonParser();
-          JsonObject json=parser.parse(new InputStreamReader(fs.open(pfs))).getAsJsonObject();
-          JsonElement v=json.get(Constants.VERSION);
-          if (v == null)           throw new RuntimeException("Missing version");
-          JsonElement type=json.get(Constants.TYPE);
-          if (type == null)           throw new RuntimeException("Missing type");
-          Class c=Class.forName(type.getAsString());
-          OldModel model=(OldModel)c.newInstance();
-          model.fromJson(json);
-        }
- else         if (pfs.getName().endsWith(Extensions.HEX)) {
-          FSDataInputStream s=fs.open(pfs);
-          int sz=(int)Math.min(1L << 20,size);
-          byte[] mem=MemoryManager.malloc1(sz);
-          s.readFully(mem);
-          ValueArray ary=new ValueArray(k,0).read(new AutoBuffer(mem));
-          val=new Value(k,ary,Value.HDFS);
-        }
- else         if (size >= 2 * ValueArray.CHUNK_SZ) {
-          val=new Value(k,new ValueArray(k,size),Value.HDFS);
-        }
- else {
-          val=new Value(k,(int)size,Value.HDFS);
-          val.setdsk();
-        }
+        Value val=new Value(k,(int)size,Value.HDFS);
+        val.setdsk();
         DKV.put(k,val);
         Log.info("PersistHdfs: DKV.put(" + k + ")");
         JsonObject o=new JsonObject();

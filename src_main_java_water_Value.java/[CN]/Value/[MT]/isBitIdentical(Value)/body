@@ -1,15 +1,9 @@
 {
   if (this == v)   return true;
-  if (!isArray() && !v.isArray())   return Arrays.equals(getBytes(),v.getBytes());
-  if (isArray() && v.isArray()) {
-    ValueArray thisAry=get();
-    ValueArray thatAry=v.get();
-    if (thisAry.length() == thatAry.length() && thisAry._numrows == thatAry._numrows && thisAry._rowsize == thatAry._rowsize && thisAry._cols.length == thatAry._cols.length) {
-      for (int i=0; i < thisAry._cols.length; ++i)       if (!thisAry._cols[i].equals(thatAry._cols[i]))       return false;
-      BitsCmpTask res=new BitsCmpTask(thisAry);
-      res.invoke(v._key);
-      return res._res;
-    }
-  }
-  return false;
+  if (!isFrame() && !v.isFrame())   return Arrays.equals(getBytes(),v.getBytes());
+  Frame fr0=get();
+  Frame fr1=v.get();
+  if (fr0.numRows() != fr1.numRows())   return false;
+  if (fr0.numCols() != fr1.numCols())   return false;
+  return new BitCmp(fr1).doAll(fr0)._eq;
 }

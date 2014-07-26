@@ -1,18 +1,4 @@
 {
-  if (m.get_params().validation != null) {
-    Futures fs=new Futures();
-    H2O.H2OCountedCompleter scoretsk=new H2O.H2OCountedCompleter(){
-      @Override public void compute2(){
-        scoreOnTest(m,old);
-        tryComplete();
-      }
-    }
-;
-    H2O.submitTask(scoretsk);
-    fs.add(scoretsk);
-    fs.blockForPending();
-    return;
-  }
   Futures fs=new Futures();
   final CMTask[] cmTask=new CMTask[1];
   final SpeeDRFModel score_model=(SpeeDRFModel)m.clone();
