@@ -1,19 +1,14 @@
 {
-  _computed=true;
-  if (_dt == null)   return;
-  DTask origDt=_dt;
-  DTask dt;
+  DTask dt, origDt=_dt;
   while ((dt=_dt) != null) {
     AutoBuffer ab=null;
     try {
       ab=new AutoBuffer(_client).putTask(UDP.udp.ack,_tsknum).put1(SERVER_UDP_SEND);
       dt.write(ab);
+      _computed=true;
       boolean t=ab.hasTCP();
       dt._repliedTcp=t;
-      _computedAndReplied=true;
-      AutoBuffer ab2=ab;
-      ab=null;
-      ab2.close(t,false);
+      ab.close(t,false);
       break;
     }
  catch (    AutoBuffer.TCPIsUnreliableException e) {
@@ -30,7 +25,7 @@ catch (    Exception e) {
       if (ab != null)       ab.close(true,true);
     }
   }
-  if (dt == null)   Log.info("Cancelled remote task#" + _tsknum + " "+ origDt.getClass()+ " to "+ _client+ " has been cancelled by remote");
+  if (dt == null)   Log.info("Cancelled remote task#" + _tsknum + " "+ (origDt != null ? origDt.getClass() : "unknown")+ " to "+ _client+ " has been cancelled by remote");
  else   if ((dt instanceof DRemoteTask || dt instanceof MRTask2) && dt.logVerbose())   Log.debug("Done  remote task#" + _tsknum + " "+ dt.getClass()+ " to "+ _client);
   _client.record_task_answer(this);
 }

@@ -1,7 +1,0 @@
-{
-  double[] beta=MemoryManager.malloc8d(_dinfo.fullN() + 1);
-  beta[beta.length - 1]=_glm.link(_ymu) + _iceptAdjust;
-  m.submodels=new GLMModel.Submodel[]{new GLMModel.Submodel(lambda_max,beta,beta,0,0,beta.length >= sparseCoefThreshold)};
-  m.submodels[0].validation=val;
-  return m;
-}

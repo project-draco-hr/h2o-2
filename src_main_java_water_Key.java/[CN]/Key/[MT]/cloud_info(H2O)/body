@@ -1,11 +1,11 @@
 {
   long x=_cache;
   if (cloud(x) == cloud._idx)   return x;
-  char home=(char)cloud.D(this,0);
+  char home=(char)D(0);
   int desired=desired(x);
   int replica=-1;
   for (int i=0; i < desired; i++) {
-    int idx=cloud.D(this,i);
+    int idx=D(i);
     if (idx >= 0 && cloud._memary[idx] == H2O.SELF) {
       replica=i;
       break;

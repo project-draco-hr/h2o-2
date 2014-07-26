@@ -3,7 +3,7 @@
   byte[] bits=vec.chunkForChunkIdx(0)._mem;
   final int chunkStartIdx=_fileChunkOffsets.get(key)._val;
   Compression cpr=Utils.guessCompressionMethod(bits);
-  CustomParser.ParserSetup localSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),_setup,false)._setup;
+  CustomParser.ParserSetup localSetup=GuessSetup.guessSetup(Utils.unzipBytes(bits,cpr),_setup,false)._setup;
   if (!_setup.isCompatible(localSetup)) {
     _parserr="Conflicting file layouts, expecting: " + _setup + " but found "+ localSetup;
     return;

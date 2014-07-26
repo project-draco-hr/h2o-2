@@ -1,2 +1,19 @@
 {
+  final GLM2 glm=_glms[i];
+  if (n == H2O.SELF) {
+    H2O.submitTask(new H2OCountedCompleter(new Callback(n)){
+      @Override public void compute2(){
+        glm.run(this);
+      }
+    }
+);
+  }
+ else {
+    new RPC(n,new DTask(){
+      @Override public void compute2(){
+        glm.run(this);
+      }
+    }
+).addCompleter(new Callback(n)).call();
+  }
 }

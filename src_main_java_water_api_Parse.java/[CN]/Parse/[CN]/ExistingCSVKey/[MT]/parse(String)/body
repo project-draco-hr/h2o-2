@@ -25,9 +25,9 @@
   CustomParser.ParserSetup userSetup=new CustomParser.ParserSetup(_parserType.value(),_separator.value(),hasHeader);
   CustomParser.PSetupGuess setup=null;
   try {
-    setup=ParseDataset.guessSetup(keys,hKey,userSetup,checkHeader);
+    setup=GuessSetup.guessSetup(keys,hKey,userSetup,checkHeader);
   }
- catch (  ParseDataset.ParseSetupGuessException e) {
+ catch (  GuessSetup.ParseSetupGuessException e) {
     throw new IllegalArgumentException(e.getMessage());
   }
   if (setup._isValid) {

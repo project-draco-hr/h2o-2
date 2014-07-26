@@ -1,9 +1,12 @@
 {
+  SpeeDRFModel rf_model=null;
   try {
-    logStart();
     source.read_lock(self());
-    buildForest();
-    if (n_folds > 0)     CrossValUtils.crossValidate(this);
+    rf_model=initModel();
+    rf_model.start_training(null);
+    rf_model.write_lock(self());
+    buildForest(rf_model);
+    rf_model.stop_training();
   }
  catch (  JobCancelledException ex) {
     Log.info("Random Forest building was cancelled.");
@@ -15,15 +18,13 @@ catch (  Exception ex) {
   }
  finally {
     source.unlock(self());
+    if (n_folds > 0)     CrossValUtils.crossValidate(this);
     remove();
-    state=UKV.<Job>get(self()).state;
-    new TAtomic<SpeeDRFModel>(){
-      @Override public SpeeDRFModel atomic(      SpeeDRFModel m){
-        if (m != null)         m.get_params().state=state;
-        return m;
-      }
+    if (rf_model != null) {
+      rf_model=UKV.get(dest());
+      rf_model.get_params().state=UKV.<Job>get(self()).state;
+      rf_model.unlock(self());
     }
-.invoke(dest());
     emptyLTrash();
     cleanup();
   }

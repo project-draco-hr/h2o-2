@@ -1,8 +1,0 @@
-{
-  boolean done=_currentLambda <= lambda_min || (max_predictors != -1 && nzs(_beta) > max_predictors);
-  if (!done) {
-    H2OCountedCompleter cmp=(H2OCountedCompleter)getCompleter();
-    cmp.addToPendingCount(1);
-    nextLambda(nextLambdaValue(),new LambdaIteration(cmp));
-  }
-}

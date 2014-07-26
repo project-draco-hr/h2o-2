@@ -5,17 +5,7 @@
   Env env=new Env(locked);
   final Key[] frameKeys=H2O.KeySnapshot.globalSnapshot().filter(new H2O.KVFilter(){
     @Override public boolean filter(    H2O.KeyInfo k){
-      if (k._type == TypeMap.VALUE_ARRAY) {
-        Value v=DKV.get(k._key);
-        if (v == null)         return false;
-        Frame frAuto=ValueArray.asFrame(v);
-        Frame fr2=new Frame(k._key,frAuto._names,frAuto.vecs());
-        frAuto.remove(0,fr2.numCols());
-        frAuto.delete();
-        fr2.delete_and_lock(null).unlock(null);
-        return true;
-      }
- else       return k._type == TypeMap.FRAME;
+      return k._type == TypeMap.FRAME;
     }
   }
 ).keys();

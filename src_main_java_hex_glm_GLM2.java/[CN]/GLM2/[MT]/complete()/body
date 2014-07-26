@@ -1,19 +1,25 @@
 {
-  GLMModel model=DKV.get(dest()).get();
-  model.maybeComputeVariableImportances();
-  model.stop_training();
-  if (_addedL2 > 0) {
-    String warn="Added L2 penalty (rho = " + _addedL2 + ")  due to non-spd matrix. ";
-    model.addWarning(warn);
+  try {
+    _model.maybeComputeVariableImportances();
+    _model.stop_training();
+    _model.pickBestXval();
+    if (_addedL2 > 0) {
+      String warn="Added L2 penalty (rho = " + _addedL2 + ")  due to non-spd matrix. ";
+      _model.addWarning(warn);
+      _model.update(self());
+    }
   }
-  state=JobState.DONE;
-  model.get_params().state=state;
-  model.update(self());
-  model.unlock(self());
-  if (n_folds > 1)   for (int i=1; i < _xvals.length; ++i)   DKV.get(_xvals[i].dest()).<GLMModel>get().unlock(self());
-  if (_dinfo._nfolds == 0 && !_grid) {
-    remove();
-    DKV.remove(_progressKey);
+  finally {
+    _model.unlock(self());
+    if (_dinfo._nfolds == 0 && !_grid)     remove();
+    state=UKV.<Job>get(self()).state;
+    new TAtomic<GLMModel>(){
+      @Override public GLMModel atomic(      GLMModel m){
+        if (m != null)         m.get_params().state=state;
+        return m;
+      }
+    }
+.invoke(dest());
   }
   if (_fjtask != null)   _fjtask.tryComplete();
 }
