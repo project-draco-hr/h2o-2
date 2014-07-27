@@ -7,7 +7,7 @@
     if (resp != null)     gtrash(resp);
     float[] priorDist=setPriorDist(train);
     Frame fr=setStrat(train,test,resp);
-    model=initModel(fr,priorDist);
+    model=initModel(fr,test,priorDist);
     model.start_training(null);
     model.write_lock(self());
     drfParams=DRFParams.create(fr.find(resp),model.N,model.max_depth,(int)fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
@@ -21,7 +21,7 @@
     tsk.validateInputData();
     tsk.invokeOnAllNodes();
     model=UKV.get(dest());
-    model.scoreAllTrees(fr,resp);
+    model.scoreAllTrees(test == null ? fr : test,resp);
   }
   finally {
     if (model != null) {
