@@ -27,6 +27,7 @@
       float sampledItem=rand.nextFloat();
       if (chks[_classcol].isNA0(row))       continue;
       if (_computeOOB && (isLocalTree || isRemoteTreeChunk)) {
+        if (sampledItem < _model.sample)         continue;
       }
       if (!_model.regression) {
         int prediction=(int)_model.classify0(ntree,chks,row,_modelDataMap,numClasses,false);
