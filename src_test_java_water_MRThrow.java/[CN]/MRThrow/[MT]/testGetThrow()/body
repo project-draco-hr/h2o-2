@@ -20,6 +20,12 @@ catch (      Throwable ex) {
     }
   }
   finally {
+    try {
+      Thread.sleep(10);
+    }
+ catch (    InterruptedException ignore) {
+    }
     Lockable.delete(h2okey);
+    System.out.println(H2O.store_size());
   }
 }

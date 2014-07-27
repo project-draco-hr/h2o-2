@@ -35,7 +35,11 @@
     coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls3[i],coefs.get(cfs1[i]),1e-4);
   }
-  finally {
+ catch (  Throwable t) {
+    t.printStackTrace();
+    System.out.println("haha");
+  }
+ finally {
     if (fr != null)     fr.delete();
     if (model != null)     model.delete();
   }

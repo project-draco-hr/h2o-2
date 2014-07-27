@@ -1,19 +1,27 @@
 {
+  _computed=true;
+  if (_dt == null)   return;
   DTask dt, origDt=_dt;
   while ((dt=_dt) != null) {
     AutoBuffer ab=null;
     try {
       ab=new AutoBuffer(_client).putTask(UDP.udp.ack,_tsknum).put1(SERVER_UDP_SEND);
       dt.write(ab);
-      _computed=true;
       boolean t=ab.hasTCP();
       dt._repliedTcp=t;
-      ab.close(t,false);
+      _computedAndReplied=true;
+      AutoBuffer ab2=ab;
+      ab=null;
+      ab2.close(t,false);
       break;
     }
  catch (    AutoBuffer.TCPIsUnreliableException e) {
       Log.info("Task cancelled or network congestion: TCPACK " + e._ioe.getMessage() + ", t#"+ _tsknum+ " AB="+ ab+ ", waiting and retrying...");
-      if (ab != null)       ab.close(true,true);
+      if (ab != null)       try {
+        ab.close(true,true);
+      }
+ catch (      Exception ignore) {
+      }
       try {
         Thread.sleep(500);
       }
@@ -22,10 +30,14 @@
     }
 catch (    Exception e) {
       Log.err(e);
-      if (ab != null)       ab.close(true,true);
+      if (ab != null)       try {
+        ab.close(true,true);
+      }
+ catch (      Exception ignore) {
+      }
     }
   }
   if (dt == null)   Log.info("Cancelled remote task#" + _tsknum + " "+ (origDt != null ? origDt.getClass() : "unknown")+ " to "+ _client+ " has been cancelled by remote");
  else   if ((dt instanceof DRemoteTask || dt instanceof MRTask2) && dt.logVerbose())   Log.debug("Done  remote task#" + _tsknum + " "+ dt.getClass()+ " to "+ _client);
-  _client.record_task_answer(this);
+  if (dt != null)   _client.record_task_answer(this);
 }

@@ -1,5 +1,5 @@
 {
-  int res=submodels[0].iteration;
-  for (int i=1; i < submodels.length && submodels[i] != null && submodels[i].iteration != 0; ++i)   res=submodels[i].iteration;
-  return res;
+  Submodel[] sm=submodels;
+  for (int i=sm.length - 1; i >= 0; --i)   if (sm[i] != null && sm[i].iteration != 0)   return sm[i].iteration;
+  return 0;
 }
