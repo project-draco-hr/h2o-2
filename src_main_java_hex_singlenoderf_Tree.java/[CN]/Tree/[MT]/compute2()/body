@@ -22,8 +22,7 @@
     }
     _stats=null;
     Key tkey=toKey();
-    TreeP tp=_local_mode ? new TreeP(d.rows(),-1,d.nonOOB(),tkey) : null;
-    appendKey(_job.dest(),tkey,_verbose > 10 ? _tree.toString(new StringBuilder(""),Integer.MAX_VALUE).toString() : "",tp);
+    appendKey(_job.dest(),tkey,_verbose > 10 ? _tree.toString(new StringBuilder(""),Integer.MAX_VALUE).toString() : "");
     StringBuilder sb=new StringBuilder("[RF] Tree : ").append(_data_id + 1);
     sb.append(" d=").append(_tree.depth()).append(" leaves=").append(_tree.leaves()).append(" done in ").append(timer).append('\n');
     Log.info(sb.toString());

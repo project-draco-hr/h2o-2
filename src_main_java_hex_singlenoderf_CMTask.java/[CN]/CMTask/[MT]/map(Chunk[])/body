@@ -1,2 +1,58 @@
 {
+  final int rows=chks[0]._len;
+  final int cmin=_model.resp_min;
+  short numClasses=(short)_model.classes();
+  _cms=new long[ModelUtils.DEFAULT_THRESHOLDS.length][2][2];
+  int[][] votes=new int[rows][_N];
+  int[][] localVotes=_computeOOB ? new int[rows][_N] : null;
+  _errorsPerTree=new long[_model.treeCount()];
+  for (int ntree=0; ntree < _model.treeCount(); ntree++) {
+    if (_score_new_tree_only)     ntree=_model.treeCount() - 1;
+    long treeSeed=_model.seed(ntree);
+    byte producerId=_model.producerId(ntree);
+    int init_row=(int)chks[0]._start;
+    boolean isLocalTree=_computeOOB && isLocalTree(producerId);
+    boolean isRemote=true;
+    for (    long a_chunk_row_mapping : _chunk_row_mapping) {
+      if (chks[0]._start == a_chunk_row_mapping) {
+        isRemote=false;
+        break;
+      }
+    }
+    boolean isRemoteTreeChunk=_computeOOB && isRemote;
+    if (isRemoteTreeChunk)     init_row=_rowsPerNode[producerId] + (int)chks[0]._start + producerRemoteRows(producerId,chks[0]._vec.chunkKey(chks[0].cidx()));
+    long seed=Sampling.chunkSampleSeed(treeSeed,init_row);
+    Random rand=Utils.getDeterRNG(seed);
+    ROWS:     for (int row=0; row < rows; row++) {
+      float sampledItem=rand.nextFloat();
+      if (chks[_classcol].isNA0(row))       continue;
+      if (_computeOOB && (isLocalTree || isRemoteTreeChunk)) {
+        if (sampledItem < _model.sample)         continue;
+      }
+      if (!_model.regression) {
+        int prediction=(int)_model.classify0(ntree,chks,row,_modelDataMap,numClasses,false);
+        if (prediction >= numClasses)         continue;
+        int alignedPrediction=alignModelIdx(prediction);
+        int alignedData=alignDataIdx((int)chks[_classcol].at80(row) - cmin);
+        if (alignedPrediction != alignedData) {
+          _errorsPerTree[ntree]++;
+        }
+        votes[row][alignedPrediction]++;
+      }
+ else {
+        float pred=_model.classify0(ntree,chks,row,_modelDataMap,(short)0,true);
+        float actual=chks[_classcol].at80(row);
+        float delta=actual - pred;
+        _ss+=delta * delta;
+        _rowcnt++;
+      }
+    }
+  }
+  if (!_model.regression) {
+    _matrix=computeCM(votes,chks,false,_model.get_params().balance_classes);
+    if (localVotes != null) {
+      _localMatrices=new CM[H2O.CLOUD.size()];
+      _localMatrices[H2O.SELF.index()]=computeCM(localVotes,chks,true,_model.get_params().balance_classes);
+    }
+  }
 }

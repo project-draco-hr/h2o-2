@@ -1,18 +1,27 @@
 {
   SpeeDRFModel model=null;
   try {
-    model=initModel();
+    Frame train=setTrain();
+    Frame test=setTest();
+    Vec resp=regression ? null : train.lastVec().toEnum();
+    if (resp != null)     gtrash(resp);
+    float[] priorDist=setPriorDist(train);
+    Frame fr=setStrat(train,test,resp);
+    model=initModel(fr,priorDist);
     model.start_training(null);
     model.write_lock(self());
-    drfParams=DRFParams.create(model.fr.find(model.response),model.N,model.max_depth,(int)model.fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
+    drfParams=DRFParams.create(fr.find(resp),model.N,model.max_depth,(int)fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
     DRFTask tsk=new DRFTask();
     tsk._job=Job.findJob(self());
     tsk._params=drfParams;
     tsk._rfmodel=model;
     tsk._drf=this;
+    tsk._fr=fr;
+    tsk._resp=resp;
     tsk.validateInputData();
     tsk.invokeOnAllNodes();
     model=UKV.get(dest());
+    model.scoreAllTrees(fr,resp);
   }
   finally {
     if (model != null) {
