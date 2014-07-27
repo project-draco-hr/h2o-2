@@ -4,7 +4,7 @@
   DocGen.HTML.title(sb,title);
   sb.append("<div class=\"alert\">").append("Actions: ");
   sb.append(Inspect2.link("Inspect training data (" + _dataKey.toString() + ")",_dataKey)).append(", ");
-  if (this.test_frame != null)   sb.append(Inspect2.link("Inspect testing data (" + testKey.toString() + ")",testKey)).append(", ");
+  if (validation)   sb.append(Inspect2.link("Inspect testing data (" + testKey.toString() + ")",testKey)).append(", ");
   sb.append(Predict.link(_key,"Score on dataset"));
   if (this.size() > 0 && this.size() < N && !Job.findJob(jobKey).isCancelledOrCrashed()) {
     sb.append(", ");

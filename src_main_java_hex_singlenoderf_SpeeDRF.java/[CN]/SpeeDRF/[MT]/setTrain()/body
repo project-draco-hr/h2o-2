@@ -1,0 +1,5 @@
+{
+  Frame train=FrameTask.DataInfo.prepareFrame(source,response,ignored_cols,!regression,false,false);
+  if (train.lastVec().masterVec() != null && train.lastVec() != response)   gtrash(train.lastVec());
+  return train;
+}
