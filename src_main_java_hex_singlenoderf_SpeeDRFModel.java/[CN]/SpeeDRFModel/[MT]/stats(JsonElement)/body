@@ -4,6 +4,6 @@
   }
  else {
     JsonObject obj=json.getAsJsonObject();
-    return new double[]{obj.get(Constants.MIN).getAsDouble(),obj.get(Constants.MEAN).getAsDouble(),obj.get(Constants.MAX).getAsDouble()};
+    return new double[]{Math.round(obj.get(Constants.MIN).getAsDouble() * 1000.0) / 1000.0,Math.round(obj.get(Constants.MEAN).getAsDouble() * 1000.0) / 1000.0,Math.round(obj.get(Constants.MAX).getAsDouble() * 1000.0) / 1000.0};
   }
 }
