@@ -13,7 +13,7 @@ exprList = ['x= 3; r.hex[(x > 0) & (x < 4),]', 'x= 3; r.hex[,(x > 0) & (x < 4)]'
 if DO_APPLY:
     exprList += ['apply(r.hex,1,sum)', 'apply(r.hex,2,sum)']
 if DO_FUNCTION:
-    exprList += ['crunk=function(x){x+99}', 'function(x,y,z){x[]}(r.hex,1,2)', 'function(x){x+1}(2)', 'function(x){y=x*2; y+1}(2)', 'function(x){y=1+2}(2)', 'function(funy){function(x){funy(x)*funy(x)}}(sgn)(-2)', 'a=1; a=2; function(x){x=a;a=3}', 'a=r.hex; function(x){x=a;a=3;nrow(x)*a}(a)', 'mean=function(x){99/nrow(x)};mean(r.hex)', 'mean=function(x){99/nrow(x)}', 'mean2=function(x){99/nrow(x)};mean2(r.hex)', 'mean2=function(x){99/nrow(x)}']
+    exprList += ['crunk=function(x){x+99}', 'function(x,y,z){x[]}(r.hex,1,2)', 'function(x){x+1}(2)', 'function(x){y=x*2; y+1}(2)', 'function(x){y=1+2}(2)', 'function(funy){function(x){funy(x)*funy(x)}}(sgn)(-2)', 'a=1; a=2; function(x){x=a;a=3}', 'a=r.hex; function(x){x=a;a=3;nrow(x)*a}(a)', 'mean2=function(x){99/nrow(x)};mean2(r.hex)', 'mean2=function(x){99/nrow(x)}']
 if DO_TERNARY:
     exprList += ['1 ? r.hex : (r.hex+1)', '1 ? (r.hex+1) : r.hex', '0 ? 1 : 2', '0 ? r.hex+1 : r.hex+2', 'r.hex>3 ? 99 : r.hex']
 if DO_IFELSE:

@@ -21,6 +21,3 @@ def test_rf_1ktrees_job_cancel_fvec(self):
         print 'model_key:', model_key
         a = h2o.nodes[0].jobs_admin()
         print 'jobs_admin():', h2o.dump_json(a)
-        print 'cancelling with a bad key'
-        b = h2o.nodes[0].jobs_cancel(key=model_key)
-        print 'jobs_cancel():', h2o.dump_json(b)
