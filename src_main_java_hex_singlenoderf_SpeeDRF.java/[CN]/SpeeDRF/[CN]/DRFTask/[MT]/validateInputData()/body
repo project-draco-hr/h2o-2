@@ -6,18 +6,18 @@
   if (!_rfmodel.regression) {
     final int classes=(int)(c.max() - c.min()) + 1;
     if (!(2 <= classes && classes <= 254))     throw new IllegalArgumentException("Found " + classes + " classes: "+ err);
-    if (0.0f > _params.sample || _params.sample > 1.0f)     throw new IllegalArgumentException("Sampling rate must be in [0,1] but found " + _params.sample);
+    if (0.0f > _rfParams.sample || _rfParams.sample > 1.0f)     throw new IllegalArgumentException("Sampling rate must be in [0,1] but found " + _rfParams.sample);
   }
-  if (_params.num_split_features != -1 && (_params.num_split_features < 1 || _params.num_split_features > vecs.length - 1))   throw new IllegalArgumentException("Number of split features exceeds available data. Should be in [1," + (vecs.length - 1) + "]");
+  if (_rfParams.num_split_features != -1 && (_rfParams.num_split_features < 1 || _rfParams.num_split_features > vecs.length - 1))   throw new IllegalArgumentException("Number of split features exceeds available data. Should be in [1," + (vecs.length - 1) + "]");
   ChunkAllocInfo cai=new ChunkAllocInfo();
   boolean can_load_all=canLoadAll(_fr,cai);
-  if (_params._useNonLocalData && !can_load_all) {
+  if (_rfParams._useNonLocalData && !can_load_all) {
     Log.warn("Cannot load all data from remote nodes - " + "the node " + cai.node + " requires "+ PrettyPrint.bytes(cai.requiredMemory)+ " to load all data and perform computation but there is only "+ PrettyPrint.bytes(cai.availableMemory)+ " of available memory. "+ "Please provide more memory for JVMs or disable the option '"+ Constants.USE_NON_LOCAL_DATA+ "' (however, it may affect resulting accuracy).");
     Log.warn("Automatically disabling fast mode.");
     throw new IllegalArgumentException("Cannot compute fast RF: Use big data Random Forest.");
   }
   if (can_load_all) {
-    _params._useNonLocalData=true;
+    _rfParams._useNonLocalData=true;
     _drf.local_mode=false;
     Log.info("Enough available free memory to compute on all data. Pulling all data locally and then launching RF.");
   }
