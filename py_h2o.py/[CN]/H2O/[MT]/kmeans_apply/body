@@ -1,5 +1,5 @@
 def kmeans_apply(self, data_key, model_key, destination_key, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, **kwargs):
-    params_dict = {'destination_key': destination_key, 'model_key': model_key, 'data_key': data_key, }
+    params_dict = {'destination_key': destination_key, '_modelKey': model_key, 'data_key': data_key, }
     browseAlso = kwargs.get('browseAlso', False)
     check_params_update_kwargs(params_dict, kwargs, 'kmeans_apply', print_params=True)
     print '\nKMeansApply params list:', params_dict

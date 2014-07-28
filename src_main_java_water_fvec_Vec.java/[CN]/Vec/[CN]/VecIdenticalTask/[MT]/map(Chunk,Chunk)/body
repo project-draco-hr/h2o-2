@@ -1,0 +1,18 @@
+{
+  if (!(c1 instanceof C8DChunk) && c1.getClass().equals(c2.getClass()))   _res=Arrays.equals(c1._mem,c2._mem);
+ else {
+    if (c1._len != c2._len)     return;
+    if (c1.hasFloat()) {
+      if (!c2.hasFloat())       return;
+      for (int i=0; i < c1._len; ++i) {
+        double diff=c1.at0(i) - c2.at0(i);
+        if (diff > fpointPrecision || -diff > fpointPrecision)         return;
+      }
+    }
+ else {
+      if (c2.hasFloat())       return;
+      for (int i=0; i < c1._len; ++i)       if (c1.at80(i) != c2.at80(i))       return;
+    }
+    _res=true;
+  }
+}
