@@ -6,16 +6,12 @@
   cm.invoke();
   if (regression) {
     float mse=(float)cm.mse;
-    errs=Arrays.copyOf(errs,errs.length + 1);
     errs[errs.length - 1]=mse;
-    cms=Arrays.copyOf(cms,cms.length + 1);
     cms[cms.length - 1]=null;
   }
  else {
     this.cm=cm.cm;
-    errs=Arrays.copyOf(errs,errs.length + 1);
     errs[errs.length - 1]=-1f;
-    cms=Arrays.copyOf(cms,cms.length + 1);
     ConfusionMatrix new_cm=new ConfusionMatrix(this.cm);
     cms[cms.length - 1]=new_cm;
     if (classes() == 2 && !scored.lastVec().isInt()) {
