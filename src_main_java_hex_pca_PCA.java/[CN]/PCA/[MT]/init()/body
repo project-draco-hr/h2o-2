@@ -1,4 +1,6 @@
 {
   super.init();
-  if (selectFrame(source).numExpCols() > MAX_COL)   throw new IllegalArgumentException("Cannot process more than " + MAX_COL + " columns, taking into account expanded categoricals");
+  int num_ecols=selectFrame(source).numExpCols();
+  Log.info("Running PCA on dataset with " + num_ecols + " expanded columns in Gram matrix");
+  if (num_ecols > MAX_COL)   throw new IllegalArgumentException("Cannot process more than " + MAX_COL + " columns, taking into account expanded categoricals");
 }
