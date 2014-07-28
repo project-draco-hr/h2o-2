@@ -4,7 +4,7 @@
     return null;
   }
   Timer t_inhale=new Timer();
-  SpeeDRFModel rfmodel=_rfmodel;
+  final SpeeDRFModel rfmodel=_rfModel;
   boolean[] _isByteCol=new boolean[fr.numCols()];
   long[] _naCnts=new long[fr.numCols()];
   for (int i=0; i < _isByteCol.length; ++i) {
@@ -13,8 +13,8 @@
   }
   final int[] modelDataMap=colMap(fr._names,rfmodel._names);
   final int totalRows=getRowCount(fr);
-  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_drf.drfParams.seed,_drf.drfParams.bin_limit,_drf.drfParams.class_weights);
-  checkAndLimitFeatureUsedPerSplit();
+  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_rfParams.seed,_rfParams.bin_limit,_rfParams.class_weights);
+  checkAndLimitFeatureUsedPerSplit(fr);
   ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
   Log.info("\n\nTotal Number of Chunks: " + fr.anyVec().nChunks() + "\n\n");
   int cnter_local=0;
@@ -35,8 +35,8 @@
     }
   }
   Log.info("\n\nTotal local  chunks to load: " + cnter_local + "\n\nTotal remote chunks to load:"+ cnter_remote);
-  _rfmodel.current_status="Inhaling Data";
-  _rfmodel.update(_rfmodel.jobKey);
+  _rfModel.current_status="Inhaling Data";
+  _rfModel.update(_rfModel.jobKey);
   Log.info(Log.Tag.Sys.RANDF,"Beginning Random Forest Inhale.");
   ForkJoinTask.invokeAll(dataInhaleJobs);
   dapt.shrink();

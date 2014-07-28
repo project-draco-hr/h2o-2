@@ -5,11 +5,7 @@
     buildForest();
     if (n_folds > 0)     CrossValUtils.crossValidate(this);
   }
- catch (  JobCancelledException ex) {
-    Log.info("Random Forest building was cancelled.");
-    throw ex;
-  }
-catch (  Exception ex) {
+ catch (  Exception ex) {
     ex.printStackTrace();
     throw new RuntimeException(ex);
   }
