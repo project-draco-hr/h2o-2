@@ -1,0 +1,18 @@
+{
+  final CMTask cmTask=CMTask.scoreTask(this,treeCount(),oobee,fr,modelResp);
+  if (regression) {
+    float mse=cmTask._ss / ((float)(cmTask._rowcnt));
+    errs[errs.length - 1]=mse;
+    cms[cms.length - 1]=null;
+  }
+ else {
+    _domain=cmTask.domain(modelResp);
+    confusion=CMTask.CMFinal.make(cmTask._matrix,this,_domain,cmTask._errorsPerTree,oobee,cmTask._sum,cmTask._cms);
+    this.cm=cmTask._matrix._matrix;
+    errorsPerTree=cmTask._errorsPerTree;
+    errs[errs.length - 1]=confusion.mse();
+    cms[cms.length - 1]=new ConfusionMatrix(confusion._matrix);
+    if (classes() == 2)     validAUC=makeAUC(toCMArray(confusion._cms),ModelUtils.DEFAULT_THRESHOLDS,cmDomain);
+    if (importance && !regression)     varimp=doVarImpCalc(fr,this,modelResp);
+  }
+}

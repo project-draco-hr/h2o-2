@@ -8,6 +8,7 @@
     }
  else {
       for (int i=0; i < _nfolds + 1; ++i) {
+        if (_nobs[i] + t._nobs[i] == 0)         continue;
         _ymu[i]=_ymu[i] * ((double)_nobs[i] / (_nobs[i] + t._nobs[i])) + t._ymu[i] * t._nobs[i] / (_nobs[i] + t._nobs[i]);
         _nobs[i]+=t._nobs[i];
         if (t._ymax[i] > _ymax[i])         _ymax[i]=t._ymax[i];

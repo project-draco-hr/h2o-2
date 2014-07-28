@@ -1,19 +1,2 @@
 {
-  GLMModel model=DKV.get(dest()).get();
-  model.maybeComputeVariableImportances();
-  model.stop_training();
-  if (_addedL2 > 0) {
-    String warn="Added L2 penalty (rho = " + _addedL2 + ")  due to non-spd matrix. ";
-    model.addWarning(warn);
-  }
-  state=JobState.DONE;
-  model.get_params().state=state;
-  model.update(self());
-  model.unlock(self());
-  if (n_folds > 1)   for (int i=1; i < _xvals.length; ++i)   DKV.get(_xvals[i].dest()).<GLMModel>get().unlock(self());
-  if (_dinfo._nfolds == 0 && !_grid) {
-    remove();
-    DKV.remove(_progressKey);
-  }
-  if (_fjtask != null)   _fjtask.tryComplete();
 }

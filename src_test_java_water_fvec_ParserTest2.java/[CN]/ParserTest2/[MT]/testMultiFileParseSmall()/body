@@ -1,0 +1,18 @@
+{
+  Key[] files=null, files2=null;
+  Frame f1=null, f2=null;
+  try {
+    files=ImportFiles2.importPath("smalldata/parse_folder_test");
+    f1=ParseDataset2.parse(Key.make("multifile"),files);
+    files2=ImportFiles2.importPath("smalldata/glm_test/prostate_cat_replaced.csv");
+    f2=f1.makeCompatible(ParseDataset2.parse(Key.make("singleFile"),files2));
+    DKV.put(f2._key,f2);
+    assertTrue(f1.isIdentical(f2));
+  }
+  finally {
+    if (f1 != null)     f1.delete();
+    if (f2 != null)     f2.delete();
+    if (files != null)     for (    Key k : files)     UKV.remove(k);
+    if (files2 != null)     for (    Key k : files2)     UKV.remove(k);
+  }
+}

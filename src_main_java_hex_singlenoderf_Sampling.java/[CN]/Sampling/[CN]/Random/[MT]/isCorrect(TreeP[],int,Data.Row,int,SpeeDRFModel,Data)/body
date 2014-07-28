@@ -1,9 +1,0 @@
-{
-  int[] votes=new int[num_classes + 1];
-  for (  TreeP t : localTrees) {
-    if (!t.isOOB(r))     continue;
-    votes[classify(t,r,m,d)]++;
-  }
-  votes[0]=Utils.maxIndex(votes);
-  return votes[0] == ref;
-}

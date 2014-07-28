@@ -15,8 +15,6 @@ parse.add_argument('-l', '--logging', help='turn on logging.DEBUG msgs to see al
 parse.add_argument('-v', '--verbose', help='dump the last N stdout from the failed jobs', action='store_true')
 group.add_argument('-c', help='do a hardwired special job copy between jenkins', type=int, action='store', default=None)
 args = parse.parse_args()
-print 'creates jsandbox (cleaned), and puts aTxt.txt and aConsole.txt in there, along with artifacts'
-print ' also creates fails* and regress* in there'
 allowedJobsX = ['h2o_master_test', 'h2o_release_tests', 'h2o_release_tests2', 'h2o_release_tests_164', 'h2o_release_tests_c10_only', 'h2o_perf_test', 'h2o_release_Runit']
 allowedJobsE = ['h2o.tests.single.jvm', 'h2o.tests.single.jvm.fvec', 'h2o.multi.vm.temporary', 'h2o.tests.ec2.multi.jvm', 'h2o.tests.ec2.multi.jvm.fvec', 'h2o.tests.ec2.hosts']
 allowedJobsS = ['sm_testdir_single_jvm', 'sm_testdir_single_jvm_fvec', 'sm_testdir_multi_jvm', 'sm_testdir_hosts', 'sm_test_NN2_mnist']
@@ -51,7 +49,7 @@ if (not (args.jobname or args.x or args.e or args.s)):
     eDone = False
     xDone = False
     while (not jobname):
-        allAllowedJobs = ((allowedJobsE + allowedJobsX) + allowedJobsS)
+        allAllowedJobs = (allowedJobsE + allowedJobsX)
         for (j, job) in enumerate(allAllowedJobs):
             if ((not eDone) and (j == (subtract + len(allowedJobsE)))):
                 subtract += len(allowedJobsE)

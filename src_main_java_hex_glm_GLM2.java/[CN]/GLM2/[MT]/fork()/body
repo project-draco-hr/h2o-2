@@ -5,21 +5,10 @@
   if (lambda_search)   total=3 * nlambdas;
   DKV.put(_progressKey,new GLM2_Progress(total * (n_folds + 1)),fs);
   fs.blockForPending();
-  H2OCountedCompleter fjtask=new H2OCountedCompleter(){
-    @Override public void compute2(){
-      run(true,this);
-    }
-    @Override public void onCompletion(    CountedCompleter cmp){
-      GLM2.this.complete();
-    }
-    @Override public boolean onExceptionalCompletion(    Throwable t,    CountedCompleter cmp){
-      if (!(t instanceof JobCancelledException) && (t.getMessage() == null || !t.getMessage().contains("JobCancelled")))       GLM2.this.cancel(t);
-      return true;
-    }
-  }
-;
+  H2OCountedCompleter fjtask=new H2OJobCompleter();
   GLM2 j=(GLM2)clone();
   j.start(fjtask);
   H2O.submitTask(fjtask);
+  _fjtask=fjtask;
   return j;
 }
