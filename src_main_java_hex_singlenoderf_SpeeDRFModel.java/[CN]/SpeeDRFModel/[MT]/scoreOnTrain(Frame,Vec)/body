@@ -6,8 +6,7 @@
     cms[cms.length - 1]=null;
   }
  else {
-    _domain=cmTask.domain(modelResp);
-    confusion=CMTask.CMFinal.make(cmTask._matrix,this,_domain,cmTask._errorsPerTree,oobee,cmTask._sum,cmTask._cms);
+    confusion=CMTask.CMFinal.make(cmTask._matrix,this,classNames(),cmTask._errorsPerTree,oobee,cmTask._sum,cmTask._cms);
     this.cm=cmTask._matrix._matrix;
     errorsPerTree=cmTask._errorsPerTree;
     errs[errs.length - 1]=confusion.mse();
