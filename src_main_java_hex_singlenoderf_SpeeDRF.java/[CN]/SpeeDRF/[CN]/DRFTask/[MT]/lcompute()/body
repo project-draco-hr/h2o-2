@@ -1,5 +1,5 @@
 {
-  final DataAdapter dapt=DABuilder.create(_rfParams,_rfmodel).build(_fr,_rfParams._useNonLocalData);
+  final DataAdapter dapt=DABuilder.create(_params,_rfmodel).build(_fr,_params._useNonLocalData);
   if (dapt == null) {
     tryComplete();
     return;
@@ -8,8 +8,8 @@
   int numSplitFeatures=howManySplitFeatures();
   int ntrees=howManyTrees();
   int[] rowsPerChunks=howManyRPC(_fr);
-  updateRFModel(_rfmodel._key,numSplitFeatures);
-  updateRFModelStatus(_rfmodel._key,"Building Forest");
-  SpeeDRF.build(_jobKey,_rfmodel._key,_rfParams,localData,ntrees,numSplitFeatures,rowsPerChunks);
+  updateRFModel(_rfmodel,numSplitFeatures);
+  updateRFModelStatus(_rfmodel,"Building Forest");
+  SpeeDRF.build(_jobKey,_rfmodel,_params,localData,ntrees,numSplitFeatures,rowsPerChunks);
   tryComplete();
 }

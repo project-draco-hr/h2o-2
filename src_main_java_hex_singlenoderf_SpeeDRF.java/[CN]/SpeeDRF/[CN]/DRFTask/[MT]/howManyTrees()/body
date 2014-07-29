@@ -9,7 +9,7 @@
   }
   H2ONode[] array=nodes.toArray(new H2ONode[nodes.size()]);
   Arrays.sort(array);
-  int ntrees=_rfParams.num_trees / nodes.size();
-  if (Arrays.binarySearch(array,H2O.SELF) < _rfParams.num_trees - ntrees * nodes.size())   ++ntrees;
+  int ntrees=_params.num_trees / nodes.size();
+  if (Arrays.binarySearch(array,H2O.SELF) < _params.num_trees - ntrees * nodes.size())   ++ntrees;
   return ntrees;
 }

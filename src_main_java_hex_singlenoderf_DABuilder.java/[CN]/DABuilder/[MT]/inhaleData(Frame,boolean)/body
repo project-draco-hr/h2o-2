@@ -4,7 +4,7 @@
     return null;
   }
   Timer t_inhale=new Timer();
-  final SpeeDRFModel rfmodel=_rfModel;
+  final SpeeDRFModel rfmodel=UKV.get(_rfModel);
   boolean[] _isByteCol=new boolean[fr.numCols()];
   long[] _naCnts=new long[fr.numCols()];
   for (int i=0; i < _isByteCol.length; ++i) {
@@ -35,8 +35,7 @@
     }
   }
   Log.info("\n\nTotal local  chunks to load: " + cnter_local + "\n\nTotal remote chunks to load:"+ cnter_remote);
-  _rfModel.current_status="Inhaling Data";
-  _rfModel.update(_rfModel.jobKey);
+  SpeeDRF.DRFTask.updateRFModelStatus(_rfModel,"Inhaling Data.");
   Log.info(Log.Tag.Sys.RANDF,"Beginning Random Forest Inhale.");
   ForkJoinTask.invokeAll(dataInhaleJobs);
   dapt.shrink();

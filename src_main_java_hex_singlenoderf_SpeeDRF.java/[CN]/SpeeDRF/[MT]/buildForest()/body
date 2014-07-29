@@ -6,21 +6,16 @@
     Vec resp=regression ? null : train.lastVec().toEnum();
     if (resp != null)     gtrash(resp);
     float[] priorDist=setPriorDist(train);
-    Frame fr=setStrat(train,test,resp);
-    model=initModel(fr,test,priorDist);
+    train=setStrat(train,test,resp);
+    model=initModel(train,test,priorDist);
     model.start_training(null);
     model.write_lock(self());
-    drfParams=DRFParams.create(fr.find(resp),model.N,model.max_depth,(int)fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
-    DRFTask tsk=new DRFTask();
-    tsk._jobKey=self();
-    tsk._rfParams=drfParams;
-    tsk._rfmodel=model;
-    tsk._fr=fr;
-    tsk._resp=resp;
-    tsk.validateInputData();
+    drfParams=DRFParams.create(train.find(resp),model.N,model.max_depth,(int)train.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
+    DRFTask tsk=new DRFTask(self(),train,drfParams,model._key);
+    tsk.validateInputData(train);
     tsk.invokeOnAllNodes();
     model=UKV.get(dest());
-    model.scoreAllTrees(test == null ? fr : test,resp);
+    model.scoreAllTrees(test == null ? train : test,resp);
   }
   finally {
     if (model != null) {
