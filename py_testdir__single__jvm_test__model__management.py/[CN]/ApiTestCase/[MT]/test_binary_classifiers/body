@@ -25,7 +25,7 @@ def test_binary_classifiers(self):
                 self.assertEqual(scoring_result['metrics'][0]['model']['key'], model_key, ((('Expected model key: ' + model_key) + ' but got: ') + scoring_result['metrics'][0]['model']['key']))
                 self.assertEqual(scoring_result['metrics'][0]['frame']['key'], frame_key, ((('Expected frame key: ' + frame_key) + ' but got: ') + scoring_result['metrics'][0]['frame']['key']))
                 if (model_category == 'Binomial'):
-                    self.validate_binomial_classifier_metrics(scoring_result['metrics'][0])
+                    self.validate_binomial_classifier_metrics(scoring_result['metrics'][0], model_key, frame_key)
                 if (model_category == 'Regression'):
                     None
     print '##############################################'
@@ -34,21 +34,21 @@ def test_binary_classifiers(self):
     print ''
     print '##############################################'
     test_frames = ['prostate.hex', 'airlines_test.hex']
-    for test_frame in test_frames:
-        print (('Scoring compatible models for /2/Frames?key=' + test_frame) + '&find_compatible_models=true. . .')
-        frames = node.frames(key=test_frame, find_compatible_models=1)
-        compatible_models = frames['frames'][test_frame]['compatible_models']
+    for frame_key in test_frames:
+        print (('Scoring compatible models for /2/Frames?key=' + frame_key) + '&find_compatible_models=true. . .')
+        frames = node.frames(key=frame_key, find_compatible_models=1)
+        compatible_models = frames['frames'][frame_key]['compatible_models']
         for model_key in compatible_models:
-            print ((('Scoring: /2/Frames?key=' + test_frame) + '&score_model=') + model_key)
-            scoring_result = node.frames(key=test_frame, score_model=model_key)
+            print ((('Scoring: /2/Frames?key=' + frame_key) + '&score_model=') + model_key)
+            scoring_result = node.frames(key=frame_key, score_model=model_key)
             self.assertKeysExist(scoring_result, '', ['metrics'])
             self.assertKeysExist(scoring_result, 'metrics[0]', ['model_category'])
             model_category = scoring_result['metrics'][0]['model_category']
             self.assertKeysExist(scoring_result, 'metrics[0]', ['model', 'frame', 'duration_in_ms'])
             self.assertEqual(scoring_result['metrics'][0]['model']['key'], model_key, ((('Expected model key: ' + model_key) + ' but got: ') + scoring_result['metrics'][0]['model']['key']))
-            self.assertEqual(scoring_result['metrics'][0]['frame']['key'], test_frame, ((('Expected frame key: ' + test_frame) + ' but got: ') + scoring_result['metrics'][0]['frame']['key']))
+            self.assertEqual(scoring_result['metrics'][0]['frame']['key'], frame_key, ((('Expected frame key: ' + frame_key) + ' but got: ') + scoring_result['metrics'][0]['frame']['key']))
             print 'the model_category: ', model_category
             if (model_category == 'Binomial'):
-                self.validate_binomial_classifier_metrics(scoring_result['metrics'][0])
+                self.validate_binomial_classifier_metrics(scoring_result['metrics'][0], model_key, frame_key)
             if (model_category == 'Regression'):
                 None
