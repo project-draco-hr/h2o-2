@@ -8,10 +8,6 @@
     n.start();
   }
   H2O.waitForCloudSize(nnodes,20000);
-  new GLMTest2().testCars();
-  new ModelSerializationTest().testGLMModel();
-  new NewVectorTest().testCompression();
-  System.out.println("compression ok");
   for (int i=0; i < datasets.length; i+=2) {
     File f=new File(datasets[i]);
     if (!f.exists())     throw new RuntimeException("did not find file " + f.getAbsolutePath());
