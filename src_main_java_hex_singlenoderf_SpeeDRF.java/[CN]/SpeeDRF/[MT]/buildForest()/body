@@ -10,7 +10,7 @@
     model=initModel(train,test,priorDist);
     model.start_training(null);
     model.write_lock(self());
-    drfParams=DRFParams.create(train.find(resp),model.N,model.max_depth,(int)train.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
+    drfParams=DRFParams.create(train.find(resp),model.N,model.max_depth,(int)train.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,true,regression);
     DRFTask tsk=new DRFTask(self(),train,drfParams,model._key);
     tsk.validateInputData(train);
     tsk.invokeOnAllNodes();
