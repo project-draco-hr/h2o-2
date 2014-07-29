@@ -34,6 +34,8 @@ def create_models(self, frame_keys):
     print '#####################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model. . .'
     speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
+    speedrf_AirlinesTrain_1 = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_1_params)
+    num_models = (num_models + 1)
     print '######################################################################'
     print 'Generating AirlinesTrain DeepLearning binary classification model. . .'
     dl_AirlinesTrain_1_params = {'destination_key': 'dl_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'hidden': [10, 10], 'classification': 1, 'variable_importances': 1, }
