@@ -2,7 +2,6 @@ def validate_binomial_classifier_metrics(self, metrics):
     self.assertKeysExist(metrics, '', ['cm', 'auc'])
     self.assertNotEqual(None, metrics['auc'])
     self.assertNotEqual(None, metrics['cm'])
-    self.assertNotEqual(None, metrics['cm']['response_info'])
     self.assertNotEqual(None, metrics['cm']['actual_domain'])
     self.assertNotEqual(None, metrics['cm']['predicted_domain'])
     self.assertNotEqual(None, metrics['cm']['domain'])
