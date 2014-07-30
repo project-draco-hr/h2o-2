@@ -1,8 +1,8 @@
 def test_summary2_NY0(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    choicesList = [('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0')]
-    tryList = [(100, 200, 'x.hex', choicesList[3]), (1000, 200, 'x.hex', choicesList[2]), (10000, 200, 'x.hex', choicesList[1]), (100000, 200, 'x.hex', choicesList[0])]
+    choicesList = [('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0'), (' N', ' Y', ' 0'), (' n', ' y', ' 0'), (' F', ' T', ' 0'), (' f', ' t', ' 0')]
+    tryList = [(100, 200, 'x.hex', choicesList[4]), (100, 200, 'x.hex', choicesList[5]), (100, 200, 'x.hex', choicesList[6]), (100, 200, 'x.hex', choicesList[7]), (100, 200, 'x.hex', choicesList[3]), (1000, 200, 'x.hex', choicesList[2]), (10000, 200, 'x.hex', choicesList[1]), (100000, 200, 'x.hex', choicesList[0])]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
