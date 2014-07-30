@@ -49,6 +49,19 @@
     Log.info("Starting to train the Deep Learning model.");
     do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowUsageFraction).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowUsageFraction).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowUsageFraction).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor()));
+    if (!isCancelledOrCrashed() && override_with_best_model && model.actual_best_model_key != null && n_folds == 0) {
+      DeepLearningModel best_model=UKV.get(model.actual_best_model_key);
+      if (best_model != null && best_model.error() < model.error()) {
+        Log.info("Setting the model to be the best model so far (based on scoring history).");
+        DeepLearningModel.DeepLearningModelInfo mi=best_model.model_info().deep_clone();
+        mi.set_processed_global(model.model_info().get_processed_global());
+        mi.set_processed_local(model.model_info().get_processed_local());
+        model.set_model_info(mi);
+        model.update(self());
+        model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor());
+        assert(best_model.error() == model.error());
+      }
+    }
     Log.info(model);
     Log.info("Finished training the Deep Learning model.");
     return model;
