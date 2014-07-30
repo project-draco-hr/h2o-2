@@ -1,6 +1,6 @@
 {
-  if (submodels != null)   for (  Submodel sm : submodels)   if (sm.xvalidation != null && (sm.xvalidation instanceof GLMXValidation)) {
-    GLMXValidation xval=(GLMXValidation)sm.xvalidation;
+  if (submodels != null)   if (submodels[0].xvalidation != null && (submodels[0].xvalidation instanceof GLMXValidation)) {
+    GLMXValidation xval=(GLMXValidation)submodels[0].xvalidation;
     for (    Key k : xval.xval_models) {
       GLMModel m=DKV.get(k).get();
       m.unlock(job_key);
