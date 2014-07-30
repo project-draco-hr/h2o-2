@@ -6,6 +6,7 @@
   _timeLastScoreEnter=start_time;
   model_info=new DeepLearningModelInfo(params,dinfo);
   actual_best_model_key=params.best_model_key != null ? params.best_model_key : Key.make(destKey + "_best");
+  if (params.n_folds != 0)   actual_best_model_key=null;
   Object job=UKV.get(jobKey);
   if (job instanceof DeepLearning)   get_params().state=((DeepLearning)UKV.get(jobKey)).state;
  else   get_params().state=((Job.JobHandle)UKV.get(jobKey)).state;
