@@ -25,7 +25,7 @@
                   for (                  int scorevalidation : new int[]{200,0}) {
                     for (                    int vf : new int[]{0,1,-1}) {
                       for (                      int train_samples_per_iteration : new int[]{-1,0,rng.nextInt(100),500}) {
-                        for (                        Key best_model_key : new Key[]{null,Key.make()}) {
+                        for (                        Key best_model_key : new Key[]{null}) {
                           count++;
                           if (fraction < rng.nextFloat())                           continue;
                           final double epochs=7 + rng.nextDouble() + rng.nextInt(4);
@@ -85,6 +85,14 @@
 {
                             StringBuilder sb=new StringBuilder();
                             mymodel.generateHTML("test",sb);
+                          }
+                          if (mymodel.actual_best_model_key != null) {
+                            final DeepLearningModel best_model=UKV.get(mymodel.actual_best_model_key);
+                            Assert.assertTrue(best_model.get_params().state == Job.JobState.DONE);
+{
+                              StringBuilder sb=new StringBuilder();
+                              best_model.generateHTML("test",sb);
+                            }
                           }
                           if (valid == null)                           valid=frame;
                           double threshold=0;
