@@ -3,9 +3,9 @@
   for (int i=0; i < res.length; ++i)   res[i]=new ParserSetup.TypeInfo();
   for (int i=0; i < _ncols; ++i) {
     if (_domains[i].size() <= 1 && _nnums[i] >= .2)     res[i]._type=ParserSetup.Coltype.NUM;
- else     if (_domains[i].size() > 2 && (double)_nstrings[i] / _nlines[i] >= .5) {
+ else     if (_domains[i].size() > 2 && (double)_nstrings[i] / _nlines[i] >= .95) {
       res[i]._type=ParserSetup.Coltype.STR;
-      res[i]._strongGuess=(double)_nstrings[i] / _nlines[i] >= .5;
+      res[i]._strongGuess=(double)_nstrings[i] / _nlines[i] >= .99;
     }
  else     if (_domains[i].size() == 2) {
       String[] domain=_domains[i].toArray(new String[2]);
@@ -17,9 +17,9 @@
         if (_nzeros[i] > 0 && _nzeros[i] + _nstrings[i] == _nlines[i])         res[i]._naStr=new ValueString("0");
       }
  else {
-        if ((double)_nstrings[i] / _nlines[i] >= .5) {
+        if ((double)_nstrings[i] / _nlines[i] >= .95) {
           res[i]._type=ParserSetup.Coltype.STR;
-          res[i]._strongGuess=(double)_nstrings[i] / _nlines[i] >= .75;
+          res[i]._strongGuess=(double)_nstrings[i] / _nlines[i] >= .99;
         }
  else         if (_nnums[i] > 0 && (double)_nnums[i] / _nlines[i] > .2)         res[i]._type=ParserSetup.Coltype.NUM;
       }
