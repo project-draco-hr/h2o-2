@@ -1,4 +1,5 @@
 {
+  if (Float.isInfinite(a) || Float.isInfinite(b) && (a < b || b < a))   return false;
   float ulp_a=Math.ulp(a);
   float ulp_b=Math.ulp(b);
   float small_ulp=Math.min(ulp_a,ulp_b);

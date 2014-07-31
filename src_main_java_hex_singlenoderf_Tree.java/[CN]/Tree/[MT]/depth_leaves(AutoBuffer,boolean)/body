@@ -1,25 +1,25 @@
 {
   return new TreeVisitor<RuntimeException>(tbits,regression){
     int _maxdepth, _depth, _leaves;
-    protected TreeVisitor leafFloat(    float fl){
+    @Override protected TreeVisitor leafFloat(    float fl){
       _leaves++;
       if (_depth > _maxdepth)       _maxdepth=_depth;
       return this;
     }
-    protected TreeVisitor leaf(    int tclass){
+    @Override protected TreeVisitor leaf(    int tclass){
       _leaves++;
       if (_depth > _maxdepth)       _maxdepth=_depth;
       return this;
     }
-    protected TreeVisitor pre(    int col,    float fcmp,    int off0,    int offl,    int offr){
+    @Override protected TreeVisitor pre(    int col,    float fcmp,    int off0,    int offl,    int offr){
       _depth++;
       return this;
     }
-    protected TreeVisitor post(    int col,    float fcmp){
+    @Override protected TreeVisitor post(    int col,    float fcmp){
       _depth--;
       return this;
     }
-    long result(){
+    @Override long result(){
       return ((long)_maxdepth << 32) | _leaves;
     }
   }
