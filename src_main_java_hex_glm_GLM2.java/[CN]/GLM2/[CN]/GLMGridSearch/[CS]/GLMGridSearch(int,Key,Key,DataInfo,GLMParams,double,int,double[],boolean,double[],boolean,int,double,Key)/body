@@ -1,15 +1,20 @@
 {
   super(jobKey,dstKey);
+  dinfo._frameKey=src_key;
   description="GLM Grid with params " + glm.toString() + "on data "+ dinfo.toString();
   _maxParallelism=maxP;
   _jobs=new GLM2[alphas.length];
   _idx=new AtomicInteger(_maxParallelism);
   for (int i=0; i < _jobs.length; ++i) {
-    _jobs[i]=new GLM2("GLM grid(" + i + ")",self(),Key.make(dstKey.toString() + "_" + i),dinfo,glm,lambdas,alphas[i],nfolds,betaEpsilon,self());
+    _jobs[i]=new GLM2("GLM grid(" + i + ")",self(),Key.make(dstKey.toString() + "_" + i),dinfo,glm,lambdas,alphas[i],nfolds,betaEpsilon,self(),src_key);
     _jobs[i]._grid=true;
     _jobs[i].nlambdas=nlambdas;
     _jobs[i].lambda_min_ratio=lambda_min_ratio;
     _jobs[i].lambda_search=lambda_search;
     _jobs[i].higher_accuracy=high_accuracy;
+    _jobs[i].family=glm.family;
+    _jobs[i].link=glm.link;
+    _jobs[i].tweedie_variance_power=glm.tweedie_variance_power;
+    _jobs[i].tweedie_link_power=glm.tweedie_link_power;
   }
 }
