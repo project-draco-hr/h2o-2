@@ -6,7 +6,7 @@ def write_syn_dataset(csvPathname, rowCount, colCount, SEED, choices):
         rowData = []
         for j in range(colCount):
             ri = random.choice(choices)
-            if (ri == '0'):
+            if ((ri == '0') or (ri == ' 0')):
                 naCnt[j] += 1
             rowData.append(ri)
         rowDataCsv = ','.join(map(str, rowData))
