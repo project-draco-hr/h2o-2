@@ -40,10 +40,12 @@ def test_exec_enums_rand_cut(self):
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, iColCount, oColCount, SEEDPERFILE, colEnumList=colEnumList)
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
+        rSummary = h2o_cmd.runSummary(key=parseResult['destination_key'])
+        h2o_cmd.infoFromSummary(rSummary)
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
         if (len(constantValuesDict) != 0):
             raise Exception(("Probably got a col NA'ed and constant values as a result %s" % constantValuesDict))
