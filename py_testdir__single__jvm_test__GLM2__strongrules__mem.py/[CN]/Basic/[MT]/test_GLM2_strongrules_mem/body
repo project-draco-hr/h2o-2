@@ -1,11 +1,11 @@
 def test_GLM2_strongrules_mem(self):
-    csvFilename = 'AirlinesTrain.csv.zip'
-    csvPathname = (('airlines' + '/') + csvFilename)
-    parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', timeoutSecs=15)
-    params = {'strong_rules_enabled': 1, 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC', 'family': 'binomial', }
+    csvFilename = 'arcene_train.data'
+    csvPathname = (('arcene' + '/') + csvFilename)
+    noStrongRules = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
+    params = {'alpha': 0.5, 'n_folds': 0, 'strong_rules_enabled': 0, 'lambda_search': 0, 'response': 0, 'cols': [i for i in range(1, 5000)], 'ignored_cols': [i for i in range(5000, 10000)], 'family': 'binomial', }
     kwargs = params.copy()
     starttime = time.time()
-    glmtest = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)
+    glmtest = h2o_cmd.runGLM(parseResult=noStrongRules, **kwargs)
     elapsedtime = (time.time() - starttime)
-    print ('glm took', elapsedtime)
+    print ('GLM runtime: ', elapsedtime)
     h2o_glm.simpleCheckGLM(self, glmtest, None, **kwargs)
