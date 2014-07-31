@@ -21,5 +21,5 @@
       bestSplit=j;
     }
   }
-  return bestSplit == -1 ? Split.impossible(Utils.maxIndex(computeDist(d,colIndex),_random)) : Split.split(colIndex,bestSplit,bestSoFar);
+  return (bestSplit == -1 || bestSoFar == Float.POSITIVE_INFINITY) ? Split.impossible(Utils.maxIndex(computeDist(d,colIndex),_random)) : Split.split(colIndex,bestSplit,bestSoFar);
 }

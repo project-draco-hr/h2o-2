@@ -1,8 +1,8 @@
 {
-  ADMMSolver.subgrad(alpha[0],lambda[_lambdaIdx],newBeta,grad);
+  ADMMSolver.subgrad(alpha[0],_currentLambda,newBeta,grad);
   double err=0;
   for (  double d : grad)   if (d > err)   err=d;
  else   if (d < -err)   err=-d;
-  Log.info("GLM converged with max |subgradient| = " + err);
+  LogInfo("converged with max |subgradient| = " + err);
   return err;
 }

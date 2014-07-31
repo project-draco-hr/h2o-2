@@ -1,0 +1,14 @@
+{
+  if (_f1 == _f2) {
+    _res=true;
+  }
+ else   if (Arrays.deepEquals(_f1.names(),_f2.names())) {
+    _vts=new Vec.VecIdenticalTask[_f1.numCols()];
+    addToPendingCount(_vts.length);
+    for (int i=0; i < _vts.length; ++i) {
+      _vts[i]=new Vec.VecIdenticalTask(this,_fpointPrecision);
+      _vts[i].asyncExec(_f1.vec(i),_f2.vec(i));
+    }
+  }
+  tryComplete();
+}

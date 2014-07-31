@@ -1,7 +1,13 @@
 {
   super.queryArgumentValueSet(arg,inputArgs);
   if (arg._name.equals("classification")) {
+    arg._hideInQuery=true;
+  }
+  if (arg._name.equals("balance_classes")) {
     arg.setRefreshOnChange();
+    if (regression) {
+      arg.disable("Class balancing is only for classification.");
+    }
   }
   if (arg._name.equals("classification")) {
     regression=!this.classification;
@@ -25,17 +31,14 @@
       arg.disable("Random Sampling for regression trees.");
     }
   }
-  if (arg._name.equals("strata_samples")) {
-    if (sampling_strategy != Sampling.Strategy.STRATIFIED_LOCAL) {
-      arg.disable("No Strata for Random sampling.");
-    }
-    if (regression) {
-      arg.disable("No strata for regression.");
-    }
-  }
   if (arg._name.equals("importance")) {
     if (regression) {
       arg.disable("Variable Importance not supported in SpeeDRF regression.");
+    }
+  }
+  if (classification) {
+    if (arg._name.equals("max_after_balance_size") && !balance_classes) {
+      arg.disable("Requires balance classes flag to be set.",inputArgs);
     }
   }
 }

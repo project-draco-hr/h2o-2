@@ -2,12 +2,8 @@
   H2O.main(args);
   TestUtil.stall_till_cloudsize(NODES);
   List<Class> tests=new ArrayList<Class>();
-  tests.add(DeepLearningSpiralsTest.class);
-  tests.add(DeepLearningIrisTest.Short.class);
-  tests.add(DeepLearningProstateTest.Short.class);
-  tests.add(NeuronsTest.class);
-  tests.add(MRUtilsTest.class);
-  tests.add(DropoutTest.class);
+  tests.add(ParserTest2.ParseAllSmalldata.class);
+  tests.add(GLMRandomTest.Short.class);
   JUnitCore junit=new JUnitCore();
   junit.addListener(new LogListener());
   Result result=junit.run(tests.toArray(new Class[0]));

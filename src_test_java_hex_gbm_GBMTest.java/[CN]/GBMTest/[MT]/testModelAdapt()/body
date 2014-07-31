@@ -18,6 +18,7 @@
     gbm.invoke();
     gbmmodel=UKV.get(gbm.dest());
     testHTML(gbmmodel);
+    Assert.assertTrue(gbmmodel.get_params().state == Job.JobState.DONE);
     Frame ftest=ParseDataset2.parse(dest2,new Key[]{fkey2});
     Frame preds=gbm.score(ftest);
     ftest.delete();

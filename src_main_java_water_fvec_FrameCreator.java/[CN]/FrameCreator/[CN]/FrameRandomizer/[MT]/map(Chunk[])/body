@@ -4,6 +4,7 @@
   for (int r=0; r < cs[0]._len; r++) {
     setSeed(rng,0,cs[0]._start + r);
     if (_createFrame.response_factors > 1)     cs[0].set0(r,(int)(rng.nextDouble() * _createFrame.response_factors));
+ else     if (_createFrame.positive_response)     cs[0].set0(r,_createFrame.real_range * rng.nextDouble());
  else     cs[0].set0(r,_createFrame.real_range * (1 - 2 * rng.nextDouble()));
   }
   for (  int c : _cat_cols) {

@@ -1,13 +1,8 @@
 def columnInfoFromInspect(key, exceptionOnMissingValues=True, **kwargs):
     inspect = runInspect(key=key, **kwargs)
-    if h2o.beta_features:
-        num_rows = inspect['numRows']
-        num_cols = inspect['numCols']
-        keyNA = 'naCnt'
-    else:
-        num_rows = inspect['num_rows']
-        num_cols = inspect['num_cols']
-        keyNA = 'num_missing_values'
+    num_rows = inspect['numRows']
+    num_cols = inspect['numCols']
+    keyNA = 'naCnt'
     cols = inspect['cols']
     missingValuesDict = {}
     constantValuesDict = {}
@@ -21,15 +16,10 @@ def columnInfoFromInspect(key, exceptionOnMissingValues=True, **kwargs):
         msg = ('%s %d' % (c['name'], k))
         msg += (' type: %s' % c['type'])
         printMsg = False
-        if h2o.beta_features:
-            if (c['type'] == 'Enum'):
-                cardinality = c['cardinality']
-                msg += (' cardinality: %d' % cardinality)
-                enumSizeDict[k] = cardinality
-                printMsg = True
-        elif (c['type'] == 'enum'):
-            msg += (' enum_domain_size: %d' % c['enum_domain_size'])
-            enumSizeDict[k] = c['enum_domain_size']
+        if (c['type'] == 'Enum'):
+            cardinality = c['cardinality']
+            msg += (' cardinality: %d' % cardinality)
+            enumSizeDict[k] = cardinality
             printMsg = True
         if (c[keyNA] != 0):
             pct = (((c[keyNA] + 0.0) / num_rows) * 100)

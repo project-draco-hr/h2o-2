@@ -1,8 +1,9 @@
 {
   new TreeVisitor<RuntimeException>(this,ct){
-    @Override protected void pre(    int col,    float fcmp,    boolean equal){
+    @Override protected void pre(    int col,    float fcmp,    IcedBitSet gcmp,    int equal){
       for (int i=0; i < _depth; i++)       sb.append("  ");
-      sb.append(_names[col]).append(equal ? "==" : "< ").append(fcmp).append('\n');
+      if (equal == 2 || equal == 3)       sb.append(_names[col]).append("==").append(gcmp.toString()).append('\n');
+ else       sb.append(_names[col]).append(equal == 1 ? "==" : "< ").append(fcmp).append('\n');
     }
     @Override protected void leaf(    float pred){
       for (int i=0; i < _depth; i++)       sb.append("  ");

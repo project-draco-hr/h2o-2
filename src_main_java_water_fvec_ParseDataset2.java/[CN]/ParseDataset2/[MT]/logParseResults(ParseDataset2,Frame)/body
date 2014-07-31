@@ -16,7 +16,7 @@
       String isConstantStr=isConstant ? "constant" : "";
       String numLevelsStr=isCategorical ? String.format("numLevels(%d)",v.domain().length) : "";
       boolean printLogSeparatorToStdout=false;
-      boolean printColumnToStdout=false;
+      boolean printColumnToStdout;
 {
         final int MAX_HEAD_TO_PRINT_ON_STDOUT=10;
         final int MAX_TAIL_TO_PRINT_ON_STDOUT=10;
@@ -47,7 +47,8 @@
         Log.info_no_stdout(String.format("    %-8s %15s %20s %20s %15s %11s %16s",CStr,typeStr,minStr,maxStr,naStr,isConstantStr,numLevelsStr));
       }
     }
+    Log.info(FrameUtils.chunkSummary(fr).toString());
   }
- catch (  Exception xe) {
+ catch (  Exception ignore) {
   }
 }

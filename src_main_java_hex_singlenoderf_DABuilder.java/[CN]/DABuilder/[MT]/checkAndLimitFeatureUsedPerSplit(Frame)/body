@@ -1,0 +1,7 @@
+{
+  int validCols=fr.numCols() - 1;
+  if (validCols < _rfParams.num_split_features) {
+    Log.info(Log.Tag.Sys.RANDF,"Limiting features from " + _rfParams.num_split_features + " to "+ validCols+ " because there are no more valid columns in the dataset");
+    _rfParams.num_split_features=validCols;
+  }
+}

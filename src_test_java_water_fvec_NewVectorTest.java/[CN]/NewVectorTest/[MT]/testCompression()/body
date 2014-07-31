@@ -2,7 +2,12 @@
   testImpl(new long[]{120,12,120},new int[]{0,1,0},C0LChunk.class,false);
   testImpl(new long[]{122,3,44},new int[]{0,0,0},C1NChunk.class,false);
   testImpl(new long[]{1,0,1},new int[]{0,0,0},CBSChunk.class,false);
+  testImpl(new long[]{0,128,255},new int[]{0,0,0},C1NChunk.class,false);
+  testImpl(new long[]{0,Long.MAX_VALUE,128,254},new int[]{0,Integer.MIN_VALUE,0,0},C1Chunk.class,false);
+  testImpl(new long[]{0,Long.MAX_VALUE,128,255},new int[]{0,Integer.MIN_VALUE,0,0},C2Chunk.class,false);
+  testImpl(new long[]{0,Long.MAX_VALUE,128,255,Short.MAX_VALUE - 1},new int[]{0,Integer.MIN_VALUE,0,0,0},C2Chunk.class,false);
   testImpl(new long[]{122,-3,44},new int[]{-1,0,-1},C1SChunk.class,true);
+  testImpl(new long[]{0,10,254},new int[]{0,0,0},C1NChunk.class,false);
   testImpl(new long[]{1000,200,30},new int[]{0,1,2},C1SChunk.class,false);
   testImpl(new long[]{1000,200,32767,-32767,32},new int[]{0,1,0,0,3},C2Chunk.class,false);
   testImpl(new long[]{50100,50101,50123,49999},new int[]{0,0,0,0},C1SChunk.class,false);

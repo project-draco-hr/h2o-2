@@ -1,19 +1,2 @@
 {
-  init();
-  link=family.defaultLink;
-  tweedie_link_power=1 - tweedie_variance_power;
-  _glm=new GLMParams(family,tweedie_variance_power,link,tweedie_link_power);
-  if (alpha.length > 1) {
-    if (destination_key == null)     destination_key=Key.make("GLMGridResults_" + Key.make());
-    if (job_key == null)     job_key=Key.make((byte)0,Key.JOB,H2O.SELF);
-    ;
-    Job j=gridSearch(self(),destination_key,_dinfo,_glm,lambda,lambda_search,alpha,higher_accuracy,n_folds);
-    return GLMGridView.redirect(this,j.dest());
-  }
- else {
-    if (destination_key == null)     destination_key=Key.make("GLMModel_" + Key.make());
-    if (job_key == null)     job_key=Key.make("GLM2Job_" + Key.make());
-    fork();
-    return GLMProgress.redirect(this,job_key,dest());
-  }
 }

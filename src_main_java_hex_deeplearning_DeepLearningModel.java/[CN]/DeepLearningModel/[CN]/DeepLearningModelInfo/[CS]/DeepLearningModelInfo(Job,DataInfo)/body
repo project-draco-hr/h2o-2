@@ -2,7 +2,7 @@
   this.job=job;
   data_info=dinfo;
   final int num_input=dinfo.fullN();
-  final int num_output=get_params().classification ? dinfo._adaptedFrame.domains()[dinfo._adaptedFrame.domains().length - 1].length : 1;
+  final int num_output=get_params().autoencoder ? num_input : get_params().classification ? dinfo._adaptedFrame.domains()[dinfo._adaptedFrame.domains().length - 1].length : 1;
   assert(num_input > 0);
   assert(num_output > 0);
   if (has_momenta() && adaDelta())   throw new IllegalArgumentException("Cannot have non-zero momentum and adaptive rate at the same time.");
@@ -18,6 +18,11 @@
   for (int i=1; i <= layers; ++i)   dense_row_weights[i]=new Neurons.DenseRowMatrix(units[i + 1],units[i]);
   biases=new Neurons.DenseVector[layers + 1];
   for (int i=0; i <= layers; ++i)   biases[i]=new Neurons.DenseVector(units[i + 1]);
+  if (get_params().autoencoder && get_params().sparsity_beta > 0) {
+    avg_activations=new Neurons.DenseVector[layers];
+    mean_a=new float[layers];
+    for (int i=0; i < layers; ++i)     avg_activations[i]=new Neurons.DenseVector(units[i + 1]);
+  }
   fillHelpers();
   mean_rate=new float[units.length];
   rms_rate=new float[units.length];

@@ -1,0 +1,26 @@
+{
+  SpeeDRFModel model=null;
+  try {
+    Frame train=setTrain();
+    Frame test=setTest();
+    Vec resp=regression ? null : train.lastVec().toEnum();
+    if (resp != null)     gtrash(resp);
+    float[] priorDist=setPriorDist(train);
+    train=setStrat(train,test,resp);
+    model=initModel(train,test,priorDist);
+    model.start_training(null);
+    model.write_lock(self());
+    drfParams=DRFParams.create(train.find(resp),model.N,model.max_depth,(int)train.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,true,regression);
+    DRFTask tsk=new DRFTask(self(),train,drfParams,model._key);
+    tsk.validateInputData(train);
+    tsk.invokeOnAllNodes();
+    model=UKV.get(dest());
+    model.scoreAllTrees(test == null ? train : test,resp);
+  }
+  finally {
+    if (model != null) {
+      model.unlock(self());
+      model.stop_training();
+    }
+  }
+}

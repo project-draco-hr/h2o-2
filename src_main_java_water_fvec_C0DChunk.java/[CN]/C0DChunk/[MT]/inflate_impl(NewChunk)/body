@@ -1,12 +1,10 @@
 {
+  nc.set_len(nc.set_sparseLen(0));
   if (_con == 0) {
-    nc._id=new int[0];
-    nc._ls=new long[0];
-    nc._xs=new int[0];
+    nc.addZeros(len());
   }
  else {
-    nc._ds=MemoryManager.malloc8d(_len);
-    Arrays.fill(nc._ds,_con);
+    for (int i=0; i < len(); ++i)     nc.addNum(_con);
   }
   return nc;
 }

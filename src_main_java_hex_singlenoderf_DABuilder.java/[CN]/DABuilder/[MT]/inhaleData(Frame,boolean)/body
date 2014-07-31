@@ -1,0 +1,44 @@
+{
+  long id=getChunkId(fr);
+  if (id == -99999) {
+    return null;
+  }
+  Timer t_inhale=new Timer();
+  final SpeeDRFModel rfmodel=UKV.get(_rfModel);
+  boolean[] _isByteCol=new boolean[fr.numCols()];
+  long[] _naCnts=new long[fr.numCols()];
+  for (int i=0; i < _isByteCol.length; ++i) {
+    _isByteCol[i]=DataAdapter.isByteCol(fr.vecs()[i],(int)fr.numRows(),i == _isByteCol.length - 1,rfmodel.regression);
+    _naCnts[i]=fr.vecs()[i].naCnt();
+  }
+  final int[] modelDataMap=colMap(fr._names,rfmodel._names);
+  final int totalRows=getRowCount(fr);
+  final DataAdapter dapt=new DataAdapter(fr,rfmodel,modelDataMap,totalRows,getChunkId(fr),_rfParams.seed,_rfParams.bin_limit,_rfParams.class_weights);
+  checkAndLimitFeatureUsedPerSplit(fr);
+  ArrayList<RecursiveAction> dataInhaleJobs=new ArrayList<RecursiveAction>();
+  Log.info("\n\nTotal Number of Chunks: " + fr.anyVec().nChunks() + "\n\n");
+  int cnter_local=0;
+  int cnter_remote=0;
+  for (int i=0; i < fr.anyVec().nChunks(); ++i) {
+    if (useNonLocal) {
+      if (fr.anyVec().chunkKey(i).home()) {
+        cnter_local++;
+      }
+ else {
+        cnter_remote++;
+      }
+      dataInhaleJobs.add(loadChunkAction(dapt,fr,i,_isByteCol,_naCnts,rfmodel.regression));
+    }
+ else     if (fr.anyVec().chunkKey(i).home()) {
+      cnter_local++;
+      dataInhaleJobs.add(loadChunkAction(dapt,fr,i,_isByteCol,_naCnts,rfmodel.regression));
+    }
+  }
+  Log.info("\n\nTotal local  chunks to load: " + cnter_local + "\n\nTotal remote chunks to load:"+ cnter_remote);
+  SpeeDRF.DRFTask.updateRFModelStatus(_rfModel,"Inhaling Data.");
+  Log.info(Log.Tag.Sys.RANDF,"Beginning Random Forest Inhale.");
+  ForkJoinTask.invokeAll(dataInhaleJobs);
+  dapt.shrink();
+  Log.info(Log.Tag.Sys.RANDF,"Inhale done in " + t_inhale);
+  return dapt;
+}

@@ -2,8 +2,6 @@
   int[] permutation=getPermutationArray();
   int cidx=node._column;
   int l=_dapt.hasAnyInvalid(cidx) || _dapt.hasAnyInvalid(_dapt.columns() - 1) ? filterInv(node,permutation,ls,rs) : filterVal(node,permutation,ls,rs);
-  ls.applyClassWeights();
-  rs.applyClassWeights();
   ColumnInfo[] linfo=_columnInfo.clone();
   ColumnInfo[] rinfo=_columnInfo.clone();
   linfo[node._column]=linfo[node._column].left(node._split);

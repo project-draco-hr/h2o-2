@@ -1,0 +1,33 @@
+{
+  Frame f=parseFrame(dataset);
+  DRFModel model=null;
+  DRF drf=new DRF();
+  try {
+    Vec respVec=f.vec(response);
+    drf.source=f;
+    drf.response=respVec;
+    drf.ignored_cols=ignored_cols;
+    drf.classification=true;
+    drf.ntrees=ntrees;
+    drf.seed=42;
+    drf.balance_classes=true;
+    drf.n_folds=nfolds;
+    drf.keep_cross_validation_splits=false;
+    drf.invoke();
+    Assert.assertEquals("Number of cross validation model is wrond!",nfolds,drf.xval_models.length);
+    model=UKV.get(drf.dest());
+    Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
+  }
+  finally {
+    if (f != null)     f.delete();
+    if (model != null) {
+      if (drf.xval_models != null) {
+        for (        Key k : drf.xval_models) {
+          Model m=UKV.get(k);
+          m.delete();
+        }
+      }
+      model.delete();
+    }
+  }
+}

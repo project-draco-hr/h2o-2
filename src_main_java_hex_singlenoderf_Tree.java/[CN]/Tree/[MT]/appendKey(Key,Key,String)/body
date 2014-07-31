@@ -1,0 +1,10 @@
+{
+  final int selfIdx=H2O.SELF.index();
+  new TAtomic<SpeeDRFModel>(){
+    @Override public SpeeDRFModel atomic(    SpeeDRFModel old){
+      if (old == null)       return null;
+      return SpeeDRFModel.make(old,tKey,selfIdx,tString);
+    }
+  }
+.invoke(model);
+}

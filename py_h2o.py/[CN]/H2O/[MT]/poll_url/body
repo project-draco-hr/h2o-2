@@ -1,8 +1,8 @@
 def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySecs=0, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, reuseFirstPollUrl=False, noPrint=False):
     verboseprint('poll_url input: response:', dump_json(response))
-    print 'at top of poll_url, timeoutSec: ', timeoutSecs
+    print 'at top of poll_url, timeoutSecs: ', timeoutSecs
 
-    def get_redirect_url(response, beta_features):
+    def get_redirect_url(response):
         url = None
         params = None
         if ('response_info' in response):
@@ -34,7 +34,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
         status = r['status']
         progress = r.get('progress', '')
     doFirstPoll = (status != 'done')
-    (url, params) = get_redirect_url(response, beta_features)
+    (url, params) = get_redirect_url(response)
     if params:
         paramsStr = '&'.join([('%s=%s' % (k, v)) for (k, v) in params.items()])
     else:
@@ -52,7 +52,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
     count = 0
     if initialDelaySecs:
         time.sleep(initialDelaySecs)
-    while ((status == 'poll') or doFirstPoll or (beta_features and (status == 'redirect') and ('Inspect' not in url))):
+    while ((status == 'poll') or doFirstPoll or ((status == 'redirect') and ('Inspect' not in url))):
         count += 1
         if ((time.time() - start) > timeoutSecs):
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
@@ -81,15 +81,10 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             progress = ''
         else:
             doFirstPoll = False
-            if (beta_features or ('response_info' in response)):
-                status = response['response_info']['status']
-                progress = response.get('progress', '')
-            else:
-                r = response['response']
-                status = r['status']
-                progress = r.get('progress', '')
-            if (beta_features and (not reuseFirstPollUrl)):
-                (url, params) = get_redirect_url(response, beta_features)
+            status = response['response_info']['status']
+            progress = response.get('progress', '')
+            if (not reuseFirstPollUrl):
+                (url, params) = get_redirect_url(response)
             if noPoll:
                 return response
     if msgUsed:

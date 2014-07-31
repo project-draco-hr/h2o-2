@@ -1,0 +1,65 @@
+def test_rf_covtype20x_fvec(self):
+    h2o.beta_features = True
+    importFolderPath = 'standard'
+    if DO_SMALL:
+        csvFilenameTrain = 'covtype.data'
+        hex_key = 'covtype1x.data.A.hex'
+    else:
+        csvFilenameTrain = 'covtype20x.data'
+        hex_key = 'covtype20x.data.A.hex'
+    csvPathname = ((importFolderPath + '/') + csvFilenameTrain)
+    parseResultTrain = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=500)
+    inspect = h2o_cmd.runInspect(key=parseResultTrain['destination_key'])
+    dataKeyTrain = parseResultTrain['destination_key']
+    print 'Parse end', dataKeyTrain
+    if DO_SMALL:
+        csvFilenameTest = 'covtype.data'
+        hex_key = 'covtype1x.data.B.hex'
+        dataKeyTest2 = 'covtype1x.data.C.hex'
+    else:
+        csvFilenameTest = 'covtype20x.data'
+        hex_key = 'covtype20x.data.B.hex'
+        dataKeyTest2 = 'covtype20x.data.C.hex'
+    csvPathname = ((importFolderPath + '/') + csvFilenameTest)
+    parseResultTest = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=500)
+    print "Parse result['destination_key']:", parseResultTest['destination_key']
+    inspect = h2o_cmd.runInspect(key=parseResultTest['destination_key'])
+    dataKeyTest = parseResultTest['destination_key']
+    print 'Parse end', dataKeyTest
+    execExpr = ((dataKeyTest2 + '=') + dataKeyTest)
+    kwargs = {'str': execExpr, 'timeoutSecs': 15, }
+    resultExec = h2o_cmd.runExec(**kwargs)
+    paramDict = drf2ParamDict
+    params = {'num_trees': 20, 'destination_key': 'RF_model', 'response': 'C55', }
+    kwargs = params.copy()
+    timeoutSecs = (30 + (kwargs['num_trees'] * 60))
+    start = time.time()
+    h2o_cmd.runSpeeDRF(parseResult=parseResultTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, **kwargs)
+    print 'rf job end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
+    print '\nRFView start after job completion'
+    model_key = kwargs['destination_key']
+    ntree = kwargs['num_trees']
+    start = time.time()
+    h2o_cmd.runSpeeDRFView(None, model_key, timeoutSecs=timeoutSecs)
+    print 'First rfview end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
+    for trial in range(1):
+        start = time.time()
+        rfView = h2o_cmd.runSpeeDRFView(None, model_key, timeoutSecs=timeoutSecs)
+        print 'rfview', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'
+        rfView['drf_model'] = rfView.pop('speedrf_model')
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
+        self.assertAlmostEqual(classification_error, 50, delta=50, msg=('Classification error %s differs too much' % classification_error))
+        start = time.time()
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest2)
+        print 'predict', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'
+        parseKey = parseResultTrain['destination_key']
+        rfModelKey = rfView['drf_model']['_key']
+        predictKey = 'Predict.hex'
+        start = time.time()
+        predictResult = h2o_cmd.runPredict(data_key=parseKey, model_key=rfModelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=parseKey, vactual='C55', predict=predictKey, vpredict='predict')
+        cm = predictCMResult['cm']
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        print '\nTest\n==========\n'
+        print h2o_gbm.pp_cm(cm)
+        print 'Trial #', trial, 'completed'

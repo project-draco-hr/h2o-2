@@ -1,0 +1,43 @@
+{
+  _treeMeasuresOnOOB=new VariableImportance.TreeVotes[fr.numCols() - 1];
+  _treeMeasuresOnSOOB=new VariableImportance.TreeVotes[fr.numCols() - 1];
+  for (int i=0; i < fr.numCols() - 1; i++)   _treeMeasuresOnOOB[i]=new VariableImportance.TreeVotes(treeCount());
+  for (int i=0; i < fr.numCols() - 1; i++)   _treeMeasuresOnSOOB[i]=new VariableImportance.TreeVotes(treeCount());
+  final int ncols=fr.numCols();
+  final int trees=treeCount();
+  for (int i=0; i < ncols - 1; i++)   _treeMeasuresOnSOOB[i]=new VariableImportance.TreeVotes(trees);
+  Futures fs=new Futures();
+  for (int var=0; var < ncols - 1; var++) {
+    final int variable=var;
+    H2O.H2OCountedCompleter task4var=new H2O.H2OCountedCompleter(){
+      @Override public void compute2(){
+        VariableImportance.TreeVotes[] cd=VariableImportance.collectVotes(trees,classes(),fr,ncols - 1,sample,variable,model,resp);
+        asVotes(_treeMeasuresOnOOB[variable]).append(cd[0]);
+        asVotes(_treeMeasuresOnSOOB[variable]).append(cd[1]);
+        tryComplete();
+      }
+    }
+;
+    H2O.submitTask(task4var);
+    fs.add(task4var);
+  }
+  fs.blockForPending();
+  final float[] varimp=new float[ncols - 1];
+  float[] varimpSD=new float[ncols - 1];
+  for (int var=0; var < ncols - 1; var++) {
+    long[] votesOOB=asVotes(_treeMeasuresOnOOB[var]).votes();
+    long[] votesSOOB=asVotes(_treeMeasuresOnSOOB[var]).votes();
+    float imp=0.f;
+    float v=0.f;
+    long[] nrows=asVotes(_treeMeasuresOnOOB[var]).nrows();
+    for (int i=0; i < votesOOB.length; ++i) {
+      double delta=((float)(votesOOB[i] - votesSOOB[i])) / (float)nrows[i];
+      imp+=delta;
+      v+=delta * delta;
+    }
+    imp/=model.treeCount();
+    varimp[var]=imp;
+    varimpSD[var]=(float)Math.sqrt((v / model.treeCount() - imp * imp) / model.treeCount());
+  }
+  return new VarImp.VarImpMDA(varimp,varimpSD,model.treeCount());
+}

@@ -1,6 +1,18 @@
 {
-  logStart();
-  buildModel(seed);
-  if (n_folds > 0)   CrossValUtils.crossValidate(this);
-  remove();
+  try {
+    logStart();
+    buildModel(seed);
+    if (n_folds > 0)     CrossValUtils.crossValidate(this);
+  }
+  finally {
+    remove();
+    state=UKV.<Job>get(self()).state;
+    new TAtomic<GBMModel>(){
+      @Override public GBMModel atomic(      GBMModel m){
+        if (m != null)         m.get_params().state=state;
+        return m;
+      }
+    }
+.invoke(dest());
+  }
 }

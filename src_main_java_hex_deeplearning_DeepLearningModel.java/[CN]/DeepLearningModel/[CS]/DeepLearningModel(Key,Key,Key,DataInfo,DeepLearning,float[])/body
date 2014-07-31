@@ -5,12 +5,16 @@
   start_time=System.currentTimeMillis();
   _timeLastScoreEnter=start_time;
   model_info=new DeepLearningModelInfo(params,dinfo);
+  actual_best_model_key=Key.makeUserHidden(Key.make());
+  if (params.n_folds != 0)   actual_best_model_key=null;
   Object job=UKV.get(jobKey);
   if (job instanceof DeepLearning)   get_params().state=((DeepLearning)UKV.get(jobKey)).state;
  else   get_params().state=((Job.JobHandle)UKV.get(jobKey)).state;
-  errors=new Errors[1];
-  errors[0]=new Errors();
-  errors[0].validation=(params.validation != null);
-  errors[0].num_folds=params.n_folds;
+  if (!get_params().autoencoder) {
+    errors=new Errors[1];
+    errors[0]=new Errors();
+    errors[0].validation=(params.validation != null);
+    errors[0].num_folds=params.n_folds;
+  }
   assert(Arrays.equals(_key._kb,destKey._kb));
 }

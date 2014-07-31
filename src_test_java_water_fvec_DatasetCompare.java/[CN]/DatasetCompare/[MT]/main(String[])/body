@@ -1,0 +1,34 @@
+{
+  System.out.println("Running Parser Cmp Test with args=" + Arrays.toString(args));
+  System.out.println(Arrays.equals((int[])null,(int[])null));
+  final int nnodes=3;
+  for (int i=1; i < nnodes; i++) {
+    Node n=new NodeVM(args);
+    n.inheritIO();
+    n.start();
+  }
+  H2O.waitForCloudSize(nnodes,20000);
+  new GLMTest2().testCars();
+  new ModelSerializationTest().testGLMModel();
+  new NewVectorTest().testCompression();
+  System.out.println("compression ok");
+  for (int i=0; i < datasets.length; i+=2) {
+    File f=new File(datasets[i]);
+    if (!f.exists())     throw new RuntimeException("did not find file " + f.getAbsolutePath());
+    Key frRaw=NFSFileVec.make(f);
+    Key frHex=Key.make(datasets[i + 1]);
+    ParseDataset2.parse(frHex,new Key[]{frRaw});
+  }
+  Futures fs=new Futures();
+  for (int i=0; i < cmds.length; i+=2) {
+    System.out.println("Executing: '" + cmds[i] + "'");
+    Env env=Exec2.exec(cmds[i]);
+    Frame fr=env.popAry();
+    DKV.put(Key.make(cmds[i + 1]),fr,fs);
+  }
+  fs.blockForPending();
+  String root=(args.length > 0) ? args[0] : "smalldata";
+  System.out.println("ROOT = " + root);
+  System.out.println("Running...");
+  System.out.println("DONE");
+}

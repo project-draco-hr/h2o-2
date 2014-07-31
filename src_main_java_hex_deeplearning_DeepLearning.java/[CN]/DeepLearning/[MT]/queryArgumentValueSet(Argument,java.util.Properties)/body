@@ -16,10 +16,6 @@
   if (arg._name.equals("initial_weight_scale") && (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive)) {
     arg.disable("Using sqrt(6 / (# units + # units of previous layer)) for Uniform distribution.",inputArgs);
   }
-  if (arg._name.equals("loss") && !classification) {
-    arg.disable("Using MeanSquare loss for regression.",inputArgs);
-    loss=Loss.MeanSquare;
-  }
   if (classification) {
     if (arg._name.equals("regression_stop")) {
       arg.disable("Only for regression.",inputArgs);
@@ -69,5 +65,9 @@
   if (arg._name.equals("single_node_mode") && (H2O.CLOUD.size() == 1 || !replicate_training_data)) {
     arg.disable("Only for multi-node operation with replication.");
     single_node_mode=false;
+  }
+  if (arg._name.equals("use_all_factor_levels") && autoencoder) {
+    arg.disable("Automatically enabled for auto-encoders.");
+    use_all_factor_levels=true;
   }
 }

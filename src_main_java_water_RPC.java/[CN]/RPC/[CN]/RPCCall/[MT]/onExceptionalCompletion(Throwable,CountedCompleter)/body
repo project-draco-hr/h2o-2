@@ -1,7 +1,15 @@
 {
-  if (!_firstException.getAndSet(true)) {
-    _dt.setException(ex);
-    onCompletion(caller);
+  _computed=true;
+  boolean first=false;
+  DTask dt=_dt;
+  if (dt != null && dt._exception == null) {
+synchronized (this) {
+      if (dt._exception == null) {
+        dt.setException(ex);
+        first=true;
+      }
+    }
   }
+  if (first)   onCompletion(caller);
   return false;
 }
