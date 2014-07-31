@@ -1,7 +1,7 @@
 {
   if (fr == null)   return null;
-  Futures fs=null;
+  Futures fs=new Futures();
   for (  Vec vec : fr.vecs())   fs=subRef(vec,fs);
-  if (fs != null)   fs.blockForPending();
+  fs.blockForPending();
   return null;
 }
