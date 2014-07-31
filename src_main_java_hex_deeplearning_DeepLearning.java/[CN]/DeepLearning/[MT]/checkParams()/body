@@ -27,6 +27,11 @@
     if (initial_weight_distribution == InitialWeightDistribution.UniformAdaptive) {
       Log.info("Ignoring initial_weight_scale for UniformAdaptive weight distribution.");
     }
+    if (n_folds != 0) {
+      if (override_with_best_model) {
+        Log.info("Ignoring override_with_best_model, since the final model is the only scored model with n-fold cross-validation.");
+      }
+    }
   }
   if (loss == Loss.Automatic) {
     if (!classification) {
