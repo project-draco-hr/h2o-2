@@ -1,8 +1,13 @@
 {
   try {
-    ForkJoinPool.managedBlock(this);
+    try {
+      ForkJoinPool.managedBlock(this);
+    }
+ catch (    InterruptedException e) {
+    }
+    return self();
   }
- catch (  InterruptedException e) {
+ catch (  Throwable t) {
+    throw new RuntimeException(t);
   }
-  return self();
 }
