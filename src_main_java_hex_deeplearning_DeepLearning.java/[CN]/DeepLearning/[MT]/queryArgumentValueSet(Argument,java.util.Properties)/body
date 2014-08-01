@@ -70,4 +70,8 @@
     arg.disable("Automatically enabled for auto-encoders.");
     use_all_factor_levels=true;
   }
+  if (arg._name.equals("override_with_best_model") && n_folds != 0) {
+    arg.disable("Only without n-fold cross-validation.",inputArgs);
+    override_with_best_model=false;
+  }
 }

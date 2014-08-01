@@ -7,18 +7,18 @@
     m.local_forests[nodeIdx][m.local_forests[nodeIdx].length - 1]=tkey;
   }
  catch (  ArrayIndexOutOfBoundsException aioobe) {
-    Log.info("Node Index in: " + nodeIdx);
-    Log.info("Length of old local_forests[nodeIdx]: " + old.local_forests[nodeIdx].length);
-    Log.info("Length of new local_forests[nodeIdx]: " + m.local_forests[nodeIdx].length);
-    Log.info("Appending to the node index @: " + (m.local_forests[nodeIdx].length - 1));
-    throw H2O.fail(aioobe.getMessage());
+    Log.err("Node Index in: " + nodeIdx);
+    Log.err("Length of old: old.local_forests[nodeIdx].length: " + old.local_forests[nodeIdx].length);
+    Log.err("Length of new: m.local_forests[nodeIdx].length: " + m.local_forests[nodeIdx].length);
+    Log.err("Appending to the node index @: m.local_forests[nodeIdx].length - 1" + (m.local_forests[nodeIdx].length - 1));
+    throw aioobe;
   }
   if (old.verbose_output.length < 2) {
     m.verbose_output=Arrays.copyOf(old.verbose_output,old.verbose_output.length + 1);
     m.verbose_output[m.verbose_output.length - 1]=tString;
   }
   m.errs=Arrays.copyOf(old.errs,old.errs.length + 1);
-  m.errs[m.errs.length - 1]=-1.f;
+  m.errs[m.errs.length - 1]=-1.0;
   m.cms=Arrays.copyOf(old.cms,old.cms.length + 1);
   m.cms[m.cms.length - 1]=null;
   JsonObject trees=new JsonObject();

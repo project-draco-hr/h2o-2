@@ -1,0 +1,20 @@
+import unittest, random, sys, time, re, getpass
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_glm, h2o_util
+import h2o_print as h2p, h2o_gbm
+import string
+randChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&\\()*+-./:;?@[\\]^_`{|}~ \t'
+randChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&\\()*+-./:;?@[]^_`{|}~ \t'
+quoteChars = '\'"'
+quoteChars = ''
+MIN_ENUM_WIDTH = 6
+MAX_ENUM_WIDTH = 16
+RAND_ENUM_LENGTH = True
+CUT_EXPR_CNT = 20
+ROWS = 100000
+DO_PLOT = (getpass.getuser() == 'kevin')
+DO_MEDIAN = True
+MAX_QBINS = 1000
+MULTI_PASS = 1
+if (__name__ == '__main__'):
+    h2o.unit_main()
