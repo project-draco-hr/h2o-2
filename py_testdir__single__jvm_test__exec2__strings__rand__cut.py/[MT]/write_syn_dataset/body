@@ -4,7 +4,7 @@ def write_syn_dataset(csvPathname, rowCount, inCount=1, outCount=1, SEED='123456
     for row in range(rowCount):
         rowData = []
         for iCol in range(inCount):
-            ri = random.choice(colEnumList[iCol])
+            ri = random.choice(colEnumList)
             rowData.append(ri)
         for oCol in range(outCount):
             ri = ('%.2f' % random.uniform(0, 10000000.0))
