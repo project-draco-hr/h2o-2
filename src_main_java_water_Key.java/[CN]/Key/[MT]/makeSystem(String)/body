@@ -1,0 +1,7 @@
+{
+  byte[] kb=decodeKeyName(s);
+  byte[] kb2=new byte[kb.length + 1];
+  System.arraycopy(kb,0,kb2,1,kb.length);
+  kb2[0]=Key.BUILT_IN_KEY;
+  return Key.make(kb2);
+}

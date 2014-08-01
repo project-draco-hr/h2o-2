@@ -24,9 +24,7 @@
         }
  else         if (ColumnSelect.class.isAssignableFrom(api.filter())) {
           ColumnSelect name=(ColumnSelect)newInstance(api);
-          H2OHexKey key=null;
-          for (          Argument a : _arguments)           if (a instanceof H2OHexKey && name._ref.equals(((H2OHexKey)a)._name))           key=(H2OHexKey)a;
-          arg=new HexAllColumnSelect(f.getName(),key);
+          throw H2O.fail();
         }
  else         if (Dependent.class.isAssignableFrom(api.filter())) {
           Dependent d=(Dependent)newInstance(api);
