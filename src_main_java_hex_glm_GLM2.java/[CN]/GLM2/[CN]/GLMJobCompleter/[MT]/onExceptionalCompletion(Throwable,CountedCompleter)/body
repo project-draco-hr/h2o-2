@@ -1,13 +1,11 @@
 {
   if (_cmp.compareAndSet(null,cmp)) {
-    if (!(t instanceof JobCancelledException) && (t.getMessage() == null || !t.getMessage().contains("JobCancelled"))) {
-      _done=true;
-      GLM2.this.cancel(t);
+    _done=true;
+    GLM2.this.cancel(t);
+    if (_grid) {
+      _failed=true;
+      tryComplete();
     }
-  }
-  if (_grid) {
-    _failed=true;
-    tryComplete();
   }
   return !_grid;
 }
