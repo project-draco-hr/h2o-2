@@ -1,0 +1,22 @@
+{
+  parseArgs(args);
+  if (g_start) {
+    h2odriver d=new h2odriver();
+    d.setZk(g_zk);
+    d.setZkroot(g_zkroot);
+    d.setNumNodes(g_numNodes);
+    d.doStart();
+  }
+ else   if (g_wait) {
+    h2odriver d=new h2odriver();
+    d.setZk(g_zk);
+    d.setZkroot(g_zkroot);
+    d.setCloudFormationTimeoutSeconds(g_cloudFormationTimeoutSeconds);
+    MasterPayload mp=d.doWait();
+    System.out.println(mp.ip + ":" + mp.port);
+  }
+ else {
+    System.out.println("bad path");
+    System.exit(1);
+  }
+}

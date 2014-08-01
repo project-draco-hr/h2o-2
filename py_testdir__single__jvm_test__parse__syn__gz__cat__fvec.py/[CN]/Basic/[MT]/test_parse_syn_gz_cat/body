@@ -1,7 +1,6 @@
 def test_parse_syn_gz_cat(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100, 10000, 'cF', 600), (100, 12000, 'cF', 600), (100, 15000, 'cF', 600), (100, 17000, 'cF', 600), (100, 20000, 'cF', 600), (100, 40000, 'cF', 600)]
-    DOSUMMARY = True
+    tryList = [(100, 100, 'cF', 600), (100, 5000, 'cF', 600), (100, 10000, 'cF', 600), (100, 20000, 'cF', 600), (100, 40000, 'cF', 600)]
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
