@@ -30,12 +30,14 @@
     for (int i=0; i < shuf_map.length; ++i)     shuf_map[i]=start + i;
     Utils.shuffleArray(shuf_map,new Random().nextLong());
   }
+  long num_processed_rows=0;
   for (int rrr=0; rrr < repeats; ++rrr) {
     OUTER:     for (int rr=start; rr < end; ++rr) {
       final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
       final long lr=r + chunks[0]._start;
       if ((_dinfo._nfolds > 0 && (lr % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))       continue;
       for (      Chunk c : chunks)       if (c.isNA0(r))       continue OUTER;
+      ++num_processed_rows;
       int i=0, ncats=0;
       for (; i < _dinfo._cats; ++i) {
         int c=(int)chunks[i].at80(r);
@@ -56,9 +58,10 @@
         response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
         if (_dinfo._normRespMul != null)         response[i]=(response[i] - _dinfo._normRespSub[i]) * _dinfo._normRespMul[i];
       }
-      if (outputs != null && outputs.length > 0)       processRow(offset + r,nums,ncats,cats,response,outputs);
- else       processRow(offset + r,nums,ncats,cats,response);
+      long seed=offset + rrr * (end - start) + r;
+      if (outputs != null && outputs.length > 0)       processRow(seed,nums,ncats,cats,response,outputs);
+ else       processRow(seed,nums,ncats,cats,response);
     }
   }
-  chunkDone();
+  chunkDone(num_processed_rows);
 }
