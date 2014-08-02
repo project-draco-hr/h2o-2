@@ -1,15 +1,10 @@
 {
-  _computed=true;
-  boolean first=false;
-  DTask dt=_dt;
-  if (dt != null && dt._exception == null) {
+  if (_computed)   return false;
 synchronized (this) {
-      if (dt._exception == null) {
-        dt.setException(ex);
-        first=true;
-      }
-    }
+    if (_computed)     return false;
+    _computed=true;
   }
-  if (first)   onCompletion(caller);
+  _dt.setException(ex);
+  sendAck();
   return false;
 }

@@ -3,6 +3,6 @@
   if (_typeid == 0)   _typeid=TypeMap.onIce(_cname);
   if (ki._type == _typeid)   return true;
   Class kclz=TypeMap.clazz(ki._type);
-  if (TypeMap.className(_typeid).equals("water.Model"))   return Model.class.isAssignableFrom(kclz) || OldModel.class.isAssignableFrom(kclz);
+  if (TypeMap.className(_typeid).equals("water.Model"))   return Model.class.isAssignableFrom(kclz);
   return TypeMap.clazz(_typeid).isAssignableFrom(kclz);
 }

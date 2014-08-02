@@ -1,0 +1,11 @@
+{
+  byte[] b=new byte[4];
+  UnsafeUtils.set4(b,0,UnsafeUtils.get4(bs,off));
+  int port=UnsafeUtils.get2(bs,off + 4) & 0xFFFF;
+  try {
+    return intern(InetAddress.getByAddress(b),port);
+  }
+ catch (  UnknownHostException e) {
+    throw Log.errRTExcept(e);
+  }
+}

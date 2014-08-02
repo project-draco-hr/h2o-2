@@ -1,7 +1,0 @@
-{
-  pmml.expect("TreeModel").skipAttrs();
-  pmml.expect('>').skipWS().expect('<').pGeneric("MiningSchema").skipWS().expect('<');
-  RFNode rfn=pRFNode(pmml);
-  pmml.skipWS().expect("</TreeModel>");
-  return rfn;
-}

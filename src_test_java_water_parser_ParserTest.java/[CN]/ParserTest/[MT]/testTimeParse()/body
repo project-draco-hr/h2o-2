@@ -1,7 +1,0 @@
-{
-  Key fkey=load_test_file("smalldata/kaggle/bestbuy_train_10k.csv.gz");
-  Key okey=Key.make("bestbuy.hex");
-  ParseDataset.parse(okey,new Key[]{fkey});
-  ValueArray va=DKV.get(okey).get();
-  va.delete();
-}
