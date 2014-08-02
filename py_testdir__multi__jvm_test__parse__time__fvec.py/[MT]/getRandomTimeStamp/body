@@ -12,12 +12,12 @@ def getRandomTimeStamp():
         month = random.choice(months[h2o_util.weighted_choice(monthWeights)])
     else:
         month = str(random.randint(1, 12))
-        if (random.randint(0, 1) == 1):
-            month = month.zfill(2)
     hour = str(random.randint(0, 23))
     if (random.randint(0, 1) == 1):
         hour = hour.zfill(2)
     minute = str(random.randint(0, 59))
+    if (random.randint(0, 1) == 1):
+        minute = minute.zfill(2)
     second = str(random.randint(0, 59))
     if (random.randint(0, 1) == 1):
         second = second.zfill(2)
