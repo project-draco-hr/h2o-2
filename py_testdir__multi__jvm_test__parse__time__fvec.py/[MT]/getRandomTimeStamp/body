@@ -1,7 +1,5 @@
 def getRandomTimeStamp():
     day = days[h2o_util.weighted_choice(dayWeights)]
-    if (random.randint(0, 1) == 1):
-        day = day.zfill(2)
     timestampFormat = random.randint(0, 3)
     if (timestampFormat == 0):
         year = str(random.randint(0, 99))
@@ -14,8 +12,6 @@ def getRandomTimeStamp():
         month = random.choice(months[h2o_util.weighted_choice(monthWeights)])
     else:
         month = str(random.randint(1, 12))
-        if (random.randint(0, 1) == 1):
-            month = month.zfill(2)
     hour = str(random.randint(0, 23))
     if (random.randint(0, 1) == 1):
         hour = hour.zfill(2)
