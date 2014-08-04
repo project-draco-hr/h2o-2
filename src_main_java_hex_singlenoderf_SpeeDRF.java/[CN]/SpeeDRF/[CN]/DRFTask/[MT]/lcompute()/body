@@ -10,6 +10,8 @@
   int[] rowsPerChunks=howManyRPC(_fr);
   updateRFModel(_rfmodel,numSplitFeatures);
   updateRFModelStatus(_rfmodel,"Building Forest");
+  updateRFModelLocalForests(_rfmodel,ntrees);
+  Log.info("Dispalying local forest stats:");
   SpeeDRF.build(_jobKey,_rfmodel,_params,localData,ntrees,numSplitFeatures,rowsPerChunks);
   tryComplete();
 }
