@@ -5,7 +5,7 @@ def test_exec2_apply_phrases(self):
     hexKey = 'i.hex'
     parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=hexKey)
     for col in [1]:
-        initList = [('r.hex', 'r.hex=i.hex'), (None, ('func1=function(x){max(x[,%s])}' % col)), (None, ('func2=function(x){a=3;nrow(x[,%s])*a}' % col)), (None, ('func3=function(x){apply(x[,%s],2,sum)/nrow(x[,%s])}' % (col, col))), (None, ('func4=function(x) { mean( x[,%s]) }' % col)), (None, ('func5=function(x) { sd( x[,%s]) }' % col)), (None, ('func6=function(x) { quantile(x[,%s] , c(0.9) ) }' % col))]
+        initList = [('r.hex', 'r.hex=i.hex'), (None, ('func1=function(x){max(x[,%s])}' % col)), (None, ('func2=function(x){a=3;nrow(x[,%s])*a}' % col)), (None, ('func3=function(x){apply(x[,%s],2,sum)/nrow(x[,%s])}' % (col, col))), (None, ('func4=function(x) { mean( x[,%s]) }' % col)), (None, ('func5=function(x) { sd( x[,%s]) }' % col)), (None, ('func6=function(x) { quantile(x[,%s] , c(0.9) ) }' % col)), (None, ('func7=function(x) { round( x[,%s], 1) }' % col)), (None, ('func8=function(x) { signif( x[,%s], 1) }' % col)), (None, ('func9=function(x) { trunc( x[,%s]) }' % col))]
         for (resultKey, execExpr) in initList:
             h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=60)
         for p in phrases:
