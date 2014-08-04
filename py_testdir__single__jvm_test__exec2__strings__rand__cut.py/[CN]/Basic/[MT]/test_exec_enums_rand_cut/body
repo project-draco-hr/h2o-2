@@ -1,8 +1,7 @@
 def test_exec_enums_rand_cut(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    n = ROWS
-    tryList = [(n, 10, 9, 'cE', 300)]
+    tryList = [(ROWS, 3, 2, 'cE', 300)]
     eKeys = [('e%s' % i) for i in range(10)]
     trial = 0
     for (rowCount, iColCount, oColCount, hex_key, timeoutSecs) in tryList:
@@ -10,7 +9,7 @@ def test_exec_enums_rand_cut(self):
         hex_key = 'p'
         colEnumList = create_col_enum_list(iColCount)
         rowExprList = []
-        for i in range(CUT_EXPR_CNT):
+        for j in range(CUT_EXPR_CNT):
             print 'Creating', CUT_EXPR_CNT, 'cut expressions'
             cutValue = [None for i in range(iColCount)]
             cols = random.sample(range(iColCount), random.randint(1, iColCount))
@@ -35,12 +34,13 @@ def test_exec_enums_rand_cut(self):
             rowExpr = ('%s[%s,];' % (hex_key, cutExpr))
             print 'rowExpr:', rowExpr
             rowExprList.append(rowExpr)
+            print 'j:', j
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname
         write_syn_dataset(csvPathname, rowCount, iColCount, oColCount, SEEDPERFILE, colEnumList=colEnumList)
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, doSummary=False)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, doSummary=False, header=0)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
