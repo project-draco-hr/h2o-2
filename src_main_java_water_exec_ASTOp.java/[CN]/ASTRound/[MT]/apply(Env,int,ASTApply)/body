@@ -1,0 +1,26 @@
+{
+  final int digits=(int)env.popDbl();
+  if (digits < 0)   throw new IllegalArgumentException("Error in round: argument digits must be a non-negative integer");
+  if (env.isAry()) {
+    Frame fr=env.popAry();
+    for (int i=0; i < fr.vecs().length; i++) {
+      if (fr.vecs()[i].isEnum())       throw new IllegalArgumentException("Non-numeric column " + String.valueOf(i + 1) + " in data frame");
+    }
+    String skey=env.key();
+    Frame fr2=new MRTask2(){
+      @Override public void map(      Chunk chks[],      NewChunk nchks[]){
+        for (int i=0; i < nchks.length; i++) {
+          NewChunk n=nchks[i];
+          Chunk c=chks[i];
+          int rlen=c._len;
+          for (int r=0; r < rlen; r++)           n.addNum(roundDigits(c.at0(r),digits));
+        }
+      }
+    }
+.doAll(fr.numCols(),fr).outputFrame(fr.names(),fr.domains());
+    env.subRef(fr,skey);
+    env.pop();
+    env.push(fr2);
+  }
+ else   env.poppush(roundDigits(env.popDbl(),digits));
+}

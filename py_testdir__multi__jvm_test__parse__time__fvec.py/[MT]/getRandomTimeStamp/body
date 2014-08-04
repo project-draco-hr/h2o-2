@@ -1,0 +1,38 @@
+def getRandomTimeStamp():
+    day = days[h2o_util.weighted_choice(dayWeights)]
+    timestampFormat = random.randint(0, 3)
+    if (timestampFormat == 0):
+        year = str(random.randint(0, 99))
+        if (random.randint(0, 1) == 1):
+            year = year.zfill(2)
+    else:
+        year = str(random.randint(1900, 2016))
+    timestampFormat = random.randint(0, 5)
+    if (timestampFormat == 0):
+        month = random.choice(months[h2o_util.weighted_choice(monthWeights)])
+    else:
+        month = str(random.randint(1, 12))
+    hour = str(random.randint(0, 23))
+    if (random.randint(0, 1) == 1):
+        hour = hour.zfill(2)
+    minute = str(random.randint(0, 59))
+    if (random.randint(0, 1) == 1):
+        minute = minute.zfill(2)
+    second = str(random.randint(0, 59))
+    if (random.randint(0, 1) == 1):
+        second = second.zfill(2)
+    milli = str(random.randint(0, 999))
+    r = (random.randint(0, 2) == 1)
+    if (r == 1):
+        milli = milli.zfill(2)
+    elif (r == 2):
+        milli = milli.zfill(3)
+    if (timestampFormat == 0):
+        a = ('%s-%s-%s' % (day, month, year))
+    elif (timestampFormat == 1):
+        a = ('%s-%s-%s' % (year, month, day))
+    elif (timestampFormat == 2):
+        a = ('%s-%s-%s %s:%s:%s' % (year, month, day, hour, minute, second))
+    else:
+        a = ('%s-%s-%s %s:%s:%s:%s' % (year, month, day, hour, minute, second, milli))
+    return a
