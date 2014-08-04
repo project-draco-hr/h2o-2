@@ -1,10 +1,9 @@
 {
   Key fkey=load_test_file(filename);
   Key okey=Key.make(keyname);
-  ParseDataset.parse(okey,new Key[]{fkey});
-  ValueArray val=DKV.get(okey).get();
-  assertEquals(filename + ": number of chunks == 1",1,val.chunks());
-  assertEquals(filename + ": number of rows   == 2",2,val._numrows);
-  assertEquals(filename + ": number of cols   == 9",9,val._cols.length);
-  val.delete();
+  Frame fr=ParseDataset2.parse(okey,new Key[]{fkey});
+  assertEquals(filename + ": number of chunks == 1",1,fr.anyVec().nChunks());
+  assertEquals(filename + ": number of rows   == 2",2,fr.numRows());
+  assertEquals(filename + ": number of cols   == 9",9,fr.numCols());
+  fr.delete();
 }

@@ -1,16 +1,17 @@
 {
   File file=find_test_file("target/h2o.jar");
   Key h2okey=load_test_file(file);
+  NFSFileVec nfs=DKV.get(h2okey).get();
   try {
     for (int i=0; i < H2O.CLOUD._memary.length; ++i) {
       ByteHistoThrow bh=new ByteHistoThrow();
       bh._throwAt=H2O.CLOUD._memary[i].toString();
       try {
-        bh.invoke(h2okey);
+        bh.doAll(nfs);
         fail("should've thrown");
       }
  catch (      RuntimeException e) {
-        assertTrue(e.getMessage().indexOf("test") != -1);
+        assertTrue(e.getMessage().contains("test"));
       }
 catch (      Throwable ex) {
         ex.printStackTrace();
@@ -19,6 +20,11 @@ catch (      Throwable ex) {
     }
   }
   finally {
+    try {
+      Thread.sleep(100);
+    }
+ catch (    InterruptedException ignore) {
+    }
     Lockable.delete(h2okey);
   }
 }

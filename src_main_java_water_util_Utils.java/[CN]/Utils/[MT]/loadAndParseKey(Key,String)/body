@@ -1,8 +1,0 @@
-{
-  FileIntegrityChecker c=FileIntegrityChecker.check(new File(path),false);
-  Key k=c.syncDirectory(null,null,null,null);
-  ParseDataset.forkParseDataset(okey,new Key[]{k},null).get();
-  UKV.remove(k);
-  ValueArray res=DKV.get(okey).get();
-  return res;
-}

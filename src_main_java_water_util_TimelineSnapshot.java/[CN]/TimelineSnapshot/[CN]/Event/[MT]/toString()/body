@@ -1,6 +1,6 @@
 {
   int udp_type=(int)(dataLo() & 0xff);
-  UDP.udp udpType=UDP.udp.UDPS[udp_type];
+  UDP.udp udpType=UDP.getUdp(udp_type);
   String operation=isSend() ? " SEND " : " RECV ";
   String host1=addrString();
   String host2=recoH2O().toString();

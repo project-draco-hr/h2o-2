@@ -21,7 +21,7 @@
   ByteVec v=(ByteVec)vecs[0];
   byte[] bits=v.chunkForChunkIdx(0).getBytes();
   Compression cpr=Utils.guessCompressionMethod(bits);
-  globalSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),globalSetup,true)._setup;
+  globalSetup=GuessSetup.guessSetup(Utils.unzipBytes(bits,cpr),globalSetup,true)._setup;
   if (globalSetup._ncols == 0)   throw new java.lang.IllegalArgumentException(globalSetup.toString());
   return forkParseDataset(okey,keys,globalSetup,delete_on_done).get();
 }

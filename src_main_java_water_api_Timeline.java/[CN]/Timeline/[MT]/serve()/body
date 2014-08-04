@@ -15,7 +15,7 @@
     long l0=event.dataLo();
     long h8=event.dataHi();
     int udp_type=(int)(l0 & 0xff);
-    UDP.udp e=UDP.udp.UDPS[udp_type];
+    UDP.udp e=UDP.getUdp(udp_type);
     if (e == UDP.udp.heartbeat) {
       heartbeats.add(event);
       continue;

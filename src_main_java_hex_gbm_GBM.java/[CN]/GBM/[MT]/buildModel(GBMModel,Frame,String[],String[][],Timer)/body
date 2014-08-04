@@ -14,8 +14,6 @@
     if (!Job.isRunning(self()))     break;
     tstats.updateBy(ktrees);
   }
-  if (Job.isRunning(self())) {
-    model=doScoring(model,fr,ktrees,tid,tstats,true,false,false);
-  }
+  model=doScoring(model,fr,ktrees,tid,tstats,true,false,false);
   return model;
 }

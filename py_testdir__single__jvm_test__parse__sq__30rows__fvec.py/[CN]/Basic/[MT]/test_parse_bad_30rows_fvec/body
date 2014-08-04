@@ -7,7 +7,7 @@ def test_parse_bad_30rows_fvec(self):
     dsf.close()
     for i in range(20):
         single_quotes = 1
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', single_quotes=single_quotes, hex_key=(('trial' + str(i)) + '.hex'))
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', single_quotes=single_quotes, header=1, hex_key=(('trial' + str(i)) + '.hex'))
         inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         numRows = inspect['numRows']
