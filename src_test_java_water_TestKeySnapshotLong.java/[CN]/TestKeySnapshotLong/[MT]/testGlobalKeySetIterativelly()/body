@@ -1,9 +1,10 @@
 {
   int i=0;
+  Random rng=new Random(0xa7a34721109d3708L ^ System.currentTimeMillis());
   try {
     for (i=0; i < 50000; ++i) {
       UKV.put(Key.make("key" + i),new Utils.IcedInt(i));
-      if (i % 10 == 0) {
+      if (i % (rng.nextInt(31) + 1) == 0) {
         Key[] keys2=H2O.KeySnapshot.globalSnapshot().keys();
         Assert.assertEquals(i + 1,keys2.length);
       }
