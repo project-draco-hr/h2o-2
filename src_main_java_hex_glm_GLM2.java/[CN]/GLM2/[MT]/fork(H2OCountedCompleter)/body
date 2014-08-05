@@ -3,7 +3,7 @@
   _progressKey=Key.make(dest().toString() + "_progress",(byte)1,Key.HIDDEN_USER_KEY,dest().home_node());
   int total=max_iter;
   if (lambda_search)   total=3 * nlambdas;
-  GLM2_Progress progress=new GLM2_Progress(total * (n_folds + 1));
+  GLM2_Progress progress=new GLM2_Progress(total * (n_folds > 1 ? (n_folds + 1) : 1));
   LogInfo("created progress " + progress);
   DKV.put(_progressKey,progress,fs);
   fs.blockForPending();
