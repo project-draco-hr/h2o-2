@@ -31,7 +31,7 @@ def test_RF_mnist_both(self):
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
         ntree = 25
-        params = {'response': 0, 'num_trees': ntree, 'mtry': 28, 'max_depth': 2147483647, 'select_stat_type': 'ENTROPY', 'sampling_strategy': 'RANDOM', 'sample': 0.67, 'oobee': 1, 'destination_key': 'RF_model', 'bin_limit': 1024, }
+        params = {'response': 0, 'ntrees': ntree, 'mtries': 28, 'max_depth': 2147483647, 'select_stat_type': 'ENTROPY', 'sampling_strategy': 'RANDOM', 'sample_rate': 0.67, 'oobee': 1, 'destination_key': 'RF_model', 'nbins': 1024, }
         if (rfSeed is None):
             params['seed'] = random.randint(0, sys.maxint)
         else:
