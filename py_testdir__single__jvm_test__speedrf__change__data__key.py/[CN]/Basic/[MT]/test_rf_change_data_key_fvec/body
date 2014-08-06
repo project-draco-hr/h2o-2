@@ -14,7 +14,7 @@ def test_rf_change_data_key_fvec(self):
     inspect = h2o_cmd.runInspect(key=parseResultTest['destination_key'])
     dataKeyTest = parseResultTest['destination_key']
     print 'Parse end', dataKeyTest
-    params = {'num_trees': 2, 'destination_key': 'RF_model', }
+    params = {'ntrees': 2, 'destination_key': 'RF_model', }
     kwargs = params.copy()
     kwargs['response'] = 'C55'
     timeoutSecs = 100
@@ -26,7 +26,7 @@ def test_rf_change_data_key_fvec(self):
     print 'rf job end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
     print '\nRFView start after job completion'
     model_key = kwargs['destination_key']
-    ntrees = kwargs['num_trees']
+    ntrees = kwargs['ntrees']
     start = time.time()
     h2o_cmd.runSpeeDRFView(None, model_key, timeoutSecs)
     print 'First rfview end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
