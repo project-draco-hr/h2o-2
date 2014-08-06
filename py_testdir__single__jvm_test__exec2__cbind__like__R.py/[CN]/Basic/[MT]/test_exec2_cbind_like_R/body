@@ -8,7 +8,7 @@ def test_exec2_cbind_like_R(self):
     hex_key = 'df'
     csvPathname = ((SYNDATASETS_DIR + '/') + 'df.csv')
     write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-    parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hex_key, timeoutSecs=3000, retryDelaySecs=2, doSummary=False)
+    parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=3000, retryDelaySecs=2, doSummary=False)
     colCount = 1
     hex_key = 'indx'
     csvPathname = ((SYNDATASETS_DIR + '/') + 'indx.csv')
