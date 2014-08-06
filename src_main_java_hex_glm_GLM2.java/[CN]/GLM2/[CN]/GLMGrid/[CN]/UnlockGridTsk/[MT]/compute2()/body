@@ -1,7 +1,0 @@
-{
-  GLMGrid g=H2O.get(_key).get();
-  addToPendingCount(g.destination_keys.length);
-  for (  Key k : g.destination_keys)   new GLMModel.UnlockModelTask(this,k,_jobKey).forkTask();
-  g.unlock(_jobKey);
-  tryComplete();
-}
