@@ -1,14 +1,14 @@
 {
   if (kb.length > KEY_LENGTH)   throw new IllegalArgumentException("Key length would be " + kb.length);
   _kb=kb;
-  int i=0;
-  int chk=0;
-  if (kb.length >= 10 && kb[0] == ARRAYLET_CHUNK && kb[1] == 0) {
-    long off=UDP.get8(kb,2);
-    i+=2 + 8;
-    boolean big=(off >> 20) >= 64;
-    chk=(int)(off >>> ((big ? 6 : 2) + 20));
+  int hash=0;
+  for (  byte b : kb) {
+    hash+=b;
+    hash+=(hash << 10);
+    hash^=(hash >> 6);
   }
-  int hash=hash(kb,i,kb.length);
-  _hash=hash + chk;
+  hash+=(hash << 3);
+  hash^=(hash >> 11);
+  hash+=(hash << 15);
+  _hash=hash;
 }

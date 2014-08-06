@@ -1,0 +1,16 @@
+{
+  int cols=chks.length;
+  int rows=chks[0]._len;
+  long start=chks[0]._start;
+  for (int c=0; c < cols; c++) {
+    Chunk c0=chks[c];
+    Vec v1=_fr.vecs()[c];
+    if (c0._vec.isUUID()) {
+      for (int r=0; r < rows; r++)       if (!(c0.isNA0(r) && v1.isNA(r + start)) && ((c0.isNA0(r) && !v1.isNA(r + start)) || (!c0.isNA0(r) && v1.isNA(r + start)) || (c0.at16l0(r) != v1.at16l(r + start))|| (c0.at16h0(r) != v1.at16h(r + start))))       return;
+    }
+ else {
+      for (int r=0; r < rows; r++)       if (!Utils.compareDoubles(c0.at0(r),v1.at(r + start)))       return;
+    }
+  }
+  _eq=true;
+}

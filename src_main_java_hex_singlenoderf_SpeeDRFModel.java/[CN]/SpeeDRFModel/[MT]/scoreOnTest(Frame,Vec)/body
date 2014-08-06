@@ -10,8 +10,9 @@
     cms[cms.length - 1]=null;
   }
  else {
+    double mse=CMTask.MSETask.doTask(scored.add("actual",fr.lastVec()));
     this.cm=cm.cm;
-    errs[errs.length - 1]=-1f;
+    errs[errs.length - 1]=(float)mse;
     ConfusionMatrix new_cm=new ConfusionMatrix(this.cm);
     cms[cms.length - 1]=new_cm;
     if (classes() == 2 && !scored.lastVec().isInt()) {
@@ -23,4 +24,6 @@
     }
     if (importance && !regression)     varimp=doVarImpCalc(fr,this,modelResp);
   }
+  scored.remove("actual");
+  scored.delete();
 }

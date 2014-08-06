@@ -34,13 +34,6 @@
       if (m == null && p == null)       continue;
       if (val.isLockable())       continue;
       boolean isChunk=p instanceof Chunk;
-      if (val.isArray() && (val._persist & Value.BACKEND_MASK) != Value.ICE) {
-        if (m != null && p != null) {
-          val.freeMem();
-          freed+=val._max;
-        }
-        continue;
-      }
       long touched=val._lastAccessedTime;
       if (touched > clean_to_age) {
         if (val.isPersisted() && m != null && p != null && !isChunk) {

@@ -1,9 +1,0 @@
-{
-  if (key._kb[0] != Key.ARRAYLET_CHUNK)   return null;
-  if (!key.home())   return null;
-  Key arykey=ValueArray.getArrayKey(key);
-  Value v1=DKV.get(arykey,Integer.MAX_VALUE,H2O.ARY_KEY_PRIORITY);
-  if (v1 == null)   return null;
-  if (!v1.isArray())   return null;
-  return Persist.I[v1.backend()].lazyArrayChunk(key);
-}

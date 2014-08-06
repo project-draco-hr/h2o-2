@@ -1,0 +1,53 @@
+def validate_binomial_classifier_metrics(self, metrics, model, frame):
+    self.assertKeysExistAndNonNull(metrics, '', ['cm', 'auc', 'model', 'model_category', 'frame', 'duration_in_ms', 'scoring_time'])
+    self.assertNotEqual(None, metrics['auc'])
+    criteria = ['F1', 'F2', 'F0point5', 'accuracy', 'precision', 'recall', 'specificity', 'mcc', 'max_per_class_error']
+    criteria_max_min = [(criterion + '_for_criteria') for criterion in criteria]
+    criteria += ['errorr']
+    criteria_max_min += ['error_for_criteria']
+    misc_fields = ['thresholds', 'threshold_criterion', 'actual_domain', 'AUC', 'Gini', 'confusion_matrices', 'threshold_criteria', 'threshold_for_criteria', 'confusion_matrix_for_criteria']
+    self.assertKeysExistAndNonNull(metrics, 'auc', ((criteria + criteria_max_min) + misc_fields))
+    assert (type(metrics['auc']['thresholds']) is list), 'thresholds value is a list.'
+    assert (len(metrics['auc']['thresholds']) > 0), 'thresholds value is a list of more than 0 elments.'
+    num_thresholds = len(metrics['auc']['thresholds'])
+    for criterion in criteria:
+        assert (len(metrics['auc'][criterion]) == num_thresholds), (criterion + ' list is the same length as thresholds list.')
+        assert (metrics['auc'][criterion][(num_thresholds / 2)] != 0.0), (criterion + ' list has a non-zero median element.')
+    assert (type(metrics['auc']['threshold_criteria']) is list), 'threshold_criteria value is a list.'
+    assert (len(metrics['auc']['threshold_criteria']) > 0), 'threshold_criteria value is a list of more than 0 elments.'
+    num_threshold_criteria = len(metrics['auc']['threshold_criteria'])
+    assert (num_threshold_criteria == (len(criteria) - 1)), 'We are testing all the threshold criteria (test a).'
+    assert (num_threshold_criteria == (len(criteria_max_min) - 1)), 'We are testing all the threshold criteria (test b).'
+    for criterion_mm in criteria_max_min:
+        assert (len(metrics['auc'][criterion_mm]) == num_threshold_criteria), (criterion_mm + ' list is the same length as threshold_criteria list.')
+        assert (metrics['auc'][criterion_mm][(num_threshold_criteria / 2)] != 0.0), (criterion_mm + ' list has a non-zero median element.')
+    assert (len(metrics['auc']['confusion_matrix_for_criteria']) == num_threshold_criteria), 'confusion_matrix_for_criteria list is the same length as threshold_criteria list.'
+    assert (type(metrics['auc']['confusion_matrix_for_criteria']) is list), 'confusion_matrix_for_criteria is a list.'
+    assert (type(metrics['auc']['confusion_matrix_for_criteria'][(num_threshold_criteria / 2)]) is list), 'confusion_matrix_for_criteria is a list of lists.'
+    assert (type(metrics['auc']['confusion_matrix_for_criteria'][(num_threshold_criteria / 2)][0]) is list), 'confusion_matrix_for_criteria is a list of lists of lists.'
+    assert (metrics['auc']['confusion_matrix_for_criteria'][(num_threshold_criteria / 2)][0][0] != 0.0), 'confusion_matrix_for_criteria list has a non-zero median element.'
+    self.assertNotEqual(None, metrics['cm'])
+    self.assertKeysExistAndNonNull(metrics, 'cm', ['actual_domain', 'predicted_domain', 'domain', 'cm', 'mse'])
+    assert (type(metrics['cm']['actual_domain']) is list), 'actual_domain is a list.'
+    assert (type(metrics['cm']['predicted_domain']) is list), 'predicted_domain is a list.'
+    assert (type(metrics['cm']['domain']) is list), 'domain is a list.'
+    assert (len(metrics['cm']['actual_domain']) > 0), 'actual_domain is a list of more than 0 elements.'
+    assert (len(metrics['cm']['predicted_domain']) > 0), 'predicted_domain is a list of more than 0 elements.'
+    assert (len(metrics['cm']['domain']) > 0), 'domain is a list of more than 0 elements.'
+    assert (type(metrics['cm']['cm']) is list), 'cm is a list.'
+    assert (type(metrics['cm']['cm'][0]) is list), 'cm is a list of lists.'
+    assert (sum(metrics['cm']['cm'][0]) > 0), 'first domain of cm has at least one non-zero value.'
+    self.assertNotEqual(0.0, metrics['cm']['mse'])
+    self.assertEquals(metrics['model_category'], 'Binomial')
+    self.assertNotEqual(0, metrics['scoring_time'])
+    assert (type(metrics['model']) is dict), 'model field is an object.'
+    self.assertKeysExistAndNonNull(metrics, 'model', ['key', 'creation_epoch_time_millis', 'id', 'model_category'])
+    self.assertEquals(metrics['model']['model_category'], 'Binomial')
+    self.assertEquals(metrics['model']['key'], model)
+    self.assertNotEqual(0, metrics['model']['creation_epoch_time_millis'])
+    assert re.compile('[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}').match(metrics['model']['id'])
+    assert (type(metrics['frame']) is dict), 'frame field is an object.'
+    self.assertKeysExistAndNonNull(metrics, 'frame', ['key', 'creation_epoch_time_millis', 'id'])
+    self.assertEquals(metrics['frame']['key'], frame)
+    self.assertNotEqual(0, metrics['frame']['creation_epoch_time_millis'])
+    assert re.compile('[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}').match(metrics['frame']['id'])

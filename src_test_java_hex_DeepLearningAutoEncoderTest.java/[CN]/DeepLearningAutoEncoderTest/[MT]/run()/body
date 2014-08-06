@@ -29,7 +29,7 @@
     final Vec l2_train=l2_frame_train.anyVec();
     sb.append("Mean reconstruction error: " + l2_train.mean() + "\n");
     Assert.assertEquals(mymodel.mse(),l2_train.mean(),1e-7);
-    Assert.assertTrue(l2_train.mean() < 1e-1);
+    Assert.assertTrue(l2_train.mean() < 2e-1);
     Frame reconstr=mymodel.score(train);
     double mean_l2=0;
     for (int r=0; r < reconstr.numRows(); ++r) {

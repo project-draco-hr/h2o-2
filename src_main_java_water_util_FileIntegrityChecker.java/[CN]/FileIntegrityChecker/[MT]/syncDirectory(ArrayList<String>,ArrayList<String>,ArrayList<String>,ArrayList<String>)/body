@@ -14,24 +14,12 @@
       k=PersistNFS.decodeFile(f);
       if (files != null)       files.add(_files[i]);
       if (keys != null)       keys.add(k.toString());
-      if (_newApi) {
-        if (DKV.get(k) != null)         dels.add(k.toString());
-        new Frame(k).delete_and_lock(null);
-        NFSFileVec nfs=DKV.get(NFSFileVec.make(f,fs)).get();
-        Frame fr=new Frame(k,new String[]{"0"},new Vec[]{nfs});
-        fr.update(null);
-        fr.unlock(null);
-      }
- else {
-        long size=f.length();
-        Value val;
-        if (size < 2 * ValueArray.CHUNK_SZ) {
-          val=new Value(k,(int)size,Value.NFS);
-          val.setdsk();
-        }
- else         val=new Value(k,new ValueArray(k,size),Value.NFS);
-        DKV.put(k,val,fs);
-      }
+      if (DKV.get(k) != null)       dels.add(k.toString());
+      new Frame(k).delete_and_lock(null);
+      NFSFileVec nfs=DKV.get(NFSFileVec.make(f,fs)).get();
+      Frame fr=new Frame(k,new String[]{"0"},new Vec[]{nfs});
+      fr.update(null);
+      fr.unlock(null);
     }
   }
   fs.blockForPending();
