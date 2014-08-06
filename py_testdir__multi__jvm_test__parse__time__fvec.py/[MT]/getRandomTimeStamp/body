@@ -1,17 +1,28 @@
 def getRandomTimeStamp():
     day = days[h2o_util.weighted_choice(dayWeights)]
-    timestampFormat = random.randint(0, 3)
-    if (timestampFormat == 0):
-        year = str(random.randint(0, 99))
-        if (random.randint(0, 1) == 1):
-            year = year.zfill(2)
-    else:
-        year = str(random.randint(1900, 2016))
     timestampFormat = random.randint(0, 5)
+    timestampFormat = 0
+    yearInt = random.randint(1970, 2016)
+    yearStr = str(yearInt)
     if (timestampFormat == 0):
-        month = random.choice(months[h2o_util.weighted_choice(monthWeights)])
+        if (random.randint(0, 1) == 1):
+            if (str(yearStr[(-2)]) == '0'):
+                year = int(str(yearStr)[(-1):])
+            else:
+                year = int(str(yearStr)[(-2):])
+        else:
+            year = int(str(yearStr)[(-2):])
+    else:
+        year = yearInt
+    if (timestampFormat == 0):
+        monthIndex = random.randint(1, 12)
+        month = random.choice(months[monthIndex])
     else:
         month = str(random.randint(1, 12))
+    import calendar
+    legalDays = calendar.monthrange(yearInt, monthIndex)[1]
+    if (day > legalDays):
+        day = legalDays
     hour = str(random.randint(0, 23))
     if (random.randint(0, 1) == 1):
         hour = hour.zfill(2)
