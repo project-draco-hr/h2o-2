@@ -1,6 +1,5 @@
 {
-  H2OCountedCompleter t=getCurrentTask();
-  t.addToPendingCount(g.destination_keys.length);
-  for (  Key k : g.destination_keys)   new GLMModel.UnlockModelTask(t,k,_jobKey).forkTask();
+  addToPendingCount(g.destination_keys.length);
+  for (  Key k : g.destination_keys)   new GLMModel.UnlockModelTask(this,k,_jobKey).forkTask();
   g.unlock(_jobKey);
 }

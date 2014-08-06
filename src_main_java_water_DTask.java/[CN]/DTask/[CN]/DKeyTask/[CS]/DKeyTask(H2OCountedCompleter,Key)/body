@@ -1,24 +1,4 @@
 {
-  final DKeyTask dk=this;
-  final DTask dt=new DTask(cmp){
-    @Override public void compute2(){
-      Value val=H2O.get(k);
-      if (val != null) {
-        V v=val.get();
-        dk._task=this;
-        dk.map(v);
-      }
-      tryComplete();
-    }
-  }
-;
-  if (k.home())   _task=dt;
- else {
-    _task=new H2OCountedCompleter(){
-      @Override public void compute2(){
-        new RPC(k.home_node(),dt).addCompleter(this).call();
-      }
-    }
-;
-  }
+  super(cmp);
+  _key=k;
 }
