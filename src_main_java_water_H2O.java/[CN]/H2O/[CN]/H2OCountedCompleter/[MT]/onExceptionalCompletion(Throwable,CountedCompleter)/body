@@ -1,7 +1,4 @@
 {
-  if (!(ex instanceof JobCancelledException) && this.getCompleter() == null) {
-    System.err.println("onExCompletion for " + this);
-    ex.printStackTrace();
-  }
+  if (!(ex instanceof JobCancelledException) && !(ex instanceof IllegalArgumentException) && this.getCompleter() == null)   ex.printStackTrace();
   return true;
 }

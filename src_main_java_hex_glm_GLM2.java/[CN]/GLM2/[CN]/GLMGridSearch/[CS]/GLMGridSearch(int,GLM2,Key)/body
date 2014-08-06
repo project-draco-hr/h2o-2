@@ -1,0 +1,16 @@
+{
+  super(glm2.self(),destKey);
+  _glm2=glm2;
+  description="GLM Grid on data " + glm2._dinfo.toString();
+  _maxParallelism=maxP;
+  _jobs=new GLM2[glm2.alpha.length];
+  _idx=new AtomicInteger(_maxParallelism);
+  for (int i=0; i < _jobs.length; ++i) {
+    _jobs[i]=(GLM2)_glm2.clone();
+    _jobs[i]._grid=true;
+    _jobs[i].alpha=new double[]{glm2.alpha[i]};
+    _jobs[i].destination_key=Key.make(glm2.destination_key + "_" + i);
+    _jobs[i]._progressKey=Key.make(dest().toString() + "_progress_" + i,(byte)1,Key.HIDDEN_USER_KEY,dest().home_node());
+    _jobs[i].job_key=Key.make(glm2.job_key + "_" + i);
+  }
+}
