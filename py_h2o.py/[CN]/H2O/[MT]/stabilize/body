@@ -3,7 +3,7 @@ def stabilize(self, test_func, error, timeoutSecs=10, retryDelaySecs=0.5):
     start = time.time()
     numberOfRetries = 0
     while ((time.time() - start) < timeoutSecs):
-        if test_func(self, tries=numberOfRetries):
+        if test_func(self, tries=numberOfRetries, timeoutSecs=timeoutSecs):
             break
         time.sleep(retryDelaySecs)
         numberOfRetries += 1
