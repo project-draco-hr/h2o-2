@@ -1,7 +1,7 @@
 {
   Key okey=Key.make("extra.hex");
-  Key nfs=NFSFileVec.make(new File("smalldata/test/test_parse_extra_cols.csv"));
-  ArrayList al=new ArrayList();
+  Key nfs=load_test_file("smalldata/test/test_parse_extra_cols.csv");
+  ArrayList<Key> al=new ArrayList<Key>();
   al.add(nfs);
   CustomParser.ParserSetup setup0=new CustomParser.ParserSetup();
   setup0._header=true;
