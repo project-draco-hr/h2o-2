@@ -1,5 +1,9 @@
 {
   if (other == null || _pType != other._pType)   return false;
   if (_pType == ParserType.CSV && (_separator != other._separator || _ncols != other._ncols))   return false;
+  if (_types == null)   _types=other._types;
+ else   if (other._types != null) {
+    for (int i=0; i < _types.length; ++i)     _types[i].merge(other._types[i]);
+  }
   return true;
 }

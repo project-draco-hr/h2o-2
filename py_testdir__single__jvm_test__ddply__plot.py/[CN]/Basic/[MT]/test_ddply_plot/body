@@ -13,7 +13,7 @@ def test_ddply_plot(self):
         print 'Creating random', csvPathname, 'with range', ((maxInt - minInt) + 1)
         write_syn_dataset(csvPathname, rowCount, colCount, minInt, maxInt, SEEDPERFILE)
         hexKey = 'r.hex'
-        parseResult = h2i.import_parse(path=csvPathname, schema='local', hex_key=hexKey)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hexKey)
         for (resultKey, execExpr) in initList:
             h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=60)
         execExpr = (('a1 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')

@@ -29,7 +29,7 @@ def test_RF_many_cols_enum(self):
         numCols = inspect['numCols']
         ntrees = 10
         for max_depth in [5, 10, 20, 40]:
-            params = {'bin_limit': 1024, 'classification': 1, 'num_trees': ntrees, 'max_depth': max_depth, 'response': ('C' + str((numCols - 1))), 'ignored_cols_by_name': None, }
+            params = {'nbins': 1024, 'classification': 1, 'ntrees': ntrees, 'max_depth': max_depth, 'response': ('C' + str((numCols - 1))), 'ignored_cols_by_name': None, }
             print 'Using these parameters for RF: ', params
             kwargs = params.copy()
             trainStart = time.time()

@@ -1,0 +1,8 @@
+{
+  Key[] xvals=m.xvalModels();
+  if (xvals != null) {
+    addToPendingCount(xvals.length);
+    for (int i=0; i < xvals.length; ++i)     new DeleteModelTask(this,xvals[i]).forkTask();
+  }
+  m.delete();
+}

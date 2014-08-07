@@ -6,12 +6,13 @@ print 'test dd-MMM-yy format. caps for month?'
 print 'apparently h2o NAs some cases. illegal dates in a month?'
 print "seems to be that we require leading zero in year, but it's okay to not have it in the date?"
 ROWS = 5
-RESTRICT_TO_28 = True
+COLS = 20
+RESTRICT_TO_28 = False
 RESTRICT_MONTH_TO_UPPER = True
 if RESTRICT_MONTH_TO_UPPER:
-    months = [['Jan', 'JAN', 'jan'], ['Feb', 'FEB', 'feb'], ['Mar', 'MAR', 'mar'], ['Apr', 'APR', 'apr'], ['May', 'MAY', 'may'], ['Jun', 'JUN', 'jun'], ['Jul', 'JUL', 'jul'], ['Aug', 'AUG', 'aug'], ['Sep', 'SEP', 'sep'], ['Oct', 'OCT', 'oct'], ['Nov', 'NOV', 'nov'], ['Dec', 'DEC', 'dec']]
+    months = [['nullForZero'], ['JAN'], ['FEB'], ['MAR'], ['APR'], ['MAY'], ['JUN'], ['JUL'], ['AUG'], ['SEP'], ['OCT'], ['NOV'], ['DEC']]
 else:
-    months = [['JAN'], ['FEB'], ['MAR'], ['APR'], ['MAY'], ['JUN'], ['JUL'], ['AUG'], ['SEP'], ['OCT'], ['NOV'], ['DEC']]
+    months = [['nullForZero'], ['Jan', 'JAN', 'jan'], ['Feb', 'FEB', 'feb'], ['Mar', 'MAR', 'mar'], ['Apr', 'APR', 'apr'], ['May', 'MAY', 'may'], ['Jun', 'JUN', 'jun'], ['Jul', 'JUL', 'jul'], ['Aug', 'AUG', 'aug'], ['Sep', 'SEP', 'sep'], ['Oct', 'OCT', 'oct'], ['Nov', 'NOV', 'nov'], ['Dec', 'DEC', 'dec']]
 monthWeights = [(1 if (i != 1) else 5) for i in range(len(months))]
 if RESTRICT_TO_28:
     days = map(str, range(1, 29))

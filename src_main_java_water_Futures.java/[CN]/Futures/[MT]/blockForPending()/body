@@ -15,4 +15,7 @@ synchronized (this) {
 catch (  ExecutionException e) {
     throw Log.errRTExcept(e);
   }
+catch (  Throwable t) {
+    throw new RuntimeException(t);
+  }
 }
