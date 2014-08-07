@@ -1,26 +1,2 @@
 {
-  if (preds.length == 1) {
-    preds[0]=0;
-    return preds;
-  }
-  double[][] cs=centers;
-  int numInputCols=tmp.length - 1;
-  if (normalized && _normClust == null)   cs=_normClust=normalize(centers,chunks);
-  if (_means == null) {
-    _means=new double[numInputCols];
-    for (int i=0; i < numInputCols; i++)     _means[i]=chunks[i]._vec.mean();
-  }
-  if (normalized && _mults == null) {
-    _mults=new double[numInputCols];
-    for (int i=0; i < numInputCols; i++) {
-      double sigma=chunks[i]._vec.sigma();
-      _mults[i]=normalize(sigma) ? 1 / sigma : 1;
-    }
-  }
-  data(tmp,chunks,rowInChunk,_means,_mults);
-  Arrays.fill(preds,0);
-  int cluster=closest(cs,tmp,_ncats,new ClusterDist())._cluster;
-  preds[0]=cluster;
-  preds[1 + cluster]=1;
-  return preds;
 }

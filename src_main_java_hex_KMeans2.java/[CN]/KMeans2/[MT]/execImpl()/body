@@ -50,6 +50,7 @@
         sampler._sqr=sqr._sqr;
         sampler._probability=k * 3;
         sampler._seed=seed;
+        sampler._ncats=dinfo._cats;
         sampler._means=means;
         sampler._mults=mults;
         sampler.doAll(vecs);
@@ -62,7 +63,7 @@
       }
       clusters=recluster(clusters,k,rand,initialization);
     }
-    for (; ; ) {
+    LOOP:     for (; ; ) {
       Lloyds task=new Lloyds();
       task._clusters=clusters;
       task._means=means;
@@ -70,6 +71,19 @@
       task._ncats=dinfo._cats;
       task._nnums=dinfo._nums;
       task.doAll(vecs);
+      boolean badrow=false;
+      for (int clu=0; clu < k; clu++)       if (task._rows[clu] == 0) {
+        if (badrow) {
+          Log.warn("KMeans: Re-running Lloyds to re-init another cluster");
+          model.iterations--;
+          continue LOOP;
+        }
+        long row=task._worse_row;
+        Log.warn("KMeans: Re-initing cluster " + clu + " to row "+ row);
+        data(clusters[clu]=task._cMeans[clu],vecs,row,means,mults);
+        task._rows[clu]=1;
+        badrow=true;
+      }
       model.centers=clusters=normalize ? denormalize(task._cMeans,vecs) : task._cMeans;
       model.between_cluster_variances=task._betwnSqrs;
       double[] variances=new double[task._cSqrs.length];

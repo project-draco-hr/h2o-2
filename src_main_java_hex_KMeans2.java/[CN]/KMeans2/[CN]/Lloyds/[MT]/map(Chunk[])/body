@@ -4,6 +4,7 @@
   _betwnSqrs=new double[_clusters.length];
   _rows=new long[_clusters.length];
   _gm=new double[_clusters[0].length];
+  _worse_err=0;
   double[] values=new double[_clusters[0].length];
   ClusterDist cd=new ClusterDist();
   int[] clusters=new int[cs[0]._len];
@@ -12,9 +13,13 @@
     closest(_clusters,values,_ncats,cd);
     int clu=clusters[row]=cd._cluster;
     _sqr+=cd._dist;
-    if (clu == -1)     continue;
+    assert(clu != -1);
     for (int col=0; col < values.length; col++)     _cMeans[clu][col]+=values[col];
     _rows[clu]++;
+    if (cd._dist > _worse_err) {
+      _worse_err=cd._dist;
+      _worse_row=cs[0]._start + row;
+    }
   }
   int[] validMeans=new int[_gm.length];
   for (int clu=0; clu < _cMeans.length; clu++)   for (int col=0; col < _cMeans[clu].length; col++) {
