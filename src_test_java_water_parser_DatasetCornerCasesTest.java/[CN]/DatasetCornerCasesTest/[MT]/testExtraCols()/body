@@ -1,0 +1,11 @@
+{
+  Key okey=Key.make("extra.hex");
+  Key nfs=NFSFileVec.make(new File("smalldata/test/test_parse_extra_cols.csv"));
+  ArrayList al=new ArrayList();
+  al.add(nfs);
+  CustomParser.ParserSetup setup0=new CustomParser.ParserSetup();
+  setup0._header=true;
+  CustomParser.ParserSetup setup1=GuessSetup.guessSetup(al,null,setup0,false)._setup;
+  Frame fr=ParseDataset2.parse(okey,new Key[]{nfs},setup1,true);
+  fr.delete();
+}
