@@ -169,7 +169,7 @@
                               }
                             }
   finally {
-                              fpreds.delete();
+                              if (fpreds != null)                               fpreds.delete();
                             }
                             Log.info("Predicted values: PASS");
                             final double trainErr=ref._nn.Accuracy(ref._trainData);
@@ -197,7 +197,7 @@
                                 compareVal(bestErr,best_err,abseps,releps);
                               }
   finally {
-                                bestPredict.delete();
+                                if (bestPredict != null)                                 bestPredict.delete();
                               }
                             }
                           }
