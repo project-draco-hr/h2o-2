@@ -1,0 +1,13 @@
+{
+  String prefix=new String();
+  if (keys.length > 0)   prefix=keys[0];
+  for (int i=1; i < keys.length; i++) {
+    String tmp=keys[i];
+    int j=0;
+    for (; j < Math.min(prefix.length(),tmp.length()); j++) {
+      if (prefix.charAt(j) != tmp.charAt(j))       break;
+    }
+    prefix=prefix.substring(0,j);
+  }
+  return prefix;
+}
