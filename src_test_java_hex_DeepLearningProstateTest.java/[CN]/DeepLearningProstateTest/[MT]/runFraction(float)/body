@@ -149,7 +149,7 @@
                                   pred2=new Frame(Key.make("pred2"),pred.names(),pred.vecs());
                                   pred2.delete_and_lock(null);
                                   pred2.unlock(null);
-                                  if (mymodel.nclasses() == 2 && true) {
+                                  if (mymodel.nclasses() == 2) {
                                     Env ev=Exec2.exec("pred2[,1]=pred2[,3]>=" + 0.5);
                                     try {
                                       pred2=ev.popAry();
