@@ -39,11 +39,11 @@ def getRandomTimeStamp():
     elif (r == 2):
         milli = milli.zfill(3)
     if (timestampFormat == 0):
-        a = ('%s-%s-%s' % (day, month, year))
+        a = ('%s-%s-%02d' % (day, month, year))
     elif (timestampFormat == 1):
-        a = ('%s-%s-%s' % (year, month, day))
+        a = ('%04d-%s-%s' % (year, month, day))
     elif (timestampFormat == 2):
-        a = ('%s-%s-%s %s:%s:%s' % (year, month, day, hour, minute, second))
+        a = ('%04d-%s-%s %s:%s:%s' % (year, month, day, hour, minute, second))
     else:
-        a = ('%s-%s-%s %s:%s:%s:%s' % (year, month, day, hour, minute, second, milli))
+        a = ('%04d-%s-%s %s:%s:%s:%s' % (year, month, day, hour, minute, second, milli))
     return a
