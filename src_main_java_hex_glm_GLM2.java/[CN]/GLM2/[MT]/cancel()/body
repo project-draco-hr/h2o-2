@@ -1,5 +1,5 @@
 {
-  source.unlock(self());
+  if (!_grid)   source.unlock(self());
   DKV.remove(_progressKey);
   Value v=DKV.get(destination_key);
   if (v != null) {
@@ -9,5 +9,5 @@
     DKV.remove(destination_key);
   }
   DKV.remove(destination_key);
-  super.cancel(msg);
+  super.cancel();
 }

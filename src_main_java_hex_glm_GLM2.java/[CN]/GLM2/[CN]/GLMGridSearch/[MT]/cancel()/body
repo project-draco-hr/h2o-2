@@ -1,5 +1,7 @@
 {
-  source.unlock(self());
+  _cancelled=true;
   for (  GLM2 g : _jobs)   g.cancel();
+  source.unlock(self());
   DKV.remove(destination_key);
+  super.cancel();
 }
