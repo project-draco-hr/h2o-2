@@ -80,8 +80,9 @@
       for (int clu=0; clu < k; clu++)       sum+=distance(clusters[clu],task._cMeans[clu],ncats);
       sum/=N;
       Log.info("KMeans: Change in cluster centers=" + sum);
-      if (sum < 1e-6)       done=true;
-      if (model.iterations >= max_iter || done) {
+      done=(sum < 1e-6 || model.iterations == max_iter - 1);
+      if (done) {
+        Log.info("Writing clusters to key " + model._clustersKey);
         Clusters cc=new Clusters();
         cc._clusters=clusters;
         cc._means=means;
