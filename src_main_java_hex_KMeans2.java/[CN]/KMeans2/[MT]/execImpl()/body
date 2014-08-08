@@ -1,76 +1,58 @@
 {
+  Frame fr;
   KMeans2Model model=null;
   try {
     logStart();
     source.read_lock(self());
-    String sourceArg=input("source");
-    Key sourceKey=null;
-    if (sourceArg != null)     sourceKey=Key.make(sourceArg);
-    Frame fr=DataInfo.prepareFrame(source,ignored_cols,false,drop_na_cols);
-    String[] names=fr.names();
-    Vec[] vecs=fr.vecs();
-    if (vecs == null || vecs.length == 0)     throw new IllegalArgumentException("No columns selected. Check that selected columns have not been dropped due to too many NAs.");
-    DataInfo dinfo=new DataInfo(fr,0,false,DataInfo.TransformType.STANDARDIZE,DataInfo.TransformType.NONE);
-    String[] domain=new String[k];
-    for (int i=0; i < domain.length; i++)     domain[i]="Cluster " + i;
-    String[] namesResp=Utils.append(names,"response");
-    String[][] domaiResp=(String[][])Utils.append((new Frame(names,vecs)).domains(),(Object)domain);
-    model=new KMeans2Model(this,destination_key,sourceKey,namesResp,domaiResp);
+    fr=FrameTask.DataInfo.prepareFrame(source,ignored_cols,false,drop_na_cols);
+    Vec vecs[]=fr.vecs();
+    final int N=vecs.length;
+    int ncats=0, len=N;
+    while (ncats != len) {
+      while (vecs[ncats].isEnum())       ncats++;
+      while (len > 0 && !vecs[len - 1].isEnum())       len--;
+      if (ncats < len - 1)       fr.swap(ncats,len - 1);
+    }
+    _ncats=ncats;
+    model=new KMeans2Model(this,dest(),fr._key,fr.names(),fr.domains());
     model.delete_and_lock(self());
-    model.k=k;
-    model.normalized=normalize;
-    model.max_iter=max_iter;
-    double[] means=new double[vecs.length];
-    double[] mults=normalize ? new double[vecs.length] : null;
-    for (int i=0; i < vecs.length; i++) {
-      means[i]=(float)vecs[i].mean();
-      if (mults != null) {
+    double[] means=new double[N];
+    for (int i=0; i < N; i++)     means[i]=vecs[i].mean();
+    double[] mults=null;
+    if (normalize) {
+      mults=new double[N];
+      for (int i=0; i < N; i++) {
         double sigma=vecs[i].sigma();
         mults[i]=normalize(sigma) ? 1.0 / sigma : 1.0;
       }
     }
     Random rand=Utils.getRNG(seed - 1);
-    double[][] clusters;
+    double clusters[][];
     if (initialization == Initialization.None) {
-      clusters=new double[k][vecs.length];
+      clusters=model.centers=new double[k][fr.numCols()];
       for (      double[] cluster : clusters)       randomRow(vecs,rand,cluster,means,mults);
     }
  else {
-      clusters=new double[1][];
-      clusters[0]=new double[vecs.length];
+      clusters=new double[1][vecs.length];
       randomRow(vecs,rand,clusters[0],means,mults);
       while (model.iterations < 5) {
-        SumSqr sqr=new SumSqr();
-        sqr._clusters=clusters;
-        sqr._means=means;
-        sqr._mults=mults;
-        sqr.doAll(vecs);
-        Sampler sampler=new Sampler();
-        sampler._clusters=clusters;
-        sampler._sqr=sqr._sqr;
-        sampler._probability=k * 3;
-        sampler._seed=seed;
-        sampler._ncats=dinfo._cats;
-        sampler._means=means;
-        sampler._mults=mults;
-        sampler.doAll(vecs);
+        SumSqr sqr=new SumSqr(clusters,means,mults,_ncats).doAll(vecs);
+        Sampler sampler=new Sampler(clusters,means,mults,_ncats,sqr._sqr,k * 3,seed).doAll(vecs);
         clusters=Utils.append(clusters,sampler._sampled);
-        if (!isRunning(self()))         return;
-        model.centers=normalize ? denormalize(clusters,vecs) : clusters;
-        model.total_within_SS=sqr._sqr;
+        if (!isRunning())         return;
+        model.centers=denormalize(clusters,ncats,means,mults);
+        model.total_within_SS=sqr._sqr / fr.numRows();
         model.iterations++;
         model.update(self());
       }
-      clusters=recluster(clusters,k,rand,initialization);
+      clusters=recluster(clusters,rand);
     }
-    LOOP:     for (; ; ) {
-      Lloyds task=new Lloyds();
-      task._clusters=clusters;
-      task._means=means;
-      task._mults=mults;
-      task._ncats=dinfo._cats;
-      task._nnums=dinfo._nums;
-      task.doAll(vecs);
+    model.iterations=0;
+    boolean done=false;
+    LOOP:     for (; model.iterations < max_iter; model.iterations++) {
+      if (!isRunning())       return;
+      Lloyds task=new Lloyds(clusters,means,mults,_ncats,k).doAll(vecs);
+      max_cats(task._cMeans,task._cats);
       boolean badrow=false;
       for (int clu=0; clu < k; clu++)       if (task._rows[clu] == 0) {
         if (badrow) {
@@ -84,20 +66,22 @@
         task._rows[clu]=1;
         badrow=true;
       }
-      model.centers=clusters=normalize ? denormalize(task._cMeans,vecs) : task._cMeans;
-      model.between_cluster_variances=task._betwnSqrs;
-      double[] variances=new double[task._cSqrs.length];
-      for (int clu=0; clu < task._cSqrs.length; clu++)       for (int col=0; col < task._cSqrs[clu].length; col++)       variances[clu]+=task._cSqrs[clu][col];
-      double between_cluster_SS=0.0;
-      for (int clu=0; clu < task._betwnSqrs.length; clu++)       between_cluster_SS+=task._betwnSqrs[clu];
-      model.between_cluster_SS=between_cluster_SS;
-      model.within_cluster_variances=variances;
-      model.total_within_SS=task._sqr;
-      model.total_SS=model.total_within_SS + model.between_cluster_SS;
+      model.centers=denormalize(task._cMeans,ncats,means,mults);
       model.size=task._rows;
-      model.iterations++;
+      model.within_cluster_variances=task._cSqr;
+      double ssq=0;
+      for (int i=0; i < k; i++) {
+        ssq+=model.within_cluster_variances[i];
+        model.within_cluster_variances[i]/=task._rows[i];
+      }
+      model.total_within_SS=ssq / fr.numRows();
       model.update(self());
-      if (model.iterations >= max_iter) {
+      double sum=0;
+      for (int clu=0; clu < k; clu++)       sum+=distance(clusters[clu],task._cMeans[clu],ncats);
+      sum/=N;
+      Log.info("KMeans: Change in cluster centers=" + sum);
+      if (sum < 1e-6)       done=true;
+      if (model.iterations >= max_iter || done) {
         Clusters cc=new Clusters();
         cc._clusters=clusters;
         cc._means=means;
@@ -107,13 +91,20 @@
         fr2.delete_and_lock(self()).unlock(self());
         break;
       }
-      if (!isRunning(self()))       break;
+      clusters=task._cMeans;
+      StringBuilder sb=new StringBuilder();
+      sb.append("KMeans: iter: ").append(model.iterations).append(", MSE=").append(model.total_within_SS);
+      for (int i=0; i < k; i++)       sb.append(", ").append(task._cSqr[i]).append("/").append(task._rows[i]);
+      Log.info(sb);
     }
   }
-  finally {
+ catch (  Throwable t) {
+    t.printStackTrace();
+    cancel(t);
+  }
+ finally {
     if (model != null)     model.unlock(self());
     source.unlock(self());
-    remove();
     state=UKV.<Job>get(self()).state;
     new TAtomic<KMeans2Model>(){
       @Override public KMeans2Model atomic(      KMeans2Model m){
