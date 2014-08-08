@@ -25,21 +25,21 @@
                   for (                  int scoretraining : new int[]{200,0}) {
                     for (                    int scorevalidation : new int[]{200,0}) {
                       for (                      int vf : new int[]{0,1,-1}) {
-                        for (                        int n_folds : new int[]{0,2}) {
+                        for (                        int n_folds : new int[]{2}) {
                           if (n_folds != 0 && vf != 0)                           continue;
                           for (                          boolean keep_cv_splits : new boolean[]{false}) {
                             for (                            boolean override_with_best_model : new boolean[]{false,true}) {
                               for (                              int train_samples_per_iteration : new int[]{-1,0,rng.nextInt(100),500}) {
                                 DeepLearningModel mymodel=null;
                                 Key dest=null, dest_tmp=null;
+                                count++;
+                                if (fraction < rng.nextFloat())                                 continue;
                                 try {
-                                  count++;
-                                  if (fraction < rng.nextFloat())                                   continue;
-                                  final double epochs=7 + rng.nextDouble() + rng.nextInt(4);
-                                  final int[] hidden=new int[]{1 + rng.nextInt(4),1 + rng.nextInt(6)};
                                   Log.info("**************************)");
                                   Log.info("Starting test #" + count);
                                   Log.info("**************************)");
+                                  final double epochs=7 + rng.nextDouble() + rng.nextInt(4);
+                                  final int[] hidden=new int[]{1 + rng.nextInt(4),1 + rng.nextInt(6)};
                                   Frame valid=null;
                                   if (vf == 1)                                   valid=frame;
  else                                   if (vf == -1)                                   valid=vframe;
@@ -83,6 +83,8 @@
                                         StringBuilder sb=new StringBuilder();
                                         cv_model.generateHTML("cv",sb);
                                       }
+                                      mymodel=UKV.get(dest_tmp);
+                                      if (mymodel != null)                                       mymodel.delete_xval_models();
                                     }
                                   }
                                   dest=Key.make();
@@ -172,7 +174,7 @@
                                       pred2=new Frame(Key.make("pred2"),pred.names(),pred.vecs());
                                       pred2.delete_and_lock(null);
                                       pred2.unlock(null);
-                                      if (mymodel.nclasses() == 2) {
+                                      if (mymodel.nclasses() == 2 && false) {
                                         Env ev=Exec2.exec("pred2[,1]=pred2[,3]>=" + 0.5);
                                         try {
                                           pred2=ev.popAry();
@@ -227,7 +229,11 @@
                                   Log.info("Parameters combination " + count + ": PASS");
                                   testcount++;
                                 }
-  finally {
+ catch (                                Throwable t) {
+                                  t.printStackTrace();
+                                  throw new RuntimeException(t);
+                                }
+ finally {
                                   if (mymodel != null)                                   mymodel.delete();
                                   if (dest != null)                                   UKV.remove(dest);
                                   if (dest_tmp != null)                                   UKV.remove(dest_tmp);
