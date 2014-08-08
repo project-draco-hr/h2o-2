@@ -26,7 +26,7 @@
                 k.k=clusters;
                 k.initialization=init;
                 k.destination_key=Key.make();
-                k.seed=0xC0FFEE;
+                k.seed=rng.nextLong();
                 k.source=frame;
                 k.max_iter=max_iter;
                 k.normalize=normalize;
@@ -36,13 +36,11 @@
                 Frame score=null;
                 try {
                   m=UKV.get(k.dest());
-                  for (                  double d : m.between_cluster_variances)                   Assert.assertFalse(Double.isNaN(d));
                   for (                  double d : m.within_cluster_variances)                   Assert.assertFalse(Double.isNaN(d));
-                  Assert.assertFalse(Double.isNaN(m.between_cluster_SS));
-                  Assert.assertFalse(Double.isNaN(m.total_SS));
                   Assert.assertFalse(Double.isNaN(m.total_within_SS));
                   for (                  long o : m.size)                   Assert.assertTrue(o > 0);
                   for (                  double[] dc : m.centers)                   for (                  double d : dc)                   Assert.assertFalse(Double.isNaN(d));
+                  KMeans2Test.testHTML(m);
                   score=m.score(frame);
                   for (long j=0; j < score.numRows(); ++j)                   org.junit.Assert.assertTrue(score.anyVec().at8(j) >= 0 && score.anyVec().at8(j) < clusters);
                   Log.info("Parameters combination " + count + ": PASS");
