@@ -7,7 +7,7 @@
     for (int i=0; i < rows.length; i++)     rows[i][0]=model.within_cluster_variances[i];
     columnHTMLlong(sb,"Cluster Size",model.size);
     DocGen.HTML.section(sb,"Cluster Variances: ");
-    table(sb,"Clusters",new String[]{"Within Cluster Variances"},rows);
+    table(sb,"Clusters",new String[]{"Within Cluster Sum of Squares"},rows);
     sb.append("<br />");
     DocGen.HTML.section(sb,"Overall Totals: ");
     double[] row=new double[]{model.total_within_SS};

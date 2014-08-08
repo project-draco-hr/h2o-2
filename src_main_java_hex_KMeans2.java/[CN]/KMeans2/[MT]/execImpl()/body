@@ -73,9 +73,8 @@
       double ssq=0;
       for (int i=0; i < k; i++) {
         ssq+=model.within_cluster_variances[i];
-        model.within_cluster_variances[i]/=task._rows[i];
       }
-      model.total_within_SS=ssq / fr.numRows();
+      model.total_within_SS=ssq;
       model.update(self());
       double sum=0;
       for (int clu=0; clu < k; clu++)       sum+=distance(clusters[clu],task._cMeans[clu],ncats);
