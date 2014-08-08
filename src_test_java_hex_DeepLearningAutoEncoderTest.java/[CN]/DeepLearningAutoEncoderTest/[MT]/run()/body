@@ -21,7 +21,7 @@
       p.activation=DeepLearning.Activation.Tanh;
       p.loss=DeepLearning.Loss.MeanSquare;
       p.epochs=500;
-      p.force_load_balance=true;
+      p.force_load_balance=false;
       p.invoke();
       DeepLearningModel mymodel=UKV.get(p.dest());
       Frame l2_frame_train=null, l2_frame_test=null;
@@ -33,7 +33,7 @@
         final Vec l2_train=l2_frame_train.anyVec();
         sb.append("Mean reconstruction error: " + l2_train.mean() + "\n");
         Assert.assertEquals(mymodel.mse(),l2_train.mean(),1e-7);
-        Assert.assertTrue("too big reconstruction error: " + l2_train.mean(),l2_train.mean() < 3e-1);
+        Assert.assertTrue("too big a reconstruction error: " + l2_train.mean(),l2_train.mean() < 0.02);
         Frame reconstr=mymodel.score(train);
         double mean_l2=0;
         for (int r=0; r < reconstr.numRows(); ++r) {
