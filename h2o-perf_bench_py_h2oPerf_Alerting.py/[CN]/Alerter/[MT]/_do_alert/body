@@ -6,7 +6,7 @@ def _do_alert(self):
         f.write('\n')
         if (len(self.correct_alert.alert_list) > 0):
             for key in self.correct_alert.alert_list:
-                f.write(((('Test ' + key) + ' failed:  ') + self.correct_alert.alert_list[key]))
+                f.write(((('FAIL\t\t' + key) + ' failed:  ') + self.correct_alert.alert_list[key]))
                 f.write('\n')
         else:
             f.write('All tests were correct.')
@@ -15,7 +15,7 @@ def _do_alert(self):
         f.write('\n')
         if (len(self.speed_alert.alert_list) > 0):
             for key in self.speed_alert.alert_list:
-                f.write(((('Test ' + key) + ' failed:  ') + self.speed_alert.alert_list[key]))
+                f.write(((('FAIL\t\t' + key) + ' failed:  ') + self.speed_alert.alert_list[key]))
                 f.write('\n')
         else:
             f.write('No tests failed due to untimeliness.')
@@ -24,7 +24,7 @@ def _do_alert(self):
         f.write('\n')
         if (len(self.infrastructure_alert.alert_list) > 0):
             for key in self.infrastructure_alert.alert_list:
-                f.write(((('Test ' + key) + ' failed:  ') + self.infrastructure_alert.alert_list[key]))
+                f.write(((('FAIL\t\t' + key) + ' failed:  ') + self.infrastructure_alert.alert_list[key]))
                 f.write('\n')
         else:
             f.write('All tests ran.')

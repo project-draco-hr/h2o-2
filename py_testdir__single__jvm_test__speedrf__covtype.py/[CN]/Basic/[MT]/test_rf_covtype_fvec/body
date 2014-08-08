@@ -21,26 +21,26 @@ def test_rf_covtype_fvec(self):
     nbinsList = [10, 100, 1000]
     if (TRY == 'max_depth'):
         tryList = depthList
-    elif (TRY == 'num_trees'):
+    elif (TRY == 'ntrees'):
         tryList = ntreesList
-    elif (TRY == 'bin_limit'):
+    elif (TRY == 'nbins'):
         tryList = nbinsList
     else:
         raise Exception(('huh? %s' % TRY))
     for d in tryList:
         if (TRY == 'max_depth'):
             paramDict['max_depth'] = d
-        elif (TRY == 'num_trees'):
-            paramDict['num_trees'] = d
-        elif (TRY == 'bin_limit'):
-            paramDict['bin_limit'] = d
+        elif (TRY == 'ntrees'):
+            paramDict['ntrees'] = d
+        elif (TRY == 'nbins'):
+            paramDict['nbins'] = d
         else:
             raise Exception(('huh? %s' % TRY))
         if DO_OOBE:
             paramDict['validation'] = None
         else:
             paramDict['validation'] = parseTestResult['destination_key']
-        timeoutSecs = (30 + (paramDict['num_trees'] * 200))
+        timeoutSecs = (30 + (paramDict['ntrees'] * 200))
         TRIES = 5
         for i in range(TRIES):
             lastOne = (i == (TRIES - 1))
@@ -86,10 +86,10 @@ def test_rf_covtype_fvec(self):
         if DO_PLOT:
             if (TRY == 'max_depth'):
                 xLabel = 'max_depth'
-            elif (TRY == 'num_trees'):
-                xLabel = 'num_trees'
-            elif (TRY == 'bin_limit'):
-                xLabel = 'bin_limit'
+            elif (TRY == 'ntrees'):
+                xLabel = 'ntrees'
+            elif (TRY == 'nbins'):
+                xLabel = 'nbins'
             else:
                 raise Exception(('huh? %s' % TRY))
             xList.append(paramDict[xLabel])

@@ -1,0 +1,7 @@
+{
+  if (submodels == null)   return null;
+  for (  Submodel sm : submodels)   if (sm.xvalidation instanceof GLMXValidation) {
+    return ((GLMXValidation)sm.xvalidation).xval_models;
+  }
+  return null;
+}
