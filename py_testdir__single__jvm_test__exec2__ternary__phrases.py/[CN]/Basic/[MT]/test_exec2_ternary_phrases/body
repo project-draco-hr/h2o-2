@@ -14,11 +14,3 @@ def test_exec2_ternary_phrases(self):
     for execExpr in exprList:
         bigExprList.append(execExpr)
         h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)
-    for j in range(50):
-        execExpr = ((('a=' + random.choice(bigExprList)) + '; b= ') + random.choice(bigExprList))
-        if re.search('\\?.*\\?', execExpr):
-            break
-        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)
-    for j in range(50):
-        execExpr = ((((('a=' + random.choice(bigExprList)) + '; b= ') + random.choice(bigExprList)) + '; c=') + random.choice(bigExprList))
-        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)
