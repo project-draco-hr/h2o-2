@@ -13,6 +13,7 @@
     algo.seed=SEED;
     algo.invoke();
     KMeans2Model res=UKV.get(algo.dest());
+    Assert.assertTrue(res != null);
     testHTML(res);
     Assert.assertTrue(res.get_params().state == Job.JobState.DONE);
     double[][] clusters=res.centers;
