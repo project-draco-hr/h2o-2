@@ -1,5 +1,16 @@
 {
-  for (int clu=0; clu < _cMeans.length; clu++)   Layer.Stats.reduce(_cMeans[clu],_cSqrs[clu],_rows[clu],mr._cMeans[clu],mr._cSqrs[clu],mr._rows[clu]);
+  for (int clu=0; clu < _K; clu++) {
+    long ra=_rows[clu];
+    long rb=mr._rows[clu];
+    double[] ma=_cMeans[clu];
+    double[] mb=mr._cMeans[clu];
+    for (int c=0; c < ma.length; c++)     if (ra + rb > 0)     ma[c]=(ma[c] * ra + mb[c] * rb) / (ra + rb);
+  }
+  Utils.add(_cats,mr._cats);
+  Utils.add(_cSqr,mr._cSqr);
   Utils.add(_rows,mr._rows);
-  _sqr+=mr._sqr;
+  if (_worse_err < mr._worse_err) {
+    _worse_err=mr._worse_err;
+    _worse_row=mr._worse_row;
+  }
 }
