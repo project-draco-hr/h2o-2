@@ -105,6 +105,7 @@
     cancel(t);
   }
  finally {
+    remove();
     if (model != null)     model.unlock(self());
     source.unlock(self());
     state=UKV.<Job>get(self()).state;
