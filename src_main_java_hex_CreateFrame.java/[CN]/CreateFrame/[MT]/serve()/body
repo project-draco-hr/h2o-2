@@ -1,6 +1,10 @@
 {
   try {
     if (integer_fraction + categorical_fraction > 1)     throw new IllegalArgumentException("Integer and categorical fractions must add up to <= 1.");
+    if (Math.abs(missing_fraction) > 1)     throw new IllegalArgumentException("Missing fraction must be between 0 and 1.");
+    if (Math.abs(integer_fraction) > 1)     throw new IllegalArgumentException("Integer fraction must be between 0 and 1.");
+    if (Math.abs(categorical_fraction) > 1)     throw new IllegalArgumentException("Categorical fraction must be between 0 and 1.");
+    if (response_factors < 1)     throw new IllegalArgumentException("Response factors must be either 1 (real-valued response), or >=2 (factor levels).");
     if (cols <= 0 || rows <= 0)     throw new IllegalArgumentException("Must have number of rows > 0 and columns > 1.");
     if (!randomize) {
       if (integer_fraction != 0 || categorical_fraction != 0)       throw new IllegalArgumentException("Cannot have integer or categorical fractions > 0 unless randomize=true.");
