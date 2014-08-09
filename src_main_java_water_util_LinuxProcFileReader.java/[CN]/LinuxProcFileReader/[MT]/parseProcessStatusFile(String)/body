@@ -1,0 +1,14 @@
+{
+  if (s == null)   return;
+  try {
+    Pattern p=Pattern.compile("Cpus_allowed:\\s+([A-fa-f0-9]+)");
+    Matcher m=p.matcher(s);
+    boolean b=m.find();
+    if (!b) {
+      return;
+    }
+    _processCpusAllowed=Integer.parseInt(m.group(1),16);
+  }
+ catch (  Exception xe) {
+  }
+}
