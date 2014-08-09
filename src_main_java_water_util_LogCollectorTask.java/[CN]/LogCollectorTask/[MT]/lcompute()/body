@@ -1,4 +1,5 @@
 {
+  _result=new byte[H2O.CLOUD._memary.length][];
   int idx=H2O.SELF.index();
   baos=new ByteArrayOutputStream();
   ZipOutputStream zos=new ZipOutputStream(baos);
@@ -15,7 +16,8 @@
     }
  catch (    Exception xe) {
     }
-    _result=baos.toByteArray();
+    byte[] arr=baos.toByteArray();
+    _result[idx]=arr;
     tryComplete();
   }
 }
