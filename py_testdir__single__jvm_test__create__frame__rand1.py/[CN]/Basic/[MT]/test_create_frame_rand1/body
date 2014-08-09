@@ -31,6 +31,6 @@ def test_create_frame_rand1(self):
             h2o.nodes[0].csv_download(src_key='temp1000.hex', csvPathname=csvPathname, timeoutSecs=60)
         if DO_INSPECT:
             h2o_cmd.runInspect(key='temp1000.hex')
-        h2o_cmd.runSummary(key='temp1000.hex')
+        h2o_cmd.runSummary(key='temp1000.hex', timeoutSecs=300)
         print h2o.dump_json(cfResult)
         print 'Trial #', trial, 'completed'
