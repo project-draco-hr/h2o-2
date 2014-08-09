@@ -1,0 +1,10 @@
+{
+  if (_type == Coltype.AUTO || !_strongGuess && tinfo._strongGuess) {
+    _type=tinfo._type;
+    _naStr=tinfo._naStr;
+    _strongGuess=tinfo._strongGuess;
+  }
+ else   if (tinfo._type != Coltype.AUTO && !_strongGuess) {
+    tinfo._type=Coltype.INVALID;
+  }
+}

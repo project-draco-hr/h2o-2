@@ -16,4 +16,13 @@
   PCAModel myModel=buildModel(dinfo,tsk);
   myModel.delete_and_lock(self());
   myModel.unlock(self());
+  remove();
+  final JobState state=UKV.<Job>get(self()).state;
+  new TAtomic<PCAModel>(){
+    @Override public PCAModel atomic(    PCAModel m){
+      if (m != null)       m.get_params().state=state;
+      return m;
+    }
+  }
+.invoke(dest());
 }

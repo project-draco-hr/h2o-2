@@ -3,7 +3,7 @@ def test_summary_with_x_libsvm(self):
     print 'Empty rows except for the last, with all zeros for class. Single col at max'
     h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 10000, 'cC', 300)]
+    tryList = [(100, 100, 'cA', 300), (100000, 100, 'cB', 300), (100, 1000, 'cC', 300)]
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = ('syn_%s_%s_%s.csv' % (SEEDPERFILE, rowCount, colCount))
