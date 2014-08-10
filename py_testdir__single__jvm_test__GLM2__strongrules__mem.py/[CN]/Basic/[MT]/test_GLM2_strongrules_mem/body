@@ -8,7 +8,7 @@ def test_GLM2_strongrules_mem(self):
     params = {'alpha': 0.5, 'n_folds': 0, 'strong_rules_enabled': 1, 'lambda_search': 0, 'response': 3000, 'cols': [i for i in range(2900)], 'family': 'binomial', }
     kwargs = params.copy()
     starttime = time.time()
-    glmtest_SR = h2o_cmd.runGLM(timeoutSecs=300, parseResult=data, **kwargs)
+    glmtest_SR = h2o_cmd.runGLM(timeoutSecs=600, parseResult=data, **kwargs)
     elapsedtime = (time.time() - starttime)
     print ('GLM modelling completes in %0.4f ' % elapsedtime)
     print 'Test complete.'
