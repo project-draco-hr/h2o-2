@@ -6,6 +6,7 @@
     source.read_lock(self());
     if (source.numRows() < k)     throw new IllegalArgumentException("Cannot make " + k + " clusters out of "+ source.numRows()+ " rows.");
     fr=FrameTask.DataInfo.prepareFrame(source,ignored_cols,false,drop_na_cols);
+    if (fr.numCols() == 0)     throw new IllegalArgumentException("No columns left to work with.");
     Vec vecs[]=fr.vecs();
     final int N=vecs.length;
     int ncats=0, len=N;
