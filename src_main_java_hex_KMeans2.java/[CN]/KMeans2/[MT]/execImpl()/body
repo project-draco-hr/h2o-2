@@ -50,23 +50,31 @@
       clusters=recluster(clusters,rand);
     }
     model.iterations=0;
-    boolean done=false;
+    boolean done;
     LOOP:     for (; model.iterations < max_iter; model.iterations++) {
       if (!isRunning())       return;
       Lloyds task=new Lloyds(clusters,means,mults,_ncats,k).doAll(vecs);
       max_cats(task._cMeans,task._cats);
       boolean badrow=false;
-      for (int clu=0; clu < k; clu++)       if (task._rows[clu] == 0) {
-        if (badrow) {
-          Log.warn("KMeans: Re-running Lloyds to re-init another cluster");
-          model.iterations--;
-          continue LOOP;
+      for (int clu=0; clu < k; clu++) {
+        if (task._rows[clu] == 0) {
+          if (badrow) {
+            Log.warn("KMeans: Re-running Lloyds to re-init another cluster");
+            model.iterations--;
+            if (reinit_attempts++ < k) {
+              continue LOOP;
+            }
+ else {
+              reinit_attempts=0;
+              break;
+            }
+          }
+          long row=task._worst_row;
+          Log.warn("KMeans: Re-initializing cluster " + clu + " to row "+ row);
+          data(clusters[clu]=task._cMeans[clu],vecs,row,means,mults);
+          task._rows[clu]=1;
+          badrow=true;
         }
-        long row=task._worse_row;
-        Log.warn("KMeans: Re-initing cluster " + clu + " to row "+ row);
-        data(clusters[clu]=task._cMeans[clu],vecs,row,means,mults);
-        task._rows[clu]=1;
-        badrow=true;
       }
       model.centers=denormalize(task._cMeans,ncats,means,mults);
       model.size=task._rows;
@@ -77,6 +85,7 @@
       }
       model.total_within_SS=ssq;
       model.update(self());
+      reinit_attempts=0;
       double sum=0;
       for (int clu=0; clu < k; clu++)       sum+=distance(clusters[clu],task._cMeans[clu],ncats);
       sum/=N;
