@@ -1,0 +1,32 @@
+def test_bayes_and2(self):
+    h2o.beta_features = True
+    csvPathname = 'standard/covtype.data'
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put')
+    paramDict = define_params()
+    for trial in range(1):
+        params = {'response': 54, }
+        colX = h2o_util.pickRandParams(paramDict, params)
+        kwargs = params.copy()
+        timeoutSecs = 120
+        execExpr = 'covtype.hex[,54+1] = factor(covtype.hex[,54+1])'
+        (resultExec, ncols) = h2e.exec_expr(execExpr=execExpr)
+        start = time.time()
+        bayesResult = h2o.nodes[0].naive_bayes(timeoutSecs=timeoutSecs, source='covtype.hex', **kwargs)
+        print 'bayes end on ', csvPathname, 'took', (time.time() - start), 'seconds'
+        print 'bayes result:', h2o.dump_json(bayesResult)
+        nb_model = bayesResult['nb_model']
+        ncats = nb_model['ncats']
+        nnums = nb_model['nnums']
+        pcond = nb_model['pcond']
+        pprior = nb_model['pprior']
+        rescnt = nb_model['rescnt']
+        modelClassDist = nb_model['_modelClassDist']
+        names = nb_model['_names']
+        domains = nb_model['_domains']
+        priorClassDist = nb_model['_priorClassDist']
+        model_key = nb_model['_key']
+        print 'Doing predict with same dataset, and the bayes model'
+        h2o.nodes[0].generate_predictions(model_key=model_key, data_key='covtype.hex', prediction='Predict.hex')
+        resultAUC = h2o.nodes[0].generate_auc(thresholds=None, actual=hexKey, predict='Predict.hex', vactual=y, vpredict=1)
+        print 'AUC result:', h2o.dump_json(resultAUC)
+        print 'Trial #', trial, 'completed\n'
