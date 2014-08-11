@@ -1,0 +1,13 @@
+{
+  if (!_grid)   source.unlock(self());
+  DKV.remove(_progressKey);
+  Value v=DKV.get(destination_key);
+  if (v != null) {
+    GLMModel m=v.get();
+    Key[] xvals=m.xvalModels();
+    if (xvals != null)     for (    Key k : xvals)     DKV.remove(k);
+    DKV.remove(destination_key);
+  }
+  DKV.remove(destination_key);
+  super.cancel();
+}

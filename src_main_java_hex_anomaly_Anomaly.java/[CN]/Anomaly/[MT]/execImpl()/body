@@ -1,4 +1,5 @@
 {
+  if (dl_autoencoder_model == null)   throw new IllegalArgumentException("Deep Learning Model must be specified.");
   DeepLearningModel dlm=UKV.get(dl_autoencoder_model);
   if (dlm == null)   throw new IllegalArgumentException("Deep Learning Model not found.");
   if (!dlm.get_params().autoencoder)   throw new IllegalArgumentException("Deep Learning Model must be build with autoencoder = true.");

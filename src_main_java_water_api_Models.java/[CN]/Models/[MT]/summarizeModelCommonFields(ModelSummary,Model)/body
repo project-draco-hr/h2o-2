@@ -3,6 +3,7 @@
   summary.warnings=model.warnings;
   summary.model_algorithm=model.getClass().toString();
   Key job_key=((Job)model.job()).self();
+  if (null == job_key)   throw H2O.fail("Null job key for model: " + (model == null ? "null model" : model._key));
   Job job=DKV.get(job_key).get();
   summary.state=job.getState();
   summary.model_category=model.getModelCategory();

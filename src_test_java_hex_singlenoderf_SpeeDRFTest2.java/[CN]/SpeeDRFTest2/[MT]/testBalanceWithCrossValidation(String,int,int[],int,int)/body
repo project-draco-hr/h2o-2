@@ -8,12 +8,12 @@
     spdrf.response=respVec;
     spdrf.ignored_cols=ignored_cols;
     spdrf.classification=true;
-    spdrf.num_trees=ntrees;
+    spdrf.ntrees=ntrees;
     spdrf.balance_classes=true;
     spdrf.n_folds=nfolds;
     spdrf.keep_cross_validation_splits=false;
     spdrf.invoke();
-    Assert.assertEquals("Number of cross validation model is wrond!",nfolds,spdrf.xval_models.length);
+    Assert.assertEquals("Number of cross validation model is wrong!",nfolds,spdrf.xval_models.length);
     model=UKV.get(spdrf.dest());
   }
   finally {

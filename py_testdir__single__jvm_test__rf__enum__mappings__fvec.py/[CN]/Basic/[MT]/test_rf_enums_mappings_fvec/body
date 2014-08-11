@@ -39,7 +39,7 @@ def test_rf_enums_mappings_fvec(self):
         y = colCount
         modelKey = 'enums'
         if SPEEDRF:
-            kwargs = {'destination_key': modelKey, 'response': y, 'num_trees': 1, 'max_depth': 100, 'oobee': 1, 'seed': 123456789, }
+            kwargs = {'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'oobee': 1, 'seed': 123456789, }
         else:
             kwargs = {'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'min_rows': 1, 'validation': scoreDataKey, 'seed': 123456789, }
         for r in range(4):

@@ -4,8 +4,8 @@ def test_parse_time(self):
     csvFilename = 'syn_time.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     headerData = None
-    colCount = 6
-    rowCount = 1000
+    colCount = COLS
+    rowCount = ROWS
     write_syn_dataset(csvPathname, rowCount, colCount, headerData)
     for trial in range(20):
         rowData = rand_rowData()

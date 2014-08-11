@@ -3,9 +3,9 @@ sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_browse as h2b, h2o_exec as h2e, h2o_hosts, h2o_import as h2i
 initList = [('rhex', 'rhex=i.hex')]
 DO_COMPOUND = True
-DO_IRIS = False
-phrasesCompound = ['aa=!0; x=!0', 'aa=0; x=0', 'aa=c(11,22,33,44,55,66); aa[c(2,6,1),]', 'rhex[1,-1]; rhex[1,-1]; rhex[1,-1]', 'x=!0; x+!2', 'x=!0; !x+2', 'x= 3; rhex[,(x > 0) & (x < 4)]', 'x= 3; rhex[(x > 0) & (x < 4),]', 'x=0; x+2']
-phrases = ['ifelse(1,0,2)', 'ifelse(0,0,2)', '!1.23', '1.23', '!1.23<!2.34', '!1.23<2.34', '1.23<=2.34', '1.23<!2.34', '1.23<2.34', '1.23==2.34', '1.23>=2.34', '1.23>2.34', '1.23!=2.34', '(1.23+rhex)-rhex', '1.23+(rhex-rhex)', 'apply(rhex,2,sum)', '!c(!1,3,5)', '!c(1,!3,5)', '!c(1,3,!5)', '!c(1,3,5)', 'c(1,3,5)', 'cbind(c(1,2,3,4), c(5,6,7,8))', 'factor(rhex[,5])', 'is.na(rhex)', 'max(1,23)', 'min(1,2)', 'nrow(rhex)*3', 'rhex[,1]==1.0', '!rhex', 'rhex', 'rhex[,1]', 'rhex[1,]', 'rhex+1', 'rhex[,1]+1', 'rhex[2,3]', 'rhex[2+4,-4]', 'rhex[c(1,3,5),]', 'rhex[nrow(rhex),]', 'rhex[nrow(rhex)-1,ncol(rhex)-1]', 'rhex-rhex', 'runif(rhex[,1], -1)', 'sum(1,2)', 'sum(1,2,3)', 'sum(1,rhex,3)', 'sum(4,c(1,3,5),2,6)', 'sum(c(1,3,5))', 'x<-!1', 'x<-1', 'x=!1', 'x=1']
+DO_IRIS = True
+phrasesCompound = ['aa=!0; x=!0', 'aa=0; x=0', 'bb=c(11,22,33,44,55,66); bb[c(2,6,1),]', 'rhex[1,-1]; rhex[1,-1]; rhex[1,-1]', 'x=!0; x+!2', 'x=!0; !x+2', 'x= 3; rhex[,(x > 0) & (x < 4)]', 'x= 3; rhex[(x > 0) & (x < 4),]', 'x=0; x+2']
+phrases = ['round(rhex[,1],0)', 'round(rhex[,1],1)', 'round(rhex[,1],2)', 'signif(rhex[,1],1)', 'signif(rhex[,1],2)', 'signif(rhex[,1],22)', 'trunc(rhex[,1])', 'trunc(rhex[,1])', 'trunc(rhex[,1])', 'trunc(rhex[,1])', 'ifelse(1,0,2)', 'ifelse(0,0,2)', '!1.23', '1.23', '!1.23<!2.34', '!1.23<2.34', '1.23<=2.34', '1.23<!2.34', '1.23<2.34', '1.23==2.34', '1.23>=2.34', '1.23>2.34', '1.23!=2.34', '(1.23+rhex)-rhex', '1.23+(rhex-rhex)', 'apply(rhex,2,sum)', '!c(!1,3,5)', '!c(1,!3,5)', '!c(1,3,!5)', '!c(1,3,5)', 'c(1,3,5)', 'cbind(c(1,2,3,4), c(5,6,7,8))', 'factor(rhex[,5])', 'is.na(rhex)', 'max(1,23)', 'min(1,2)', 'nrow(rhex)*3', 'rhex[,1]==1.0', '!rhex', 'rhex', 'rhex[,1]', 'rhex[1,]', 'rhex+1', 'rhex[,1]+1', 'rhex[2,3]', 'rhex[2+4,-4]', 'rhex[c(1,3,5),]', 'rhex[nrow(rhex),]', 'rhex[nrow(rhex)-1,ncol(rhex)-1]', 'rhex-rhex', 'runif(rhex[,1], -1)', 'sum(1,2)', 'sum(1,2,3)', 'sum(1,rhex,3)', 'sum(4,c(1,3,5),2,6)', 'sum(c(1,3,5))', 'x<-!1', 'x<-1', 'x=!1', 'x=1']
 if DO_COMPOUND:
     phrases += phrasesCompound
 if (__name__ == '__main__'):

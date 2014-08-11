@@ -1,0 +1,26 @@
+{
+  _embeddedWebServerIp=ip.getHostAddress();
+  _embeddedWebServerPort=port;
+  try {
+    ZooKeeper z=ZooKeeperFactory.makeZk(_zk);
+    byte[] payload;
+    payload=z.getData(_zkroot,null,null);
+    ClusterPayload cp=ClusterPayload.fromPayload(payload,ClusterPayload.class);
+    _numNodes=cp.numNodes;
+    if (_numNodes <= 0) {
+      System.out.println("ERROR: numNodes must be > 0 (" + _numNodes + ")");
+      System.exit(1);
+    }
+    WorkerPayload wp=new WorkerPayload();
+    wp.ip=ip.getHostAddress();
+    wp.port=port;
+    wp.pid=getProcessId();
+    payload=wp.toPayload();
+    z.create(_zkroot + "/nodes/",payload,ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT_SEQUENTIAL);
+    z.close();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    System.exit(1);
+  }
+}

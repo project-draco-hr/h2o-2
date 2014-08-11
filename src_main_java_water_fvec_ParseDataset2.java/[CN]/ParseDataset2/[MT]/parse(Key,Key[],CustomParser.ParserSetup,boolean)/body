@@ -1,9 +1,5 @@
 {
-  Key k=keys[0];
-  ByteVec v=(ByteVec)getVec(k);
-  byte[] bits=v.chunkForChunkIdx(0).getBytes();
-  Compression cpr=Utils.guessCompressionMethod(bits);
-  globalSetup=ParseDataset.guessSetup(Utils.unzipBytes(bits,cpr),globalSetup,true)._setup;
+  keys=filterEmptyFiles(keys);
   if (globalSetup._ncols == 0)   throw new java.lang.IllegalArgumentException(globalSetup.toString());
   return forkParseDataset(okey,keys,globalSetup,delete_on_done).get();
 }

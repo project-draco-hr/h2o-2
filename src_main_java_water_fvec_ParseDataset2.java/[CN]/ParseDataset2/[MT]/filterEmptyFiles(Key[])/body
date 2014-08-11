@@ -1,0 +1,21 @@
+{
+  Arrays.sort(keys);
+  Vec[] vecs=new Vec[keys.length];
+  int c=0;
+  for (int i=0; i < vecs.length; ++i) {
+    vecs[i]=getVec(keys[i]);
+    if (vecs[i].length() == 0)     c++;
+  }
+  if (c > 0) {
+    Key[] ks=new Key[keys.length - c];
+    Vec[] vs=new Vec[vecs.length - c];
+    int j=0;
+    for (int i=0; i < keys.length; ++i)     if (vecs[i].length() != 0) {
+      ks[j]=keys[i];
+      vs[j]=vecs[i];
+      ++j;
+    }
+    keys=ks;
+  }
+  return keys;
+}

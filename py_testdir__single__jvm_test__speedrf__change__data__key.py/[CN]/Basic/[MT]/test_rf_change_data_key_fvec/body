@@ -1,0 +1,42 @@
+def test_rf_change_data_key_fvec(self):
+    h2o.beta_features = True
+    importFolderPath = 'standard'
+    csvFilenameTrain = 'covtype.data'
+    csvPathname = ((importFolderPath + '/') + csvFilenameTrain)
+    parseResultTrain = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=500)
+    h2o_cmd.runInspect(key=parseResultTrain['destination_key'])
+    dataKeyTrain = parseResultTrain['destination_key']
+    print 'Parse end', dataKeyTrain
+    csvFilenameTest = 'covtype20x.data'
+    csvPathname = ((importFolderPath + '/') + csvFilenameTest)
+    parseResultTest = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, timeoutSecs=500)
+    print "Parse result['destination_key']:", parseResultTest['destination_key']
+    inspect = h2o_cmd.runInspect(key=parseResultTest['destination_key'])
+    dataKeyTest = parseResultTest['destination_key']
+    print 'Parse end', dataKeyTest
+    params = {'ntrees': 2, 'destination_key': 'RF_model', }
+    kwargs = params.copy()
+    kwargs['response'] = 'C55'
+    timeoutSecs = 100
+    start = time.time()
+    h2o_cmd.runSpeeDRF(parseResult=parseResultTrain, timeoutSecs=timeoutSecs, retryDelaySecs=1, noPoll=True, **kwargs)
+    print 'rf job dispatch end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
+    start = time.time()
+    h2o_jobs.pollWaitJobs(pattern='RF_model', timeoutSecs=360, pollTimeoutSecs=120, retryDelaySecs=5)
+    print 'rf job end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
+    print '\nRFView start after job completion'
+    model_key = kwargs['destination_key']
+    ntrees = kwargs['ntrees']
+    start = time.time()
+    h2o_cmd.runSpeeDRFView(None, model_key, timeoutSecs)
+    print 'First rfview end on ', dataKeyTrain, 'took', (time.time() - start), 'seconds'
+    for trial in range(3):
+        start = time.time()
+        rfView = h2o_cmd.runSpeeDRFView(None, model_key, timeoutSecs)
+        print 'rfview', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'
+        rfView['drf_model'] = rfView.pop('speedrf_model')
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntrees)
+        start = time.time()
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        print 'predict', trial, 'end on ', dataKeyTest, 'took', (time.time() - start), 'seconds.'
+        print 'Trial #', trial, 'completed'

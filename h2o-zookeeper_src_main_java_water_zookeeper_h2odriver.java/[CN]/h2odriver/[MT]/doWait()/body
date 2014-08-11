@@ -1,0 +1,31 @@
+{
+  ZooKeeper z=ZooKeeperFactory.makeZk(_zk);
+  byte[] payload;
+  payload=z.getData(_zkroot,null,null);
+  ClusterPayload cp=ClusterPayload.fromPayload(payload,ClusterPayload.class);
+  z.close();
+  assert(cp.numNodes > 0);
+  long startMillis=System.currentTimeMillis();
+  while (true) {
+    z=ZooKeeperFactory.makeZk(_zk);
+    if (z.exists(_zkroot,false) == null) {
+      z.close();
+      throw new Exception("ZooKeeper node does not exist: " + _zkroot);
+    }
+    try {
+      payload=z.getData(_zkroot + "/master",null,null);
+      MasterPayload mp=MasterPayload.fromPayload(payload,MasterPayload.class);
+      z.close();
+      Thread.sleep(CLOUD_FORMATION_SETTLE_DOWN_SECONDS);
+      return mp;
+    }
+ catch (    KeeperException.NoNodeException e) {
+    }
+    long now=System.currentTimeMillis();
+    if (Math.abs(now - startMillis) > (_cloudFormationTimeoutSeconds * 1000)) {
+      z.close();
+      throw new TimeoutException("Timed out waiting for cloud to form");
+    }
+    Thread.sleep(1000);
+  }
+}

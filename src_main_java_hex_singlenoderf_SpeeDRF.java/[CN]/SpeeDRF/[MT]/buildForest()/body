@@ -1,18 +1,22 @@
 {
+  logStart();
   SpeeDRFModel model=null;
   try {
-    model=initModel();
+    Frame train=setTrain();
+    Frame test=setTest();
+    Vec resp=regression ? null : train.lastVec().toEnum();
+    if (resp != null)     gtrash(resp);
+    float[] priorDist=setPriorDist(train);
+    train=setStrat(train,test,resp);
+    model=initModel(train,test,priorDist);
     model.start_training(null);
     model.write_lock(self());
-    drfParams=DRFParams.create(model.fr.find(model.response),model.N,model.max_depth,(int)model.fr.numRows(),model.nbins,model.statType,seed,model.weights,mtry,model.sampling_strategy,(float)sample,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,!local_mode,regression);
-    DRFTask tsk=new DRFTask();
-    tsk._job=Job.findJob(self());
-    tsk._params=drfParams;
-    tsk._rfmodel=model;
-    tsk._drf=this;
-    tsk.validateInputData();
+    drfParams=DRFParams.create(train.find(resp),model.N,model.max_depth,(int)train.numRows(),model.nbins,model.statType,seed,model.weights,mtries,model.sampling_strategy,(float)sample_rate,model.strata_samples,model.verbose ? 100 : 1,_exclusiveSplitLimit,true,regression);
+    DRFTask tsk=new DRFTask(self(),train,drfParams,model._key);
+    tsk.validateInputData(train);
     tsk.invokeOnAllNodes();
     model=UKV.get(dest());
+    model.scoreAllTrees(test == null ? train : test,resp);
   }
   finally {
     if (model != null) {

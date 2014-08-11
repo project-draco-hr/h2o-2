@@ -21,5 +21,3 @@ def test_KMeans_covtype20x_fvec(self):
         print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
-        gs = h2o.nodes[0].gap_statistic(source=hex_key, k_max=8)
-        print 'gap_statistic:', h2o.dump_json(gs)
