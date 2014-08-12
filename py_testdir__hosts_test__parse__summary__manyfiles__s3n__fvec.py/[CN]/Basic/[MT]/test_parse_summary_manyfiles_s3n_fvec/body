@@ -1,9 +1,9 @@
 def test_parse_summary_manyfiles_s3n_fvec(self):
     h2o.beta_features = True
-    csvDirlist = [('manyfiles-nflx-gz', 600)]
+    csvDirlist = [('manyfiles-nflx-gz', 1200)]
     trial = 0
     for (csvDirname, timeoutSecs) in csvDirlist:
-        csvPathname = (csvDirname + '/file_[2][0-9][0-9].dat.gz')
+        csvPathname = (csvDirname + '/file_[2][0-4][0-9].dat.gz')
         (importHDFSResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='s3n', timeoutSecs=timeoutSecs)
         print '\nTrying StoreView after the import hdfs'
         h2o_cmd.runStoreView(timeoutSecs=120)

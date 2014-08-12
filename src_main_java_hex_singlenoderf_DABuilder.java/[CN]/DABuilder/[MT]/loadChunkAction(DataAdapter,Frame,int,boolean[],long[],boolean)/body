@@ -1,6 +1,7 @@
 {
   return new RecursiveAction(){
     @Override protected void compute(){
+      if (dapt._jobKey != null && !Job.isRunning(dapt._jobKey))       throw new Job.JobCancelledException();
       try {
         Chunk[] chks=new Chunk[fr.numCols()];
         int ncolumns=chks.length;
@@ -8,6 +9,7 @@
           chks[i]=fr.vecs()[i].chunkForChunkIdx(cidx);
         }
         for (int j=0; j < chks[0]._len; ++j) {
+          if (dapt._jobKey != null && !Job.isRunning(dapt._jobKey))           throw new Job.JobCancelledException();
           int rowNum=(int)chks[0]._start + j;
           boolean rowIsValid=false;
           for (int c=0; c < chks.length; ++c) {
@@ -38,7 +40,6 @@
         }
       }
  catch (      Throwable t) {
-        t.printStackTrace();
       }
     }
   }
