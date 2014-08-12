@@ -30,5 +30,8 @@
       Log.info(Sys.RANDF,_tree.toString(sb,Integer.MAX_VALUE).toString());
     }
   }
+ else {
+    if (_jobKey != null && !Job.isRunning(_jobKey))     throw new Job.JobCancelledException();
+  }
   tryComplete();
 }
