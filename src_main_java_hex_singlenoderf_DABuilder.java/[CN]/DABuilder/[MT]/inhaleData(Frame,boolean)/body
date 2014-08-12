@@ -38,7 +38,9 @@
   SpeeDRF.DRFTask.updateRFModelStatus(_rfModel,"Inhaling Data.");
   Log.info(Log.Tag.Sys.RANDF,"Beginning Random Forest Inhale.");
   ForkJoinTask.invokeAll(dataInhaleJobs);
+  if (dapt._jobKey != null && !Job.isRunning(dapt._jobKey))   throw new Job.JobCancelledException();
   dapt.shrink();
+  if (dapt._jobKey != null && !Job.isRunning(dapt._jobKey))   throw new Job.JobCancelledException();
   Log.info(Log.Tag.Sys.RANDF,"Inhale done in " + t_inhale);
   return dapt;
 }
