@@ -1,0 +1,23 @@
+{
+  _result=new byte[H2O.CLOUD._memary.length][];
+  int idx=H2O.SELF.index();
+  baos=new ByteArrayOutputStream();
+  ZipOutputStream zos=new ZipOutputStream(baos);
+  try {
+    zipDir(Log.LOG_DIR,zos);
+  }
+ catch (  IOException e) {
+    H2O.ignore(e);
+  }
+ finally {
+    try {
+      zos.close();
+      baos.close();
+    }
+ catch (    Exception xe) {
+    }
+    byte[] arr=baos.toByteArray();
+    _result[idx]=arr;
+    tryComplete();
+  }
+}

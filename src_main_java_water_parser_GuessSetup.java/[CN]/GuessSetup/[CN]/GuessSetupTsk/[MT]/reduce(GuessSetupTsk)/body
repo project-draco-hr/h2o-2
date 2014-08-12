@@ -1,8 +1,16 @@
 {
+  if (drt._empty)   return;
   if (_gSetup == null || !_gSetup._isValid) {
+    _empty=false;
     _gSetup=drt._gSetup;
-    _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
-    _gSetup._setupFromFile=drt._gSetup._setupFromFile;
+    if (_gSetup == null)     System.out.println("haha");
+    try {
+      _gSetup._hdrFromFile=drt._gSetup._hdrFromFile;
+      _gSetup._setupFromFile=drt._gSetup._setupFromFile;
+    }
+ catch (    Throwable t) {
+      t.printStackTrace();
+    }
   }
  else   if (drt._gSetup._isValid && !_gSetup._setup.isCompatible(drt._gSetup._setup)) {
     if (_conflicts.contains(_gSetup._setupFromFile) && !drt._conflicts.contains(drt._gSetup._setupFromFile)) {

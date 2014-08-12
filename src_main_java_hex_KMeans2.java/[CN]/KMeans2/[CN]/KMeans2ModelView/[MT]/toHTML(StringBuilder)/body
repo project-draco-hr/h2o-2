@@ -1,5 +1,5 @@
 {
-  if (model != null) {
+  if (model != null && model.centers != null && model.within_cluster_variances != null) {
     model.parameters.makeJsonBox(sb);
     DocGen.HTML.section(sb,"Cluster Centers: ");
     table(sb,"Clusters",model._names,model.centers);

@@ -149,10 +149,10 @@
                                         threshold=aucd.threshold();
                                         error=aucd.err();
                                         Log.info(sb);
-                                        Assert.assertTrue(aucd.AUC > 0.75);
-                                        Assert.assertTrue(aucd.AUC < 0.9);
+                                        Assert.assertTrue(aucd.AUC > 0.7);
+                                        Assert.assertTrue(aucd.AUC < 0.95);
                                         Assert.assertTrue(aucd.threshold() > 0.1);
-                                        Assert.assertTrue(aucd.threshold() < 0.6);
+                                        Assert.assertTrue(aucd.threshold() < 0.7);
                                         Assert.assertEquals(new ConfusionMatrix(aucd.cm()).err(),error,1e-15);
                                         Assert.assertEquals(mymodel.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
                                       }
@@ -174,7 +174,7 @@
                                       pred2=new Frame(Key.make("pred2"),pred.names(),pred.vecs());
                                       pred2.delete_and_lock(null);
                                       pred2.unlock(null);
-                                      if (mymodel.nclasses() == 2 && false) {
+                                      if (mymodel.nclasses() == 2) {
                                         Env ev=Exec2.exec("pred2[,1]=pred2[,3]>=" + 0.5);
                                         try {
                                           pred2=ev.popAry();
