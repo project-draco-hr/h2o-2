@@ -4,12 +4,12 @@ def test_rf_covtype_fvec(self):
     csvTrainFilename = 'covtype.data'
     csvTrainPathname = ((importFolderPath + '/') + csvTrainFilename)
     hex_key = (csvTrainFilename + '.hex')
-    parseTrainResult = h2i.import_parse(bucket='home-0xdiag-imitation', path=csvTrainPathname, hex_key=hex_key, timeoutSecs=180, doSummary=False)
+    parseTrainResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvTrainPathname, hex_key=hex_key, timeoutSecs=180, doSummary=False)
     inspect = h2o_cmd.runInspect(None, parseTrainResult['destination_key'])
     csvTestFilename = 'covtype.data'
     csvTestPathname = ((importFolderPath + '/') + csvTestFilename)
     hex_key = (csvTestFilename + '.hex')
-    parseTestResult = h2i.import_parse(bucket='home-0xdiag-imitation', path=csvTestPathname, hex_key=hex_key, timeoutSecs=180)
+    parseTestResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvTestPathname, hex_key=hex_key, timeoutSecs=180)
     inspect = h2o_cmd.runInspect(None, parseTestResult['destination_key'])
     rfViewInitial = []
     xList = []
