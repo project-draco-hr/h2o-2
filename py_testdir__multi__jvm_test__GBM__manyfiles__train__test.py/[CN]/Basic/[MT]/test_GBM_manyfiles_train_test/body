@@ -22,13 +22,13 @@ def test_GBM_manyfiles_train_test(self):
         numRows = inspect['numRows']
         numCols = inspect['numCols']
         execExpr = ('%s[,378+1]=%s[,378+1]>15' % (trainKey, trainKey))
-        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=120)
+        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=300)
         parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, doSummary=False)
         elapsed = (time.time() - start)
         print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'test parse result:', parseTestResult['destination_key']
         execExpr = ('%s[,378+1]=%s[,378+1]>15' % (testKey, testKey))
-        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=120)
+        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=300)
         response = 378
         x = range(numCols)
         del x[response]
