@@ -9,7 +9,7 @@ def test_bayes_and2(self):
         colX = h2o_util.pickRandParams(paramDict, params)
         kwargs = params.copy()
         timeoutSecs = 120
-        execExpr = 'covtype.hex[,54+1] = factor(covtype.hex[,54+1])'
+        execExpr = 'covtype.hex[,54+1] = factor(covtype.hex[,54+1] != 5)'
         (resultExec, ncols) = h2e.exec_expr(execExpr=execExpr)
         start = time.time()
         bayesResult = h2o.nodes[0].naive_bayes(timeoutSecs=timeoutSecs, source='covtype.hex', **kwargs)
