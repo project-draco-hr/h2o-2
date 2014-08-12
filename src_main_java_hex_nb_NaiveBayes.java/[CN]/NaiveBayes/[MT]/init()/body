@@ -1,4 +1,6 @@
 {
   super.init();
   if (!response.isEnum())   throw new IllegalArgumentException("Response must be a categorical column");
+  if (laplace < 0)   throw new IllegalArgumentException("Laplace smoothing must be an integer >= 0.");
+  if (min_std_dev <= 1e-10)   throw new IllegalArgumentException("Min. standard deviation must be at least 1e-10.");
 }
