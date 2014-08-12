@@ -35,5 +35,6 @@ def test_csv_download_libsvm(self):
         self.assertEqual(missingValuesListA, missingValuesListB, 'missingValuesList mismatches after re-parse of downloadCsv result')
         self.assertEqual(numColsA, numColsB, ('numCols mismatches after re-parse of downloadCsv result %d %d' % (numColsA, numColsB)))
         self.assertEqual(numRowsA, numRowsB, ('numRows mismatches after re-parse of downloadCsv result %d %d' % (numRowsA, numRowsB)))
-        self.assertEqual(byteSizeA, byteSizeB, ('byteSize mismatches after re-parse of downloadCsv result %d %d' % (byteSizeA, byteSizeB)))
+        if DO_BYTESIZE_COMPARE:
+            self.assertEqual(byteSizeA, byteSizeB, ('byteSize mismatches after re-parse of downloadCsv result %d %d' % (byteSizeA, byteSizeB)))
         h2o.check_sandbox_for_errors()
