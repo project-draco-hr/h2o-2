@@ -21,6 +21,7 @@
       _tree=new FJBuild(spl,d,0,_seed).compute();
     }
     _stats=null;
+    if (_jobKey != null && !Job.isRunning(_jobKey))     throw new Job.JobCancelledException();
     Key tkey=toKey();
     appendKey(_modelKey,tkey,_verbose > 10 ? _tree.toString(new StringBuilder(""),Integer.MAX_VALUE).toString() : "",_data_id);
     StringBuilder sb=new StringBuilder("[RF] Tree : ").append(_data_id + 1);
@@ -30,5 +31,6 @@
       Log.info(Sys.RANDF,_tree.toString(sb,Integer.MAX_VALUE).toString());
     }
   }
+ else   throw new Job.JobCancelledException();
   tryComplete();
 }
