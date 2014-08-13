@@ -3,7 +3,7 @@
 synchronized (_lock) {
       if (_s3 == null) {
         try {
-          _s3=new AmazonS3Client(H2O.getAWSCredentials(),s3ClientCfg());
+          _s3=new AmazonS3Client(new H2OAWSCredentialsProviderChain(),s3ClientCfg());
         }
  catch (        Throwable e) {
           StringBuilder msg=new StringBuilder();
