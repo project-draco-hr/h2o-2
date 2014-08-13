@@ -40,7 +40,6 @@
       ++num_processed_rows;
       int i=0, ncats=0;
       for (; i < _dinfo._cats; ++i) {
-        assert(!chunks[i].isNA0(r));
         int c=(int)chunks[i].at80(r);
         if (_dinfo._catLvls != null) {
           c=Arrays.binarySearch(_dinfo._catLvls[i],c);
