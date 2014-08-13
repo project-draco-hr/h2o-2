@@ -12,6 +12,5 @@
     errs[errs.length - 1]=confusion.mse();
     cms[cms.length - 1]=new ConfusionMatrix(confusion._matrix);
     if (classes() == 2)     validAUC=makeAUC(toCMArray(confusion._cms),ModelUtils.DEFAULT_THRESHOLDS,cmDomain);
-    if (importance && !regression)     varimp=doVarImpCalc(fr,this,modelResp);
   }
 }
