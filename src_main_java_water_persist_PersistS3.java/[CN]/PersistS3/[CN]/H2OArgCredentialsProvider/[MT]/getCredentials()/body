@@ -1,0 +1,9 @@
+{
+  File credentials=new File(Objects.firstNonNull(H2O.OPT_ARGS.aws_credentials,DEFAULT_CREDENTIALS_LOCATION));
+  try {
+    return new PropertiesCredentials(credentials);
+  }
+ catch (  IOException e) {
+    throw new AmazonClientException("Unable to load AWS credentials from file " + credentials);
+  }
+}
