@@ -3,9 +3,9 @@ def test_parse_header_rows_mismatch_fvec(self):
     csvFilename = 'syn_ints.csv'
     csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
     headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL'
-    totalCols = 8
+    inputCols = 8
     totalRows = 10000
-    rList = rand_rowData(totalCols)
+    rList = rand_rowData(inputCols)
     write_syn_dataset(csvPathname, totalRows, headerData, rList)
     for trial in range(2):
         src_key = ((csvFilename + '_') + str(trial))
@@ -18,7 +18,8 @@ def test_parse_header_rows_mismatch_fvec(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
-        self.assertEqual(inspect['numCols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['numCols'], totalCols)))
+        expectedCols = (inputCols + 1)
+        self.assertEqual(inspect['numCols'], expectedCols, ('parse created result with the wrong number of cols %s %s' % (inspect['numCols'], expectedCols)))
         self.assertEqual(inspect['numRows'], totalRows, ("parse created result with the wrong number of rows (header shouldn't count) %s %s" % (inspect['numRows'], totalRows)))
         kwargs = {'sample_rate': 0.75, 'max_depth': 25, 'ntrees': 1, }
         start = time.time()
