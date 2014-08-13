@@ -1,9 +1,7 @@
-def rand_rowData(totalCols):
-    rowData1 = str(random.randint(0, 7))
-    for i in range(totalCols):
-        rowData1 = ((rowData1 + ',') + str(random.randint(0, 7)))
-    rowData2 = str(random.randint(0, 7))
-    for i in range(totalCols):
-        rowData2 = ((rowData2 + ',') + str(random.randint(0, 7)))
-    r = [rowData1, rowData2]
+def rand_rowData(inputCols):
+    rowData1 = [str(random.randint(0, 7)) for i in range(inputCols)]
+    rowData2 = [str(random.randint(0, 7)) for i in range(inputCols)]
+    r = [','.join(rowData1), ','.join(rowData2)]
+    print '\nrandom row 0:', r[0]
+    print 'random row 1:', r[1]
     return r

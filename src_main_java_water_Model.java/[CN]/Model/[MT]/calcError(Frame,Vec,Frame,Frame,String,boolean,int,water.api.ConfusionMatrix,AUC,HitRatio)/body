@@ -26,7 +26,9 @@
         cm.cm[1][0]=aucd.cm()[1][0];
         cm.cm[0][1]=aucd.cm()[0][1];
         cm.cm[1][1]=aucd.cm()[1][1];
-        assert(new hex.ConfusionMatrix(cm.cm).err() == aucd.err());
+        double cm_err=new hex.ConfusionMatrix(cm.cm).err();
+        double auc_err=aucd.err();
+        if (!(Double.isNaN(cm_err) && Double.isNaN(auc_err)))         assert(cm_err == auc_err);
       }
  else {
         error=new hex.ConfusionMatrix(cm.cm).err();

@@ -23,7 +23,7 @@ def test_GBM_manyfiles_multijob(self):
         execExpr = ('%s[,378+1]=%s[,378+1]>15' % (trainKey, trainKey))
         if (not DO_FAIL):
             execExpr += ('; factor(%s[, 378+1]);' % trainKey)
-        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=60)
+        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=180)
         csvPathname = ((importFolderPath + '/') + testFilename)
         parseTestResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, doSummary=False)
         elapsed = (time.time() - start)
@@ -32,7 +32,7 @@ def test_GBM_manyfiles_multijob(self):
         execExpr = ('%s[,378+1]=%s[,378+1]>15' % (testKey, testKey))
         if (not DO_FAIL):
             execExpr += ('; factor(%s[, 378+1]);' % testKey)
-        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=60)
+        resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=180)
         response = 378
         x = range(numCols)
         del x[response]
