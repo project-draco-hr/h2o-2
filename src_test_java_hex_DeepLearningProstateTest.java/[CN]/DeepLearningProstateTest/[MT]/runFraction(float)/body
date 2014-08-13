@@ -88,6 +88,7 @@
                               }
                               mymodel=UKV.get(dest);
                               Assert.assertTrue(mymodel.get_params().state == Job.JobState.DONE);
+                              Assert.assertTrue(mymodel.model_info().get_processed_total() >= epochs * 0.99 * frame.numRows());
 {
                                 StringBuilder sb=new StringBuilder();
                                 mymodel.generateHTML("test",sb);
