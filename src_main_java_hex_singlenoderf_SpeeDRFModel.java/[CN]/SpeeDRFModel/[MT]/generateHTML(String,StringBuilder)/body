@@ -17,7 +17,7 @@
   sb.append("</pre>");
   if (this.size() > 0 && this.size() < N)   sb.append("Current Status: ").append("Building Random Forest");
  else {
-    if (this.size() == N) {
+    if (this.size() == N && !this.current_status.equals("Performing Variable Importance Calculation.")) {
       sb.append("Current Status: ").append("Complete.");
     }
  else {
@@ -37,13 +37,8 @@
  else     sb.append("<div class=\"alert\">Reported on ").append(oobee ? "OOB data" : "training").append(" data</div>");
   }
   if (!regression) {
-    if (confusion != null && confusion.valid() && (this.N * .25 > 0) && classes() > 2) {
-      buildCM(sb);
-    }
- else {
-      if (this.cms[this.cms.length - 1] != null && (this.N * .25 > 0 && classes() > 2)) {
-        this.cms[this.cms.length - 1].toHTML(sb,this.cmDomain);
-      }
+    if (this.cms[this.cms.length - 1] != null && (this.N * .25 > 0 && classes() >= 2)) {
+      this.cms[this.cms.length - 1].toHTML(sb,this.cmDomain);
     }
   }
   sb.append("<br />");

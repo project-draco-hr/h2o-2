@@ -15,8 +15,17 @@
     DRFTask tsk=new DRFTask(self(),train,drfParams,model._key);
     tsk.validateInputData(train);
     tsk.invokeOnAllNodes();
+    Log.info("Tree building complete. Scoring...");
     model=UKV.get(dest());
     model.scoreAllTrees(test == null ? train : test,resp);
+    if (importance && !regression) {
+      Log.info("Scoring complete. Performing Variable Importance Calculations.");
+      model.current_status="Performing Variable Importance Calculation.";
+      Timer VITimer=new Timer();
+      model.variableImportanceCalc(train,resp);
+      Log.info("Variable Importance on " + (train.numCols() - 1) + " variables and "+ ntrees+ " trees done in "+ VITimer);
+    }
+    model.current_status="Model Complete";
   }
   finally {
     if (model != null) {

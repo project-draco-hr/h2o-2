@@ -15,6 +15,9 @@ def test_binary_classifiers(self):
             compatible_frames = models['models'][model_key]['compatible_frames']
             self.assertKeysExist(models, ('models/' + model_key), ['training_duration_in_ms'])
             self.assertNotEqual(models['models'][model_key]['training_duration_in_ms'], 0, ('Expected non-zero training time for model: ' + model_key))
+            if (models['models'][model_key]['model_algorithm'] != 'Naive Bayes'):
+                self.assertKeysExistAndNonNull(models, ('models/' + model_key), ['variable_importances'])
+                self.assertKeysExistAndNonNull(models, (('models/' + model_key) + '/variable_importances'), ['varimp', 'method', 'max_var', 'scaled'])
             for frame_key in compatible_frames:
                 print ((('Scoring: /2/Models?key=' + model_key) + '&score_frame=') + frame_key)
                 scoring_result = node.models(key=model_key, score_frame=frame_key)
