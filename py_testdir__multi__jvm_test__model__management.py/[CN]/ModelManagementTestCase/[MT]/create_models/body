@@ -45,7 +45,7 @@ def create_models(self, frame_keys):
     print '#####################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model. . .'
     before = (time.time() * 1000)
-    speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
+    speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, }
     speedrf_AirlinesTrain_1 = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_1_params)
     durations['speedrf_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
@@ -89,7 +89,7 @@ def create_models(self, frame_keys):
     print '#####################################################################'
     print 'Generating Prostate complex SpeeDRF binary classification model. . .'
     before = (time.time() * 1000)
-    speedrf_Prostate_1_params = {'destination_key': 'speedrf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
+    speedrf_Prostate_1_params = {'destination_key': 'speedrf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, }
     speedrf_Prostate_1 = node.speedrf(prostate_hex, **speedrf_Prostate_1_params)
     num_models = (num_models + 1)
     durations['speedrf_Prostate_binary_1'] = ((time.time() * 1000) - before)
