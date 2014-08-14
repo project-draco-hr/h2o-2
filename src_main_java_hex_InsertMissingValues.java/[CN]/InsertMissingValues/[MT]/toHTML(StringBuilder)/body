@@ -1,0 +1,10 @@
+{
+  Frame fr=UKV.get(key);
+  if (fr == null) {
+    return false;
+  }
+  RString aft=new RString("<a href='Inspect2.html?src_key=%$key'>%key</a>");
+  aft.replace("key",key);
+  DocGen.HTML.section(sb,"Inserted missing values into frame '" + aft.toString() + " done.");
+  return true;
+}

@@ -1,0 +1,15 @@
+{
+  try {
+    if (missing_fraction == 0)     throw new IllegalArgumentException("Missing fraction must be larger than 0.");
+    if (Math.abs(missing_fraction) > 1)     throw new IllegalArgumentException("Missing fraction must be between 0 and 1.");
+    if (key == null)     throw new IllegalArgumentException("A valid key must be provided.");
+    Frame fr=UKV.get(key);
+    if (fr == null)     throw new IllegalArgumentException("Frame " + key + " not found.");
+    new FrameCreator.MissingInserter(seed,missing_fraction).doAll(fr);
+    Log.info("Modified frame '" + key + "' : added "+ missing_fraction * 100 + "% missing values.");
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+}
