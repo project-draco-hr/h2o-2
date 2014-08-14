@@ -25,12 +25,12 @@
                   for (                  int scoretraining : new int[]{200,0}) {
                     for (                    int scorevalidation : new int[]{200,0}) {
                       for (                      int vf : new int[]{0,1,-1}) {
-                        for (                        int n_folds : new int[]{2}) {
+                        for (                        int n_folds : new int[]{0}) {
                           if (n_folds != 0 && vf != 0)                           continue;
                           for (                          boolean keep_cv_splits : new boolean[]{false}) {
                             for (                            boolean override_with_best_model : new boolean[]{false,true}) {
                               for (                              int train_samples_per_iteration : new int[]{-1,0,rng.nextInt(100),500}) {
-                                DeepLearningModel mymodel=null;
+                                DeepLearningModel model1=null, model2=null;
                                 Key dest=null, dest_tmp=null;
                                 count++;
                                 if (fraction < rng.nextFloat())                                 continue;
@@ -43,7 +43,7 @@
                                   Frame valid=null;
                                   if (vf == 1)                                   valid=frame;
  else                                   if (vf == -1)                                   valid=vframe;
-                                  dest_tmp=Key.make();
+                                  dest_tmp=Key.make("first");
 {
                                     Log.info("Using seed: " + seed);
                                     DeepLearning p=new DeepLearning();
@@ -77,17 +77,18 @@
                                       t.printStackTrace();
                                       throw new RuntimeException(t);
                                     }
+                                    model1=UKV.get(dest_tmp);
                                     if (n_folds != 0) {
                                       for (                                      Key k : p.xval_models) {
                                         DeepLearningModel cv_model=UKV.get(k);
                                         StringBuilder sb=new StringBuilder();
                                         cv_model.generateHTML("cv",sb);
+                                        UKV.remove(k);
                                       }
-                                      mymodel=UKV.get(dest_tmp);
-                                      if (mymodel != null)                                       mymodel.delete_xval_models();
                                     }
                                   }
-                                  dest=Key.make();
+                                  Key best1=model1.actual_best_model_key;
+                                  dest=Key.make("restart");
                                   DeepLearning p=new DeepLearning();
                                   final DeepLearningModel tmp_model=UKV.get(dest_tmp);
                                   Assert.assertTrue(tmp_model.get_params().state == Job.JobState.DONE);
@@ -111,33 +112,34 @@
                                     t.printStackTrace();
                                     throw new RuntimeException(t);
                                   }
-                                  mymodel=UKV.get(dest);
-                                  Assert.assertTrue(mymodel.get_params().state == Job.JobState.DONE);
+                                  model2=UKV.get(dest);
+                                  Assert.assertTrue(model2.get_params().state == Job.JobState.DONE);
 {
                                     StringBuilder sb=new StringBuilder();
-                                    mymodel.generateHTML("test",sb);
+                                    model2.generateHTML("test",sb);
                                   }
-                                  if (mymodel.actual_best_model_key != null) {
-                                    final DeepLearningModel best_model=UKV.get(mymodel.actual_best_model_key);
+                                  if (model2.actual_best_model_key != null) {
+                                    final DeepLearningModel best_model=UKV.get(model2.actual_best_model_key);
                                     Assert.assertTrue(best_model.get_params().state == Job.JobState.DONE);
 {
                                       StringBuilder sb=new StringBuilder();
                                       best_model.generateHTML("test",sb);
                                     }
                                     if (override_with_best_model) {
-                                      Assert.assertEquals(best_model.error(),mymodel.error(),0);
+                                      Assert.assertEquals(best_model.error(),model2.error(),0);
                                     }
+                                    UKV.remove(model2.actual_best_model_key);
                                   }
                                   if (valid == null)                                   valid=frame;
                                   double threshold=0;
-                                  if (mymodel.isClassifier()) {
+                                  if (model2.isClassifier()) {
                                     Frame pred=null, pred2=null;
                                     try {
-                                      pred=mymodel.score(valid);
+                                      pred=model2.score(valid);
                                       StringBuilder sb=new StringBuilder();
                                       AUC auc=new AUC();
                                       double error=0;
-                                      if (mymodel.nclasses() == 2) {
+                                      if (model2.nclasses() == 2) {
                                         auc.actual=valid;
                                         assert(resp == 1);
                                         auc.vactual=valid.vecs()[resp];
@@ -154,7 +156,7 @@
                                         Assert.assertTrue(aucd.threshold() > 0.1);
                                         Assert.assertTrue(aucd.threshold() < 0.7);
                                         Assert.assertEquals(new ConfusionMatrix(aucd.cm()).err(),error,1e-15);
-                                        Assert.assertEquals(mymodel.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
+                                        Assert.assertEquals(model2.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
                                       }
                                       double CMerrorOrig;
 {
@@ -174,7 +176,7 @@
                                       pred2=new Frame(Key.make("pred2"),pred.names(),pred.vecs());
                                       pred2.delete_and_lock(null);
                                       pred2.unlock(null);
-                                      if (mymodel.nclasses() == 2) {
+                                      if (model2.nclasses() == 2) {
                                         Env ev=Exec2.exec("pred2[,1]=pred2[,3]>=" + 0.5);
                                         try {
                                           pred2=ev.popAry();
@@ -224,6 +226,7 @@
   finally {
                                       if (pred != null)                                       pred.delete();
                                       if (pred2 != null)                                       pred2.delete();
+                                      if (best1 != null)                                       DKV.remove(best1);
                                     }
                                   }
                                   Log.info("Parameters combination " + count + ": PASS");
@@ -234,7 +237,16 @@
                                   throw new RuntimeException(t);
                                 }
  finally {
-                                  if (mymodel != null)                                   mymodel.delete();
+                                  if (model1 != null) {
+                                    model1.delete_best_model();
+                                    model1.delete_xval_models();
+                                    model1.delete();
+                                  }
+                                  if (model2 != null) {
+                                    model2.delete_best_model();
+                                    model2.delete_xval_models();
+                                    model2.delete();
+                                  }
                                   if (dest != null)                                   UKV.remove(dest);
                                   if (dest_tmp != null)                                   UKV.remove(dest_tmp);
                                 }
