@@ -54,7 +54,7 @@
           throw new RuntimeException(t);
         }
  finally {
-          if (p != null)           p.delete();
+          p.delete();
         }
         mymodel=UKV.get(p.dest());
         DeepLearningModel.Errors[] errs=mymodel.scoring_history();
