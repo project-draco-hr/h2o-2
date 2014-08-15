@@ -1,0 +1,10 @@
+{
+  if (_ti[yi] > (_newThresholds.length >> 1)) {
+    Arrays.sort(_newThresholds[yi]);
+    for (int i=0; i < _ti[yi]; i+=2) {
+      _newThresholds[yi][i >> 1]=_newThresholds[yi][i];
+    }
+    _ti[yi]=_newThresholds.length >> 1;
+    for (int i=_ti[yi]; i < _newThresholds[yi].length; ++i)     _newThresholds[yi][i]=Float.POSITIVE_INFINITY;
+  }
+}
