@@ -26,6 +26,10 @@
     hb._keys=(H2O.STORE.size());
     hb.set_valsz(myHisto.histo(false)._cached);
     hb._num_cpus=(char)run.availableProcessors();
+    if (counter % 300 == 2) {
+      hb._gflops=Linpack.run(hb._cpus_allowed);
+      hb._membw=MemoryBandwidth.run(hb._cpus_allowed);
+    }
     Object load=null;
     try {
       load=mbs.getAttribute(os,"SystemLoadAverage");
@@ -59,6 +63,7 @@
       hb._process_total_ticks=-1;
       hb._process_num_open_fds=-1;
     }
+    hb._cpus_allowed=lpfr.getProcessCpusAllowed();
     hb._pid=lpfr.getProcessID();
     UDPHeartbeat.build_and_multicast(cloud,hb);
     long now=System.currentTimeMillis();

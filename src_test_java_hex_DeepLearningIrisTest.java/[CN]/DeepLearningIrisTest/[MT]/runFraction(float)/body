@@ -107,6 +107,7 @@
                             p.shuffle_training_data=false;
                             p.classification_stop=-1;
                             p.force_load_balance=false;
+                            p.override_with_best_model=false;
                             p.replicate_training_data=false;
                             p.single_node_mode=true;
                             p.sparse=sparse;
@@ -129,6 +130,7 @@
                             }
                             ref.train((int)p.epochs,rate,p.momentum_stable,loss);
                             mymodel=p.trainModel(mymodel);
+                            Assert.assertTrue(mymodel.model_info().get_processed_total() == epoch * fr.numRows());
                             final double abseps=1e-4;
                             final double releps=1e-4;
                             neurons=DeepLearningTask.makeNeuronsForTesting(mymodel.model_info());
@@ -203,7 +205,10 @@
                             Log.info("Parameters combination " + num_runs + ": PASS");
                           }
   finally {
-                            if (mymodel != null)                             mymodel.delete();
+                            if (mymodel != null) {
+                              mymodel.delete_best_model();
+                              mymodel.delete();
+                            }
                             if (_train != null)                             _train.delete();
                             if (_test != null)                             _test.delete();
                             if (frame != null)                             frame.delete();

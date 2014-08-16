@@ -36,11 +36,11 @@
       final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
       final long lr=r + chunks[0]._start;
       if ((_dinfo._nfolds > 0 && (lr % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))       continue;
-      for (      Chunk c : chunks)       if (c.isNA0(r))       continue OUTER;
       ++num_processed_rows;
+      for (      Chunk c : chunks)       if (skipMissing() && c.isNA0(r))       continue OUTER;
       int i=0, ncats=0;
       for (; i < _dinfo._cats; ++i) {
-        int c=(int)chunks[i].at80(r);
+        int c=chunks[i].isNA0(r) ? 0 : (int)chunks[i].at80(r);
         if (_dinfo._catLvls != null) {
           c=Arrays.binarySearch(_dinfo._catLvls[i],c);
           if (c >= 0)           cats[ncats++]=c + _dinfo._catOffsets[i];
@@ -57,6 +57,7 @@
       for (i=0; i < _dinfo._responses; ++i) {
         response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
         if (_dinfo._normRespMul != null)         response[i]=(response[i] - _dinfo._normRespSub[i]) * _dinfo._normRespMul[i];
+        if (Double.isNaN(response[i]))         continue OUTER;
       }
       long seed=offset + rrr * (end - start) + r;
       if (outputs != null && outputs.length > 0)       processRow(seed,nums,ncats,cats,response,outputs);

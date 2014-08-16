@@ -3,6 +3,7 @@
   Frame f1=null, f2=null, f3=null;
   try {
     files=ImportFiles2.importPath("smalldata/parse_folder_test");
+    new GuessSetup.GuessSetupTsk(new CustomParser.ParserSetup(),true).invoke(files);
     f1=ParseDataset2.parse(Key.make("multifile"),files);
     files2=ImportFiles2.importPath("smalldata/glm_test/prostate_cat_replaced.csv");
     f3=ParseDataset2.parse(Key.make("singleFile"),files2);
