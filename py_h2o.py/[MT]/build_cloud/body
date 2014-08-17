@@ -52,7 +52,7 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
         verify_cloud_size(nodeList)
         check_sandbox_for_errors(python_test_name=python_test_name)
     except:
-        if cleanup:
+        if (cleanup and nodeList):
             for n in nodeList:
                 n.terminate()
         else:
