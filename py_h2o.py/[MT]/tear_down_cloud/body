@@ -7,9 +7,13 @@ def tear_down_cloud(nodeList=None, sandboxIgnoreErrors=False):
     if (not nodeList):
         nodeList = nodes
     try:
-        for n in nodeList:
-            n.terminate()
-            verboseprint('tear_down_cloud n:', n)
+        if (1 == 0):
+            for n in nodeList:
+                n.terminate()
+                verboseprint('tear_down_cloud n:', n)
+        else:
+            nodeList[0].terminate()
+            verboseprint('h2o shutdown using node 0:')
     finally:
         check_sandbox_for_errors(sandboxIgnoreErrors=sandboxIgnoreErrors, python_test_name=python_test_name)
         nodeList[:] = []
