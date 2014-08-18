@@ -6,7 +6,8 @@ def test_rf_params_rand2_fvec(self):
         params = {'response': 'C55', 'ntrees': 1, 'mtries': 7, 'balance_classes': 0, 'importance': 0, }
         colX = h2o_util.pickRandParams(paramDict, params)
         if (('cols' in params) and params['cols']):
-            pass
+            if ('ignored_cols_by_name' in params):
+                params['ignored_cols_by_name'] = None
         elif (('ignored_cols_by_name' in params) and params['ignored_cols_by_name']):
             params['mtries'] = random.randint(1, 53)
         else:
