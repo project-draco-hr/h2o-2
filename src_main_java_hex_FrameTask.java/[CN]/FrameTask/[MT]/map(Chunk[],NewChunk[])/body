@@ -40,7 +40,7 @@
       for (      Chunk c : chunks)       if (skipMissing() && c.isNA0(r))       continue OUTER;
       int i=0, ncats=0;
       for (; i < _dinfo._cats; ++i) {
-        int c=chunks[i].isNA0(r) ? 0 : (int)chunks[i].at80(r);
+        int c=chunks[i].isNA0(r) ? _dinfo._catOffsets[i + 1] - _dinfo._catOffsets[i] - 1 : (int)chunks[i].at80(r);
         if (_dinfo._catLvls != null) {
           c=Arrays.binarySearch(_dinfo._catLvls[i],c);
           if (c >= 0)           cats[ncats++]=c + _dinfo._catOffsets[i];
