@@ -1,0 +1,63 @@
+def process(self):
+    self.set_state(STATE_NONE)
+    examples_lines = 0
+    found_examples = False
+    injected_dontrun = False
+    found_dontrun = False
+    found_dontrun_closebrace = False
+    f = open(os.path.join(self.dir_name, self.file_name), 'r')
+    self.of = open(os.path.join(self.new_dir_name, self.file_name), 'w')
+    s = f.readline()
+    while (len(s) > 0):
+        self.lineno = (self.lineno + 1)
+        if (self.state == STATE_IN_EXAMPLES):
+            examples_lines = (examples_lines + 1)
+        match_groups = re.search('^\\\\examples{', s)
+        if (match_groups is not None):
+            if (self.state == STATE_IN_EXAMPLES):
+                self.parse_error('examples may not be in examples')
+            self.set_state(STATE_IN_EXAMPLES)
+            found_examples = True
+            self.emit_line(s)
+            s = f.readline()
+            continue
+        match_groups = re.search('^\\\\dontrun{', s)
+        if (match_groups is not None):
+            if (self.state != STATE_IN_EXAMPLES):
+                self.parse_error('dontrun must be in examples')
+            if found_dontrun:
+                self.parse_error('only one dontrun section is supported')
+            if injected_dontrun:
+                self.inject_line('}')
+                injected_dontrun = False
+            self.set_state(STATE_IN_DONTRUN)
+            found_dontrun = True
+            self.emit_line(s)
+            s = f.readline()
+            continue
+        match_groups = re.search('^}', s)
+        if (found_examples and (match_groups is not None)):
+            if (self.state == STATE_IN_EXAMPLES):
+                if injected_dontrun:
+                    self.inject_line('}')
+                    injected_dontrun = False
+                self.set_state(STATE_NONE)
+            elif (self.state == STATE_IN_DONTRUN):
+                self.set_state(STATE_IN_EXAMPLES)
+                found_dontrun_closebrace = True
+            else:
+                self.parse_error('unaccounted for close brace')
+                sys.exit(1)
+            self.emit_line(s)
+            s = f.readline()
+            continue
+        if found_dontrun_closebrace:
+            self.parse_error('extra stuff after dontrun close brace')
+        if ((self.state == STATE_IN_EXAMPLES) and (not injected_dontrun) and (not found_dontrun)):
+            self.inject_line('\\dontrun{')
+            injected_dontrun = True
+        self.emit_line(s)
+        s = f.readline()
+        continue
+    f.close()
+    self.of.close()

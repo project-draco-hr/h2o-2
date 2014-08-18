@@ -3,6 +3,8 @@ import sys
 import time
 import boto
 import boto.ec2
+iam_profile_resource_name = None
+iam_profile_name = None
 keyName = '0xdata_Big'
 securityGroupName = 'SecurityDisabled'
 numInstancesToLaunch = 3
@@ -37,7 +39,7 @@ if debug:
     boto.set_stream_logger('h2o-ec2')
 ec2 = boto.ec2.connect_to_region(regionName, debug=debug)
 print 'Launching', numInstancesToLaunch, 'instances.'
-reservation = ec2.run_instances(image_id=amiId, min_count=numInstancesToLaunch, max_count=numInstancesToLaunch, key_name=keyName, instance_type=instanceType, security_groups=[securityGroupName], dry_run=dryRun)
+reservation = ec2.run_instances(image_id=amiId, min_count=numInstancesToLaunch, max_count=numInstancesToLaunch, key_name=keyName, instance_type=instanceType, security_groups=[securityGroupName], instance_profile_arn=iam_profile_resource_name, instance_profile_name=iam_profile_name, dry_run=dryRun)
 for i in range(numInstancesToLaunch):
     instance = reservation.instances[i]
     print 'Waiting for instance', (i + 1), 'of', numInstancesToLaunch, '...'

@@ -36,8 +36,8 @@
       final int r=shuf_map != null ? (int)shuf_map[rr - start] : rr;
       final long lr=r + chunks[0]._start;
       if ((_dinfo._nfolds > 0 && (lr % _dinfo._nfolds) == _dinfo._foldId) || (skip_rng != null && skip_rng.nextFloat() > _useFraction))       continue;
-      for (      Chunk c : chunks)       if (skipMissing() && c.isNA0(r))       continue OUTER;
       ++num_processed_rows;
+      for (      Chunk c : chunks)       if (skipMissing() && c.isNA0(r))       continue OUTER;
       int i=0, ncats=0;
       for (; i < _dinfo._cats; ++i) {
         int c=chunks[i].isNA0(r) ? 0 : (int)chunks[i].at80(r);
