@@ -1,0 +1,9 @@
+{
+  final double[] b;
+  if (_lastResult == null) {
+    b=MemoryManager.malloc8d(_activeCols.length);
+    b[b.length - 1]=_glm.linkInv(_ymu);
+  }
+ else   b=resizeVec(_lastResult._glmt._beta,_activeCols,_lastResult._activeCols);
+  return b;
+}
