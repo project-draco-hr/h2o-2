@@ -46,35 +46,35 @@ def create_models(self, frame_keys):
     print '####################################################################'
     print 'Generating AirlinesTrain simple DRF binary classification model. . .'
     before = (time.time() * 1000)
-    rf_AirlinesTrain_1_params = {'destination_key': 'rf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 5, 'max_depth': 2, 'classification': 1, }
+    rf_AirlinesTrain_1_params = {'destination_key': 'rf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 5, 'max_depth': 2, 'classification': 1, 'seed': 1234567890123456789L, }
     rf_AirlinesTrain_1 = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_1_params)
     durations['rf_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex DRF binary classification model. . .'
     before = (time.time() * 1000)
-    rf_AirlinesTrain_2_params = {'destination_key': 'rf_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, }
+    rf_AirlinesTrain_2_params = {'destination_key': 'rf_AirlinesTrain_binary_2', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'seed': 1234567890123456789L, }
     rf_AirlinesTrain_2 = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_2_params)
     durations['rf_AirlinesTrain_binary_2'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     print '###############################################################################################'
     print 'Generating AirlinesTrain simple DRF binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
-    rf_AirlinesTrain_3fold_params = {'destination_key': 'rf_AirlinesTrain_binary_3fold', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 5, 'max_depth': 2, 'classification': 1, 'n_folds': 3, }
+    rf_AirlinesTrain_3fold_params = {'destination_key': 'rf_AirlinesTrain_binary_3fold', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 5, 'max_depth': 2, 'classification': 1, 'seed': 1234567890123456789L, 'n_folds': 3, }
     rf_AirlinesTrain_3fold = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_3fold_params)
     durations['rf_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 4)
     print '#####################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model. . .'
     before = (time.time() * 1000)
-    speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, }
+    speedrf_AirlinesTrain_1_params = {'destination_key': 'speedrf_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, 'seed': 1234567890123456789L, }
     speedrf_AirlinesTrain_1 = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_1_params)
     durations['speedrf_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     print '####################################################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
-    speedrf_AirlinesTrain_3fold_params = {'destination_key': 'speedrf_AirlinesTrain_binary_3fold', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, 'n_folds': 3, }
+    speedrf_AirlinesTrain_3fold_params = {'destination_key': 'speedrf_AirlinesTrain_binary_3fold', 'response': 'IsDepDelayed', 'ignored_cols_by_name': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, 'seed': 1234567890123456789L, 'n_folds': 3, }
     speedrf_AirlinesTrain_3fold = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_3fold_params)
     durations['speedrf_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 4)
@@ -118,14 +118,14 @@ def create_models(self, frame_keys):
     print '###############################################################'
     print 'Generating Prostate simple DRF binary classification model. . .'
     before = (time.time() * 1000)
-    rf_Prostate_1_params = {'destination_key': 'rf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 10, 'max_depth': 5, 'classification': 1, }
+    rf_Prostate_1_params = {'destination_key': 'rf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 10, 'max_depth': 5, 'classification': 1, 'seed': 1234567890123456789L, }
     rf_Prostate_1 = node.random_forest(prostate_hex, **rf_Prostate_1_params)
     durations['rf_Prostate_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     print '#####################################################################'
     print 'Generating Prostate complex SpeeDRF binary classification model. . .'
     before = (time.time() * 1000)
-    speedrf_Prostate_1_params = {'destination_key': 'speedrf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, }
+    speedrf_Prostate_1_params = {'destination_key': 'speedrf_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols_by_name': None, 'ntrees': 50, 'max_depth': 10, 'classification': 1, 'importance': 1, 'seed': 1234567890123456789L, }
     speedrf_Prostate_1 = node.speedrf(prostate_hex, **speedrf_Prostate_1_params)
     num_models = (num_models + 1)
     durations['speedrf_Prostate_binary_1'] = ((time.time() * 1000) - before)
@@ -137,7 +137,8 @@ def create_models(self, frame_keys):
     durations['glm_Prostate_regression_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_Prostate_regression_1, None, **glm_Prostate_regression_1_params)
-    print (('Checking ' + str(len(h2o.nodes))) + ' nodes for models: ')
+    print '########################################################'
+    print (((('Checking ' + str(len(h2o.nodes))) + ' nodes for ') + str(num_models)) + ' models: ')
     for a_node in h2o.nodes:
         print ((('  ' + a_node.http_addr) + ':') + str(a_node.port))
     found_problem = False
@@ -159,4 +160,5 @@ def create_models(self, frame_keys):
             else:
                 expected = durations[key[0:idx]]
             self.assertTrue((value['training_duration_in_ms'] < expected), ((((('Expected training duration as computed by the server (' + str(value['training_duration_in_ms'])) + ') to be less than we compute in the test  (') + str(expected)) + ') for model: ') + key))
+            self.assertKeysExistAndNonNull(value, '', ['expert_parameters'])
     self.assertNotEqual(found_problem, True, 'Missing models on at least one node.')
