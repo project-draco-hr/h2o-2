@@ -25,7 +25,7 @@ def test_GLM2_mnist_reals(self):
         print 'x:', x
         modelKey = 'mnist'
         params = {'response': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.0, 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, 'destination_key': modelKey, }
-        for c in [0, 7]:
+        for c in [5]:
             print 'Trying binomial with case:', c
             execExpr = ('A.hex=%s;A.hex[,%s]=(A.hex[,%s]==%s)' % (trainKey, (y + 1), (y + 1), c))
             h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
