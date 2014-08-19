@@ -33,7 +33,7 @@ def test_ddply_plot(self):
         execExpr = 'd=sum(a1!=a2)==0'
         (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
         print 'execResult', h2o.dump_json(execResult)
-        self.assertEqual(result, 1, ("a1 and a2 weren't equal? %s" % result))
+        self.assertEqual(result, 1, ("a1 and a2 weren't equal? Maybe ddply can vary execution order (fp error? so multiple ddply() can have different answer. %s %s %s" % (FUNC_PHRASE, result, h2o.dump_json(execResult))))
         trial += 1
         xList.append(groups)
         eList.append(ddplyElapsed)
