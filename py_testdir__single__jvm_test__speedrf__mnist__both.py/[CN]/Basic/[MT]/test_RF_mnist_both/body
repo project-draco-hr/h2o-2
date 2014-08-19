@@ -45,7 +45,7 @@ def test_RF_mnist_both(self):
         elapsed = (time.time() - start)
         print 'RF completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(None, rfView, **params)
-        self.assertAlmostEqual(classification_error, 1.6, delta=0.5, msg=('Classification error %s differs too much' % classification_error))
+        self.assertAlmostEqual(classification_error, 1.6, delta=1.6, msg=('Classification error %s differs too much' % classification_error))
         treeStats = rfView['speedrf_model']['treeStats']
         leaves = {'min': treeStats['minLeaves'], 'mean': treeStats['meanLeaves'], 'max': treeStats['maxLeaves'], }
         leavesExpected = {'min': 4996, 'mean': 5064.1, 'max': 5148, }
