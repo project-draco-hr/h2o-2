@@ -2,7 +2,7 @@
   FVecDataOut dout=new FVecDataOut(_vg,chunkStartIdx,localSetup._ncols,vecIdStart,enums(_eKey,localSetup._ncols));
   CustomParser p=localSetup.parser();
   if (localSetup._pType.parallelParseSupported)   try {
-    p.streamParse2(is,dout);
+    p.streamParse(is,dout,pmon);
   }
  catch (  IOException e) {
     throw new RuntimeException(e);
