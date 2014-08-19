@@ -59,7 +59,10 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
     if h2oQuantilesApprox:
         if math.isnan(float(h2oQuantilesApprox)):
             raise Exception(('h2oQuantilesApprox is unexpectedly NaN %s' % h2oQuantilesApprox))
-        h2o_util.assertApproxEqual(h2oQuantilesApprox, b, rel=0.1, msg='h2o quantile singlepass is not approx. same as sort algo')
+        if h2oSummary2MaxErr:
+            h2o_util.assertApproxEqual(h2oQuantilesApprox, b, tol=h2oSummary2MaxErr, msg='h2o quantile singlepass is not approx. same as sort algo')
+        else:
+            h2o_util.assertApproxEqual(h2oQuantilesApprox, b, rel=0.1, msg='h2o quantile singlepass is not approx. same as sort algo')
     if h2oSummary2:
         if math.isnan(float(h2oSummary2)):
             raise Exception(('h2oSummary2 is unexpectedly NaN %s' % h2oSummary2))
@@ -77,7 +80,7 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
         if h2oQuantilesExact:
             h2o_util.assertApproxEqual(h2oQuantilesExact, p, tol=2e-07, msg='h2o quantile multipass is not same as numpy.percentile')
             h2o_util.assertApproxEqual(h2oQuantilesExact, s1, tol=2e-07, msg='h2o quantile multipass is not same as scipy stats.scoreatpercentile')
-        if h2oQuantilesApprox:
+        if (h2oQuantilesApprox and (1 == 0)):
             if (interpolate == 'mean'):
                 h2o_util.assertApproxEqual(h2oQuantilesApprox, s2, rel=0.5, msg='h2o quantile singlepass is not approx. same as scipy stats.mstats.mquantiles')
             else:
