@@ -14,6 +14,10 @@ def create_models(self, frame_keys):
     durations['glm_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_1, None, **glm_AirlinesTrain_1_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#########################################################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
@@ -22,6 +26,10 @@ def create_models(self, frame_keys):
     durations['glm_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_3fold, None, **glm_AirlinesTrain_3fold_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '####################################################################'
     print 'Generating AirlinesTrain simple GBM binary classification model. . .'
     before = (time.time() * 1000)
@@ -29,6 +37,10 @@ def create_models(self, frame_keys):
     gbm_AirlinesTrain_1 = node.gbm(airlines_train_hex, **gbm_AirlinesTrain_1_params)
     durations['gbm_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#####################################################################'
     print 'Generating AirlinesTrain complex GBM binary classification model. . .'
     before = (time.time() * 1000)
@@ -36,6 +48,10 @@ def create_models(self, frame_keys):
     gbm_AirlinesTrain_2 = node.gbm(airlines_train_hex, **gbm_AirlinesTrain_2_params)
     durations['gbm_AirlinesTrain_binary_2'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '###############################################################################################'
     print 'Generating AirlinesTrain simple GBM binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
@@ -43,6 +59,10 @@ def create_models(self, frame_keys):
     gbm_AirlinesTrain_3fold = node.gbm(airlines_train_hex, **gbm_AirlinesTrain_3fold_params)
     durations['gbm_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 4)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '####################################################################'
     print 'Generating AirlinesTrain simple DRF binary classification model. . .'
     before = (time.time() * 1000)
@@ -50,6 +70,10 @@ def create_models(self, frame_keys):
     rf_AirlinesTrain_1 = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_1_params)
     durations['rf_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#####################################################################'
     print 'Generating AirlinesTrain complex DRF binary classification model. . .'
     before = (time.time() * 1000)
@@ -57,6 +81,10 @@ def create_models(self, frame_keys):
     rf_AirlinesTrain_2 = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_2_params)
     durations['rf_AirlinesTrain_binary_2'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '###############################################################################################'
     print 'Generating AirlinesTrain simple DRF binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
@@ -64,6 +92,10 @@ def create_models(self, frame_keys):
     rf_AirlinesTrain_3fold = node.random_forest(airlines_train_hex, **rf_AirlinesTrain_3fold_params)
     durations['rf_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 4)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#####################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model. . .'
     before = (time.time() * 1000)
@@ -71,6 +103,10 @@ def create_models(self, frame_keys):
     speedrf_AirlinesTrain_1 = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_1_params)
     durations['speedrf_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '####################################################################################################'
     print 'Generating AirlinesTrain complex SpeeDRF binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
@@ -78,6 +114,10 @@ def create_models(self, frame_keys):
     speedrf_AirlinesTrain_3fold = node.speedrf(airlines_train_hex, **speedrf_AirlinesTrain_3fold_params)
     durations['speedrf_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 4)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '######################################################################'
     print 'Generating AirlinesTrain DeepLearning binary classification model. . .'
     before = (time.time() * 1000)
@@ -85,6 +125,10 @@ def create_models(self, frame_keys):
     dl_AirlinesTrain_1 = node.deep_learning(airlines_train_hex, **dl_AirlinesTrain_1_params)
     durations['dl_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '##############################################################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model with different response column. . .'
     before = (time.time() * 1000)
@@ -93,6 +137,10 @@ def create_models(self, frame_keys):
     durations['glm_AirlinesTrain_binary_A'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_AirlinesTrain_A, None, **glm_AirlinesTrain_A_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#################################################################################################'
     print 'Generating AirlinesTrain DeepLearning binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
@@ -100,6 +148,10 @@ def create_models(self, frame_keys):
     dl_AirlinesTrain_3fold = node.deep_learning(airlines_train_hex, **dl_AirlinesTrain_3fold_params)
     durations['dl_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 4)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '##############################################################################################'
     print 'Generating AirlinesTrain Naive Bayes binary classification model. . .'
     before = (time.time() * 1000)
@@ -107,6 +159,10 @@ def create_models(self, frame_keys):
     nb_AirlinesTrain = node.naive_bayes(source=airlines_train_hex, timeoutSecs=120, **nb_AirlinesTrain_params)
     durations['nb_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#########################################################'
     print 'Generating Prostate GLM2 binary classification model. . .'
     before = (time.time() * 1000)
@@ -115,6 +171,10 @@ def create_models(self, frame_keys):
     durations['glm_Prostate_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_Prostate_1, None, **glm_Prostate_1_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '###############################################################'
     print 'Generating Prostate simple DRF binary classification model. . .'
     before = (time.time() * 1000)
@@ -122,6 +182,10 @@ def create_models(self, frame_keys):
     rf_Prostate_1 = node.random_forest(prostate_hex, **rf_Prostate_1_params)
     durations['rf_Prostate_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '#####################################################################'
     print 'Generating Prostate complex SpeeDRF binary classification model. . .'
     before = (time.time() * 1000)
@@ -129,6 +193,10 @@ def create_models(self, frame_keys):
     speedrf_Prostate_1 = node.speedrf(prostate_hex, **speedrf_Prostate_1_params)
     num_models = (num_models + 1)
     durations['speedrf_Prostate_binary_1'] = ((time.time() * 1000) - before)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '##############################################'
     print 'Generating Prostate GLM2 regression model. . .'
     before = (time.time() * 1000)
@@ -137,6 +205,10 @@ def create_models(self, frame_keys):
     durations['glm_Prostate_regression_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
     h2o_glm.simpleCheckGLM(self, glm_Prostate_regression_1, None, **glm_Prostate_regression_1_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
     print '########################################################'
     print (((('Checking ' + str(len(h2o.nodes))) + ' nodes for ') + str(num_models)) + ' models: ')
     for a_node in h2o.nodes:
