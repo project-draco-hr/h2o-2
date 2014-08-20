@@ -1,0 +1,8 @@
+{
+  JsonObject jo=toJSON();
+  for (  Map.Entry<String,JsonElement> entry : jo.entrySet()) {
+    String key=entry.getKey();
+    if (!whitelist.contains(key))     jo.remove(key);
+  }
+  return jo;
+}

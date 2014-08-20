@@ -1,7 +1,7 @@
 {
   double dx=Math.log10(scale);
   int x=(int)dx;
-  if (PrettyPrint.pow10i(x) != scale)   throw H2O.unimpl();
+  if (x >= 0 && PrettyPrint.pow10i(x) != scale)   throw H2O.unimpl();
   int w=1 + lg + 1+ 1+ 1+ 2;
   return w;
 }

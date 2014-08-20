@@ -1,43 +1,44 @@
 def test_ddply_plot(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(1000000, 5, 'cD', 0, 10, 30), (1000000, 5, 'cD', 0, 20, 30), (1000000, 5, 'cD', 0, 30, 30), (1000000, 5, 'cD', 0, 40, 30), (1000000, 5, 'cD', 0, 50, 30), (1000000, 5, 'cD', 0, 70, 30), (1000000, 5, 'cD', 0, 100, 30), (1000000, 5, 'cD', 0, 130, 30), (1000000, 5, 'cD', 0, 160, 30)]
+    tryList = [(1000000, 5, 'cD', 0, 10, 30), (1000000, 5, 'cD', 0, 20, 30), (1000000, 5, 'cD', 0, 40, 30), (1000000, 5, 'cD', 0, 50, 30), (1000000, 5, 'cD', 0, 80, 30), (1000000, 5, 'cD', 0, 160, 30), (1000000, 5, 'cD', 0, 320, 30)]
     xList = []
     eList = []
     fList = []
     trial = 0
-    for (rowCount, colCount, hex_key, minInt, maxInt, timeoutSecs) in tryList:
-        SEEDPERFILE = random.randint(0, sys.maxint)
-        csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
-        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
-        print 'Creating random', csvPathname, 'with range', ((maxInt - minInt) + 1)
-        write_syn_dataset(csvPathname, rowCount, colCount, minInt, maxInt, SEEDPERFILE)
-        hexKey = 'r.hex'
-        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hexKey)
-        for (resultKey, execExpr) in initList:
-            h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=60)
-        execExpr = (('a1 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
-        start = time.time()
-        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
-        ddplyElapsed = (time.time() - start)
-        print 'ddplyElapsed:', ddplyElapsed
-        execExpr = (('a2 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
-        start = time.time()
-        (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
-        groups = execResult['num_rows']
-        maxExpectedGroups = (((maxInt - minInt) + 1) ** 2)
-        h2o_util.assertApproxEqual(groups, maxExpectedGroups, rel=0.2, msg=("groups %s isn't close to expected amount %s" % (groups, maxExpectedGroups)))
-        ddplyElapsed = (time.time() - start)
-        print 'ddplyElapsed:', ddplyElapsed
-        print 'execResult', h2o.dump_json(execResult)
-        execExpr = 'd=sum(a1!=a2)==0'
-        (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
-        print 'execResult', h2o.dump_json(execResult)
-        self.assertEqual(result, 1, ("a1 and a2 weren't equal? %s" % result))
-        trial += 1
-        xList.append(groups)
-        eList.append(ddplyElapsed)
-        fList.append(ddplyElapsed)
+    for repeat in range(REPEAT):
+        for (rowCount, colCount, hex_key, minInt, maxInt, timeoutSecs) in tryList:
+            SEEDPERFILE = random.randint(0, sys.maxint)
+            csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            print 'Creating random', csvPathname, 'with range', ((maxInt - minInt) + 1)
+            write_syn_dataset(csvPathname, rowCount, colCount, minInt, maxInt, SEEDPERFILE)
+            hexKey = 'r.hex'
+            parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hexKey)
+            for (resultKey, execExpr) in initList:
+                h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=60)
+            execExpr = (('a1 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
+            start = time.time()
+            h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            ddplyElapsed = (time.time() - start)
+            print 'ddplyElapsed:', ddplyElapsed
+            execExpr = (('a2 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
+            start = time.time()
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            groups = execResult['num_rows']
+            maxExpectedGroups = (((maxInt - minInt) + 1) ** 2)
+            h2o_util.assertApproxEqual(groups, maxExpectedGroups, rel=0.2, msg=("groups %s isn't close to expected amount %s" % (groups, maxExpectedGroups)))
+            ddplyElapsed = (time.time() - start)
+            print 'ddplyElapsed:', ddplyElapsed
+            print 'execResult', h2o.dump_json(execResult)
+            execExpr = 'd=sum(a1!=a2)==0'
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            print 'execResult', h2o.dump_json(execResult)
+            self.assertEqual(result, 1, ("a1 and a2 weren't equal? Maybe ddply can vary execution order (fp error? so multiple ddply() can have different answer. %s %s %s" % (FUNC_PHRASE, result, h2o.dump_json(execResult))))
+            trial += 1
+            xList.append(groups)
+            eList.append(ddplyElapsed)
+            fList.append(ddplyElapsed)
     if DO_PLOT:
         xLabel = 'groups'
         eLabel = 'ddplyElapsed'

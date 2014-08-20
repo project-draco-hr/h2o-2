@@ -1,7 +1,7 @@
 def test_summary2_unifiles2(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [('breadth.csv', 'b.hex', False, [('C1', None, None, None, None, None)], 'smalldata', 'quantiles'), ('wonkysummary.csv', 'b.hex', True, [('X1', None, None, None, None, None)], 'smalldata', None), ('covtype.data', 'c.hex', False, [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard')]
+    tryList = [('breadth.csv', 'b.hex', False, [('C1', None, None, None, None, None)], 'smalldata', 'quantiles'), ('wonkysummary.csv', 'b.hex', True, [('X1', 7.0, None, None, None, 1000046.0)], 'smalldata', None), ('covtype.data', 'c.hex', False, [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard')]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
@@ -72,6 +72,15 @@ def test_summary2_unifiles2(self):
                 h2o_util.assertApproxEqual(pctile[7], expected[4], rel=0.02, msg='75th percentile is not approx. expected')
             if expected[5]:
                 h2o_util.assertApproxEqual(maxs[0], expected[5], rel=0.02, msg='max is not approx. expected')
+            if (expected[1] and expected[5]):
+                expectedRange = (expected[5] - expected[1])
+                expectedBin = (expectedRange / (MAX_QBINS - 2))
+                maxErr = (0.5 * expectedBin)
+                maxErr = (maxErr * 2)
+                print 'maxErr:', maxErr
+            else:
+                print "Test won't calculate max expected error"
+                maxErr = 0
             hstart = column['hstart']
             hstep = column['hstep']
             hbrk = column['hbrk']
@@ -90,6 +99,6 @@ def test_summary2_unifiles2(self):
                 print 'maxs colname:', colname, '(2 places):', mx
                 print 'mins colname:', colname, '(2 places):', mn
                 if ((colname != '') and expected[scipyCol] and (csvFilename != 'covtype.data')):
-                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=skipHeader, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else OTHER_Q), h2oSummary2=pctile[(5 if DO_MEDIAN else OTHER_Q_SUMM_INDEX)], h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult)
+                    h2o_summ.quantile_comparisons(csvPathnameFull, skipHeader=skipHeader, col=scipyCol, datatype='float', quantile=(0.5 if DO_MEDIAN else OTHER_Q), h2oSummary2=pctile[(5 if DO_MEDIAN else OTHER_Q_SUMM_INDEX)], h2oQuantilesApprox=qresult_single, h2oQuantilesExact=qresult, h2oSummary2MaxErr=maxErr)
             scipyCol += 1
         trial += 1

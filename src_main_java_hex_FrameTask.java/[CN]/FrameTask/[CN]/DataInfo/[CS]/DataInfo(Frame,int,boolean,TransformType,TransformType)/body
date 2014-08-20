@@ -25,11 +25,13 @@
   Vec[] vecs2=vecs.clone();
   String[] names=fr._names.clone();
   _catOffsets=MemoryManager.malloc4(ncats + 1);
+  _catMissing=new int[ncats];
   int len=_catOffsets[0]=0;
   for (int i=0; i < ncats; ++i) {
     Vec v=(vecs2[i]=vecs[cats[i]]);
     names[i]=fr._names[cats[i]];
-    _catOffsets[i + 1]=(len+=v.domain().length - (useAllFactorLevels ? 0 : 1));
+    _catMissing[i]=v.naCnt() > 0 ? 1 : 0;
+    _catOffsets[i + 1]=(len+=v.domain().length - (useAllFactorLevels ? 0 : 1) + (v.naCnt() > 0 ? 1 : 0));
   }
   if (predictor_transform != TransformType.NONE) {
     _normSub=MemoryManager.malloc8d(nnums);

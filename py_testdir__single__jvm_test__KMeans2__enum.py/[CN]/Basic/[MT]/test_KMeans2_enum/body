@@ -13,5 +13,5 @@ def test_KMeans2_enum(self):
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'))
         print "Parse result['destination_key']:", parseResult['destination_key']
         kwargs = {'k': 2, 'initialization': 'Furthest', 'destination_key': 'benign_k.hex', 'max_iter': 10, }
-        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=15, **kwargs)
         h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
