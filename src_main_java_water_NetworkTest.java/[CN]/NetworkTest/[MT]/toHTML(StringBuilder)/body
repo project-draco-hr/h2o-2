@@ -1,26 +1,31 @@
 {
-  DocGen.HTML.section(sb,"Origin: " + H2O.SELF._key);
-  sb.append("<table cellpadding='10'>");
-  sb.append("<tr>");
-  sb.append("<th>Destination / Message Size</th>");
-  for (int m=0; m < msg_sizes.length; ++m) {
-    sb.append("<th>");
-    sb.append(PrettyPrint.bytes(msg_sizes[m]));
-    sb.append("</th>");
-  }
-  for (int n=0; n < H2O.CLOUD.size(); ++n) {
-    sb.append("</tr>");
+  try {
+    DocGen.HTML.section(sb,"Origin: " + H2O.SELF._key);
+    sb.append("<table cellpadding='10'>");
     sb.append("<tr>");
-    sb.append("<td>");
-    sb.append(H2O.CLOUD._memary[n]._key);
-    sb.append("</td>");
+    sb.append("<th>Destination / Message Size</th>");
     for (int m=0; m < msg_sizes.length; ++m) {
-      sb.append("<td>");
-      sb.append(PrettyPrint.usecs((long)microseconds[m][n]) + ", " + PrettyPrint.bytesPerSecond((long)(1e6 * bandwidths[m][n])));
-      sb.append("</td>");
+      sb.append("<th>");
+      sb.append(PrettyPrint.bytes(msg_sizes[m]));
+      sb.append("</th>");
     }
+    for (int n=0; n < microseconds[0].length; ++n) {
+      sb.append("</tr>");
+      sb.append("<tr>");
+      sb.append("<td>");
+      sb.append(H2O.CLOUD._memary[n]._key);
+      sb.append("</td>");
+      for (int m=0; m < msg_sizes.length; ++m) {
+        sb.append("<td>");
+        sb.append(PrettyPrint.usecs((long)microseconds[m][n]) + ", " + PrettyPrint.bytesPerSecond((long)bandwidths[m][n]));
+        sb.append("</td>");
+      }
+    }
+    sb.append("</tr>");
+    sb.append("</table>");
   }
-  sb.append("</tr>");
-  sb.append("</table>");
+ catch (  Throwable t) {
+    return false;
+  }
   return true;
 }

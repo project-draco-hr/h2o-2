@@ -1,12 +1,12 @@
 {
-  microseconds=new float[msg_sizes.length][];
-  bandwidths=new float[msg_sizes.length][];
+  microseconds=new double[msg_sizes.length][];
+  bandwidths=new double[msg_sizes.length][];
   for (int i=0; i < msg_sizes.length; ++i) {
     microseconds[i]=send_recv_all(msg_sizes[i],repeats);
     Utils.div(microseconds[i],1e3f);
-    bandwidths[i]=new float[microseconds[i].length];
+    bandwidths[i]=new double[microseconds[i].length];
     for (int j=0; j < microseconds[i].length; ++j) {
-      bandwidths[i][j]=(2f * msg_sizes[i]) / microseconds[i][j];
+      bandwidths[i][j]=(2 * msg_sizes[i]) / (microseconds[i][j] / 1e6);
     }
   }
   nodes=new String[H2O.CLOUD.size()];
