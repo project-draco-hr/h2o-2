@@ -3,10 +3,12 @@
     StreamData din=new StreamData(is);
     int cidx=0;
     StreamDataOut nextChunk=dout;
+    long lastProgress=pmon.progress();
     while (is.available() > 0) {
-      if (dout != nextChunk) {
+      if (pmon.progress() > lastProgress) {
+        lastProgress=pmon.progress();
         nextChunk.close();
-        dout.reduce(nextChunk);
+        if (dout != nextChunk)         dout.reduce(nextChunk);
         nextChunk=nextChunk.nextChunk();
       }
       parallelParse(cidx++,din,nextChunk);
