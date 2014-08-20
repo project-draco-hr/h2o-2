@@ -7,7 +7,7 @@
     for (int l=0; l < repeats; ++l) {
       new RPC(node,ppt).call().get();
     }
-    times[i]=(float)t.nanos();
+    times[i]=(float)t.nanos() / repeats;
   }
   return times;
 }
