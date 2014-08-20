@@ -6,7 +6,7 @@
     H2ONode node=H2O.CLOUD._memary[i];
     Timer t=new Timer();
     for (int l=0; l < repeats; ++l) {
-      new RPC(node,ppt).call().get();
+      new RPC<PingPongTask>(node,ppt).call().get();
     }
     times[i]=(double)t.nanos() / repeats;
   }
