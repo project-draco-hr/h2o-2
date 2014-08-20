@@ -77,13 +77,18 @@
                                       t.printStackTrace();
                                       throw new RuntimeException(t);
                                     }
+ finally {
+                                      p.delete();
+                                    }
                                     model1=UKV.get(dest_tmp);
                                     if (n_folds != 0) {
-                                      for (                                      Key k : p.xval_models) {
+                                      for (                                      Key k : model1.get_params().xval_models) {
                                         DeepLearningModel cv_model=UKV.get(k);
                                         StringBuilder sb=new StringBuilder();
                                         cv_model.generateHTML("cv",sb);
-                                        UKV.remove(k);
+                                      }
+                                      if (model1 != null) {
+                                        model1.delete_xval_models();
                                       }
                                     }
                                   }
@@ -112,6 +117,9 @@
                                     t.printStackTrace();
                                     throw new RuntimeException(t);
                                   }
+ finally {
+                                    p.delete();
+                                  }
                                   model2=UKV.get(dest);
                                   Assert.assertTrue(model2.get_params().state == Job.JobState.DONE);
 {
@@ -128,7 +136,6 @@
                                     if (override_with_best_model) {
                                       Assert.assertEquals(best_model.error(),model2.error(),0);
                                     }
-                                    UKV.remove(model2.actual_best_model_key);
                                   }
                                   if (valid == null)                                   valid=frame;
                                   double threshold=0;
@@ -151,7 +158,7 @@
                                         threshold=aucd.threshold();
                                         error=aucd.err();
                                         Log.info(sb);
-                                        Assert.assertTrue(aucd.AUC > 0.7);
+                                        Assert.assertTrue(aucd.AUC > 0.5);
                                         Assert.assertTrue(aucd.AUC < 0.95);
                                         Assert.assertTrue(aucd.threshold() > 0.1);
                                         Assert.assertTrue(aucd.threshold() < 0.7);
@@ -216,7 +223,7 @@
                                         CM.invoke();
                                         sb=new StringBuilder();
                                         sb.append("\n");
-                                        sb.append("Threshold: " + threshold + "\n");
+                                        sb.append("Threshold: ").append(threshold).append("\n");
                                         CM.toASCII(sb);
                                         Log.info(sb);
                                         double threshErr2=new ConfusionMatrix(CM.cm).err();
@@ -238,13 +245,13 @@
                                 }
  finally {
                                   if (model1 != null) {
-                                    model1.delete_best_model();
                                     model1.delete_xval_models();
+                                    model1.delete_best_model();
                                     model1.delete();
                                   }
                                   if (model2 != null) {
-                                    model2.delete_best_model();
                                     model2.delete_xval_models();
+                                    model2.delete_best_model();
                                     model2.delete();
                                   }
                                   if (dest != null)                                   UKV.remove(dest);
