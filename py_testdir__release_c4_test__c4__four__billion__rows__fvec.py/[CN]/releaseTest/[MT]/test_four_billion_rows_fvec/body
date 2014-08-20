@@ -22,7 +22,7 @@ def test_four_billion_rows_fvec(self):
         h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
         self.assertEqual(2, numCols, msg=('generated %s cols (including output).  parsed to %s cols' % (2, numCols)))
         self.assertEqual((4 * 1000000000), numRows, msg=('generated %s rows, parsed to %s rows' % ((4 * 1000000000), numRows)))
-        kwargs = {'k': 3, 'initialization': 'Furthest', 'max_iter': 4, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
+        kwargs = {'k': 3, 'initialization': 'Furthest', 'max_iter': 10, 'normalize': 0, 'destination_key': 'junk.hex', 'seed': 265211114317615310, }
         timeoutSecs = 900
         start = time.time()
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, retryDelaySecs=4, **kwargs)
