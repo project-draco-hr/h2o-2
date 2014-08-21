@@ -13,7 +13,7 @@ def test_kmeans_prostate(self):
         kmeansSeed = 6655548259421773879
         kwargs = {'ignored_cols': 'ID', 'k': 3, 'initialization': 'PlusPlus', 'destination_key': 'prostate_k.hex', 'max_iter': 500, 'seed': kmeansSeed, }
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
-        modelView = h2o.nodes[0].kmeans_model_view(model='prostate_k.hex')
+        modelView = h2o.nodes[0].kmeans_view(model='prostate_k.hex')
         h2o.verboseprint('KMeans2ModelView:', h2o.dump_json(modelView))
         model = modelView['model']
         clusters = model['centers']
