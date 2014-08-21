@@ -1,5 +1,5 @@
 def show_h2o_processes():
-    if (1 == 0):
+    if (1 == 1):
         username = getpass.getuser()
         if ((username == 'jenkins') or (username == 'kevin') or (username == 'michal')):
             import psutil
@@ -11,22 +11,34 @@ def show_h2o_processes():
             h2oFound = False
             for p in psutil.process_iter():
                 h2oProcess = False
-                if ('java' in p.name()):
-                    users.add(p.username)
-                    for c in p.cmdline:
+                if hasattr(p.name, '__call__'):
+                    pname = p.name()
+                    pcmdline = p.cmdline()
+                    pusername = p.username()
+                    pstatus = p.status()
+                    ppid = p.pid()
+                else:
+                    pname = p.name
+                    pcmdline = p.cmdline
+                    pusername = p.username
+                    pstatus = p.status
+                    ppid = p.pid
+                if ('java' in pname):
+                    users.add(pusername)
+                    for c in pcmdline:
                         if ('h2o' in c):
                             h2oProcess = True
-                            h2oUsers.add(p.username)
+                            h2oUsers.add(pusername)
                             break
                 if h2oProcess:
                     h2oFound = True
                     print '\n#**********************************************'
                     print p
                     try:
-                        print 'pid:', p.pid
-                        print 'cmdline:', p.cmdline
-                        print 'status:', p.status
-                        print 'username:', p.username
+                        print 'pid:', ppid
+                        print 'cmdline:', pcmdline
+                        print 'status:', pstatus
+                        print 'username:', pusername
                         print 'cpu_percent:', p.get_cpu_percent(interval=1.0)
                         print 'memory_percent:', p.get_memory_percent()
                         print p.get_memory_info()
