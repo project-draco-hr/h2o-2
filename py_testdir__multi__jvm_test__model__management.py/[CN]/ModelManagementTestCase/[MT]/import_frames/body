@@ -10,6 +10,7 @@ def import_frames(self):
     test_hash_before = (-1)
     train_hash_before = (-1)
     for a_node in h2o.nodes:
+        print ((('  Checking ' + a_node.http_addr) + ':') + str(a_node.port))
         frames = a_node.frames()
         self.assertKeysExist(frames, 'frames', ['airlines_train.hex'])
         self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
