@@ -1,6 +1,9 @@
 def show_h2o_processes():
     if (1 == 1):
         username = getpass.getuser()
+        h2oFound = False
+        users = set()
+        h2oUsers = set()
         if ((username == 'jenkins') or (username == 'kevin') or (username == 'michal')):
             import psutil
             print 'total physical dram:', ((psutil.TOTAL_PHYMEM + 0) / (1024 * 1024)), 'GB'
