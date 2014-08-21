@@ -1,5 +1,5 @@
 def show_h2o_processes():
-    if (1 == 1):
+    if (1 == 0):
         username = getpass.getuser()
         if ((username == 'jenkins') or (username == 'kevin') or (username == 'michal')):
             import psutil
@@ -11,7 +11,7 @@ def show_h2o_processes():
             h2oFound = False
             for p in psutil.process_iter():
                 h2oProcess = False
-                if ('java' in p.name):
+                if ('java' in p.name()):
                     users.add(p.username)
                     for c in p.cmdline:
                         if ('h2o' in c):
