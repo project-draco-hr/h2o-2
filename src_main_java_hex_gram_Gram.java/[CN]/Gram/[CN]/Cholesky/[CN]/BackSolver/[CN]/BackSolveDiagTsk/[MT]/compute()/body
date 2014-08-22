@@ -5,10 +5,8 @@
       _y[k]/=_xx[k - _diagLen][k];
       for (int i=_ifrom; i < k; ++i)       _y[i]-=_y[k] * _xx[k - _diagLen][i];
     }
-    final int row=(_kto - _diagLen) / _blocksz;
-    final int col=_ifrom / _blocksz;
-    if (row == 0)     tryComplete();
-    for (int i=0; i < _tasks[row].length - 1; ++i)     _tasks[row][i].tryFork();
+    if (_row == 0)     tryComplete();
+    for (int i=0; i < _tasks[_row].length - 1; ++i)     _tasks[_row][i].tryFork();
   }
  catch (  Throwable t) {
     t.printStackTrace();

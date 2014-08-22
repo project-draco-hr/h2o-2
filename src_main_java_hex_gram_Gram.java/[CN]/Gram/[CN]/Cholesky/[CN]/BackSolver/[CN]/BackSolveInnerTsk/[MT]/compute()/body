@@ -4,12 +4,10 @@
     for (int k=_kfrom; k >= _kto; --k) {
       final double yk=_y[k];
       final double[] x=_xx[k - _diagLen];
-      for (int i=_ifrom; i < (_ifrom + _blocksz); ++i)       _y[i]-=yk * x[i];
+      for (int i=_ifrom; i < _ito; ++i)       _y[i]-=yk * x[i];
     }
-    final int row=(_kto - _diagLen) / _blocksz;
-    final int col=_ifrom / _blocksz;
-    if (row == 0)     tryComplete();
- else     _tasks[row - 1][col].tryFork();
+    if (_row == 0)     tryComplete();
+ else     _tasks[_row - 1][_col].tryFork();
   }
  catch (  Throwable t) {
     t.printStackTrace();
