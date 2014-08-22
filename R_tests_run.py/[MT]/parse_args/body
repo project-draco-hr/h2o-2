@@ -11,6 +11,8 @@ def parse_args(argv):
     global g_run_medium
     global g_run_large
     global g_use_cloud
+    global g_use_cloud2
+    global g_config
     global g_use_ip
     global g_use_port
     global g_no_run
@@ -79,6 +81,15 @@ def parse_args(argv):
             g_use_ip = m.group(1)
             port_string = m.group(2)
             g_use_port = int(port_string)
+        elif (s == '--usecloud2'):
+            i += 1
+            if (i > len(argv)):
+                usage()
+            s = argv[i]
+            if (s is None):
+                unknown_arg(s)
+            g_use_cloud2 = True
+            g_config = s
         elif (s == '--jvm.xmx'):
             i += 1
             if (i > len(argv)):
