@@ -158,10 +158,6 @@
                                         threshold=aucd.threshold();
                                         error=aucd.err();
                                         Log.info(sb);
-                                        Assert.assertTrue(aucd.AUC > 0.5);
-                                        Assert.assertTrue(aucd.AUC < 0.95);
-                                        Assert.assertTrue(aucd.threshold() > 0.1);
-                                        Assert.assertTrue(aucd.threshold() < 0.7);
                                         Assert.assertEquals(new ConfusionMatrix(aucd.cm()).err(),error,1e-15);
                                         Assert.assertEquals(model2.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
                                       }
