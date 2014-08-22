@@ -3,9 +3,14 @@ def write_syn_dataset(csvPathname, rowCount, colCount, minInt, maxInt, SEED):
     dsf = open(csvPathname, 'w+')
     for i in range(rowCount):
         rowData = []
-        for j in range(colCount):
-            ri = (r1.randint(minInt, maxInt) / math.pi)
-            rowData.append(('%+e' % ri))
+        if DO_REALS:
+            for j in range(colCount):
+                ri = (r1.randint(minInt, maxInt) / math.pi)
+                rowData.append(('%+e' % ri))
+        else:
+            for j in range(colCount):
+                ri = r1.randint(minInt, maxInt)
+                rowData.append(ri)
         rowDataCsv = ','.join(map(str, rowData))
         dsf.write((rowDataCsv + '\n'))
     dsf.close()
