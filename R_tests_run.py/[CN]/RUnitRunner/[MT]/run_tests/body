@@ -9,7 +9,10 @@ def run_tests(self):
         out = open(out_file_name, 'w')
         cloud = self.clouds[0]
         port = cloud.get_port()
-        cmd = ['R', '--quiet', '-f', os.path.join(self.test_root_dir, 'Utils/runnerSetupPackage.R'), '--args', ('127.0.0.1:' + str(port))]
+        ip = '127.0.0.1:'
+        if g_use_cloud2:
+            ip = (cloud.get_ip() + ':')
+        cmd = ['R', '--quiet', '-f', os.path.join(self.test_root_dir, 'Utils/runnerSetupPackage.R'), '--args', (ip + str(port))]
         child = subprocess.Popen(args=cmd, stdout=out, stderr=subprocess.STDOUT)
         rv = child.wait()
         if self.terminated:
@@ -26,10 +29,14 @@ def run_tests(self):
     self._log('')
     if self.use_cloud:
         self._log('Starting {} tests...'.format(num_tests))
+    elif self.use_cloud2:
+        self._log('Starting {} tests on {} clouds...'.format(num_tests, len(self.clouds)))
     else:
         self._log('Starting {} tests on {} clouds with {} total H2O nodes...'.format(num_tests, self.num_clouds, num_nodes))
     self._log('')
-    start_count = min(len(self.tests_not_started), len(self.clouds))
+    start_count = min(len(self.tests_not_started), len(self.clouds), 30)
+    if g_use_cloud2:
+        start_count = min(start_count, 75)
     for i in range(start_count):
         cloud = self.clouds[i]
         ip = cloud.get_ip()
