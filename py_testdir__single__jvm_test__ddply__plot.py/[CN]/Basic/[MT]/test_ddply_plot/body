@@ -4,9 +4,11 @@ def test_ddply_plot(self):
     if DO_KNOWN_FAIL:
         tryList = [(1000000, 5, 'cD', 0, 320, 30)]
     elif DO_MANY:
-        tryList = [(1000000, 5, 'cD', 0, 10, 30), (1000000, 5, 'cD', 0, 20, 30), (1000000, 5, 'cD', 0, 40, 30), (1000000, 5, 'cD', 0, 50, 30), (1000000, 5, 'cD', 0, 80, 30), (1000000, 5, 'cD', 0, 160, 30), (1000000, 5, 'cD', 0, 320, 30)]
+        tryList = [(1000000, 5, 'cD', 0, 10, 30), (1000000, 5, 'cD', 0, 20, 30), (1000000, 5, 'cD', 0, 40, 30), (1000000, 5, 'cD', 0, 50, 30), (1000000, 5, 'cD', 0, 80, 30), (1000000, 5, 'cD', 0, 160, 30)]
     else:
         tryList = [(1000000, 5, 'cD', 0, 320, 30)]
+    if DO_KNOWN_FAIL2:
+        tryList.append((1000000, 5, 'cD', 0, 320, 30))
     xList = []
     eList = []
     fList = []
@@ -20,6 +22,7 @@ def test_ddply_plot(self):
             minInt = 0
             maxInt = 320
         else:
+            bucket = None
             csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             print 'Creating random', csvPathname, 'with range', ((maxInt - minInt) + 1)
@@ -35,7 +38,7 @@ def test_ddply_plot(self):
             maxExpectedGroups = (((maxInt - minInt) + 1) ** 2)
             execExpr = (('a1 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
             start = time.time()
-            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=90)
             groups = execResult['num_rows']
             h2o_util.assertApproxEqual(groups, maxExpectedGroups, rel=0.2, msg=("groups %s isn't close to expected amount %s, minInt: %s maxInt: %s" % (groups, maxExpectedGroups, minInt, maxInt)))
             ddplyElapsed = (time.time() - start)
@@ -47,7 +50,7 @@ def test_ddply_plot(self):
             self.assertEqual(missingValuesList, [], ('a1 should have no NAs: %s trial: %s' % (missingValuesList, trial)))
             execExpr = (('a2 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
             start = time.time()
-            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=90)
             groups = execResult['num_rows']
             h2o_util.assertApproxEqual(groups, maxExpectedGroups, rel=0.2, msg=("groups %s isn't close to expected amount %s, minInt: %s maxInt: %s" % (groups, maxExpectedGroups, minInt, maxInt)))
             ddplyElapsed = (time.time() - start)
@@ -58,9 +61,9 @@ def test_ddply_plot(self):
             missingValuesList = h2o_cmd.infoFromInspect(a2dump, 'a2')
             self.assertEqual(missingValuesList, [], ('a2 should have no NAs: %s trial: %s' % (missingValuesList, trial)))
             execExpr = 'sum(a1!=a2)==0'
-            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=90)
             execExpr = 's=c(0); s=(a1!=a2)'
-            (execResult1, result1) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=60)
+            (execResult1, result1) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=90)
             print 'execResult', h2o.dump_json(execResult)
             sdump = h2o_cmd.runInspect(key='s')
             print 's', h2o.dump_json(sdump)
