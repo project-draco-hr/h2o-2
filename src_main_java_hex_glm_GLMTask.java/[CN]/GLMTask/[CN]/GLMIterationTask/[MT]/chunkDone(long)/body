@@ -4,7 +4,9 @@
   if (_grad != null)   for (int i=0; i < _grad.length; ++i)   _grad[i]*=_reg;
   _yy*=_reg;
   if (_validate && _glm.family == Family.binomial) {
-    _newThresholds[0]=Arrays.copyOf(_newThresholds[0],Math.min(_ti[0],_newThresholds[0].length >> 1));
-    _newThresholds[1]=Arrays.copyOf(_newThresholds[1],Math.min(_ti[1],_newThresholds[1].length >> 1));
+    _newThresholds[0]=Arrays.copyOf(_newThresholds[0],_ti[0]);
+    _newThresholds[1]=Arrays.copyOf(_newThresholds[1],_ti[1]);
+    Arrays.sort(_newThresholds[0]);
+    Arrays.sort(_newThresholds[1]);
   }
 }

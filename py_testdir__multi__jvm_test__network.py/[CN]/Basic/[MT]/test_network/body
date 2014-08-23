@@ -1,0 +1,19 @@
+def test_network(self):
+    for i in range(5):
+        for (node_index, node) in enumerate(h2o.nodes):
+            result = node.network_test()
+            h2o.check_sandbox_for_errors(sandboxIgnoreErrors=IGNORE_ERRORS)
+            print ('network test by node %s:' % node_index), h2o.dump_json(result)
+            bws = result['bandwidths']
+            per_node_bws = [[] for i in range(len(h2o.nodes))]
+            for (b, bw) in enumerate(bws):
+                for (n, node_bw) in enumerate(bw):
+                    if ((node_bw < 1.0) or (node_bw > 1000000000000.0)):
+                        raise Exception(('Node bw seems odd: %s %s %s' % (node_index, n, node_bw)))
+                    per_node_bws[n].append(node_bw)
+            for (p, pnb) in enumerate(per_node_bws):
+                if (pnb != sorted(pnb)):
+                    raise Exception("running at node %s, bws didn't increase with msg size for node %s: %s"(n, p, pnb))
+    for (p, pnb) in enumerate(per_node_bws):
+        print ('arno node id: %s' % p), ('largest msg, %e bytes/sec' % pnb[(-1)])
+    time.sleep(5)
