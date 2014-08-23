@@ -34,6 +34,7 @@
                 k.invoke();
                 KMeans2.KMeans2Model m=null;
                 Frame score=null;
+                Frame ref=null;
                 try {
                   m=UKV.get(k.dest());
                   for (                  double d : m.within_cluster_variances)                   Assert.assertFalse(Double.isNaN(d));
@@ -42,13 +43,17 @@
                   for (                  double[] dc : m.centers)                   for (                  double d : dc)                   Assert.assertFalse(Double.isNaN(d));
                   KMeans2Test.testHTML(m);
                   score=m.score(frame);
-                  for (long j=0; j < score.numRows(); ++j)                   org.junit.Assert.assertTrue(score.anyVec().at8(j) >= 0 && score.anyVec().at8(j) < clusters);
+                  ref=UKV.get(m._clustersKey);
+                  for (long j=0; j < score.numRows(); ++j) {
+                    org.junit.Assert.assertTrue(score.anyVec().at8(j) >= 0 && score.anyVec().at8(j) < clusters);
+                  }
                   Log.info("Parameters combination " + count + ": PASS");
                   testcount++;
                 }
   finally {
                   if (m != null)                   m.delete();
                   if (score != null)                   score.delete();
+                  if (ref != null)                   ref.delete();
                 }
               }
             }
