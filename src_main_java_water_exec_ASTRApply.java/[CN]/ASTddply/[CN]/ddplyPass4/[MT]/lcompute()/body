@@ -1,7 +1,22 @@
 {
-  NewChunk nchks[]=RemoteExec._results.remove(_envkey);
-  if (nchks != null) {
-    if (nchks.length != _avs.length)     throw new IllegalArgumentException("Results of ddply must return the same column count, but one group returned " + nchks.length + " columns and this group is returning "+ _avs.length);
+  _hasGrps=_nlocals[H2O.SELF.index()] != 0;
+  if (_hasGrps) {
+    NewChunk nchks[]=RemoteExec._results.get(_envkey);
+    if (nchks != null) {
+      if (nchks.length != _avs.length)       throw new IllegalArgumentException("Results of ddply must return the same column count, but one group returned " + nchks.length + " columns and this group is returning "+ _avs.length);
+      Futures fs=new Futures();
+      for (int i=0; i < _avs.length; i++) {
+        NewChunk nc=nchks[i];
+        nc._vec=_avs[i];
+        nc.close(fs);
+      }
+      fs.blockForPending();
+    }
+    _envkey=null;
+  }
+ else {
+    NewChunk[] nchks=new NewChunk[_avs.length];
+    for (int i=0; i < nchks.length; ++i)     nchks[i]=new NewChunk(null,H2O.SELF.index(),_numgrps);
     Futures fs=new Futures();
     for (int i=0; i < _avs.length; i++) {
       NewChunk nc=nchks[i];
@@ -10,6 +25,5 @@
     }
     fs.blockForPending();
   }
-  _envkey=null;
   tryComplete();
 }
