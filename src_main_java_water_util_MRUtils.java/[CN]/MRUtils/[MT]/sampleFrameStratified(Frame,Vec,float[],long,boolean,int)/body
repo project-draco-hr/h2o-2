@@ -2,6 +2,7 @@
   if (fr == null)   return null;
   assert(label.isEnum());
   assert(sampling_ratios != null && sampling_ratios.length == label.domain().length);
+  for (  float s : sampling_ratios)   assert(!Float.isNaN(s));
   final int labelidx=fr.find(label);
   assert(labelidx >= 0);
   final boolean poisson=false;
@@ -29,6 +30,7 @@
     }
   }
 .doAll(fr.numCols(),fr).outputFrame(fr.names(),fr.domains());
+  assert(r.numCols() == fr.numCols());
   long[] dist=new ClassDist(r.vecs()[labelidx]).doAll(r.vecs()[labelidx]).dist();
   if (dist == null)   return fr;
   if (debug) {
