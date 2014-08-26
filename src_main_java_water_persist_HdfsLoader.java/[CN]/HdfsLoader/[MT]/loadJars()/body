@@ -3,6 +3,9 @@
     Log.info("H2O was started by Hadoop; inheriting HDFS library from mapper task.");
     return;
   }
+  if (H2O.OPT_ARGS.hdfs_version != null) {
+    Log.info("HDFS version specified on the command line: " + H2O.OPT_ARGS.hdfs_version);
+  }
   String version=Objects.firstNonNull(H2O.OPT_ARGS.hdfs_version,DEFAULT_HDFS_VERSION);
   if ("mapr".equals(version) || Strings.nullToEmpty(H2O.OPT_ARGS.hdfs).startsWith("maprfs:///")) {
     version=MAPRFS_HDFS_VERSION;
