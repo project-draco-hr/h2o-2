@@ -9,10 +9,14 @@ def tear_down_cloud(nodeList=None, sandboxIgnoreErrors=False):
     try:
         for n in nodeList:
             n.shutdown_all()
+    except:
+        pass
+    try:
         time.sleep(2)
         for n in nodeList:
             n.terminate()
             verboseprint('tear_down_cloud n:', n)
-    finally:
-        check_sandbox_for_errors(sandboxIgnoreErrors=sandboxIgnoreErrors, python_test_name=python_test_name)
-        nodeList[:] = []
+    except:
+        pass
+    check_sandbox_for_errors(sandboxIgnoreErrors=sandboxIgnoreErrors, python_test_name=python_test_name)
+    nodeList[:] = []
