@@ -1,0 +1,14 @@
+def test_exec2_ifelse_phrases(self):
+    bucket = 'smalldata'
+    csvPathname = 'iris/iris2.csv'
+    hexKey = 'i.hex'
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
+    exprList = []
+    while (len(exprList) != 200):
+        expr = ((random.choice(phrases) + ' , ') + random.choice(phrases))
+        exprList.append((('ifelse(1,' + expr) + ')'))
+        exprList.append((('ifelse(0,' + expr) + ')'))
+    for (resultKey, execExpr) in initList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=resultKey, timeoutSecs=4)
+    for execExpr in exprList:
+        h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=4)

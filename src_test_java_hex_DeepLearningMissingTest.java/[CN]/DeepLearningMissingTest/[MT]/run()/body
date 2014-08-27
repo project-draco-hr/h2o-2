@@ -10,7 +10,7 @@
   Log.info("Using seed " + seed);
   Map<DeepLearning.MissingValuesHandling,Double> sumErr=new TreeMap<DeepLearning.MissingValuesHandling,Double>();
   StringBuilder sb=new StringBuilder();
-  for (  DeepLearning.MissingValuesHandling mvh : new DeepLearning.MissingValuesHandling[]{DeepLearning.MissingValuesHandling.Skip,DeepLearning.MissingValuesHandling.MeanImpute}) {
+  for (  DeepLearning.MissingValuesHandling mvh : new DeepLearning.MissingValuesHandling[]{DeepLearning.MissingValuesHandling.Skip,DeepLearning.MissingValuesHandling.MeanImputation}) {
     double sumerr=0;
     Map<Double,Double> map=new TreeMap<Double,Double>();
     for (    double missing_fraction : new double[]{0,0.1,0.25,0.5,0.75,1}) {
@@ -87,6 +87,6 @@
     sumErr.put(mvh,sumerr);
   }
   Log.info(sb.toString());
-  Assert.assertTrue(sumErr.get(DeepLearning.MissingValuesHandling.Skip) > sumErr.get(DeepLearning.MissingValuesHandling.MeanImpute));
-  Assert.assertTrue(sumErr.get(DeepLearning.MissingValuesHandling.MeanImpute) < 2);
+  Assert.assertTrue(sumErr.get(DeepLearning.MissingValuesHandling.Skip) > sumErr.get(DeepLearning.MissingValuesHandling.MeanImputation));
+  Assert.assertTrue(sumErr.get(DeepLearning.MissingValuesHandling.MeanImputation) < 2);
 }

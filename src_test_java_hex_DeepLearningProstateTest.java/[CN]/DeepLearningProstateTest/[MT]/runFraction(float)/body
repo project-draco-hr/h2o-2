@@ -22,14 +22,14 @@
             for (            boolean balance_classes : new boolean[]{true,false}) {
               for (              int resp : responses[i]) {
                 for (                DeepLearning.ClassSamplingMethod csm : new DeepLearning.ClassSamplingMethod[]{DeepLearning.ClassSamplingMethod.Stratified,DeepLearning.ClassSamplingMethod.Uniform}) {
-                  for (                  int scoretraining : new int[]{200,0}) {
-                    for (                    int scorevalidation : new int[]{200,0}) {
+                  for (                  int scoretraining : new int[]{200,20,0}) {
+                    for (                    int scorevalidation : new int[]{200,20,0}) {
                       for (                      int vf : new int[]{0,1,-1}) {
-                        for (                        int n_folds : new int[]{0}) {
+                        for (                        int n_folds : new int[]{0,2}) {
                           if (n_folds != 0 && vf != 0)                           continue;
                           for (                          boolean keep_cv_splits : new boolean[]{false}) {
                             for (                            boolean override_with_best_model : new boolean[]{false,true}) {
-                              for (                              int train_samples_per_iteration : new int[]{-1,0,rng.nextInt(100),500}) {
+                              for (                              int train_samples_per_iteration : new int[]{-2,-1,0,rng.nextInt(100),500}) {
                                 DeepLearningModel model1=null, model2=null;
                                 Key dest=null, dest_tmp=null;
                                 count++;
@@ -77,17 +77,20 @@
                                       t.printStackTrace();
                                       throw new RuntimeException(t);
                                     }
+ finally {
+                                      p.delete();
+                                    }
                                     model1=UKV.get(dest_tmp);
                                     if (n_folds != 0) {
-                                      for (                                      Key k : p.xval_models) {
+                                      for (                                      Key k : model1.get_params().xval_models) {
                                         DeepLearningModel cv_model=UKV.get(k);
                                         StringBuilder sb=new StringBuilder();
                                         cv_model.generateHTML("cv",sb);
-                                        UKV.remove(k);
+                                        cv_model.delete_best_model();
+                                        cv_model.delete();
                                       }
                                     }
                                   }
-                                  Key best1=model1.actual_best_model_key;
                                   dest=Key.make("restart");
                                   DeepLearning p=new DeepLearning();
                                   final DeepLearningModel tmp_model=UKV.get(dest_tmp);
@@ -112,6 +115,9 @@
                                     t.printStackTrace();
                                     throw new RuntimeException(t);
                                   }
+ finally {
+                                    p.delete();
+                                  }
                                   model2=UKV.get(dest);
                                   Assert.assertTrue(model2.get_params().state == Job.JobState.DONE);
 {
@@ -128,7 +134,6 @@
                                     if (override_with_best_model) {
                                       Assert.assertEquals(best_model.error(),model2.error(),0);
                                     }
-                                    UKV.remove(model2.actual_best_model_key);
                                   }
                                   if (valid == null)                                   valid=frame;
                                   double threshold=0;
@@ -151,10 +156,6 @@
                                         threshold=aucd.threshold();
                                         error=aucd.err();
                                         Log.info(sb);
-                                        Assert.assertTrue(aucd.AUC > 0.7);
-                                        Assert.assertTrue(aucd.AUC < 0.95);
-                                        Assert.assertTrue(aucd.threshold() > 0.1);
-                                        Assert.assertTrue(aucd.threshold() < 0.7);
                                         Assert.assertEquals(new ConfusionMatrix(aucd.cm()).err(),error,1e-15);
                                         Assert.assertEquals(model2.calcError(valid,auc.vactual,pred,pred,"training",false,0,null,auc,null),error,1e-15);
                                       }
@@ -216,7 +217,7 @@
                                         CM.invoke();
                                         sb=new StringBuilder();
                                         sb.append("\n");
-                                        sb.append("Threshold: " + threshold + "\n");
+                                        sb.append("Threshold: ").append(threshold).append("\n");
                                         CM.toASCII(sb);
                                         Log.info(sb);
                                         double threshErr2=new ConfusionMatrix(CM.cm).err();
@@ -226,7 +227,6 @@
   finally {
                                       if (pred != null)                                       pred.delete();
                                       if (pred2 != null)                                       pred2.delete();
-                                      if (best1 != null)                                       DKV.remove(best1);
                                     }
                                   }
                                   Log.info("Parameters combination " + count + ": PASS");
@@ -238,17 +238,15 @@
                                 }
  finally {
                                   if (model1 != null) {
-                                    model1.delete_best_model();
                                     model1.delete_xval_models();
+                                    model1.delete_best_model();
                                     model1.delete();
                                   }
                                   if (model2 != null) {
-                                    model2.delete_best_model();
                                     model2.delete_xval_models();
+                                    model2.delete_best_model();
                                     model2.delete();
                                   }
-                                  if (dest != null)                                   UKV.remove(dest);
-                                  if (dest_tmp != null)                                   UKV.remove(dest_tmp);
                                 }
                               }
                             }

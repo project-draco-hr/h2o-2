@@ -30,7 +30,7 @@ def sub_c2_nongz_fvec_long(self):
         if DO_GLM:
             ignore_x = [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541]
             ignore_x = ','.join(map((lambda x: ('C' + str((x + 1)))), ignore_x))
-            GLMkwargs = {'ignored_cols': ignore_x, 'family': 'binomial', 'response': 'C379', 'max_iter': 4, 'n_folds': 1, 'family': 'binomial', 'alpha': 0.2, 'lambda': 1e-05, }
+            GLMkwargs = {'ignored_cols': ignore_x, 'family': 'binomial', 'response': 'C379', 'max_iter': 10, 'n_folds': 1, 'family': 'binomial', 'alpha': 0.2, 'lambda': 1e-05, }
             h2i.delete_keys_at_all_nodes(pattern='manyfile')
             execExpr = ('A.hex=%s' % parseResult['destination_key'])
             h2e.exec_expr(execExpr=execExpr, timeoutSecs=180)

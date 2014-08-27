@@ -3,7 +3,7 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
     if (ALGO == 'poisson'):
         tryList = [(50000, 5, 'cD', 300)]
     else:
-        tryList = [(500, 30, 'cD', 300), (500, 30, 'cD', 300)]
+        tryList = [(500, 30, 'cD', 300), (5000, 30, 'cD', 300)]
     lenNodes = len(h2o.nodes)
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         modeString = ((((((((((((((('_Bins' + str(BINS)) + '_Dmin') + str(DATA_VALUE_MIN)) + '_Dmax') + str(DATA_VALUE_MAX)) + '_Cmin') + str(COEFF_VALUE_MIN)) + '_Cmax') + str(COEFF_VALUE_MAX)) + '_Imin') + str(INTCPT_VALUE_MIN)) + '_Imax') + str(INTCPT_VALUE_MAX)) + '_Ddist') + str(DATA_DISTS))
@@ -21,7 +21,7 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
         print ('\n' + csvFilename)
         y = colCount
         print "GLM is ignoring the thresholds I give it? deciding what's best?"
-        kwargs = {'family': ALGO, 'response': y, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
+        kwargs = {'standardize': 0, 'family': ALGO, 'response': y, 'max_iter': 25, 'lambda': 0, 'alpha': 0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         (warnings, coefficients, intercept) = h2o_glm.simpleCheckGLM(self, glm, 'C1', **kwargs)
@@ -30,7 +30,7 @@ def GLM_syn_eqns_data(self, ALGO='binomial', DATA_VALUE_MIN=(-1), DATA_VALUE_MAX
             deltaCoeff = 0.1
             deltaIntcpt = 0.2
         else:
-            deltaCoeff = 0.4
+            deltaCoeff = 0.5
             deltaIntcpt = 1.0
         for (i, c) in enumerate(coefficients):
             g = coefficientsGen[i]

@@ -3,13 +3,8 @@
   while (true) {
     UDP_PORT=API_PORT + 1;
     try {
-      if (OPT_ARGS.ip != null) {
-        int defaultBacklog=-1;
-        _apiSocket=new ServerSocket(API_PORT,defaultBacklog,SELF_ADDRESS);
-      }
- else {
-        _apiSocket=new ServerSocket(API_PORT);
-      }
+      _apiSocket=OPT_ARGS.ip == null ? new ServerSocket(API_PORT) : new ServerSocket(API_PORT,-1,SELF_ADDRESS);
+      _apiSocket.setReuseAddress(true);
       _udpSocket=DatagramChannel.open();
       _udpSocket.socket().setReuseAddress(true);
       _udpSocket.socket().bind(new InetSocketAddress(SELF_ADDRESS,UDP_PORT));

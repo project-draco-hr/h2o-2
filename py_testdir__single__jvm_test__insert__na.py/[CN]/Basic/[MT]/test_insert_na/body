@@ -1,0 +1,28 @@
+def test_insert_na(self):
+    csvFilename = 'covtype.data'
+    csvPathname = ('standard/' + csvFilename)
+    hex_key = 'covtype.hex'
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, schema='local', timeoutSecs=20)
+    print 'Just insert some NAs and see what happens'
+    inspect = h2o_cmd.runInspect(key=hex_key)
+    origNumRows = inspect['numRows']
+    origNumCols = inspect['numCols']
+    missing_fraction = 0.1
+    expectedMissing = (missing_fraction * origNumRows)
+    for trial in range(2):
+        fs = h2o.nodes[0].insert_missing_values(key=hex_key, missing_fraction=missing_fraction, seed=SEED)
+        print 'fs', h2o.dump_json(fs)
+        inspect = h2o_cmd.runInspect(key=hex_key)
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
+        expected = (0.1 * numRows)
+        missingValuesList = h2o_cmd.infoFromInspect(inspect)
+        print 'missingValuesList', missingValuesList
+        for mv in missingValuesList:
+            self.assertAlmostEqual(mv, expectedMissing, delta=(0.1 * mv), msg=('mv %s is not approx. expected %s' % (mv, expectedMissing)))
+        self.assertEqual(origNumRows, numRows)
+        self.assertEqual(origNumCols, numCols)
+        summaryResult = h2o_cmd.runSummary(key=hex_key)
+        print 'trial', trial
+        print 'expectedMissing:', expectedMissing
+        print "I don't understand why the values don't increase every iteration. It seems to stay stuck with the first effect"

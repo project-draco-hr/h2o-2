@@ -14,7 +14,7 @@ def test_kmeans_benign(self):
         kmeansSeed = random.randint(0, sys.maxint)
         kwargs = {'k': 4, 'initialization': 'PlusPlus', 'destination_key': 'benign_k.hex', 'max_iter': 50, 'seed': kmeansSeed, }
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
-        modelView = h2o.nodes[0].kmeans_model_view(model='benign_k.hex')
+        modelView = h2o.nodes[0].kmeans_view(model='benign_k.hex')
         h2o.verboseprint('KMeans2ModelView:', h2o.dump_json(modelView))
         model = modelView['model']
         clusters = model['centers']

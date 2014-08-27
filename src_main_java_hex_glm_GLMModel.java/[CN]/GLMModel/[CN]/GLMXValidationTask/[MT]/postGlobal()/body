@@ -7,5 +7,5 @@
     _xvals[i].nobs=_nobs - _xvals[i].nobs;
     GLMModel.setXvalidation(cmp,_xmodels[i]._key,_lambda,_xvals[i]);
   }
-  GLMModel.setXvalidation(cmp,_model._key,_lambda,new GLMXValidation(_model,_xmodels,_xvals,_lambda,_nobs));
+  GLMModel.setXvalidation(cmp,_model._key,_lambda,new GLMXValidation(_model,_xmodels,_xvals,_lambda,_nobs,_thresholds));
 }
