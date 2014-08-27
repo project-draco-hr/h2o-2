@@ -22,28 +22,58 @@
   Vec vecs[]=p2.close();
   Key envkey=Key.make();
   UKV.put(envkey,env);
-  Futures fs=new Futures();
   int grpnum=0;
   int nlocals[]=new int[csz];
+  ArrayList<AppendableVec> grpCols=new ArrayList<AppendableVec>();
+  ArrayList<NewChunk> nchks=new ArrayList<NewChunk>();
+  for (  int col : cols) {
+    AppendableVec av=new AppendableVec(Vec.VectorGroup.VG_LEN1.addVec());
+    grpCols.add(av);
+    nchks.add(new NewChunk(av,0));
+  }
   RemoteExec re=null;
+  Futures fs=new Futures();
+  int ncols;
   for (  Group g : p1._groups.keySet()) {
     Vec rows=vecs[grpnum++];
     Vec[] data=fr.vecs();
     Vec[] gvecs=new Vec[data.length];
     Key[] keys=rows.group().addVecs(data.length);
     for (int c=0; c < data.length; c++)     gvecs[c]=new SubsetVec(rows._key,data[c]._key,keys[c],rows._espc);
-    Frame fg=new Frame(fr._names,gvecs);
+    Key grpkey=Key.make("ddply_grpkey_" + (grpnum - 1));
+    Frame fg=new Frame(grpkey,fr._names,gvecs);
+    Futures gfs=new Futures();
+    DKV.put(grpkey,fg,gfs);
+    gfs.blockForPending();
     final int nidx=g.hashCode() % csz;
-    re=new RemoteExec(nlocals[nidx]++,p2._nlocals[nidx],g._ds,fg,envkey);
-    fs.add(RPC.call(H2O.CLOUD._memary[nidx],(re)));
+    fs.add(RPC.call(H2O.CLOUD._memary[nidx],(re=new RemoteExec((grpnum - 1),p2._nlocals[nidx],g._ds,fg,envkey))));
   }
   fs.blockForPending();
-  ArrayList<Integer> nodes=new ArrayList<Integer>();
-  for (int i=0; i < nlocals.length; ++i)   if (nlocals[i] != 0)   nodes.add(i);
-  int[] idxs=new int[nodes.size()];
-  for (int i=0; i < nodes.size(); ++i)   idxs[i]=nodes.get(i);
-  Vec vres[]=new ddplyPass4(envkey,cols.length,re._ncols,nlocals,numgrps).invokeOnAllNodes().close();
-  String[] names=new String[cols.length + re._ncols];
+  grpnum=0;
+  for (  Group g : p1._groups.keySet()) {
+    int c=0;
+    for (    double d : g._ds)     nchks.get(c++).addNum(d);
+    Key rez_key=Key.make("ddply_RemoteRez_" + grpnum++);
+    Result rg=UKV.get(rez_key);
+    if (rg == null)     Log.info("Result was null: grp_id = " + (grpnum - 1) + " rez_key = "+ rez_key);
+    ncols=rg.isRow() ? rg.resultR().length : 1;
+    if (nchks.size() < ncols + cols.length) {
+      for (int i=0; i < ncols; ++i) {
+        AppendableVec av=new AppendableVec(Vec.VectorGroup.VG_LEN1.addVec());
+        grpCols.add(av);
+        nchks.add(new NewChunk(av,0));
+      }
+    }
+    for (int i=0; i < ncols; ++i)     nchks.get(c++).addNum(rg.isRow() ? rg.resultR()[i] : rg.resultD());
+    UKV.remove(rez_key);
+  }
+  Vec vres[]=new Vec[grpCols.size()];
+  for (int i=0; i < vres.length; ++i) {
+    nchks.get(i).close(0,fs);
+    vres[i]=grpCols.get(i).close(fs);
+  }
+  fs.blockForPending();
+  String[] names=new String[grpCols.size()];
   for (int i=0; i < cols.length; i++) {
     names[i]=fr._names[cols[i]];
     vres[i]._domain=fr.vecs()[cols[i]]._domain;
@@ -72,7 +102,6 @@
   }
 .doAll(ff.numCols(),ff).outputFrame(null,ff.names(),ff.domains());
   ff.delete();
-  for (  Vec v : vecs)   UKV.remove(v._key);
   UKV.remove(envkey);
   env.poppush(4,res,null);
 }
