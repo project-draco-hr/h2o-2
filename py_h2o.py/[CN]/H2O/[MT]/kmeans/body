@@ -10,7 +10,8 @@ def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDel
     if noPoll:
         return a
     a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
-    verboseprint(('\n%s result:' % algo), dump_json(a))
+    print 'For now, always dumping the last result ..are the centers good'
+    print ('\n%s result:' % algo), dump_json(a)
     if (browseAlso | browse_json):
         print ('Redoing the %s through the browser, no results saved though' % algo)
         h2b.browseJsonHistoryAsUrlLastMatch(algo)
