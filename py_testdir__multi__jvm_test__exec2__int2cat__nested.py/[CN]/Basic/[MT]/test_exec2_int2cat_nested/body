@@ -1,10 +1,15 @@
 def test_exec2_int2cat_nested(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    tryList = [(1000, 10, 'cA', 100), (1000, 20, 'cB', 100), (1000, 30, 'cC', 100), (1000, 40, 'cD', 100), (1000, 10, 'cE', 100), (1000, 20, 'cF', 100), (1000, 30, 'cG', 100), (1000, 40, 'cH', 100)]
-    exprList = ['<keyX>[,<col2>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);', '<keyX>[,<col2>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);']
-    exprList = ['<keyX>[,<col1>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);', '<keyX>[,<col1>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);']
-    exprList = ['<keyX>[,2] = factor(<keyX>[,2])']
+    tryList = [(100000, 10, 'cA', 100), (100000, 20, 'cB', 100), (100000, 30, 'cC', 100)]
+    if (DO_CASE == 0):
+        exprList = ['<keyX>[,<col2>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);', '<keyX>[,<col2>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);']
+    elif (DO_CASE == 1):
+        exprList = ['<keyX>[,<col1>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);', '<keyX>[,<col1>] = factor(<keyX>[,<col1>]);', '<keyX>[,<col1>] = factor(<keyX>[,1]);', '<keyX>[,1] = factor(<keyX>[,<col2>]);']
+    elif (DO_CASE == 2):
+        exprList = ['<keyX>[,2] = factor(<keyX>[,2])']
+    else:
+        raise Exception(('Bad case: %s' % DO_CASE))
     for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         csvFilename = (((((('syn_' + str(SEEDPERFILE)) + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -18,6 +23,3 @@ def test_exec2_int2cat_nested(self):
         print '\nNow running the exec commands across all input cols'
         colResultList = h2e.exec_expr_list_across_cols(None, exprList, hex_key, maxCol=colCount, timeoutSecs=30, incrementingResult=False)
         print '\nexec colResultList', colResultList
-        if (not h2o.browse_disable):
-            h2b.browseJsonHistoryAsUrlLastMatch('Inspect')
-            time.sleep(3)

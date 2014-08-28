@@ -2,7 +2,7 @@ def __init__(self, host, *args, **kwargs):
     super(RemoteH2O, self).__init__(*args, **kwargs)
     self.remoteH2O = True
     self.jar = host.upload_file('target/h2o.jar')
-    self.flatfile = host.upload_file(flatfile_name())
+    self.flatfile = host.upload_file(flatfile_pathname())
     if self.aws_credentials:
         self.aws_credentials = host.upload_file(self.aws_credentials)
     if self.hdfs_config:

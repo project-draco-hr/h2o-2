@@ -63,7 +63,7 @@
     }
     int my_cpu_pct=-1;
     int sys_cpu_pct=-1;
-{
+    if (!_skip_ticks.value()) {
       LastTicksEntry lte=ticksHashMap.get(h2o.toString());
       if (lte != null) {
         long system_total_ticks_delta=hb._system_total_ticks - lte._system_total_ticks;
@@ -102,8 +102,12 @@
   response.add(NODES,nodes);
   response.addProperty(CONSENSUS,Paxos._commonKnowledge);
   response.addProperty(LOCKED,Paxos._cloudLocked);
-  Log.info("H2O Cloud Status:");
-  for (  String s : response.toString().split("[{}]"))   if (!s.equals(",") && s.length() > 0)   Log.info(s);
+  boolean logCloudStatus=(!cloudHealthy) || (cloudHealthy != lastCloudHealthy) || (!_quiet.value());
+  lastCloudHealthy=cloudHealthy;
+  if (logCloudStatus) {
+    Log.info("H2O Cloud Status:");
+    for (    String s : response.toString().split("[{}]"))     if (!s.equals(",") && s.length() > 0)     Log.info(s);
+  }
   Response r=Response.done(response);
   r.setBuilder(CONSENSUS,new BooleanStringBuilder("","Voting new members"));
   r.setBuilder(LOCKED,new BooleanStringBuilder("Locked","Accepting new members"));
