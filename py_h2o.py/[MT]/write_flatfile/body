@@ -1,6 +1,7 @@
 def write_flatfile(node_count=2, base_port=54321, hosts=None, rand_shuffle=True, port_offset=0):
     ports_per_node = 2
-    pff = open(flatfile_name(), 'w+')
+    print 'hello:', flatfile_pathname()
+    pff = open(flatfile_pathname(), 'w+')
     hostPortList = []
     if (hosts is None):
         ip = python_cmd_ip
@@ -15,3 +16,4 @@ def write_flatfile(node_count=2, base_port=54321, hosts=None, rand_shuffle=True,
     for hp in hostPortList:
         pff.write((hp + '\n'))
     pff.close()
+    print 'hello2:', flatfile_pathname()

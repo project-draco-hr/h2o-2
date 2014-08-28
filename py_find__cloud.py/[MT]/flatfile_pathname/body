@@ -1,0 +1,8 @@
+def flatfile_pathname():
+    if args.flatfile:
+        a = args.flatfile
+    else:
+        print 'New: match h2o.py in getting it by default from LOG_DIR (sandbox) if not specified.'
+        a = (LOG_DIR + ('/pytest_flatfile-%s' % getpass.getuser()))
+    print 'Starting with contents of ', a
+    return a

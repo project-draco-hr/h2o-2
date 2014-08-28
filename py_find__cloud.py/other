@@ -6,8 +6,8 @@ parser.add_argument('-hdfs_config', '--hdfs_config', default=None, help='Use thi
 parser.add_argument('-hdfs_name_node', '--hdfs_name_node', default='192.168.1.176', help='Use this for setting hdfs_name_node in the cloned cloud. Can be ip, ip:port, hostname, hostname:port', type=str)
 parser.add_argument('-expected_size', '--expected_size', default=None, help='Require that the discovered cloud has this size, at each discovered node, otherwise exception', type=int)
 args = parser.parse_args()
-LOG_DIR = 'sandbox'
-with open(flatfile_name(), 'r') as f:
+LOG_DIR = get_sandbox_name()
+with open(flatfile_pathname(), 'r') as f:
     possMembers = f.readlines()
 f.close()
 h2oNodes = {}
