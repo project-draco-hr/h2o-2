@@ -12,5 +12,7 @@ def test_NN2_params_rand2(self):
         nn = h2o_cmd.runDeepLearning(timeoutSecs=500, parseResult=parseResult, **kwargs)
         print 'nn result:', h2o.dump_json(nn)
         h2o.check_sandbox_for_errors()
+        deeplearning_model = nn['deeplearning_model']
+        errors = deeplearning_model['errors']
         print 'Deep Learning end on ', csvPathname, 'took', (time.time() - start), 'seconds'
         print 'Trial #', trial, 'completed\n'

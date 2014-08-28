@@ -1,0 +1,54 @@
+def test_create_rebalance_2enum(self):
+    h2o.beta_features = True
+    params = {'rows': 100, 'cols': 1, }
+    for trial in range(20):
+        h2o_util.pickRandParams(paramDict, params)
+        i = params.get('integer_fraction', None)
+        c = params.get('categorical_fraction', None)
+        r = params.get('randomize', None)
+        v = params.get('value', None)
+        if r:
+            if (not i):
+                i = 0
+            if (not c):
+                c = 0
+            if ((i and c) and ((i + c) >= 1.0)):
+                c = (1.0 - i)
+            params['integer_fraction'] = i
+            params['categorical_fraction'] = c
+            params['value'] = None
+        else:
+            params['randomize'] = 0
+            params['integer_fraction'] = 0
+            params['categorical_fraction'] = 0
+        kwargs = params.copy()
+        print kwargs
+        timeoutSecs = 300
+        hex_key = 'temp1000.hex'
+        cfResult = h2o.nodes[0].create_frame(key=hex_key, timeoutSecs=timeoutSecs, **kwargs)
+        print 'Rebalancing it to create an artificially large # of chunks'
+        rb_key = ('rb_%s' % hex_key)
+        start = time.time()
+        print ('Rebalancing %s to %s with %s chunks' % (hex_key, rb_key, REBALANCE_CHUNKS))
+        SEEDPERFILE = random.randint(0, sys.maxint)
+        rebalanceResult = h2o.nodes[0].rebalance(source=hex_key, after=rb_key, seed=SEEDPERFILE, chunks=REBALANCE_CHUNKS)
+        elapsed = (time.time() - start)
+        print 'rebalance end on ', hex_key, 'to', rb_key, 'took', elapsed, 'seconds',
+        print ('Now doing to_enum across all columns of %s' % rb_key)
+        for column_index in range(params['cols']):
+            result = h2o.nodes[0].to_enum(None, src_key=rb_key, column_index=(column_index + 1))
+            summaryResult = h2o_cmd.runSummary(key=hex_key)
+            column = summaryResult['summaries'][column_index]
+            colname = column['colname']
+            coltype = column['type']
+            nacnt = column['nacnt']
+            stats = column['stats']
+            stattype = stats['type']
+            if (nacnt >= params['rows']):
+                raise Exception(("column %s, which has name '%s', somehow too many NAs after convert to Enum  %s %s" % (column_index, colname, nacnt, params['rows'])))
+            print "I suspect that columns that are constant, maybe with NAs also, don't convert to Enum"
+            if (stattype != 'Enum'):
+                raise Exception(("column %s, which has name '%s', didn't convert to Enum, is %s %s %s" % (column_index, colname, stattype, coltype, h2o.dump_json(column))))
+            cardinality = stats['cardinality']
+            h2o_cmd.infoFromSummary(summaryResult)
+        print 'Trial #', trial, 'completed'
