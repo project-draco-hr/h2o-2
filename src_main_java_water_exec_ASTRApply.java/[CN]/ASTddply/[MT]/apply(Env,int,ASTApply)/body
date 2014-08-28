@@ -45,6 +45,7 @@
     Futures gfs=new Futures();
     DKV.put(grpkey,fg,gfs);
     gfs.blockForPending();
+    fg.anyVec().rollupStats();
     final int nidx=g.hashCode() % csz;
     fs.add(RPC.call(H2O.CLOUD._memary[nidx],(re=new RemoteExec((grpnum - 1),p2._nlocals[nidx],g._ds,fg,envkey))));
   }
