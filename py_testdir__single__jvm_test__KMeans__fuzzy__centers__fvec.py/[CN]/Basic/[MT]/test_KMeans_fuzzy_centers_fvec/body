@@ -25,20 +25,15 @@ def test_KMeans_fuzzy_centers_fvec(self):
     allErrors = []
     for trial in range(10):
         seed = random.randint(0, sys.maxint)
-        kwargs = {'k': len(genCenters), 'initialization': 'PlusPlus', 'destination_key': 'k.hex', 'max_iter': 1000, }
+        kwargs = {'seed': seed, 'k': len(genCenters), 'initialization': 'PlusPlus', 'destination_key': 'k.hex', 'max_iter': 1000, }
         kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=60, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
         h2o.nodes[0].csv_download(src_key='d', csvPathname='kmeans_predict.csv')
         self.assertEqual(len(genCenters[0]), len(centers[0]), ("kmeans first center doesn't have same # of values as dataset row %s %s" % (len(genCenters[0]), len(centers[0]))))
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial=trial)
-        if h2o.beta_features:
-            error = kmeans['model']['total_within_SS']
-            within_cluster_variances = kmeans['model']['within_cluster_variances']
-            print 'trial:', trial, 'within_cluster_variances:', within_cluster_variances
-        else:
-            model_key = kmeans['_key']
-            kmeansResult = h2o_cmd.runInspect(key=model_key)
-            error = kmeansResult['KMeansModel']['error']
+        error = kmeans['model']['total_within_SS']
+        within_cluster_variances = kmeans['model']['within_cluster_variances']
+        print 'trial:', trial, 'within_cluster_variances:', within_cluster_variances
         genDistances = calc_best_distance(centers, dataset)
         print 'trial:', trial, 'genDistances:', genDistances
         print 'trial:', trial, 'centers:', centers
