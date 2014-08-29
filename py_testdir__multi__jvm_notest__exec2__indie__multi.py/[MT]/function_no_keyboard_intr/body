@@ -1,4 +1,0 @@
-def function_no_keyboard_intr(result_queue, function, *args):
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-    result_queue.put(function(*args))
-    return True

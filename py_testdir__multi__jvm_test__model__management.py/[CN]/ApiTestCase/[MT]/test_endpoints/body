@@ -8,13 +8,13 @@ def test_endpoints(self):
     print 'Testing /2/Frames list. . .'
     frames = node.frames()
     self.assertKeysExist(frames, 'frames', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
-    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_xx', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
     self.assertKeysDontExist(frames, '', ['models'])
     print '##############################################'
     print 'Testing /2/Frames?key=airlines_test.hex. . .'
     frames = node.frames(key='airlines_test.hex')
     self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
-    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
+    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_xx', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
     self.assertKeysDontExist(frames, '', ['models'])
     self.assertKeysExist(frames, 'frames/airlines_test.hex', ['creation_epoch_time_millis', 'id', 'key', 'column_names', 'compatible_models'])
     self.assertEqual(frames['frames']['airlines_test.hex']['id'], 'fffffffffffff38d', msg=('The airlines_test.hex frame hash should be deterministic.  Expected fffffffffffff38d, got: ' + frames['frames']['airlines_test.hex']['id']))
@@ -23,10 +23,10 @@ def test_endpoints(self):
     print 'Testing /2/Frames?key=airlines_test.hex&find_compatible_models=true. . .'
     frames = node.frames(key='airlines_test.hex', find_compatible_models=1)
     self.assertKeysExist(frames, 'frames', ['airlines_test.hex'])
-    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
+    self.assertKeysDontExist(frames, 'frames', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_xx', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'prostate.hex'])
     self.assertKeysExist(frames, '', ['models'])
     self.assertKeysExist(frames, 'models', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A'])
-    self.assertKeysDontExist(frames, 'models', ['glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
+    self.assertKeysDontExist(frames, 'models', ['glm_Prostate_binary_xx', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1', 'airlines_train.hex', 'airlines_train.hex', 'airlines_test.hex', 'prostate.hex'])
     print '##############################################'
     print 'Testing /2/Frames with various options. . .'
     print '##############################################'
@@ -34,7 +34,7 @@ def test_endpoints(self):
     print '##############################################'
     print 'Testing /2/Models list. . .'
     models = node.models()
-    self.assertKeysExist(models, 'models', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysExist(models, 'models', ['glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_xx', 'rf_Prostate_binary_1', 'glm_Prostate_regression_1'])
     self.assertKeysExist(models, 'models/glm_AirlinesTrain_binary_1', ['id', 'key', 'creation_epoch_time_millis', 'model_category', 'state', 'input_column_names', 'response_column_name', 'critical_parameters', 'secondary_parameters', 'expert_parameters', 'compatible_frames', 'warnings'])
     self.assertEqual(0, len(models['models']['glm_AirlinesTrain_binary_1']['warnings']), msg='Expect no warnings for glm_AirlinesTrain_binary_1.')
     self.assertEqual(models['models']['glm_AirlinesTrain_binary_1']['key'], 'glm_AirlinesTrain_binary_1', ('key should equal our key: ' + 'glm_AirlinesTrain_binary_1'))
@@ -46,20 +46,28 @@ def test_endpoints(self):
     self.assertKeysExist(models, 'models', ['rf_Prostate_binary_1'])
     self.assertKeysExist(models, 'models/rf_Prostate_binary_1', ['warnings'])
     self.assertEqual(0, len(models['models']['rf_Prostate_binary_1']['warnings']), msg='Expect no warnings for rf_Prostate_binary_1.')
-    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_xx', 'glm_Prostate_regression_1'])
     self.assertKeysDontExist(models, '', ['frames'])
     print '##############################################'
     print 'Testing /2/Models?key=rf_Prostate_binary_1&find_compatible_frames=true. . .'
     models = node.models(key='rf_Prostate_binary_1', find_compatible_frames=1)
     self.assertKeysExist(models, 'models', ['rf_Prostate_binary_1'])
-    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_1', 'glm_Prostate_regression_1'])
+    self.assertKeysDontExist(models, 'models', ['airlines_train.hex', 'airlines_test.hex', 'prostate.hex', 'glm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_1', 'gbm_AirlinesTrain_binary_2', 'rf_AirlinesTrain_binary_1', 'rf_AirlinesTrain_binary_2', 'dl_AirlinesTrain_binary_1', 'glm_AirlinesTrain_binary_A', 'glm_Prostate_binary_xx', 'glm_Prostate_regression_1'])
     self.assertKeysExist(models, '', ['frames'])
     self.assertKeysExist(models, 'frames', ['prostate.hex'])
     self.assertKeysDontExist(models, 'frames', ['airlines_train.hex', 'airlines_test.hex'])
     print '##############################################'
-    print 'Testing /2/Models?key=glm_Prostate_binary_1 variable importance warning. . .'
-    models = node.models(key='glm_Prostate_binary_1')
-    self.assertKeysExist(models, 'models', ['glm_Prostate_binary_1'])
-    self.assertKeysExist(models, 'models/glm_Prostate_binary_1', ['warnings'])
-    self.assertEqual(1, len(models['models']['glm_Prostate_binary_1']['warnings']), msg='Expect one warning for glm_Prostate_binary_1.')
-    self.assertTrue(('use_all_factor_levels' in models['models']['glm_Prostate_binary_1']['warnings'][0]), "Expect variable importances warning since we aren't using use_all_factor_levels.")
+    print 'Testing /2/Models?key=glm_Prostate_binary_* variable importance warnings. . .'
+    should_have_warnings = ['glm_Prostate_binary_10', 'glm_Prostate_binary_1x']
+    should_not_have_warnings = ['glm_Prostate_binary_00', 'glm_Prostate_binary_01', 'glm_Prostate_binary_11', 'glm_Prostate_binary_xx', 'glm_Prostate_binary_x0', 'glm_Prostate_binary_x1', 'glm_Prostate_binary_0x']
+    for m in should_have_warnings:
+        models = node.models(key=m)
+        self.assertKeysExist(models, 'models', [m])
+        self.assertKeysExist(models, ('models/' + m), ['warnings'])
+        self.assertEqual(1, len(models['models'][m]['warnings']), msg=((('Expect one warning for ' + m) + ': ') + repr(models['models'][m]['warnings'])))
+        self.assertTrue(('use_all_factor_levels' in models['models'][m]['warnings'][0]), "Expect variable importances warning since we aren't using use_all_factor_levels.")
+    for m in should_not_have_warnings:
+        models = node.models(key=m)
+        self.assertKeysExist(models, 'models', [m])
+        self.assertKeysExist(models, ('models/' + m), ['warnings'])
+        self.assertEqual(0, len(models['models'][m]['warnings']), msg=((('Expect zero warnings for ' + m) + ': ') + repr(models['models'][m]['warnings'])))

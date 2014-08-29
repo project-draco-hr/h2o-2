@@ -6,11 +6,17 @@ def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDel
     check_params_update_kwargs(params_dict, kwargs, 'kmeans', print_params=True)
     algo = '2/KMeans2'
     print ('\n%s params list:' % algo), params_dict
-    a = self.__do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
+    a1 = self.__do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
     if noPoll:
-        return a
-    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
-    verboseprint(('\n%s result:' % algo), dump_json(a))
+        return a1
+    a1 = self.poll_url(a1, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+    print 'For now, always dumping the last polled kmeans result ..are the centers good'
+    print ('\n%s result:' % algo), dump_json(a1)
+    if (1 == 0):
+        a = self.kmeans_view(model=a1['model']['_key'], timeoutSecs=30)
+        verboseprint(('\n%s model view result:' % algo), dump_json(a))
+    else:
+        a = a1
     if (browseAlso | browse_json):
         print ('Redoing the %s through the browser, no results saved though' % algo)
         h2b.browseJsonHistoryAsUrlLastMatch(algo)

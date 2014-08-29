@@ -1,0 +1,118 @@
+{
+  int length=pattern.length();
+  int[] indexRef=new int[1];
+  for (int i=0; i < length; i++) {
+    indexRef[0]=i;
+    String token=parseToken(pattern,indexRef);
+    i=indexRef[0];
+    int tokenLen=token.length();
+    if (tokenLen == 0) {
+      break;
+    }
+    char c=token.charAt(0);
+    if (c == '%' && token.charAt(1) != '%') {
+      c=token.charAt(1);
+switch (c) {
+case 'a':
+        builder.appendDayOfWeekShortText();
+      break;
+case 'A':
+    builder.appendDayOfWeekText();
+  break;
+case 'b':
+builder.appendMonthOfYearShortText();
+break;
+case 'B':
+builder.appendMonthOfYearText();
+break;
+case 'C':
+builder.appendDayOfWeekShortText();
+builder.appendLiteral(' ');
+builder.appendMonthOfYearShortText();
+builder.appendLiteral(' ');
+builder.appendDayOfMonth(2);
+builder.appendLiteral(' ');
+builder.appendHourOfDay(2);
+builder.appendLiteral(':');
+builder.appendMinuteOfHour(2);
+builder.appendLiteral(':');
+builder.appendSecondOfMinute(2);
+builder.appendLiteral(' ');
+builder.appendYear(4,4);
+break;
+case 'd':
+builder.appendDayOfMonth(2);
+break;
+case 'H':
+builder.appendHourOfDay(2);
+break;
+case 'I':
+builder.appendHourOfHalfday(2);
+break;
+case 'j':
+builder.appendDayOfYear(3);
+break;
+case 'm':
+builder.appendMonthOfYear(2);
+break;
+case 'M':
+builder.appendMinuteOfHour(2);
+break;
+case 'p':
+builder.appendHalfdayOfDayText();
+break;
+case 'S':
+builder.appendSecondOfMinute(2);
+break;
+case 'U':
+builder.appendWeekOfWeekyear(2);
+break;
+case 'w':
+builder.appendDayOfWeek(1);
+break;
+case 'W':
+builder.appendWeekOfWeekyear(2);
+break;
+case 'x':
+builder.appendYearOfCentury(2,2);
+builder.appendLiteral('/');
+builder.appendMonthOfYear(2);
+builder.appendLiteral('/');
+builder.appendDayOfMonth(2);
+break;
+case 'X':
+builder.appendHourOfDay(2);
+builder.appendLiteral(':');
+builder.appendMinuteOfHour(2);
+builder.appendLiteral(':');
+builder.appendSecondOfMinute(2);
+break;
+case 'y':
+builder.appendTwoDigitWeekyear(2019);
+break;
+case 'Y':
+builder.appendYear(4,4);
+break;
+case 'z':
+builder.appendTimeZoneOffset(null,"z",false,2,2);
+break;
+case 'Z':
+builder.appendTimeZoneName();
+break;
+default :
+builder.appendLiteral('\'');
+builder.appendLiteral(token);
+Log.warn(token + "is not acceptted as a parse token, treating as a literal");
+}
+}
+ else {
+if (c == '\'') {
+String sub=token.substring(1);
+if (sub.length() > 0) {
+builder.appendLiteral(new String(sub));
+}
+}
+ else throw new IllegalArgumentException("Unexpected token encountered parsing format string:" + c);
+}
+}
+}

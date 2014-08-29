@@ -14,7 +14,7 @@ def upload_file(self, f, progress=None):
                 print '{0} Skipping upload of file {1}. File {2} exists on remote side!'.format(self, f, dest)
             except IOError as e:
                 if (e.errno == errno.ENOENT):
-                    verboseprint('{0} uploading file {1}.'.format(self, f))
+                    verboseprint('{0} uploading file {1}'.format(self, f))
                     sftp.put(f, dest, callback=progress)
                 elif (e.errno == errno.EEXIST):
                     pass
