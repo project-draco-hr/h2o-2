@@ -4,7 +4,7 @@ def test_ddply_plot(self):
     if DO_KNOWN_FAIL:
         tryList = [(1000000, 5, 'cD', 0, 320, 30)]
     else:
-        tryList = [(1000000, 5, 'cD', 0, 10, 30), (1000000, 5, 'cD', 0, 20, 30), (1000000, 5, 'cD', 0, 80, 30)]
+        tryList = [(1000000, 5, 'cD', 0, 10, 30), (1000000, 5, 'cD', 0, 20, 30), (1000000, 5, 'cD', 0, 40, 30), (1000000, 5, 'cD', 0, 50, 30), (1000000, 5, 'cD', 0, 80, 30)]
     if DO_APPEND_KNOWN_FAIL2:
         tryList.append((1000000, 5, 'cD', 0, 160, 30))
     xList = []
@@ -25,9 +25,9 @@ def test_ddply_plot(self):
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             print 'Creating random', csvPathname, 'with range', ((maxInt - minInt) + 1)
             write_syn_dataset(csvPathname, rowCount, colCount, minInt, maxInt, SEEDPERFILE)
-        for lll in range(3):
+        for lll in range(1):
             hexKey = 'r.hex'
-            parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=hexKey)
+            parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
             inspect = h2o_cmd.runInspect(key=hexKey)
             missingValuesList = h2o_cmd.infoFromInspect(inspect, csvFilename)
             self.assertEqual(missingValuesList, [], ('a1 should have no NAs in parsed dataset: %s' % missingValuesList))
