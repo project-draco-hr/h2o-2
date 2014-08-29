@@ -15,7 +15,8 @@ def test_binary_classifiers(self):
             compatible_frames = models['models'][model_key]['compatible_frames']
             self.assertKeysExist(models, ('models/' + model_key), ['training_duration_in_ms'])
             self.assertNotEqual(models['models'][model_key]['training_duration_in_ms'], 0, ('Expected non-zero training time for model: ' + model_key))
-            if (models['models'][model_key]['model_algorithm'] != 'Naive Bayes'):
+            should_not_have_varimp = ['glm_Prostate_binary_00', 'glm_Prostate_binary_01', 'glm_Prostate_binary_0x', 'glm_Prostate_binary_xx', 'glm_Prostate_binary_x0', 'glm_Prostate_binary_x1']
+            if ((models['models'][model_key]['model_algorithm'] != 'Naive Bayes') and (model_key not in should_not_have_varimp)):
                 self.assertKeysExistAndNonNull(models, ('models/' + model_key), ['variable_importances'])
                 self.assertKeysExistAndNonNull(models, (('models/' + model_key) + '/variable_importances'), ['varimp', 'method', 'max_var', 'scaled'])
             for frame_key in compatible_frames:
