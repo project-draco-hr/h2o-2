@@ -1,17 +1,17 @@
-def test_mixed_int_enum_1_1(self):
+def test_mixed_int_enum_many(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     enumList = ['abc', 'def', 'ghi']
     intList = [0, 1, 2, '']
     expectedList = ['abc', 'def', 'ghi']
-    tryList = [(ROWS, COLS, 'x.hex', enumList[0:1], expectedList[0:1], intList[0:2]), (ROWS, COLS, 'x.hex', enumList[0:2], expectedList[0:2], intList[0:1]), (ROWS, COLS, 'x.hex', enumList[0:1], expectedList[0:1], intList[0:1]), (ROWS, COLS, 'x.hex', enumList[0:], expectedList[0:], intList[0:1]), (ROWS, COLS, 'x.hex', enumList[0:2], expectedList[0:2], intList[0:2]), (ROWS, COLS, 'x.hex', enumList[0:1], expectedList[0:1], intList[0:2]), (ROWS, COLS, 'x.hex', enumList[0:], expectedList[0:], intList[0:2])]
+    tryList = [(ROWS, COLS, 'a.hex', enumList[0:1], expectedList[0:1], intList[0:2], False), (ROWS, COLS, 'b.hex', enumList[0:2], expectedList[0:2], intList[0:1], True), (ROWS, COLS, 'c.hex', enumList[0:1], expectedList[0:1], intList[0:1], True), (ROWS, COLS, 'd.hex', enumList[0:], expectedList[0:], intList[0:1], True), (ROWS, COLS, 'e.hex', enumList[0:2], expectedList[0:2], intList[0:2], True), (ROWS, COLS, 'f.hex', enumList[0:1], expectedList[0:1], intList[0:2], True), (ROWS, COLS, 'g.hex', enumList[0:], expectedList[0:], intList[0:2], True)]
     timeoutSecs = 10
     trial = 1
     n = h2o.nodes[0]
     lenNodes = len(h2o.nodes)
     x = 0
     timeoutSecs = 60
-    for (rowCount, colCount, hex_key, enumChoices, enumExpected, intChoices) in tryList:
+    for (rowCount, colCount, hex_key, enumChoices, enumExpected, intChoices, resultIsEnum) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         x += 1
         csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
@@ -22,7 +22,7 @@ def test_mixed_int_enum_1_1(self):
         parseResult = h2i.import_parse(path=csvPathname, schema='put', header=0, hex_key=hex_key, timeoutSecs=10, doSummary=False)
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
-        print ('\n' + csvFilename)
+        print '\nTrial:', trial, csvFilename
         numRows = inspect['numRows']
         numCols = inspect['numCols']
         summaryResult = h2o_cmd.runSummary(key=hex_key, noPrint=False, numRows=numRows, numCols=numCols)
@@ -33,23 +33,23 @@ def test_mixed_int_enum_1_1(self):
             coltype = column['type']
             stats = column['stats']
             stattype = stats['type']
-            self.assertEqual(stattype, 'Enum')
-            cardinality = stats['cardinality']
-            if ENABLE_ASSERTS:
+            if (ENABLE_ASSERTS and resultIsEnum):
+                self.assertEqual(stattype, 'Enum', ('trial %s: Expecting summaries/stats/type to be Enum for %s col colname %s' % (trial, i, colname)))
+            if (ENABLE_ASSERTS and resultIsEnum):
+                cardinality = stats['cardinality']
                 self.assertEqual(cardinality, len(enumChoices), msg=('trial %s: cardinality %s should be %s' % (trial, cardinality, len(enumChoices))))
             hstart = column['hstart']
             hstep = column['hstep']
             hbrk = column['hbrk']
-            if ENABLE_ASSERTS:
+            if (ENABLE_ASSERTS and resultIsEnum):
                 self.assertEqual(hbrk, enumChoices)
             hcnt = column['hcnt']
             hcntTotal = sum(hcnt)
             numRowsCreated = (rowCount + len(intChoices))
-            if ENABLE_ASSERTS:
+            if (ENABLE_ASSERTS and resultIsEnum):
                 self.assertEqual(hcntTotal, (numRowsCreated - expectedNaCnt[i]))
             self.assertEqual(numRows, numRowsCreated, msg=('trial %s: numRows %s should be %s' % (trial, numRows, numRowsCreated)))
             nacnt = column['nacnt']
-            if ENABLE_ASSERTS:
+            if (ENABLE_ASSERTS and resultIsEnum):
                 self.assertEqual(nacnt, expectedNaCnt[i], ('trial %s: Column %s Expected %s. nacnt %s incorrect' % (trial, i, expectedNaCnt[i], nacnt)))
         trial += 1
-        h2i.delete_keys_at_all_nodes()
