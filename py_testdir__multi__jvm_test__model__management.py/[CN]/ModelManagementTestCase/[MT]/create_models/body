@@ -9,7 +9,7 @@ def create_models(self, frame_keys):
     print '##############################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model. . .'
     before = (time.time() * 1000)
-    glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, 'use_all_factor_levels': 1, }
+    glm_AirlinesTrain_1_params = {'destination_key': 'glm_AirlinesTrain_binary_1', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, 'use_all_factor_levels': 1, 'variable_importances': 1, }
     glm_AirlinesTrain_1 = node.GLM(airlines_train_hex, **glm_AirlinesTrain_1_params)
     durations['glm_AirlinesTrain_binary_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
@@ -21,7 +21,7 @@ def create_models(self, frame_keys):
     print '#########################################################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model with nfold crossvalidation. . .'
     before = (time.time() * 1000)
-    glm_AirlinesTrain_3fold_params = {'destination_key': 'glm_AirlinesTrain_binary_3fold', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 3, 'use_all_factor_levels': 1, }
+    glm_AirlinesTrain_3fold_params = {'destination_key': 'glm_AirlinesTrain_binary_3fold', 'response': 'IsDepDelayed', 'ignored_cols': 'IsDepDelayed_REC, IsDepDelayed_REC_recoded', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 3, 'use_all_factor_levels': 1, 'variable_importances': 1, }
     glm_AirlinesTrain_3fold = node.GLM(airlines_train_hex, **glm_AirlinesTrain_3fold_params)
     durations['glm_AirlinesTrain_binary_3fold'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
@@ -132,7 +132,7 @@ def create_models(self, frame_keys):
     print '##############################################################################################'
     print 'Generating AirlinesTrain GLM2 binary classification model with different response column. . .'
     before = (time.time() * 1000)
-    glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC_recoded', 'ignored_cols': 'IsDepDelayed, IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, 'use_all_factor_levels': 1, }
+    glm_AirlinesTrain_A_params = {'destination_key': 'glm_AirlinesTrain_binary_A', 'response': 'IsDepDelayed_REC_recoded', 'ignored_cols': 'IsDepDelayed, IsDepDelayed_REC', 'family': 'binomial', 'alpha': 0.5, 'standardize': 0, 'lambda': 0.01, 'n_folds': 0, 'use_all_factor_levels': 1, 'variable_importances': 1, }
     glm_AirlinesTrain_A = node.GLM(airlines_train_hex, **glm_AirlinesTrain_A_params)
     durations['glm_AirlinesTrain_binary_A'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
@@ -164,13 +164,109 @@ def create_models(self, frame_keys):
         dummy = a_node.frames()
         dummy = a_node.models()
     print '#########################################################'
-    print 'Generating Prostate GLM2 binary classification model. . .'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances false and use_all_factor_levels false (should have no warnings) . . .'
     before = (time.time() * 1000)
-    glm_Prostate_1_params = {'destination_key': 'glm_Prostate_binary_1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 0, }
-    glm_Prostate_1 = node.GLM(prostate_hex, **glm_Prostate_1_params)
-    durations['glm_Prostate_binary_1'] = ((time.time() * 1000) - before)
+    glm_Prostate_00_params = {'destination_key': 'glm_Prostate_binary_00', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'variable_importances': 0, 'use_all_factor_levels': 0, }
+    glm_Prostate_00 = node.GLM(prostate_hex, **glm_Prostate_00_params)
+    durations['glm_Prostate_binary_00'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
-    h2o_glm.simpleCheckGLM(self, glm_Prostate_1, None, **glm_Prostate_1_params)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_00, None, **glm_Prostate_00_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances false and use_all_factor_levels true (should have no warnings) . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_01_params = {'destination_key': 'glm_Prostate_binary_01', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'variable_importances': 0, 'use_all_factor_levels': 1, }
+    glm_Prostate_01 = node.GLM(prostate_hex, **glm_Prostate_01_params)
+    durations['glm_Prostate_binary_01'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_01, None, **glm_Prostate_01_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances true and use_all_factor_levels false (should have a warning) . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_10_params = {'destination_key': 'glm_Prostate_binary_10', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'variable_importances': 1, 'use_all_factor_levels': 0, }
+    glm_Prostate_10 = node.GLM(prostate_hex, **glm_Prostate_10_params)
+    durations['glm_Prostate_binary_10'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_10, None, **glm_Prostate_10_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances true and use_all_factor_levels true (should have no warnings) . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_11_params = {'destination_key': 'glm_Prostate_binary_11', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'variable_importances': 1, 'use_all_factor_levels': 1, }
+    glm_Prostate_11 = node.GLM(prostate_hex, **glm_Prostate_11_params)
+    durations['glm_Prostate_binary_11'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_11, None, **glm_Prostate_11_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances default (should default to false) and use_all_factor_levels default (should default to false), should have no warnings . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_xx_params = {'destination_key': 'glm_Prostate_binary_xx', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, }
+    glm_Prostate_xx = node.GLM(prostate_hex, **glm_Prostate_xx_params)
+    durations['glm_Prostate_binary_xx'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_xx, None, **glm_Prostate_xx_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances default (should default to false) and use_all_factor_levels false (should have no warnings) . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_x0_params = {'destination_key': 'glm_Prostate_binary_x0', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 0, }
+    glm_Prostate_x0 = node.GLM(prostate_hex, **glm_Prostate_x0_params)
+    durations['glm_Prostate_binary_x0'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_x0, None, **glm_Prostate_x0_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances default (should default to false) and use_all_factor_levels true (should have no warnings) . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_x1_params = {'destination_key': 'glm_Prostate_binary_x1', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 1, }
+    glm_Prostate_x1 = node.GLM(prostate_hex, **glm_Prostate_x1_params)
+    durations['glm_Prostate_binary_x1'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_x1, None, **glm_Prostate_x1_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances false and use_all_factor_levels default (should default to false), should have no warnings . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_0x_params = {'destination_key': 'glm_Prostate_binary_0x', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'variable_importances': 0, }
+    glm_Prostate_0x = node.GLM(prostate_hex, **glm_Prostate_0x_params)
+    durations['glm_Prostate_binary_0x'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_0x, None, **glm_Prostate_0x_params)
+    for a_node in h2o.nodes:
+        print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
+        dummy = a_node.frames()
+        dummy = a_node.models()
+    print '#########################################################'
+    print 'Generating Prostate GLM2 binary classification model with variable_importances True and use_all_factor_levels default (should default to false), should have a warning . . .'
+    before = (time.time() * 1000)
+    glm_Prostate_1x_params = {'destination_key': 'glm_Prostate_binary_1x', 'response': 'CAPSULE', 'ignored_cols': None, 'family': 'binomial', 'alpha': 0.5, 'n_folds': 0, 'variable_importances': 1, }
+    glm_Prostate_1x = node.GLM(prostate_hex, **glm_Prostate_1x_params)
+    durations['glm_Prostate_binary_1x'] = ((time.time() * 1000) - before)
+    num_models = (num_models + 1)
+    h2o_glm.simpleCheckGLM(self, glm_Prostate_1x, None, **glm_Prostate_1x_params)
     for a_node in h2o.nodes:
         print ((('Checking /Frames and /Models on: ' + a_node.http_addr) + ':') + str(a_node.port))
         dummy = a_node.frames()
@@ -200,7 +296,7 @@ def create_models(self, frame_keys):
     print '##############################################'
     print 'Generating Prostate GLM2 regression model. . .'
     before = (time.time() * 1000)
-    glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 1, }
+    glm_Prostate_regression_1_params = {'destination_key': 'glm_Prostate_regression_1', 'response': 'AGE', 'ignored_cols': None, 'family': 'gaussian', 'alpha': 0.5, 'n_folds': 0, 'use_all_factor_levels': 1, 'variable_importances': 1, }
     glm_Prostate_regression_1 = node.GLM(prostate_hex, **glm_Prostate_regression_1_params)
     durations['glm_Prostate_regression_1'] = ((time.time() * 1000) - before)
     num_models = (num_models + 1)
