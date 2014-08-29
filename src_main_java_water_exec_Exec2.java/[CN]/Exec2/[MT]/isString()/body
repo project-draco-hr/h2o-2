@@ -1,0 +1,10 @@
+{
+  if (_x >= _buf.length)   return null;
+  char c=_buf[_x];
+  if (isQuote(c)) {
+    int x=_x + 1;
+    while (x < _buf.length && _buf[x] != c)     x++;
+    return _str.substring(_x + 1,x);
+  }
+  return null;
+}
