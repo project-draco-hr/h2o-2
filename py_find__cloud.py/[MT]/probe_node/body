@@ -6,7 +6,7 @@ def probe_node(line, h2oNodes):
     if (http_addr == ''):
         http_addr = '127.0.0.1'
     probes = []
-    gc = do_json_request(http_addr, port, 'Cloud.json', timeout=3)
+    gc = do_json_request(http_addr, port, 'Cloud.json', timeout=10)
     if (gc is None):
         return probes
     consensus = gc['consensus']

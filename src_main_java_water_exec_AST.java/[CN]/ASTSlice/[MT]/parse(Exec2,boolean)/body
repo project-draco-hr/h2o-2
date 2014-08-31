@@ -8,7 +8,8 @@
   AST rows=E.xpeek(',',(x=E._x),parseCXExpr(E,false));
   if (rows != null && !rows._t.union(Type.dblary()))   E.throwErr("Must be scalar or array",x);
   AST cols=E.xpeek(']',(x=E._x),parseCXExpr(E,false));
-  if (cols != null && !cols._t.union(Type.dblary()))   E.throwErr("Must be scalar or array",x);
+  if (cols != null && !cols._t.union(Type.dblary()))   if (cols._t.isStr())   E.throwErr("The current Exec does not handle strings",x);
+ else   E.throwErr("Must be scalar or array",x);
   Type t=rows != null && rows.isPosConstant() && cols != null && cols.isPosConstant() ? Type.DBL : Type.ARY;
   return new ASTSlice(t,ast,cols,rows);
 }

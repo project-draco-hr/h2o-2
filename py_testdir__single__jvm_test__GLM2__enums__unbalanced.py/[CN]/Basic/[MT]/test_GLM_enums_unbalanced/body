@@ -59,8 +59,8 @@ def test_GLM_enums_unbalanced(self):
             print 'iteration', iteration
             print 'auc', auc
             h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
-            if (iteration > 20):
-                raise Exception(('Why take so many iterations:  %s in this glm2 training?' % iterations))
+            if (iteration > 30):
+                raise Exception(('Why take so many iterations:  %s in this glm2 training?' % iteration))
             print 'Problems with test data having different enums than train? just use train for now'
             testDataKey = hex_key
             h2o_cmd.runScore(dataKey=testDataKey, modelKey=modelKey, vactual=y, vpredict=1, expectedAuc=0.5)

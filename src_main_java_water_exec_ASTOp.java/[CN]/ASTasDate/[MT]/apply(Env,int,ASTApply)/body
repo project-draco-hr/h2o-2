@@ -1,0 +1,25 @@
+{
+  final String format=env.popStr();
+  if (format.isEmpty())   throw new IllegalArgumentException("as.Date requires a non-empty format string");
+  Frame fr=env.ary(-1);
+  if (fr.vecs().length != 1 || !fr.vecs()[0].isEnum())   throw new IllegalArgumentException("as.Date requires a single column of factors");
+  Frame fr2=new MRTask2(){
+    @Override public void map(    Chunk chks[],    NewChunk nchks[]){
+      DateTimeFormatter dtf=ParseTime.forStrptimePattern(format);
+      for (int i=0; i < nchks.length; i++) {
+        NewChunk n=nchks[i];
+        Chunk c=chks[i];
+        int rlen=c._len;
+        for (int r=0; r < rlen; r++) {
+          if (!c.isNA0(r)) {
+            String date=c._vec.domain((long)c.at0(r));
+            n.addNum(DateTime.parse(date,dtf).getMillis(),0);
+          }
+ else           n.addNA();
+        }
+      }
+    }
+  }
+.doAll(fr.numCols(),fr).outputFrame(fr._names,null);
+  env.poppush(2,fr2,null);
+}
