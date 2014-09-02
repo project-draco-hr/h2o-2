@@ -3,7 +3,7 @@ def test_rf_big1_nopoll_fvec(self):
     csvFilename = 'hhp_107_01.data.gz'
     hex_key = (csvFilename + '.hex')
     print ('\n' + csvFilename)
-    parseResult = h2i.import_parse(bucket='smalldata', path=csvFilename, hex_key=hex_key, timeoutSecs=15, schema='put')
+    parseResult = h2i.import_parse(bucket='smalldata', path=csvFilename, hex_key=hex_key, timeoutSecs=30, schema='put')
     rfViewInitial = []
     for jobDispatch in range(3):
         start = time.time()
