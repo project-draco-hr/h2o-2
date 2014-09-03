@@ -1,4 +1,4 @@
-def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=None, allowError=False, trial=0):
+def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=None, allowError=False, allowRowError=False, trial=0):
     from operator import itemgetter
     tupleResultList.sort(key=itemgetter(0))
     if (expected is not None):
@@ -15,5 +15,6 @@ def compareResultsToExpected(self, tupleResultList, expected=None, allowedDelta=
             for (a, b) in zip(expCenter, actCenter):
                 absAllowedDelta = abs((allowedDelta[0] * a))
                 self.assertAlmostEqual(a, b, delta=absAllowedDelta, msg=('Trial %d Center value expected: %s actual: %s delta > %s' % (trial, a, b, absAllowedDelta)))
-            absAllowedDelta = abs((allowedDelta[1] * expRows))
-            self.assertAlmostEqual(expRows, actRows, delta=absAllowedDelta, msg=('Trial %d Rows expected: %s actual: %s delta > %s' % (trial, expRows, actRows, absAllowedDelta)))
+            if (not allowRowError):
+                absAllowedDelta = abs((allowedDelta[1] * expRows))
+                self.assertAlmostEqual(expRows, actRows, delta=absAllowedDelta, msg=('Trial %d Rows expected: %s actual: %s delta > %s' % (trial, expRows, actRows, absAllowedDelta)))

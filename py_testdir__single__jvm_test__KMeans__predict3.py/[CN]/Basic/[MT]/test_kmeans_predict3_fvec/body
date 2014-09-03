@@ -1,7 +1,6 @@
 def test_kmeans_predict3_fvec(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     timeoutSecs = 600
-    predictHexKey = 'predict_0.hex'
     predictCsv = 'predict_0.csv'
     actualCsv = 'actual_0.csv'
     if (1 == 1):
@@ -14,7 +13,7 @@ def test_kmeans_predict3_fvec(self):
         bucket = 'smalldata'
         csvPathname = 'iris/iris2.csv'
         hexKey = 'iris2.csv.hex'
-        translate = None
+        translate = {'setosa': 0.0, 'versicolor': 1.0, 'virginica': 2.0, }
         expectedPctWrong = 0.7
     elif (1 == 0):
         outputClasses = 6
@@ -68,7 +67,7 @@ def test_kmeans_predict3_fvec(self):
     csvSrcOutputPathname = ((SYNDATASETS_DIR + '/') + actualCsv)
     csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
 
-    def predict_and_compare_csvs(model_key, hex_key, translate=None, y=0):
+    def predict_and_compare_csvs(model_key, hex_key, predictHexKey, translate=None, y=0):
         dataKey = 'P.hex'
         if skipSrcOutputHeader:
             print 'Has header in dataset, so should be able to chop out col 0 for predict and get right answer'
@@ -79,8 +78,9 @@ def test_kmeans_predict3_fvec(self):
             dataKey = hex_key
         h2e.exec_expr(execExpr=(((('Z.hex=' + hex_key) + '[,') + str((y + 1))) + ']'), timeoutSecs=30)
         start = time.time()
-        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
+        predictResult = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
         print 'generate_predictions end on ', hexKey, ' took', (time.time() - start), 'seconds'
+        print 'predictResult:', h2o.dump_json(predictResult)
         h2o.check_sandbox_for_errors()
         inspect = h2o_cmd.runInspect(key=predictHexKey)
         h2o_cmd.infoFromInspect(inspect, 'predict.hex')
@@ -116,7 +116,15 @@ def test_kmeans_predict3_fvec(self):
     seed = random.randint(0, sys.maxint)
     kwargs = {'ignored_cols_by_name': response, 'seed': seed, 'k': outputClasses, 'initialization': 'PlusPlus', 'destination_key': 'kmeans_model', 'max_iter': 1000, }
     kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=60, **kwargs)
+    size = kmeans['model']['size']
     (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
+    size2 = [t[1] for t in tupleResultList]
+    if (size != size2):
+        raise Exception('training cluster sizes: %s are not the same as what we got from predict on same data: %s', (size, size2))
+    expectedSizes = [[39, 50, 61], [38, 50, 62]]
+    sortedSize = sorted(size)
+    if (sortedSize not in expectedSizes):
+        raise Exception(('I got cluster sizes %s but expected one of these: %s ' % (sortedSize, expectedSizes)))
     print 'centers:', centers
     self.assertEqual((numCols - 1), len(centers[0]), ("kmeans first center doesn't have same # of values as dataset row %s %s" % ((numCols - 1), len(centers[0]))))
     error = kmeans['model']['total_within_SS']
@@ -127,6 +135,13 @@ def test_kmeans_predict3_fvec(self):
     print "don't you need one less column (the last is output?)"
     print 'WARNING: max_iter set to 8 for benchmark comparisons'
     print 'y=', y
-    pctWrong = predict_and_compare_csvs(model_key='kmeans_model', hex_key=hexKey, translate=translate, y=y)
+    print ''
+    print "oh I see why I can't compare predict to actual, in kmeans"
+    print "the cluster order doesn't have to match the output class enum order"
+    print "so I don't know what cluster, each output class will be (kmeans)"
+    print 'all I can say is that the prediction distribution should match the original source distribution'
+    print 'have to figure out what to do'
+    predictHexKey = 'predict_0.hex'
+    pctWrong = predict_and_compare_csvs(model_key='kmeans_model', hex_key=hexKey, predictHexKey=predictHexKey, translate=translate, y=y)
     if (1 == 0):
         self.assertAlmostEqual(pctWrong, expectedPctWrong, delta=0.7, msg=("predicted pctWrong: %s should be small because we're predicting with training data" % pctWrong))

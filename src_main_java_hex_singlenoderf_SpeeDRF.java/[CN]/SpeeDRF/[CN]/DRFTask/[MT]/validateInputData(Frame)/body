@@ -9,9 +9,9 @@
   ChunkAllocInfo cai=new ChunkAllocInfo();
   boolean can_load_all=canLoadAll(fr,cai);
   if (_params._useNonLocalData && !can_load_all) {
-    Log.warn("Cannot load all data from remote nodes - " + "the node " + cai.node + " requires "+ PrettyPrint.bytes(cai.requiredMemory)+ " to load all data and perform computation but there is only "+ PrettyPrint.bytes(cai.availableMemory)+ " of available memory. "+ "Please provide more memory for JVMs or disable the option '"+ Constants.USE_NON_LOCAL_DATA+ "' (however, it may affect resulting accuracy).");
-    Log.warn("Automatically disabling fast mode.");
-    throw new IllegalArgumentException("Cannot compute fast RF: Use big data Random Forest.");
+    String heap_warning="This algorithm requires loading of all data from remote nodes." + "\nThe node " + cai.node + " requires "+ PrettyPrint.bytes(cai.requiredMemory)+ " more memory to load all data and perform computation but there is only "+ PrettyPrint.bytes(cai.availableMemory)+ " of available memory."+ "\n\nPlease provide more memory for JVMs \n\n-OR-\n\n Try Big Data Random Forest: ";
+    Log.warn(heap_warning);
+    throw new IllegalArgumentException(heap_warning + DRF.link(Key.make(_key),"Big Data Random Forest"));
   }
   if (can_load_all) {
     _params._useNonLocalData=true;

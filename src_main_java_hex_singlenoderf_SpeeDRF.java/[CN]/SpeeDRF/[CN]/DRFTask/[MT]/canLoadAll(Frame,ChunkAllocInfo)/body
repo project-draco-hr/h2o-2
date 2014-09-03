@@ -13,7 +13,8 @@
     long nodeFreeMemory=(long)((hb.get_max_mem() - (hb.get_tot_mem() - hb.get_free_mem())) * OVERHEAD_MAGIC);
     Log.debug(Log.Tag.Sys.RANDF,i + ": computed available mem: " + PrettyPrint.bytes(nodeFreeMemory));
     Log.debug(Log.Tag.Sys.RANDF,i + ": remote chunks require: " + PrettyPrint.bytes(memForNonLocal));
-    if (nodeFreeMemory - memForNonLocal <= 0) {
+    if (nodeFreeMemory - memForNonLocal <= 0 || (nodeFreeMemory <= TWO_HUNDRED_MB && memForNonLocal >= ONE_FIFTY_MB)) {
+      Log.info("Node free memory raw: " + nodeFreeMemory);
       cai.node=H2O.CLOUD._memary[i];
       cai.availableMemory=nodeFreeMemory;
       cai.requiredMemory=memForNonLocal;
