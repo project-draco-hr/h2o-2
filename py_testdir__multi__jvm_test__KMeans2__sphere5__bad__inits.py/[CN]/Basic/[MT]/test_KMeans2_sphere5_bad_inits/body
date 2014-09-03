@@ -9,7 +9,7 @@ def test_KMeans2_sphere5_bad_inits(self):
     print '\nStarting', csvFilename
     parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=(csvFilename + '.hex'))
     for trial in range(5):
-        kwargs = {'normalize': 0, 'k': CLUSTERS, 'max_iter': 50, 'initialization': 'Furthest', 'destination_key': 'syn_spheres100.hex', 'seed': SEED, }
+        kwargs = {'normalize': 0, 'k': CLUSTERS, 'max_iter': 50, 'initialization': 'PlusPlus', 'destination_key': 'syn_spheres100.hex', 'seed': SEED, }
         timeoutSecs = 30
         start = time.time()
         kmeansResult = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
