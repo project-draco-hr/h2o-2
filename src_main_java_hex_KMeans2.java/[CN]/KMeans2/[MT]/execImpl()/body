@@ -37,9 +37,9 @@
  else {
       clusters=new double[1][vecs.length];
       randomRow(vecs,rand,clusters[0],means,mults);
-      while (model.iterations < 5) {
+      while (model.iterations < k) {
         SumSqr sqr=new SumSqr(clusters,means,mults,_ncats).doAll(vecs);
-        Sampler sampler=new Sampler(clusters,means,mults,_ncats,sqr._sqr,k * 3,seed).doAll(vecs);
+        Sampler sampler=new Sampler(clusters,means,mults,_ncats,sqr._sqr,1,seed).doAll(vecs);
         clusters=Utils.append(clusters,sampler._sampled);
         if (!isRunning())         return;
         model.centers=denormalize(clusters,ncats,means,mults);
