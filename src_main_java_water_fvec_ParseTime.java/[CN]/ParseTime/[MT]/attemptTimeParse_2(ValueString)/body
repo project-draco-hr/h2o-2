@@ -4,7 +4,7 @@
   final int end=i + str.get_length();
   while (i < end && buf[i] == ' ')   i++;
   if (i < end && buf[i] == '"')   i++;
-  if ((end - i) < 8)   return Long.MIN_VALUE;
+  if ((end - i) < 7)   return Long.MIN_VALUE;
   int yy=0, MM=0, dd=0;
   dd=digit(dd,buf[i++]);
   if (buf[i] != '-')   dd=digit(dd,buf[i++]);
