@@ -1,0 +1,19 @@
+def test_exec2_fast_locks(self):
+    csvPathname = 'iris/iris2.csv'
+    src_key = 'iris.csv'
+    if (not AVOID_BUG):
+        (importResult, importPattern) = h2i.import_only(bucket='smalldata', path=csvPathname, schema='put', src_key=src_key, timeoutSecs=10)
+        print 'importResult:', h2o.dump_json(importResult)
+        print 'importPattern:', h2o.dump_json(importPattern)
+    y = 4
+    for trial in range(1, 100):
+        if AVOID_BUG:
+            (importResult, importPattern) = h2i.import_only(bucket='smalldata', path=csvPathname, schema='put', src_key=src_key, timeoutSecs=10)
+            print 'importResult:', h2o.dump_json(importResult)
+            print 'importPattern:', h2o.dump_json(importPattern)
+        hex_key = (('iris2_' + str(trial)) + '.hex')
+        parseResult = h2i.parse_only(pattern=src_key, hex_key=hex_key, delete_on_done=(1 if AVOID_BUG else 0), timeoutSecs=10)
+        execExpr = ('%s[,%s]=(%s[,%s]==%s)' % (hex_key, (y + 1), hex_key, (y + 1), 1))
+        h2e.exec_expr(execExpr=execExpr, timeoutSecs=10)
+    a = h2o.nodes[0].jobs_admin()
+    h2o.verboseprint('jobs_admin():', h2o.dump_json(a))
