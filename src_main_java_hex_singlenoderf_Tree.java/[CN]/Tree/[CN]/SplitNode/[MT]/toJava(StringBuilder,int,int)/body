@@ -1,0 +1,23 @@
+{
+  int d=0;
+  if (depth.length == 0) {
+    sb.append("  static final float predict(double[] data) {\n" + "    float pred = ");
+  }
+ else {
+    d=depth[0];
+  }
+  sb.append("Double.isNaN(data[" + Integer.toString(_column) + "]) || (float) data["+ Integer.toString(_column)+ "] /* "+ _name+ "*/ ").append("<= ").append(Utils.p2d(split_value())).append("\n");
+  if (sb.length() > n)   return sb;
+  for (int i=-3; i < d; i++) {
+    sb.append("  ");
+  }
+  sb.append(" ? ");
+  sb=_l.toJava(sb,n,d + 1).append("\n");
+  if (sb.length() > n)   return sb;
+  for (int i=-3; i < d; i++) {
+    sb.append("  ");
+  }
+  sb.append(" : ");
+  sb=_r.toJava(sb,n,d + 1);
+  return sb;
+}
