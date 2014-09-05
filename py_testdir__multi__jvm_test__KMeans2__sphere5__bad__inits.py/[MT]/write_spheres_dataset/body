@@ -1,6 +1,6 @@
 def write_spheres_dataset(csvPathname, CLUSTERS, n):
     dsf = open(csvPathname, 'w+')
-    centersList = []
+    expectedCenters = []
     currentCenter = None
     totalRows = 0
     print ''
@@ -11,7 +11,7 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
             currentCenter = [0, 0, 0]
         else:
             currentCenter = [(a + b) for (a, b) in zip(currentCenter, newOffset)]
-        centersList.append(currentCenter)
+        expectedCenters.append(currentCenter)
         numPts = random.randint(int((0.5 * n)), int((1.5 * n)))
         print 'currentCenter:', currentCenter, 'R:', R, 'numPts', numPts
         for i in range(numPts):
@@ -20,5 +20,5 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
             dsf.write((','.join(map(str, xyzShifted)) + '\n'))
             totalRows += 1
     dsf.close()
-    print 'Spheres created:', len(centersList), 'totalRows:', totalRows
-    return centersList
+    print 'Spheres created:', len(expectedCenters), 'totalRows:', totalRows
+    return expectedCenters
