@@ -13,7 +13,7 @@ def test_KMeans2_sphere5_bad_inits(self):
     sameAsBest = 0
     bestResult = Result(None, None, None, None, None, None, None, None, None)
     for trial in range(TRIALS):
-        kwargs = {'normalize': 0, 'k': CLUSTERS, 'max_iter': MAX_ITER, 'initialization': 'PlusPlus', 'destination_key': 'syn_spheres100.hex', 'seed': SEED, }
+        kwargs = {'normalize': 0, 'k': CLUSTERS, 'max_iter': MAX_ITER, 'initialization': 'Furthest', 'destination_key': 'syn_spheres100.hex', 'seed': SEED, }
         timeoutSecs = 30
         start = time.time()
         kmeansResult = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
