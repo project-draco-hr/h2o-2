@@ -1,7 +1,10 @@
 {
-  if (s == -1)   seed=_seedGenerator.nextLong();
+  if (s == -1) {
+    seed=_seedGenerator.nextLong();
+    use_seed=seed;
+  }
  else {
     _seedGenerator=Utils.getDeterRNG(s);
-    seed=_seedGenerator.nextLong();
+    use_seed=_seedGenerator.nextLong();
   }
 }
