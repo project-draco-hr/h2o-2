@@ -1,0 +1,15 @@
+{
+  if (dl_model == null)   throw new IllegalArgumentException("Deep Learning Model must be specified.");
+  DeepLearningModel dlm=UKV.get(dl_model);
+  if (dlm == null)   throw new IllegalArgumentException("Deep Learning Model not found.");
+  StringBuilder sb=new StringBuilder();
+  if (layer < -1 || layer > dlm.get_params().hidden.length - 1)   throw new IllegalArgumentException("Layer must be either -1 or between 0 and " + (dlm.get_params().hidden.length - 1));
+  if (layer == -1)   layer=dlm.get_params().hidden.length - 1;
+  int features=dlm.get_params().hidden[layer];
+  sb.append("\nTransforming frame '" + source._key.toString() + "' with "+ source.numCols()+ " into "+ features+ " features with model '"+ dl_model+ "'\n");
+  Frame df=dlm.scoreDeepFeatures(source,layer);
+  sb.append("Storing the new features under: " + dest() + ".\n");
+  Frame output=new Frame(dest(),df.names(),df.vecs());
+  output.delete_and_lock(null);
+  output.unlock(null);
+}
