@@ -2,14 +2,7 @@
   SpeeDRFModel m=(SpeeDRFModel)old.clone();
   m.t_keys=Arrays.copyOf(old.t_keys,old.t_keys.length + 1);
   m.t_keys[m.t_keys.length - 1]=tkey;
-  if (old.dtreeKeys == null) {
-    m.dtreeKeys=new Key[1][m.nclasses()];
-  }
- else {
-    m.dtreeKeys=Arrays.copyOf(old.dtreeKeys,old.dtreeKeys.length + 1);
-    m.dtreeKeys[m.dtreeKeys.length - 1]=new Key[m.nclasses()];
-  }
-  m.dtreeKeys[m.dtreeKeys.length - 1][0]=dtKey;
+  m.dtreeKeys[tree_id][0]=dtKey;
   m.local_forests[nodeIdx][tree_id]=tkey;
   if (old.verbose_output.length < 2) {
     m.verbose_output=Arrays.copyOf(old.verbose_output,old.verbose_output.length + 1);
