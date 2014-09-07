@@ -3,10 +3,12 @@ sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_kmeans, h2o_hosts, h2o_import as h2i
 from operator import itemgetter
 import collections
-BAD_SEED = None
-MAX_ITER = 100
-TRIALS = 4
-INIT = 'PlusPlus'
-NOT_SO_BAD = True
+CLUSTERS = 5
+SPHERE_PTS = 100000
+BAD_SEED = 815071896901582303
+MAX_ITER = 1000
+TRIALS = 1
+INIT = 'Furthest'
+NOT_SO_BAD = False
 if (__name__ == '__main__'):
     h2o.unit_main()

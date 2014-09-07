@@ -7,7 +7,7 @@ def test_KMeans2_winesPCA(self):
     h2o.check_sandbox_for_errors()
     inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
     print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
-    kwargs = {'initialization': 'Furthest', 'max_iter': 15, 'k': 3, 'seed': 265211114317615310, }
+    kwargs = {'initialization': 'Furthest', 'max_iter': 50, 'k': 3, 'seed': '265211114317615310', }
     timeoutSecs = 480
     for trial in range(10):
         start = time.time()
@@ -16,6 +16,9 @@ def test_KMeans2_winesPCA(self):
         print 'kmeans #', trial, 'end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
         h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
-        expected = [([(-2.25977535371875), (-0.8631572635625001)], 64, 83.77800617624794), ([0.16232721958461543, 1.7626161107230771], 65, 111.64440134649745), ([2.7362112930204074, (-1.2107751495102044)], 49, 62.6290553489474)]
+        if OLD_KMEANS:
+            expected = [([(-2.25977535371875), (-0.8631572635625001)], 64, 83.77800617624794), ([0.16232721958461543, 1.7626161107230771], 65, 111.64440134649745), ([2.7362112930204074, (-1.2107751495102044)], 49, 62.6290553489474)]
+        else:
+            expected = [([(-2.23406681758209), (-0.7729819755373136)], 67, 96.85372611195429), ([0.25174392601612905, 1.792222172419355], 62, 99.21823733913352), ([2.7362112930204074, (-1.2107751495102044)], 49, 62.6290553489474)]
         allowedDelta = (0.01, 0.01, 0.01)
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected, allowedDelta, trial)
