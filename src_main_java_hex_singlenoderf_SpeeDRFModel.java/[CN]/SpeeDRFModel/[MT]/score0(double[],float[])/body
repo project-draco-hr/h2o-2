@@ -10,7 +10,9 @@
  else {
     int votes[]=new int[numClasses + 1];
     preds=new float[numClasses + 1];
-    for (int i=0; i < treeCount(); i++)     votes[(int)Tree.classify(new AutoBuffer(tree(i)),data,numClasses,false)]++;
+    for (int i=0; i < treeCount(); i++) {
+      votes[(int)Tree.classify(new AutoBuffer(tree(i)),data,numClasses,false)]++;
+    }
     float s=0.f;
     for (    int v : votes)     s+=(float)v;
     if (get_params().balance_classes) {
@@ -18,7 +20,7 @@
       return preds;
     }
     for (int i=0; i < votes.length - 1; ++i)     preds[i + 1]=((float)votes[i] / (float)treeCount());
-    preds[0]=(float)(classify(votes,null,null) + resp_min);
+    preds[0]=ModelUtils.getPrediction(preds,data);
     float[] rawp=new float[preds.length + 1];
     for (int i=0; i < votes.length; ++i)     rawp[i + 1]=(float)votes[i];
     return preds;

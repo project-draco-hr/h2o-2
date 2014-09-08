@@ -1,0 +1,15 @@
+def process(self):
+    f = open(self.file_name, 'r')
+    allowed_regex_list = ['^\\* using log directory', '^\\* using R version', '^\\* using R version', '^\\* using platform', '^\\* using session charset', '^\\* checking .* \\.\\.\\. OK', '^\\* checking extension type \\.\\.\\. Package', '^\\* this is package', '^\\* checking CRAN incoming feasibility \\.\\.\\. NOTE', '^Maintainer:', '^New maintainer:', '^\\s*Tom Kraljevic', '^Old maintainer\\(s\\):', '^\\s*Anqi Fu', '^NOTE: There was 1 note.']
+    s = f.readline()
+    while (len(s) > 0):
+        self.lineno = (self.lineno + 1)
+        allowed = False
+        for regex in allowed_regex_list:
+            match_groups = re.search(regex, s)
+            if (match_groups is not None):
+                allowed = True
+                break
+        if (not allowed):
+            self.parse_error('Illegal output found', s, f)
+        s = f.readline()

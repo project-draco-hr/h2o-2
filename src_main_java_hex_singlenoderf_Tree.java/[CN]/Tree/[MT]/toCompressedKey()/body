@@ -1,0 +1,7 @@
+{
+  AutoBuffer bs=new AutoBuffer();
+  TreeModel.CompressedTree compressedTree=compress();
+  Key key=Key.make((byte)1,Key.DFJ_INTERNAL_USER,H2O.SELF);
+  UKV.put(key,new Value(key,compressedTree));
+  return key;
+}

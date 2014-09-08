@@ -10,6 +10,6 @@ def test_KMeans_twit_fvec(self):
         kwargs = {'k': 3, 'max_iter': 50, 'normalize': 0, 'initialization': 'Furthest', 'destination_key': 'kmeans_dest_key', 'seed': 265211114317615310, }
         init_choices = ['Furthest', 'PlusPlus']
         kwargs['initialization'] = init_choices[(trial % len(init_choices))]
-        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=5, **kwargs)
+        kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=15, **kwargs)
         (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvFilename, parseResult, 'd', **kwargs)
         h2o_kmeans.compareResultsToExpected(self, tupleResultList, expected2, allowedDelta, trial=trial)
