@@ -1,0 +1,24 @@
+{
+  if (dtreeTreeModel != null) {
+    return dtreeTreeModel;
+  }
+  Key key=Key.make();
+  Key model_key=_key;
+  Key dataKey=_dataKey;
+  Key testKey=null;
+  String[] names=_names;
+  String[][] domains=_domains;
+  String[] cmDomain=this.cmDomain;
+  int ntrees=treeCount();
+  int min_rows=0;
+  int nbins=this.nbins;
+  int mtries=this.mtry;
+  long seed=-1;
+  int num_folds=0;
+  float[] priorClassDist=null;
+  float[] classDist=null;
+  dtreeTreeModel=new SpeeDRFModel_DTree(model_key,model_key,dataKey,testKey,names,domains,cmDomain,ntrees,max_depth,min_rows,nbins,mtries,num_folds,priorClassDist,classDist);
+  dtreeTreeModel=new SpeeDRFModel_DTree(dtreeTreeModel,dtreeKeys,treeStats);
+  dtreeTreeModel.isFromSpeeDRF=true;
+  return dtreeTreeModel;
+}

@@ -77,7 +77,7 @@
       }
     }
     for (; j < numInputColumns; j++)     row[j]=Double.NaN;
-    model.predict(row,preds);
+    preds=model.predict(row,preds);
     for (int i=0; i < preds.length; i++) {
       if (i == 0 && model.isClassifier()) {
         String[] domainValues=model.getDomainValues(model.getResponseIdx());

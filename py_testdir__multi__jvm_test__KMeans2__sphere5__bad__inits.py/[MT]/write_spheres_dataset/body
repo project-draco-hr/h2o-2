@@ -12,7 +12,10 @@ def write_spheres_dataset(csvPathname, CLUSTERS, n):
         else:
             currentCenter = [(a + b) for (a, b) in zip(currentCenter, newOffset)]
         expectedCenters.append(currentCenter)
-        numPts = random.randint(int((0.5 * n)), int((1.5 * n)))
+        if NOT_SO_BAD:
+            numPts = random.randint(int((0.5 * n)), int((1.5 * n)))
+        else:
+            numPts = n
         print 'currentCenter:', currentCenter, 'R:', R, 'numPts', numPts
         for i in range(numPts):
             xyz = get_xyz_sphere(R)

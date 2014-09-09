@@ -1,0 +1,30 @@
+{
+  AutoBuffer ab=new AutoBuffer(bytes);
+  SB sb=new SB();
+  ab.get4();
+  ab.get8();
+  ab.get1();
+  int cap=0;
+  String abString=ab.toString();
+  Pattern pattern=Pattern.compile("<= .* <= (.*?) <=");
+  Matcher matcher=pattern.matcher(abString);
+  if (matcher.find()) {
+    cap=Integer.valueOf(matcher.group(1));
+  }
+  ab.get4();
+  ab.get8();
+  ab.get1();
+  while (ab.position() < cap) {
+    byte currentNodeType=(byte)ab.get1();
+    if (currentNodeType == 'S') {
+      int _col=ab.get2();
+      float splitValue=ab.get4f();
+      sb.p("C").p(_col).p(" <= ").p(splitValue).p("(");
+    }
+ else     if (currentNodeType == '[') {
+      int cls=ab.get1();
+      sb.p("[" + cls + "]");
+    }
+  }
+  return sb.toString();
+}

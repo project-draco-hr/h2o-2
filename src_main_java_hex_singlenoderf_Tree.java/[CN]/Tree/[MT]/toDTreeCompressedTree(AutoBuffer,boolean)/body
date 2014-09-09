@@ -1,0 +1,70 @@
+{
+  AutoBuffer result=new AutoBuffer();
+  int cap=0;
+  String abString=ab.toString();
+  Pattern pattern=Pattern.compile("<= .* <= (.*?) <=");
+  Matcher matcher=pattern.matcher(abString);
+  if (matcher.find()) {
+    cap=Integer.valueOf(matcher.group(1));
+  }
+  ab.get4();
+  ab.get8();
+  ab.get1();
+  while (ab.position() < cap) {
+    byte _nodeType=0;
+    byte currentNodeType=(byte)ab.get1();
+    if (currentNodeType == 'S' || currentNodeType == 'E') {
+      if (currentNodeType == 'E') {
+        _nodeType|=0x04;
+      }
+      int _col=ab.get2();
+      float splitValue=ab.get4f();
+      int skipSize=ab.get1();
+      int skip;
+      if (skipSize == 0) {
+        _nodeType|=0x02;
+        skip=ab.get3();
+      }
+ else {
+        skip=skipSize;
+      }
+      int currentPosition=ab.position();
+      byte leftType=(byte)ab.get1();
+      ab.position(currentPosition + skip);
+      byte rightType=(byte)ab.get1();
+      ab.position(currentPosition);
+      if (leftType == '[') {
+        _nodeType|=0x30;
+      }
+      if (rightType == '[') {
+        _nodeType|=0xC0;
+      }
+      int skipModify=getSkip(ab,skip,regression);
+      skip+=skipModify;
+      if (skip > 255) {
+        _nodeType|=0x02;
+      }
+      result.put1(_nodeType);
+      result.put2((short)_col);
+      result.put4f(splitValue);
+      if (skip <= 255) {
+        if (leftType == 'S' || leftType == 'E')         result.put1(skip);
+      }
+ else {
+        result.put3(skip);
+      }
+    }
+ else     if (currentNodeType == '[') {
+      if (regression) {
+        result.put4f(ab.get4f());
+      }
+ else {
+        result.put4f((float)ab.get1());
+      }
+    }
+ else {
+      return result;
+    }
+  }
+  return result;
+}

@@ -1,0 +1,25 @@
+{
+  int result=0;
+  int startPos=ab.position();
+  while (ab.position() < startPos + leftSize) {
+    byte currentNodeType=(byte)ab.get1();
+    if (currentNodeType == 'S' || currentNodeType == 'E') {
+      ab.get2();
+      ab.get4f();
+      int skipSize=ab.get1();
+      if (skipSize == 0) {
+        ab.get3();
+      }
+    }
+ else     if (currentNodeType == '[') {
+      result++;
+      if (regression)       ab.get4f();
+ else       ab.get1();
+    }
+ else {
+      throw new NotImplementedException();
+    }
+  }
+  ab.position(startPos);
+  return result;
+}

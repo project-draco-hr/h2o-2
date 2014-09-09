@@ -1,5 +1,17 @@
 {
-  forest.i().p("return pred;").nl();
-  forest.i().p("}").di(1).nl();
-  forest.i().p("}").di(1).nl();
+  if (!isFromSpeeDRF) {
+    forest.i().p("return pred;").nl();
+    forest.i().p("}").di(1).nl();
+    forest.i().p("}").di(1).nl();
+  }
+ else {
+    if (c == 0) {
+      forest.i().p("float sum = 0;").nl();
+      forest.i().p("for (int i=1; i <= " + nclasses() + "; i++) {").p("sum += pred[i];").p("}").nl();
+      forest.i().p("for (int i=1; i <= " + nclasses() + "; i++) {").p("pred[i] /= sum;").p("}").nl();
+    }
+    forest.i().p("return pred;").nl();
+    forest.i().p("}").di(1).nl();
+    forest.i().p("}").di(1).nl();
+  }
 }

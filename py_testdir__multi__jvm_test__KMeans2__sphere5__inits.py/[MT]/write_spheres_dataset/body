@@ -1,0 +1,34 @@
+def write_spheres_dataset(csvPathname, CLUSTERS, n):
+    dsf = open(csvPathname, 'w+')
+    expectedCenters = []
+    currentCenter = None
+    totalRows = 0
+    print ''
+    for sphereCnt in range(CLUSTERS):
+        if (TEST_CASE == 1):
+            R = 0.0
+            newOffset = [0.0, 0.0, 10.0]
+        else:
+            R = (10 * (sphereCnt + 1))
+            newOffset = [(3 * R), (3 * R), (3 * R)]
+        if (currentCenter is None):
+            currentCenter = [0.0, 0.0, 0.0]
+        else:
+            currentCenter = [(a + b) for (a, b) in zip(currentCenter, newOffset)]
+        expectedCenters.append(currentCenter)
+        if (TEST_CASE == 1):
+            numPts = 10
+        else:
+            numPts = random.randint(int((0.5 * n)), int((1.5 * n)))
+        print 'currentCenter:', currentCenter, 'R:', R, 'numPts', numPts
+        for i in range(numPts):
+            if (TEST_CASE == 1):
+                xyzShifted = (0.0, 0.0, (sphereCnt * 10.0))
+            else:
+                xyz = get_xyz_sphere(R)
+                xyzShifted = [(a + b) for (a, b) in zip(xyz, currentCenter)]
+            dsf.write((','.join(map(str, xyzShifted)) + '\n'))
+            totalRows += 1
+    dsf.close()
+    print 'Spheres created:', len(expectedCenters), 'totalRows:', totalRows
+    return expectedCenters

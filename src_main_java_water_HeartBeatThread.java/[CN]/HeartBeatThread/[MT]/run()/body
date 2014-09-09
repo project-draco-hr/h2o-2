@@ -26,7 +26,7 @@
     hb._keys=(H2O.STORE.size());
     hb.set_valsz(myHisto.histo(false)._cached);
     hb._num_cpus=(char)run.availableProcessors();
-    if ((counter + H2O.SELF.hashCode()) % 300 == 2) {
+    if ((counter + Math.abs(H2O.SELF.hashCode())) % 300 == 0) {
       hb._gflops=Linpack.run(hb._cpus_allowed);
       hb._membw=MemoryBandwidth.run(hb._cpus_allowed);
     }

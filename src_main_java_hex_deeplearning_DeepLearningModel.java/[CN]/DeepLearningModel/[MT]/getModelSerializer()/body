@@ -1,0 +1,9 @@
+{
+  return new ModelAutobufferSerializer(){
+    @Override protected AutoBuffer postLoad(    Model m,    AutoBuffer ab){
+      Job.hygiene(((DeepLearningModel)m).get_params());
+      return ab;
+    }
+  }
+;
+}

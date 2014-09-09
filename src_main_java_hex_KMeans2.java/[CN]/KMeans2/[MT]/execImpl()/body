@@ -31,23 +31,25 @@
     Random rand=Utils.getRNG(seed - 1);
     double clusters[][];
     if (initialization == Initialization.None) {
-      clusters=model.centers=new double[k][fr.numCols()];
+      clusters=model.centers=new double[k * 3][fr.numCols()];
       for (      double[] cluster : clusters)       randomRow(vecs,rand,cluster,means,mults);
+      clusters=recluster(clusters,rand);
     }
  else {
       clusters=new double[1][vecs.length];
       randomRow(vecs,rand,clusters[0],means,mults);
       while (model.iterations < 5) {
         SumSqr sqr=new SumSqr(clusters,means,mults,_ncats).doAll(vecs);
-        Sampler sampler=new Sampler(clusters,means,mults,_ncats,sqr._sqr,k * 3,seed).doAll(vecs);
+        long randomSeed=(long)rand.nextDouble();
+        Sampler sampler=new Sampler(clusters,means,mults,_ncats,sqr._sqr,k * 3,randomSeed).doAll(vecs);
         clusters=Utils.append(clusters,sampler._sampled);
         if (!isRunning())         return;
         model.centers=denormalize(clusters,ncats,means,mults);
-        model.total_within_SS=sqr._sqr / fr.numRows();
+        model.total_within_SS=sqr._sqr;
         model.iterations++;
         model.update(self());
+        clusters=recluster(clusters,rand);
       }
-      clusters=recluster(clusters,rand);
     }
     model.iterations=0;
     boolean done;
