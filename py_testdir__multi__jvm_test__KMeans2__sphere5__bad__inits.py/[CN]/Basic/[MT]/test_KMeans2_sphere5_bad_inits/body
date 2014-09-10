@@ -36,7 +36,7 @@ def test_KMeans2_sphere5_bad_inits(self):
         print r.error
         if (bestResult.error and (r.error <= bestResult.error)):
             sameAsBest += 1
-            if (r.size != bestResult.size):
+            if (sorted(r.size) != sorted(bestResult.size)):
                 raise Exception(('Would expect that if two trials got the same error (rounded to int), the cluster sizes would likely be the same? %s %s' % (r.size, bestResult.size)))
         if (not bestResult.error):
             bestResult = r
