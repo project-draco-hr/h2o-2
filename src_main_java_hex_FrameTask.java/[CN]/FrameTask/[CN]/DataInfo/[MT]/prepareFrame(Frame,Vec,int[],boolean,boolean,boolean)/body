@@ -2,6 +2,9 @@
   Frame fr=new Frame(Key.makeSystem(Key.make().toString()),source._names.clone(),source.vecs().clone());
   if (ignored_cols != null)   fr.remove(ignored_cols);
   final Vec[] vecs=fr.vecs();
+  Futures fs=new Futures();
+  for (  Vec v : vecs)   v.rollupStats(fs);
+  fs.blockForPending();
   if (response != null) {
     for (int i=0; i < vecs.length - 1; ++i) {
       if (vecs[i] == response) {
