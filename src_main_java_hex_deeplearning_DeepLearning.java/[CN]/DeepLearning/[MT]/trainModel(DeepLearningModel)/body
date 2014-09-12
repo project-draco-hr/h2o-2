@@ -14,9 +14,12 @@
     if (!quiet_mode)     Log.info("Number of model parameters (weights/biases): " + String.format("%,d",model_size));
     train=model.model_info().data_info()._adaptedFrame;
     if (mp.force_load_balance)     train=updateFrame(train,reBalance(train,mp.replicate_training_data));
-    float[] trainSamplingFactors;
     if (mp.classification && mp.balance_classes) {
-      trainSamplingFactors=new float[train.lastVec().domain().length];
+      float[] trainSamplingFactors=new float[train.lastVec().domain().length];
+      if (balance_class_model_distribution != null) {
+        if (balance_class_model_distribution.length != train.lastVec().domain().length)         throw new IllegalArgumentException("balance_class_model_distribution must have " + train.lastVec().domain().length + " elements");
+        trainSamplingFactors=balance_class_model_distribution;
+      }
       train=updateFrame(train,sampleFrameStratified(train,train.lastVec(),trainSamplingFactors,(long)(mp.max_after_balance_size * train.numRows()),mp.seed,true,false));
       model.setModelClassDistribution(new MRUtils.ClassDist(train.lastVec()).doAll(train.lastVec()).rel_dist());
     }
@@ -48,7 +51,7 @@
     if (autoencoder)     model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor());
     model.update(self());
     Log.info("Starting to train the Deep Learning model.");
-    do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowFraction(train,mp,model)).doAll(train).model_info());
+    if (n_folds == 0 || xval_models == null)     do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowFraction(train,mp,model)).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor()));
     if (!isCancelledOrCrashed() && override_with_best_model && model.actual_best_model_key != null && n_folds == 0) {
       DeepLearningModel best_model=UKV.get(model.actual_best_model_key);
