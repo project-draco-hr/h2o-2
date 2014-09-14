@@ -1,8 +1,32 @@
 {
   _a=_dvec;
   Arrays.fill(_a.raw(),0f);
-  for (int i=0; i < numcat; ++i)   _a.set(cats[i],1f);
-  for (int i=0; i < nums.length; ++i)   _a.set(_dinfo.numStart() + i,Double.isNaN(nums[i]) ? 0f : (float)nums[i]);
+  if (params.max_input_layer_size < _dinfo.fullN()) {
+    final int N=_dinfo.fullN();
+    final int M=params.max_input_layer_size;
+    assert(_a.size() == M);
+    DenseVector orig=new DenseVector(N);
+    for (int i=0; i < numcat; ++i)     orig.set(cats[i],1f);
+    for (int i=0; i < nums.length; ++i)     orig.set(_dinfo.numStart() + i,Double.isNaN(nums[i]) ? 0f : (float)nums[i]);
+    if (matrix == null) {
+      Random rng=new Random(params.seed);
+      matrix=new float[N * M];
+      for (int i=0; i < M; ++i) {
+        for (int j=0; j < N; ++j) {
+          matrix[i * N + j]=rng.nextFloat();
+        }
+      }
+    }
+    for (int i=0; i < M; ++i) {
+      for (int j=0; j < N; ++j) {
+        _a.add(i,orig.get(j) * matrix[i * N + j]);
+      }
+    }
+  }
+ else {
+    for (int i=0; i < numcat; ++i)     _a.set(cats[i],1f);
+    for (int i=0; i < nums.length; ++i)     _a.set(_dinfo.numStart() + i,Double.isNaN(nums[i]) ? 0f : (float)nums[i]);
+  }
   if (_dropout == null)   return;
   seed+=params.seed + 0x1337B4BE;
   _dropout.randomlySparsifyActivation(_a,seed);
