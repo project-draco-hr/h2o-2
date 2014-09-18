@@ -16,9 +16,9 @@
     if (mp.force_load_balance)     train=updateFrame(train,reBalance(train,mp.replicate_training_data));
     if (mp.classification && mp.balance_classes) {
       float[] trainSamplingFactors=new float[train.lastVec().domain().length];
-      if (balance_class_model_distribution != null) {
-        if (balance_class_model_distribution.length != train.lastVec().domain().length)         throw new IllegalArgumentException("balance_class_model_distribution must have " + train.lastVec().domain().length + " elements");
-        trainSamplingFactors=balance_class_model_distribution;
+      if (class_sampling_factors != null) {
+        if (class_sampling_factors.length != train.lastVec().domain().length)         throw new IllegalArgumentException("class_sampling_factors must have " + train.lastVec().domain().length + " elements");
+        trainSamplingFactors=class_sampling_factors;
       }
       train=updateFrame(train,sampleFrameStratified(train,train.lastVec(),trainSamplingFactors,(long)(mp.max_after_balance_size * train.numRows()),mp.seed,true,false));
       model.setModelClassDistribution(new MRUtils.ClassDist(train.lastVec()).doAll(train.lastVec()).rel_dist());
