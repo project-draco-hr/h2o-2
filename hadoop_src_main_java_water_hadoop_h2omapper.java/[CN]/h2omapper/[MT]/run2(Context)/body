@@ -23,6 +23,7 @@
   String nthreadsString=conf.get(H2O_NTHREADS_KEY);
   String basePortString=conf.get(H2O_BASE_PORT_KEY);
   String betaString=conf.get(H2O_BETA_KEY);
+  String randomUdpDropString=conf.get(H2O_RANDOM_UDP_DROP_KEY);
   String licenseData=conf.get(H2O_LICENSE_DATA_KEY);
   ServerSocket ss=new ServerSocket();
   InetSocketAddress sa=new InetSocketAddress("127.0.0.1",0);
@@ -57,6 +58,11 @@
   if (betaString != null) {
     if (betaString.length() > 0) {
       argsList.add(betaString);
+    }
+  }
+  if (randomUdpDropString != null) {
+    if (randomUdpDropString.length() > 0) {
+      argsList.add(randomUdpDropString);
     }
   }
   if (licenseData != null) {
