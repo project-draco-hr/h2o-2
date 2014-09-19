@@ -51,7 +51,7 @@
     if (autoencoder)     model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor());
     model.update(self());
     Log.info("Starting to train the Deep Learning model.");
-    if (n_folds == 0 || xval_models == null)     do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowFraction(train,mp,model)).doAll(train).model_info());
+    do     model.set_model_info(H2O.CLOUD.size() > 1 && mp.replicate_training_data ? (mp.single_node_mode ? new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invoke(Key.make()).model_info() : new DeepLearningTask2(train,model.model_info(),rowFraction(train,mp,model)).invokeOnAllNodes().model_info()) : new DeepLearningTask(model.model_info(),rowFraction(train,mp,model)).doAll(train).model_info());
  while (model.doScoring(train,trainScoreFrame,validScoreFrame,self(),getValidAdaptor()));
     if (!isCancelledOrCrashed() && override_with_best_model && model.actual_best_model_key != null && n_folds == 0) {
       DeepLearningModel best_model=UKV.get(model.actual_best_model_key);
