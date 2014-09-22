@@ -20,12 +20,12 @@
     if (arg._name.equals("regression_stop")) {
       arg.disable("Only for regression.",inputArgs);
     }
-    if (arg._name.equals("max_after_balance_size") && !balance_classes) {
+    if ((arg._name.equals("max_after_balance_size") || arg._name.equals("class_sampling_factors")) && !balance_classes) {
       arg.disable("Requires balance_classes.",inputArgs);
     }
   }
  else {
-    if (arg._name.equals("classification_stop") || arg._name.equals("max_confusion_matrix_size") || arg._name.equals("max_hit_ratio_k")|| arg._name.equals("max_after_balance_size")|| arg._name.equals("balance_classes")) {
+    if (arg._name.equals("classification_stop") || arg._name.equals("max_confusion_matrix_size") || arg._name.equals("max_hit_ratio_k")|| arg._name.equals("max_after_balance_size")|| arg._name.equals("balance_classes")|| arg._name.equals("class_sampling_factors")) {
       arg.disable("Only for classification.",inputArgs);
     }
     if (validation != null && arg._name.equals("score_validation_sampling")) {
