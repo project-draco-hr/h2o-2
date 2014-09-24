@@ -1,0 +1,71 @@
+{
+  if (vec_start != null && !vec_start.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
+  if (!vec_stop.isInt())   throw new IllegalArgumentException("stop time must be of type integer");
+  if (!vec_event.isInt() && !vec_event.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
+  min_time=(long)vec_stop.min();
+  max_time=(long)vec_stop.max();
+  int n_time=(int)(max_time - min_time + 1);
+  n_risk=MemoryManager.malloc8(n_time);
+  n_event=MemoryManager.malloc8(n_time);
+  n_censor=MemoryManager.malloc8(n_time);
+  int i, t;
+  double step=Double.NaN;
+  double oldCoef=Double.NaN;
+  double oldLoglik=-Double.MAX_VALUE;
+  double newCoef=0;
+  double newLoglik;
+  for (i=0; i < 100; i++) {
+    iter=i + 1;
+    CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time).doAll(vec_stop,vec_event,vec_x);
+    if (i == 0) {
+      n=cox1.n;
+      t=n_time - 1;
+      total_event=cox1.countEvents[t];
+      n_risk[t]=cox1.countEvents[t] + cox1.countCensored[t];
+      n_event[t]=cox1.countEvents[t];
+      for (t=n_time - 2; t >= 0; t--) {
+        total_event+=cox1.countEvents[t];
+        n_risk[t]=n_risk[t + 1] + (cox1.countEvents[t] + cox1.countCensored[t]);
+        n_event[t]=cox1.countEvents[t];
+        n_censor[t]=cox1.countCensored[t];
+      }
+    }
+    newLoglik=0;
+    gradient=0;
+    hessian=0;
+    double cumsumExpXBeta=0;
+    double cumsumXExpXBeta=0;
+    double cumsumXXExpXBeta=0;
+    for (t=n_time - 1; t >= 0; t--) {
+      cumsumExpXBeta+=cox1.sumExpXBeta[t];
+      cumsumXExpXBeta+=cox1.sumXExpXBeta[t];
+      cumsumXXExpXBeta+=cox1.sumXXExpXBeta[t];
+      if (cox1.countEvents[t] > 0) {
+        newLoglik+=cox1.sumXBetaEvents[t];
+        gradient+=cox1.sumXEvents[t];
+        double gamma=cumsumXExpXBeta / cumsumExpXBeta;
+        newLoglik-=cox1.countEvents[t] * Math.log(cumsumExpXBeta);
+        gradient-=cox1.countEvents[t] * gamma;
+        hessian-=cox1.countEvents[t] * (((cumsumXXExpXBeta / cumsumExpXBeta) - (gamma * (cumsumXExpXBeta / cumsumExpXBeta))));
+      }
+    }
+    if (newLoglik > oldLoglik) {
+      coef=newCoef;
+      exp_coef=Math.exp(coef);
+      var_coef=-1 / hessian;
+      se_coef=Math.sqrt(var_coef);
+      z_coef=coef / se_coef;
+      loglik=newLoglik;
+      if (newLoglik == 0)       lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
+ else       lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
+      if (lre > 9)       break;
+      step=gradient / hessian;
+      if (Double.isNaN(step) || Double.isInfinite(step))       break;
+      oldCoef=newCoef;
+      oldLoglik=newLoglik;
+    }
+ else     step/=2;
+    newCoef=oldCoef - step;
+  }
+  return Response.done(this);
+}
