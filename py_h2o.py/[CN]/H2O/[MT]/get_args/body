@@ -65,6 +65,8 @@ def get_args(self):
         args += [('--aws_credentials=' + self.aws_credentials)]
     if (self.random_udp_drop or random_udp_drop):
         args += ['--random_udp_drop']
+    if self.force_tcp:
+        args += ['--force_tcp']
     if self.disable_h2o_log:
         args += ['--nolog']
     return args
