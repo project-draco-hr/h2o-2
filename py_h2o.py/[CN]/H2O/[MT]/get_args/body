@@ -28,7 +28,10 @@ def get_args(self):
             b = 'h2o determined'
         print ('You can attach debugger at port %s for jvm at %s:%s' % (debuggerPort, a, b))
         args += [('-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=%s' % debuggerPort)]
-    args += ['-ea']
+    if self.disable_assertions:
+        print 'WARNING: h2o is running with assertions disabled'
+    else:
+        args += ['-ea']
     if self.use_maprfs:
         args += ['-Djava.library.path=/opt/mapr/lib']
     if self.classpath:
@@ -62,6 +65,8 @@ def get_args(self):
         args += [('--aws_credentials=' + self.aws_credentials)]
     if (self.random_udp_drop or random_udp_drop):
         args += ['--random_udp_drop']
+    if self.force_tcp:
+        args += ['--force_tcp']
     if self.disable_h2o_log:
         args += ['--nolog']
     return args

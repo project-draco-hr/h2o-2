@@ -1,4 +1,12 @@
 {
+  Log.info("\nGathering additional data before log collection.");
+  Log.info("\nCollecting cloud status.");
+  new Cloud().serve();
+  Log.info("\nPerforming network test.");
+  new NetworkTest().invoke();
+  Log.info("\nCollecting stack traces.");
+  new JStack().serve();
+  Log.info("\nCollecting logs.");
   LogCollectorTask collector=new LogCollectorTask();
   collector.invokeOnAllNodes();
   String outputFileStem=getOutputLogStem();
