@@ -1,52 +1,61 @@
 {
-  if (vec_start != null && !vec_start.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
-  if (!vec_stop.isInt())   throw new IllegalArgumentException("stop time must be of type integer");
-  if (!vec_event.isInt() && !vec_event.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
-  min_time=(long)vec_stop.min();
-  max_time=(long)vec_stop.max();
+  if (!ignore_start_column && !start_column.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
+  if (!stop_column.isInt())   throw new IllegalArgumentException("stop time must be of type integer");
+  if (!event_column.isInt() && !event_column.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
+  Vec[] cols;
+  if (ignore_start_column) {
+    cols=new Vec[3];
+    cols[0]=stop_column;
+    cols[1]=event_column;
+    cols[2]=x_column;
+  }
+ else {
+    cols=new Vec[4];
+    cols[0]=start_column;
+    cols[1]=stop_column;
+    cols[2]=event_column;
+    cols[3]=x_column;
+  }
+  if (ignore_start_column)   min_time=(long)stop_column.min();
+ else   min_time=(long)start_column.min();
+  max_time=(long)stop_column.max();
   int n_time=(int)(max_time - min_time + 1);
-  n_risk=MemoryManager.malloc8(n_time);
-  n_event=MemoryManager.malloc8(n_time);
-  n_censor=MemoryManager.malloc8(n_time);
+  double x_mean=x_column.mean();
   int i, t;
   double step=Double.NaN;
   double oldCoef=Double.NaN;
   double oldLoglik=-Double.MAX_VALUE;
   double newCoef=0;
   double newLoglik;
-  for (i=0; i < 100; i++) {
+  for (i=0; i < 1000; i++) {
     iter=i + 1;
-    CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time).doAll(vec_stop,vec_event,vec_x);
+    CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time,ignore_start_column,x_mean).doAll(cols);
+    if (ignore_start_column) {
+      for (t=n_time - 2; t >= 0; t--) {
+        cox1.cumsumExpXBeta[t]+=cox1.cumsumExpXBeta[t + 1];
+        cox1.cumsumXExpXBeta[t]+=cox1.cumsumXExpXBeta[t + 1];
+        cox1.cumsumXXExpXBeta[t]+=cox1.cumsumXXExpXBeta[t + 1];
+      }
+    }
     if (i == 0) {
       n=cox1.n;
-      t=n_time - 1;
-      total_event=cox1.countEvents[t];
-      n_risk[t]=cox1.countEvents[t] + cox1.countCensored[t];
-      n_event[t]=cox1.countEvents[t];
-      for (t=n_time - 2; t >= 0; t--) {
-        total_event+=cox1.countEvents[t];
-        n_risk[t]=n_risk[t + 1] + (cox1.countEvents[t] + cox1.countCensored[t]);
-        n_event[t]=cox1.countEvents[t];
-        n_censor[t]=cox1.countCensored[t];
-      }
+      for (t=0; t < n_time; t++)       total_event+=cox1.countEvents[t];
+      n_risk=cox1.countRisk.clone();
+      n_event=cox1.countEvents.clone();
+      n_censor=cox1.countCensored.clone();
+      if (ignore_start_column)       for (t=n_time - 2; t >= 0; t--)       n_risk[t]+=n_risk[t + 1];
     }
     newLoglik=0;
     gradient=0;
     hessian=0;
-    double cumsumExpXBeta=0;
-    double cumsumXExpXBeta=0;
-    double cumsumXXExpXBeta=0;
     for (t=n_time - 1; t >= 0; t--) {
-      cumsumExpXBeta+=cox1.sumExpXBeta[t];
-      cumsumXExpXBeta+=cox1.sumXExpXBeta[t];
-      cumsumXXExpXBeta+=cox1.sumXXExpXBeta[t];
       if (cox1.countEvents[t] > 0) {
         newLoglik+=cox1.sumXBetaEvents[t];
         gradient+=cox1.sumXEvents[t];
-        double gamma=cumsumXExpXBeta / cumsumExpXBeta;
-        newLoglik-=cox1.countEvents[t] * Math.log(cumsumExpXBeta);
+        double gamma=cox1.cumsumXExpXBeta[t] / cox1.cumsumExpXBeta[t];
+        newLoglik-=cox1.countEvents[t] * Math.log(cox1.cumsumExpXBeta[t]);
         gradient-=cox1.countEvents[t] * gamma;
-        hessian-=cox1.countEvents[t] * (((cumsumXXExpXBeta / cumsumExpXBeta) - (gamma * (cumsumXExpXBeta / cumsumExpXBeta))));
+        hessian-=cox1.countEvents[t] * (((cox1.cumsumXXExpXBeta[i] / cox1.cumsumExpXBeta[i]) - (gamma * (cox1.cumsumXExpXBeta[i] / cox1.cumsumExpXBeta[i]))));
       }
     }
     if (newLoglik > oldLoglik) {
