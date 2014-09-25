@@ -17,7 +17,7 @@
     cols[3]=x_column;
   }
   if (ignore_start_column)   min_time=(long)stop_column.min();
- else   min_time=(long)start_column.min();
+ else   min_time=(long)start_column.min() + 1;
   max_time=(long)stop_column.max();
   int n_time=(int)(max_time - min_time + 1);
   double x_mean=x_column.mean();
@@ -27,7 +27,7 @@
   double oldLoglik=-Double.MAX_VALUE;
   double newCoef=0;
   double newLoglik;
-  for (i=0; i < 1000; i++) {
+  for (i=0; i < 100; i++) {
     iter=i + 1;
     CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time,ignore_start_column,x_mean).doAll(cols);
     if (ignore_start_column) {
@@ -55,9 +55,10 @@
         double gamma=cox1.cumsumXExpXBeta[t] / cox1.cumsumExpXBeta[t];
         newLoglik-=cox1.countEvents[t] * Math.log(cox1.cumsumExpXBeta[t]);
         gradient-=cox1.countEvents[t] * gamma;
-        hessian-=cox1.countEvents[t] * (((cox1.cumsumXXExpXBeta[i] / cox1.cumsumExpXBeta[i]) - (gamma * (cox1.cumsumXExpXBeta[i] / cox1.cumsumExpXBeta[i]))));
+        hessian-=cox1.countEvents[t] * (((cox1.cumsumXXExpXBeta[t] / cox1.cumsumExpXBeta[t]) - (gamma * (cox1.cumsumXExpXBeta[t] / cox1.cumsumExpXBeta[t]))));
       }
     }
+    if (i == 0)     null_loglik=newLoglik;
     if (newLoglik > oldLoglik) {
       coef=newCoef;
       exp_coef=Math.exp(coef);

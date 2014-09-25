@@ -29,8 +29,8 @@
     t2=(int)(stop_i - _min_time);
     if (!_ignore_start_column) {
       start_i=start.at80(i);
-      t1=start_i <= _min_time ? 0 : (int)(start_i - _min_time);
       if (start_i >= stop_i)       throw new IllegalArgumentException("start values must be strictly less than stop values");
+      t1=(int)((start_i + 1) - _min_time);
     }
     x_i=xs.at0(i) - _x_mean;
     if (!Double.isNaN(x_i)) {
