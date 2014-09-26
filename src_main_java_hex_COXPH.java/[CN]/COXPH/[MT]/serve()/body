@@ -68,6 +68,7 @@
       z_coef=coef / se_coef;
       loglik=newLoglik;
       loglik_test=-2 * (null_loglik - loglik);
+      wald_test=coef * coef / var_coef;
       if (newLoglik == 0)       lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else       lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
       if (lre > 9)       break;
