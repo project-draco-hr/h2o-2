@@ -1,6 +1,21 @@
 {
+  if (e.sys == Sys.HTLOG) {
+    e.sys=Sys.HTTPD;
+    String s=e.toString();
+    org.apache.log4j.Logger httpdLogger=LogManager.getLogger("water.api.RequestServer");
+    if (e.kind == Kind.INFO) {
+      httpdLogger.info(s);
+    }
+ else {
+      httpdLogger.error(s);
+    }
+    return;
+  }
   String s=e.toString();
-  if (e.kind == Kind.ERRR) {
+  if (e.kind == Kind.FATL) {
+    l4j.fatal(s);
+  }
+ else   if (e.kind == Kind.ERRR) {
     l4j.error(s);
   }
  else   if (e.kind == Kind.WARN) {
@@ -8,6 +23,12 @@
   }
  else   if (e.kind == Kind.INFO) {
     l4j.info(s);
+  }
+ else   if (e.kind == Kind.DEBG) {
+    l4j.debug(s);
+  }
+ else   if (e.kind == Kind.TRAC) {
+    l4j.trace(s);
   }
  else {
     l4j.error(s);
