@@ -5,7 +5,7 @@ def test_c9_GLM_airlines_multi(self):
     for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         start = time.time()
-        kwargs = {'parser_type': 'CSV', 'separator': 44, 'header': 0, 'delete_on_done': 1, }
+        kwargs = {'parser_type': 'CSV', 'separator': 44, 'header': 1, 'delete_on_done': 1, }
         parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', hex_key=trainKey, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
         print 'parse end on ', csvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
