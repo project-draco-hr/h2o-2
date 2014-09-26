@@ -1,0 +1,72 @@
+{
+{
+    LinuxProcFileReader lpfr=new LinuxProcFileReader();
+    lpfr.read();
+    if (!lpfr.valid()) {
+      Log.info("CollectLinuxInfo couldn't collect anything because we're not running on Linux");
+    }
+  }
+  String linuxInfoDirString=Log.getLogPathFileNameStem() + "-collect-linux-info";
+  File linuxInfoDir=new File(linuxInfoDirString);
+  if (linuxInfoDir.exists()) {
+    try {
+      String[] cmd={"/bin/rm","-r","-f",linuxInfoDirString};
+      Log.debug("Running command: " + Arrays.toString(cmd));
+      Process p=Runtime.getRuntime().exec(cmd);
+      p.waitFor();
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  if (linuxInfoDir.exists()) {
+    throw new RuntimeException("Failed to delete directory " + linuxInfoDirString);
+  }
+  try {
+    String[] cmd={"/bin/mkdir","-p",linuxInfoDirString};
+    Log.debug("Running command: " + Arrays.toString(cmd));
+    Process p=Runtime.getRuntime().exec(cmd);
+    p.waitFor();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  if (!linuxInfoDir.exists()) {
+    throw new RuntimeException("Failed to create directory " + linuxInfoDirString);
+  }
+  try {
+    String[] cmd={"/bin/chmod","u+rwx",linuxInfoDirString};
+    Log.debug("Running command: " + Arrays.toString(cmd));
+    Process p=Runtime.getRuntime().exec(cmd);
+    p.waitFor();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  String collectFilename="collect-linux-info.sh";
+  InputStream is=Boot._init.getResource2("/diagnostics/" + collectFilename);
+  File collectDirFilename=new File(linuxInfoDir,collectFilename);
+  try {
+    FileOutputStream os=new FileOutputStream(collectDirFilename);
+    byte[] buffer=new byte[1024];
+    int len=is.read(buffer);
+    while (len != -1) {
+      os.write(buffer,0,len);
+      len=is.read(buffer);
+    }
+    is.close();
+    os.close();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  try {
+    String[] cmd={"/bin/sh",collectDirFilename.toString(),linuxInfoDirString};
+    Log.debug("Running command: " + Arrays.toString(cmd));
+    Process p=Runtime.getRuntime().exec(cmd);
+    p.waitFor();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}
