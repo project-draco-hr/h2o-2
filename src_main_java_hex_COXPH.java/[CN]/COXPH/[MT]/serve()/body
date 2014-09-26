@@ -1,26 +1,26 @@
 {
-  if (!ignore_start_column && !start_column.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
+  if (use_start_column && !start_column.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
   if (!stop_column.isInt())   throw new IllegalArgumentException("stop time must be of type integer");
   if (!event_column.isInt() && !event_column.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
   Vec[] cols;
-  if (ignore_start_column) {
-    cols=new Vec[3];
-    cols[0]=stop_column;
-    cols[1]=event_column;
-    cols[2]=x_column;
-  }
- else {
+  if (use_start_column) {
     cols=new Vec[4];
     cols[0]=start_column;
     cols[1]=stop_column;
     cols[2]=event_column;
     cols[3]=x_column;
   }
-  if (ignore_start_column)   min_time=(long)stop_column.min();
- else   min_time=(long)start_column.min() + 1;
+ else {
+    cols=new Vec[3];
+    cols[0]=stop_column;
+    cols[1]=event_column;
+    cols[2]=x_column;
+  }
+  if (use_start_column)   min_time=(long)start_column.min() + 1;
+ else   min_time=(long)stop_column.min();
   max_time=(long)stop_column.max();
   int n_time=(int)(max_time - min_time + 1);
-  double x_mean=x_column.mean();
+  x_mean=x_column.mean();
   int i, t;
   double step=Double.NaN;
   double oldCoef=Double.NaN;
@@ -29,8 +29,8 @@
   double newLoglik;
   for (i=0; i < 100; i++) {
     iter=i + 1;
-    CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time,ignore_start_column,x_mean).doAll(cols);
-    if (ignore_start_column) {
+    CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time,use_start_column,x_mean).doAll(cols);
+    if (!use_start_column) {
       for (t=n_time - 2; t >= 0; t--) {
         cox1.cumsumExpXBeta[t]+=cox1.cumsumExpXBeta[t + 1];
         cox1.cumsumXExpXBeta[t]+=cox1.cumsumXExpXBeta[t + 1];
@@ -43,7 +43,7 @@
       n_risk=cox1.countRisk.clone();
       n_event=cox1.countEvents.clone();
       n_censor=cox1.countCensored.clone();
-      if (ignore_start_column)       for (t=n_time - 2; t >= 0; t--)       n_risk[t]+=n_risk[t + 1];
+      if (!use_start_column)       for (t=n_time - 2; t >= 0; t--)       n_risk[t]+=n_risk[t + 1];
     }
     newLoglik=0;
     gradient=0;
@@ -62,10 +62,12 @@
     if (newLoglik > oldLoglik) {
       coef=newCoef;
       exp_coef=Math.exp(coef);
+      exp_neg_coef=Math.exp(-coef);
       var_coef=-1 / hessian;
       se_coef=Math.sqrt(var_coef);
       z_coef=coef / se_coef;
       loglik=newLoglik;
+      loglik_test=-2 * (null_loglik - loglik);
       if (newLoglik == 0)       lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else       lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
       if (lre > 9)       break;

@@ -1,16 +1,16 @@
 {
   Chunk start, stop, events, xs;
-  if (_ignore_start_column) {
-    start=null;
-    stop=cols[0];
-    events=cols[1];
-    xs=cols[2];
-  }
- else {
+  if (_use_start_column) {
     start=cols[0];
     stop=cols[1];
     events=cols[2];
     xs=cols[3];
+  }
+ else {
+    start=null;
+    stop=cols[0];
+    events=cols[1];
+    xs=cols[2];
   }
   int i, t, t1=-1, t2;
   long start_i, stop_i, event_i;
@@ -27,7 +27,7 @@
     event_i=events.at80(i);
     stop_i=stop.at80(i);
     t2=(int)(stop_i - _min_time);
-    if (!_ignore_start_column) {
+    if (_use_start_column) {
       start_i=start.at80(i);
       if (start_i >= stop_i)       throw new IllegalArgumentException("start values must be strictly less than stop values");
       t1=(int)((start_i + 1) - _min_time);
@@ -45,19 +45,19 @@
         sumXBetaEvents[t2]+=xbeta_i;
       }
  else       countCensored[t2]++;
-      if (_ignore_start_column) {
-        countRisk[t2]++;
-        cumsumExpXBeta[t2]+=expXBeta_i;
-        cumsumXExpXBeta[t2]+=xExpXBeta_i;
-        cumsumXXExpXBeta[t2]+=xxExpXBeta_i;
-      }
- else {
+      if (_use_start_column) {
         for (t=t1; t <= t2; t++) {
           countRisk[t]++;
           cumsumExpXBeta[t]+=expXBeta_i;
           cumsumXExpXBeta[t]+=xExpXBeta_i;
           cumsumXXExpXBeta[t]+=xxExpXBeta_i;
         }
+      }
+ else {
+        countRisk[t2]++;
+        cumsumExpXBeta[t2]+=expXBeta_i;
+        cumsumXExpXBeta[t2]+=xExpXBeta_i;
+        cumsumXXExpXBeta[t2]+=xxExpXBeta_i;
       }
     }
   }
