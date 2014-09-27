@@ -21,6 +21,10 @@
   max_time=(long)stop_column.max();
   int n_time=(int)(max_time - min_time + 1);
   x_mean=x_column.mean();
+  cumhaz=MemoryManager.malloc8d(n_time);
+  se_cumhaz=MemoryManager.malloc8d(n_time);
+  surv=MemoryManager.malloc8d(n_time);
+  double[] se_term=MemoryManager.malloc8d(n_time);
   int i, t;
   double step=Double.NaN;
   double oldCoef=Double.NaN;
@@ -32,15 +36,15 @@
     CoxphFitTask cox1=new CoxphFitTask(newCoef,min_time,n_time,use_start_column,x_mean).doAll(cols);
     if (!use_start_column) {
       for (t=n_time - 2; t >= 0; t--) {
-        cox1.cumsumExpXBeta[t]+=cox1.cumsumExpXBeta[t + 1];
-        cox1.cumsumXExpXBeta[t]+=cox1.cumsumXExpXBeta[t + 1];
-        cox1.cumsumXXExpXBeta[t]+=cox1.cumsumXXExpXBeta[t + 1];
+        cox1.rcumsumRisk[t]+=cox1.rcumsumRisk[t + 1];
+        cox1.rcumsumXRisk[t]+=cox1.rcumsumXRisk[t + 1];
+        cox1.rcumsumXXRisk[t]+=cox1.rcumsumXXRisk[t + 1];
       }
     }
     if (i == 0) {
       n=cox1.n;
       for (t=0; t < n_time; t++)       total_event+=cox1.countEvents[t];
-      n_risk=cox1.countRisk.clone();
+      n_risk=cox1.countRiskSet.clone();
       n_event=cox1.countEvents.clone();
       n_censor=cox1.countCensored.clone();
       if (!use_start_column)       for (t=n_time - 2; t >= 0; t--)       n_risk[t]+=n_risk[t + 1];
@@ -50,12 +54,12 @@
     hessian=0;
     for (t=n_time - 1; t >= 0; t--) {
       if (cox1.countEvents[t] > 0) {
-        newLoglik+=cox1.sumXBetaEvents[t];
+        newLoglik+=cox1.sumLogRiskEvents[t];
         gradient+=cox1.sumXEvents[t];
-        double gamma=cox1.cumsumXExpXBeta[t] / cox1.cumsumExpXBeta[t];
-        newLoglik-=cox1.countEvents[t] * Math.log(cox1.cumsumExpXBeta[t]);
+        double gamma=cox1.rcumsumXRisk[t] / cox1.rcumsumRisk[t];
+        newLoglik-=cox1.countEvents[t] * Math.log(cox1.rcumsumRisk[t]);
         gradient-=cox1.countEvents[t] * gamma;
-        hessian-=cox1.countEvents[t] * (((cox1.cumsumXXExpXBeta[t] / cox1.cumsumExpXBeta[t]) - (gamma * (cox1.cumsumXExpXBeta[t] / cox1.cumsumExpXBeta[t]))));
+        hessian-=cox1.countEvents[t] * (((cox1.rcumsumXXRisk[t] / cox1.rcumsumRisk[t]) - (gamma * (cox1.rcumsumXRisk[t] / cox1.rcumsumRisk[t]))));
       }
     }
     if (i == 0)     null_loglik=newLoglik;
@@ -69,6 +73,20 @@
       loglik=newLoglik;
       loglik_test=-2 * (null_loglik - loglik);
       wald_test=coef * coef / var_coef;
+      for (t=0; t < n_time; t++) {
+        cumhaz[t]=cox1.countEvents[t] / cox1.rcumsumRisk[t];
+        se_cumhaz[t]=cox1.countEvents[t] / (cox1.rcumsumRisk[t] * cox1.rcumsumRisk[t]);
+        se_term[t]=(cox1.rcumsumXRisk[t] / cox1.rcumsumRisk[t]) * cumhaz[t];
+      }
+      for (t=1; t < n_time; t++) {
+        cumhaz[t]=cumhaz[t - 1] + cumhaz[t];
+        se_cumhaz[t]=se_cumhaz[t - 1] + se_cumhaz[t];
+        se_term[t]=se_term[t - 1] + se_term[t];
+      }
+      for (t=0; t < n_time; t++) {
+        se_cumhaz[t]=Math.sqrt(se_cumhaz[t] + (se_term[t] * var_coef * se_term[t]));
+        surv[t]=Math.exp(-cumhaz[t]);
+      }
       if (newLoglik == 0)       lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else       lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
       if (lre > 9)       break;
