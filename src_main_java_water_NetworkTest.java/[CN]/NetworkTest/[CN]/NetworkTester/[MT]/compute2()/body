@@ -1,4 +1,5 @@
 {
+  Log.debug("NetworkTester compute2 starting...");
   if (serial) {
     for (int i=0; i < microseconds.length; ++i) {
       microseconds[i]=send_recv_all(msg_sizes[i],repeats);
@@ -12,4 +13,5 @@
     Utils.div(microseconds_collective,1e3f);
   }
   tryComplete();
+  Log.debug("NetworkTester compute2 completed");
 }
