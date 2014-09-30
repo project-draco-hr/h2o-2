@@ -19,6 +19,9 @@
   countCensored=MemoryManager.malloc8(_n_time);
   countEvents=MemoryManager.malloc8(_n_time);
   sumXEvents=MemoryManager.malloc8d(_n_time);
+  sumRiskEvents=MemoryManager.malloc8d(_n_time);
+  sumXRiskEvents=MemoryManager.malloc8d(_n_time);
+  sumXXRiskEvents=MemoryManager.malloc8d(_n_time);
   sumLogRiskEvents=MemoryManager.malloc8d(_n_time);
   rcumsumRisk=MemoryManager.malloc8d(_n_time);
   rcumsumXRisk=MemoryManager.malloc8d(_n_time);
@@ -42,6 +45,9 @@
       if (event_i > 0) {
         countEvents[t2]++;
         sumXEvents[t2]+=x_i;
+        sumRiskEvents[t2]+=risk_i;
+        sumXRiskEvents[t2]+=xRisk_i;
+        sumXXRiskEvents[t2]+=xxRisk_i;
         sumLogRiskEvents[t2]+=logRisk_i;
       }
  else       countCensored[t2]++;
