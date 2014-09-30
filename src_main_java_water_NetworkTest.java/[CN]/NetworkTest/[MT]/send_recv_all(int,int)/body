@@ -8,7 +8,7 @@
     H2ONode node=H2O.CLOUD._memary[i];
     Timer t=new Timer();
     for (int l=0; l < repeats; ++l) {
-      Log.debug("NetworkTest send_recv_all starting iteration " + l + " of "+ repeats+ " ...");
+      Log.debug("NetworkTest send_recv_all starting msg_size " + msg_size + " bytes, iteration "+ l+ " of "+ repeats+ " ...");
       PingPongTask ppt=new PingPongTask(payload);
       new RPC<PingPongTask>(node,ppt).call().get();
       Log.debug("NetworkTest send_recv_all completed iteration " + l + " of "+ repeats);
