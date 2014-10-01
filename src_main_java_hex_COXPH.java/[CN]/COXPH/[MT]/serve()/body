@@ -31,7 +31,7 @@
   double step=Double.NaN;
   double oldCoef=Double.NaN;
   double oldLoglik=-Double.MAX_VALUE;
-  double newCoef=0;
+  double newCoef=init;
   double newLoglik;
   for (i=0; i <= iter_max; i++) {
     iter=i;
@@ -102,7 +102,8 @@ se_coef=Math.sqrt(var_coef);
 z_coef=coef / se_coef;
 loglik=newLoglik;
 loglik_test=-2 * (null_loglik - loglik);
-wald_test=coef * coef / var_coef;
+double diff_init=coef - init;
+wald_test=(diff_init * diff_init) / var_coef;
 rsq=1 - Math.exp(-loglik_test / n);
 switch (ties) {
 case efron:
