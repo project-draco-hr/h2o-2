@@ -27,16 +27,19 @@
   rcumsumXRisk=MemoryManager.malloc8d(_n_time);
   rcumsumXXRisk=MemoryManager.malloc8d(_n_time);
   for (i=0; i < stop._len; i++) {
-    event_i=events.at80(i);
-    stop_i=stop.at80(i);
-    t2=(int)(stop_i - _min_time);
-    if (_use_start_column) {
-      start_i=start.at80(i);
-      if (start_i >= stop_i)       throw new IllegalArgumentException("start values must be strictly less than stop values");
-      t1=(int)((start_i + 1) - _min_time);
-    }
-    x_i=xs.at0(i) - _x_mean;
-    if (!Double.isNaN(x_i)) {
+    boolean missing_obs=stop.isNA0(i) || events.isNA0(i) || xs.isNA0(i);
+    if (_use_start_column)     missing_obs=missing_obs || start.isNA0(i);
+    if (missing_obs)     n_missing++;
+ else {
+      event_i=events.at80(i);
+      stop_i=stop.at80(i);
+      t2=(int)(stop_i - _min_time);
+      if (_use_start_column) {
+        start_i=start.at80(i);
+        if (start_i >= stop_i)         throw new IllegalArgumentException("start values must be strictly less than stop values");
+        t1=(int)((start_i + 1) - _min_time);
+      }
+      x_i=xs.at0(i) - _x_mean;
       logRisk_i=x_i * _beta;
       risk_i=Math.exp(logRisk_i);
       xRisk_i=x_i * risk_i;

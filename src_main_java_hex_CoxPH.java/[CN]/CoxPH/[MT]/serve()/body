@@ -4,25 +4,24 @@
   if (!event_column.isInt() && !event_column.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
   if (Double.isNaN(lre_min) || lre_min <= 0)   throw new IllegalArgumentException("lre_min must be a positive number");
   if (iter_max < 1)   throw new IllegalArgumentException("iter_max must be a positive integer");
+  long min_time;
+  if (use_start_column)   min_time=(long)start_column.min() + 1;
+ else   min_time=(long)stop_column.min();
+  int n_time=(int)(stop_column.max() - min_time + 1);
+  if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("The time number of time points is " + n_time + "; allowed maximum is "+ MAX_TIME_BINS);
   String[] names;
   if (use_start_column) {
     names=new String[4];
-    for (int j=0; j < source.numCols(); j++) {
-      Vec vec=source.vec(j);
-      if (vec == start_column)       names[0]=source.names()[j];
- else       if (vec == stop_column)       names[1]=source.names()[j];
- else       if (vec == event_column)       names[2]=source.names()[j];
- else       if (vec == x_column)       names[3]=source.names()[j];
-    }
+    names[0]=source.names()[source.find(start_column)];
+    names[1]=source.names()[source.find(stop_column)];
+    names[2]=source.names()[source.find(event_column)];
+    names[3]=source.names()[source.find(x_column)];
   }
  else {
     names=new String[3];
-    for (int j=0; j < source.numCols(); j++) {
-      Vec vec=source.vec(j);
-      if (vec == stop_column)       names[0]=source.names()[j];
- else       if (vec == event_column)       names[1]=source.names()[j];
- else       if (vec == x_column)       names[2]=source.names()[j];
-    }
+    names[0]=source.names()[source.find(stop_column)];
+    names[1]=source.names()[source.find(event_column)];
+    names[2]=source.names()[source.find(x_column)];
   }
   source=source.subframe(names);
   coxph_model=new CoxPHModel(this,dest(),source._key,source,null);
@@ -62,6 +61,7 @@
         }
         if (i == 0) {
           coxph_model.n=coxFit.n;
+          coxph_model.n_missing=coxFit.n_missing;
           for (t=0; t < n_time; t++)           coxph_model.total_event+=coxFit.countEvents[t];
           coxph_model.n_risk=coxFit.countRiskSet.clone();
           coxph_model.n_event=coxFit.countEvents.clone();
@@ -167,13 +167,11 @@ oldLoglik=newLoglik;
  else step/=2;
 newCoef=oldCoef - step;
 }
-tryComplete();
-}
-@Override public void onCompletion(CountedCompleter cc){
 Futures fs=new Futures();
 DKV.put(dest(),coxph_model,fs);
 fs.blockForPending();
 remove();
+tryComplete();
 }
 }
 ;
