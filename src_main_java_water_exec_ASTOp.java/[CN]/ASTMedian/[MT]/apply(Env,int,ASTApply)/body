@@ -1,0 +1,12 @@
+{
+  Frame fr=env.peekAry();
+  if (fr.vecs().length > 1)   throw new IllegalArgumentException("median does not apply to multiple cols.");
+  if (fr.vecs()[0].isEnum())   throw new IllegalArgumentException("median only applies to numeric vector.");
+  QuantilesPage qp=new QuantilesPage();
+  qp.source_key=fr;
+  qp.column=fr.anyVec();
+  qp.invoke();
+  double median=qp.result;
+  env.pop();
+  env.poppush(median);
+}

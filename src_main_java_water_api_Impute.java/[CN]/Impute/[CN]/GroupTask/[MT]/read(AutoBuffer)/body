@@ -1,0 +1,8 @@
+{
+  super.read(ab);
+  int len=ab.get4();
+  if (len == 0)   return this;
+  _grp2val=new NonBlockingHashMap<Group,Double>();
+  for (int i=0; i < len; i++)   _grp2val.put(ab.get(Group.class),ab.get8d());
+  return this;
+}
