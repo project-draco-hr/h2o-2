@@ -5,7 +5,7 @@
     String value=parms.getProperty((String)arg);
     if (value != null && value.length() != 0)     log+=" " + arg + "="+ value;
   }
-  Log.info(Sys.HTLOG,log);
+  Log.info_no_stdout(Sys.HTLOG,log);
   if (filterOutRepetitiveStuff) {
     if (uri.endsWith(".css"))     return;
     if (uri.endsWith(".js"))     return;
