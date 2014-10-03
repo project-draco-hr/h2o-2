@@ -1,0 +1,17 @@
+def write_syn_dataset(csvPathname, rowCount, colCount, SEED):
+    r1 = random.Random(SEED)
+    if UTF16:
+        dsf = codecs.open(csvPathname, encoding='utf-16', mode='w+')
+    else:
+        dsf = open(csvPathname, 'w+')
+    for i in range(rowCount):
+        if UTF16:
+            rowDataCsv = ((((unichr(233) + unichr(3058)) + unichr(3972)) + unichr(6000)) + unichr(13231))
+        else:
+            rowData = []
+            for j in range(colCount):
+                r = generate_random_utf8_string(length=2)
+                rowData.append(r)
+            rowDataCsv = ','.join(map(str, rowData))
+        dsf.write((rowDataCsv + '\n'))
+    dsf.close()
