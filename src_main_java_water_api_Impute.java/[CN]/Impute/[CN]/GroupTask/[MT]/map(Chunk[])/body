@@ -1,0 +1,10 @@
+{
+  int rows=cs[0].len();
+  Chunk vals=cs[cs.length - 1];
+  for (int row=0; row < rows; ++row) {
+    Group g=new Group(_cols.length);
+    g.fill(row,cs,_cols);
+    double val=vals.at0(row);
+    _grp2val.putIfAbsent(g,val);
+  }
+}

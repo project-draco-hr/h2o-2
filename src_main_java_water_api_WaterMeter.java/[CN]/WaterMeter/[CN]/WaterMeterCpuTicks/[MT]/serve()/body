@@ -1,0 +1,23 @@
+{
+  if ((node_idx.value() < 0) || (node_idx.value() >= H2O.CLOUD.size())) {
+    throw new IllegalArgumentException("Illegal node_idx for this H2O cluster (must be from 0 to " + H2O.CLOUD.size() + ")");
+  }
+  H2ONode node=H2O.CLOUD._memary[node_idx.value()];
+  GetTicksTask ppt=new GetTicksTask();
+  Log.trace("GetTicksTask starting to node " + node_idx.value() + "...");
+  new RPC<GetTicksTask>(node,ppt).call().get();
+  Log.trace("GetTicksTask completed to node " + node_idx.value());
+  long[][] cpuTicks=ppt._cpuTicks;
+  JsonArray j=new JsonArray();
+  for (  long[] arr : cpuTicks) {
+    JsonArray j2=new JsonArray();
+    j2.add(new JsonPrimitive(arr[0]));
+    j2.add(new JsonPrimitive(arr[1]));
+    j2.add(new JsonPrimitive(arr[2]));
+    j2.add(new JsonPrimitive(arr[3]));
+    j.add(j2);
+  }
+  JsonObject o=new JsonObject();
+  o.add("cpuTicks",j);
+  return Response.done(o);
+}

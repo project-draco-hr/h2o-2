@@ -3,8 +3,10 @@
   microseconds=new double[msg_sizes.length][];
   microseconds_collective=new double[msg_sizes.length];
   NetworkTester nt=new NetworkTester(msg_sizes,microseconds,microseconds_collective,repeats,serial,collective);
+  Log.debug("Starting top-level NetworkTester...");
   H2O.submitTask(nt);
   nt.join();
+  Log.debug("NetworkTester top-level after join");
   bandwidths=new double[msg_sizes.length][];
   for (int i=0; i < bandwidths.length; ++i) {
     bandwidths[i]=new double[microseconds[i].length];
@@ -16,9 +18,11 @@
   for (int i=0; i < bandwidths_collective.length; ++i) {
     bandwidths_collective[i]=(2 * H2O.CLOUD.size() * msg_sizes[i]) / (microseconds_collective[i] / 1e6);
   }
+  Log.debug("NetworkTest calculated bandwidths");
   nodes=new String[H2O.CLOUD.size()];
   for (int i=0; i < nodes.length; ++i)   nodes[i]=H2O.CLOUD._memary[i]._key.toString();
   StringBuilder sb=new StringBuilder();
   toASCII(sb);
   Log.info(sb);
+  Log.debug("NetworkTester top-level completed");
 }

@@ -25,7 +25,10 @@
       }
       fis.close();
       zos.closeEntry();
-      if (stopEarlyBecauseTooMuchData)       break;
+      if (stopEarlyBecauseTooMuchData) {
+        Log.warn("LogCollectorTask stopEarlyBecauseTooMuchData");
+        break;
+      }
     }
   }
  catch (  Exception e) {

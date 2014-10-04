@@ -1,0 +1,13 @@
+{
+  Chunk c=cs[col_id];
+  int rows=cs[0].len();
+  for (int r=0; r < rows; ++r) {
+    if (c.isNA0(r) || (c._vec.isEnum() && c._vec.domain()[(int)c.at0(r)].equals("NA"))) {
+      Group g=new Group(_cols.length);
+      g.fill(r,cs,_cols);
+      if (grp2val._grp2val.get(g) == null)       continue;
+      double rv=grp2val._grp2val.get(g);
+      c.set0(r,rv);
+    }
+  }
+}

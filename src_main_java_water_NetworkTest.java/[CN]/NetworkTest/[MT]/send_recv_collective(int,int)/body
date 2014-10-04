@@ -1,11 +1,15 @@
 {
+  Log.debug("NetworkTest send_recv_collective starting...");
   byte[] payload=new byte[msg_size];
   new Random().nextBytes(payload);
   Vec v=Vec.makeConSeq(0.,1);
   Timer t=new Timer();
   for (int l=0; l < repeats; ++l) {
+    Log.debug("NetworkTest send_recv_collective starting msg_size " + msg_size + " bytes, iteration "+ l+ " of "+ repeats+ " ...");
     new CollectiveTask(payload).doAll(v);
+    Log.debug("NetworkTest send_recv_collective completed iteration " + l + " of "+ repeats);
   }
   v.remove(new Futures()).blockForPending();
+  Log.debug("NetworkTest send_recv_collective completed");
   return (double)t.nanos() / repeats;
 }
