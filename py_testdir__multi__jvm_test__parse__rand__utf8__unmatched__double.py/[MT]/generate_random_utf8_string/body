@@ -1,0 +1,7 @@
+def generate_random_utf8_string(length=5):
+    cList = []
+    for i in range(length):
+        r = random.choice(ordinalChoices)
+        c = unichr(r).encode('utf-8')
+        cList.append(c)
+    return ''.join(cList)
