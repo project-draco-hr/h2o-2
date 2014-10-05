@@ -1,4 +1,4 @@
-def test_parse_rand_utf8_unmatched_double(self):
+def test_parse_rand_utf8_angle_start(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(1000, 1, 'cA', 120), (1000, 1, 'cG', 120), (1000, 1, 'cH', 120)]
@@ -16,7 +16,6 @@ def test_parse_rand_utf8_unmatched_double(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=60)
         print 'inspect:', h2o.dump_json(inspect)
         numRows = inspect['numRows']
-        self.assertEqual(numRows, rowCount, msg=('Wrong numRows likely due to unmatched " row going to NA: %s %s' % (numRows, rowCount)))
         numCols = inspect['numCols']
         if DOUBLE_QUOTE:
             self.assertTrue(((numCols == colCount) or (numCols == (colCount + 1))), msg=('Wrong numCols: %s %s' % (numCols, colCount)))
