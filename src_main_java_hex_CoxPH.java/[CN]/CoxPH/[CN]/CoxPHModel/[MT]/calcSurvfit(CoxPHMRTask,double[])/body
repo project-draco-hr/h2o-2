@@ -1,0 +1,36 @@
+{
+switch (parameters.ties) {
+case efron:
+    for (int t=0; t < cumhaz.length; t++) {
+      cumhaz[t]=0;
+      se_cumhaz[t]=0;
+      se_term[t]=0;
+      for (long e=0; e < coxMR.countEvents[t]; e++) {
+        double frac=((double)e) / ((double)coxMR.countEvents[t]);
+        double haz=1 / (coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t]);
+        cumhaz[t]+=haz;
+        se_cumhaz[t]+=haz * haz;
+        se_term[t]+=(coxMR.rcumsumXRisk[t] - frac * coxMR.sumXRiskEvents[t]) * haz * haz;
+      }
+    }
+  break;
+case breslow:
+for (int t=0; t < cumhaz.length; t++) {
+  cumhaz[t]=coxMR.countEvents[t] / coxMR.rcumsumRisk[t];
+  se_cumhaz[t]=coxMR.countEvents[t] / (coxMR.rcumsumRisk[t] * coxMR.rcumsumRisk[t]);
+  se_term[t]=(coxMR.rcumsumXRisk[t] / coxMR.rcumsumRisk[t]) * cumhaz[t];
+}
+break;
+default :
+throw new IllegalArgumentException("ties method must be either efron or breslow");
+}
+for (int t=1; t < cumhaz.length; t++) {
+cumhaz[t]=cumhaz[t - 1] + cumhaz[t];
+se_cumhaz[t]=se_cumhaz[t - 1] + se_cumhaz[t];
+se_term[t]=se_term[t - 1] + se_term[t];
+}
+for (int t=0; t < cumhaz.length; t++) {
+se_cumhaz[t]=Math.sqrt(se_cumhaz[t] + (se_term[t] * var_coef * se_term[t]));
+surv[t]=Math.exp(-cumhaz[t]);
+}
+}

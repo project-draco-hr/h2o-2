@@ -1,0 +1,9 @@
+{
+  n=coxMR.n;
+  n_missing=coxMR.n_missing;
+  for (int t=0; t < coxMR.countEvents.length; t++)   total_event+=coxMR.countEvents[t];
+  n_risk=coxMR.countRiskSet.clone();
+  n_event=coxMR.countEvents.clone();
+  n_censor=coxMR.countCensored.clone();
+  if (!parameters.use_start_column)   for (int t=n_risk.length - 2; t >= 0; t--)   n_risk[t]+=n_risk[t + 1];
+}

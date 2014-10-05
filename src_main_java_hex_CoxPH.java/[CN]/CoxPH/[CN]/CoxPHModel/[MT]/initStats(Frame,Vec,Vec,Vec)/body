@@ -1,0 +1,16 @@
+{
+  if (parameters.use_start_column) {
+    names_coef=source.names()[3];
+    min_time=(long)start_column.min() + 1;
+  }
+ else {
+    names_coef=source.names()[2];
+    min_time=(long)stop_column.min();
+  }
+  max_time=(long)stop_column.max();
+  int n_time=(int)(max_time - min_time + 1);
+  x_mean=x_column.mean();
+  cumhaz=MemoryManager.malloc8d(n_time);
+  se_cumhaz=MemoryManager.malloc8d(n_time);
+  surv=MemoryManager.malloc8d(n_time);
+}
