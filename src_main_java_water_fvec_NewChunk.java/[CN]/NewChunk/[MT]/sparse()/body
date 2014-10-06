@@ -1,3 +1,10 @@
 {
-  return _id != null;
+  if (_id != null) {
+    assert(sparseLen() <= _id.length);
+    return true;
+  }
+ else {
+    assert(sparseLen() == len());
+    return false;
+  }
 }
