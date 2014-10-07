@@ -1,0 +1,10 @@
+{
+  double x_centered=x_new - x_mean;
+  double risk_new=Math.exp(coef * x_centered);
+  for (int t=0; t < cumhaz_0.length; t++) {
+    double gamma=x_centered * cumhaz_0[t] - var_cumhaz_2[t];
+    cumhaz[t]=risk_new * cumhaz_0[t];
+    se_cumhaz[t]=risk_new * Math.sqrt(var_cumhaz_1[t] + (gamma * var_coef * gamma));
+    surv[t]=Math.exp(-cumhaz[t]);
+  }
+}

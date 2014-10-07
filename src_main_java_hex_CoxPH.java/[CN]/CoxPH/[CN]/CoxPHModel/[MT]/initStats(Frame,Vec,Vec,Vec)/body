@@ -10,6 +10,9 @@
   max_time=(long)stop_column.max();
   int n_time=(int)(max_time - min_time + 1);
   x_mean=x_column.mean();
+  cumhaz_0=MemoryManager.malloc8d(n_time);
+  var_cumhaz_1=MemoryManager.malloc8d(n_time);
+  var_cumhaz_2=MemoryManager.malloc8d(n_time);
   cumhaz=MemoryManager.malloc8d(n_time);
   se_cumhaz=MemoryManager.malloc8d(n_time);
   surv=MemoryManager.malloc8d(n_time);

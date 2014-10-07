@@ -7,27 +7,20 @@
     H2O.H2OCountedCompleter task=new H2O.H2OCountedCompleter(){
       @Override public void compute2(){
         Vec[] cols=source.vecs();
-        int n_time=model.cumhaz.length;
+        int n_time=model.cumhaz_0.length;
         double step=Double.NaN;
         double oldCoef=Double.NaN;
         double oldLoglik=-Double.MAX_VALUE;
         double newCoef=init;
-        double[] se_term=MemoryManager.malloc8d(model.se_cumhaz.length);
         for (int i=0; i <= iter_max; i++) {
           model.iter=i;
           CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(cols);
-          if (!use_start_column) {
-            for (int t=n_time - 2; t >= 0; t--) {
-              coxMR.rcumsumRisk[t]+=coxMR.rcumsumRisk[t + 1];
-              coxMR.rcumsumXRisk[t]+=coxMR.rcumsumXRisk[t + 1];
-              coxMR.rcumsumXXRisk[t]+=coxMR.rcumsumXXRisk[t + 1];
-            }
-          }
+          coxMR.finish();
           if (i == 0)           model.calcCounts(coxMR);
           double newLoglik=model.calcLoglik(coxMR);
           if (newLoglik > oldLoglik) {
             model.calcModelStats(newCoef,newLoglik);
-            model.calcSurvfit(coxMR,se_term);
+            model.calcCumhaz_0(coxMR);
             if (newLoglik == 0)             model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else             model.lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
             if (model.lre >= lre_min)             break;
@@ -39,6 +32,7 @@
  else           step/=2;
           newCoef=oldCoef - step;
         }
+        model.calcSurvfit(model.x_mean);
         Futures fs=new Futures();
         DKV.put(dest(),model,fs);
         fs.blockForPending();
