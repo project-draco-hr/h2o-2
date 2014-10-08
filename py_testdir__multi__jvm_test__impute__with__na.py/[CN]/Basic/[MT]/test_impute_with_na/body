@@ -52,7 +52,19 @@ def test_impute_with_na(self):
         print 'expectedMissing:', expectedMissing
         print 'Now get rid of all the missing values, but imputing means. We know all columns should have NAs from above'
         print 'Do the columns in random order'
-        shuffledColList = range(0, 55)
+        if AVOID_BUG:
+            shuffledColList = range(0, 49)
+            execExpr = ('%s = %s[,1:49]' % (hex_key2, hex_key2))
+            h2e.exec_expr(execExpr=execExpr, timeoutSecs=10)
+            inspect = h2o_cmd.runInspect(key=hex_key2)
+            numCols = inspect['numCols']
+            missingValuesList = h2o_cmd.infoFromInspect(inspect)
+            print 'missingValuesList after impute:', missingValuesList
+            if (len(missingValuesList) != 49):
+                raise Exception(('expected missing values in all cols after pruning enum cols: %s' % missingValuesList))
+        else:
+            shuffledColList = range(0, 55)
+        origInspect = inspect
         random.shuffle(shuffledColList)
         for column in shuffledColList:
             groupBy = random.sample(range(55), random.randint(0, 54))
@@ -77,3 +89,7 @@ def test_impute_with_na(self):
         print 'missingValuesList after impute:', missingValuesList
         if missingValuesList:
             raise Exception(('Not expecting any missing values after imputing all cols: %s' % missingValuesList))
+        cols = inspect['cols']
+        origCols = origInspect['cols']
+        for (i, (c, oc)) in enumerate(zip(cols, origCols)):
+            h2o_util.approxEqual(c['mean'], oc['mean'], tol=1e-09, msg=('col %i original mean: %s not equal to mean after impute: %s' % (i, c['mean'], oc['mean'])))
