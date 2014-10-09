@@ -1,0 +1,16 @@
+{
+  _responses=new long[_thresh.length];
+  _avg_response=0;
+  final int len=Math.min(ca._len,cp._len);
+  for (int i=0; i < len; i++) {
+    if (ca.isNA0(i))     continue;
+    final int a=(int)ca.at80(i);
+    if (a != 0 && a != 1)     throw new IllegalArgumentException("Invalid values in vactual: must be binary (0 or 1).");
+    if (cp.isNA0(i))     continue;
+    final double pr=cp.at0(i);
+    for (int t=0; t < _thresh.length; t++) {
+      if (pr >= _thresh[t] && (t == 0 || pr < _thresh[t - 1]) && a == 1)       _responses[t]++;
+    }
+    if (a == 1)     _avg_response++;
+  }
+}
