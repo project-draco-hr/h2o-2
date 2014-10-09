@@ -63,7 +63,7 @@
     }
     int my_cpu_pct=-1;
     int sys_cpu_pct=-1;
-    if (!_skip_ticks.value()) {
+    if (!skip_ticks) {
       LastTicksEntry lte=ticksHashMap.get(h2o.toString());
       if (lte != null) {
         long system_total_ticks_delta=hb._system_total_ticks - lte._system_total_ticks;
@@ -102,7 +102,7 @@
   response.add(NODES,nodes);
   response.addProperty(CONSENSUS,Paxos._commonKnowledge);
   response.addProperty(LOCKED,Paxos._cloudLocked);
-  boolean logCloudStatus=(!cloudHealthy) || (cloudHealthy != lastCloudHealthy) || (!_quiet.value());
+  boolean logCloudStatus=(!cloudHealthy) || (cloudHealthy != lastCloudHealthy) || !quiet;
   lastCloudHealthy=cloudHealthy;
   if (logCloudStatus) {
     Log.info("H2O Cloud Status:");

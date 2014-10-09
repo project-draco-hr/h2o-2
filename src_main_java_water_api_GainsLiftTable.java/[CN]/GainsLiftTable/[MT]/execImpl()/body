@@ -1,0 +1,33 @@
+{
+  Vec va=null, vp;
+  try {
+    va=vactual.toEnum();
+    vp=vpredict;
+    if (!va.group().equals(vp.group())) {
+      vp=va.align(vp);
+    }
+{
+      thresholds=new double[groups];
+      for (int i=0; i < groups; ++i) {
+        QuantilesPage q=new QuantilesPage();
+        q.source_key=predict;
+        q.column=vpredict;
+        q.quantile=(groups - i - 1.) / groups;
+        q.invoke();
+        thresholds[i]=q.result;
+      }
+      if (Utils.minValue(thresholds) < 0)       throw new IllegalArgumentException("Minimum propability cannot be negative.");
+      if (Utils.maxValue(thresholds) > 1)       throw new IllegalArgumentException("Maximum probability cannot be greater than 1.");
+      GainsTask gt=new GainsTask(thresholds,va.length());
+      gt.doAll(va,vp);
+      response_rates=gt.response_rates();
+      avg_response_rate=gt.avg_response_rate();
+    }
+  }
+  finally {
+    if (va != null)     UKV.remove(va._key);
+  }
+  StringBuilder sb=new StringBuilder();
+  toASCII(sb);
+  Log.info(sb);
+}

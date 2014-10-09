@@ -1,0 +1,23 @@
+{
+  if (response_rates == null)   return false;
+  DocGen.HTML.arrayHead(sb);
+  sb.append("<tr class='warning' style='min-width:60px'>");
+  sb.append("<th>Quantile</th><th>Response rate</th><th>Lift</th><th>Cumulative lift</th>");
+  sb.append("</tr>");
+  float cumulativelift=0;
+  for (int i=0; i < groups; i++) {
+    sb.append("<tr>");
+    sb.append("<td>").append(Utils.formatPct((i + 1.) / groups)).append("</td>");
+    sb.append("<td>").append(Utils.formatPct(response_rates[i])).append("</td>");
+    final float lift=response_rates[i] / avg_response_rate;
+    cumulativelift+=lift / groups;
+    sb.append("<td>").append(lift).append("</td>");
+    sb.append("<td>").append(Utils.formatPct(cumulativelift)).append("</td>");
+  }
+  sb.append("<tr style='min-width:60px'><th>Total</th>");
+  sb.append("<td>").append(Utils.formatPct(avg_response_rate)).append("</td>");
+  sb.append("<td>").append(1.0).append("</td>");
+  sb.append("<td></td>");
+  DocGen.HTML.arrayTail(sb);
+  return true;
+}

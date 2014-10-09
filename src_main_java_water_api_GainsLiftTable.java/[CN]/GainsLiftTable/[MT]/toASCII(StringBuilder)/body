@@ -1,0 +1,16 @@
+{
+  sb.append("Quantile  Response rate    Lift    Cumulative lift\n");
+  float cumulativelift=0;
+  for (int i=0; i < groups; i++) {
+    sb.append(Utils.formatPct((i + 1.) / groups));
+    sb.append("   ").append(Utils.formatPct(response_rates[i])).append("   ");
+    final float lift=response_rates[i] / avg_response_rate;
+    cumulativelift+=lift / groups;
+    sb.append("   ").append(lift).append("     ");
+    sb.append("   ").append(Utils.formatPct(cumulativelift)).append("\n");
+  }
+  sb.append("Total ");
+  sb.append("    ").append(Utils.formatPct(avg_response_rate)).append("  ");
+  sb.append("    ").append(1.0).append("    ");
+  sb.append("         \n");
+}

@@ -1,0 +1,54 @@
+import unittest
+import random, sys, time, os
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i, h2o_exec as h2e
+import codecs
+print 'Maybe h2o is supposed to NA rows if they start with an unmatched "'
+print "For now, complain if numRows isn't what I generated"
+print 
+print 'We throw in double quotes to terminate the string randomly, along with random within the string'
+print 'Will this change row/col? not sure. failing on numRows right now'
+print 'allow for an extra col to be created relative to my one col expectation'
+UTF16 = False
+UTF8 = False
+ASCII = True
+UTF8_MULTIBYTE = False
+DOUBLE_QUOTE = True
+DOUBLE_QUOTE_END_RANDOM = True
+SINGLE_QUOTE = True
+if ASCII:
+    ordinalChoices = range(32, 127)
+elif UTF8:
+    ordinalChoices = range(0, 256)
+elif DOUBLE_QUOTE:
+    ordinalChoices = range(0, 64)
+else:
+    ordinalChoices = range(0, 128)
+if UTF8_MULTIBYTE:
+    ordinalChoices = range(0, 64)
+    ordinalChoices += [8220, 8221, 8216, 8217, 6000]
+safe_remove(9, ordinalChoices)
+safe_remove(0, ordinalChoices)
+safe_remove(13, ordinalChoices)
+safe_remove(10, ordinalChoices)
+safe_remove(1, ordinalChoices)
+safe_remove(59, ordinalChoices)
+safe_remove(32, ordinalChoices)
+safe_remove(34, ordinalChoices)
+if (not SINGLE_QUOTE):
+    safe_remove(39, ordinalChoices)
+safe_remove(44, ordinalChoices)
+safe_remove(48, ordinalChoices)
+safe_remove(49, ordinalChoices)
+safe_remove(50, ordinalChoices)
+safe_remove(51, ordinalChoices)
+safe_remove(52, ordinalChoices)
+safe_remove(53, ordinalChoices)
+safe_remove(54, ordinalChoices)
+safe_remove(55, ordinalChoices)
+safe_remove(56, ordinalChoices)
+safe_remove(57, ordinalChoices)
+if DOUBLE_QUOTE:
+    ordinalChoices.append(34)
+if (__name__ == '__main__'):
+    h2o.unit_main()

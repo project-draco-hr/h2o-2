@@ -1,32 +1,45 @@
-def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsError=False, sandboxIgnoreErrors=False, pattern=None):
+def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsError=False, sandboxIgnoreErrors=False, pattern=None, verbose=False):
     errorFound = False
     if (not LOG_DIR):
         LOG_DIR = './sandbox'
     if (not os.path.exists(LOG_DIR)):
+        if verbose:
+            print 'directory', LOG_DIR, 'not found'
         return
-    fileList = []
+    goodLogsList = []
     if pattern:
-        fileList1 = glob.glob(((LOG_DIR + '/') + pattern))
-        for filename in fileList1:
+        if verbose:
+            print 'Only looking at files that match pattern:', pattern
+        tempFileList = glob.glob(((LOG_DIR + '/') + pattern))
+        for filename in tempFileList:
             if (os.path.isfile(filename) and (not re.search('doneToLine', filename)) and (not re.search('\\.json$', filename))):
-                fileList.append(os.path.basename(filename))
-        if (len(fileList) == 0):
+                goodLogsList.append(os.path.basename(filename))
+        if (len(goodLogsList) == 0):
             raise Exception(('Unexpected: h2o_sandbox found 0 files in %s that matched the pattern: %s' % (LOG_DIR, pattern)))
     else:
-        fileList1 = os.listdir(LOG_DIR)
-        for filename in fileList1:
-            if (re.search('h2o.*stdout|h2o.*stderr|h2o\\..*\\.log', filename) and (not re.search('doneToLine', filename))):
-                fileList.append(filename)
-        if (len(fileList) == 0):
-            emsg = ('Unexpected: h2o_sandbox found 0 files in %s that matched the stdout/stderr pattern' % LOG_DIR)
+        tempFileList = os.listdir(LOG_DIR)
+        if verbose:
+            print 'kbn1:', tempFileList
+        for filename in tempFileList:
+            if (re.search('h2o.*stdout|h2o.*stderr|h2o.*\\.log.*', filename) and (not re.search('doneToLine', filename))):
+                goodLogsList.append(filename)
+        if verbose:
+            print 'kbn2:', goodLogsList
+        if (len(goodLogsList) == 0):
+            emsg = ('Unexpected: h2o_sandbox found 0 files in %s that matched the stdout/stderr or log pattern' % LOG_DIR)
             if sandboxIgnoreErrors:
                 print emsg
                 return
             else:
                 pass
+    if verbose:
+        print 'h2o_sandbox: checking', len(goodLogsList), 'files'
     errLines = []
-    for filename in fileList:
-        sandFile = open(((LOG_DIR + '/') + filename), 'r')
+    for filename in goodLogsList:
+        goodLogPath = ((LOG_DIR + '/') + filename)
+        goodLog = open(goodLogPath, 'r')
+        if verbose:
+            print '\nScraping this log:', goodLogPath
         try:
             with open(((LOG_DIR + '/doneToLine.') + filename)) as f:
                 r = f.readline().rstrip()
@@ -51,7 +64,9 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
         lines = 0
         currentLine = 0
         log_python_test_name = None
-        for line in sandFile:
+        if verbose:
+            print ('Using doneToLine line marker %s with %s' % (doneToLine, goodLogPath))
+        for line in goodLog:
             currentLine += 1
             m = re.search('(python_test_name:) (.*)', line)
             if m:
@@ -62,7 +77,8 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
             foundBad = False
             if (not (' bytes)' in line)):
                 printSingleWarning = regex3.search(line)
-                foundBad = (regex1.search(line) and (not (('Error on' in line) or ('ApiPortWatchdog' in line) or ('Error reduced' in line) or ('out-of-bag error estimation' in line) or ('reconstruction error' in line) or ('Prediction error' in line) or (('Act/Prd' in line) and ('Error' in line)) or (('AUC' in line) and ('Gini' in line) and ('Precision' in line)) or ('Error on training data' in line) or ('Error on validation data' in line) or ('water.DException' in line) or ('WARN SCORM' in line) or ('stack_traces' in line) or ('out_of_bag_error_estimate' in line) or ('Training Error' in line) or ('Mean Squared Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
+                foundBadPartial = regex1.search(line)
+                foundBad = (foundBadPartial and (not (('Error on' in line) or ('ApiPortWatchdog' in line) or ('Error reduced' in line) or ('out-of-bag error estimation' in line) or ('reconstruction error' in line) or ('Prediction error' in line) or (('Act/Prd' in line) and ('Error' in line)) or (('AUC' in line) and ('Gini' in line) and ('Precision' in line)) or ('Error on training data' in line) or ('Error on validation data' in line) or ('WARN SCORM' in line) or ('stack_traces' in line) or ('out_of_bag_error_estimate' in line) or ('Training Error' in line) or ('Mean Squared Error' in line) or (('Error' in line) and ('Actual' in line)) or ('prediction error' in line) or ('errors on' in line) or ('class.error' in line) or ('error rate' in line) or ('[Loaded ' in line) or ('[WARN]' in line) or ('CalcSquareErrorsTasks' in line))))
             if ((printing == 0) and foundBad):
                 printing = 1
                 lines = 1
@@ -78,7 +94,7 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
             if printSingleWarning:
                 if (not (('Unable to load native-hadoop library' in line) or ('stack_traces' in line) or ('Multiple local IPs detected' in line) or ('[Loaded ' in line) or ('RestS3Service' in line))):
                     sys.stdout.write(line)
-        sandFile.close()
+        goodLog.close()
         with open((((LOG_DIR + '/') + 'doneToLine.') + filename), 'w') as f:
             f.write((str(currentLine) + '\n'))
     sys.stdout.flush()
@@ -93,14 +109,16 @@ def check_sandbox_for_errors(LOG_DIR=None, python_test_name='', cloudShutdownIsE
             emsg1 = (' check_sandbox_for_errors: Errors in sandbox stdout or stderr (or R stdout/stderr).\n' + 'Could have occurred at any prior time\n\n')
             emsg2 = ''.join(errLines)
             errorFound = True
-            errorMessage = ((python_test_name + emsg1) + emsg2)
-            if pattern:
-                print '####################################################################'
+            errorMessage = ((str(python_test_name) + emsg1) + emsg2)
+            if (pattern or sandboxIgnoreErrors):
+                print '########################################################################################################################################'
                 print errorMessage
-                print '####################################################################'
-            if ((not pattern) and (not sandboxIgnoreErrors)):
+                print '########################################################################################################################################'
+            else:
                 raise Exception(errorMessage)
     if errorFound:
         return errorMessage
     else:
+        if verbose:
+            print 'h2o_sandbox: h2o logs seem okay'
         return

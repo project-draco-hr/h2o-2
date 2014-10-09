@@ -1,0 +1,16 @@
+{
+  System.out.println("Running ParserTest2");
+  final int nnodes=1;
+  for (int i=1; i < nnodes; i++) {
+    Node n=new NodeVM(args);
+    n.inheritIO();
+    n.start();
+  }
+  H2O.waitForCloudSize(nnodes);
+  System.out.println("Running...");
+  new CoxPHTest().testCoxPHEfron1Var();
+  new CoxPHTest().testCoxPHBreslow1Var();
+  new CoxPHTest().testCoxPHEfron1VarNoStart();
+  new CoxPHTest().testCoxPHBreslow1VarNoStart();
+  System.out.println("DONE!");
+}

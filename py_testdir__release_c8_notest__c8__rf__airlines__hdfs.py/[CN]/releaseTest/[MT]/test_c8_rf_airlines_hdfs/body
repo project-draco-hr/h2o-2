@@ -1,9 +1,0 @@
-def test_c8_rf_airlines_hdfs(self):
-    h2o.beta_features = False
-    trainParseResult = self.loadTrainData()
-    kwargs = paramsTrainRF.copy()
-    trainResult = h2o_rf.trainRF(trainParseResult, **kwargs)
-    scoreParseResult = self.loadScoreData()
-    kwargs = paramsScoreRF.copy()
-    scoreResult = h2o_rf.scoreRF(scoreParseResult, trainResult, **kwargs)
-    h2i.delete_keys_at_all_nodes(timeoutSecs=600)

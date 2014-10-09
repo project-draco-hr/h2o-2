@@ -23,6 +23,10 @@
       return "%/%";
     }
   }
+  if (_x + 2 <= _buf.length && c == '%' && _buf[_x] == '%') {
+    _x++;
+    return "%%";
+  }
   if (_x >= _buf.length)   return _str.substring(_x - 1,_x);
   char c2=_buf[_x];
   if (isDigit(c2) || isLetter(c2) || isWS(c2)|| isReserved(c2)) {

@@ -1,0 +1,21 @@
+{
+  Frame fr=env.peekAry();
+  if (fr.vecs().length > 1)   throw new IllegalArgumentException("mode does not apply to multiple cols.");
+  if (!fr.vecs()[0].isEnum())   throw new IllegalArgumentException("mode only applies to factor columns.");
+  Vec column=fr.anyVec();
+  String dom[]=column.domain();
+  long[][] levels=new long[1][];
+  levels[0]=new Vec.CollectDomain(column).doAll(new Frame(column)).domain();
+  long[][] counts=new ASTTable.Tabularize(levels).doAll(column)._counts;
+  long maxCounts=-1;
+  int mode=-1;
+  for (int i=0; i < counts[0].length; ++i) {
+    if (counts[0][i] > maxCounts && !dom[i].equals("NA")) {
+      maxCounts=counts[0][i];
+      mode=i;
+    }
+  }
+  double mc=mode != -1 ? (double)mode : (double)Arrays.asList(dom).indexOf("NA");
+  env.pop();
+  env.poppush(mc);
+}

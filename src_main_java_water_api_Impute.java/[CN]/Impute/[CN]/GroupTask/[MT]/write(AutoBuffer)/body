@@ -1,0 +1,10 @@
+{
+  super.write(ab);
+  if (_grp2val == null)   return ab.put4(0);
+  ab.put4(_grp2val.size());
+  for (  Group g : _grp2val.keySet()) {
+    ab.put(g);
+    ab.put8d(_grp2val.get(g));
+  }
+  return ab;
+}
