@@ -28,8 +28,10 @@
       final int cM=M - nums.length;
       if (cM <= 0)       throw new IllegalArgumentException("max_input_layer_size must be at least " + (nums.length + 1));
       assert(_a.size() == M);
+      Hash murmur=MurmurHash.getInstance();
       for (int i=0; i < numcat; ++i) {
-        int hashval=cats[i] ^ (int)params.seed;
+        ByteBuffer buf=ByteBuffer.allocate(4);
+        int hashval=murmur.hash(buf.putInt(cats[i]).array(),4,(int)params.seed);
         _a.add(Math.abs(hashval % cM),1f);
       }
       for (int i=0; i < nums.length; ++i)       _a.set(cM + i,Double.isNaN(nums[i]) ? 0f : (float)nums[i]);
