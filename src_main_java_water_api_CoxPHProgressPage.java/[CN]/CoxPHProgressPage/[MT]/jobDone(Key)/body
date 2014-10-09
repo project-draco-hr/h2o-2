@@ -1,3 +1,6 @@
 {
-  return CoxPHModelView.redirect(this,dest);
+  Response resp;
+  if (UKV.get(dest) == null)   resp=Response.error("start times must be strictly less than stop times");
+ else   resp=CoxPHModelView.redirect(this,dest);
+  return resp;
 }

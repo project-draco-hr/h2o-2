@@ -1,4 +1,5 @@
 {
+  super.init();
   if (use_start_column && !start_column.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
   if (!stop_column.isInt())   throw new IllegalArgumentException("stop time must be of type integer");
   if (!event_column.isInt() && !event_column.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
@@ -8,5 +9,10 @@
   if (use_start_column)   min_time=(long)start_column.min() + 1;
  else   min_time=(long)stop_column.min();
   int n_time=(int)(stop_column.max() - min_time + 1);
-  if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("The time number of time points is " + n_time + "; allowed maximum is "+ MAX_TIME_BINS);
+  if (n_time < 1)   throw new IllegalArgumentException("start times must be strictly less than stop times");
+  if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("number of distinct stop times is " + n_time + "; maximum number allowed is "+ MAX_TIME_BINS);
+  source=getSubframe();
+  Frame fr=source.subframe(new String[]{source.names()[0],source.names()[source.numCols() - 1]});
+  model=new CoxPHModel(this,dest(),source._key,fr.names(),fr.domains(),null,null);
+  model.initStats(source,start_column,stop_column,x_column);
 }

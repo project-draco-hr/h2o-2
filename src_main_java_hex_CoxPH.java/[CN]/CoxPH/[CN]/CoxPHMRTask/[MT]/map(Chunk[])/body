@@ -1,17 +1,9 @@
 {
-  Chunk start, stop, events, xs;
-  if (_use_start_column) {
-    start=cols[0];
-    stop=cols[1];
-    events=cols[2];
-    xs=cols[3];
-  }
- else {
-    start=null;
-    stop=cols[0];
-    events=cols[1];
-    xs=cols[2];
-  }
+  Chunk xs=cols[0];
+  Chunk start=null;
+  if (_use_start_column)   start=cols[cols.length - 3];
+  Chunk stop=cols[cols.length - 2];
+  Chunk events=cols[cols.length - 1];
   int i, t, t1=-1, t2;
   long start_i, stop_i, event_i;
   double x_i, logRisk_i, risk_i, xRisk_i, xxRisk_i;
@@ -36,7 +28,7 @@
       t2=(int)(stop_i - _min_time);
       if (_use_start_column) {
         start_i=start.at80(i);
-        if (start_i >= stop_i)         throw new IllegalArgumentException("start values must be strictly less than stop values");
+        if (start_i >= stop_i)         throw new IllegalArgumentException("start times must be strictly less than stop times");
         t1=(int)((start_i + 1) - _min_time);
       }
       x_i=xs.at0(i) - _x_mean;

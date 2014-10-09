@@ -1,51 +1,31 @@
 {
-  try {
-    checkArguments();
-    source=getSubframe();
-    model=new CoxPHModel(this,dest(),source._key,source,null);
-    model.initStats(source,start_column,stop_column,x_column);
-    H2O.H2OCountedCompleter task=new H2O.H2OCountedCompleter(){
-      @Override public void compute2(){
-        Vec[] cols=source.vecs();
-        int n_time=model.cumhaz_0.length;
-        double step=Double.NaN;
-        double oldCoef=Double.NaN;
-        double oldLoglik=-Double.MAX_VALUE;
-        double newCoef=init;
-        for (int i=0; i <= iter_max; i++) {
-          model.iter=i;
-          CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(cols);
-          coxMR.finish();
-          if (i == 0)           model.calcCounts(coxMR);
-          double newLoglik=model.calcLoglik(coxMR);
-          if (newLoglik > oldLoglik) {
-            model.calcModelStats(newCoef,newLoglik);
-            model.calcCumhaz_0(coxMR);
-            if (newLoglik == 0)             model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
- else             model.lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
-            if (model.lre >= lre_min)             break;
-            step=model.gradient / model.hessian;
-            if (Double.isNaN(step) || Double.isInfinite(step))             break;
-            oldCoef=newCoef;
-            oldLoglik=newLoglik;
-          }
- else           step/=2;
-          newCoef=oldCoef - step;
-        }
-        model.calcSurvfit(model.x_mean);
-        Futures fs=new Futures();
-        DKV.put(dest(),model,fs);
-        fs.blockForPending();
-        remove();
-        tryComplete();
-      }
+  Vec[] cols=source.vecs();
+  int n_time=(int)(model.max_time - model.min_time + 1);
+  double step=Double.NaN;
+  double oldCoef=Double.NaN;
+  double oldLoglik=-Double.MAX_VALUE;
+  double newCoef=init;
+  for (int i=0; i <= iter_max; i++) {
+    model.iter=i;
+    CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(cols);
+    coxMR.finish();
+    if (i == 0)     model.calcCounts(coxMR);
+    double newLoglik=model.calcLoglik(coxMR);
+    if (newLoglik > oldLoglik) {
+      model.calcModelStats(newCoef,newLoglik);
+      model.calcCumhaz_0(coxMR);
+      if (newLoglik == 0)       model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
+ else       model.lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
+      if (model.lre >= lre_min)       break;
+      step=model.gradient / model.hessian;
+      if (Double.isNaN(step) || Double.isInfinite(step))       break;
+      oldCoef=newCoef;
+      oldLoglik=newLoglik;
     }
-;
-    start(task);
-    H2O.submitTask(task);
+ else     step/=2;
+    newCoef=oldCoef - step;
   }
- catch (  Throwable t) {
-    t.printStackTrace();
-    cancel(t);
-  }
+  Futures fs=new Futures();
+  DKV.put(dest(),model,fs);
+  fs.blockForPending();
 }

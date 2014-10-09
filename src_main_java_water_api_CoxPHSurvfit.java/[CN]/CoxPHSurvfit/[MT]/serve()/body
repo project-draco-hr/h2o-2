@@ -1,0 +1,12 @@
+{
+  try {
+    if (model == null)     throw new IllegalArgumentException("Model is required to perform validation!");
+    CoxPHModel m=DKV.get(model).get();
+    if (survfit == null)     survfit=Key.make("__Survfit_" + Key.make());
+    m.makeSurvfit(survfit,x_new);
+    return Inspect2.redirect(this,survfit.toString());
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+}
