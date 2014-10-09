@@ -42,7 +42,6 @@ def test_impute_with_na(self):
         print 'missingValuesList', missingValuesList
         if (len(missingValuesList) != numCols):
             raise Exception(('Why is missingValuesList not right afer ToEnum2?: %s %s' % (enumColList, missingValuesList)))
-        expected = (0.1 * numRows)
         for mv in missingValuesList:
             self.assertAlmostEqual(mv, expectedMissing, delta=(0.1 * mv), msg=('mv %s is not approx. expected %s' % (mv, expectedMissing)))
         summaryResult = h2o_cmd.runSummary(key=hex_key2)
