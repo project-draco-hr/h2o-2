@@ -23,4 +23,7 @@ def main(argv):
     perf_runner.run_tests()
     print 'Finished running all tests'
     print 'Running Alerts Rollup'
-    Alerter(order=10, names=perf_runner.names).alert()
+    try:
+        Alerter(order=10, names=perf_runner.names).alert()
+    except:
+        print 'Failed to write Alerts.txt'
