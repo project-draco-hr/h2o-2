@@ -2,9 +2,8 @@
   if (source == null)   throw new IllegalArgumentException("Missing frame to rebalance!");
   try {
     if (chunks > source.numRows())     throw new IllegalArgumentException("Cannot create more than " + source.numRows() + " chunks.");
-    if (after == null)     after=source._key.toString() + ".balanced";
-    final Key newKey=Key.make(after);
-    RebalanceDataSet rb=new RebalanceDataSet(source,newKey,chunks);
+    if (after == null)     after=Key.make(source._key.toString() + ".balanced");
+    RebalanceDataSet rb=new RebalanceDataSet(source,after,chunks);
     H2O.submitTask(rb);
     rb.join();
     return RequestBuilders.Response.done(this);
