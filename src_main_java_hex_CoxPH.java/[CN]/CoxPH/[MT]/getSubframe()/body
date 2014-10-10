@@ -1,0 +1,17 @@
+{
+  String[] names;
+  if (use_start_column) {
+    names=new String[4];
+    names[0]=source.names()[source.find(x_column)];
+    names[1]=source.names()[source.find(start_column)];
+    names[2]=source.names()[source.find(stop_column)];
+    names[3]=source.names()[source.find(event_column)];
+  }
+ else {
+    names=new String[3];
+    names[0]=source.names()[source.find(x_column)];
+    names[1]=source.names()[source.find(stop_column)];
+    names[2]=source.names()[source.find(event_column)];
+  }
+  return source.subframe(names);
+}

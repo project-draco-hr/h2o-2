@@ -1,0 +1,40 @@
+{
+  double newLoglik=0;
+  gradient=0;
+  hessian=0;
+switch (parameters.ties) {
+case efron:
+    for (int t=coxMR.countEvents.length - 1; t >= 0; t--) {
+      if (coxMR.countEvents[t] > 0) {
+        newLoglik+=coxMR.sumLogRiskEvents[t];
+        gradient+=coxMR.sumXEvents[t];
+        for (long e=0; e < coxMR.countEvents[t]; e++) {
+          double frac=((double)e) / ((double)coxMR.countEvents[t]);
+          double term=coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t];
+          double dterm=coxMR.rcumsumXRisk[t] - frac * coxMR.sumXRiskEvents[t];
+          double d2term=coxMR.rcumsumXXRisk[t] - frac * coxMR.sumXXRiskEvents[t];
+          double dlogTerm=dterm / term;
+          newLoglik-=Math.log(term);
+          gradient-=dlogTerm;
+          hessian-=d2term / term - (dlogTerm * (dterm / term));
+        }
+      }
+    }
+  break;
+case breslow:
+for (int t=coxMR.countEvents.length - 1; t >= 0; t--) {
+  if (coxMR.countEvents[t] > 0) {
+    newLoglik+=coxMR.sumLogRiskEvents[t];
+    gradient+=coxMR.sumXEvents[t];
+    double dlogTerm=coxMR.rcumsumXRisk[t] / coxMR.rcumsumRisk[t];
+    newLoglik-=coxMR.countEvents[t] * Math.log(coxMR.rcumsumRisk[t]);
+    gradient-=coxMR.countEvents[t] * dlogTerm;
+    hessian-=coxMR.countEvents[t] * (((coxMR.rcumsumXXRisk[t] / coxMR.rcumsumRisk[t]) - (dlogTerm * (coxMR.rcumsumXRisk[t] / coxMR.rcumsumRisk[t]))));
+  }
+}
+break;
+default :
+throw new IllegalArgumentException("ties method must be either efron or breslow");
+}
+return newLoglik;
+}

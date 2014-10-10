@@ -1,0 +1,25 @@
+{
+  ArrayList<HashSet<String>> strs=new ArrayList<HashSet<String>>();
+  for (  String domain : domains) {
+    String[] news=domain.split(regex);
+    for (int i=0; i < news.length; ++i) {
+      if (strs.size() == i) {
+        HashSet<String> x=new HashSet<String>();
+        x.add(news[i]);
+        strs.add(x);
+      }
+ else {
+        HashSet<String> x=strs.get(i);
+        x.add(news[i]);
+        strs.set(i,x);
+      }
+    }
+  }
+  String[][] doms=new String[strs.size()][];
+  for (int i=0; i < strs.size(); ++i) {
+    HashSet<String> x=strs.get(i);
+    doms[i]=new String[x.size()];
+    for (int j=0; j < x.size(); ++j)     doms[i][j]=(String)x.toArray()[j];
+  }
+  return doms;
+}
