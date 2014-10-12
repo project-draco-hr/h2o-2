@@ -74,4 +74,10 @@
     arg.disable("Only without n-fold cross-validation.",inputArgs);
     override_with_best_model=false;
   }
+  if (arg._name.equals("average_activation") && !autoencoder) {
+    arg.disable("Only for autoencoder.",inputArgs);
+  }
+  if (arg._name.equals("sparsity_beta") && !autoencoder) {
+    arg.disable("Only for autoencoder.",inputArgs);
+  }
 }
