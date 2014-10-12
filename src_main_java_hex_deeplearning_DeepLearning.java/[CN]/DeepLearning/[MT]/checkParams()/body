@@ -70,6 +70,7 @@
   }
   if (autoencoder && validation != null)   throw new UnsupportedOperationException("Cannot specify a validation dataset for auto-encoder.");
   if (autoencoder && activation == Activation.Maxout)   throw new UnsupportedOperationException("Maxout activation is not supported for auto-encoder.");
+  if (max_categorical_features < 1)   throw new IllegalArgumentException("max_categorical_features must be at least " + 1);
   if (dest() == null) {
     destination_key=Key.make();
   }
