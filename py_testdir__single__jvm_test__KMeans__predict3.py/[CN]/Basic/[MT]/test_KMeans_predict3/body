@@ -1,4 +1,4 @@
-def test_kmeans_predict3(self):
+def test_KMeans_predict3(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     timeoutSecs = 600
     predictCsv = 'predict_0.csv'
@@ -121,7 +121,7 @@ def test_kmeans_predict3(self):
     size2 = [t[1] for t in tupleResultList]
     if (size != size2):
         raise Exception('training cluster sizes: %s are not the same as what we got from predict on same data: %s', (size, size2))
-    expectedSizes = [[39, 50, 61], [38, 50, 62], [22, 31, 97], [24, 29, 97], [24, 30, 96]]
+    expectedSizes = [[39, 50, 61], [38, 50, 62], [22, 31, 97], [24, 29, 97], [24, 30, 96], [23, 31, 96]]
     sortedSize = sorted(size)
     if (sortedSize not in expectedSizes):
         raise Exception(('I got cluster sizes %s but expected one of these: %s ' % (sortedSize, expectedSizes)))
