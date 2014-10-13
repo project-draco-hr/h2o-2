@@ -1,9 +1,7 @@
 @classmethod
 def setUpClass(cls):
-    print 'base_port:', base_port
-    h2o_os_util.check_port_group(base_port)
     start = time.time()
-    h2o_hosts.build_cloud_with_hosts(node_count, base_port=base_port, use_flatfile=True, java_heap_GB=1)
+    h2o_hosts.build_cloud_with_hosts(node_count, use_flatfile=True, java_heap_GB=1)
     print 'jar/flatfile copied and Cloud of', len(h2o.nodes), 'built in', (time.time() - start), 'seconds'
     global totalNodes
     totalNodes = len(h2o.nodes)
