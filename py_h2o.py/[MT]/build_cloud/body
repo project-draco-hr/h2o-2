@@ -1,4 +1,4 @@
-def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, init_sandbox=True, **kwargs):
+def build_cloud(node_count=1, base_port=None, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, init_sandbox=True, **kwargs):
     if (not disable_time_stamp):
         sys.stdout = OutWrapper(sys.stdout)
     if (clone_cloud_json or clone_cloud):
@@ -15,12 +15,12 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
         setup_benchmark_log()
     ports_per_node = 2
     nodeList = []
-    port_offset = get_port_offset()
+    base_port = get_base_port(base_port)
     try:
         totalNodes = 0
-        portList = [((port_offset + base_port) + (ports_per_node * i)) for i in range(node_count)]
+        portList = [(base_port + (ports_per_node * i)) for i in range(node_count)]
         if (hosts is None):
-            write_flatfile(node_count=node_count, base_port=base_port, port_offset=port_offset)
+            write_flatfile(node_count=node_count, base_port=base_port)
             hostCount = 1
             if rand_shuffle:
                 random.shuffle(portList)
