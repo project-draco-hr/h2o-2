@@ -1,4 +1,4 @@
-def wait_for_node_to_accept_connections(self, timeoutSecs=15, noExtraErrorCheck=False):
+def wait_for_node_to_accept_connections(self, nodeList, timeoutSecs=15, noExtraErrorCheck=False):
     verboseprint('wait_for_node_to_accept_connections')
 
     def test(n, tries=None, timeoutSecs=timeoutSecs):
@@ -7,4 +7,4 @@ def wait_for_node_to_accept_connections(self, timeoutSecs=15, noExtraErrorCheck=
             return True
         except requests.ConnectionError as e:
             return False
-    self.stabilize(test, error=('waiting to accept initial connection: Expected cloud %s' % nodes), timeoutSecs=timeoutSecs, retryDelaySecs=0.1)
+    self.stabilize(test, error=('waiting to accept initial connection: Expected cloud %s' % nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=0.1)
