@@ -24,7 +24,10 @@ def test_parse_rand_enum_compress(self):
             csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             print 'Creating random', csvPathname
+            start = time.time()
             lastcols = write_syn_dataset(csvPathname, enumList, rowCount, colCount, scale=1, colSepChar=colSepChar, rowSepChar=rowSepChar, SEED=NEW_SEED)
+            elapsed = (time.time() - start)
+            print ('took %s seconds to create %s' % (elapsed, csvPathname))
             lastcolsHistory.append(lastcols)
             parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, separator=colSepInt)
             print "Parse result['destination_key']:", parseResult['destination_key']
