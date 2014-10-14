@@ -86,4 +86,10 @@
   if (!sparse && col_major) {
     if (!quiet_mode)     throw new IllegalArgumentException("Cannot use column major storage for non-sparse data handling.");
   }
+  if (reproducible) {
+    if (H2O.CLOUD.size() != 1)     throw new IllegalArgumentException("Reproducible mode only works in single-node mode.");
+    if (!quiet_mode)     Log.info("Automatically turning on force_load_balancing and setting train_samples_per_iteration to 0 to enforce reproducibility.");
+    force_load_balance=true;
+    train_samples_per_iteration=0;
+  }
 }
