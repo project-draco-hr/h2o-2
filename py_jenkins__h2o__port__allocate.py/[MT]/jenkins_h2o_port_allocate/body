@@ -17,10 +17,10 @@ def jenkins_h2o_port_allocate():
     else:
         h2oPortOffset = (PORTS_PER_SLOT * (executor + hostnameIndex))
         h2oPort += h2oPortOffset
-    print ('Possible h2o base_port range is %s to %s' % (DEFAULT_BASE_PORT, ((h2oPort + (PORTS_PER_SLOT * EXECUTOR_NUM)) - 1)))
-    print ('Possible h2o ports used ranged is %s to %s' % (DEFAULT_BASE_PORT, (h2oPort + (PORTS_PER_SLOT * EXECUTOR_NUM))))
-    print ("want to 'export H2O_PORT=%s" % h2oPort)
-    print ("want to 'export H2O_PORT_OFFSET=%s # legacy" % h2oPortOffset)
+    print ('Possible h2o base_port range is %s to %s' % (DEFAULT_BASE_PORT, ((DEFAULT_BASE_PORT + ((PORTS_PER_SLOT * EXECUTOR_NUM) * len(USED_HOSTNAMES))) - 2)))
+    print ('Possible h2o ports used ranged is %s to %s' % (DEFAULT_BASE_PORT, ((DEFAULT_BASE_PORT + ((PORTS_PER_SLOT * EXECUTOR_NUM) * len(USED_HOSTNAMES))) - 1)))
+    print ("want to 'export H2O_PORT=%s'" % h2oPort)
+    print ("want to 'export H2O_PORT_OFFSET=%s # legacy'" % h2oPortOffset)
     f = open('H2O_BASE_PORT.sh', 'w')
     f.write(('export H2O_PORT=%s\n' % h2oPort))
     f.write(('export H2O_PORT_OFFSET=%s # legacy\n' % h2oPortOffset))
