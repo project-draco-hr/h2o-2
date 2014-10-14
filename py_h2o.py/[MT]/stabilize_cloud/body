@@ -1,5 +1,5 @@
-def stabilize_cloud(node, node_count, timeoutSecs=14.0, retryDelaySecs=0.25, noExtraErrorCheck=False):
-    node.wait_for_node_to_accept_connections(timeoutSecs=timeoutSecs, noExtraErrorCheck=noExtraErrorCheck)
+def stabilize_cloud(node, nodeList, timeoutSecs=14.0, retryDelaySecs=0.25, noExtraErrorCheck=False):
+    node_count = len(nodeList)
 
     def test(n, tries=None, timeoutSecs=14.0):
         c = n.get_cloud(noExtraErrorCheck=True, timeoutSecs=timeoutSecs)
@@ -27,4 +27,5 @@ def stabilize_cloud(node, node_count, timeoutSecs=14.0, retryDelaySecs=0.25, noE
             for ci in c['nodes']:
                 verboseprint(ci['name'])
         return a
-    node.stabilize(test, error=('A cloud of size %d' % node_count), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
+    node.wait_for_node_to_accept_connections(nodeList, timeoutSecs=timeoutSecs, noExtraErrorCheck=noExtraErrorCheck)
+    node.stabilize(test, error=('trying to build cloud of size %d' % node_count), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)
