@@ -28,12 +28,17 @@ def write_syn_dataset(csvPathname, enumList, rowCount, colCount=1, scale=1, colS
         rowIndex = []
         riIndexSum = 0
         for col in range(colCount):
-            riIndex = robj.randint(0, (howManyEnumsToUse - 1))
-            if REPORT_OUTPUT:
-                riIndexSum += riIndex
-            rowData.append(enumList[riIndex])
-            if REPORT_LAST_ENUM_INDICES:
-                rowIndex.append(riIndex)
+            if (USE_NA and (robj.randint(0, 99) == 0)):
+                riIndex = None
+                riIndexSum += 0
+                rowData.append('')
+            else:
+                riIndex = robj.randint(0, (howManyEnumsToUse - 1))
+                if REPORT_OUTPUT:
+                    riIndexSum += riIndex
+                rowData.append(enumList[riIndex])
+                if REPORT_LAST_ENUM_INDICES:
+                    rowIndex.append(riIndex)
         if REPORT_OUTPUT:
             ri = (riIndexSum % MULTINOMIAL)
             rowData.append(ri)
