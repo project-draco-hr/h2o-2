@@ -1,22 +1,30 @@
 {
+  final int n_coef=coef.length;
   double newLoglik=0;
-  gradient=0;
-  hessian=0;
+  for (int j=0; j < n_coef; j++) {
+    gradient[j]=0;
+    for (int k=0; k < n_coef; k++)     hessian[j][k]=0;
+  }
 switch (parameters.ties) {
 case efron:
     for (int t=coxMR.countEvents.length - 1; t >= 0; t--) {
       if (coxMR.countEvents[t] > 0) {
         newLoglik+=coxMR.sumLogRiskEvents[t];
-        gradient+=coxMR.sumXEvents[t];
+        for (int j=0; j < n_coef; j++)         gradient[j]+=coxMR.sumXEvents[j][t];
         for (long e=0; e < coxMR.countEvents[t]; e++) {
           double frac=((double)e) / ((double)coxMR.countEvents[t]);
           double term=coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t];
-          double dterm=coxMR.rcumsumXRisk[t] - frac * coxMR.sumXRiskEvents[t];
-          double d2term=coxMR.rcumsumXXRisk[t] - frac * coxMR.sumXXRiskEvents[t];
-          double dlogTerm=dterm / term;
           newLoglik-=Math.log(term);
-          gradient-=dlogTerm;
-          hessian-=d2term / term - (dlogTerm * (dterm / term));
+          for (int j=0; j < n_coef; j++) {
+            double djTerm=coxMR.rcumsumXRisk[j][t] - frac * coxMR.sumXRiskEvents[j][t];
+            double djLogTerm=djTerm / term;
+            gradient[j]-=djLogTerm;
+            for (int k=0; k < n_coef; k++) {
+              double dkTerm=coxMR.rcumsumXRisk[k][t] - frac * coxMR.sumXRiskEvents[k][t];
+              double djkTerm=coxMR.rcumsumXXRisk[j][k][t] - frac * coxMR.sumXXRiskEvents[j][k][t];
+              hessian[j][k]-=djkTerm / term - (djLogTerm * (dkTerm / term));
+            }
+          }
         }
       }
     }
@@ -25,11 +33,13 @@ case breslow:
 for (int t=coxMR.countEvents.length - 1; t >= 0; t--) {
   if (coxMR.countEvents[t] > 0) {
     newLoglik+=coxMR.sumLogRiskEvents[t];
-    gradient+=coxMR.sumXEvents[t];
-    double dlogTerm=coxMR.rcumsumXRisk[t] / coxMR.rcumsumRisk[t];
     newLoglik-=coxMR.countEvents[t] * Math.log(coxMR.rcumsumRisk[t]);
-    gradient-=coxMR.countEvents[t] * dlogTerm;
-    hessian-=coxMR.countEvents[t] * (((coxMR.rcumsumXXRisk[t] / coxMR.rcumsumRisk[t]) - (dlogTerm * (coxMR.rcumsumXRisk[t] / coxMR.rcumsumRisk[t]))));
+    for (int j=0; j < n_coef; j++) {
+      double dlogTerm=coxMR.rcumsumXRisk[j][t] / coxMR.rcumsumRisk[t];
+      gradient[j]+=coxMR.sumXEvents[j][t];
+      gradient[j]-=coxMR.countEvents[t] * dlogTerm;
+      for (int k=0; k < n_coef; k++)       hessian[j][k]-=coxMR.countEvents[t] * (((coxMR.rcumsumXXRisk[j][k][t] / coxMR.rcumsumRisk[t]) - (dlogTerm * (coxMR.rcumsumXRisk[k][t] / coxMR.rcumsumRisk[t]))));
+    }
   }
 }
 break;

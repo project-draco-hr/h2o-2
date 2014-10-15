@@ -1,0 +1,14 @@
+{
+  final int nrow=hasNA.length;
+  final int x_ncol=_use_start_column ? cols.length - 3 : cols.length - 2;
+  double[] logRisk=MemoryManager.malloc8d(nrow);
+  for (int j=0; j < x_ncol; j++) {
+    for (int i=0; i < nrow; i++) {
+      if (!hasNA[i]) {
+        double x_i=cols[j].at0(i) - _x_mean[j];
+        logRisk[i]+=x_i * _beta[j];
+      }
+    }
+  }
+  return logRisk;
+}

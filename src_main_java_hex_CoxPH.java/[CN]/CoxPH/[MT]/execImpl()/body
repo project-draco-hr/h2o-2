@@ -1,13 +1,20 @@
 {
-  Vec[] cols=source.vecs();
-  int n_time=(int)(model.max_time - model.min_time + 1);
-  double step=Double.NaN;
-  double oldCoef=Double.NaN;
+  int n_coef;
+  if (use_start_column)   n_coef=source.numCols() - 3;
+ else   n_coef=source.numCols() - 2;
+  double[] step=MemoryManager.malloc8d(n_coef);
+  double[] oldCoef=MemoryManager.malloc8d(n_coef);
+  double[] newCoef=MemoryManager.malloc8d(n_coef);
+  for (int j=0; j < n_coef; j++) {
+    step[j]=Double.NaN;
+    oldCoef[j]=Double.NaN;
+    newCoef[j]=init;
+  }
   double oldLoglik=-Double.MAX_VALUE;
-  double newCoef=init;
+  final int n_time=(int)(model.max_time - model.min_time + 1);
   for (int i=0; i <= iter_max; i++) {
     model.iter=i;
-    CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(cols);
+    CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(source.vecs());
     coxMR.finish();
     if (i == 0)     model.calcCounts(coxMR);
     double newLoglik=model.calcLoglik(coxMR);
@@ -17,13 +24,16 @@
       if (newLoglik == 0)       model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else       model.lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
       if (model.lre >= lre_min)       break;
-      step=model.gradient / model.hessian;
-      if (Double.isNaN(step) || Double.isInfinite(step))       break;
-      oldCoef=newCoef;
+      for (int j=0; j < n_coef; j++)       step[j]=0;
+      for (int j=0; j < n_coef; j++)       for (int k=0; k < n_coef; k++)       step[j]-=model.var_coef[j][k] * model.gradient[k];
+      for (int j=0; j < n_coef; j++)       if (Double.isNaN(step[j]) || Double.isInfinite(step[j]))       break;
       oldLoglik=newLoglik;
+      for (int j=0; j < n_coef; j++)       oldCoef[j]=newCoef[j];
     }
- else     step/=2;
-    newCoef=oldCoef - step;
+ else {
+      for (int j=0; j < n_coef; j++)       step[j]/=2;
+    }
+    for (int j=0; j < n_coef; j++)     newCoef[j]=oldCoef[j] - step[j];
   }
   Futures fs=new Futures();
   DKV.put(dest(),model,fs);

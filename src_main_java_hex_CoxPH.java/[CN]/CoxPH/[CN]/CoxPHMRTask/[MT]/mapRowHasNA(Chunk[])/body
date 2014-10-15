@@ -1,0 +1,19 @@
+{
+  final int x_ncol=_use_start_column ? cols.length - 3 : cols.length - 2;
+  Chunk start=null;
+  if (_use_start_column)   start=cols[cols.length - 3];
+  Chunk stop=cols[cols.length - 2];
+  Chunk events=cols[cols.length - 1];
+  final int nrow=stop._len;
+  boolean[] hasNA=MemoryManager.mallocZ(nrow);
+  for (int i=0; i < nrow; i++)   hasNA[i]=stop.isNA0(i);
+  for (int i=0; i < nrow; i++)   hasNA[i]|=events.isNA0(i);
+  if (_use_start_column) {
+    for (int i=0; i < nrow; i++) {
+      hasNA[i]|=start.isNA0(i);
+      if (start.at80(i) >= stop.at80(i))       throw new IllegalArgumentException("start times must be strictly less than stop times");
+    }
+  }
+  for (int j=0; j < x_ncol; j++)   for (int i=0; i < nrow; i++)   hasNA[i]|=cols[j].isNA0(i);
+  return hasNA;
+}
