@@ -30,6 +30,9 @@
       scalar=env.popDbl();
       sb.append(Double.toString(scalar));
     }
+    if (env.warnings().length != 0) {
+      sb.append(Arrays.toString(env.warnings()));
+    }
     result=sb.toString();
     return Response.done(this);
   }
