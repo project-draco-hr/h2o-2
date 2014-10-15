@@ -35,10 +35,7 @@ def test_parse_rand_enum_compress(self):
             numCols = inspect['numCols']
             numRows = inspect['numRows']
             h2o_cmd.infoFromInspect(inspect)
-            expectedNA = (0.06 * numRows)
             missingValuesList = h2o_cmd.infoFromInspect(inspect)
-            for mv in missingValuesList:
-                self.assertAlmostEqual(mv, expectedNA, delta=(0.1 * mv), msg=('mv %s is not approx. expected %s' % (mv, expectedNA)))
             self.assertEqual(rowCount, numRows)
             self.assertEqual(colCount, numCols)
             (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=DISABLE_ALL_NA)
