@@ -1,6 +1,9 @@
 def test_parse_rand_enum_compress(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    n = 1000000
+    if DEBUG:
+        n = 20
+    else:
+        n = 1000000
     if h2o.long_test_case:
         repeat = 1000
         scale = 100
