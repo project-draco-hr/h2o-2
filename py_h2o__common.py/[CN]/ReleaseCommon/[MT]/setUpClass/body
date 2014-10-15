@@ -6,5 +6,5 @@ def setUpClass(cls):
         h2o_hosts.build_cloud_with_hosts()
     else:
         h2o.build_cloud_with_json()
-    h2o.stabilize_cloud(h2o.nodes[0], node_count=len(h2o.nodes), timeoutSecs=90)
+    h2o.stabilize_cloud(h2o.nodes[0], h2o.nodes, timeoutSecs=90)
     h2o.verify_cloud_size()

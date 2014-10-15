@@ -1,5 +1,6 @@
 {
   try {
+    if (column_index <= 0)     throw new IllegalArgumentException("Column index is 1 based. Please supply a valid column index in the range [1," + src_key.numCols() + "]");
     Log.info("Factorizing column " + column_index);
     Vec nv=src_key.vecs()[column_index - 1].toEnum();
     src_key.replace(column_index - 1,nv);

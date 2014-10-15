@@ -1,0 +1,28 @@
+{
+  try {
+    DocGen.HTML.section(sb,"UDP Drop rates");
+    for (int i=0; i < msg_sizes.length; ++i) {
+      sb.append("<h4>" + "Message size = " + msg_sizes[i] + " bytes</h4>");
+      sb.append("<div>");
+      UDPDropMatrix d=dropRates[i];
+      sb.append("<table class='table table-bordered table-condensed'>\n");
+      sb.append("<tr>");
+      sb.append("<th></th>");
+      for (int j=0; j < H2O.CLOUD.size(); ++j)       sb.append("<th>" + j + "</th>");
+      sb.append("</tr>\n");
+      for (int j=0; j < H2O.CLOUD.size(); ++j) {
+        sb.append("<tr><td>" + j + "</td>");
+        for (int k=0; k < d.dropRates[j].length; ++k) {
+          sb.append("<td>" + (int)(100 * d.dropRates[j][k]) + "&#37;</td>");
+        }
+        sb.append("</tr>\n");
+      }
+      sb.append("</table>");
+      sb.append("</div>");
+    }
+  }
+ catch (  Throwable t) {
+    t.printStackTrace();
+  }
+  return true;
+}
