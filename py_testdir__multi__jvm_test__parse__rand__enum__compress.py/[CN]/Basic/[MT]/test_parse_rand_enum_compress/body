@@ -32,6 +32,13 @@ def test_parse_rand_enum_compress(self):
             parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, separator=colSepInt, doSummary=DO_SUMMARY)
             print "Parse result['destination_key']:", parseResult['destination_key']
             inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+            numCols = inspect['numCols']
+            numRows = inspect['numRows']
             h2o_cmd.infoFromInspect(inspect)
-            print ('\n' + csvFilename)
-            (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=(not USE_NA))
+            expectedNA = (0.06 * numRows)
+            missingValuesList = h2o_cmd.infoFromInspect(inspect)
+            for mv in missingValuesList:
+                self.assertAlmostEqual(mv, expectedNA, delta=(0.1 * mv), msg=('mv %s is not approx. expected %s' % (mv, expectedNA)))
+            self.assertEqual(rowCount, numRows)
+            self.assertEqual(colCount, numCols)
+            (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=DISABLE_ALL_NA)
