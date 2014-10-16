@@ -2,7 +2,7 @@ def test_parse_specific_case2(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     hex_key = 'a.hex'
     for (dataset, expNumRows, expNumCols, expNaCnt, expType) in tryList:
-        csvFilename = ((('specific_' + str(expNumRows)) + str(expNumCols)) + '.csv')
+        csvFilename = (((('specific_' + str(expNumRows)) + 'x') + str(expNumCols)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         write_syn_dataset(csvPathname, dataset)
         parseResult = h2i.import_parse(path=csvPathname, schema='put', header=0, hex_key=hex_key, timeoutSecs=10, doSummary=False)
