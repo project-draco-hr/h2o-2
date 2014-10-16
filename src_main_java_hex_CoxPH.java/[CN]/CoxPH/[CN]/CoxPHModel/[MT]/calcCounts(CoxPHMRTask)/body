@@ -2,7 +2,7 @@
   n=coxMR.n;
   n_missing=coxMR.n_missing;
   int nz=0;
-  for (int t=0; t < coxMR.countEvents.length; t++) {
+  for (int t=0; t < coxMR.countEvents.length; ++t) {
     total_event+=coxMR.countEvents[t];
     if (coxMR.countEvents[t] > 0 || coxMR.countCensored[t] > 0) {
       time[nz]=min_time + t;
@@ -12,5 +12,5 @@
       nz++;
     }
   }
-  if (!parameters.use_start_column)   for (int t=n_risk.length - 2; t >= 0; t--)   n_risk[t]+=n_risk[t + 1];
+  if (!parameters.use_start_column)   for (int t=n_risk.length - 2; t >= 0; --t)   n_risk[t]+=n_risk[t + 1];
 }

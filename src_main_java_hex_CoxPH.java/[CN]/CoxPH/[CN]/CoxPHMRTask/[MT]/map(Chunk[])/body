@@ -5,7 +5,7 @@
   final Chunk start=_use_start_column ? cols[cols.length - 3] : null;
   final Chunk stop=cols[cols.length - 2];
   final Chunk events=cols[cols.length - 1];
-  for (int i=0; i < nrow; i++) {
+  for (int i=0; i < nrow; ++i) {
     if (mapRowHasNA(cols,i))     n_missing++;
  else {
       n++;
@@ -13,10 +13,7 @@
       final int t1=_use_start_column ? (int)((start.at80(i) + 1) - _min_time) : -1;
       final int t2=(int)(stop.at80(i) - _min_time);
       double logRisk_i=0;
-      for (int j=0; j < x_ncol; j++) {
-        final double x_i=cols[j].at0(i) - _x_mean[j];
-        logRisk_i+=x_i * _beta[j];
-      }
+      for (int j=0; j < x_ncol; ++j)       logRisk_i+=(cols[j].at0(i) - _x_mean[j]) * _beta[j];
       final double risk_i=Math.exp(logRisk_i);
       if (event_i > 0) {
         countEvents[t2]++;
@@ -25,16 +22,14 @@
       }
  else       countCensored[t2]++;
       if (_use_start_column) {
-        for (int t=t1; t <= t2; t++) {
-          countRiskSet[t]++;
-          rcumsumRisk[t]+=risk_i;
-        }
+        for (int t=t1; t <= t2; ++t)         countRiskSet[t]++;
+        for (int t=t1; t <= t2; ++t)         rcumsumRisk[t]+=risk_i;
       }
  else {
         countRiskSet[t2]++;
         rcumsumRisk[t2]+=risk_i;
       }
-      for (int j=0; j < x_ncol; j++) {
+      for (int j=0; j < x_ncol; ++j) {
         final double x1_i=cols[j].at0(i) - _x_mean[j];
         final double xRisk_i=x1_i * risk_i;
         if (event_i > 0) {
@@ -42,17 +37,17 @@
           sumXRiskEvents[j][t2]+=xRisk_i;
         }
         if (_use_start_column) {
-          for (int t=t1; t <= t2; t++)           rcumsumXRisk[j][t]+=xRisk_i;
+          for (int t=t1; t <= t2; ++t)           rcumsumXRisk[j][t]+=xRisk_i;
         }
  else {
           rcumsumXRisk[j][t2]+=xRisk_i;
         }
-        for (int k=0; k < x_ncol; k++) {
+        for (int k=0; k < x_ncol; ++k) {
           final double x2_i=cols[k].at0(i) - _x_mean[k];
           final double xxRisk_i=x2_i * xRisk_i;
           if (event_i > 0)           sumXXRiskEvents[j][k][t2]+=xxRisk_i;
           if (_use_start_column) {
-            for (int t=t1; t <= t2; t++)             rcumsumXXRisk[j][k][t]+=xxRisk_i;
+            for (int t=t1; t <= t2; ++t)             rcumsumXXRisk[j][k][t]+=xxRisk_i;
           }
  else {
             rcumsumXXRisk[j][k][t2]+=xxRisk_i;

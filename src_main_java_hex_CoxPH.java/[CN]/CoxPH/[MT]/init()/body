@@ -12,7 +12,7 @@
   source=getSubframe();
   final int x_ncol=x_columns.length;
   final String[] names=new String[x_ncol + 1];
-  for (int j=0; j < x_ncol; j++)   names[j]=source.names()[j];
+  for (int j=0; j < x_ncol; ++j)   names[j]=source.names()[j];
   names[x_ncol]=source.names()[source.numCols() - 1];
   final Frame fr=source.subframe(names);
   model=new CoxPHModel(this,dest(),source._key,fr.names(),fr.domains(),null,null);

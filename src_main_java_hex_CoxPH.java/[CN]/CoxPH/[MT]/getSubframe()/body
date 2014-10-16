@@ -2,7 +2,7 @@
   final int x_ncol=x_columns.length;
   final int ncol=use_start_column ? x_ncol + 3 : x_ncol + 2;
   final String[] names=new String[ncol];
-  for (int j=0; j < x_ncol; j++)   names[j]=source.names()[x_columns[j]];
+  for (int j=0; j < x_ncol; ++j)   names[j]=source.names()[x_columns[j]];
   if (use_start_column)   names[ncol - 3]=source.names()[source.find(start_column)];
   names[ncol - 2]=source.names()[source.find(stop_column)];
   names[ncol - 1]=source.names()[source.find(event_column)];

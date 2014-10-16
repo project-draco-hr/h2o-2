@@ -9,13 +9,15 @@
   final Vec surv=vecs[3];
   final double x_centered=x_new - x_mean[j];
   final double risk=Math.exp(coef[j] * x_centered);
-  for (int t=0; t < n_time; t++) {
-    final double gamma=x_centered * cumhaz_0[t] - var_cumhaz_2[j][t];
+  for (int t=0; t < n_time; ++t)   timevec.set(t,time[t]);
+  for (int t=0; t < n_time; ++t) {
     final double cumhaz_1=risk * cumhaz_0[t];
-    timevec.set(t,time[t]);
     cumhaz.set(t,cumhaz_1);
-    se_cumhaz.set(t,risk * Math.sqrt(var_cumhaz_1[t] + (gamma * var_coef[j][j] * gamma)));
     surv.set(t,Math.exp(-cumhaz_1));
+  }
+  for (int t=0; t < n_time; ++t) {
+    final double gamma=x_centered * cumhaz_0[t] - var_cumhaz_2[j][t];
+    se_cumhaz.set(t,risk * Math.sqrt(var_cumhaz_1[t] + (gamma * var_coef[j][j] * gamma)));
   }
   final Frame fr=new Frame(key,new String[]{"time","cumhaz","se_cumhaz","surv"},vecs);
   final Futures fs=new Futures();

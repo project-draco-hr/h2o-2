@@ -6,18 +6,9 @@
   sumRiskEvents=MemoryManager.malloc8d(_n_time);
   sumLogRiskEvents=MemoryManager.malloc8d(_n_time);
   rcumsumRisk=MemoryManager.malloc8d(_n_time);
-  sumXEvents=new double[n_coef][];
-  sumXRiskEvents=new double[n_coef][];
-  rcumsumXRisk=new double[n_coef][];
-  sumXXRiskEvents=new double[n_coef][n_coef][];
-  rcumsumXXRisk=new double[n_coef][n_coef][];
-  for (int j=0; j < n_coef; j++) {
-    sumXEvents[j]=MemoryManager.malloc8d(_n_time);
-    sumXRiskEvents[j]=MemoryManager.malloc8d(_n_time);
-    rcumsumXRisk[j]=MemoryManager.malloc8d(_n_time);
-    for (int k=0; k < n_coef; k++) {
-      sumXXRiskEvents[j][k]=MemoryManager.malloc8d(_n_time);
-      rcumsumXXRisk[j][k]=MemoryManager.malloc8d(_n_time);
-    }
-  }
+  sumXEvents=malloc2DArray(n_coef,_n_time);
+  sumXRiskEvents=malloc2DArray(n_coef,_n_time);
+  rcumsumXRisk=malloc2DArray(n_coef,_n_time);
+  sumXXRiskEvents=malloc3DArray(n_coef,n_coef,_n_time);
+  rcumsumXXRisk=malloc3DArray(n_coef,n_coef,_n_time);
 }
