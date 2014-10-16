@@ -1,12 +1,10 @@
 def massageUTF8Choices(ordinalChoices):
-    ordinalChoices.remove(9)
-    if NO_NUL:
+    if (0 in ordinalChoices):
         ordinalChoices.remove(0)
-    ordinalChoices.remove(13)
-    ordinalChoices.remove(10)
-    ordinalChoices.remove(1)
-    ordinalChoices.remove(59)
-    ordinalChoices.remove(32)
+    if (13 in ordinalChoices):
+        ordinalChoices.remove(13)
+    if (10 in ordinalChoices):
+        ordinalChoices.remove(10)
     ordinalChoices.remove(34)
     ordinalChoices.remove(44)
     if (1 == 0):
@@ -20,3 +18,5 @@ def massageUTF8Choices(ordinalChoices):
         ordinalChoices.remove(55)
         ordinalChoices.remove(56)
         ordinalChoices.remove(57)
+    if (127 in ordinalChoices):
+        ordinalChoices.remove(127)

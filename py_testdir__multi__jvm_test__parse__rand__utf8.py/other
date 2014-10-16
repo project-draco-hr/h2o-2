@@ -1,17 +1,16 @@
-import unittest
-import random, sys, time, os
+import unittest, random, sys, time, os
 sys.path.extend(['.', '..', 'py'])
 import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i, h2o_exec as h2e
+import codecs
 print "apparently need to have at least one normal character otherwise the parse doesn't work right"
-print 'is char 0x00 treated as NA? skip'
-ordinalChoices = range(0, 128)
-ordinalChoices.remove(9)
+print 'just doing single char here'
+ordinalChoices = range(0, 256)
 ordinalChoices.remove(0)
 ordinalChoices.remove(13)
 ordinalChoices.remove(10)
 ordinalChoices.remove(1)
-ordinalChoices.remove(59)
 ordinalChoices.remove(32)
+ordinalChoices.remove(9)
 ordinalChoices.remove(34)
 ordinalChoices.remove(44)
 ordinalChoices.remove(48)

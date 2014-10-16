@@ -1,0 +1,36 @@
+import unittest, random, sys, time, codecs
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i
+DEBUG = False
+UTF8 = True
+UTF8_MULTIBYTE = False
+ENUM_LENGTH = 10
+DISABLE_ALL_NA = True
+CAUSE_RANDOM_NA = True
+DO_SUMMARY = False
+print 'Original intent was this, but now it does something else'
+print 'This focuses on embedding the special h2o bytes into multi-byte UTF8 chars'
+print 'Brandon says there are no legal UTF8 multi-byte that have legal single byte embedded'
+print "that might be true for ASCII, but what about UTF8 single byte? We don't interpret any UTF8"
+print 'single byte (only ASCII) so we leave that interpretation up to other layers'
+print 'They will print as some multi-byte UTF8 char. h2o should always parse the right # of cols'
+print "I suppose we can guarantee col count if we don't use comma character except"
+print "as the col separator. And if we don't use the eol symbols (CR/CRLF/LF)"
+if UTF8:
+    ordinalChoices = range(0, 256)
+else:
+    ordinalChoices = range(0, 128)
+if UTF8_MULTIBYTE:
+    ordinalChoicesMulti = range(0, 127)
+    ordinalChoicesMulti += range(128, 159)
+    ordinalChoicesMulti += range(160, 1023)
+    ordinalChoicesMulti += range(1024, 2047)
+    ordinalChoicesMulti += range(2048, 16383)
+    ordinalChoicesMulti += range(16384, 65535)
+    ordinalChoicesMulti += range(65536, 262143)
+    ordinalChoicesMulti += range(262144, 1114111)
+massageUTF8Choices(ordinalChoices)
+if UTF8_MULTIBYTE:
+    massageUTF8Choices(ordinalChoicesMulti)
+if (__name__ == '__main__'):
+    h2o.unit_main()

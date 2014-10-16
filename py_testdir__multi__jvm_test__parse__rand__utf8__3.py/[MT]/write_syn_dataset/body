@@ -1,0 +1,25 @@
+def write_syn_dataset(csvPathname, rowCount, colCount=1, scale=1, colSepChar=',', rowSepChar='\n', SEED=12345678):
+    robj = random.Random(SEED)
+    if (UTF8 or UTF8_MULTIBYTE):
+        dsf = codecs.open(csvPathname, encoding='utf-8', mode='w+')
+    else:
+        dsf = open(csvPathname, 'w+')
+    for row in range(rowCount):
+        rowData = []
+        for col in range(colCount):
+            if ((not DISABLE_ALL_NA) and (CAUSE_RANDOM_NA and (robj.randint(0, 99) == 0))):
+                rowData.append('')
+            else:
+                r = generate_random_utf8_string(length=ENUM_LENGTH, multi=UTF8_MULTIBYTE, row=row, col=col)
+                rowData.append(r)
+        rowDataCsv = (colSepChar.join(rowData) + rowSepChar)
+        if (UTF8 or UTF8_MULTIBYTE):
+            decoded = rowDataCsv.decode('utf-8')
+            if DEBUG:
+                print 'str:', repr(rowDataCsv), type(rowDataCsv)
+                print 'utf8:', repr(decoded), type(decoded)
+            dsf.write(decoded)
+        else:
+            dsf.write(rowDataCsv)
+    dsf.close()
+    return
