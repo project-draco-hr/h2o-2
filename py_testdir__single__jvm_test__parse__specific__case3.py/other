@@ -1,0 +1,16 @@
+import unittest, random, sys, time, os
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i
+import codecs, unicodedata
+print 'create some specific small datasets with exp row/col combinations'
+print "I'll keep it to one case per file"
+print 'I would expect the unmatched double quote turns this in a 4 col dataset, not 1'
+print 'apparently turns it into all NAs'
+toDoList = [34]
+removeIfThere(0)
+tryList = []
+for i in toDoList:
+    unicodeSymbol = unichr(i)
+    tryList.append(((((((((((((((((((((('a,b,c,d' + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\n'), 10, 4, [0, 0, 0, 0, 0], ['Enum', 'Enum', 'Enum', 'Enum', 'Enum'], i))
+if (__name__ == '__main__'):
+    h2o.unit_main()
