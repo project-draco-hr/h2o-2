@@ -1,10 +1,8 @@
 {
-  int n_coef;
-  if (use_start_column)   n_coef=source.numCols() - 3;
- else   n_coef=source.numCols() - 2;
-  double[] step=MemoryManager.malloc8d(n_coef);
-  double[] oldCoef=MemoryManager.malloc8d(n_coef);
-  double[] newCoef=MemoryManager.malloc8d(n_coef);
+  final int n_coef=use_start_column ? source.numCols() - 3 : source.numCols() - 2;
+  final double[] step=MemoryManager.malloc8d(n_coef);
+  final double[] oldCoef=MemoryManager.malloc8d(n_coef);
+  final double[] newCoef=MemoryManager.malloc8d(n_coef);
   for (int j=0; j < n_coef; j++) {
     step[j]=Double.NaN;
     oldCoef[j]=Double.NaN;
@@ -17,7 +15,7 @@
     CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(source.vecs());
     coxMR.finish();
     if (i == 0)     model.calcCounts(coxMR);
-    double newLoglik=model.calcLoglik(coxMR);
+    final double newLoglik=model.calcLoglik(coxMR);
     if (newLoglik > oldLoglik) {
       model.calcModelStats(newCoef,newLoglik);
       model.calcCumhaz_0(coxMR);
@@ -35,7 +33,7 @@
     }
     for (int j=0; j < n_coef; j++)     newCoef[j]=oldCoef[j] - step[j];
   }
-  Futures fs=new Futures();
+  final Futures fs=new Futures();
   DKV.put(dest(),model,fs);
   fs.blockForPending();
 }

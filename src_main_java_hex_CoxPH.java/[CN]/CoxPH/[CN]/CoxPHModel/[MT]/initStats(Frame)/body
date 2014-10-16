@@ -1,7 +1,5 @@
 {
-  int n_coef;
-  if (parameters.use_start_column)   n_coef=source.numCols() - 3;
- else   n_coef=source.numCols() - 2;
+  final int n_coef=parameters.use_start_column ? source.numCols() - 3 : source.numCols() - 2;
   names_coef=new String[n_coef];
   coef=MemoryManager.malloc8d(n_coef);
   exp_coef=MemoryManager.malloc8d(n_coef);
@@ -18,14 +16,9 @@
     names_coef[j]=source.names()[j];
     x_mean[j]=source.vec(j).mean();
   }
-  Vec start_column=source.vec(source.numCols() - 3);
-  Vec stop_column=source.vec(source.numCols() - 2);
-  if (parameters.use_start_column) {
-    min_time=(long)start_column.min() + 1;
-  }
- else {
-    min_time=(long)stop_column.min();
-  }
+  final Vec start_column=source.vec(source.numCols() - 3);
+  final Vec stop_column=source.vec(source.numCols() - 2);
+  min_time=parameters.use_start_column ? (long)start_column.min() + 1 : (long)stop_column.min();
   max_time=(long)stop_column.max();
   final int n_time=new CollectDomain(stop_column).doAll(stop_column).domain().length;
   time=MemoryManager.malloc8(n_time);

@@ -8,7 +8,7 @@
   }
  else {
     double logRisk=0;
-    double[] data_centered=MemoryManager.malloc8d(n_coef);
+    final double[] data_centered=MemoryManager.malloc8d(n_coef);
     for (int j=0; j < n_coef; j++) {
       data_centered[j]=data[j] - x_mean[j];
       logRisk+=data_centered[j] * coef[j];
@@ -16,14 +16,14 @@
     final double risk=Math.exp(logRisk);
     for (int t=0; t < n_time; t++) {
       int i=t + 1;
-      double cumhaz_1=risk * cumhaz_0[t];
+      final double cumhaz_1=risk * cumhaz_0[t];
       double var_cumhaz_2_t=0;
       for (int j=0; j < n_coef; j++) {
         double sum=0;
         for (int k=0; k < n_coef; k++)         sum+=var_coef[j][k] * (data_centered[k] * cumhaz_0[t] - var_cumhaz_2[k][t]);
         var_cumhaz_2_t+=(data_centered[j] * cumhaz_0[t] - var_cumhaz_2[j][t]) * sum;
       }
-      double se_cumhaz_1=risk * Math.sqrt(var_cumhaz_1[t] + var_cumhaz_2_t);
+      final double se_cumhaz_1=risk * Math.sqrt(var_cumhaz_1[t] + var_cumhaz_2_t);
       preds[i]=(float)cumhaz_1;
       preds[i + n_time]=(float)se_cumhaz_1;
     }

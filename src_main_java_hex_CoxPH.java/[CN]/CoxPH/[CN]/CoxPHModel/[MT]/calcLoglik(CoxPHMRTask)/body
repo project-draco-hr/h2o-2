@@ -12,16 +12,16 @@ case efron:
         newLoglik+=coxMR.sumLogRiskEvents[t];
         for (int j=0; j < n_coef; j++)         gradient[j]+=coxMR.sumXEvents[j][t];
         for (long e=0; e < coxMR.countEvents[t]; e++) {
-          double frac=((double)e) / ((double)coxMR.countEvents[t]);
-          double term=coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t];
+          final double frac=((double)e) / ((double)coxMR.countEvents[t]);
+          final double term=coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t];
           newLoglik-=Math.log(term);
           for (int j=0; j < n_coef; j++) {
-            double djTerm=coxMR.rcumsumXRisk[j][t] - frac * coxMR.sumXRiskEvents[j][t];
-            double djLogTerm=djTerm / term;
+            final double djTerm=coxMR.rcumsumXRisk[j][t] - frac * coxMR.sumXRiskEvents[j][t];
+            final double djLogTerm=djTerm / term;
             gradient[j]-=djLogTerm;
             for (int k=0; k < n_coef; k++) {
-              double dkTerm=coxMR.rcumsumXRisk[k][t] - frac * coxMR.sumXRiskEvents[k][t];
-              double djkTerm=coxMR.rcumsumXXRisk[j][k][t] - frac * coxMR.sumXXRiskEvents[j][k][t];
+              final double dkTerm=coxMR.rcumsumXRisk[k][t] - frac * coxMR.sumXRiskEvents[k][t];
+              final double djkTerm=coxMR.rcumsumXXRisk[j][k][t] - frac * coxMR.sumXXRiskEvents[j][k][t];
               hessian[j][k]-=djkTerm / term - (djLogTerm * (dkTerm / term));
             }
           }
@@ -35,7 +35,7 @@ for (int t=coxMR.countEvents.length - 1; t >= 0; t--) {
     newLoglik+=coxMR.sumLogRiskEvents[t];
     newLoglik-=coxMR.countEvents[t] * Math.log(coxMR.rcumsumRisk[t]);
     for (int j=0; j < n_coef; j++) {
-      double dlogTerm=coxMR.rcumsumXRisk[j][t] / coxMR.rcumsumRisk[t];
+      final double dlogTerm=coxMR.rcumsumXRisk[j][t] / coxMR.rcumsumRisk[t];
       gradient[j]+=coxMR.sumXEvents[j][t];
       gradient[j]-=coxMR.countEvents[t] * dlogTerm;
       for (int k=0; k < n_coef; k++)       hessian[j][k]-=coxMR.countEvents[t] * (((coxMR.rcumsumXXRisk[j][k][t] / coxMR.rcumsumRisk[t]) - (dlogTerm * (coxMR.rcumsumXRisk[k][t] / coxMR.rcumsumRisk[t]))));
