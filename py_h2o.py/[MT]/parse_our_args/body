@@ -15,12 +15,13 @@ def parse_our_args():
     parser.add_argument('-dts', '--disable_time_stamp', help='Disable the timestamp on all stdout. Useful when trying to capture some stdout (like json prints) for use elsewhere', action='store_true')
     parser.add_argument('-debug_rest', '--debug_rest', help='Print REST API interactions to rest.log', action='store_true')
     parser.add_argument('-nc', '--nocolor', help="don't emit the chars that cause color printing", action='store_true')
+    parser.add_argument('-long', '--long_test_case', help='some tests will vary behavior to more, longer cases', action='store_true')
     parser.add_argument('unittest_args', nargs='*')
     args = parser.parse_args()
     if args.nocolor:
         h2p.disable_colors()
     global browse_disable, browse_json, verbose, ipaddr_from_cmd_line, config_json, debugger, random_udp_drop
-    global random_seed, beta_features, sleep_at_tear_down, abort_after_import, clone_cloud_json, disable_time_stamp, debug_rest
+    global random_seed, beta_features, sleep_at_tear_down, abort_after_import, clone_cloud_json, disable_time_stamp, debug_rest, long_test_case
     browse_disable = (args.browse_disable or (getpass.getuser() == 'jenkins'))
     browse_json = args.browse_json
     verbose = args.verbose
@@ -34,4 +35,5 @@ def parse_our_args():
     clone_cloud_json = args.clone_cloud_json
     disable_time_stamp = args.disable_time_stamp
     debug_rest = args.debug_rest
+    long_test_case = args.long_test_case
     sys.argv[1:] = (['-v', '--failfast'] + args.unittest_args)

@@ -1,0 +1,18 @@
+{
+  if (_srcId == H2O.SELF.index()) {
+    doTest();
+    tryComplete();
+  }
+ else {
+    _done=true;
+    final UDPDropTester t=(UDPDropTester)clone();
+    new RPC(H2O.CLOUD._memary[_srcId],t).addCompleter(new H2OCountedCompleter(this){
+      @Override public void compute2(){
+      }
+      @Override public void onCompletion(      CountedCompleter cc){
+        copyOver(t);
+      }
+    }
+).call();
+  }
+}

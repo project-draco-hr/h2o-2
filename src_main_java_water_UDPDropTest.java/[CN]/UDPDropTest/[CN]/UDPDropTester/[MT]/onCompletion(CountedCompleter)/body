@@ -1,0 +1,14 @@
+{
+  if (!_done) {
+    _done=true;
+    _dropRates=MemoryManager.malloc8d(_msgSzs.length);
+    for (int i=0; i < _msgSzs.length; ++i) {
+      double sum=0;
+      for (int j=0; j < _N; ++j) {
+        RPC<UDPPing> rpc=_pings[i][j];
+        sum+=(rpc._dt._retries == -1 ? Double.POSITIVE_INFINITY : rpc._dt._retries);
+      }
+      _dropRates[i]=1 - _N / (_N + sum);
+    }
+  }
+}

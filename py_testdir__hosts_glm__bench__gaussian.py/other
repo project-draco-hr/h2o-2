@@ -15,7 +15,7 @@ if (__name__ == '__main__'):
         h2o_hosts.build_cloud_with_hosts()
     else:
         files = local_files
-        h2o_hosts.build_cloud_with_hosts(use_hdfs=True, base_port=54321)
+        h2o_hosts.build_cloud_with_hosts(use_hdfs=True)
     run_glms(files['allstate'], [{'y': 'Claim_Amount', 'lambda': l, 'alpha': a, 'family': 'gaussian', 'n_folds': 1, } for l in [0.0001] for a in [0.5]])
     x = '0,1,2,3,5,7,8,9,16,17'
     run_glms(files['airlines'], [{'y': 'IsArrDelayed', 'x': x, 'lambda': l, 'alpha': a, 'family': 'gaussian', 'n_folds': 1, 'case': 1, } for l in [0.0001] for a in [0.5]])
