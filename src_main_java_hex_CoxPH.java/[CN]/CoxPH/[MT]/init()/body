@@ -5,14 +5,16 @@
   if (!event_column.isInt() && !event_column.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
   if (Double.isNaN(lre_min) || lre_min <= 0)   throw new IllegalArgumentException("lre_min must be a positive number");
   if (iter_max < 1)   throw new IllegalArgumentException("iter_max must be a positive integer");
-  long min_time;
-  if (use_start_column)   min_time=(long)start_column.min() + 1;
- else   min_time=(long)stop_column.min();
-  int n_time=(int)(stop_column.max() - min_time + 1);
+  final long min_time=use_start_column ? (long)start_column.min() + 1 : (long)stop_column.min();
+  final int n_time=(int)(stop_column.max() - min_time + 1);
   if (n_time < 1)   throw new IllegalArgumentException("start times must be strictly less than stop times");
   if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("number of distinct stop times is " + n_time + "; maximum number allowed is "+ MAX_TIME_BINS);
   source=getSubframe();
-  Frame fr=source.subframe(new String[]{source.names()[0],source.names()[source.numCols() - 1]});
+  final int x_ncol=x_columns.length;
+  final String[] names=new String[x_ncol + 1];
+  for (int j=0; j < x_ncol; j++)   names[j]=source.names()[j];
+  names[x_ncol]=source.names()[source.numCols() - 1];
+  final Frame fr=source.subframe(names);
   model=new CoxPHModel(this,dest(),source._key,fr.names(),fr.domains(),null,null);
-  model.initStats(source,start_column,stop_column,x_column);
+  model.initStats(source);
 }
