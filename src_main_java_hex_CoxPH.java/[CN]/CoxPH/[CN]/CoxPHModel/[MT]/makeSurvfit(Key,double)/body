@@ -1,13 +1,13 @@
 {
   int j=0;
-  if (Double.isNaN(x_new))   x_new=x_mean[j];
+  if (Double.isNaN(x_new))   x_new=data_info._normSub[j];
   final int n_time=time.length;
   final Vec[] vecs=Vec.makeNewCons((long)n_time,4,0,null);
   final Vec timevec=vecs[0];
   final Vec cumhaz=vecs[1];
   final Vec se_cumhaz=vecs[2];
   final Vec surv=vecs[3];
-  final double x_centered=x_new - x_mean[j];
+  final double x_centered=x_new - data_info._normSub[j];
   final double risk=Math.exp(coef[j] * x_centered);
   for (int t=0; t < n_time; ++t)   timevec.set(t,time[t]);
   for (int t=0; t < n_time; ++t) {
