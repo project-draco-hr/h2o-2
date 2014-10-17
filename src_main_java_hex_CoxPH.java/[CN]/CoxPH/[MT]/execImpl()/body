@@ -1,14 +1,13 @@
 {
-  final int n_resp=use_start_column ? 3 : 2;
-  final int n_coef=source.numCols() - n_resp;
+  final DataInfo dinfo=model.data_info;
+  final int n_coef=dinfo.fullN();
   final double[] step=MemoryManager.malloc8d(n_coef);
   final double[] oldCoef=MemoryManager.malloc8d(n_coef);
   final double[] newCoef=MemoryManager.malloc8d(n_coef);
-  for (int j=0; j < n_coef; ++j)   step[j]=Double.NaN;
-  for (int j=0; j < n_coef; ++j)   oldCoef[j]=Double.NaN;
+  Arrays.fill(step,Double.NaN);
+  Arrays.fill(oldCoef,Double.NaN);
   for (int j=0; j < n_coef; ++j)   newCoef[j]=init;
   double oldLoglik=-Double.MAX_VALUE;
-  final DataInfo dinfo=model.data_info;
   final int n_time=(int)(model.max_time - model.min_time + 1);
   model.x_mean=dinfo._normSub.clone();
   for (int i=0; i <= iter_max; ++i) {
@@ -22,7 +21,7 @@
       if (newLoglik == 0)       model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else       model.lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
       if (model.lre >= lre_min)       break;
-      for (int j=0; j < n_coef; ++j)       step[j]=0;
+      Arrays.fill(step,0);
       for (int j=0; j < n_coef; ++j)       for (int k=0; k < n_coef; ++k)       step[j]-=model.var_coef[j][k] * model.gradient[k];
       for (int j=0; j < n_coef; ++j)       if (Double.isNaN(step[j]) || Double.isInfinite(step[j]))       break;
       oldLoglik=newLoglik;

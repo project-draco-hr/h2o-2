@@ -1,8 +1,8 @@
 {
   data_info=dinfo;
-  final int n_coef=parameters.use_start_column ? source.numCols() - 3 : source.numCols() - 2;
-  names_coef=new String[n_coef];
-  for (int j=0; j < n_coef; ++j)   names_coef[j]=source.names()[j];
+  final int n_coef=data_info.fullN();
+  n_cats=MemoryManager.malloc8(n_coef - data_info._nums);
+  coef_names=data_info.coefNames();
   coef=MemoryManager.malloc8d(n_coef);
   exp_coef=MemoryManager.malloc8d(n_coef);
   exp_neg_coef=MemoryManager.malloc8d(n_coef);
