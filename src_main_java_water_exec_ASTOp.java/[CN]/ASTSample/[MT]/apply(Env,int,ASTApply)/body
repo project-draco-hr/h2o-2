@@ -1,0 +1,58 @@
+{
+  final double seed=env.popDbl();
+  final double nobs=env.popDbl();
+  String skey=env.key();
+  Frame fr=env.popAry();
+  long[] espc=fr.anyVec()._espc;
+  long[] chk_sizes=new long[espc.length];
+  final long[] css=new long[espc.length];
+  for (int i=0; i < espc.length - 1; ++i)   chk_sizes[i]=espc[i + 1] - espc[i];
+  chk_sizes[chk_sizes.length - 1]=fr.numRows() - espc[espc.length - 1];
+  long per_chunk_sample=(long)Math.floor(nobs / (double)espc.length);
+  long defecit=(long)(nobs - per_chunk_sample * espc.length);
+  ArrayList<Integer> idxs=new ArrayList<Integer>();
+  for (int i=0; i < css.length; ++i) {
+    css[i]=Math.min(per_chunk_sample,chk_sizes[i]);
+    long def=per_chunk_sample - css[i];
+    if (def >= 0) {
+      defecit+=def;
+    }
+    if (chk_sizes[i] > per_chunk_sample)     idxs.add(i);
+  }
+  if (defecit > 0) {
+    Random rng=new Random(seed != -1 ? (long)seed : System.currentTimeMillis());
+    while (defecit > 0) {
+      if (idxs.size() <= 0)       break;
+      int rand=rng.nextInt(idxs.size());
+      if (css[idxs.get(rand)] == chk_sizes[idxs.get(rand)]) {
+        idxs.remove(rand);
+        continue;
+      }
+      css[idxs.get(rand)]++;
+      defecit--;
+    }
+  }
+  Frame fr2=new MRTask2(){
+    @Override public void map(    Chunk[] chks,    NewChunk[] nchks){
+      int N=chks[0]._len;
+      int m=0;
+      long n=css[chks[0].cidx()];
+      int row=0;
+      Random rng=new Random(seed != -1 ? (long)seed : System.currentTimeMillis());
+      while (m < n) {
+        double u=rng.nextDouble();
+        if ((N - row) * u >= (n - m)) {
+          row++;
+        }
+ else {
+          for (int i=0; i < chks.length; ++i)           nchks[i].addNum(chks[i].at0(row));
+          row++;
+          m++;
+        }
+      }
+    }
+  }
+.doAll(fr.numCols(),fr).outputFrame(fr.names(),fr.domains());
+  env.subRef(fr,skey);
+  env.poppush(1,fr2,null);
+}

@@ -16,7 +16,7 @@ def test_GLM2_mnist_short(self):
         print 'parse result:', parseTestResult['destination_key']
         print "We won't use this pruning of x on test data. See if it prunes the same as the training"
         y = 0
-        ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTestResult['destination_key'], timeoutSecs=300, forRF=True)
+        ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTestResult['destination_key'], timeoutSecs=300, returnIgnoreX=True)
         trainKey = (((trainCsvFilename + '_') + str(trial)) + '.hex')
         csvPathname = ((importFolderPath + '/') + testCsvFilename)
         start = time.time()
