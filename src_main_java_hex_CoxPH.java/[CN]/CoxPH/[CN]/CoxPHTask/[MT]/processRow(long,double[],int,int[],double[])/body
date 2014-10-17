@@ -1,47 +1,57 @@
 {
   n++;
-  final long event_i=(long)response[response.length - 1];
+  final long event=(long)response[response.length - 1];
   final int t1=_use_start_column ? (int)(((long)response[response.length - 3] + 1) - _min_time) : -1;
   final int t2=(int)(((long)response[response.length - 2]) - _min_time);
-  double logRisk_i=0;
-  for (int j=0; j < nums.length; ++j)   logRisk_i+=nums[j] * _beta[j];
-  final double risk_i=Math.exp(logRisk_i);
-  if (event_i > 0) {
+  if (t1 > t2)   throw new IllegalArgumentException("start times must be strictly less than stop times");
+  final int numStart=_dinfo.numStart();
+  for (int j=0; j < ncats; ++j)   n_cats[cats[j]]++;
+  double logRisk=0;
+  for (int j=0; j < ncats; ++j)   logRisk+=_beta[cats[j]];
+  for (int j=0; j < nums.length; ++j)   logRisk+=nums[j] * _beta[numStart + j];
+  final double risk=Math.exp(logRisk);
+  if (event > 0) {
     countEvents[t2]++;
-    sumLogRiskEvents[t2]+=logRisk_i;
-    sumRiskEvents[t2]+=risk_i;
+    sumLogRiskEvents[t2]+=logRisk;
+    sumRiskEvents[t2]+=risk;
   }
  else   countCensored[t2]++;
   if (_use_start_column) {
     for (int t=t1; t <= t2; ++t)     countRiskSet[t]++;
-    for (int t=t1; t <= t2; ++t)     rcumsumRisk[t]+=risk_i;
+    for (int t=t1; t <= t2; ++t)     rcumsumRisk[t]+=risk;
   }
  else {
     countRiskSet[t2]++;
-    rcumsumRisk[t2]+=risk_i;
+    rcumsumRisk[t2]+=risk;
   }
-  for (int j=0; j < nums.length; ++j) {
-    final double x1_i=nums[j];
-    final double xRisk_i=x1_i * risk_i;
-    if (event_i > 0) {
-      sumXEvents[j][t2]+=x1_i;
-      sumXRiskEvents[j][t2]+=xRisk_i;
+  final int ntotal=ncats + nums.length;
+  final int numStartIter=numStart - ncats;
+  for (int jit=0; jit < ntotal; ++jit) {
+    final boolean jIsCat=jit < ncats;
+    final int j=jIsCat ? cats[jit] : numStartIter + jit;
+    final double x1=jIsCat ? 1.0 : nums[jit - ncats];
+    final double xRisk=x1 * risk;
+    if (event > 0) {
+      sumXEvents[j][t2]+=x1;
+      sumXRiskEvents[j][t2]+=xRisk;
     }
     if (_use_start_column) {
-      for (int t=t1; t <= t2; ++t)       rcumsumXRisk[j][t]+=xRisk_i;
+      for (int t=t1; t <= t2; ++t)       rcumsumXRisk[j][t]+=xRisk;
     }
  else {
-      rcumsumXRisk[j][t2]+=xRisk_i;
+      rcumsumXRisk[j][t2]+=xRisk;
     }
-    for (int k=0; k < nums.length; ++k) {
-      final double x2_i=nums[k];
-      final double xxRisk_i=x2_i * xRisk_i;
-      if (event_i > 0)       sumXXRiskEvents[j][k][t2]+=xxRisk_i;
+    for (int kit=0; kit < ntotal; ++kit) {
+      final boolean kIsCat=kit < ncats;
+      final int k=kIsCat ? cats[kit] : numStartIter + kit;
+      final double x2=kIsCat ? 1.0 : nums[kit - ncats];
+      final double xxRisk=x2 * xRisk;
+      if (event > 0)       sumXXRiskEvents[j][k][t2]+=xxRisk;
       if (_use_start_column) {
-        for (int t=t1; t <= t2; ++t)         rcumsumXXRisk[j][k][t]+=xxRisk_i;
+        for (int t=t1; t <= t2; ++t)         rcumsumXXRisk[j][k][t]+=xxRisk;
       }
  else {
-        rcumsumXXRisk[j][k][t2]+=xxRisk_i;
+        rcumsumXXRisk[j][k][t2]+=xxRisk;
       }
     }
   }
