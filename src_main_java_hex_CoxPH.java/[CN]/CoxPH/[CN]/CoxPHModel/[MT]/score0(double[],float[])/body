@@ -7,18 +7,17 @@
     for (int i=1; i <= 2 * n_time; ++i)     preds[i]=Float.NaN;
   }
  else {
-    final double[] data_centered=MemoryManager.malloc8d(n_coef);
-    for (int j=0; j < n_coef; ++j)     data_centered[j]=data[j] - x_mean[j];
+    for (int j=0; j < n_coef; ++j)     data[j]-=data_info._normSub[j];
     double logRisk=0;
-    for (int j=0; j < n_coef; ++j)     logRisk+=data_centered[j] * coef[j];
+    for (int j=0; j < n_coef; ++j)     logRisk+=data[j] * coef[j];
     final double risk=Math.exp(logRisk);
     for (int t=0; t < n_time; ++t)     preds[t + 1]=(float)(risk * cumhaz_0[t]);
     for (int t=0; t < n_time; ++t) {
       double var_cumhaz_2_t=0;
       for (int j=0; j < n_coef; ++j) {
         double sum=0;
-        for (int k=0; k < n_coef; ++k)         sum+=var_coef[j][k] * (data_centered[k] * cumhaz_0[t] - var_cumhaz_2[k][t]);
-        var_cumhaz_2_t+=(data_centered[j] * cumhaz_0[t] - var_cumhaz_2[j][t]) * sum;
+        for (int k=0; k < n_coef; ++k)         sum+=var_coef[j][k] * (data[k] * cumhaz_0[t] - var_cumhaz_2[k][t]);
+        var_cumhaz_2_t+=(data[j] * cumhaz_0[t] - var_cumhaz_2[j][t]) * sum;
       }
       preds[t + 1 + n_time]=(float)(risk * Math.sqrt(var_cumhaz_1[t] + var_cumhaz_2_t));
     }

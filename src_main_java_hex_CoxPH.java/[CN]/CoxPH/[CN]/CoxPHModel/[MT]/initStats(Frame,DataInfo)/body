@@ -1,4 +1,5 @@
 {
+  data_info=dinfo;
   final int n_coef=parameters.use_start_column ? source.numCols() - 3 : source.numCols() - 2;
   names_coef=new String[n_coef];
   for (int j=0; j < n_coef; ++j)   names_coef[j]=source.names()[j];
@@ -7,8 +8,6 @@
   exp_neg_coef=MemoryManager.malloc8d(n_coef);
   se_coef=MemoryManager.malloc8d(n_coef);
   z_coef=MemoryManager.malloc8d(n_coef);
-  x_mean=MemoryManager.malloc8d(n_coef);
-  for (int j=0; j < n_coef; ++j)   x_mean[j]=source.vec(j).mean();
   gradient=MemoryManager.malloc8d(n_coef);
   hessian=malloc2DArray(n_coef,n_coef);
   var_coef=malloc2DArray(n_coef,n_coef);

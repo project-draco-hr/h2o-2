@@ -1,5 +1,6 @@
 {
-  final int n_coef=use_start_column ? source.numCols() - 3 : source.numCols() - 2;
+  final int n_resp=use_start_column ? 3 : 2;
+  final int n_coef=source.numCols() - n_resp;
   final double[] step=MemoryManager.malloc8d(n_coef);
   final double[] oldCoef=MemoryManager.malloc8d(n_coef);
   final double[] newCoef=MemoryManager.malloc8d(n_coef);
@@ -7,10 +8,12 @@
   for (int j=0; j < n_coef; ++j)   oldCoef[j]=Double.NaN;
   for (int j=0; j < n_coef; ++j)   newCoef[j]=init;
   double oldLoglik=-Double.MAX_VALUE;
+  final DataInfo dinfo=model.data_info;
   final int n_time=(int)(model.max_time - model.min_time + 1);
+  model.x_mean=dinfo._normSub.clone();
   for (int i=0; i <= iter_max; ++i) {
     model.iter=i;
-    CoxPHMRTask coxMR=new CoxPHMRTask(newCoef,model.min_time,n_time,use_start_column,model.x_mean).doAll(source.vecs());
+    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,use_start_column).doAll(dinfo._adaptedFrame);
     if (i == 0)     model.calcCounts(coxMR);
     final double newLoglik=model.calcLoglik(coxMR);
     if (newLoglik > oldLoglik) {
@@ -23,7 +26,7 @@
       for (int j=0; j < n_coef; ++j)       for (int k=0; k < n_coef; ++k)       step[j]-=model.var_coef[j][k] * model.gradient[k];
       for (int j=0; j < n_coef; ++j)       if (Double.isNaN(step[j]) || Double.isInfinite(step[j]))       break;
       oldLoglik=newLoglik;
-      for (int j=0; j < n_coef; ++j)       oldCoef[j]=newCoef[j];
+      System.arraycopy(newCoef,0,oldCoef,0,oldCoef.length);
     }
  else {
       for (int j=0; j < n_coef; ++j)       step[j]/=2;
