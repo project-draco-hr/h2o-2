@@ -35,11 +35,11 @@ def write_syn_dataset(csvPathname, rowCount, colCount=1, scale=1, colSepChar=','
                 rowData.append('')
             else:
                 if ((howManyEnumsToUse >= 256) and UTF8_MULTIBYTE):
-                    r = generate_random_utf8_string(length=1, multi=True)
+                    r = generate_random_utf8_string(length=1, multi=True, row=row, col=col)
                 else:
-                    r = generate_random_utf8_string(length=1, multi=False)
+                    r = generate_random_utf8_string(length=1, multi=False, row=row, col=col)
                 rowData.append(r)
-        rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
+        rowDataCsv = (colSepChar.join(rowData) + rowSepChar)
         if (UTF8 or UTF8_MULTIBYTE):
             decoded = rowDataCsv.decode('utf-8')
             if DEBUG:
