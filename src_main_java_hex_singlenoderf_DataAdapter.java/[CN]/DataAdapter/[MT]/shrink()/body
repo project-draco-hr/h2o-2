@@ -1,4 +1,19 @@
 {
   if (_jobKey != null && !Job.isRunning(_jobKey))   throw new Job.JobCancelledException();
-  for (  Col c : _c)   c.shrink();
+  Futures fs=new Futures();
+  for (  final Col c : _c) {
+    H2O.H2OCountedCompleter t=new H2O.H2OCountedCompleter(){
+      @Override public byte priority(){
+        return H2O.MIN_HI_PRIORITY;
+      }
+      @Override public void compute2(){
+        c.shrink();
+        tryComplete();
+      }
+    }
+;
+    H2O.submitTask(t);
+    fs.add(t);
+  }
+  fs.blockForPending();
 }
