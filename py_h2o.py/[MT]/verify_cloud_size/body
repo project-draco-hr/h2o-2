@@ -31,6 +31,8 @@ def verify_cloud_size(nodeList=None, expectedCloudName=None, verbose=False, time
     if expectedCloudName:
         for (i, cn) in enumerate(cloudName):
             if (cn != expectedCloudName):
-                print ('node %s cloud status: %s' % (i, dump_json(cloudStatus[i])))
+                print 'node %s has the wrong cloud name: %s expectedCloudName: %s.'
+                print 'tearing cloud down'
+                tear_down_cloud(nodeList=nodeList, sandboxIgnoreErrors=False)
                 raise Exception(('node %s has the wrong cloud name: %s expectedCloudName: %s' % (i, cn, expectedCloudName)))
     return (sizeStr, consensusStr, expectedSize)

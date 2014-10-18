@@ -1,0 +1,42 @@
+def test_parse_utf8_3(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    if DEBUG:
+        n = 20
+    else:
+        n = 10000
+        n = 1000
+        n = 500
+    if h2o.long_test_case:
+        repeat = 1000
+    else:
+        repeat = 50
+    scale = 1
+    tryList = [(n, 3, 'cI', 300), (n, 3, 'cI', 300), (n, 3, 'cI', 300)]
+    for r in range(repeat):
+        for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
+            SEEDPERFILE = random.randint(0, sys.maxint)
+            colSepHexString = '2c'
+            colSepChar = colSepHexString.decode('hex')
+            colSepInt = int(colSepHexString, base=16)
+            print 'colSepChar:', colSepChar
+            rowSepHexString = '0a'
+            rowSepChar = rowSepHexString.decode('hex')
+            print 'rowSepChar:', rowSepChar
+            csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+            csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+            print 'Creating random', csvPathname
+            start = time.time()
+            write_syn_dataset(csvPathname, rowCount, colCount, scale=1, colSepChar=colSepChar, rowSepChar=rowSepChar, SEED=SEEDPERFILE)
+            elapsed = (time.time() - start)
+            print ('took %s seconds to create %s' % (elapsed, csvPathname))
+            parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, header=0, timeoutSecs=60, separator=colSepInt, doSummary=DO_SUMMARY)
+            print "Parse result['destination_key']:", parseResult['destination_key']
+            inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+            numCols = inspect['numCols']
+            numRows = inspect['numRows']
+            h2o_cmd.infoFromInspect(inspect)
+            missingValuesList = h2o_cmd.infoFromInspect(inspect)
+            if (numRows != rowCount):
+                raise Exception(('Expect numRows %s = rowCount %s because guaranteed not to have extra eols' % (numRows, rowCount)))
+            self.assertEqual(colCount, numCols)
+            (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)

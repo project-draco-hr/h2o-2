@@ -1,0 +1,58 @@
+{
+  n++;
+  final long event=(long)response[response.length - 1];
+  final int t1=_use_start_column ? (int)(((long)response[response.length - 3] + 1) - _min_time) : -1;
+  final int t2=(int)(((long)response[response.length - 2]) - _min_time);
+  if (t1 > t2)   throw new IllegalArgumentException("start times must be strictly less than stop times");
+  final int numStart=_dinfo.numStart();
+  for (int j=0; j < ncats; ++j)   n_cats[cats[j]]++;
+  double logRisk=0;
+  for (int j=0; j < ncats; ++j)   logRisk+=_beta[cats[j]];
+  for (int j=0; j < nums.length; ++j)   logRisk+=nums[j] * _beta[numStart + j];
+  final double risk=Math.exp(logRisk);
+  if (event > 0) {
+    countEvents[t2]++;
+    sumLogRiskEvents[t2]+=logRisk;
+    sumRiskEvents[t2]+=risk;
+  }
+ else   countCensored[t2]++;
+  if (_use_start_column) {
+    for (int t=t1; t <= t2; ++t)     countRiskSet[t]++;
+    for (int t=t1; t <= t2; ++t)     rcumsumRisk[t]+=risk;
+  }
+ else {
+    countRiskSet[t2]++;
+    rcumsumRisk[t2]+=risk;
+  }
+  final int ntotal=ncats + nums.length;
+  final int numStartIter=numStart - ncats;
+  for (int jit=0; jit < ntotal; ++jit) {
+    final boolean jIsCat=jit < ncats;
+    final int j=jIsCat ? cats[jit] : numStartIter + jit;
+    final double x1=jIsCat ? 1.0 : nums[jit - ncats];
+    final double xRisk=x1 * risk;
+    if (event > 0) {
+      sumXEvents[j][t2]+=x1;
+      sumXRiskEvents[j][t2]+=xRisk;
+    }
+    if (_use_start_column) {
+      for (int t=t1; t <= t2; ++t)       rcumsumXRisk[j][t]+=xRisk;
+    }
+ else {
+      rcumsumXRisk[j][t2]+=xRisk;
+    }
+    for (int kit=0; kit < ntotal; ++kit) {
+      final boolean kIsCat=kit < ncats;
+      final int k=kIsCat ? cats[kit] : numStartIter + kit;
+      final double x2=kIsCat ? 1.0 : nums[kit - ncats];
+      final double xxRisk=x2 * xRisk;
+      if (event > 0)       sumXXRiskEvents[j][k][t2]+=xxRisk;
+      if (_use_start_column) {
+        for (int t=t1; t <= t2; ++t)         rcumsumXXRisk[j][k][t]+=xxRisk;
+      }
+ else {
+        rcumsumXXRisk[j][k][t2]+=xxRisk;
+      }
+    }
+  }
+}

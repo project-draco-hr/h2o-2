@@ -7,10 +7,13 @@ UTF8_MULTIBYTE = True
 DISABLE_ALL_NA = False
 CAUSE_RANDOM_NA = True
 DO_SUMMARY = False
+NO_NUL = True
+print 'We have a problem starting a line with double quote and not ending it before EOL'
+print 'assume that is unlikely with the distribution being used'
 if UTF8:
-    ordinalChoices = range(0, 256)
+    ordinalChoices = range((1 if NO_NUL else 0), 256)
 else:
-    ordinalChoices = range(0, 128)
+    ordinalChoices = range((1 if NO_NUL else 0), 128)
 if UTF8_MULTIBYTE:
 
     def aSmallSet(a, b):

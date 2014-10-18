@@ -1,0 +1,8 @@
+import unittest, random, sys, time
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_rf as h2o_rf, h2o_hosts, h2o_import as h2i, h2o_exec, h2o_util, h2o_browse as h2b
+ALLOWED_DELTA = 40
+DO_MULTINOMIAL = False
+paramDict = {'response': 'C55', 'ntrees': 3, 'max_depth': 30, 'nbins': 100, 'sample_rate': 0.99999, 'classification': 1, 'seed': '1234567890', 'importance': 1, }
+if (__name__ == '__main__'):
+    h2o.unit_main()

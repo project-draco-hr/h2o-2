@@ -1,0 +1,24 @@
+def test_rf_covtype_train_oobe_fvec(self):
+    h2o.beta_features = True
+    print '\nRun test iterations/compare with covtype.data'
+    rfv1 = self.rf_covtype_train_oobe('covtype.data', checkExpectedResults=False, expectedAuc=0.95)
+    (ce1, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFScore(rfv=rfv1)
+    ce1pct1 = classErrorPctList[1]
+    print '\nRun test iterations/compare with covtype.shuffled.data'
+    rfv2 = self.rf_covtype_train_oobe('covtype.shuffled.data', checkExpectedResults=True, expectedAuc=0.95)
+    (ce2, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFScore(rfv=rfv2)
+    ce2pct1 = classErrorPctList[1]
+    print '\nRun test iterations/compare with covtype.sorted.data'
+    rfv3 = self.rf_covtype_train_oobe('covtype.sorted.data', checkExpectedResults=False, expectedAuc=0.95)
+    (ce3, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFScore(rfv=rfv3)
+    ce3pct1 = classErrorPctList[1]
+    print 'rfv3, from covtype.sorted.data'
+    print '\nJsonDiff covtype.data rfv, to covtype.sorted.data rfv'
+    print 'rfv1:', h2o.dump_json(rfv1)
+    print 'rfv3:', h2o.dump_json(rfv3)
+    df = h2o_util.JsonDiff(rfv1, rfv3)
+    print 'df.difference:', h2o.dump_json(df.difference)
+    self.assertAlmostEqual(ce1, ce2, delta=0.5, msg=("classification error %s isn't close to that when sorted %s" % (ce1, ce2)))
+    self.assertAlmostEqual(ce1, ce3, delta=0.5, msg=("classification error %s isn't close to that when sorted %s" % (ce1, ce3)))
+    self.assertAlmostEqual(ce1pct1, ce2pct1, delta=1.0, msg=("classErrorPctList[1] %s isn't close to that when sorted %s" % (ce1pct1, ce2pct1)))
+    self.assertAlmostEqual(ce1pct1, ce3pct1, delta=1.0, msg=("classErrorPctList[1] %s isn't close to that when sorted %s" % (ce1pct1, ce3pct1)))

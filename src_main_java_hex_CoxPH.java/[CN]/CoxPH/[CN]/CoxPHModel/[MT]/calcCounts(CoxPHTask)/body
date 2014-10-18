@@ -1,0 +1,17 @@
+{
+  n=coxMR.n;
+  n_missing=coxMR.n_missing;
+  System.arraycopy(coxMR.n_cats,0,n_cats,0,n_cats.length);
+  int nz=0;
+  for (int t=0; t < coxMR.countEvents.length; ++t) {
+    total_event+=coxMR.countEvents[t];
+    if (coxMR.countEvents[t] > 0 || coxMR.countCensored[t] > 0) {
+      time[nz]=min_time + t;
+      n_risk[nz]=coxMR.countRiskSet[t];
+      n_event[nz]=coxMR.countEvents[t];
+      n_censor[nz]=coxMR.countCensored[t];
+      nz++;
+    }
+  }
+  if (!parameters.use_start_column)   for (int t=n_risk.length - 2; t >= 0; --t)   n_risk[t]+=n_risk[t + 1];
+}

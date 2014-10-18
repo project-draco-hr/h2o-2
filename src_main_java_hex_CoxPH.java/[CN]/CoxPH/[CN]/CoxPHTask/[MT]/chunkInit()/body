@@ -1,0 +1,15 @@
+{
+  final int n_coef=_beta.length;
+  n_cats=MemoryManager.malloc8(n_coef - _dinfo._nums);
+  countRiskSet=MemoryManager.malloc8(_n_time);
+  countCensored=MemoryManager.malloc8(_n_time);
+  countEvents=MemoryManager.malloc8(_n_time);
+  sumRiskEvents=MemoryManager.malloc8d(_n_time);
+  sumLogRiskEvents=MemoryManager.malloc8d(_n_time);
+  rcumsumRisk=MemoryManager.malloc8d(_n_time);
+  sumXEvents=malloc2DArray(n_coef,_n_time);
+  sumXRiskEvents=malloc2DArray(n_coef,_n_time);
+  rcumsumXRisk=malloc2DArray(n_coef,_n_time);
+  sumXXRiskEvents=malloc3DArray(n_coef,n_coef,_n_time);
+  rcumsumXXRisk=malloc3DArray(n_coef,n_coef,_n_time);
+}

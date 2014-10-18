@@ -1,0 +1,50 @@
+{
+  final int n_coef=coef.length;
+  double newLoglik=0;
+  for (int j=0; j < n_coef; ++j) {
+    gradient[j]=0;
+    for (int k=0; k < n_coef; ++k)     hessian[j][k]=0;
+  }
+switch (parameters.ties) {
+case efron:
+    for (int t=coxMR.countEvents.length - 1; t >= 0; --t) {
+      if (coxMR.countEvents[t] > 0) {
+        newLoglik+=coxMR.sumLogRiskEvents[t];
+        for (int j=0; j < n_coef; ++j)         gradient[j]+=coxMR.sumXEvents[j][t];
+        for (long e=0; e < coxMR.countEvents[t]; ++e) {
+          final double frac=((double)e) / ((double)coxMR.countEvents[t]);
+          final double term=coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t];
+          newLoglik-=Math.log(term);
+          for (int j=0; j < n_coef; ++j) {
+            final double djTerm=coxMR.rcumsumXRisk[j][t] - frac * coxMR.sumXRiskEvents[j][t];
+            final double djLogTerm=djTerm / term;
+            gradient[j]-=djLogTerm;
+            for (int k=0; k < n_coef; ++k) {
+              final double dkTerm=coxMR.rcumsumXRisk[k][t] - frac * coxMR.sumXRiskEvents[k][t];
+              final double djkTerm=coxMR.rcumsumXXRisk[j][k][t] - frac * coxMR.sumXXRiskEvents[j][k][t];
+              hessian[j][k]-=djkTerm / term - (djLogTerm * (dkTerm / term));
+            }
+          }
+        }
+      }
+    }
+  break;
+case breslow:
+for (int t=coxMR.countEvents.length - 1; t >= 0; --t) {
+  if (coxMR.countEvents[t] > 0) {
+    newLoglik+=coxMR.sumLogRiskEvents[t];
+    newLoglik-=coxMR.countEvents[t] * Math.log(coxMR.rcumsumRisk[t]);
+    for (int j=0; j < n_coef; ++j) {
+      final double dlogTerm=coxMR.rcumsumXRisk[j][t] / coxMR.rcumsumRisk[t];
+      gradient[j]+=coxMR.sumXEvents[j][t];
+      gradient[j]-=coxMR.countEvents[t] * dlogTerm;
+      for (int k=0; k < n_coef; ++k)       hessian[j][k]-=coxMR.countEvents[t] * (((coxMR.rcumsumXXRisk[j][k][t] / coxMR.rcumsumRisk[t]) - (dlogTerm * (coxMR.rcumsumXRisk[k][t] / coxMR.rcumsumRisk[t]))));
+    }
+  }
+}
+break;
+default :
+throw new IllegalArgumentException("ties method must be either efron or breslow");
+}
+return newLoglik;
+}

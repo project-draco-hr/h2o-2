@@ -10,11 +10,8 @@
   if (n_time < 1)   throw new IllegalArgumentException("start times must be strictly less than stop times");
   if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("number of distinct stop times is " + n_time + "; maximum number allowed is "+ MAX_TIME_BINS);
   source=getSubframe();
-  final int x_ncol=x_columns.length;
-  final String[] names=new String[x_ncol + 1];
-  for (int j=0; j < x_ncol; j++)   names[j]=source.names()[j];
-  names[x_ncol]=source.names()[source.numCols() - 1];
-  final Frame fr=source.subframe(names);
-  model=new CoxPHModel(this,dest(),source._key,fr.names(),fr.domains(),null,null);
-  model.initStats(source);
+  final int n_resp=use_start_column ? 3 : 2;
+  final DataInfo dinfo=new DataInfo(source,n_resp,false,DataInfo.TransformType.DEMEAN);
+  model=new CoxPHModel(this,dest(),source._key,source,null);
+  model.initStats(source,dinfo);
 }
