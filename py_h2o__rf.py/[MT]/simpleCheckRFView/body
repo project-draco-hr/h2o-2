@@ -84,10 +84,14 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         raise Exception('scores in RFView seems wrong. scores:', scoresList)
     varimp = rf_model['varimp']
     treeStats = rf_model['treeStats']
+    if (not treeStats):
+        raise Exception(('treeStats not right?: %s' % h2o.dump_json(treestats)))
     data_key = rf_model['_dataKey']
     model_key = rf_model['_key']
     classification_error = pctWrong
     if (not noPrint):
+        if (('minLeaves' not in treeStats) or (not treeStats['minLeaves'])):
+            raise Exception(('treestats seems to be missing minLeaves %s' % h2o.dump_json(treestats)))
         print '\n         Leaves: {0} / {1} / {2}\n          Depth: {3} / {4} / {5}\n            Err: {6:0.2f} %\n        '.format(treeStats['minLeaves'], treeStats['meanLeaves'], treeStats['maxLeaves'], treeStats['minDepth'], treeStats['meanDepth'], treeStats['maxDepth'], classification_error)
     dataInspect = h2o_cmd.runInspect(key=data_key)
     h2o.check_sandbox_for_errors()

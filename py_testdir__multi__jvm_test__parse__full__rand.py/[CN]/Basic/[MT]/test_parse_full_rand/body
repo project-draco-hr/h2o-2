@@ -7,11 +7,11 @@ def test_parse_full_rand(self):
     if h2o.long_test_case:
         repeat = 1000
         scale = 10
-        tryList = [((n * scale), 1, 'cI', 300), ((n * scale), 1, 'cI', 300), ((n * scale), 1, 'cI', 300)]
+        tryList = [((n * scale), 3, 'cI', 300)]
     else:
         repeat = 1
         scale = 1
-        tryList = [(n, 3, 'cI', 300), (n, 3, 'cI', 300), (n, 3, 'cI', 300)]
+        tryList = [(n, 3, 'cI', 300)]
     lastcolsHistory = []
     for r in range(repeat):
         SEED_PER_FILE = random.randint(0, sys.maxint)
