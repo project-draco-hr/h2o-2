@@ -84,6 +84,8 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         raise Exception('scores in RFView seems wrong. scores:', scoresList)
     varimp = rf_model['varimp']
     treeStats = rf_model['treeStats']
+    if (not treeStats):
+        raise Exception(('treeStats not right?: %s' % h2o.dump_json(treestats)))
     data_key = rf_model['_dataKey']
     model_key = rf_model['_key']
     classification_error = pctWrong
