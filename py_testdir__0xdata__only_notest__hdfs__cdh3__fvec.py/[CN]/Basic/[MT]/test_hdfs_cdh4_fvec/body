@@ -10,5 +10,5 @@ def test_hdfs_cdh4_fvec(self):
     for csvFilename in csvFilenameList:
         print 'Loading', csvFilename, 'from HDFS'
         csvPathname = ('datasets/' + csvFilename)
-        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', timeoutSecs=1000)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', header=0, timeoutSecs=1000)
         print 'parse result:', parseResult['destination_key']
