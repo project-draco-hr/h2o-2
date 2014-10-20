@@ -18,11 +18,11 @@ def test_c7_rel(self):
     h2o_cmd.infoFromInspect(inspect, csvPathname)
     numRows = inspect['numRows']
     numCols = inspect['numCols']
-    summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'], numCols=numCols, numRows=numRows)
+    summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'], numCols=numCols, numRows=numRows, timeoutSecs=500)
     keepPattern = 'oly_|mt_|b_'
     y = 'is_purchase'
     print 'y:', y
-    x = h2o_glm.goodXFromColumnInfo(y, keepPattern=keepPattern, key=parseResult['destination_key'], timeoutSecs=300)
+    x = h2o_glm.goodXFromColumnInfo(y, keepPattern=keepPattern, key=parseResult['destination_key'])
     print 'x:', x
     kwargs = {'response': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, }
     timeoutSecs = 3600
