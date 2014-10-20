@@ -26,7 +26,7 @@ def test_four_billion_rows(self):
         h2e.exec_expr(execExpr=execExpr, timeoutSecs=30)
         print ('\n' + csvFilename)
         colX = 0
-        kwargs = {'response': 'C2', 'n_folds': 0, 'cols': colX, 'alpha': 0, 'lambda': 0, 'link': 'binomial', }
+        kwargs = {'response': 'C2', 'n_folds': 0, 'cols': colX, 'alpha': 0, 'lambda': 0, 'family': 'binomial', }
         timeoutSecs = 900
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
