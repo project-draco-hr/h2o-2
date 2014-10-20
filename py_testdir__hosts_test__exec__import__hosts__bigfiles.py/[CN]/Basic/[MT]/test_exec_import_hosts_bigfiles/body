@@ -1,6 +1,6 @@
 def test_exec_import_hosts_bigfiles(self):
     timeoutSecs = 4000
-    csvFilenameList = [('covtype.data', 'c'), ('covtype20x.data', 'c20'), ('covtype200x.data', 'c200'), ('billion_rows.csv.gz', 'b')]
+    csvFilenameList = [('covtype.data', 'c'), ('covtype20x.data', 'c20'), ('covtype200x.data', 'c200')]
     lenNodes = len(h2o.nodes)
     importFolderPath = 'standard'
     for (csvFilename, hex_key) in csvFilenameList:
@@ -9,4 +9,5 @@ def test_exec_import_hosts_bigfiles(self):
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
-        exec_list(exprList, lenNodes, csvFilename, hex_key)
+        colX = (inspect['numCols'] - 1)
+        exec_list(exprList, lenNodes, csvFilename, hex_key, colX)

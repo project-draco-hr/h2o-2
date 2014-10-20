@@ -1,10 +1,9 @@
-def exec_list(exprList, lenNodes, csvFilename, hex_key):
+def exec_list(exprList, lenNodes, csvFilename, hex_key, colX):
     h2e.exec_zero_list(zeroList)
     trial = 1
     while (trial < 100):
         for exprTemplate in exprList:
             nodeX = random.randint(0, (lenNodes - 1))
-            colX = random.randint(0, 1)
             row = str(random.randint(1, 400000))
             execExpr = h2e.fill_in_expr_template(exprTemplate, colX, trial, row, hex_key)
             execResultInspect = h2e.exec_expr(h2o.nodes[nodeX], execExpr, resultKey=(('Result' + str(trial)) + '.hex'), timeoutSecs=60)
