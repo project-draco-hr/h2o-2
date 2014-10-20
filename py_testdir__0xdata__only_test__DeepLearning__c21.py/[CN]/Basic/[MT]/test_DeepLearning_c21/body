@@ -1,0 +1,35 @@
+def test_DeepLearning_c21(self):
+    importFolderPath = '/mnt/0xcustomer-datasets/c21'
+    csvPathname_train = (importFolderPath + '/persona_clean_deep.tsv.zip')
+    csvPathname_test = (importFolderPath + '/persona_clean_deep.tsv.zip')
+    hex_key = 'train.hex'
+    validation_key = 'test.hex'
+    timeoutSecs = 300
+    parseResult = h2i.import_parse(path=csvPathname_train, schema='local', hex_key=hex_key, timeoutSecs=timeoutSecs)
+    parseResultV = h2i.import_parse(path=csvPathname_test, schema='local', hex_key=validation_key, timeoutSecs=timeoutSecs)
+    inspect = h2o_cmd.runInspect(None, hex_key)
+    print ('\n' + csvPathname_train), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    response = 'any_response'
+    identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
+    model_key = (('nn_' + identifier) + '.hex')
+    kwargs = {'response': response, 'destination_key': model_key, 'validation': validation_key, }
+    expectedErr = 0.03
+    timeoutSecs = 600
+    start = time.time()
+    nn = h2o_cmd.runDeepLearning(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
+    print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
+    expectedErr = 0.046
+    relTol = 0.35
+    predict_key = 'Predict.hex'
+    kwargs = {'data_key': validation_key, 'destination_key': predict_key, 'model_key': model_key, }
+    predictResult = h2o_cmd.runPredict(timeoutSecs=timeoutSecs, **kwargs)
+    h2o_cmd.runInspect(key=predict_key, verbose=True)
+    kwargs = {}
+    predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=validation_key, vactual=response, predict=predict_key, vpredict='predict', timeoutSecs=timeoutSecs, **kwargs)
+    cm = predictCMResult['cm']
+    print h2o_gbm.pp_cm(cm)
+    actualErr = (h2o_gbm.pp_cm_summary(cm) / 100.0)
+    print ('actual   classification error:' + format(actualErr))
+    print ('expected classification error:' + format(expectedErr))
+    if ((actualErr != expectedErr) and (abs(((expectedErr - actualErr) / expectedErr)) > relTol)):
+        raise Exception(('Scored classification error of %s is not within %s %% relative error of %s' % (actualErr, (float(relTol) * 100), expectedErr)))
