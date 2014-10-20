@@ -2,6 +2,7 @@ def test_parse_specific_case6(self):
     SYNDATASETS_DIR = h2o.make_syn_dir()
     hex_key = 'a.hex'
     for (dataset, expNumRows, expNumCols, expNaCnt, expType, unicodeNum) in tryList:
+        unicodeSymbol = unichr(unicodeNum)
         csvFilename = (((('specific_' + str(expNumRows)) + 'x') + str(expNumCols)) + '.csv')
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         write_syn_dataset(csvPathname, dataset)
@@ -10,6 +11,7 @@ def test_parse_specific_case6(self):
         print ('Parsed with special unichr(%s) which is %s:' % (unicodeNum, unichr(unicodeNum)))
         print 'inspect:', h2o.dump_json(inspect)
         numRows = inspect['numRows']
+        numCols = inspect['numCols']
         self.assertEqual(numRows, expNumRows, msg=('Using quoted unichr(0x%x) Wrong numRows: %s Expected: %s' % (unicodeNum, numRows, expNumRows)))
         numCols = inspect['numCols']
         self.assertEqual(numCols, expNumCols, msg=('Using quoted unichr(0x%x) Wrong numCols: %s Expected: %s' % (unicodeNum, numCols, expNumCols)))
