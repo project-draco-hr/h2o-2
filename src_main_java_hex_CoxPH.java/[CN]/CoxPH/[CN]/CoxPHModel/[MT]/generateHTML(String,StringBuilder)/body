@@ -5,6 +5,9 @@
   sb.append("<tr><th>Number of Complete Cases</th><td>");
   sb.append(n);
   sb.append("</td></tr>");
+  sb.append("<tr><th>Number of Non Complete Cases</th><td>");
+  sb.append(n_missing);
+  sb.append("</td></tr>");
   sb.append("<tr><th>Number of Events in Complete Cases</th><td>");
   sb.append(total_event);
   sb.append("</td></tr>");
@@ -36,17 +39,17 @@
   sb.append("<tr><th>Likelihood ratio test</th><td>");
   sb.append(String.format("%.2f",loglik_test));
   sb.append(" on ");
-  sb.append(String.format("%d",coef.length));
+  sb.append(coef.length);
   sb.append(" df</td></tr>");
   sb.append("<tr><th>Wald test            </th><td>");
   sb.append(String.format("%.2f",wald_test));
   sb.append(" on ");
-  sb.append(String.format("%d",coef.length));
+  sb.append(coef.length);
   sb.append(" df</td></tr>");
   sb.append("<tr><th>Score (logrank) test </th><td>");
   sb.append(String.format("%.2f",score_test));
   sb.append(" on ");
-  sb.append(String.format("%d",coef.length));
+  sb.append(coef.length);
   sb.append(" df</td></tr>");
   sb.append("</table>");
 }
