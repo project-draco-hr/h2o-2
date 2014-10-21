@@ -1,0 +1,18 @@
+{
+  try {
+    if (factors.length == 0)     throw new IllegalArgumentException("factors must be non-empty.");
+    for (    int v : factors) {
+      if (!source.vecs()[v].isEnum()) {
+        throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");
+      }
+    }
+    final createInteractions in=new createInteractions(this);
+    H2O.submitTask(in);
+    in.join();
+    Log.info("Created frame '" + target + "'.");
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+}
