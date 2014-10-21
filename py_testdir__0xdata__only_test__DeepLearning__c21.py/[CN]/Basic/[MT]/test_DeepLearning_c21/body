@@ -12,7 +12,7 @@ def test_DeepLearning_c21(self):
     response = 'any_response'
     identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
     model_key = (('nn_' + identifier) + '.hex')
-    kwargs = {'response': response, 'destination_key': model_key, 'validation': validation_key, }
+    kwargs = {'epochs': 0.001, 'response': response, 'destination_key': model_key, 'validation': validation_key, }
     expectedErr = 0.03
     timeoutSecs = 600
     start = time.time()
