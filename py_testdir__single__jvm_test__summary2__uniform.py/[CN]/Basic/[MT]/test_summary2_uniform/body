@@ -19,7 +19,7 @@ def test_summary2_uniform(self):
         expectedRange = (expectedMax - expectedMin)
         expectedBin = (expectedRange / (MAX_QBINS - 2))
         maxDelta = (0.5 * expectedBin)
-        maxDeltaPlusDistVariance = (4 * maxDelta)
+        maxDeltaPlusDistVariance = (10 * maxDelta)
         maxDelta = (1.1 * maxDelta)
         csvPathnameFull = h2i.find_folder_and_filename(None, csvPathname, returnFullPath=True)
         parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, doSummary=False)
