@@ -2,7 +2,6 @@
   n=source.numRows();
   data_info=dinfo;
   final int n_coef=data_info.fullN();
-  n_cats=MemoryManager.malloc8(n_coef - data_info._nums);
   coef_names=data_info.coefNames();
   coef=MemoryManager.malloc8d(n_coef);
   exp_coef=MemoryManager.malloc8d(n_coef);
@@ -18,9 +17,9 @@
   max_time=(long)stop_column.max();
   final int n_time=new CollectDomain(stop_column).doAll(stop_column).domain().length;
   time=MemoryManager.malloc8(n_time);
-  n_risk=MemoryManager.malloc8(n_time);
-  n_event=MemoryManager.malloc8(n_time);
-  n_censor=MemoryManager.malloc8(n_time);
+  n_risk=MemoryManager.malloc8d(n_time);
+  n_event=MemoryManager.malloc8d(n_time);
+  n_censor=MemoryManager.malloc8d(n_time);
   cumhaz_0=MemoryManager.malloc8d(n_time);
   var_cumhaz_1=MemoryManager.malloc8d(n_time);
   var_cumhaz_2=malloc2DArray(n_coef,n_time);
