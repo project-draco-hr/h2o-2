@@ -1,15 +1,18 @@
 {
+  n_missing=n - coxMR.n;
   n=coxMR.n;
-  n_missing=coxMR.n_missing;
-  System.arraycopy(coxMR.n_cats,0,n_cats,0,n_cats.length);
+  x_mean_cat=coxMR.sumWeightedCatX.clone();
+  for (int j=0; j < x_mean_cat.length; j++)   x_mean_cat[j]/=coxMR.sumWeights;
+  x_mean_num=coxMR._dinfo._normSub.clone();
+  for (int j=0; j < x_mean_num.length; j++)   x_mean_num[j]+=coxMR.sumWeightedNumX[j] / coxMR.sumWeights;
   int nz=0;
   for (int t=0; t < coxMR.countEvents.length; ++t) {
     total_event+=coxMR.countEvents[t];
-    if (coxMR.countEvents[t] > 0 || coxMR.countCensored[t] > 0) {
+    if (coxMR.sizeEvents[t] > 0 || coxMR.sizeCensored[t] > 0) {
       time[nz]=min_time + t;
-      n_risk[nz]=coxMR.countRiskSet[t];
-      n_event[nz]=coxMR.countEvents[t];
-      n_censor[nz]=coxMR.countCensored[t];
+      n_risk[nz]=coxMR.sizeRiskSet[t];
+      n_event[nz]=coxMR.sizeEvents[t];
+      n_censor[nz]=coxMR.sizeCensored[t];
       nz++;
     }
   }

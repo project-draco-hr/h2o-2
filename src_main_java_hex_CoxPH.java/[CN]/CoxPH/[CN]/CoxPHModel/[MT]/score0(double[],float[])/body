@@ -19,7 +19,7 @@
  else {
     double[] full_data=MemoryManager.malloc8d(n_coef);
     for (int j=0; j < n_cats; ++j)     if (Double.isNaN(data[j])) {
-      for (int k=data_info._catOffsets[j]; k < data_info._catOffsets[j + 1]; ++k)       full_data[k]=(double)this.n_cats[k] / (double)n;
+      for (int k=data_info._catOffsets[j]; k < data_info._catOffsets[j + 1]; ++k)       full_data[k]=this.x_mean_cat[k];
     }
  else     if (data[j] != 0)     full_data[data_info._catOffsets[j] + (int)(data[j] - 1)]=1;
     for (int j=0; j < n_num; ++j)     full_data[numStart + j]=data[n_cats + j] - data_info._normSub[j];

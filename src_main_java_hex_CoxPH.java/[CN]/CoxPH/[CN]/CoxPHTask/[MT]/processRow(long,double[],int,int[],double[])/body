@@ -1,27 +1,33 @@
 {
   n++;
+  final double weight=_use_weights_column ? response[0] : 1.0;
+  if (weight <= 0)   throw new IllegalArgumentException("weights must be positive values");
   final long event=(long)response[response.length - 1];
   final int t1=_use_start_column ? (int)(((long)response[response.length - 3] + 1) - _min_time) : -1;
   final int t2=(int)(((long)response[response.length - 2]) - _min_time);
   if (t1 > t2)   throw new IllegalArgumentException("start times must be strictly less than stop times");
   final int numStart=_dinfo.numStart();
-  for (int j=0; j < ncats; ++j)   n_cats[cats[j]]++;
+  sumWeights+=weight;
+  for (int j=0; j < ncats; ++j)   sumWeightedCatX[cats[j]]+=weight;
+  for (int j=0; j < nums.length; ++j)   sumWeightedNumX[j]+=weight * nums[j];
   double logRisk=0;
   for (int j=0; j < ncats; ++j)   logRisk+=_beta[cats[j]];
   for (int j=0; j < nums.length; ++j)   logRisk+=nums[j] * _beta[numStart + j];
-  final double risk=Math.exp(logRisk);
+  final double risk=weight * Math.exp(logRisk);
+  logRisk*=weight;
   if (event > 0) {
     countEvents[t2]++;
+    sizeEvents[t2]+=weight;
     sumLogRiskEvents[t2]+=logRisk;
     sumRiskEvents[t2]+=risk;
   }
- else   countCensored[t2]++;
+ else   sizeCensored[t2]+=weight;
   if (_use_start_column) {
-    for (int t=t1; t <= t2; ++t)     countRiskSet[t]++;
+    for (int t=t1; t <= t2; ++t)     sizeRiskSet[t]+=weight;
     for (int t=t1; t <= t2; ++t)     rcumsumRisk[t]+=risk;
   }
  else {
-    countRiskSet[t2]++;
+    sizeRiskSet[t2]+=weight;
     rcumsumRisk[t2]+=risk;
   }
   final int ntotal=ncats + nums.length;
@@ -32,7 +38,7 @@
     final double x1=jIsCat ? 1.0 : nums[jit - ncats];
     final double xRisk=x1 * risk;
     if (event > 0) {
-      sumXEvents[j][t2]+=x1;
+      sumXEvents[j][t2]+=weight * x1;
       sumXRiskEvents[j][t2]+=xRisk;
     }
     if (_use_start_column) {

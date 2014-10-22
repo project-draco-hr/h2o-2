@@ -11,22 +11,9 @@ def test_B_hdfs_files(self):
         start = time.time()
         print 'Parsing', csvFilename
         csvPathname = ('datasets/' + csvFilename)
-        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', timeoutSecs=timeoutSecs, retryDelaySecs=1.0)
+        parseResult = h2i.import_parse(path=csvPathname, schema='hdfs', header=0, timeoutSecs=timeoutSecs, retryDelaySecs=1.0)
         print csvFilename, '\nparse time (python)', (time.time() - start), 'seconds'
-        print csvFilename, '\nparse time (h2o):', parseResult['response']['time']
         print 'parse result:', parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
-        cols = inspect['cols']
-        for (i, colDict) in enumerate(cols):
-            num_missing_values = colDict['num_missing_values']
-            if (num_missing_values != 0):
-                pass
-        num_cols = inspect['num_cols']
-        num_rows = inspect['num_rows']
-        row_size = inspect['row_size']
-        ptype = inspect['type']
-        value_size_bytes = inspect['value_size_bytes']
-        response = inspect['response']
-        ptime = response['time']
-        print ('num_cols: %s, num_rows: %s, row_size: %s, ptype: %s,                    value_size_bytes: %s, response: %s, time: %s' % (num_cols, num_rows, row_size, ptype, value_size_bytes, response, ptime))
+        h2o_cmd.infoFromInspect(inspect, csvPathname)
         print ('\n' + csvFilename)

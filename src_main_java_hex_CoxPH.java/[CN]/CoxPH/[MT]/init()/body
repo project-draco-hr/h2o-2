@@ -10,7 +10,9 @@
   if (n_time < 1)   throw new IllegalArgumentException("start times must be strictly less than stop times");
   if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("number of distinct stop times is " + n_time + "; maximum number allowed is "+ MAX_TIME_BINS);
   source=getSubframe();
-  final int n_resp=use_start_column ? 3 : 2;
+  int n_resp=2;
+  if (use_weights_column)   n_resp++;
+  if (use_start_column)   n_resp++;
   final DataInfo dinfo=new DataInfo(source,n_resp,false,DataInfo.TransformType.DEMEAN);
   model=new CoxPHModel(this,dest(),source._key,source,null);
   model.initStats(source,dinfo);

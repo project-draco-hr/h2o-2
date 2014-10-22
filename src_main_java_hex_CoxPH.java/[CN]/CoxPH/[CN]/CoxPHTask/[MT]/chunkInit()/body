@@ -1,8 +1,10 @@
 {
   final int n_coef=_beta.length;
-  n_cats=MemoryManager.malloc8(n_coef - _dinfo._nums);
-  countRiskSet=MemoryManager.malloc8(_n_time);
-  countCensored=MemoryManager.malloc8(_n_time);
+  sumWeightedCatX=MemoryManager.malloc8d(n_coef - _dinfo._nums);
+  sumWeightedNumX=MemoryManager.malloc8d(_dinfo._nums);
+  sizeRiskSet=MemoryManager.malloc8d(_n_time);
+  sizeCensored=MemoryManager.malloc8d(_n_time);
+  sizeEvents=MemoryManager.malloc8d(_n_time);
   countEvents=MemoryManager.malloc8(_n_time);
   sumRiskEvents=MemoryManager.malloc8d(_n_time);
   sumLogRiskEvents=MemoryManager.malloc8d(_n_time);

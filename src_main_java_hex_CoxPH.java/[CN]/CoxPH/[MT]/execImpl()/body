@@ -9,10 +9,9 @@
   for (int j=0; j < n_coef; ++j)   newCoef[j]=init;
   double oldLoglik=-Double.MAX_VALUE;
   final int n_time=(int)(model.max_time - model.min_time + 1);
-  model.x_mean=dinfo._normSub.clone();
   for (int i=0; i <= iter_max; ++i) {
     model.iter=i;
-    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,use_start_column).doAll(dinfo._adaptedFrame);
+    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,use_start_column,use_weights_column).doAll(dinfo._adaptedFrame);
     if (i == 0)     model.calcCounts(coxMR);
     final double newLoglik=model.calcLoglik(coxMR);
     if (newLoglik > oldLoglik) {
