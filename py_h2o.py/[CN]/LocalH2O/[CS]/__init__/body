@@ -3,6 +3,7 @@ def __init__(self, *args, **kwargs):
     self.rc = None
     self.ice = tmp_dir('ice.')
     self.flatfile = flatfile_pathname()
+    self.remoteH2O = False
     h2o_os_util.check_port_group(self.port)
     h2o_os_util.show_h2o_processes()
     if (self.node_id is not None):
