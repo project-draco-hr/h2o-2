@@ -38,26 +38,26 @@
     final double x1=jIsCat ? 1.0 : nums[jit - ncats];
     final double xRisk=x1 * risk;
     if (event > 0) {
-      sumXEvents[j][t2]+=weight * x1;
-      sumXRiskEvents[j][t2]+=xRisk;
+      sumXEvents[t2][j]+=weight * x1;
+      sumXRiskEvents[t2][j]+=xRisk;
     }
     if (_use_start_column) {
-      for (int t=t1; t <= t2; ++t)       rcumsumXRisk[j][t]+=xRisk;
+      for (int t=t1; t <= t2; ++t)       rcumsumXRisk[t][j]+=xRisk;
     }
  else {
-      rcumsumXRisk[j][t2]+=xRisk;
+      rcumsumXRisk[t2][j]+=xRisk;
     }
     for (int kit=0; kit < ntotal; ++kit) {
       final boolean kIsCat=kit < ncats;
       final int k=kIsCat ? cats[kit] : numStartIter + kit;
       final double x2=kIsCat ? 1.0 : nums[kit - ncats];
       final double xxRisk=x2 * xRisk;
-      if (event > 0)       sumXXRiskEvents[j][k][t2]+=xxRisk;
+      if (event > 0)       sumXXRiskEvents[t2][j][k]+=xxRisk;
       if (_use_start_column) {
-        for (int t=t1; t <= t2; ++t)         rcumsumXXRisk[j][k][t]+=xxRisk;
+        for (int t=t1; t <= t2; ++t)         rcumsumXXRisk[t][j][k]+=xxRisk;
       }
  else {
-        rcumsumXXRisk[j][k][t2]+=xxRisk;
+        rcumsumXXRisk[t2][j][k]+=xxRisk;
       }
     }
   }
