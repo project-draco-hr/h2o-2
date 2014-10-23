@@ -1,0 +1,20 @@
+{
+  super(selfKey,job.source._key == null ? dinfo._frameKey : job.source._key,dinfo._adaptedFrame,null);
+  parameters=Job.hygiene((GLM2)job.clone());
+  job_key=job.self();
+  this.ymu=ymu;
+  this.prior=prior;
+  this.glm=glm;
+  threshold=0.5;
+  this.data_info=dinfo;
+  this.warnings=new String[0];
+  this.alpha=alpha;
+  this.lambda_max=lambda_max;
+  this.beta_eps=beta_eps;
+  submodels=new Submodel[0];
+  run_time=0;
+  start_time=System.currentTimeMillis();
+  coefficients_names=coefNames();
+  useAllFactorLevels=dinfo._useAllFactorLevels;
+  null_validation=nullVal;
+}

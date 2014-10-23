@@ -1,3 +1,5 @@
 {
-  return (_response != null && _response.value() == fr.vecs()[i]) || fr.vecs()[i].isUUID();
+  if (fr.vecs()[i].isUUID())   return true;
+  for (  FrameKeyVec v : _ignoredVecs)   if (v.value() == fr.vecs()[i])   return true;
+  return false;
 }

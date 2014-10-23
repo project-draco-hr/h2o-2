@@ -13,7 +13,7 @@
     for (int i=1; i < submodels.length; ++i) {
       GLMValidation val=xval ? submodels[i].xvalidation : submodels[i].validation;
       if (val == null || val == bestVal)       continue;
-      if ((useAuc && val.auc > bestVal.auc) || (xval && val.residual_deviance < bestVal.residual_deviance) || (((bestVal.residual_deviance - val.residual_deviance) / val.null_deviance) >= 0.01)) {
+      if ((useAuc && val.auc > bestVal.auc) || (xval && val.residual_deviance < bestVal.residual_deviance) || (((bestVal.residual_deviance - val.residual_deviance) / null_validation.residual_deviance) >= 0.01)) {
         bestVal=val;
         bestId=i;
       }
