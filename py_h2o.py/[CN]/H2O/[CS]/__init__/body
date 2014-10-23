@@ -23,7 +23,6 @@ def __init__(self, use_this_ip_addr=None, port=54321, capture_output=True, force
         self.h2o_addr = ip_from_cmd_line
     else:
         self.h2o_addr = use_this_ip_addr
-    print ('Using force_ip=%s at LocalH2O init' % force_ip)
     self.force_ip = (force_ip or (self.h2o_addr != None))
     if self.h2o_addr:
         self.http_addr = self.h2o_addr

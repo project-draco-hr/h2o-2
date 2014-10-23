@@ -2,7 +2,6 @@ def __init__(self, host, *args, **kwargs):
     super(RemoteH2O, self).__init__(*args, **kwargs)
     if ('force_ip' in kwargs):
         self.force_ip = kwargs['force_ip']
-    print ('kbn: using force_ip=%s at RemoteH2O' % self.force_ip)
     self.remoteH2O = True
     self.jar = host.upload_file('target/h2o.jar')
     self.flatfile = host.upload_file(flatfile_pathname())
