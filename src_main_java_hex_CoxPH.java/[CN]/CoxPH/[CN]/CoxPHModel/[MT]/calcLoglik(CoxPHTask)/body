@@ -8,21 +8,26 @@
 switch (parameters.ties) {
 case efron:
     for (int t=coxMR.sizeEvents.length - 1; t >= 0; --t) {
-      if (coxMR.sizeEvents[t] > 0) {
-        final double avgSize=coxMR.sizeEvents[t] / coxMR.countEvents[t];
-        newLoglik+=coxMR.sumLogRiskEvents[t];
-        for (int j=0; j < n_coef; ++j)         gradient[j]+=coxMR.sumXEvents[j][t];
-        for (long e=0; e < coxMR.countEvents[t]; ++e) {
-          final double frac=((double)e) / ((double)coxMR.countEvents[t]);
-          final double term=coxMR.rcumsumRisk[t] - frac * coxMR.sumRiskEvents[t];
+      final double sizeEvents_t=coxMR.sizeEvents[t];
+      if (sizeEvents_t > 0) {
+        final long countEvents_t=coxMR.countEvents[t];
+        final double sumLogRiskEvents_t=coxMR.sumLogRiskEvents[t];
+        final double sumRiskEvents_t=coxMR.sumRiskEvents[t];
+        final double rcumsumRisk_t=coxMR.rcumsumRisk[t];
+        final double avgSize=sizeEvents_t / countEvents_t;
+        newLoglik+=sumLogRiskEvents_t;
+        for (int j=0; j < n_coef; ++j)         gradient[j]+=coxMR.sumXEvents[t][j];
+        for (long e=0; e < countEvents_t; ++e) {
+          final double frac=((double)e) / ((double)countEvents_t);
+          final double term=rcumsumRisk_t - frac * sumRiskEvents_t;
           newLoglik-=avgSize * Math.log(term);
           for (int j=0; j < n_coef; ++j) {
-            final double djTerm=coxMR.rcumsumXRisk[j][t] - frac * coxMR.sumXRiskEvents[j][t];
+            final double djTerm=coxMR.rcumsumXRisk[t][j] - frac * coxMR.sumXRiskEvents[t][j];
             final double djLogTerm=djTerm / term;
             gradient[j]-=avgSize * djLogTerm;
             for (int k=0; k < n_coef; ++k) {
-              final double dkTerm=coxMR.rcumsumXRisk[k][t] - frac * coxMR.sumXRiskEvents[k][t];
-              final double djkTerm=coxMR.rcumsumXXRisk[j][k][t] - frac * coxMR.sumXXRiskEvents[j][k][t];
+              final double dkTerm=coxMR.rcumsumXRisk[t][k] - frac * coxMR.sumXRiskEvents[t][k];
+              final double djkTerm=coxMR.rcumsumXXRisk[t][j][k] - frac * coxMR.sumXXRiskEvents[t][j][k];
               hessian[j][k]-=avgSize * (djkTerm / term - (djLogTerm * (dkTerm / term)));
             }
           }
@@ -32,14 +37,17 @@ case efron:
   break;
 case breslow:
 for (int t=coxMR.sizeEvents.length - 1; t >= 0; --t) {
-  if (coxMR.sizeEvents[t] > 0) {
-    newLoglik+=coxMR.sumLogRiskEvents[t];
-    newLoglik-=coxMR.sizeEvents[t] * Math.log(coxMR.rcumsumRisk[t]);
+  final double sizeEvents_t=coxMR.sizeEvents[t];
+  if (sizeEvents_t > 0) {
+    final double sumLogRiskEvents_t=coxMR.sumLogRiskEvents[t];
+    final double rcumsumRisk_t=coxMR.rcumsumRisk[t];
+    newLoglik+=sumLogRiskEvents_t;
+    newLoglik-=sizeEvents_t * Math.log(rcumsumRisk_t);
     for (int j=0; j < n_coef; ++j) {
-      final double dlogTerm=coxMR.rcumsumXRisk[j][t] / coxMR.rcumsumRisk[t];
-      gradient[j]+=coxMR.sumXEvents[j][t];
-      gradient[j]-=coxMR.sizeEvents[t] * dlogTerm;
-      for (int k=0; k < n_coef; ++k)       hessian[j][k]-=coxMR.sizeEvents[t] * (((coxMR.rcumsumXXRisk[j][k][t] / coxMR.rcumsumRisk[t]) - (dlogTerm * (coxMR.rcumsumXRisk[k][t] / coxMR.rcumsumRisk[t]))));
+      final double dlogTerm=coxMR.rcumsumXRisk[t][j] / rcumsumRisk_t;
+      gradient[j]+=coxMR.sumXEvents[t][j];
+      gradient[j]-=sizeEvents_t * dlogTerm;
+      for (int k=0; k < n_coef; ++k)       hessian[j][k]-=sizeEvents_t * (((coxMR.rcumsumXXRisk[t][j][k] / rcumsumRisk_t) - (dlogTerm * (coxMR.rcumsumXRisk[t][k] / rcumsumRisk_t))));
     }
   }
 }
