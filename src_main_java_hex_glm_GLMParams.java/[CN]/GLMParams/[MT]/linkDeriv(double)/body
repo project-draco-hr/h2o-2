@@ -1,9 +1,11 @@
 {
 switch (link) {
 case logit:
-    return 1 / (x * (1 - x));
+    double res=1 / (x * (1 - x));
+  if (res > 1e5)   return 1e5;
+return res;
 case identity:
-  return 1;
+return 1;
 case log:
 return 1.0 / x;
 case inverse:

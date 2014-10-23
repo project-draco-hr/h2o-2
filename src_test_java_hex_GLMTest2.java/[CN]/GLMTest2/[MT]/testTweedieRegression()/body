@@ -11,9 +11,11 @@
     double[] intercepts=new double[]{3.643,1.318,9.154};
     double[] xs=new double[]{-0.260,-0.0284,-0.853};
     for (int i=0; i < powers.length; ++i) {
-      DataInfo dinfo=new DataInfo(fr,1,false,DataInfo.TransformType.NONE);
-      GLMParams glm=new GLMParams(Family.tweedie,powers[i]);
-      new GLM2("GLM test of gaussian(linear) regression.",Key.make(),modelKey,dinfo,glm,new double[]{0},0).fork().get();
+      GLM2 glm=new GLM2("GLM test of gaussian(linear) regression.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.tweedie,Link.family_default,0,true);
+      glm.setTweediePower(powers[i]);
+      glm.setLambda(0);
+      glm.max_iter=1000;
+      glm.fork().get();
       model=DKV.get(modelKey).get();
       testHTML(model);
       HashMap<String,Double> coefs=model.coefficients();

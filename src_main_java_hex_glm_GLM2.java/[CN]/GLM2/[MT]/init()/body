@@ -1,23 +1,2 @@
 {
-  super.init();
-  if (nlambdas == -1)   nlambdas=100;
-  if (lambda_search && lambda.length > 1)   throw new IllegalArgumentException("Can not supply both lambda_search and multiple lambdas. If lambda_search is on, GLM expects only one value of lambda_value, representing the lambda_value min (smallest lambda_value in the lambda_value search).");
-  if (response.isEnum() && family != Family.binomial)   throw new IllegalArgumentException("Invalid response variable, trying to run regression with categorical response!");
-switch (family) {
-case poisson:
-case tweedie:
-    if (response.min() < 0)     throw new IllegalArgumentException("Illegal response column for family='" + family + "', response must be >= 0.");
-  break;
-case gamma:
-if (response.min() <= 0) throw new IllegalArgumentException("Invalid response for family='Gamma', response must be > 0!");
-break;
-case binomial:
-if (response.min() < 0 || response.max() > 1) throw new IllegalArgumentException("Illegal response column for family='Binomial', response must in <0,1> range!");
-break;
-default :
-}
-Frame fr=DataInfo.prepareFrame(source,response,ignored_cols,family == Family.binomial,true,true);
-_dinfo=new DataInfo(fr,1,use_all_factor_levels || lambda_search,standardize ? DataInfo.TransformType.STANDARDIZE : DataInfo.TransformType.NONE,DataInfo.TransformType.NONE);
-_activeData=_dinfo;
-if (higher_accuracy) setHighAccuracy();
 }
