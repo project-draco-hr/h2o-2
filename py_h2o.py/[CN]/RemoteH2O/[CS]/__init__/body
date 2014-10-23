@@ -1,5 +1,8 @@
 def __init__(self, host, *args, **kwargs):
     super(RemoteH2O, self).__init__(*args, **kwargs)
+    if ('force_ip' in kwargs):
+        self.force_ip = kwargs['force_ip']
+    print ('kbn: using force_ip=%s at RemoteH2O' % self.force_ip)
     self.remoteH2O = True
     self.jar = host.upload_file('target/h2o.jar')
     self.flatfile = host.upload_file(flatfile_pathname())
@@ -25,14 +28,14 @@ def __init__(self, host, *args, **kwargs):
             logPrefix = ('remote-h2o-' + str(self.node_id))
         else:
             logPrefix = 'remote-h2o'
-        logPrefix += ('-' + host.addr)
+        logPrefix += ('-' + host.h2o_addr)
         (outfd, outpath) = tmp_file((logPrefix + '.stdout.'), '.log')
         (errfd, errpath) = tmp_file((logPrefix + '.stderr.'), '.log')
         drain(self.channel.makefile(), outfd)
         drain(self.channel.makefile_stderr(), errfd)
-        comment = ('Remote on %s, stdout %s, stderr %s' % (self.addr, os.path.basename(outpath), os.path.basename(errpath)))
+        comment = ('Remote on %s, stdout %s, stderr %s' % (self.h2o_addr, os.path.basename(outpath), os.path.basename(errpath)))
     else:
         drain(self.channel.makefile(), sys.stdout)
         drain(self.channel.makefile_stderr(), sys.stderr)
-        comment = ('Remote on %s' % self.addr)
+        comment = ('Remote on %s' % self.h2o_addr)
     log(cmd, comment=comment)

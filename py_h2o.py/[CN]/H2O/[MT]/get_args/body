@@ -46,8 +46,11 @@ def get_args(self):
             args += [('-hdfs_config=' + self.hdfs_config)]
     if beta_features:
         args += ['-beta']
-    if ((self.addr is not None) and (not self.remoteH2O)):
-        args += [('--ip=%s' % self.addr)]
+    if self.network:
+        args += (['-network='] + self.network)
+    if (self.force_ip and self.h2o_addr):
+        print ('kbn: using -force_ip=%s with java' % self.force_ip)
+        args += [('--ip=%s' % self.h2o_addr)]
     if (self.port is not None):
         args += [('--port=%d' % self.port)]
     if self.use_flatfile:
