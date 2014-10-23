@@ -1,0 +1,15 @@
+{
+  for (int i=0; i < offset._len; ++i) {
+    if (offset.isNA0(i) || response.isNA0(i))     continue;
+    double eta=_icpt;
+    double y=response.at0(i);
+    double mu=_glm.linkInv(eta + (offset.at0(i) - _sub) * _mul);
+    double var=_glm.variance(mu);
+    if (var < 1e-5)     var=1e-5;
+    double d=_glm.linkDeriv(mu);
+    double w=1.0 / (var * d * d);
+    double z=eta + (y - mu) * d;
+    _xy+=w * z;
+    _xx+=w;
+  }
+}

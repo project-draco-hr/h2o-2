@@ -1,6 +1,6 @@
 {
   _xvals=new GLMValidation[_xmodels.length];
-  for (int i=0; i < _xmodels.length; ++i)   _xvals[i]=new GLMValidation(null,_xmodels[i].ymu,_xmodels[i].glm,_xmodels[i].rank(),_thresholds);
+  for (int i=0; i < _xmodels.length; ++i)   _xvals[i]=new GLMValidation(null,_xmodels[i].glm,_xmodels[i].rank(),_thresholds);
   final int nrows=chunks[0]._len;
   double[] row=MemoryManager.malloc8d(_xmodels[0]._names.length);
   float[] preds=MemoryManager.malloc4f(_xmodels[0].glm.family == Family.binomial ? 3 : 1);

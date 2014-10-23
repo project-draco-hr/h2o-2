@@ -13,7 +13,7 @@
     catsHasNA|=Double.isNaN(data[j]);
   }
   for (int j=n_cats; j < n_data; ++j)   numsHasNA|=Double.isNaN(data[j]);
-  if (numsHasNA || (catsHasNA && !catsAllNA) || (n_num == 0 && catsAllNA)) {
+  if (numsHasNA || (catsHasNA && !catsAllNA) || (n_num > 0 && catsAllNA)) {
     for (int i=1; i <= 2 * n_time; ++i)     preds[i]=Float.NaN;
   }
  else {
@@ -28,11 +28,12 @@
     final double risk=Math.exp(logRisk);
     for (int t=0; t < n_time; ++t)     preds[t + 1]=(float)(risk * cumhaz_0[t]);
     for (int t=0; t < n_time; ++t) {
+      final double cumhaz_0_t=cumhaz_0[t];
       double var_cumhaz_2_t=0;
       for (int j=0; j < n_coef; ++j) {
         double sum=0;
-        for (int k=0; k < n_coef; ++k)         sum+=var_coef[j][k] * (full_data[k] * cumhaz_0[t] - var_cumhaz_2[k][t]);
-        var_cumhaz_2_t+=(full_data[j] * cumhaz_0[t] - var_cumhaz_2[j][t]) * sum;
+        for (int k=0; k < n_coef; ++k)         sum+=var_coef[j][k] * (full_data[k] * cumhaz_0_t - var_cumhaz_2[t][k]);
+        var_cumhaz_2_t+=(full_data[j] * cumhaz_0_t - var_cumhaz_2[t][j]) * sum;
       }
       preds[t + 1 + n_time]=(float)(risk * Math.sqrt(var_cumhaz_1[t] + var_cumhaz_2_t));
     }

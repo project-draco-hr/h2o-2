@@ -4,7 +4,7 @@ def test_iostatus(self):
         stats = node.iostatus()
         h2o.verboseprint(h2o.dump_json(stats))
         histogram = stats['histogram']
-        print '\nProbing node:', ((str(node.addr) + ':') + str(node.port))
+        print '\nProbing node:', ((str(node.h2o_addr) + ':') + str(node.port))
         for k in histogram:
             if (k['window'] == 10):
                 i_o = k['i_o']

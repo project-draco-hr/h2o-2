@@ -8,7 +8,7 @@ def random_forest(self, data_key, trees=None, timeoutSecs=300, retryDelaySecs=1.
     browseAlso = kwargs.pop('browseAlso', False)
     check_params_update_kwargs(params_dict, kwargs, 'random_forest', print_params)
     inspect = h2o_cmd.runInspect(key=data_key)
-    if (('response' not in params_dict) or (not params_dict['response'])):
+    if (('response' not in params_dict) or (params_dict['response'] is None)):
         params_dict['response'] = str(inspect['cols'][(-1)]['name'])
     elif isinstance(params_dict['response'], int):
         params_dict['response'] = str(inspect['cols'][params_dict['response']]['name'])

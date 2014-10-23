@@ -16,7 +16,7 @@
     surv.set(t,Math.exp(-cumhaz_1));
   }
   for (int t=0; t < n_time; ++t) {
-    final double gamma=x_centered * cumhaz_0[t] - var_cumhaz_2[j][t];
+    final double gamma=x_centered * cumhaz_0[t] - var_cumhaz_2[t][j];
     se_cumhaz.set(t,risk * Math.sqrt(var_cumhaz_1[t] + (gamma * var_coef[j][j] * gamma)));
   }
   final Frame fr=new Frame(key,new String[]{"time","cumhaz","se_cumhaz","surv"},vecs);

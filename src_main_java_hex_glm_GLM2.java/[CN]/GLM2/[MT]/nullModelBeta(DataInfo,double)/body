@@ -1,0 +1,6 @@
+{
+  double icpt=_noffsets == 0 ? _glm.link(ymu) : computeIntercept(dinfo,ymu,offset,response);
+  double[] beta=MemoryManager.malloc8d(_dinfo.fullN() + 1 - _noffsets);
+  beta[beta.length - 1]=icpt;
+  return beta;
+}
