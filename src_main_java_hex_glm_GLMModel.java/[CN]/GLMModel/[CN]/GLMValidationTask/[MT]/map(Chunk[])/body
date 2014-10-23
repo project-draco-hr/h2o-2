@@ -1,5 +1,5 @@
 {
-  _res=new GLMValidation(null,_model.ymu,_model.glm,_model.rank(_lambda));
+  _res=new GLMValidation(null,_model.glm,_model.rank(_lambda));
   final int nrows=chunks[0]._len;
   double[] row=MemoryManager.malloc8d(_model._names.length);
   float[] preds=MemoryManager.malloc4f(_model.glm.family == Family.binomial ? 3 : 1);
