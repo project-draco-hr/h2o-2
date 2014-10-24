@@ -3,7 +3,7 @@
   Arrays.sort(ignored_cols);
   for (  Vec v : response) {
     int id=source.find(v);
-    if (Arrays.binarySearch(ignored_cols,id) != -1)     throw new IllegalArgumentException("Column can not be both ignored and used as a response.");
+    if (Arrays.binarySearch(ignored_cols,id) >= 0)     throw new IllegalArgumentException("Column can not be both ignored and used as a response.");
   }
   if (ignored_cols != null)   fr.remove(ignored_cols);
   final Vec[] vecs=fr.vecs();
