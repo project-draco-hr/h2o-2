@@ -1,6 +1,9 @@
 {
   if (fromJar()) {
-    return _systemLoader.getResourceAsStream("resources" + uri);
+    InputStream is=_systemLoader.getResourceAsStream("resources" + uri);
+    if (is == null)     is=this.getClass().getClassLoader().getResourceAsStream("resources" + uri);
+    if (is == null)     is=Thread.currentThread().getContextClassLoader().getResourceAsStream("resources" + uri);
+    return is;
   }
  else {
     try {

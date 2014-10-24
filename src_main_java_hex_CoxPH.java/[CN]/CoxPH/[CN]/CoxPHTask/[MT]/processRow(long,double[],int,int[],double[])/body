@@ -1,9 +1,9 @@
 {
   n++;
-  final double weight=_use_weights_column ? response[0] : 1.0;
+  final double weight=_has_weights_column ? response[0] : 1.0;
   if (weight <= 0)   throw new IllegalArgumentException("weights must be positive values");
   final long event=(long)response[response.length - 1];
-  final int t1=_use_start_column ? (int)(((long)response[response.length - 3] + 1) - _min_time) : -1;
+  final int t1=_has_start_column ? (int)(((long)response[response.length - 3] + 1) - _min_time) : -1;
   final int t2=(int)(((long)response[response.length - 2]) - _min_time);
   if (t1 > t2)   throw new IllegalArgumentException("start times must be strictly less than stop times");
   final int numStart=_dinfo.numStart();
@@ -22,7 +22,7 @@
     sumRiskEvents[t2]+=risk;
   }
  else   sizeCensored[t2]+=weight;
-  if (_use_start_column) {
+  if (_has_start_column) {
     for (int t=t1; t <= t2; ++t)     sizeRiskSet[t]+=weight;
     for (int t=t1; t <= t2; ++t)     rcumsumRisk[t]+=risk;
   }
@@ -41,7 +41,7 @@
       sumXEvents[t2][j]+=weight * x1;
       sumXRiskEvents[t2][j]+=xRisk;
     }
-    if (_use_start_column) {
+    if (_has_start_column) {
       for (int t=t1; t <= t2; ++t)       rcumsumXRisk[t][j]+=xRisk;
     }
  else {
@@ -53,7 +53,7 @@
       final double x2=kIsCat ? 1.0 : nums[kit - ncats];
       final double xxRisk=x2 * xRisk;
       if (event > 0)       sumXXRiskEvents[t2][j][k]+=xxRisk;
-      if (_use_start_column) {
+      if (_has_start_column) {
         for (int t=t1; t <= t2; ++t)         rcumsumXXRisk[t][j][k]+=xxRisk;
       }
  else {
