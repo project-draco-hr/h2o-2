@@ -1,4 +1,5 @@
 {
+  super(Thread.currentThread().getContextClassLoader());
   final String ownJar=getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
   Log.POST(2000,"ownJar is " + ownJar);
   ZipFile jar=null;
