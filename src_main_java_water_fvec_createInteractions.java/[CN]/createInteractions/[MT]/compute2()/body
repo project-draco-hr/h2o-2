@@ -1,22 +1,9 @@
 {
   _out=new Frame(Key.make(_ci.target),_ci.source.names(),_ci.source.vecs());
-  String[] union=null;
-  int A=_ci.factors[0];
-  String[] dA=_out.vecs()[A]._domain;
-  int len=dA.length;
-  String name=_out._names[A];
-  for (int i=1; i < _ci.factors.length; i++) {
-    int B=_ci.factors[i];
-    String[] dB=_out.vecs()[B]._domain;
-    name+=_out._names[B];
-    len*=dB.length;
-    if (len > water.parser.Enum.MAX_ENUM_SIZE) {
-      Log.info("Skipping interaction term " + name + ": too many factors.");
-      continue;
-    }
-    int count=0;
-    for (    String sa : dA)     for (    String sb : dB)     union[count++]=sa + "." + sb;
-    Vec nv=_out.anyVec().makeZero(union);
-    _out.add(name,nv);
-  }
+  String[] domain=new createInteractionDomain(_ci,0,1).doAll(_out)._domain;
+  Vec interaction=_out.anyVec().makeZero(domain);
+  _out.add("this_interaction",interaction);
+  new createInteractionDomain(_ci,0,1).doAll(_out);
+  _out.delete_and_lock(_job);
+  tryComplete();
 }

@@ -2,6 +2,8 @@
   _i=i;
   _j=j;
   _ci=ci;
-  _domain=new String[]{"yes","no"};
+  String[] A=_ci.source.domains()[_ci.factors[i]];
+  String[] B=_ci.source.domains()[_ci.factors[j]];
+  _domain=new String[]{A[0] + "_" + B[0],A[1] + "_" + B[0],A[0] + "_" + B[1],A[1] + "_" + B[1]};
   Log.info("Making interaction between " + _ci.source._names[_ci.factors[i]] + " and "+ _ci.source._names[_ci.factors[j]]);
 }
