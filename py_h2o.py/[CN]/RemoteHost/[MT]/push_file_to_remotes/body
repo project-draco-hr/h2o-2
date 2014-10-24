@@ -3,5 +3,5 @@ def push_file_to_remotes(self, f, hosts):
     for h in hosts:
         if (h == self):
             continue
-        self.run_cmd(('scp %s %s@%s:%s' % (dest, h.username, h.addr, dest)))
+        self.run_cmd(('scp %s %s@%s:%s' % (dest, h.username, h.h2o_addr, dest)))
         h.record_file(f, dest)

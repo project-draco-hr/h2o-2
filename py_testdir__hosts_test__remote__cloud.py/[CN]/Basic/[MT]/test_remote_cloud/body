@@ -3,6 +3,6 @@ def test_remote_cloud(self):
         timeoutSecs = max(60, (8 * totalNodes))
         print 'totalNodes:', totalNodes, 'timeoutSecs:', timeoutSecs
         start = time.time()
-        h2o.build_cloud(node_count, hosts=h2o_hosts.hosts, use_flatfile=False, timeoutSecs=timeoutSecs, retryDelaySecs=0.5)
+        h2o_hosts.build_cloud_with_hosts(node_count, use_flatfile=False, timeoutSecs=timeoutSecs, retryDelaySecs=0.5)
         print 'Cloud of', len(h2o.nodes), 'built in', (time.time() - start), 'seconds'
         check_cloud_and_setup_next()

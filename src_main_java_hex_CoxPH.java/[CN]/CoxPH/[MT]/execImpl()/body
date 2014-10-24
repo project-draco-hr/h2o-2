@@ -9,12 +9,14 @@
   for (int j=0; j < n_coef; ++j)   newCoef[j]=init;
   double oldLoglik=-Double.MAX_VALUE;
   final int n_time=(int)(model.max_time - model.min_time + 1);
+  final boolean has_start_column=(model.parameters.start_column != null);
+  final boolean has_weights_column=(model.parameters.weights_column != null);
   for (int i=0; i <= iter_max; ++i) {
     model.iter=i;
-    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,use_start_column,use_weights_column).doAll(dinfo._adaptedFrame);
-    if (i == 0)     model.calcCounts(coxMR);
+    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,has_start_column,has_weights_column).doAll(dinfo._adaptedFrame);
     final double newLoglik=model.calcLoglik(coxMR);
     if (newLoglik > oldLoglik) {
+      if (i == 0)       model.calcCounts(coxMR);
       model.calcModelStats(newCoef,newLoglik);
       model.calcCumhaz_0(coxMR);
       if (newLoglik == 0)       model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
