@@ -13,7 +13,7 @@
   var_coef=malloc2DArray(n_coef,n_coef);
   final Vec start_column=source.vec(source.numCols() - 3);
   final Vec stop_column=source.vec(source.numCols() - 2);
-  min_time=parameters.use_start_column ? (long)start_column.min() + 1 : (long)stop_column.min();
+  min_time=parameters.start_column == null ? (long)stop_column.min() : (long)start_column.min() + 1;
   max_time=(long)stop_column.max();
   final int n_time=new CollectDomain(stop_column).doAll(stop_column).domain().length;
   time=MemoryManager.malloc8(n_time);

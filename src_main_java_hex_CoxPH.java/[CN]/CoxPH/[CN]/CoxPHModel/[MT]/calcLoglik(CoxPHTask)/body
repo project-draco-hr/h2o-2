@@ -22,7 +22,7 @@ fjts[t]=new RecursiveAction(){
     final double rcumsumRisk_t=coxMR.rcumsumRisk[_t];
     final double avgSize=sizeEvents_t / countEvents_t;
     newLoglik_t[_t]=sumLogRiskEvents_t;
-    for (int j=0; j < n_coef; ++j)     gradient_t[_t][j]=coxMR.sumXEvents[_t][j];
+    System.arraycopy(coxMR.sumXEvents[_t],0,gradient_t[_t],0,n_coef);
     for (long e=0; e < countEvents_t; ++e) {
       final double frac=((double)e) / ((double)countEvents_t);
       final double term=rcumsumRisk_t - frac * sumRiskEvents_t;
