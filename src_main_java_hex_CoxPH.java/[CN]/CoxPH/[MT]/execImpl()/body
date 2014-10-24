@@ -16,9 +16,9 @@
     final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,has_start_column,has_weights_column).doAll(dinfo._adaptedFrame);
     final double newLoglik=model.calcLoglik(coxMR);
     if (newLoglik > oldLoglik) {
+      if (i == 0)       model.calcCounts(coxMR);
       model.calcModelStats(newCoef,newLoglik);
       model.calcCumhaz_0(coxMR);
-      if (i == 0)       model.calcCounts(coxMR);
       if (newLoglik == 0)       model.lre=-Math.log10(Math.abs(oldLoglik - newLoglik));
  else       model.lre=-Math.log10(Math.abs((oldLoglik - newLoglik) / newLoglik));
       if (model.lre >= lre_min)       break;

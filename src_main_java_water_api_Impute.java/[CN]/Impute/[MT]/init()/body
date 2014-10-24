@@ -1,12 +1,22 @@
 {
   if (source == null || column == null)   throw new IllegalArgumentException("Missing data or input column!");
-  if (column.isBad())   throw new IllegalArgumentException("Column is 100% NAs, nothing to do.");
+  if (column.isBad()) {
+    Log.info("Column is 100% NAs, nothing to do.");
+    return true;
+  }
   if (method != Method.mean && method != Method.median && method != Method.mode)   throw new IllegalArgumentException("method must be one of (mean, median, mode)");
-  if (!(column.isEnum()) && column.naCnt() <= 0)   throw new IllegalArgumentException("No NAs in the column, nothing to do.");
-  if (column.isEnum() && !Arrays.asList(column._domain).contains("NA") && column.naCnt() <= 0)   throw new IllegalArgumentException("No NAs in the column, nothing to do.");
+  if (!(column.isEnum()) && column.naCnt() <= 0) {
+    Log.info("No NAs in the column, nothing to do.");
+    return true;
+  }
+  if (column.isEnum() && !Arrays.asList(column._domain).contains("NA") && column.naCnt() <= 0) {
+    Log.info("No NAs in the column, nothing to do.");
+    return true;
+  }
   if (method == Method.mode && (!column.isEnum()))   throw new IllegalArgumentException("Method `mode` only applicable to factor columns.");
   if (column.isEnum() && method != Method.mode) {
     Log.warn("Column to impute is a factor column, changing method to mode.");
     method=Method.mode;
   }
+  return false;
 }
