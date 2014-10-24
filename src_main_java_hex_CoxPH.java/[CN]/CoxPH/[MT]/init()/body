@@ -1,18 +1,18 @@
 {
   super.init();
-  if (use_start_column && !start_column.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
+  if ((start_column != null) && !start_column.isInt())   throw new IllegalArgumentException("start time must be null or of type integer");
   if (!stop_column.isInt())   throw new IllegalArgumentException("stop time must be of type integer");
   if (!event_column.isInt() && !event_column.isEnum())   throw new IllegalArgumentException("event must be of type integer or factor");
   if (Double.isNaN(lre_min) || lre_min <= 0)   throw new IllegalArgumentException("lre_min must be a positive number");
   if (iter_max < 1)   throw new IllegalArgumentException("iter_max must be a positive integer");
-  final long min_time=use_start_column ? (long)start_column.min() + 1 : (long)stop_column.min();
+  final long min_time=(start_column == null) ? (long)stop_column.min() : (long)start_column.min() + 1;
   final int n_time=(int)(stop_column.max() - min_time + 1);
   if (n_time < 1)   throw new IllegalArgumentException("start times must be strictly less than stop times");
   if (n_time > MAX_TIME_BINS)   throw new IllegalArgumentException("number of distinct stop times is " + n_time + "; maximum number allowed is "+ MAX_TIME_BINS);
   source=getSubframe();
   int n_resp=2;
-  if (use_weights_column)   n_resp++;
-  if (use_start_column)   n_resp++;
+  if (weights_column != null)   n_resp++;
+  if (start_column != null)   n_resp++;
   final DataInfo dinfo=new DataInfo(source,n_resp,false,DataInfo.TransformType.DEMEAN);
   model=new CoxPHModel(this,dest(),source._key,source,null);
   model.initStats(source,dinfo);
