@@ -1,6 +1,7 @@
 {
   try {
     _pool=ClassPool.getDefault();
+    _pool.insertClassPath(new ClassClassPath(Weaver.class));
     _iced=_pool.get("water.Iced");
     _dtask=_pool.get("water.DTask");
     _enum=_pool.get("java.lang.Enum");
