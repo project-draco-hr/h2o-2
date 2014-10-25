@@ -1,0 +1,41 @@
+{
+  Log.info("Combining domains with " + _fr.domains()[_i].length + " x "+ _fr.domains()[_j].length+ " = "+ (_fr.domains()[_i].length * _fr.domains()[_j].length)+ " factors");
+  _tm=new TreeMap(Collections.reverseOrder());
+  Iterator it=_hm.entrySet().iterator();
+  while (it.hasNext()) {
+    Map.Entry kv=(Map.Entry)it.next();
+    long ab=((Utils.IcedLong)kv.getKey())._val;
+    long count=((Utils.IcedLong)kv.getValue())._val;
+    _tm.put(ab,count);
+  }
+  long factorCount=0;
+  Log.info("Found " + _hm.size() + " unique interaction factors.");
+  _domain=new String[_hm.size()];
+  Iterator it2=_tm.entrySet().iterator();
+  int d=0;
+  while (it2.hasNext()) {
+    Map.Entry kv=(Map.Entry)it2.next();
+    long ab=(Long)kv.getKey();
+    long count=(Long)kv.getValue();
+    if (factorCount < _ci.max_factors) {
+      factorCount++;
+      int a=(int)(ab >> 32);
+      int b=(int)ab;
+      String feature=_fr.domains()[_i][a] + "_" + _fr.domains()[_j][b];
+      _domain[d++]=feature;
+    }
+ else     break;
+  }
+  if (d < _domain.length) {
+    String[] copy=new String[d];
+    System.arraycopy(_domain,0,copy,0,d);
+    _domain=copy;
+    TreeMap tm=new TreeMap();
+    it2=_tm.entrySet().iterator();
+    while (--d >= 0) {
+      Map.Entry kv=(Map.Entry)it2.next();
+      tm.put(kv.getKey(),kv.getValue());
+    }
+    _tm=tm;
+  }
+}

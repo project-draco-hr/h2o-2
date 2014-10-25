@@ -1,0 +1,18 @@
+{
+  for (int r=0; r < cs[0]._len; r++) {
+    final long a=cs[_i].isNA0(r) ? Integer.MIN_VALUE : cs[_i].at80(r);
+    final long b=cs[_j].isNA0(r) ? Integer.MIN_VALUE : cs[_j].at80(r);
+    assert((int)a == a);
+    assert((int)b == b);
+    final long ab=(a << 32) | (b & 0xFFFFFFFL);
+    int level=-1;
+    for (int i=0; i < _keys.length; ++i) {
+      if (ab == _keys[i]) {
+        level=i;
+        break;
+      }
+    }
+    if (level >= 0)     cs[cs.length - 1].set0(r,level);
+ else     cs[cs.length - 1].setNA0(r);
+  }
+}
