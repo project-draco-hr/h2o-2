@@ -1,17 +1,2 @@
 {
-  _hm=new Utils.IcedHashMap<Utils.IcedLong,Utils.IcedLong>();
-  for (int r=0; r < cs[0]._len; r++) {
-    long a=cs[_i].isNA0(r) ? Integer.MIN_VALUE : cs[_i].at80(r);
-    long b=cs[_j].isNA0(r) ? Integer.MIN_VALUE : cs[_j].at80(r);
-    assert((int)a == a);
-    assert((int)b == b);
-    long ab=(a << 32) | (b & 0xFFFFFFFL);
-    Utils.IcedLong AB=new Utils.IcedLong(ab);
-    if (_hm.containsKey(AB)) {
-      _hm.put(AB,new Utils.IcedLong(_hm.get(AB)._val + 1));
-    }
- else {
-      _hm.put(AB,new Utils.IcedLong(1));
-    }
-  }
 }

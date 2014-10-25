@@ -1,4 +1,9 @@
 {
-  mrt._hm.putAll(_hm);
-  mrt._hm.clear();
+  assert(mrt._unsortedMap != null);
+  assert(_unsortedMap != null);
+  Utils.IcedHashMap third=new Utils.IcedHashMap<IcedLong,IcedLong>();
+  third.putAll(mrt._unsortedMap);
+  third.putAll(_unsortedMap);
+  _unsortedMap=third;
+  mrt._unsortedMap=null;
 }
