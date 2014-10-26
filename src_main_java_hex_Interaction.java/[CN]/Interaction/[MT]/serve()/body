@@ -6,7 +6,7 @@
         throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");
       }
     }
-    final createInteractions in=new createInteractions(this);
+    final CreateInteractions in=new CreateInteractions(this);
     H2O.submitTask(in);
     in.join();
     Log.info("Created frame '" + target + "'.");
