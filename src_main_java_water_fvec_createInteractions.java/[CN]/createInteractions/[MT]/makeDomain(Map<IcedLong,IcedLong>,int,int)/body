@@ -1,2 +1,43 @@
 {
+  String[] _domain;
+  Frame _fr=_out;
+  _sortedMap=mySort(unsortedMap);
+  long factorCount=0;
+  _domain=new String[_sortedMap.size()];
+  Iterator it2=_sortedMap.entrySet().iterator();
+  int d=0;
+  while (it2.hasNext()) {
+    Map.Entry kv=(Map.Entry)it2.next();
+    final long ab=(Long)kv.getKey();
+    final long count=(Long)kv.getValue();
+    if (factorCount < _ci.max_factors && count >= _ci.min_occurrence) {
+      factorCount++;
+      String feature="";
+      if (_j != _i) {
+        int a=(int)(ab >> 32);
+        final String fA=a != _missing ? _fr.domains()[_i][a] : "NA";
+        feature=fA + "_";
+      }
+      int b=(int)ab;
+      String fB=b != _missing ? _fr.domains()[_j][b] : "NA";
+      feature+=fB;
+      _domain[d++]=feature;
+    }
+ else     break;
+  }
+  if (d < _sortedMap.size()) {
+    Log.info("Truncated map to " + _sortedMap.size() + " elements.");
+    String[] copy=new String[d + 1];
+    System.arraycopy(_domain,0,copy,0,d);
+    copy[d]=_other;
+    _domain=copy;
+    Map tm=new LinkedHashMap<Long,Long>();
+    it2=_sortedMap.entrySet().iterator();
+    while (--d >= 0) {
+      Map.Entry kv=(Map.Entry)it2.next();
+      tm.put(kv.getKey(),kv.getValue());
+    }
+    _sortedMap=tm;
+  }
+  return _domain;
 }
