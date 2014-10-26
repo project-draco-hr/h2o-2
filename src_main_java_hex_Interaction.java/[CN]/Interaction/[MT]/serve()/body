@@ -6,10 +6,12 @@
         throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");
       }
     }
+    Timer time=new Timer();
     final CreateInteractions in=new CreateInteractions(this);
     H2O.submitTask(in);
     in.join();
-    Log.info("Created frame '" + target + "'.");
+    _time=time.time();
+    Log.info(report());
     return Response.done(this);
   }
  catch (  Throwable t) {
