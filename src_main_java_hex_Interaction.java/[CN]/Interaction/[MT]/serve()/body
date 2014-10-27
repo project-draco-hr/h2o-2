@@ -1,5 +1,6 @@
 {
   try {
+    source.read_lock(self());
     if (factors.length == 0)     throw new IllegalArgumentException("factors must be non-empty.");
     for (    int v : factors) {
       if (!source.vecs()[v].isEnum()) {
@@ -23,5 +24,8 @@
   }
  catch (  Throwable t) {
     return Response.error(t);
+  }
+ finally {
+    source.unlock(self());
   }
 }
