@@ -6,7 +6,7 @@
     Map<ValueString,Integer> otMap=other._map;
     if (myMap == otMap)     return;
     for (    ValueString str : otMap.keySet())     myMap.put(str,1);
-    if (myMap.size() <= MAX_ENUM_SIZE)     return;
+    if (myMap.size() <= H2O.DATA_MAX_FACTOR_LEVELS)     return;
   }
   kill();
 }
