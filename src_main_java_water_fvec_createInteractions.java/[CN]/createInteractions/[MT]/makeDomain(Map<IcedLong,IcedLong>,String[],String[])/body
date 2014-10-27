@@ -1,6 +1,5 @@
 {
   String[] _domain;
-  Frame _fr=_out;
   _sortedMap=mySort(unsortedMap);
   long factorCount=0;
   _domain=new String[_sortedMap.size()];
@@ -13,13 +12,13 @@
     if (factorCount < _ci.max_factors && count >= _ci.min_occurrence) {
       factorCount++;
       String feature="";
-      if (_j != _i) {
+      if (dA != dB) {
         int a=(int)(ab >> 32);
-        final String fA=a != _missing ? _fr.domains()[_i][a] : "NA";
+        final String fA=a != _missing ? dA[a] : "NA";
         feature=fA + "_";
       }
       int b=(int)ab;
-      String fB=b != _missing ? _fr.domains()[_j][b] : "NA";
+      String fB=b != _missing ? dB[b] : "NA";
       feature+=fB;
       _domain[d++]=feature;
     }

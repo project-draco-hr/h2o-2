@@ -6,6 +6,13 @@
         throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");
       }
     }
+    if (target == null) {
+      target=source._key.toString() + ".interaction.";
+      target+="C" + factors[0];
+      for (int i=1; i < factors.length; ++i) {
+        target+="_C" + factors[i];
+      }
+    }
     Timer time=new Timer();
     final createInteractions in=new createInteractions(this);
     H2O.submitTask(in);
