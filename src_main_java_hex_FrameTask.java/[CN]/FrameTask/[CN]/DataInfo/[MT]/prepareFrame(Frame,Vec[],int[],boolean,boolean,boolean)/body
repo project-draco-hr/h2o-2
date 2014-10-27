@@ -1,5 +1,10 @@
 {
   Frame fr=new Frame(Key.makeSystem(Key.make().toString()),source._names.clone(),source.vecs().clone());
+  if (ignored_cols != null && !Utils.isSorted(ignored_cols))   Arrays.sort(ignored_cols);
+  if (response != null && ignored_cols != null)   for (  Vec v : response) {
+    int id=source.find(v);
+    if (Arrays.binarySearch(ignored_cols,id) >= 0)     throw new IllegalArgumentException("Column can not be both ignored and used as a response.");
+  }
   if (ignored_cols != null)   fr.remove(ignored_cols);
   final Vec[] vecs=fr.vecs();
   Futures fs=new Futures();
