@@ -9,7 +9,7 @@
   byte producerId=(byte)H2O.SELF.index();
   for (int i=0; i < ntrees; ++i) {
     long treeSeed=rnd.nextLong() + TREE_SEED_INIT;
-    trees[i]=new Tree(jobKey,modelKey,localData,producerId,drfParams.max_depth,drfParams.stat_type,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose,drfParams.regression,!drfParams._useNonLocalData);
+    trees[i]=new Tree(jobKey,modelKey,localData,producerId,drfParams.max_depth,drfParams.stat_type,numSplitFeatures,treeSeed,i,drfParams._exclusiveSplitLimit,sampler,drfParams._verbose,drfParams.regression,!drfParams._useNonLocalData,((SpeeDRFModel)UKV.get(modelKey)).score_pojo);
   }
   Log.info("Invoking the tree build tasks on all nodes.");
   DRemoteTask.invokeAll(trees);

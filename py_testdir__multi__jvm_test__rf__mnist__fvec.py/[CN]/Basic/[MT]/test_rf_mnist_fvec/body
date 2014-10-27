@@ -21,7 +21,7 @@ def test_rf_mnist_fvec(self):
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseResult['destination_key']
         print "This is the 'ignore=' we'll use"
-        ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300, forRF=True)
+        ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300, returnIgnoreX=True)
         params = {'response': ('C' + str((y + 1))), 'cols': None, 'ignored_cols_by_name': ignore_x, 'classification': 1, 'validation': None, 'ntrees': 2, 'max_depth': 20, 'min_rows': None, 'nbins': 1000, 'mtries': None, 'sample_rate': 0.66, 'seed': None, }
     rfViewInitial = []
     for jobDispatch in range(1):

@@ -1,7 +1,7 @@
 def delete_keys_at_all_nodes(node=None, pattern=None, timeoutSecs=120):
-    time.sleep(5)
     if (not node):
         node = h2o.nodes[0]
+    node.unlock()
     totalDeletedCnt = 0
     deletedCnt = delete_keys(node, pattern=pattern, timeoutSecs=timeoutSecs)
     totalDeletedCnt += deletedCnt

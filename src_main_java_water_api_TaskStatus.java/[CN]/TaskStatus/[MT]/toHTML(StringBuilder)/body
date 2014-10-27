@@ -1,0 +1,29 @@
+{
+  for (  NodeTaskInfo x : _infos) {
+    sb.append("<div>");
+    sb.append("<h3>" + x._node + "</h3>");
+    sb.append("<table class='table table-bordered table-condensed'>");
+    for (int i=0; i < H2O.CLOUD.size(); ++i) {
+      if (H2O.CLOUD._memary[i] == H2O.SELF)       continue;
+      sb.append("<tr>");
+      sb.append("<th>Pending[" + H2O.CLOUD._memary[i] + "]</th>");
+      sb.append("<td>");
+      for (      TaskInfo ti : x._pending)       if (ti.nodeId == i)       sb.append(" " + ti.toString());
+      sb.append("</td>");
+      sb.append("</tr>");
+    }
+    int i=0;
+    for (    TaskInfo[] ti : x._remotes) {
+      sb.append("<tr>");
+      sb.append("<th>Remote[" + H2O.CLOUD._memary[i++] + "]</th>");
+      sb.append("<td>");
+      sb.append(Arrays.deepToString(ti));
+      sb.append("</td>");
+      sb.append("</tr>");
+    }
+    sb.append("</table>");
+    sb.append("</div>");
+    sb.append("</p>");
+  }
+  return true;
+}

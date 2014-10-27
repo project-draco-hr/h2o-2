@@ -1,4 +1,14 @@
 {
   if (_jobKey != null && !Job.isRunning(_jobKey))   throw new Job.JobCancelledException();
-  for (  Col c : _c)   c.shrink();
+  RecursiveAction[] ras=new RecursiveAction[_c.length];
+  int i=0;
+  for (  final Col c : _c) {
+    ras[i++]=new RecursiveAction(){
+      @Override public void compute(){
+        c.shrink();
+      }
+    }
+;
+  }
+  ForkJoinTask.invokeAll(ras);
 }

@@ -5,7 +5,7 @@ def test_GLM2_tweedie(self):
     print '\nStarting', csvPathname
     parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='put')
     coefs = [7, 13, 20, 27, 21, 11]
-    y = '4'
+    y = 4
     ignored_cols = h2o_cmd.createIgnoredCols(key=parseResult['destination_key'], cols=coefs, response=y)
     kwargs = {'family': 'tweedie', 'tweedie_variance_power': 1.36, 'response': y, 'ignored_cols': ignored_cols, 'max_iter': 10, 'lambda': 0, 'alpha': 0, 'n_folds': 0, 'beta_epsilon': 0.0001, }
     glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=15, **kwargs)

@@ -1,0 +1,31 @@
+{
+  try {
+    source.read_lock(self());
+    if (factors.length == 0)     throw new IllegalArgumentException("factors must be non-empty.");
+    for (    int v : factors) {
+      if (!source.vecs()[v].isEnum()) {
+        throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");
+      }
+    }
+    if (target == null) {
+      target=source._key.toString() + ".interaction.";
+      target+="C" + factors[0];
+      for (int i=1; i < factors.length; ++i) {
+        target+="_C" + factors[i];
+      }
+    }
+    Timer time=new Timer();
+    final createInteractions in=new createInteractions(this);
+    H2O.submitTask(in);
+    in.join();
+    _time=time.time();
+    Log.info(report());
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+ finally {
+    source.unlock(self());
+  }
+}

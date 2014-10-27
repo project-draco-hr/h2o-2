@@ -1,2 +1,3 @@
 def simpleCheckRFScore(node=None, rfv=None, noPrint=False, **kwargs):
-    simpleCheckRFView(node=node, rfv=rfv, noPrint=noPrint, checkScoringOnly=True, **kwargs)
+    (classification_error, classErrorPctList, totalScores) = simpleCheckRFView(node=node, rfv=rfv, noPrint=noPrint, checkScoringOnly=True, **kwargs)
+    return (classification_error, classErrorPctList, totalScores)

@@ -1,0 +1,19 @@
+import unittest, random, sys, time, os
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i
+import codecs, unicodedata
+print 'create some specific small datasets with exp row/col combinations'
+print 'This injects the full set of single byte UTF8 in a col, except for some special h2o chars'
+toDoList = range(0, 256)
+H2O_COL_SEPARATOR = 44
+removeIfThere(0)
+removeIfThere(10)
+removeIfThere(13)
+removeIfThere(34)
+removeIfThere(44)
+tryList = []
+for unicodeNum in toDoList:
+    unicodeSymbol = unichr(unicodeNum)
+    tryList.append(((((((((((((((((((((('a,b,c,d' + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\na,b,c,d') + unicodeSymbol) + 's,n\n'), 10, 5, [0, 0, 0, 0, 0], ['Enum', 'Enum', 'Enum', 'Enum', 'Enum'], unicodeNum))
+if (__name__ == '__main__'):
+    h2o.unit_main()

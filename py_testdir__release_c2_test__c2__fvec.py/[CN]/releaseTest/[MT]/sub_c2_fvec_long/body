@@ -4,7 +4,7 @@ def sub_c2_fvec_long(self):
     bucket = 'home-0xdiag-datasets'
     importFolderPath = 'manyfiles-nflx-gz'
     print "Using .gz'ed files in", importFolderPath
-    csvFilenameList = [('*[1][0-4][0-9].dat.gz', 'file_50_A.dat.gz', (50 * avgMichalSize), 1800)]
+    csvFilenameList = [('*[1][0-4][0-9].dat.gz', 'file_50_A.dat.gz', (50 * avgMichalSize), 900)]
     if LOG_MACHINE_STATS:
         benchmarkLogging = ['cpu', 'disk', 'network']
     else:
@@ -17,11 +17,16 @@ def sub_c2_fvec_long(self):
         h2o.cloudPerfH2O.message('')
         h2o.cloudPerfH2O.message((('Parse ' + csvFilename) + ' Start--------------------------------'))
         start = time.time()
-        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging)
+        parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='local', hex_key=(csvFilename + '.hex'), timeoutSecs=timeoutSecs, doSummary=False, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, benchmarkLogging=benchmarkLogging)
         elapsed = (time.time() - start)
         print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print "Parse result['destination_key']:", parseResult['destination_key']
         h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
+        inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+        h2o_cmd.infoFromInspect(inspect, csvPathname)
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
+        summaryResult = h2o_cmd.runSummary(key=parseResult['destination_key'], timeoutSecs=timeoutSecs, numCols=numCols, numRows=numRows)
         if (totalBytes is not None):
             fileMBS = ((totalBytes / 1000000.0) / elapsed)
             msg = '{!s} jvms, {!s}GB heap, {:s} {:s} {:6.2f} MB/sec for {:.2f} secs'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, csvFilepattern, csvFilename, fileMBS, elapsed)

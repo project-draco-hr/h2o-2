@@ -1,0 +1,37 @@
+{
+  final int n_coef=coef.length;
+  final Matrix inv_hessian=new Matrix(hessian).inverse();
+  for (int j=0; j < n_coef; ++j) {
+    for (int k=0; k <= j; ++k) {
+      final double elem=-inv_hessian.get(j,k);
+      var_coef[j][k]=elem;
+      var_coef[k][j]=elem;
+    }
+  }
+  for (int j=0; j < n_coef; ++j) {
+    coef[j]=newCoef[j];
+    exp_coef[j]=Math.exp(coef[j]);
+    exp_neg_coef[j]=Math.exp(-coef[j]);
+    se_coef[j]=Math.sqrt(var_coef[j][j]);
+    z_coef[j]=coef[j] / se_coef[j];
+  }
+  if (iter == 0) {
+    null_loglik=newLoglik;
+    maxrsq=1 - Math.exp(2 * null_loglik / n);
+    score_test=0;
+    for (int j=0; j < n_coef; ++j) {
+      double sum=0;
+      for (int k=0; k < n_coef; ++k)       sum+=var_coef[j][k] * gradient[k];
+      score_test+=gradient[j] * sum;
+    }
+  }
+  loglik=newLoglik;
+  loglik_test=-2 * (null_loglik - loglik);
+  rsq=1 - Math.exp(-loglik_test / n);
+  wald_test=0;
+  for (int j=0; j < n_coef; ++j) {
+    double sum=0;
+    for (int k=0; k < n_coef; ++k)     sum-=hessian[j][k] * (coef[k] - parameters.init);
+    wald_test+=(coef[j] - parameters.init) * sum;
+  }
+}

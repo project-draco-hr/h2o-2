@@ -1,0 +1,11 @@
+{
+  _infos=new NodeTaskInfo[H2O.CLOUD.size()];
+  TaskInfo[][] ts=new TaskInfo[H2O.CLOUD.size()][];
+  int i=0;
+  for (  H2ONode n : H2O.CLOUD._memary)   ts[i++]=n.currentTasksInfo();
+  RPC[] pendingRPCs=UDPTimeOutThread.pendingRPCs();
+  TaskInfo[] pending=new TaskInfo[pendingRPCs.length];
+  for (int j=0; j < pendingRPCs.length; ++j)   pending[j]=new TaskInfo(pendingRPCs[j].task(),pendingRPCs[j].taskNum(),pendingRPCs[j].target().index(),pendingRPCs[j].isDone() ? task_status.DONE : task_status.CMP,pendingRPCs[j]._callCnt);
+  _infos[H2O.SELF.index()]=new NodeTaskInfo(pending,ts);
+  tryComplete();
+}

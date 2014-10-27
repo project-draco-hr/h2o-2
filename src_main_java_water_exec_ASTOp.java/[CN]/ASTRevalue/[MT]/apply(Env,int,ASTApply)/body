@@ -1,0 +1,22 @@
+{
+  final boolean warn_missing=env.popDbl() == 1;
+  final String replace=env.popStr();
+  String skey=env.key();
+  Frame fr=env.popAry();
+  if (fr.numCols() != 1)   throw new IllegalArgumentException("revalue works on a single column at a time.");
+  String[] old_dom=fr.anyVec()._domain;
+  if (old_dom == null)   throw new IllegalArgumentException("Column is not a factor column. Can only revalue a factor column.");
+  HashMap<String,String> dom_map=hashMap(replace);
+  for (int i=0; i < old_dom.length; ++i) {
+    if (dom_map.containsKey(old_dom[i])) {
+      old_dom[i]=dom_map.get(old_dom[i]);
+      dom_map.remove(old_dom[i]);
+    }
+  }
+  if (dom_map.size() > 0 && warn_missing) {
+    for (    String k : dom_map.keySet()) {
+      env._warnings=Arrays.copyOf(env._warnings,env._warnings.length + 1);
+      env._warnings[env._warnings.length - 1]="Warning: old value " + k + " not a factor level.";
+    }
+  }
+}

@@ -1,0 +1,147 @@
+def test_KMeans_predict3(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    timeoutSecs = 600
+    predictCsv = 'predict_0.csv'
+    actualCsv = 'actual_0.csv'
+    if (1 == 1):
+        outputClasses = 3
+        y = 4
+        response = 'response'
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
+        trees = 40
+        bucket = 'smalldata'
+        csvPathname = 'iris/iris2.csv'
+        hexKey = 'iris2.csv.hex'
+        translate = {'setosa': 0.0, 'versicolor': 1.0, 'virginica': 2.0, }
+        expectedPctWrong = 0.7
+    elif (1 == 0):
+        outputClasses = 6
+        y = 54
+        response = 'C55'
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
+        trees = 6
+        bucket = 'home-0xdiag-datasets'
+        csvPathname = 'standard/covtype.shuffled.10pct.data'
+        hexKey = 'covtype.shuffled.10pct.data.hex'
+        translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
+        expectedPctWrong = 0.7
+    elif (1 == 0):
+        outputClasses = 6
+        y = 54
+        response = 'C55'
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
+        trees = 40
+        bucket = 'home-0xdiag-datasets'
+        csvPathname = 'standard/covtype.shuffled.10pct.data'
+        hexKey = 'covtype.shuffled.10pct.data.hex'
+        translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
+        expectedPctWrong = 0.7
+    elif (1 == 0):
+        outputClasses = 6
+        y = 54
+        response = 'C55'
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
+        trees = 6
+        bucket = 'home-0xdiag-datasets'
+        csvPathname = 'standard/covtype.data'
+        hexKey = 'covtype.data.hex'
+        translate = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, }
+        expectedPctWrong = 0.7
+    else:
+        outputClasses = 10
+        y = 0
+        response = 'C1'
+        skipSrcOutputHeader = 1
+        skipPredictHeader = 1
+        trees = 6
+        bucket = 'home-0xdiag-datasets'
+        csvPathname = 'mnist/mnist_training.csv.gz'
+        hexKey = 'mnist_training.hex'
+        translate = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, }
+        expectedPctWrong = 0.7
+    csvPredictPathname = ((SYNDATASETS_DIR + '/') + predictCsv)
+    csvSrcOutputPathname = ((SYNDATASETS_DIR + '/') + actualCsv)
+    csvFullname = h2i.find_folder_and_filename(bucket, csvPathname, schema='put', returnFullPath=True)
+
+    def predict_and_compare_csvs(model_key, hex_key, predictHexKey, translate=None, y=0):
+        dataKey = 'P.hex'
+        if skipSrcOutputHeader:
+            print 'Has header in dataset, so should be able to chop out col 0 for predict and get right answer'
+            print "hack for now, can't chop out col 0 in Exec currently"
+            dataKey = hex_key
+        else:
+            print "No header in dataset, can't chop out cols, since col numbers are used for names"
+            dataKey = hex_key
+        h2e.exec_expr(execExpr=(((('Z.hex=' + hex_key) + '[,') + str((y + 1))) + ']'), timeoutSecs=30)
+        start = time.time()
+        predictResult = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hexKey, destination_key=predictHexKey)
+        print 'generate_predictions end on ', hexKey, ' took', (time.time() - start), 'seconds'
+        print 'predictResult:', h2o.dump_json(predictResult)
+        h2o.check_sandbox_for_errors()
+        inspect = h2o_cmd.runInspect(key=predictHexKey)
+        h2o_cmd.infoFromInspect(inspect, 'predict.hex')
+        h2o.nodes[0].csv_download(src_key='Z.hex', csvPathname=csvSrcOutputPathname)
+        h2o.nodes[0].csv_download(src_key=predictHexKey, csvPathname=csvPredictPathname)
+        h2o.check_sandbox_for_errors()
+        print 'Do a check of the original output col against predicted output'
+        (rowNum1, originalOutput) = compare_csv_at_one_col(csvSrcOutputPathname, msg='Original', colIndex=0, translate=translate, skipHeader=skipSrcOutputHeader)
+        (rowNum2, predictOutput) = compare_csv_at_one_col(csvPredictPathname, msg='Predicted', colIndex=0, skipHeader=skipPredictHeader)
+        if ((rowNum1 - skipSrcOutputHeader) != (rowNum2 - skipPredictHeader)):
+            raise Exception(('original rowNum1: %s - %d not same as downloaded predict: rowNum2: %s - %d                     %s' % (rowNum1, skipSrcOutputHeader, rowNum2, skipPredictHeader)))
+        wrong = 0
+        for (rowNum, (o, p)) in enumerate(zip(originalOutput, predictOutput)):
+            if (str(o) != str(p)):
+                if (wrong == 10):
+                    print 'Not printing any more mismatches\n'
+                elif (wrong < 10):
+                    msg = ('Comparing original output col vs predicted. row %s differs.                             original: %s predicted: %s' % (rowNum, o, p))
+                    print msg
+                wrong += 1
+        print '\nTotal wrong:', wrong
+        print 'Total:', len(originalOutput)
+        pctWrong = ((100.0 * wrong) / len(originalOutput))
+        print 'wrong/Total * 100 ', pctWrong
+        if (1 == 0):
+            if (pctWrong > 2.0):
+                raise Exception("pctWrong too high. Expect < 2% error because it's reusing training data")
+        return pctWrong
+    parseResult = h2i.import_parse(bucket=bucket, path=csvPathname, schema='put', hex_key=hexKey)
+    inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+    numCols = inspect['numCols']
+    numRows = inspect['numRows']
+    seed = random.randint(0, sys.maxint)
+    kwargs = {'ignored_cols_by_name': response, 'seed': seed, 'k': outputClasses, 'initialization': 'PlusPlus', 'destination_key': 'kmeans_model', 'max_iter': 1000, }
+    kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=60, **kwargs)
+    size = kmeans['model']['size']
+    (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
+    size2 = [t[1] for t in tupleResultList]
+    if (size != size2):
+        raise Exception('training cluster sizes: %s are not the same as what we got from predict on same data: %s', (size, size2))
+    expectedSizes = [[39, 50, 61], [38, 50, 62], [22, 31, 97], [24, 29, 97], [24, 30, 96], [23, 31, 96]]
+    sortedSize = sorted(size)
+    if (sortedSize not in expectedSizes):
+        raise Exception(('I got cluster sizes %s but expected one of these: %s ' % (sortedSize, expectedSizes)))
+    print 'centers:', centers
+    self.assertEqual((numCols - 1), len(centers[0]), ("kmeans first center doesn't have same # of values as dataset row %s %s" % ((numCols - 1), len(centers[0]))))
+    error = kmeans['model']['total_within_SS']
+    within_cluster_variances = kmeans['model']['within_cluster_variances']
+    print 'within_cluster_variances:', within_cluster_variances
+    print 'Use H2O GeneratePredictionsPage with a H2O generated model and the same data key.'
+    print "Does this work? (feeding in same data key)if you're predicting, "
+    print "don't you need one less column (the last is output?)"
+    print 'WARNING: max_iter set to 8 for benchmark comparisons'
+    print 'y=', y
+    print ''
+    print "oh I see why I can't compare predict to actual, in kmeans"
+    print "the cluster order doesn't have to match the output class enum order"
+    print "so I don't know what cluster, each output class will be (kmeans)"
+    print 'all I can say is that the prediction distribution should match the original source distribution'
+    print 'have to figure out what to do'
+    predictHexKey = 'predict_0.hex'
+    pctWrong = predict_and_compare_csvs(model_key='kmeans_model', hex_key=hexKey, predictHexKey=predictHexKey, translate=translate, y=y)
+    if (1 == 0):
+        self.assertAlmostEqual(pctWrong, expectedPctWrong, delta=0.7, msg=("predicted pctWrong: %s should be small because we're predicting with training data" % pctWrong))

@@ -1,12 +1,11 @@
 def test_Cloud(self):
-    base_port = 54300
     ports_per_node = 2
     for trials in range(0, 5):
         for tryNodes in range(3, 6):
             sys.stdout.write('.')
             sys.stdout.flush()
             start = time.time()
-            h2o.build_cloud(node_count=tryNodes, java_heap_GB=1, timeoutSecs=30, retryDelaySecs=2, base_port=base_port, use_flatfile=True)
+            h2o.build_cloud(node_count=tryNodes, java_heap_GB=1, timeoutSecs=30, retryDelaySecs=2, use_flatfile=True)
             print ('loop %d: Build cloud of %d in %d s' % (trials, tryNodes, (time.time() - start)))
             for i in range(2):
                 print ('nodes report size: %s consensus: %s expected: %d.' % h2o.verify_cloud_size())

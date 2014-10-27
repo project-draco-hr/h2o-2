@@ -1,4 +1,4 @@
 {
   final double[] grad=_lastResult.fullGrad(alpha[0],_currentLambda);
-  return pickNextLambda(_currentLambda,grad,Math.max((int)(Math.min(_dinfo.fullN(),_nobs) * 0.05),1));
+  return pickNextLambda(_currentLambda,grad,Math.max((int)(Math.min(_srcDinfo.fullN(),_nobs) * 0.05),1));
 }

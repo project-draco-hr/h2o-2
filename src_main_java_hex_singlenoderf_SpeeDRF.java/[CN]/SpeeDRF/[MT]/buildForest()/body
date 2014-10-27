@@ -25,6 +25,14 @@
       model.variableImportanceCalc(train,resp);
       Log.info("Variable Importance on " + (train.numCols() - 1) + " variables and "+ ntrees+ " trees done in "+ VITimer);
     }
+    Log.info("Generating Tree Stats");
+    JsonObject trees=new JsonObject();
+    trees.addProperty(Constants.TREE_COUNT,model.size());
+    if (model.size() > 0) {
+      trees.add(Constants.TREE_DEPTH,model.depth().toJson());
+      trees.add(Constants.TREE_LEAVES,model.leaves().toJson());
+    }
+    model.generateHTMLTreeStats(new StringBuilder(),trees);
     model.current_status="Model Complete";
   }
   finally {

@@ -19,4 +19,5 @@ def tear_down_cloud(nodeList=None, sandboxIgnoreErrors=False):
     except:
         pass
     check_sandbox_for_errors(sandboxIgnoreErrors=sandboxIgnoreErrors, python_test_name=python_test_name)
+    clean_sandbox_doneToLine()
     nodeList[:] = []

@@ -1,0 +1,8 @@
+import unittest
+import random, sys, time
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_exec as h2e
+zeroList = ['Result.hex = c(0)', 'Result0.hex = c(0)', 'Result1.hex = c(0)', 'Result2.hex = c(0)', 'Result3.hex = c(0)', 'Result4.hex = c(0)']
+exprList = ['Result<n>.hex = log(<keyX>[,<col1>])', 'Result<n>.hex = factor(<keyX>[,<col1>])', 'Result<n>.hex = <keyX>[,<col1>]', 'Result<n>.hex = min(<keyX>[,<col1>]) + Result<n-1>.hex', 'Result<n>.hex = max(<keyX>[,<col1>]) + Result<n-1>.hex', 'Result<n>.hex = mean(<keyX>[,<col1>]) + Result<n-1>.hex', 'Result<n>.hex = sum(<keyX>[,<col1>]) + Result.hex']
+if (__name__ == '__main__'):
+    h2o.unit_main()

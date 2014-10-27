@@ -1,4 +1,4 @@
-def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120, forRF=False, noPrint=False, returnStringX=True):
+def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValuesDict=None, enumSizeDict=None, colTypeDict=None, colNameDict=None, keepPattern=None, key=None, timeoutSecs=120, returnIgnoreX=False, noPrint=False, returnStringX=True):
     y = str(y)
     if (key is not None):
         (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(key, exceptionOnMissingValues=False, max_column_display=99999999, timeoutSecs=timeoutSecs)
@@ -52,7 +52,7 @@ def goodXFromColumnInfo(y, num_cols=None, missingValuesDict=None, constantValues
     if (not noPrint):
         print '\nx:', x
         print '\nignore_x:', ignore_x
-    if forRF:
+    if returnIgnoreX:
         return ignore_x
     else:
         return x

@@ -16,7 +16,7 @@ def test_GLM2_mnist_short(self):
         print 'parse result:', parseTestResult['destination_key']
         print "We won't use this pruning of x on test data. See if it prunes the same as the training"
         y = 0
-        ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTestResult['destination_key'], timeoutSecs=300, forRF=True)
+        ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTestResult['destination_key'], timeoutSecs=300, returnIgnoreX=True)
         trainKey = (((trainCsvFilename + '_') + str(trial)) + '.hex')
         csvPathname = ((importFolderPath + '/') + testCsvFilename)
         start = time.time()
@@ -25,7 +25,7 @@ def test_GLM2_mnist_short(self):
         print 'parse end on ', trainCsvFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'parse result:', parseTrainResult['destination_key']
         print "This is the pruned x we'll use"
-        ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTrainResult['destination_key'], timeoutSecs=300, forRF=True)
+        ignoreX = h2o_glm.goodXFromColumnInfo(y, key=parseTrainResult['destination_key'], timeoutSecs=300, returnIgnoreX=True)
         print 'ignoreX:', ignoreX
         modelKey = 'GLM_model'
         params = {'ignored_cols': ignoreX, 'response': ('C' + str((y + 1))), 'family': 'binomial', 'lambda': 0.5, 'alpha': 0.0001, 'max_iter': 15, 'n_folds': 1, 'beta_epsilon': 0.0001, 'destination_key': modelKey, }

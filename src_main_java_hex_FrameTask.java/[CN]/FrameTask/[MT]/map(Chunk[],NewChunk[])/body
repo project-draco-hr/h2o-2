@@ -45,12 +45,14 @@
       final int n=chunks.length - _dinfo._responses;
       for (; i < n; ++i) {
         double d=chunks[i].at0(r);
-        if (_dinfo._normMul != null)         d=(d - _dinfo._normSub[i - _dinfo._cats]) * _dinfo._normMul[i - _dinfo._cats];
+        if (_dinfo._normSub != null)         d-=_dinfo._normSub[i - _dinfo._cats];
+        if (_dinfo._normMul != null)         d*=_dinfo._normMul[i - _dinfo._cats];
         nums[i - _dinfo._cats]=d;
       }
       for (i=0; i < _dinfo._responses; ++i) {
         response[i]=chunks[chunks.length - _dinfo._responses + i].at0(r);
-        if (_dinfo._normRespMul != null)         response[i]=(response[i] - _dinfo._normRespSub[i]) * _dinfo._normRespMul[i];
+        if (_dinfo._normRespSub != null)         response[i]-=_dinfo._normRespSub[i];
+        if (_dinfo._normRespMul != null)         response[i]*=_dinfo._normRespMul[i];
         if (Double.isNaN(response[i]))         continue OUTER;
       }
       long seed=offset + rrr * (end - start) + r;

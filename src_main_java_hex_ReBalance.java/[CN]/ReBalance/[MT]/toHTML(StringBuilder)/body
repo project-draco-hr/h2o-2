@@ -1,9 +1,9 @@
 {
-  if (UKV.get(Key.make(after)) == null) {
+  if (UKV.get(after) == null) {
     return false;
   }
   RString aft=new RString("<a href='Inspect2.html?src_key=%$key'>%key</a>");
   aft.replace("key",after);
-  DocGen.HTML.section(sb,"Rebalancing done. Frame '" + aft.toString() + "' now has "+ ((Frame)UKV.get(Key.make(after))).anyVec().nChunks()+ " chunks (source: "+ source.anyVec().nChunks()+ ").");
+  DocGen.HTML.section(sb,"Rebalancing done. Frame '" + aft.toString() + "' now has "+ ((Frame)UKV.get(after)).anyVec().nChunks()+ " chunks (source: "+ source.anyVec().nChunks()+ ").");
   return true;
 }

@@ -1,0 +1,18 @@
+{
+  double mul=1, sub=0;
+  int vecId=dinfo._adaptedFrame.find(offset);
+  if (dinfo._normMul != null)   mul=dinfo._normMul[vecId - dinfo._cats];
+  if (dinfo._normSub != null)   sub=dinfo._normSub[vecId - dinfo._cats];
+  double icpt=ymu - (offset.mean() - sub) * mul;
+  double icpt2=new GLMInterceptTask(_glm,sub,mul,icpt).doAll(offset,response)._icpt;
+  double diff=icpt2 - icpt;
+  int iter=0;
+  while ((1e-4 < diff || diff < -1e-4) && ++iter <= 10) {
+    icpt=icpt2;
+    icpt2=new GLMInterceptTask(_glm,sub,mul,icpt).doAll(offset,response)._icpt;
+    System.out.println("iter = " + iter + ", icpt = "+ icpt+ ", icpt2 = "+ icpt2);
+    diff=icpt2 - icpt;
+  }
+  System.out.println("has_intercept = " + icpt);
+  return icpt;
+}

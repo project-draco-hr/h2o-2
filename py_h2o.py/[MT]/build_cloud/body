@@ -1,4 +1,4 @@
-def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, init_sandbox=True, **kwargs):
+def build_cloud(node_count=1, base_port=None, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, init_sandbox=True, **kwargs):
     if (not disable_time_stamp):
         sys.stdout = OutWrapper(sys.stdout)
     if (clone_cloud_json or clone_cloud):
@@ -15,12 +15,12 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
         setup_benchmark_log()
     ports_per_node = 2
     nodeList = []
-    port_offset = get_port_offset()
+    base_port = get_base_port(base_port)
     try:
         totalNodes = 0
-        portList = [((port_offset + base_port) + (ports_per_node * i)) for i in range(node_count)]
+        portList = [(base_port + (ports_per_node * i)) for i in range(node_count)]
         if (hosts is None):
-            write_flatfile(node_count=node_count, base_port=base_port, port_offset=port_offset)
+            write_flatfile(node_count=node_count, base_port=base_port)
             hostCount = 1
             if rand_shuffle:
                 random.shuffle(portList)
@@ -44,14 +44,14 @@ def build_cloud(node_count=1, base_port=54321, hosts=None, timeoutSecs=30, retry
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
-        stabilize_cloud(nodeList[0], len(nodeList), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, noExtraErrorCheck=True)
+        stabilize_cloud(nodeList[0], nodeList, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, noExtraErrorCheck=True)
         verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
         h2p.red_print('Built cloud:', nodeList[0].java_heap_GB, 'GB java heap(s) with', len(nodeList), 'total nodes')
         if conservative:
             for n in nodeList:
-                stabilize_cloud(n, len(nodeList), timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
-        verify_cloud_size(nodeList)
+                stabilize_cloud(n, nodeList, timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
+        verify_cloud_size(nodeList, expectedCloudName=nodeList[0].cloud_name)
         check_sandbox_for_errors(python_test_name=python_test_name)
     except:
         if (cleanup and nodeList):

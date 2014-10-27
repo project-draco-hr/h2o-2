@@ -1,6 +1,5 @@
 def process(self):
     self.set_state(STATE_NONE)
-    examples_lines = 0
     found_examples = False
     injected_dontrun = False
     found_dontrun = False
@@ -10,14 +9,32 @@ def process(self):
     s = f.readline()
     while (len(s) > 0):
         self.lineno = (self.lineno + 1)
-        if (self.state == STATE_IN_EXAMPLES):
-            examples_lines = (examples_lines + 1)
         match_groups = re.search('^\\\\examples{', s)
         if (match_groups is not None):
             if (self.state == STATE_IN_EXAMPLES):
                 self.parse_error('examples may not be in examples')
             self.set_state(STATE_IN_EXAMPLES)
             found_examples = True
+            self.emit_line(s)
+            s = f.readline()
+            continue
+        match_groups = re.search('-- CRAN examples begin --', s)
+        if (match_groups is not None):
+            if (self.state != STATE_IN_EXAMPLES):
+                self.parse_error('CRAN examples must be in examples')
+            self.state = STATE_IN_CRAN_EXAMPLES
+            self.emit_line(s)
+            s = f.readline()
+            continue
+        match_groups = re.search('-- CRAN examples end --', s)
+        if (match_groups is not None):
+            if (self.state != STATE_IN_CRAN_EXAMPLES):
+                self.parse_error('CRAN examples end must be in CRAN examples')
+            self.set_state(STATE_IN_EXAMPLES)
+            self.emit_line(s)
+            s = f.readline()
+            continue
+        if (self.state == STATE_IN_CRAN_EXAMPLES):
             self.emit_line(s)
             s = f.readline()
             continue
@@ -54,8 +71,10 @@ def process(self):
         if found_dontrun_closebrace:
             self.parse_error('extra stuff after dontrun close brace')
         if ((self.state == STATE_IN_EXAMPLES) and (not injected_dontrun) and (not found_dontrun)):
-            self.inject_line('\\dontrun{')
-            injected_dontrun = True
+            match_groups = re.match('^\\s*$', s)
+            if (match_groups is None):
+                self.inject_line('\\dontrun{')
+                injected_dontrun = True
         self.emit_line(s)
         s = f.readline()
         continue

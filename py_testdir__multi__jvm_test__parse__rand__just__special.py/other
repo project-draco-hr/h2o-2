@@ -1,0 +1,12 @@
+import unittest, random, sys, time, os
+sys.path.extend(['.', '..', 'py'])
+import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i, h2o_exec as h2e
+import codecs
+print "apparently need to have at least one normal character otherwise the parse doesn't work right"
+print 'just use the special ascii chars that h2o responds to'
+choices = 'eE.120gGfFx@#,;\t \x01'
+choices += "'"
+choices += '"'
+ordinalChoices = [ord(choices[i]) for i in range(len(choices))]
+if (__name__ == '__main__'):
+    h2o.unit_main()

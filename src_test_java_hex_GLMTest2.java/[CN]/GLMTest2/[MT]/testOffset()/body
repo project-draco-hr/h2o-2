@@ -1,0 +1,25 @@
+{
+  Key parsed=Key.make("prostate_parsed");
+  Key modelKey=Key.make("prostate_model");
+  GLMModel model=null;
+  File f=TestUtil.find_test_file("smalldata/glm_test/prostate_cat_replaced.csv");
+  Frame fr=getFrameForFile(parsed,"smalldata/glm_test/prostate_cat_replaced.csv",new String[]{"ID"},"CAPSULE");
+  try {
+    String[] cfs1=new String[]{"AGE","DPROS","DCAPS","PSA","VOL","GLEASON"};
+    double[] vals=new double[]{1,2.31296,3.47783,0.10842,-0.08657,2.90452};
+    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source(fr,fr.vec("CAPSULE"),false,true,fr.vec("AGE")),Family.binomial).fork().get();
+    model=DKV.get(modelKey).get();
+    Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
+    testHTML(model);
+    HashMap<String,Double> coefs=model.coefficients();
+    for (int i=0; i < cfs1.length; ++i)     assertEquals(vals[i],coefs.get(cfs1[i]),1e-4);
+    GLMValidation val=model.validation();
+    assertEquals(2015,model.null_validation.residualDeviance(),1e-1);
+    assertEquals(1516,val.residualDeviance(),1e-1);
+    assertEquals(1532,val.aic(),1e-1);
+  }
+  finally {
+    fr.delete();
+    if (model != null)     model.delete();
+  }
+}

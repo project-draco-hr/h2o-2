@@ -1,4 +1,4 @@
-def verify_cloud_size(nodeList=None, verbose=False, timeoutSecs=10, ignoreHealth=False):
+def verify_cloud_size(nodeList=None, expectedCloudName=None, verbose=False, timeoutSecs=10, ignoreHealth=False):
     if (not nodeList):
         nodeList = nodes
     expectedSize = len(nodeList)
@@ -6,6 +6,7 @@ def verify_cloud_size(nodeList=None, verbose=False, timeoutSecs=10, ignoreHealth
     cloudSizes = [c['cloud_size'] for c in cloudStatus]
     cloudConsensus = [c['consensus'] for c in cloudStatus]
     cloudHealthy = [c['cloud_healthy'] for c in cloudStatus]
+    cloudName = [c['cloud_name'] for c in cloudStatus]
     if (not all(cloudHealthy)):
         msg = ('Some node reported cloud_healthy not true: %s' % cloudHealthy)
         if (not ignoreHealth):
@@ -27,4 +28,11 @@ def verify_cloud_size(nodeList=None, verbose=False, timeoutSecs=10, ignoreHealth
         sizeStr = ','.join(map(str, cloudSizes))
         if (s != expectedSize):
             raise Exception(('Inconsistent cloud size.' + ('nodeList report size: %s consensus: %s instead of %d.' % (sizeStr, consensusStr, expectedSize))))
+    if expectedCloudName:
+        for (i, cn) in enumerate(cloudName):
+            if (cn != expectedCloudName):
+                print 'node %s has the wrong cloud name: %s expectedCloudName: %s.'
+                print 'tearing cloud down'
+                tear_down_cloud(nodeList=nodeList, sandboxIgnoreErrors=False)
+                raise Exception(('node %s has the wrong cloud name: %s expectedCloudName: %s' % (i, cn, expectedCloudName)))
     return (sizeStr, consensusStr, expectedSize)

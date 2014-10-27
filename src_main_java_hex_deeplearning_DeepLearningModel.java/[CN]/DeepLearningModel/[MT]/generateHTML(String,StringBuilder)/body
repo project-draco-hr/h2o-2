@@ -209,7 +209,7 @@
         samples[i]=errors[i].training_samples;
       }
       new D3Plot(samples,err,"training samples","classification error","classification error on training data").generate(sb);
-      if (get_params().validation != null) {
+      if (error.validation) {
         for (int i=0; i < err.length; ++i) {
           err[i]=(float)errors[i].valid_err;
         }
@@ -224,7 +224,7 @@
         samples[i]=errors[i + 1].training_samples;
       }
       new D3Plot(samples,err,"training samples","MSE","regression error on training data").generate(sb);
-      if (get_params().validation != null) {
+      if (error.validation) {
         for (int i=0; i < err.length; ++i) {
           err[i]=(float)errors[i + 1].valid_mse;
         }

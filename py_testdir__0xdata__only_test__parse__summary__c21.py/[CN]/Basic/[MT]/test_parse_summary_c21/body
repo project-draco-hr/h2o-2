@@ -1,0 +1,21 @@
+def test_parse_summary_c21(self):
+    importFolderPath = '/mnt/0xcustomer-datasets/c21'
+    timeoutSecs = 300
+    csvPathname_train = (importFolderPath + '/persona_clean_deep.tsv.zip')
+    hex_key = 'train.hex'
+    parseResult = h2i.import_parse(path=csvPathname_train, hex_key=hex_key, timeoutSecs=timeoutSecs)
+    inspect = h2o_cmd.runInspect(key=hex_key)
+    missingValuesList = h2o_cmd.infoFromInspect(inspect, csvPathname_train)
+    numCols = inspect['numCols']
+    numRows = inspect['numRows']
+    rSummary = h2o_cmd.runSummary(key=hex_key, rows=numRows, cols=numCols)
+    h2o_cmd.infoFromSummary(rSummary)
+    csvPathname_test = (importFolderPath + '/persona_clean_deep.tsv.zip')
+    validation_key = 'test.hex'
+    parseResult = h2i.import_parse(path=csvPathname_test, hex_key=validation_key, timeoutSecs=timeoutSecs)
+    inspect = h2o_cmd.runInspect(key=hex_key)
+    missingValuesList = h2o_cmd.infoFromInspect(inspect, csvPathname_test)
+    numCols = inspect['numCols']
+    numRows = inspect['numRows']
+    rSummary = h2o_cmd.runSummary(key=hex_key, rows=numRows, cols=numCols)
+    h2o_cmd.infoFromSummary(rSummary)

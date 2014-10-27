@@ -1,8 +1,0 @@
-import unittest
-import random, sys, time
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_hosts, h2o_browse as h2b, h2o_import as h2i, h2o_exec as h2e
-zeroList = ['Result0 = 0']
-exprList = ['Result<n>.hex = log(<keyX>[<col1>])', 'Result<n>.hex = randomBitVector(19,0,123) + Result<n-1>.hex', 'Result<n>.hex = randomFilter(<keyX>,<col1>,<row>)', 'Result<n>.hex = factor(<keyX>[<col1>])', 'Result<n>.hex = slice(<keyX>[<col1>],<row>)', 'Result<n>.hex = colSwap(<keyX>,<col1>,(<keyX>[2]==0 ? 54321 : 54321))', 'Result<n>.hex = <keyX>[<col1>]', 'Result<n>.hex = min(<keyX>[<col1>])', 'Result<n>.hex = max(<keyX>[<col1>]) + Result<n-1>.hex', 'Result<n>.hex = mean(<keyX>[<col1>]) + Result<n-1>.hex', 'Result<n>.hex = sum(<keyX>[<col1>]) + Result.hex']
-if (__name__ == '__main__'):
-    h2o.unit_main()

@@ -1,0 +1,15 @@
+{
+  final boolean use_start_column=(start_column != null);
+  final boolean use_weights_column=(weights_column != null);
+  final int x_ncol=x_columns.length;
+  int ncol=x_ncol + 2;
+  if (use_weights_column)   ncol++;
+  if (use_start_column)   ncol++;
+  final String[] names=new String[ncol];
+  for (int j=0; j < x_ncol; ++j)   names[j]=source.names()[x_columns[j]];
+  if (use_weights_column)   names[x_ncol]=source.names()[source.find(weights_column)];
+  if (use_start_column)   names[ncol - 3]=source.names()[source.find(start_column)];
+  names[ncol - 2]=source.names()[source.find(stop_column)];
+  names[ncol - 1]=source.names()[source.find(event_column)];
+  return source.subframe(names);
+}

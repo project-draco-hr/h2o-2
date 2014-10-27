@@ -1,0 +1,15 @@
+{
+  if (!env.isAry()) {
+    throw new IllegalArgumentException("toupper only operates on a single vector!");
+  }
+  Frame fr=env.popAry();
+  if (fr.numCols() != 1)   throw new IllegalArgumentException("toupper only takes a single column of data. Got " + fr.numCols() + " columns.");
+  String skey=env.key();
+  String[] new_dom=fr.anyVec().domain().clone();
+  for (int i=0; i < new_dom.length; ++i)   new_dom[i]=new_dom[i].toUpperCase(Locale.ENGLISH);
+  Frame fr2=new Frame(fr._names,fr.vecs());
+  fr2.anyVec()._domain=new_dom;
+  env.subRef(fr,skey);
+  env.pop();
+  env.push(fr2);
+}

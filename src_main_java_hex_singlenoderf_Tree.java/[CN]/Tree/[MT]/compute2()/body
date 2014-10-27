@@ -23,7 +23,8 @@
     _stats=null;
     if (_jobKey != null && !Job.isRunning(_jobKey))     throw new Job.JobCancelledException();
     Key tkey=toKey();
-    Key dtreeKey=toCompressedKey();
+    Key dtreeKey=null;
+    if (_score_pojo)     dtreeKey=toCompressedKey();
     appendKey(_modelKey,tkey,dtreeKey,_verbose > 10 ? _tree.toString(new StringBuilder(""),Integer.MAX_VALUE).toString() : "",_data_id);
     StringBuilder sb=new StringBuilder("[RF] Tree : ").append(_data_id + 1);
     sb.append(" d=").append(_tree.depth()).append(" leaves=").append(_tree.leaves()).append(" done in ").append(timer).append('\n');

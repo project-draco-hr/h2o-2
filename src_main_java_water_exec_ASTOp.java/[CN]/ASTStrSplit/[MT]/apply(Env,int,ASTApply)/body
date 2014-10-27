@@ -1,0 +1,30 @@
+{
+  String split=env.popStr();
+  Frame fr=env.ary(-1);
+  if (fr.numCols() != 1)   throw new IllegalArgumentException("strsplit requires a single column.");
+  split=split.isEmpty() ? "" : split;
+  final String[] old_domains=fr.anyVec().domain();
+  final String[][] new_domains=newDomains(old_domains,split);
+  final String[] col_names=new String[new_domains.length];
+  for (int i=1; i <= col_names.length; ++i)   col_names[i - 1]="C" + i;
+  final String regex=split;
+  Frame fr2=new MRTask2(){
+    @Override public void map(    Chunk[] cs,    NewChunk[] ncs){
+      Chunk c=cs[0];
+      for (int i=0; i < c._len; ++i) {
+        int idx=(int)c.at0(i);
+        String s=old_domains[idx];
+        String[] ss=s.split(regex);
+        int cnt=0;
+        for (int j=0; j < ss.length; ++j) {
+          int n_idx=Arrays.asList(new_domains[cnt]).indexOf(ss[j]);
+          if (n_idx == -1)           ncs[cnt++].addNA();
+ else           ncs[cnt++].addNum(n_idx);
+        }
+        if (cnt < ncs.length)         for (; cnt < ncs.length; ++cnt)         ncs[cnt].addNA();
+      }
+    }
+  }
+.doAll(col_names.length,fr).outputFrame(col_names,new_domains);
+  env.poppush(2,fr2,null);
+}

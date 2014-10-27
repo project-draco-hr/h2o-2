@@ -2,4 +2,4 @@
 def setUpClass(cls):
     print 'setUpClass'
     h2o.build_cloud_with_json()
-    h2o.stabilize_cloud(h2o.nodes[0], node_count=len(h2o.nodes), timeoutSecs=90)
+    h2o.stabilize_cloud(h2o.nodes[0], h2o.nodes, timeoutSecs=90)

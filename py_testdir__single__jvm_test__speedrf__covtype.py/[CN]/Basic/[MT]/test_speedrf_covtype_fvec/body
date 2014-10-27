@@ -53,7 +53,49 @@ def test_speedrf_covtype_fvec(self):
             rfResult = h2o_cmd.runSpeeDRF(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, noPoll=True, **kwargs)
             trainElapsed = (time.time() - start)
             print 'rf train end', i, 'on', csvTrainPathname, 'took', trainElapsed, 'seconds'
-            h2o_jobs.cancelAllJobs(timeoutSecs=2)
+            if (not lastOne):
+                time.sleep(1)
+                h2o_jobs.cancelAllJobs(timeoutSecs=2)
+        h2o_jobs.pollWaitJobs(timeoutSecs=300)
+        rfView = h2o_cmd.runSpeeDRFView(None, model_key, timeoutSecs=60)
+        print 'rfView:', h2o.dump_json(rfView)
+        rfView['drf_model'] = rfView.pop('speedrf_model')
+        rf_model = rfView['drf_model']
+        cms = rf_model['cms']
+        ntrees = rf_model['N']
+        errs = rf_model['errs']
+        N = rf_model['N']
+        varimp = rf_model['varimp']
+        treeStats = rf_model['treeStats']
+        if (not treeStats):
+            raise Exception(('treeStats not right?: %s' % h2o.dump_json(treeStats)))
+        if (('minLeaves' not in treeStats) or (not treeStats['minLeaves'])):
+            raise Exception(('treeStats seems to be missing minLeaves %s' % h2o.dump_json(treeStats)))
+        print 'maxDepth:', treeStats['maxDepth']
+        print 'maxLeaves:', treeStats['maxLeaves']
+        print 'minDepth:', treeStats['minDepth']
+        print 'minLeaves:', treeStats['minLeaves']
+        print 'meanLeaves:', treeStats['meanLeaves']
+        print 'meanDepth:', treeStats['meanDepth']
+        print 'errs[0]:', errs[0]
+        print 'errs[-1]:', errs[(-1)]
+        print 'errs:', errs
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView)
+        print 'classErrorPctList:', classErrorPctList
+        self.assertEqual(len(classErrorPctList), 7, 'Should be 7 output classes, so should have 7 class error percentages from a reasonable predict')
+        predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=data_key)
+        eList.append(classErrorPctList[4])
+        fList.append(trainElapsed)
+        if DO_PLOT:
+            if (TRY == 'max_depth'):
+                xLabel = 'max_depth'
+            elif (TRY == 'ntrees'):
+                xLabel = 'ntrees'
+            elif (TRY == 'nbins'):
+                xLabel = 'nbins'
+            else:
+                raise Exception(('huh? %s' % TRY))
+            xList.append(paramDict[xLabel])
     if DO_PLOT:
         eLabel = 'class 4 pctWrong'
         fLabel = 'trainElapsed'

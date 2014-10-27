@@ -1,0 +1,7 @@
+def write_syn_dataset(csvPathname, dataset):
+    dsf = codecs.open(csvPathname, encoding='utf-8', mode='w+')
+    encoded = dataset.encode('utf-8')
+    print 'utf8:', repr(encoded), type(encoded)
+    print 'str or utf8:', repr(dataset), type(dataset)
+    dsf.write(dataset)
+    dsf.close()

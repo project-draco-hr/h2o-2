@@ -1,0 +1,70 @@
+def rf_covtype_train_oobe(self, csvFilename, checkExpectedResults=True, expectedAuc=0.5):
+    importFolderPath = 'standard'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    hex_key = (csvFilename + '.hex')
+    parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=180)
+    inspect = h2o_cmd.runInspect(key=parseResult['destination_key'])
+    print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    numCols = inspect['numCols']
+    numRows = inspect['numRows']
+    pct10 = int((numRows * 0.1))
+    rowsForPct = [(i * pct10) for i in range(0, 11)]
+    last10 = (numRows - rowsForPct[9])
+    rowsForPct[10] = numRows
+    rowsForPct[0] = rowsForPct[10]
+    expectTrainPctRightList = [0, 85.16, 88.45, 90.24, 91.27, 92.03, 92.64, 93.11, 93.48, 93.79]
+    expectScorePctRightList = [0, 88.81, 91.72, 93.06, 94.02, 94.52, 95.09, 95.41, 95.77, 95.78]
+    actualTrainPctRightList = [0]
+    actualScorePctRightList = [0]
+    trial = 0
+    for rowPct in [0.9]:
+        trial += 1
+        rowsToUse = rowsForPct[(trial % 10)]
+        resultKey = ((('r_' + csvFilename) + '_') + str(trial))
+        dataKeyTrain = 'rTrain.hex'
+        dataKeyTest = 'rTest.hex'
+        response = 'C55'
+        h2o_cmd.createTestTrain(hex_key, dataKeyTrain, dataKeyTest, trainPercent=90, outputClass=4, outputCol=(numCols - 1), changeToBinomial=(not DO_MULTINOMIAL))
+        sliceResult = {'destination_key': dataKeyTrain, }
+        kwargs = paramDict.copy()
+        kwargs['destination_key'] = ((('model_' + csvFilename) + '_') + str(trial))
+        timeoutSecs = (30 + (kwargs['ntrees'] * 20))
+        start = time.time()
+        rfv = h2o_cmd.runRF(parseResult=sliceResult, timeoutSecs=timeoutSecs, validation=dataKeyTest, **kwargs)
+        elapsed = (time.time() - start)
+        print 'RF end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+        (error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfv, **kwargs)
+        oobeTrainPctRight = (100 - error)
+        if checkExpectedResults:
+            self.assertAlmostEqual(oobeTrainPctRight, expectTrainPctRightList[trial], msg=('OOBE: pct. right for %s pct. training not close enough %6.2f %6.2f' % ((trial * 10), oobeTrainPctRight, expectTrainPctRightList[trial])), delta=ALLOWED_DELTA)
+        actualTrainPctRightList.append(oobeTrainPctRight)
+        print 'Now score on the last 10%. Note this is silly if we trained on 100% of the data'
+        print 'Or sorted by output class, so that the last 10% is the last few classes'
+        rf_model = rfv['drf_model']
+        used_trees = rf_model['N']
+        data_key = rf_model['_dataKey']
+        model_key = rf_model['_key']
+        rfvScoring = h2o_cmd.runScore(dataKey=dataKeyTest, modelKey=model_key, vactual=response, vpredict=1, expectedAuc=expectedAuc)
+        print h2o.dump_json(rfvScoring)
+        h2o_rf.simpleCheckRFScore(rfv=rfvScoring, **kwargs)
+        print 'hello7'
+        (error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFScore(rfv=rfvScoring, **kwargs)
+        fullScorePctRight = (100 - error)
+        h2o.nodes[0].generate_predictions(model_key=model_key, data_key=dataKeyTest)
+        if checkExpectedResults:
+            self.assertAlmostEqual(fullScorePctRight, expectScorePctRightList[trial], msg=('Full: pct. right for scoring after %s pct. training not close enough %6.2f %6.2f' % ((trial * 10), fullScorePctRight, expectScorePctRightList[trial])), delta=ALLOWED_DELTA)
+        actualScorePctRightList.append(fullScorePctRight)
+        print 'Trial #', trial, 'completed', ('using %6.2f' % ((rowsToUse * 100.0) / numRows)), 'pct. of all rows'
+    actualDelta = [abs((a - b)) for (a, b) in zip(expectTrainPctRightList, actualTrainPctRightList)]
+    niceFp = ['{0:0.2f}'.format(i) for i in actualTrainPctRightList]
+    print 'maybe should update with actual. Remove single quotes'
+    print 'actualTrainPctRightList =', niceFp
+    niceFp = ['{0:0.2f}'.format(i) for i in actualDelta]
+    print 'actualDelta =', niceFp
+    actualDelta = [abs((a - b)) for (a, b) in zip(expectScorePctRightList, actualScorePctRightList)]
+    niceFp = ['{0:0.2f}'.format(i) for i in actualScorePctRightList]
+    print 'maybe should update with actual. Remove single quotes'
+    print 'actualScorePctRightList =', niceFp
+    niceFp = ['{0:0.2f}'.format(i) for i in actualDelta]
+    print 'actualDelta =', niceFp
+    return rfvScoring
