@@ -12,7 +12,8 @@
   for (int j=0; j < nums.length; ++j)   sumWeightedNumX[j]+=weight * nums[j];
   double logRisk=0;
   for (int j=0; j < ncats; ++j)   logRisk+=_beta[cats[j]];
-  for (int j=0; j < nums.length; ++j)   logRisk+=nums[j] * _beta[numStart + j];
+  for (int j=0; j < nums.length - _n_offsets; ++j)   logRisk+=nums[j] * _beta[numStart + j];
+  for (int j=nums.length - _n_offsets; j < nums.length; ++j)   logRisk+=nums[j];
   final double risk=weight * Math.exp(logRisk);
   logRisk*=weight;
   if (event > 0) {
@@ -30,7 +31,7 @@
     sizeRiskSet[t2]+=weight;
     rcumsumRisk[t2]+=risk;
   }
-  final int ntotal=ncats + nums.length;
+  final int ntotal=ncats + (nums.length - _n_offsets);
   final int numStartIter=numStart - ncats;
   for (int jit=0; jit < ntotal; ++jit) {
     final boolean jIsCat=jit < ncats;
