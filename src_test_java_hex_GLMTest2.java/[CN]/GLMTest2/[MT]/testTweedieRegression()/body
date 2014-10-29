@@ -1,7 +1,7 @@
 {
-  Key raw=Key.make("gaussian_test_data_raw");
-  Key parsed=Key.make("gaussian_test_data_parsed");
-  Key modelKey=Key.make("gaussian_test");
+  Key raw=Key.make("tweedie_test_data_raw");
+  Key parsed=Key.make("tweedie_test_data_parsed");
+  Key modelKey=Key.make("tweedie_test");
   Frame fr=null;
   GLMModel model=null;
   try {
@@ -11,7 +11,7 @@
     double[] intercepts=new double[]{3.643,1.318,9.154};
     double[] xs=new double[]{-0.260,-0.0284,-0.853};
     for (int i=0; i < powers.length; ++i) {
-      GLM2 glm=new GLM2("GLM test of gaussian(linear) regression.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.tweedie,Link.family_default,0,true);
+      GLM2 glm=new GLM2("GLM test of tweedie regression.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.tweedie,Link.family_default,0,true);
       glm.setTweediePower(powers[i]);
       glm.setLambda(0);
       glm.max_iter=1000;

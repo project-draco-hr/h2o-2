@@ -7,7 +7,7 @@
   }
  else   if (_noffsets > 0) {
     fullBeta=Arrays.copyOf(fullBeta,fullBeta.length + _noffsets);
-    fullBeta[fullBeta.length - 1]=fullBeta[fullBeta.length - 1 - _noffsets];
+    fullBeta[fullBeta.length - 1]=fullBeta[fullBeta.length - (has_intercept ? 1 : 0) - _noffsets];
   }
   if (_noffsets > 0) {
     for (int i=fullBeta.length - 1 - _noffsets; i < fullBeta.length - 1; ++i)     fullBeta[i]=1;
