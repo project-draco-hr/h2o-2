@@ -2,9 +2,9 @@
   Arrays.fill(z,0);
   if (_lambda > 0 || _addedL2 > 0)   gram.addDiag(_lambda * (1 - _alpha) + _addedL2);
   if (_alpha > 0 && _lambda > 0)   gram.addDiag(rho);
-  if (_proximalPenalty > 0 && _wgiven != null) {
-    gram.addDiag(_proximalPenalty,true);
-    for (int i=0; i < xy.length; ++i)     xy[i]+=_proximalPenalty * _wgiven[i];
+  if (_wgiven != null) {
+    gram.addDiag(_proximalPenalties);
+    for (int i=0; i < xy.length; ++i)     xy[i]+=_proximalPenalties[i] * _wgiven[i];
   }
   int attempts=0;
   long t1=System.currentTimeMillis();

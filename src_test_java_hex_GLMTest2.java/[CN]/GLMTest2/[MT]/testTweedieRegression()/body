@@ -15,7 +15,7 @@
       glm.setTweediePower(powers[i]);
       glm.setLambda(0);
       glm.max_iter=1000;
-      glm.fork().get();
+      glm.doInit().fork().get();
       model=DKV.get(modelKey).get();
       testHTML(model);
       HashMap<String,Double> coefs=model.coefficients();

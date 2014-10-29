@@ -7,7 +7,7 @@
     String[] ignores=new String[]{"name"};
     String response="power (hp)";
     fr=getFrameForFile(parsed,"smalldata/cars.csv",ignores,response);
-    new GLM2("GLM test on cars.",Key.make(),modelKey,new Source(fr,fr.lastVec(),true),Family.poisson).fork().get();
+    new GLM2("GLM test on cars.",Key.make(),modelKey,new Source(fr,fr.lastVec(),true),Family.poisson).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     testHTML(model);
     HashMap<String,Double> coefs=model.coefficients();
@@ -16,14 +16,14 @@
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls1[i],coefs.get(cfs1[i]),1e-4);
     double[] vls2=new double[]{8.992e-03,1.818e-04,-1.125e-04,1.505e-06,-1.284e-06,4.510e-04,-7.254e-05};
     model.delete();
-    new GLM2("GLM test on cars.",Key.make(),modelKey,new Source(fr,fr.lastVec(),true),Family.gamma).fork().get();
+    new GLM2("GLM test on cars.",Key.make(),modelKey,new Source(fr,fr.lastVec(),true),Family.gamma).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     testHTML(model);
     coefs=model.coefficients();
     for (int i=0; i < cfs1.length; ++i)     assertEquals(vls2[i],coefs.get(cfs1[i]),1e-4);
     model.delete();
     double[] vls3=new double[]{166.95862,-0.00531,-2.46690,0.12635,0.02159,-4.66995,-0.85724};
-    new GLM2("GLM test on cars.",Key.make(),modelKey,new Source(fr,fr.lastVec(),true),Family.gaussian).fork().get();
+    new GLM2("GLM test on cars.",Key.make(),modelKey,new Source(fr,fr.lastVec(),true),Family.gaussian).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     testHTML(model);
     coefs=model.coefficients();

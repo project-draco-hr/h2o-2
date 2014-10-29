@@ -11,7 +11,7 @@
   try {
     String[] cfs1=new String[]{"AGE","DPROS","DCAPS","PSA","VOL","GLEASON"};
     double[] vals=new double[]{1,2.31296,3.47783,0.10842,-0.08657,2.90452};
-    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source(fr,fr.vec("CAPSULE"),false,true,fr.vec("AGE")),Family.binomial).fork().get();
+    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source(fr,fr.vec("CAPSULE"),false,true,fr.vec("AGE")),Family.binomial).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
     testHTML(model);
