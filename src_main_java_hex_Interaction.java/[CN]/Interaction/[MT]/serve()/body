@@ -2,6 +2,7 @@
   try {
     source.read_lock(self());
     if (factors.length == 0)     throw new IllegalArgumentException("factors must be non-empty.");
+    if (pairwise && factors.length < 3)     Log.info("Ignoring the pairwise option, requires 3 or more factors.");
     for (    int v : factors) {
       if (!source.vecs()[v].isEnum()) {
         throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");

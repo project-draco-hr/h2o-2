@@ -1,8 +1,11 @@
 {
   n=source.numRows();
   data_info=dinfo;
-  final int n_coef=data_info.fullN();
-  coef_names=data_info.coefNames();
+  final int n_offsets=(parameters.offset_columns == null) ? 0 : parameters.offset_columns.length;
+  final int n_coef=data_info.fullN() - n_offsets;
+  final String[] coefNames=data_info.coefNames();
+  coef_names=new String[n_coef];
+  System.arraycopy(coefNames,0,coef_names,0,n_coef);
   coef=MemoryManager.malloc8d(n_coef);
   exp_coef=MemoryManager.malloc8d(n_coef);
   exp_neg_coef=MemoryManager.malloc8d(n_coef);
@@ -11,6 +14,11 @@
   gradient=MemoryManager.malloc8d(n_coef);
   hessian=malloc2DArray(n_coef,n_coef);
   var_coef=malloc2DArray(n_coef,n_coef);
+  x_mean_cat=MemoryManager.malloc8d(n_coef - (data_info._nums - n_offsets));
+  x_mean_num=MemoryManager.malloc8d(data_info._nums - n_offsets);
+  mean_offset=MemoryManager.malloc8d(n_offsets);
+  offset_names=new String[n_offsets];
+  System.arraycopy(coefNames,n_coef,offset_names,0,n_offsets);
   final Vec start_column=source.vec(source.numCols() - 3);
   final Vec stop_column=source.vec(source.numCols() - 2);
   min_time=parameters.start_column == null ? (long)stop_column.min() : (long)start_column.min() + 1;

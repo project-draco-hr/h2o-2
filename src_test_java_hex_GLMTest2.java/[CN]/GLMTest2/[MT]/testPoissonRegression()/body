@@ -17,8 +17,8 @@
     new GLM2("GLM test of poisson regression(2).",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.poisson).fork().get();
     model=DKV.get(modelKey).get();
     testHTML(model);
-    assertEquals(0.3396,model.beta()[1],1e-4);
-    assertEquals(0.2565,model.beta()[0],1e-4);
+    assertEquals(0.3396,model.beta()[1],5e-3);
+    assertEquals(0.2565,model.beta()[0],5e-3);
   }
   finally {
     if (fr != null)     fr.delete();
