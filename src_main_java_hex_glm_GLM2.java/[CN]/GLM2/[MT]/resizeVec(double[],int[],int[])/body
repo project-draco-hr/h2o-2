@@ -2,5 +2,5 @@
   if (beta == null || Arrays.equals(activeCols,oldActiveCols))   return beta;
   double[] full=expandVec(beta,oldActiveCols);
   if (activeCols == null)   return full;
-  return contractVec(full,activeCols);
+  return contractVec(full,activeCols,_intercept);
 }

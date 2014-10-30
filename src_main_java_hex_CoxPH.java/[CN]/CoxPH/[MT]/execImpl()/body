@@ -1,6 +1,7 @@
 {
   final DataInfo dinfo=model.data_info;
-  final int n_coef=dinfo.fullN();
+  final int n_offsets=(model.parameters.offset_columns == null) ? 0 : model.parameters.offset_columns.length;
+  final int n_coef=dinfo.fullN() - n_offsets;
   final double[] step=MemoryManager.malloc8d(n_coef);
   final double[] oldCoef=MemoryManager.malloc8d(n_coef);
   final double[] newCoef=MemoryManager.malloc8d(n_coef);
@@ -13,7 +14,7 @@
   final boolean has_weights_column=(model.parameters.weights_column != null);
   for (int i=0; i <= iter_max; ++i) {
     model.iter=i;
-    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,has_start_column,has_weights_column).doAll(dinfo._adaptedFrame);
+    final CoxPHTask coxMR=new CoxPHTask(self(),dinfo,newCoef,model.min_time,n_time,n_offsets,has_start_column,has_weights_column).doAll(dinfo._adaptedFrame);
     final double newLoglik=model.calcLoglik(coxMR);
     if (newLoglik > oldLoglik) {
       if (i == 0)       model.calcCounts(coxMR);
