@@ -4,10 +4,14 @@
   GLMModel model=null;
   File f=TestUtil.find_test_file("smalldata/glm_test/prostate_cat_replaced.csv");
   Frame fr=getFrameForFile(parsed,"smalldata/glm_test/prostate_cat_replaced.csv",new String[]{"ID"},"CAPSULE");
+  Key k=Key.make("rebalanced");
+  H2O.submitTask(new RebalanceDataSet(fr,k,64)).join();
+  fr.delete();
+  fr=DKV.get(k).get();
   try {
     String[] cfs1=new String[]{"AGE","DPROS","DCAPS","PSA","VOL","GLEASON"};
     double[] vals=new double[]{1,2.31296,3.47783,0.10842,-0.08657,2.90452};
-    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source(fr,fr.vec("CAPSULE"),false,fr.vec("AGE")),Family.binomial).fork().get();
+    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source(fr,fr.vec("CAPSULE"),false,true,fr.vec("AGE")),Family.binomial).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
     testHTML(model);

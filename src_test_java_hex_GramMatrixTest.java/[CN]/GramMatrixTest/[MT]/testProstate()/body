@@ -5,7 +5,7 @@
   Frame fr2=null;
   try {
     fr2=ParseDataset2.parse(okey2,new Key[]{ikey2});
-    DataInfo dinfo=new DataInfo(fr2,0,false,DataInfo.TransformType.NONE);
+    DataInfo dinfo=new DataInfo(fr2,0,true,false,DataInfo.TransformType.NONE);
     GramTask gt=new GramTask(null,dinfo,true,false);
     gt.doAll(dinfo._adaptedFrame);
     double[][] res=gt._gram.getXX();

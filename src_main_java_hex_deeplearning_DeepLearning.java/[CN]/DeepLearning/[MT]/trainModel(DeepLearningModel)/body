@@ -77,8 +77,18 @@
     Log.info("Deep Learning model building was cancelled.");
     return model;
   }
+catch (  Throwable t) {
+    t.printStackTrace();
+    model=UKV.get(dest());
+    state=JobState.FAILED;
+    if (model != null) {
+      model.get_params().state=state;
+      Log.info("Deep Learning model building failed.");
+    }
+    return model;
+  }
  finally {
-    if (model != null)     model.unlock(self());
+    if (model != null && DKV.get(model._key) != null)     model.unlock(self());
     unlock_data();
   }
 }

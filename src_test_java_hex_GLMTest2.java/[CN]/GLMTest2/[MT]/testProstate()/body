@@ -7,7 +7,7 @@
   try {
     String[] cfs1=new String[]{"Intercept","AGE","RACE.R2","RACE.R3","DPROS","DCAPS","PSA","VOL","GLEASON"};
     double[] vals=new double[]{-8.14867,-0.01368,0.32337,-0.38028,0.55964,0.49548,0.02794,-0.01104,0.97704};
-    new GLM2("GLM test on prostate.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.binomial).fork().get();
+    new GLM2("GLM test on prostate.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.binomial).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     Assert.assertTrue(model.get_params().state == Job.JobState.DONE);
     testHTML(model);

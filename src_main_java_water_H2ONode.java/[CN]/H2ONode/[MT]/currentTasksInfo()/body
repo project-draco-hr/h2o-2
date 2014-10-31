@@ -7,7 +7,7 @@
     if (rpc._dt instanceof GetTaskInfo)     continue;
     if (i < res.length) {
       DTask dt=rpc._dt;
-      if (dt != null)       res[i++]=new TaskInfo(rpc._dt,e.getKey(),_unique_idx,rpc._computedAndReplied ? (dt._repliedTcp ? task_status.RTCP : task_status.RUDP) : rpc._computed ? task_status.DONE : rpc._cmpStarted > 0 ? task_status.CMP : task_status.INIT,rpc._callCnt);
+      if (dt != null)       res[i++]=new TaskInfo(rpc._dt,e.getKey(),_unique_idx,rpc._computedAndReplied ? (dt._repliedTcp ? task_status.RTCP : task_status.RUDP) : rpc._computed ? task_status.DONE : rpc._cmpStarted > 0 ? task_status.CMP : task_status.INIT,(rpc._callCnt + rpc._ackResendCnt));
     }
   }
   return Arrays.copyOf(res,i);

@@ -8,7 +8,7 @@
     fr=ParseDataset2.parse(parsed,new Key[]{raw});
     double[] vals=new double[]{1.0,1.0};
     Key modelKey=Key.make("gamma_test");
-    new GLM2("GLM test of gamma regression.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.gamma).fork().get();
+    new GLM2("GLM test of gamma regression.",Key.make(),modelKey,new Source(fr,fr.lastVec(),false),Family.gamma).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
     model=DKV.get(modelKey).get();
     testHTML(model);
     for (    double c : model.beta())     assertEquals(1.0,c,1e-4);

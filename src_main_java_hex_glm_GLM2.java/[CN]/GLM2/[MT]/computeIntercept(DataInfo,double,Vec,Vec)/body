@@ -10,9 +10,7 @@
   while ((1e-4 < diff || diff < -1e-4) && ++iter <= 10) {
     icpt=icpt2;
     icpt2=new GLMInterceptTask(_glm,sub,mul,icpt).doAll(offset,response)._icpt;
-    System.out.println("iter = " + iter + ", icpt = "+ icpt+ ", icpt2 = "+ icpt2);
     diff=icpt2 - icpt;
   }
-  System.out.println("intercept = " + icpt);
   return icpt;
 }

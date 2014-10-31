@@ -1,0 +1,8 @@
+{
+  super.cleanup();
+  if (toEnum && _srcDinfo != null) {
+    Futures fs=new Futures();
+    _srcDinfo._adaptedFrame.lastVec().remove(fs);
+    fs.blockForPending();
+  }
+}
