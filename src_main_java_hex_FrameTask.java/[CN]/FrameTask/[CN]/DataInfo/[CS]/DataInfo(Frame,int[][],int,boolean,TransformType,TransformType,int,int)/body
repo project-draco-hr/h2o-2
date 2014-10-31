@@ -37,6 +37,15 @@ _normMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
 _normSub[i]=v.mean();
 }
 break;
+case DESCALE:
+_normSub=null;
+_normMul=MemoryManager.malloc8d(_nums);
+;
+for (int i=0; i < _nums; ++i) {
+Vec v=fr.vec(catLevels.length + i);
+_normMul[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
+}
+break;
 case DEMEAN:
 _normMul=null;
 _normSub=MemoryManager.malloc8d(_nums);
@@ -49,6 +58,8 @@ case NONE:
 _normMul=null;
 _normSub=null;
 break;
+default :
+throw H2O.unimpl();
 }
 }
 _response_transform=response_transform;
@@ -85,7 +96,7 @@ _normRespMul=null;
 _normRespSub=null;
 break;
 default :
-break;
+throw H2O.unimpl();
 }
 }
 _useAllFactorLevels=false;
