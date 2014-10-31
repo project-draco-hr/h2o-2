@@ -8,12 +8,13 @@
         throw new IllegalArgumentException("Column " + source.names()[v] + " is not a factor.");
       }
     }
-    if (target == null) {
-      target=source._key.toString() + ".interaction.";
+    if (destination_key == null) {
+      String target=source._key.toString() + ".interaction.";
       target+="C" + factors[0];
       for (int i=1; i < factors.length; ++i) {
         target+="_C" + factors[i];
       }
+      destination_key=Key.make(target);
     }
     Timer time=new Timer();
     final createInteractions in=new createInteractions(this);
