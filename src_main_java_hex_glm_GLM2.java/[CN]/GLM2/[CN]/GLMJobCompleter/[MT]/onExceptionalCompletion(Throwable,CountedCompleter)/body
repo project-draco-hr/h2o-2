@@ -2,6 +2,7 @@
   if (_cmp.compareAndSet(null,cmp)) {
     _done=true;
     GLM2.this.cancel(t);
+    cleanup();
     if (_grid) {
       _failed=true;
       tryComplete();
