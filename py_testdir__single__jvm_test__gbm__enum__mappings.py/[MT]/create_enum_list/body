@@ -1,6 +1,9 @@
 def create_enum_list(randChars='abcd', maxEnumSize=8, listSize=1000):
     if DO_WITH_INT:
-        enumList = range(listSize)
+        if ENUMLIST:
+            enumList = range(len(ENUMLIST))
+        else:
+            enumList = range(listSize)
     elif ENUMLIST:
         enumList = ENUMLIST
     else:
