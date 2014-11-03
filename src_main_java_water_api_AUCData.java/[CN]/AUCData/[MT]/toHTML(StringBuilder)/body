@@ -11,7 +11,7 @@
     if (my_cms == null)     return false;
     if (idxCriter == null)     return false;
     sb.append("<div>");
-    DocGen.HTML.section(sb,"Scoring for Binary Classification");
+    DocGen.HTML.section(sb,"<a href=\"http://en.wikipedia.org/wiki/Receiver_operating_characteristic\">Scoring for Binary Classification</a>");
     sb.append("\n<script type=\"text/javascript\">");
     sb.append("var cms = [\n");
     for (    hex.ConfusionMatrix cm : _cms) {
@@ -88,9 +88,7 @@
     sb.append("<tr><td><h5>Threshold:</h5></div><select id=\"select\" onchange='show_cm(this.value)'>\n");
     for (int i=0; i < my_cms.length; ++i)     sb.append("\t<option value='" + i + "'"+ (my_thresholds[i] == threshold() ? "selected='selected'" : "")+ ">"+ my_thresholds[i]+ "</option>\n");
     sb.append("</select></td></tr>");
-    sb.append("</td><tr><td id='GainsLiftTable'><h4>Gains/Lift Table</h4>");
-    new GainsLiftTable(response_rates,avg_response_rate).toHTML(sb);
-    sb.append("</tr>");
+    sb.append("</td>");
     sb.append("</table>");
     sb.append("\n<script type=\"text/javascript\">");
     sb.append("function show_cm(i){\n");
