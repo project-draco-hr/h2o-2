@@ -1,8 +1,7 @@
-def test_rf_enums_mappings_fvec(self):
+def test_speedrf_enums_mappings(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    n = 3000
-    tryList = [(n, 3, 'cI', 300), (n, 3, 'cI', 300), (n, 3, 'cI', 300)]
+    tryList = [(ROWS, COLS, 'cI', 300), (ROWS, COLS, 'cI', 300), (ROWS, COLS, 'cI', 300)]
     SEED_FOR_TRAIN = 1234567890
     SEED_FOR_SCORE = 9876543210
     errorHistory = []
@@ -39,9 +38,9 @@ def test_rf_enums_mappings_fvec(self):
         y = colCount
         modelKey = 'enums'
         if SPEEDRF:
-            kwargs = {'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'oobee': 1, 'seed': 123456789, }
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, }
         else:
-            kwargs = {'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'min_rows': 1, 'validation': scoreDataKey, 'seed': 123456789, }
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'min_rows': 1, 'validation': scoreDataKey, 'seed': 123456789, }
         for r in range(4):
             start = time.time()
             if SPEEDRF:

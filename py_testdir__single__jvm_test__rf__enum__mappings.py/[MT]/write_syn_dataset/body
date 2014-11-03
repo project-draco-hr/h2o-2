@@ -1,0 +1,19 @@
+def write_syn_dataset(csvPathname, enumList, rowCount, colCount=1, colSepChar=',', rowSepChar='\n', SEED=12345678):
+    robj = random.Random(SEED)
+    dsf = open(csvPathname, 'w+')
+    for row in range(rowCount):
+        rowData = []
+        rowIndex = []
+        riIndexSum = 0
+        for col in range(colCount):
+            riIndex = robj.randint(0, (len(enumList) - 1))
+            rowData.append(enumList[riIndex])
+            rowIndex.append(riIndex)
+            riIndexSum += riIndex
+        ri = (riIndexSum % MULTINOMIAL)
+        rowData.append(ri)
+        rowDataCsv = (colSepChar.join(map(str, rowData)) + rowSepChar)
+        dsf.write(rowDataCsv)
+    dsf.close()
+    rowIndexCsv = (colSepChar.join(map(str, rowIndex)) + rowSepChar)
+    return rowIndexCsv

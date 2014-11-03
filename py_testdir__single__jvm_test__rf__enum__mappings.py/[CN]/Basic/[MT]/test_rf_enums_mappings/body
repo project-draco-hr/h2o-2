@@ -1,0 +1,64 @@
+def test_rf_enums_mappings(self):
+    h2o.beta_features = True
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    tryList = [(ROWS, COLS, 'cI', 300), (ROWS, COLS, 'cI', 300), (ROWS, COLS, 'cI', 300)]
+    SEED_FOR_TRAIN = 1234567890
+    SEED_FOR_SCORE = 9876543210
+    errorHistory = []
+    enumHistory = []
+    lastcolsTrainHistory = []
+    lastcolsScoreHistory = []
+    for (rowCount, colCount, hex_key, timeoutSecs) in tryList:
+        enumList = create_enum_list(listSize=ENUMS)
+        enumList.reverse()
+        colSepHexString = '2c'
+        colSepChar = colSepHexString.decode('hex')
+        colSepInt = int(colSepHexString, base=16)
+        print 'colSepChar:', colSepChar
+        rowSepHexString = '0a'
+        rowSepChar = rowSepHexString.decode('hex')
+        print 'rowSepChar:', rowSepChar
+        csvFilename = (((('syn_enums_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+        csvScoreFilename = (((('syn_enums_score_' + str(rowCount)) + 'x') + str(colCount)) + '.csv')
+        csvScorePathname = ((SYNDATASETS_DIR + '/') + csvScoreFilename)
+        enumListForScore = enumList
+        print 'Creating random', csvPathname, 'for rf model building'
+        lastcols = write_syn_dataset(csvPathname, enumList, rowCount, colCount, colSepChar=colSepChar, rowSepChar=rowSepChar, SEED=SEED_FOR_TRAIN)
+        lastcolsTrainHistory.append(lastcols)
+        print 'Creating random', csvScorePathname, 'for rf scoring with prior model (using same enum list)'
+        lastcols = write_syn_dataset(csvScorePathname, enumListForScore, rowCount, colCount, colSepChar=colSepChar, rowSepChar=rowSepChar, SEED=SEED_FOR_SCORE)
+        lastcolsScoreHistory.append(lastcols)
+        scoreDataKey = ('score_' + hex_key)
+        parseResult = h2i.import_parse(path=csvScorePathname, schema='put', hex_key=scoreDataKey, timeoutSecs=30, separator=colSepInt)
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=30, separator=colSepInt)
+        print "Parse result['destination_key']:", parseResult['destination_key']
+        print ('\n' + csvFilename)
+        (missingValuesDict, constantValuesDict, enumSizeDict, colTypeDict, colNameDict) = h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=True)
+        y = colCount
+        modelKey = 'enums'
+        if SPEEDRF:
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, }
+        else:
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, 'nbins': 1024, }
+        for r in range(4):
+            start = time.time()
+            if SPEEDRF:
+                rfResult = h2o_cmd.runSpeeDRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+            else:
+                rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+            print 'rf end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+            (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
+            h2o_cmd.runScore(dataKey=scoreDataKey, modelKey=modelKey, vactual=y, vpredict=1, doAUC=(not MULTINOMIAL))
+            errorHistory.append(classification_error)
+            enumHistory.append(enumList)
+        print 'error from all runs on this dataset (with different enum mappings)'
+        print errorHistory
+        for e in enumHistory:
+            print e
+        print 'last row from all train datasets, as integer'
+        for l in lastcolsTrainHistory:
+            print l
+        print 'last row from all score datasets, as integer'
+        for l in lastcolsScoreHistory:
+            print l
