@@ -56,7 +56,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print ("Now printing the right 'best_threshold' %s from '_cms" % best_threshold)
         submodels = glm['glm_model']['submodels']
         cms = submodels[0]['validation']['_cms']
-        self.assertEqual(len(thresholds), len(cms), msg=('thresholds %s and cm %s should be lists of the same size' % (len(thresholds), len(cms))))
+        self.assertEqual(len(thresholds), len(cms), msg=('thresholds %s and cm %s should be lists of the same size. %s' % (len(thresholds), len(cms), thresholds)))
         assert (best_index < len(cms)), ('%s %s' % (best_index, len(cms)))
         cm = cms[best_index]
         print 'cm:', h2o.dump_json(cm['_arr'])
