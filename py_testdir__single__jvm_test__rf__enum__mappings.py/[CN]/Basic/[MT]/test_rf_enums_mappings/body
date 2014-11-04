@@ -38,9 +38,9 @@ def test_rf_enums_mappings(self):
         y = colCount
         modelKey = 'enums'
         if SPEEDRF:
-            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, }
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, 'mtries': 1, }
         else:
-            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, 'nbins': 1024, }
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'min_rows': 1, 'validation': hex_key, 'seed': 123456789, 'nbins': 1024, 'mtries': COLS, }
         for r in range(4):
             start = time.time()
             if SPEEDRF:
