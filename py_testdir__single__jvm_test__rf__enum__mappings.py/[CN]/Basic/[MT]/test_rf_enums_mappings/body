@@ -38,17 +38,25 @@ def test_rf_enums_mappings(self):
         y = colCount
         modelKey = 'enums'
         if SPEEDRF:
-            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'validation': scoreDataKey, 'seed': 123456789, 'mtries': 1, }
+            kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'ntrees': 1, 'max_depth': 100, 'validation': hex_key, 'seed': 123456789, 'mtries': COLS, }
+        elif GBM:
+            kwargs = {'destination_key': modelKey, 'response': y, 'validation': scoreDataKey, 'seed': 123456789, 'ntrees': 1, 'max_depth': 100, 'min_rows': 1, 'classification': 1, }
         else:
             kwargs = {'sample_rate': 0.999, 'destination_key': modelKey, 'response': y, 'classification': 1, 'ntrees': 1, 'max_depth': 100, 'min_rows': 1, 'validation': hex_key, 'seed': 123456789, 'nbins': 1024, 'mtries': COLS, }
-        for r in range(4):
+        for r in range(2):
             start = time.time()
-            if SPEEDRF:
+            if GBM:
+                gbmResult = h2o_cmd.runGBM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+                print 'gbm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+                (classification_error, classErrorPctList, totalScores) = h2o_gbm.simpleCheckGBMView(gbmv=gbmResult)
+            elif SPEEDRF:
                 rfResult = h2o_cmd.runSpeeDRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+                print 'speedrf end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+                (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
             else:
                 rfResult = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
-            print 'rf end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
-            (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
+                print 'rf end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+                (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult)
             h2o_cmd.runScore(dataKey=scoreDataKey, modelKey=modelKey, vactual=y, vpredict=1, doAUC=(not MULTINOMIAL))
             errorHistory.append(classification_error)
             enumHistory.append(enumList)
