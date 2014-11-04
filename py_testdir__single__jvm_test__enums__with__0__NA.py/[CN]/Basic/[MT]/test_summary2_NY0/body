@@ -1,8 +1,8 @@
 def test_summary2_NY0(self):
     h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
-    choicesList = [(' a', ' b', ''), (' a', ' a', ''), (' a', ' b', ' 0'), ('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0'), (' N', ' Y', ' 0'), (' n', ' y', ' 0'), (' F', ' T', ' 0'), (' f', ' t', ' 0')]
-    expectedList = [('a', 'b', ''), ('a', 'a', ''), ('a', 'b', '0'), ('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0'), ('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0')]
+    choicesList = [(' a', ' b', 'NA'), (' a', ' b', '"NA"'), (' a', ' b', ''), (' a', ' a', ''), (' a', ' b', ' 0'), ('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0'), (' N', ' Y', ' 0'), (' n', ' y', ' 0'), (' F', ' T', ' 0'), (' f', ' t', ' 0')]
+    expectedList = [(' a', ' b', ''), (' a', ' b', ''), ('a', 'b', ''), ('a', 'a', ''), ('a', 'b', '0'), ('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0'), ('N', 'Y', '0'), ('n', 'y', '0'), ('F', 'T', '0'), ('f', 't', '0')]
     tryList = [(1000, 5, 'x.hex', choicesList[4], expectedList[4]), (1000, 5, 'x.hex', choicesList[5], expectedList[5]), (1000, 5, 'x.hex', choicesList[6], expectedList[6]), (1000, 5, 'x.hex', choicesList[7], expectedList[7]), (1000, 5, 'x.hex', choicesList[3], expectedList[3]), (1000, 5, 'x.hex', choicesList[2], expectedList[2]), (1000, 5, 'x.hex', choicesList[1], expectedList[1]), (1000, 5, 'x.hex', choicesList[0], expectedList[0])]
     timeoutSecs = 10
     trial = 1
@@ -11,6 +11,7 @@ def test_summary2_NY0(self):
     x = 0
     timeoutSecs = 60
     for (rowCount, colCount, hex_key, choices, expected) in tryList:
+        print 'choices:', choices
         SEEDPERFILE = random.randint(0, sys.maxint)
         x += 1
         csvFilename = (((((('syn_' + 'binary') + '_') + str(rowCount)) + 'x') + str(colCount)) + '.csv')
