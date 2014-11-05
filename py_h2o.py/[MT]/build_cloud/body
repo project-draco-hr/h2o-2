@@ -1,4 +1,6 @@
 def build_cloud(*args, **kwargs):
     global nodes
     nodes = h2o_bc.build_cloud(*args, **kwargs)
+    if kwargs.setdefault('enable_benchmark_log', False):
+        setup_benchmark_log()
     return nodes
