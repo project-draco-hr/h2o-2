@@ -1,6 +1,6 @@
 def log_download(self, logDir=None, timeoutSecs=30, **kwargs):
     if (logDir == None):
-        logDir = LOG_DIR
+        logDir = get_sandbox_name()
     url = self.url('LogDownload.json')
     log(('Start ' + url))
     print '\nDownloading h2o log(s) using:', url
