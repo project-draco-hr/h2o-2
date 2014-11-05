@@ -38,7 +38,7 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     paramsToUse.pop('password')
     paramsToUse.pop('key_filename')
     clean_sandbox()
-    base_port = h2o_bc.get_base_port(base_port=paramsToUse['base_port'])
+    base_port = get_base_port(base_port=paramsToUse['base_port'])
     write_flatfile(node_count=paramsToUse['h2o_per_host'], base_port=base_port, hosts=hosts, rand_shuffle=paramsToUse['rand_shuffle'])
     if (hosts is not None):
         upload_jar_to_remote_hosts(hosts, slow_connection=paramsToUse['slow_connection'])
@@ -49,4 +49,4 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     node_count = paramsToUse['h2o_per_host']
     paramsToUse.pop('h2o_per_host')
     print 'java_heap_GB', paramsToUse['java_heap_GB']
-    h2o.build_cloud(node_count, hosts=hosts, init_sandbox=False, **paramsToUse)
+    build_cloud(node_count, hosts=hosts, init_sandbox=False, **paramsToUse)

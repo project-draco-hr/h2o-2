@@ -1,6 +1,6 @@
 def delete_keys_from_import_result(node=None, pattern=None, importResult=None, timeoutSecs=30):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     deletedCnt = 0
     if ('succeeded' in importResult):
         kDict = importResult['succeeded']

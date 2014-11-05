@@ -1,6 +1,6 @@
 def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     if ('warnings' in rfv):
         warnings = rfv['warnings']
         for w in warnings:
@@ -18,7 +18,7 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         elif ('rf_model' in rfv):
             rf_model = rfv['rf_model']
         else:
-            raise Exception(('no rf_model in rfv? %s' % h2o.dump_json(rfv)))
+            raise Exception(('no rf_model in rfv? %s' % dump_json(rfv)))
         cms = rf_model['cms']
         print 'number of cms:', len(cms)
         print "FIX! need to add reporting of h2o's _perr per class error"
@@ -74,7 +74,7 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         print 'pctRight:', ('%5.2f' % pctRight)
         print 'pctWrong:', ('%5.2f' % pctWrong)
     if checkScoringOnly:
-        h2o.check_sandbox_for_errors()
+        check_sandbox_for_errors()
         classification_error = pctWrong
         return (round(classification_error, 2), classErrorPctList, totalScores)
     sample_rate = kwargs.get('sample_rate', None)
@@ -95,14 +95,14 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         h2o_util.assertApproxEqual(sum(varimp), 0.0, tol=1e-05, msg=("Shouldn't have all 0's in varimp %s" % varimp))
     treeStats = rf_model['treeStats']
     if (not treeStats):
-        raise Exception(('treeStats not right?: %s' % h2o.dump_json(treeStats)))
+        raise Exception(('treeStats not right?: %s' % dump_json(treeStats)))
     data_key = rf_model['_dataKey']
     model_key = rf_model['_key']
     classification_error = pctWrong
     if (not noPrint):
         if (('minLeaves' not in treeStats) or (not treeStats['minLeaves'])):
-            raise Exception(('treeStats seems to be missing minLeaves %s' % h2o.dump_json(treeStats)))
+            raise Exception(('treeStats seems to be missing minLeaves %s' % dump_json(treeStats)))
         print '\n         Leaves: {0} / {1} / {2}\n          Depth: {3} / {4} / {5}\n            Err: {6:0.2f} %\n        '.format(treeStats['minLeaves'], treeStats['meanLeaves'], treeStats['maxLeaves'], treeStats['minDepth'], treeStats['meanDepth'], treeStats['maxDepth'], classification_error)
     dataInspect = h2o_cmd.runInspect(key=data_key)
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return (round(classification_error, 2), classErrorPctList, totalScores)

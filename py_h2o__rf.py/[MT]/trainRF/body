@@ -5,7 +5,7 @@ def trainRF(trainParseResult, scoreParseResult=None, **kwargs):
     else:
         trainResult = h2o_cmd.runRF(parseResult=trainParseResult, **kwargs)
     rftime = (time.time() - start)
-    h2o.verboseprint('RF train results: ', trainResult)
-    h2o.verboseprint('RF computation took {0} sec'.format(rftime))
+    verboseprint('RF train results: ', trainResult)
+    verboseprint('RF computation took {0} sec'.format(rftime))
     trainResult['python_call_timer'] = rftime
     return trainResult

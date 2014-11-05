@@ -1,7 +1,7 @@
 def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, doNormalized=False, **kwargs):
     GLMModel = glm['glm_model']
     if (not GLMModel):
-        raise Exception(("GLMModel didn't exist in the glm response? %s" % h2o.dump_json(glm)))
+        raise Exception(("GLMModel didn't exist in the glm response? %s" % dump_json(glm)))
     warnings = None
     if (('warnings' in GLMModel) and GLMModel['warnings']):
         warnings = GLMModel['warnings']
@@ -33,7 +33,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
         raise Exception(('Convergence issue? GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
     if ('validation' not in submodels1):
-        raise Exception(("Should be a 'validation' key in submodels1: %s" % h2o.dump_json(submodels1)))
+        raise Exception(("Should be a 'validation' key in submodels1: %s" % dump_json(submodels1)))
     validationsList = submodels1['validation']
     validations = validationsList
     n_folds = kwargs.setdefault('n_folds', None)
@@ -59,7 +59,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         self.assertEqual(len(thresholds), len(cms), msg=('thresholds %s and cm %s should be lists of the same size. %s' % (len(thresholds), len(cms), thresholds)))
         assert (best_index < len(cms)), ('%s %s' % (best_index, len(cms)))
         cm = cms[best_index]
-        print 'cm:', h2o.dump_json(cm['_arr'])
+        print 'cm:', dump_json(cm['_arr'])
         predErr = cm['_predErr']
         classErr = cm['_classErr']
         pctWrong = h2o_gbm.pp_cm_summary(cm['_arr'])
@@ -143,5 +143,5 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
             s += abs(float(v))
         self.assertGreater(s, 1e-26, (('sum of abs. value of GLM coefficients/intercept is ' + str(s)) + ', not >= 1e-26'))
     print 'submodels1, run_time (milliseconds):', submodels1['run_time']
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return (warnings, cList, intercept)
