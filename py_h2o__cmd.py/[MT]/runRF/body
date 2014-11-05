@@ -2,6 +2,6 @@ def runRF(node=None, parseResult=None, trees=5, timeoutSecs=20, **kwargs):
     if (not parseResult):
         raise Exception('No parseResult for RF')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     Key = parseResult['destination_key']
     return node.random_forest(Key, trees, timeoutSecs, **kwargs)

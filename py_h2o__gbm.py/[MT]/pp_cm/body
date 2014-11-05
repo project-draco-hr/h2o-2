@@ -8,7 +8,7 @@ def pp_cm(jcm, header=None):
     for line in jcm:
         lineSum = sum(line)
         if ((c < 0) or (c >= len(line))):
-            raise Exception(('Error in h2o_gbm.pp_cm. c: %s line: %s len(line): %s jcm: %s' % (c, line, len(line), h2o.dump_json(jcm))))
+            raise Exception(('Error in h2o_gbm.pp_cm. c: %s line: %s len(line): %s jcm: %s' % (c, line, len(line), dump_json(jcm))))
         print 'c:', c, 'line:', line
         errorSum = (lineSum - line[c])
         if (lineSum > 0):

@@ -1,7 +1,0 @@
-def frame_split(self, timeoutSecs=120, **kwargs):
-    params_dict = {'source': None, 'ratios': None, }
-    browseAlso = kwargs.pop('browseAlso', False)
-    check_params_update_kwargs(params_dict, kwargs, 'frame_split', print_params=True)
-    a = self.__do_json_request('2/FrameSplitPage.json', timeout=timeoutSecs, params=params_dict)
-    verboseprint('\nframe_split result:', dump_json(a))
-    return a

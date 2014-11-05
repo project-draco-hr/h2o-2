@@ -2,13 +2,13 @@ def find_folder_and_filename(bucket, pathWithRegex, schema='put', returnFullPath
     checkPath = True
     giveUpAndSearchLocally = False
     if ((bucket is not None) and re.match('/', pathWithRegex)):
-        h2o.verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
+        verboseprint('You said bucket:', bucket, "so stripping incorrect leading '/' from", pathWithRegex)
         pathWithRegex = pathWithRegex.lstrip('/')
     if (bucket is None):
         bucketPath = ''
     elif (bucket == '.'):
         bucketPath = os.getcwd()
-    elif (h2o.nodes[0].remoteH2O and (schema != 'put') and (os.environ.get('H2O_REMOTE_BUCKETS_ROOT') or h2o.nodes[0].h2o_remote_buckets_root)):
+    elif (h2o_nodes.nodes[0].remoteH2O and (schema != 'put') and (os.environ.get('H2O_REMOTE_BUCKETS_ROOT') or h2o_nodes.nodes[0].h2o_remote_buckets_root)):
         if (((bucket == 'smalldata') or (bucket == 'datasets')) and (schema == 'local')):
             msg1 = "\nWARNING: you're using remote nodes, and 'smalldata' or 'datasets' git buckets, with schema!=put"
             msg2 = "\nThose aren't git pull'ed by the test. Since they are user-maintained, not globally-maintained-by-0xdata,"
@@ -21,7 +21,7 @@ def find_folder_and_filename(bucket, pathWithRegex, schema='put', returnFullPath
                 rootPath = os.environ.get('H2O_REMOTE_BUCKETS_ROOT')
                 print 'Found H2O_REMOTE_BUCKETS_ROOT:', rootPath
             else:
-                rootPath = h2o.nodes[0].h2o_remote_buckets_root
+                rootPath = h2o_nodes.nodes[0].h2o_remote_buckets_root
                 print 'Found h2o_nodes[0].h2o_remote_buckets_root:', rootPath
             bucketPath = os.path.join(rootPath, bucket)
             checkPath = False
@@ -37,8 +37,8 @@ def find_folder_and_filename(bucket, pathWithRegex, schema='put', returnFullPath
         giveUpAndSearchLocally = True
     if giveUpAndSearchLocally:
         username = getpass.getuser()
-        h2oUsername = h2o.nodes[0].username
-        h2o.verboseprint('username:', username, 'h2oUsername:', h2oUsername)
+        h2oUsername = h2o_nodes.nodes[0].username
+        verboseprint('username:', username, 'h2oUsername:', h2oUsername)
         if (bucket == 'datasets'):
             possibleUsers = []
         elif (h2oUsername != username):
@@ -48,21 +48,21 @@ def find_folder_and_filename(bucket, pathWithRegex, schema='put', returnFullPath
         for u in possibleUsers:
             rootPath = os.path.expanduser(('~' + u))
             bucketPath = os.path.join(rootPath, bucket)
-            h2o.verboseprint('Checking bucketPath:', bucketPath, 'assuming home is', rootPath)
+            verboseprint('Checking bucketPath:', bucketPath, 'assuming home is', rootPath)
             if os.path.exists(bucketPath):
-                h2o.verboseprint('search A did find', bucket, 'at', rootPath)
+                verboseprint('search A did find', bucket, 'at', rootPath)
                 break
         else:
             rootPath = os.getcwd()
-            h2o.verboseprint('find_bucket looking upwards from', rootPath, 'for', bucket)
+            verboseprint('find_bucket looking upwards from', rootPath, 'for', bucket)
             levels = 0
             while (not os.path.exists(os.path.join(rootPath, bucket))):
-                h2o.verboseprint("Didn't find", bucket, 'at', rootPath)
+                verboseprint("Didn't find", bucket, 'at', rootPath)
                 rootPath = os.path.split(rootPath)[0]
                 levels += 1
                 if (levels == 6):
                     raise Exception(('unable to find bucket: %s. Maybe missing link in /home/0xdiag or /home/0xcustomer or jenkins ~? or whatever user is running the python or the h2o?' % bucket))
-            h2o.verboseprint('search B did find', bucket, 'at', rootPath)
+            verboseprint('search B did find', bucket, 'at', rootPath)
             bucketPath = os.path.join(rootPath, bucket)
     if (pathWithRegex is None):
         if returnFullPath:
@@ -86,7 +86,7 @@ def find_folder_and_filename(bucket, pathWithRegex, schema='put', returnFullPath
     else:
         folderPath = bucketPath
         tail = pathWithRegex
-    h2o.verboseprint('folderPath:', folderPath, 'tail:', tail)
+    verboseprint('folderPath:', folderPath, 'tail:', tail)
     if returnFullPath:
         return os.path.join(folderPath, tail)
     else:

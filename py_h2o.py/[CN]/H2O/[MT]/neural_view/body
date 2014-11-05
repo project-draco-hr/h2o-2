@@ -1,6 +1,0 @@
-def neural_view(self, model_key, timeoutSecs=300, print_params=False, **kwargs):
-    params_dict = {'destination_key': model_key, }
-    check_params_update_kwargs(params_dict, kwargs, 'nn_view', print_params)
-    a = self.__do_json_request('2/NeuralNetProgress.json', timeout=timeoutSecs, params=params_dict)
-    verboseprint('\nneural_view result:', dump_json(a))
-    return a

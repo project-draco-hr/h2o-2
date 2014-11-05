@@ -4,7 +4,7 @@ def log_iostats(self, initOnly=False):
     DO_IO_RW = True
     DO_IOP = True
     DO_BLOCKED = False
-    node = h2o.nodes[0]
+    node = h2o_nodes.nodes[0]
     stats = node.iostatus()
     histogram = stats['histogram']
 
@@ -54,7 +54,7 @@ def log_iostats(self, initOnly=False):
         totalSockets = len(iopList)
         if (totalSockets == 0):
             print 'WARNING: is something wrong with this io stats response?'
-            print h2o.dump_json(stats)
+            print dump_json(stats)
         logging.critical((('iostats: ' + 'Total sockets: ') + str(totalSockets)))
         if DO_BLOCKED:
             for i in iopList:

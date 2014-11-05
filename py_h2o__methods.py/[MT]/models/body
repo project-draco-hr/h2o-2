@@ -1,0 +1,5 @@
+def models(self, timeoutSecs=10, **kwargs):
+    params_dict = {'key': None, 'find_compatible_frames': 0, 'score_frame': None, }
+    check_params_update_kwargs(params_dict, kwargs, 'models', True)
+    result = self.do_json_request('2/Models', timeout=timeoutSecs, params=params_dict)
+    return result

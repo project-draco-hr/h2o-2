@@ -1,4 +1,4 @@
 def runGLMScore(node=None, key=None, model_key=None, timeoutSecs=20, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     return node.GLMScore(key, model_key, timeoutSecs, **kwargs)

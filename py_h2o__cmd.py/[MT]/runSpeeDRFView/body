@@ -1,4 +1,4 @@
 def runSpeeDRFView(node=None, modelKey=None, timeoutSecs=20, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     return node.speedrf_view(modelKey=modelKey, timeoutSecs=timeoutSecs, **kwargs)

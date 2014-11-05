@@ -1,6 +1,6 @@
 def runGLMView(node=None, modelKey=None, timeoutSecs=300, retryDelaySecs=2, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     if (not modelKey):
         raise Exception('\nNo modelKey was supplied to the glm view!')
     glmView = node.glm_view(modelKey, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs)

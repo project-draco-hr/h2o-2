@@ -11,9 +11,9 @@ def exec_expr_list_across_cols(lenNodes, exprList, keyX, minCol=0, maxCol=54, ti
                 resultKey = ('Result' + str(colX))
             else:
                 resultKey = keyX
-            (resultExec, result) = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs)
-            print '\nexecResult:', h2o.dump_json(resultExec)
-            if h2o.check_sandbox_for_errors():
+            (resultExec, result) = exec_expr(h2o_nodes.nodes[execNode], execExpr, None, timeoutSecs)
+            print '\nexecResult:', dump_json(resultExec)
+            if check_sandbox_for_errors():
                 raise Exception(('Found errors in sandbox stdout or stderr, on trial #%s.' % trial))
         print 'Column #', colX, 'completed\n'
         colResultList.append(result)

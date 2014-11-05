@@ -10,14 +10,14 @@ def predict_and_compare_csvs(model_key, hex_key, predictHexKey, csvSrcOutputPath
         dataKey = hex_key
     h2e.exec_expr(execExpr=(((('Z.hex=' + hex_key) + '[,') + str((y + 1))) + ']'), timeoutSecs=30)
     start = time.time()
-    predict = h2o.nodes[0].generate_predictions(model_key=model_key, data_key=hex_key, destination_key=predictHexKey)
+    predict = h2o_nodes.nodes[0].generate_predictions(model_key=model_key, data_key=hex_key, destination_key=predictHexKey)
     print 'generate_predictions end on ', hex_key, ' took', (time.time() - start), 'seconds'
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     inspect = h2o_cmd.runInspect(key=predictHexKey)
     h2o_cmd.infoFromInspect(inspect, 'predict.hex')
-    h2o.nodes[0].csv_download(src_key='Z.hex', csvPathname=csvSrcOutputPathname)
-    h2o.nodes[0].csv_download(src_key=predictHexKey, csvPathname=csvPredictPathname)
-    h2o.check_sandbox_for_errors()
+    h2o_nodes.nodes[0].csv_download(src_key='Z.hex', csvPathname=csvSrcOutputPathname)
+    h2o_nodes.nodes[0].csv_download(src_key=predictHexKey, csvPathname=csvPredictPathname)
+    check_sandbox_for_errors()
     print 'Do a check of the original output col against predicted output'
     (rowNum1, originalOutput) = compare_csv_at_one_col(csvSrcOutputPathname, msg='Original', colIndex=0, translate=translate, skipHeader=skipSrcOutputHeader)
     (rowNum2, predictOutput) = compare_csv_at_one_col(csvPredictPathname, msg='Predicted', colIndex=0, skipHeader=skipPredictHeader)

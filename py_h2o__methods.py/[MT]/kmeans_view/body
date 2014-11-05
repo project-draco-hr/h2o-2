@@ -1,0 +1,12 @@
+def kmeans_view(self, model=None, timeoutSecs=30, **kwargs):
+    params_dict = {'_modelKey': model, }
+    browseAlso = kwargs.get('browseAlso', False)
+    check_params_update_kwargs(params_dict, kwargs, 'kmeans_view', print_params=True)
+    print '\nKMeans2ModelView params list:', params_dict
+    a = self.do_json_request('2/KMeans2ModelView.json', timeout=timeoutSecs, params=params_dict)
+    verboseprint('\nKMeans2Model View result:', dump_json(a))
+    if (browseAlso | h2o_args.browse_json):
+        print 'Redoing the KMeans2ModelView through the browser, no results saved though'
+        h2b.browseJsonHistoryAsUrlLastMatch('KMeans2ModelView')
+        time.sleep(5)
+    return a

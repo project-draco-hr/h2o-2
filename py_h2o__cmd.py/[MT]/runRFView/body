@@ -1,6 +1,6 @@
 def runRFView(node=None, data_key=None, model_key=None, ntree=None, timeoutSecs=15, retryDelaySecs=2, doSimpleCheck=True, noPrint=False, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     rfView = node.random_forest_view(data_key, model_key, ntree=ntree, timeoutSecs=timeoutSecs, **kwargs)
     if doSimpleCheck:
         h2f.simpleCheckRFView(node, rfView, noPrint=noPrint)

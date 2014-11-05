@@ -1,0 +1,13 @@
+def GLM(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, destination_key=None, **kwargs):
+    parentName = '2/GLM2'
+    a = self.GLM_shared(key, timeoutSecs, retryDelaySecs, initialDelaySecs, parentName=parentName, destination_key=destination_key, **kwargs)
+    if noPoll:
+        return a
+    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+    verboseprint('GLM done:', dump_json(a))
+    browseAlso = kwargs.get('browseAlso', False)
+    if (browseAlso | h2o_args.browse_json):
+        print 'Viewing the GLM result through the browser'
+        h2b.browseJsonHistoryAsUrlLastMatch('GLMProgressPage')
+        time.sleep(5)
+    return a
