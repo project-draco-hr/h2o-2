@@ -1,0 +1,11 @@
+{
+  double result=0.0;
+  double sd_l=(double)sum_l;
+  double sd_r=(double)sum_r;
+  for (int i=0; i < dd_l.length; i++) {
+    double tmp=Math.abs(((double)dd_l[i]) / sd_l - ((double)dd_r[i]) / sd_r);
+    result=result + tmp;
+  }
+  result=result * result;
+  return result;
+}
