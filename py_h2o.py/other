@@ -1,41 +1,19 @@
-import time, os, stat, json, signal, tempfile, shutil, datetime, inspect, threading, getpass
-import requests, psutil, argparse, sys, unittest, glob
-import h2o_browse as h2b, h2o_perf, h2o_util, h2o_cmd, h2o_os_util
-import h2o_sandbox, h2o_print as h2p
-import re, random
-import errno
-import urlparse
-import logging
-import requests, zipfile, StringIO
-from subprocess import Popen, PIPE
-import stat
-browse_disable = True
-browse_json = False
-verbose = False
-ip_from_cmd_line = None
-network_from_cmd_line = None
-config_json = None
-debugger = False
-random_udp_drop = False
-force_tcp = False
-random_seed = None
-beta_features = True
-sleep_at_tear_down = False
-abort_after_import = False
-clone_cloud_json = None
-disable_time_stamp = False
-debug_rest = False
-long_test_case = False
-python_test_name = inspect.stack()[1][1]
-if ip_from_cmd_line:
-    python_cmd_ip = ip_from_cmd_line
-else:
-    python_cmd_ip = get_ip_address()
-python_cmd_args = ''
-python_cmd_line = ''
-python_username = getpass.getuser()
-LOG_DIR = get_sandbox_name()
-global json_url_history
-json_url_history = []
-global nodes
+import h2o_args
+import h2o_bc
+import h2o_nodes
+from h2o_test import get_sandbox_name
+print 'h2o'
 nodes = []
+beta_features = h2o_args.beta_features
+long_test_case = h2o_args.long_test_case
+browse_disable = h2o_args.browse_disable
+verbose = h2o_args.verbose
+abort_after_import = h2o_args.abort_after_import
+python_username = h2o_args.python_username
+python_test_name = h2o_args.python_test_name
+python_cmd_line = h2o_args.python_cmd_line
+LOG_DIR = get_sandbox_name()
+from h2o_bc import decide_if_localhost, touch_cloud, verify_cloud_size
+from h2o_get_ip import get_ip_address
+from h2o_test import make_syn_dir, tmp_file, check_sandbox_for_errors, clean_sandbox, clean_sandbox_stdout_stderr, find_file, dump_json, sleep, spawn_cmd, spawn_cmd_and_wait, spawn_wait, verboseprint, setup_random_seed
+from h2o_args import unit_main

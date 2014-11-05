@@ -9,7 +9,7 @@ def browseJsonHistoryAsUrl(retryDelaySecs=0.25):
                 url = re.sub('.json', '.html', url)
                 print 'browseJsonHistoryAsUrl:', url
                 print 'same, decoded:', urllib.unquote(url)
-                h2o.log(url, comment='From browseJsonHistoryAsUrl')
+                log(url, comment='From browseJsonHistoryAsUrl')
                 webbrowser.open(url, new=0)
                 time.sleep(retryDelaySecs)
                 tabCount += 1

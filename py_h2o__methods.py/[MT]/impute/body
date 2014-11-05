@@ -1,0 +1,7 @@
+def impute(self, timeoutSecs=120, **kwargs):
+    params_dict = {'source': None, 'column': None, 'method': None, 'group_by': None, }
+    browseAlso = kwargs.pop('browseAlso', False)
+    check_params_update_kwargs(params_dict, kwargs, 'impute', print_params=True)
+    a = self.do_json_request('2/Impute.json', timeout=timeoutSecs, params=params_dict)
+    verboseprint('\nimpute result:', dump_json(a))
+    return a

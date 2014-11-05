@@ -85,6 +85,14 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
     elif ((totalScores <= 0) or (totalScores > 5000000000.0)):
         raise Exception('scores in RFView seems wrong. scores:', scoresList)
     varimp = rf_model['varimp']
+    if (('importance' in kwargs) and kwargs['importance']):
+        max_var = varimp['max_var']
+        variables = varimp['variables']
+        varimpSD = varimp['varimpSD']
+        varimp = varimp['varimp']
+        if ((len(varimpSD) != max_var) or (len(varimp) != max_var) or (len(variables) != max_var)):
+            raise Exception(('varimp lists seem to be wrong length: %s %s %s' % (max_var, len(varimpSD), len(varimp), len(variables))))
+        h2o_util.assertApproxEqual(sum(varimp), 0.0, tol=1e-05, msg=("Shouldn't have all 0's in varimp %s" % varimp))
     treeStats = rf_model['treeStats']
     if (not treeStats):
         raise Exception(('treeStats not right?: %s' % h2o.dump_json(treeStats)))

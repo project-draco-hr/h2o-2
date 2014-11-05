@@ -2,6 +2,6 @@ def runNNet(node=None, parseResult=None, timeoutSecs=600, **kwargs):
     if (not parseResult):
         raise Exception('No parseResult for Neural Net')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     data_key = parseResult['destination_key']
     return node.neural_net(data_key=data_key, timeoutSecs=timeoutSecs, **kwargs)

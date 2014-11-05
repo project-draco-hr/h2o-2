@@ -6,8 +6,8 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     paramsToUse = {}
     for (k, v) in allParamsDefault.iteritems():
         paramsToUse[k] = allParamsDefault.setdefault(k, v)
-    if h2o.config_json:
-        configFilename = find_config(h2o.config_json)
+    if h2o_args.config_json:
+        configFilename = find_config(h2o_args.config_json)
     else:
         configFilename = find_config(h2o.default_hosts_file())
     h2o.verboseprint('Loading host config from', configFilename)
@@ -33,15 +33,15 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
             key_filename = paramsToUse['key_filename']
             if key_filename:
                 key_filename = os.path.expanduser(key_filename)
-            hosts.append(h2o.RemoteHost(addr=h, username=paramsToUse['username'], password=paramsToUse['password'], key_filename=key_filename))
+            hosts.append(RemoteHost(addr=h, username=paramsToUse['username'], password=paramsToUse['password'], key_filename=key_filename))
     paramsToUse.pop('ip')
     paramsToUse.pop('password')
     paramsToUse.pop('key_filename')
     h2o.clean_sandbox()
-    base_port = h2o.get_base_port(base_port=paramsToUse['base_port'])
-    h2o.write_flatfile(node_count=paramsToUse['h2o_per_host'], base_port=base_port, hosts=hosts, rand_shuffle=paramsToUse['rand_shuffle'])
+    base_port = h2o_bc.get_base_port(base_port=paramsToUse['base_port'])
+    write_flatfile(node_count=paramsToUse['h2o_per_host'], base_port=base_port, hosts=hosts, rand_shuffle=paramsToUse['rand_shuffle'])
     if (hosts is not None):
-        h2o.upload_jar_to_remote_hosts(hosts, slow_connection=paramsToUse['slow_connection'])
+        upload_jar_to_remote_hosts(hosts, slow_connection=paramsToUse['slow_connection'])
         timeoutSecs = max(60, (8 * (len(hosts) * paramsToUse['h2o_per_host'])))
     else:
         timeoutSecs = 60

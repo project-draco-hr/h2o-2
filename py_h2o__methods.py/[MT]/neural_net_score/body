@@ -1,0 +1,13 @@
+def neural_net_score(self, key, model, timeoutSecs=60, retryDelaySecs=1, initialDelaySecs=5, pollTimeoutSecs=30, noPoll=False, print_params=True, **kwargs):
+    params_dict = {'source': key, 'destination_key': None, 'model': model, 'cols': None, 'ignored_cols': None, 'ignored_col_name': None, 'classification': None, 'response': None, 'max_rows': 0, }
+    check_params_update_kwargs(params_dict, kwargs, 'neural_net_score', print_params)
+    start = time.time()
+    a = self.do_json_request('2/NeuralNetScore.json', timeout=timeoutSecs, params=params_dict)
+    if noPoll:
+        a['python_elapsed'] = (time.time() - start)
+        a['python_%timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)
+        return a
+    verboseprint('\nneural net score result:', dump_json(a))
+    a['python_elapsed'] = (time.time() - start)
+    a['python_%timeout'] = ((a['python_elapsed'] * 100) / timeoutSecs)
+    return a

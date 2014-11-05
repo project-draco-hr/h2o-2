@@ -1,8 +1,0 @@
-def jobs_cancel(self, timeoutSecs=120, **kwargs):
-    params_dict = {'key': None, }
-    browseAlso = kwargs.pop('browseAlso', False)
-    check_params_update_kwargs(params_dict, kwargs, 'jobs_cancel', print_params=True)
-    a = self.__do_json_request('Cancel.json', timeout=timeoutSecs, params=params_dict)
-    verboseprint('\njobs_cancel result:', dump_json(a))
-    print 'Cancelled job:', params_dict['key']
-    return a

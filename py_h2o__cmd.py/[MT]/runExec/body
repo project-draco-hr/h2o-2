@@ -1,6 +1,6 @@
 def runExec(node=None, timeoutSecs=20, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     a = node.exec_query(timeoutSecs, **kwargs)
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return a
