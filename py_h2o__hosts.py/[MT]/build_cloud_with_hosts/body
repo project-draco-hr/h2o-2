@@ -9,8 +9,8 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     if h2o_args.config_json:
         configFilename = find_config(h2o_args.config_json)
     else:
-        configFilename = find_config(h2o.default_hosts_file())
-    h2o.verboseprint('Loading host config from', configFilename)
+        configFilename = find_config(default_hosts_file())
+    verboseprint('Loading host config from', configFilename)
     with open(configFilename, 'rb') as fp:
         hostDict = json.load(fp)
     for (k, v) in hostDict.iteritems():
@@ -20,16 +20,16 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
         paramsToUse[k] = kwargs.setdefault(k, v)
     if paramsToUse['username']:
         paramsToUse['h2o_remote_buckets_root'] = ('/home/' + paramsToUse['username'])
-    h2o.verboseprint('All build_cloud_with_hosts params:', paramsToUse)
+    verboseprint('All build_cloud_with_hosts params:', paramsToUse)
     global hosts
     hosts = []
     if (paramsToUse['ip'] == ['127.0.0.1']):
         hosts = None
     else:
-        h2o.verboseprint('About to RemoteHost, likely bad ip if hangs')
+        verboseprint('About to RemoteHost, likely bad ip if hangs')
         hosts = []
         for h in paramsToUse['ip']:
-            h2o.verboseprint('Connecting to:', h)
+            verboseprint('Connecting to:', h)
             key_filename = paramsToUse['key_filename']
             if key_filename:
                 key_filename = os.path.expanduser(key_filename)
@@ -37,7 +37,7 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     paramsToUse.pop('ip')
     paramsToUse.pop('password')
     paramsToUse.pop('key_filename')
-    h2o.clean_sandbox()
+    clean_sandbox()
     base_port = h2o_bc.get_base_port(base_port=paramsToUse['base_port'])
     write_flatfile(node_count=paramsToUse['h2o_per_host'], base_port=base_port, hosts=hosts, rand_shuffle=paramsToUse['rand_shuffle'])
     if (hosts is not None):
