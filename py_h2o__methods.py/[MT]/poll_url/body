@@ -57,7 +57,7 @@ def poll_url(self, response, timeoutSecs=10, retryDelaySecs=0.5, initialDelaySec
             emsg = (('Exceeded timeoutSecs: %d secs while polling.' % timeoutSecs) + ('status: %s, url: %s?%s' % (status, urlUsed, paramsUsedStr)))
             raise Exception(emsg)
         if benchmarkLogging:
-            cloudPerfH2O.get_log_save(benchmarkLogging)
+            h2o.cloudPerfH2O.get_log_save(benchmarkLogging)
         create_noise = (noise_enable and ((count % 2) == 0))
         if create_noise:
             urlUsed = noiseUrl

@@ -7,7 +7,7 @@ def parse(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDela
     if kwargs.get('header_from_file'):
         kwargs['header'] = 1
     if benchmarkLogging:
-        cloudPerfH2O.get_log_save(initOnly=True)
+        h2o.cloudPerfH2O.get_log_save(initOnly=True)
     a = self.do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
     verboseprint((algo + ' result:'), dump_json(a))
     if noPoll:
