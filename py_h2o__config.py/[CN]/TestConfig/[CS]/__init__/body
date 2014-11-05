@@ -1,0 +1,14 @@
+def __init__(self, testConfig):
+    if (testConfig is None):
+        print '\nEmpty testConfig', testConfig
+        return
+    if ((not isinstance(testConfig, dict)) and (not isinstance(testConfig, list))):
+        print '\ntestConfig:', testConfig
+        raise Exception('Individual testConfig entries should be a list or dict, even if one item. Maybe you need {}?')
+    print testConfig
+    for (k, v) in testConfig.iteritems():
+        print 'testConfig init:', k, v
+        if (v == 'None'):
+            v = None
+        setattr(self, k, v)
+    print 'Created', len(testConfig), 'things for a h2o testConfig'
