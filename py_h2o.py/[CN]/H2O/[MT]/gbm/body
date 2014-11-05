@@ -1,5 +1,5 @@
 def gbm(self, data_key, timeoutSecs=600, retryDelaySecs=1, initialDelaySecs=5, pollTimeoutSecs=30, noPoll=False, print_params=True, **kwargs):
-    params_dict = {'destination_key': None, 'validation': None, 'response': None, 'source': data_key, 'learn_rate': None, 'ntrees': None, 'max_depth': None, 'min_rows': None, 'cols': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'nbins': None, 'classification': None, 'score_each_iteration': None, 'grid_parallelism': None, 'n_folds': None, }
+    params_dict = {'balance_classes': None, 'checkpoint': None, 'classification': None, 'family': None, 'cols': None, 'destination_key': None, 'grid_parallelism': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'importance': None, 'keep_cross_validation_splits': None, 'learn_rate': None, 'max_depth': None, 'min_rows': None, 'n_folds': None, 'nbins': None, 'ntrees': None, 'response': None, 'source': data_key, 'seed': None, 'score_each_iteration': None, 'validation': None, }
     check_params_update_kwargs(params_dict, kwargs, 'gbm', print_params)
     if ('validation' not in kwargs):
         kwargs['validation'] = data_key
