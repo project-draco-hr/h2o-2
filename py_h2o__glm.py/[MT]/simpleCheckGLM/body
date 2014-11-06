@@ -126,9 +126,9 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     print '\nTotal # of coefficients:', len(coefficients_names)
     if ((not allowZeroCoeff) and (colX is not None)):
         absXCoeff = abs(float(coefficients[str(colX)]))
-        self.assertGreater(absXCoeff, 1e-26, ((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)))
+        self.assertGreater(absXCoeff, 1e-26, ((((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)) + '\n') + dump_json(kwargs)))
     absIntercept = abs(float(intercept))
-    self.assertGreater(absIntercept, 1e-26, (("abs. value of GLM coefficients['Intercept'] is " + str(absIntercept)) + ', not >= 1e-26 for Intercept'))
+    self.assertGreater(absIntercept, 1e-26, (((("abs. value of GLM coefficients['Intercept'] is " + str(absIntercept)) + ', not >= 1e-26 for Intercept') + '\n') + dump_json(kwargs)))
     if (len(coefficients) > 0):
         maxKey = max([(abs(coefficients[x]), x) for x in coefficients])[1]
         print 'H2O Largest abs. coefficient value:', maxKey, coefficients[maxKey]
