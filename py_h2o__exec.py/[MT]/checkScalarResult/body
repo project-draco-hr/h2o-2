@@ -1,5 +1,5 @@
 def checkScalarResult(resultExec, resultKey, allowEmptyResult=False, nanOkay=False):
-    h2o.verboseprint('checkScalarResult resultExec:', h2o.dump_json(resultExec))
+    verboseprint('checkScalarResult resultExec:', dump_json(resultExec))
     if ('funstr' not in resultExec):
         emsg = "checkScalarResult: 'funstr' missing"
     if ('result' not in resultExec):
@@ -18,11 +18,11 @@ def checkScalarResult(resultExec, resultKey, allowEmptyResult=False, nanOkay=Fal
         num_rows = resultExec['num_rows']
         cols = resultExec['cols']
     if emsg:
-        print (("\nKey: '" + str(resultKey)) + "' resultExec:\n"), h2o.dump_json(resultExec)
+        print (("\nKey: '" + str(resultKey)) + "' resultExec:\n"), dump_json(resultExec)
         sys.stdout.flush()
         raise Exception(('exec result (resultExec) missing what we expected. Look at json above. ' + emsg))
     if ((cols and ((not num_rows) or (num_rows == 0))) and (not allowEmptyResult)):
-        print 'resultExec[0]:', h2o.dump_json(resultExec)
+        print 'resultExec[0]:', dump_json(resultExec)
         raise Exception((("checkScalarResult says 'cols' exist in exec json response," + (" but num_rows: %s is 0 or None. Is that an expected 'empty' key state?" % num_rows)) + " Use 'allowEmptyResult if so."))
     if (not cols):
         scalar = resultExec['scalar']

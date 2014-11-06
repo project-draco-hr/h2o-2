@@ -2,5 +2,5 @@ def runKMeans(node=None, parseResult=None, timeoutSecs=20, retryDelaySecs=2, **k
     if (not parseResult):
         raise Exception('No parseResult for KMeans')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     return node.kmeans(parseResult['destination_key'], None, timeoutSecs, retryDelaySecs, **kwargs)

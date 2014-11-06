@@ -7,14 +7,14 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
     lastUsedMemBytes = [1 for i in range(64)]
     while busy:
         polls += 1
-        a = h2o.nodes[0].jobs_admin(timeoutSecs=60)
+        a = h2o_nodes.nodes[0].jobs_admin(timeoutSecs=60)
         busy = False
         for j in a['jobs']:
             if ((j['end_time'] == '') and (not (j['cancelled'] or (j['result'].get('val', None) == 'CANCELLED')))):
                 busy = True
-                h2o.verboseprint('Still busy')
+                verboseprint('Still busy')
                 break
-        cloudStatus = h2o.nodes[0].get_cloud(timeoutSecs=timeoutSecs)
+        cloudStatus = h2o_nodes.nodes[0].get_cloud(timeoutSecs=timeoutSecs)
         nodes = cloudStatus['nodes']
         for (i, n) in enumerate(nodes):
             totMemBytes = n['tot_mem_bytes']
@@ -43,7 +43,7 @@ def pollStatsWhileBusy(timeoutSecs=300, pollTimeoutSecs=15, retryDelaySecs=5):
                         pass
         trials += 1
         if ((trials % 5) == 0):
-            h2o.check_sandbox_for_errors()
+            check_sandbox_for_errors()
         time.sleep(retryDelaySecs)
         if ((time.time() - start) > timeoutSecs):
             raise Exception(('Timeout while polling in pollStatsWhileBusy: %s seconds' % timeoutSecs))

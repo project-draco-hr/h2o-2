@@ -1,0 +1,6 @@
+def gbm_grid_view(self, timeoutSecs=300, print_params=False, **kwargs):
+    params_dict = {'job_key': None, 'destination_key': None, }
+    check_params_update_kwargs(params_dict, kwargs, 'gbm_grid_view', print_params)
+    a = self.do_json_request('2/GridSearchProgress.json', timeout=timeoutSecs, params=params_dict)
+    print '\ngbm_grid_view result:', dump_json(a)
+    return a

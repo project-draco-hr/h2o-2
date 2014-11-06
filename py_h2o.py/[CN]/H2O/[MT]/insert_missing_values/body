@@ -1,7 +1,0 @@
-def insert_missing_values(self, timeoutSecs=120, **kwargs):
-    params_dict = {'key': None, 'seed': None, 'missing_fraction': None, }
-    browseAlso = kwargs.pop('browseAlso', False)
-    check_params_update_kwargs(params_dict, kwargs, 'insert_missing_values', print_params=True)
-    a = self.__do_json_request('2/InsertMissingValues.json', timeout=timeoutSecs, params=params_dict)
-    verboseprint('\ninsert_missing_values result:', dump_json(a))
-    return a

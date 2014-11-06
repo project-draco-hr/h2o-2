@@ -1,6 +1,6 @@
 def simpleCheckGBMView(node=None, gbmv=None, noPrint=False, **kwargs):
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     if ('warnings' in gbmv):
         warnings = gbmv['warnings']
         for w in warnings:
@@ -14,7 +14,7 @@ def simpleCheckGBMView(node=None, gbmv=None, noPrint=False, **kwargs):
         if ('gbm_model' in gbmv):
             gbm_model = gbmv['gbm_model']
         else:
-            raise Exception(('no gbm_model in gbmv? %s' % h2o.dump_json(gbmv)))
+            raise Exception(('no gbm_model in gbmv? %s' % dump_json(gbmv)))
         cms = gbm_model['cms']
         print 'number of cms:', len(cms)
         print "FIX! need to add reporting of h2o's _perr per class error"
@@ -78,14 +78,14 @@ def simpleCheckGBMView(node=None, gbmv=None, noPrint=False, **kwargs):
     varimp = gbm_model['varimp']
     treeStats = gbm_model['treeStats']
     if (not treeStats):
-        raise Exception(('treeStats not right?: %s' % h2o.dump_json(treeStats)))
+        raise Exception(('treeStats not right?: %s' % dump_json(treeStats)))
     data_key = gbm_model['_dataKey']
     model_key = gbm_model['_key']
     classification_error = pctWrong
     if (not noPrint):
         if (('minLeaves' not in treeStats) or (not treeStats['minLeaves'])):
-            raise Exception(('treeStats seems to be missing minLeaves %s' % h2o.dump_json(treeStats)))
+            raise Exception(('treeStats seems to be missing minLeaves %s' % dump_json(treeStats)))
         print '\n         Leaves: {0} / {1} / {2}\n          Depth: {3} / {4} / {5}\n            Err: {6:0.2f} %\n        '.format(treeStats['minLeaves'], treeStats['meanLeaves'], treeStats['maxLeaves'], treeStats['minDepth'], treeStats['meanDepth'], treeStats['maxDepth'], classification_error)
     dataInspect = h2o_cmd.runInspect(key=data_key)
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return (round(classification_error, 2), classErrorPctList, totalScores)

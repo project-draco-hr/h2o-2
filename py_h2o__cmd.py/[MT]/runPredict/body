@@ -2,5 +2,5 @@ def runPredict(node=None, data_key=None, model_key=None, timeoutSecs=500, **kwar
     if (not data_key):
         raise Exception('No data_key for run Predict')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     return node.generate_predictions(data_key, model_key, timeoutSecs=timeoutSecs, **kwargs)

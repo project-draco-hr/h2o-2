@@ -2,5 +2,5 @@ def runGLM(node=None, parseResult=None, timeoutSecs=20, retryDelaySecs=2, **kwar
     if (not parseResult):
         raise Exception('No parseResult for GLM')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     return node.GLM(parseResult['destination_key'], timeoutSecs, retryDelaySecs, **kwargs)

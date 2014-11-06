@@ -1,0 +1,6 @@
+def to_enum(self, timeoutSecs=60, **kwargs):
+    params_dict = {'src_key': None, 'column_index': None, }
+    params_dict.update(kwargs)
+    a = self.do_json_request('2/ToEnum2.json', params=params_dict, timeout=timeoutSecs)
+    verboseprint('\n to_int result:', dump_json(a))
+    return a

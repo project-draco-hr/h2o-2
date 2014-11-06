@@ -1,0 +1,31 @@
+import getpass, inspect, sys, argparse, unittest
+from h2o_get_ip import get_ip_address
+print 'h2o_args'
+browse_disable = True
+browse_json = False
+verbose = False
+ip_from_cmd_line = None
+network_from_cmd_line = None
+config_json = None
+debugger = False
+random_udp_drop = False
+force_tcp = False
+random_seed = None
+beta_features = True
+sleep_at_tear_down = False
+abort_after_import = False
+clone_cloud_json = None
+disable_time_stamp = False
+debug_rest = False
+long_test_case = False
+python_cmd_ip = get_ip_address(ipFromCmdLine=ip_from_cmd_line)
+python_cmd_args = ''
+python_cmd_line = ''
+python_username = getpass.getuser()
+python_test_name = 'unknown'
+for s in inspect.stack():
+    if (s[1].startswith('test_') or ('/test_' in s[1])):
+        python_test_name = s[1]
+        break
+if ((python_username == 'jenkins') or (python_username == 'kevin')):
+    print ('    Test: %s' % python_test_name)

@@ -1,0 +1,8 @@
+def log_view(self, timeoutSecs=10, **kwargs):
+    browseAlso = kwargs.pop('browseAlso', False)
+    a = self.do_json_request('LogView.json', timeout=timeoutSecs)
+    verboseprint('\nlog_view result:', dump_json(a))
+    if (browseAlso | h2o_args.browse_json):
+        h2b.browseJsonHistoryAsUrlLastMatch('LogView')
+        time.sleep(3)
+    return a

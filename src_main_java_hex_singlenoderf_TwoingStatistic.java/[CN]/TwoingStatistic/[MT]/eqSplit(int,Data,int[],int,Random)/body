@@ -1,0 +1,24 @@
+{
+  int[] inclDist=new int[d.classes()];
+  int[] exclDist=dist.clone();
+  int bestSplit=-1;
+  double bestFitness=0.0;
+  for (int i=0; i < _columnDists[colIndex].length - 1; ++i) {
+    int sumt=0;
+    for (int j=0; j < inclDist.length; ++j) {
+      int t=_columnDists[colIndex][i][j];
+      sumt+=t;
+      inclDist[j]=t;
+      exclDist[j]=dist[j] - t;
+    }
+    int inclW=sumt;
+    int exclW=distWeight - inclW;
+    if (inclW == 0 || exclW == 0)     continue;
+    double f=((double)inclW / distWeight) * ((double)exclW / distWeight) * twoing(inclDist,inclW,exclDist,exclW);
+    if (f > bestFitness) {
+      bestSplit=i;
+      bestFitness=f;
+    }
+  }
+  return bestSplit == -1 ? Split.impossible(Utils.maxIndex(dist,_random)) : Split.exclusion(colIndex,bestSplit,bestFitness);
+}
