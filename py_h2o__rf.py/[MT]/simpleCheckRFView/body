@@ -89,10 +89,16 @@ def simpleCheckRFView(node=None, rfv=None, checkScoringOnly=False, noPrint=False
         max_var = varimp['max_var']
         variables = varimp['variables']
         varimpSD = varimp['varimpSD']
-        varimp = varimp['varimp']
-        if ((len(varimpSD) != max_var) or (len(varimp) != max_var) or (len(variables) != max_var)):
-            raise Exception(('varimp lists seem to be wrong length: %s %s %s' % (max_var, len(varimpSD), len(varimp), len(variables))))
-        h2o_util.assertApproxEqual(sum(varimp), 0.0, tol=1e-05, msg=("Shouldn't have all 0's in varimp %s" % varimp))
+        varimp2 = varimp['varimp']
+        if (not max_var):
+            raise Exception(('varimp.max_var is None? %s' % max_var))
+        if (not varimpSD):
+            raise Exception(('varimp.varimpSD is None? %s' % varimpSD))
+        if (not varimp2):
+            raise Exception(('varimp.varimp is None? %s' % varimp2))
+        if (len(varimpSD) != len(varimp2)):
+            raise Exception(('varimp lists seem to be wrong length: %s %s' % (len(varimpSD), len(varimp2))))
+        h2o_util.assertApproxEqual(sum(varimp2), 0.0, tol=1e-05, msg=("Shouldn't have all 0's in varimp %s" % varimp2))
     treeStats = rf_model['treeStats']
     if (not treeStats):
         raise Exception(('treeStats not right?: %s' % dump_json(treeStats)))
