@@ -1,0 +1,8 @@
+import unittest, time, sys, random
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_cmd, h2o_browse as h2b, h2o_import as h2i, h2o_rf
+print 'https://0xdata.atlassian.net/browse/PUB-235'
+print 'datasets with reals outside the range of single precision FP exponents cause DRF1 to ignore cols.'
+print 'No warning in browser or json about the ignored cols (h2o stdout log WARN only)'
+if (__name__ == '__main__'):
+    h2o.unit_main()
