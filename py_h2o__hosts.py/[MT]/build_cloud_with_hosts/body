@@ -49,4 +49,5 @@ def build_cloud_with_hosts(node_count=None, **kwargs):
     node_count = paramsToUse['h2o_per_host']
     paramsToUse.pop('h2o_per_host')
     print 'java_heap_GB', paramsToUse['java_heap_GB']
-    build_cloud(node_count, hosts=hosts, init_sandbox=False, **paramsToUse)
+    nodes = build_cloud(node_count, hosts=hosts, init_sandbox=False, **paramsToUse)
+    return nodes
