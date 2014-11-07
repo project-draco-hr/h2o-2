@@ -1,4 +1,6 @@
-def find_cloud(ip_port='localhost:54321', hdfs_version='cdh4', hdfs_config=None, hdfs_name_node='172.16.1.176', expectedSize=1, nodesJsonPathname='h2o_fc-nodes.json'):
+def find_cloud(ip_port=None, expectedSize=1, nodesJsonPathname='h2o_fc-nodes.json', hdfs_version='cdh4', hdfs_config=None, hdfs_name_node='172.16.1.176', **kwargs):
+    if (not ip_port):
+        ip_port = 'localhost:54321'
     possMembers = [ip_port]
     h2oNodes = {}
     probes = set()
@@ -13,7 +15,7 @@ def find_cloud(ip_port='localhost:54321', hdfs_version='cdh4', hdfs_config=None,
                 if (member2 not in probes):
                     probes.add(member2)
                     probe_node(member2, h2oNodes)
-    print ('\nWe did %s tries' % tries)
+    print ('\nDid %s tries' % tries)
     print 'len(probe):', len(probes)
     h2oNodesList = [v for (k, v) in h2oNodes.iteritems()]
     print 'Checking for two h2os at same ip address'

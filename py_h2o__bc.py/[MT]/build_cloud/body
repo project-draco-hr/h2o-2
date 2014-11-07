@@ -1,19 +1,36 @@
-def build_cloud(node_count=1, base_port=None, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, init_sandbox=True, **kwargs):
+def build_cloud(node_count=1, base_port=None, hosts=None, timeoutSecs=30, retryDelaySecs=1, cleanup=True, rand_shuffle=True, conservative=False, create_json=False, clone_cloud=None, init_sandbox=True, usecloud=False, usecloud_size=None, **kwargs):
     global stdout_wrapped
     if ((not h2o_args.disable_time_stamp) and (not stdout_wrapped)):
         sys.stdout = OutWrapper(sys.stdout)
         stdout_wrapped = True
-    if (h2o_args.clone_cloud_json or clone_cloud):
-        nodeList = build_cloud_with_json(h2o_nodes_json=(h2o_args.clone_cloud_json if h2o_args.clone_cloud_json else clone_cloud))
+    if (h2o_args.usecloud or usecloud):
+        nodesJsonPathname = 'h2o_fc-nodes.json'
+    elif h2o_args.clone_cloud_json:
+        nodesJsonPathname = h2o_args.clone_cloud_json
+    elif clone_cloud:
+        nodesJsonPathname = clone_cloud
+    else:
+        nodesJsonPathname = None
+    if ((h2o_args.clone_cloud_json or clone_cloud) or (h2o_args.usecloud or usecloud)):
+        if h2o_args.usecloud:
+            ip_port = h2o_args.usecloud
+        elif usecloud:
+            ip_port = usecloud
+        else:
+            ip_port = None
+        if h2o_args.usecloud_size:
+            useCloudExpectedSize = h2o_args.usecloud_size
+        else:
+            useCloudExpectedSize = usecloud_size
+        nodesJsonObject = h2o_fc.find_cloud(ip_port=ip_port, expectedSize=useCloudExpectedSize, nodesJsonPathname=nodesJsonPathname, **kwargs)
+        assert (1 == 0)
+        nodeList = build_cloud_with_json(h2o_nodes_json=nodesJsonPathname)
         return nodeList
     if init_sandbox:
         clean_sandbox()
     log('#*********************************************************************')
     log((('Starting new test: ' + h2o_args.python_test_name) + ' at build_cloud() '))
     log('#*********************************************************************')
-    if (1 == 0):
-        if (getpass.getuser() == 'jenkins'):
-            check_h2o_version()
     ports_per_node = 2
     nodeList = []
     base_port = get_base_port(base_port)
@@ -45,13 +62,13 @@ def build_cloud(node_count=1, base_port=None, hosts=None, timeoutSecs=30, retryD
                 totalNodes += 1
         verboseprint('Attempting Cloud stabilize of', totalNodes, 'nodes on', hostCount, 'hosts')
         start = time.time()
-        stabilize_cloud(nodeList[0], nodeList, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, noExtraErrorCheck=True)
+        stabilize_cloud(nodeList[0], nodeList, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, noSandboxErrorCheck=True)
         verboseprint(len(nodeList), 'Last added node stabilized in ', (time.time() - start), ' secs')
         verboseprint(('Built cloud: %d nodes on %d hosts, in %d s' % (len(nodeList), hostCount, (time.time() - start))))
         h2p.red_print('Built cloud:', nodeList[0].java_heap_GB, 'GB java heap(s) with', len(nodeList), 'total nodes')
         if conservative:
             for n in nodeList:
-                stabilize_cloud(n, nodeList, timeoutSecs=timeoutSecs, noExtraErrorCheck=True)
+                stabilize_cloud(n, nodeList, timeoutSecs=timeoutSecs, noSandboxErrorCheck=True)
         verify_cloud_size(nodeList, expectedCloudName=nodeList[0].cloud_name)
         check_sandbox_for_errors(python_test_name=h2o_args.python_test_name)
     except:
