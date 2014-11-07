@@ -1,8 +1,7 @@
 def test_GBM_manyfiles_train_test(self):
-    h2o.beta_features = True
     bucket = 'home-0xdiag-datasets'
     modelKey = 'GBMModelKey'
-    if localhost:
+    if h2o.localhost:
         files = [('manyfiles-nflx-gz', 'file_1.dat.gz', 'train.hex', 1800, None, 'file_1.dat.gz', 'test.hex')]
     else:
         files = [('manyfiles-nflx-gz', 'file_[0-9].dat.gz', 'train.hex', 1800, None, 'file_1[0-9].dat.gz', 'test.hex')]

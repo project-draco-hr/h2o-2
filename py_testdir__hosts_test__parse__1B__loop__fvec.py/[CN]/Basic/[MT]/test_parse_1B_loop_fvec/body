@@ -1,12 +1,11 @@
 def test_parse_1B_loop_fvec(self):
-    h2o.beta_features = True
     csvFilename = 'billion_rows.csv.gz'
     importFolderPath = 'standard'
     csvPathname = ((importFolderPath + '/') + csvFilename)
     trialMax = 3
     for tryHeap in [16]:
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import folder,', "then loop parsing 'billion_rows.csv' to unique keys"
-        h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=tryHeap)
+        h2o.init(1, java_heap_GB=tryHeap)
         timeoutSecs = 800
         for trial in range(trialMax):
             hex_key = (((csvFilename + '_') + str(trial)) + '.hex')

@@ -1,5 +1,4 @@
 def test_parse_covtype20x_loop_fvec(self):
-    h2o.beta_features = True
     csvFilename = 'covtype20x.data'
     importFolderPath = 'standard'
     csvPathname = ((importFolderPath + '/') + csvFilename)
@@ -7,7 +6,7 @@ def test_parse_covtype20x_loop_fvec(self):
     for tryJvms in [1, 2, 3, 4]:
         for tryHeap in [3]:
             print '\n', tryHeap, 'GB heap,', tryJvms, 'jvm per host, import folder,', "then loop parsing 'covtype20x.data' to unique keys"
-            h2o_hosts.build_cloud_with_hosts(node_count=tryJvms, java_heap_GB=tryHeap)
+            h2o.init(node_count=tryJvms, java_heap_GB=tryHeap)
             timeoutSecs = 300
             for trial in range(trialMax):
                 hex_key = (((csvFilename + '_') + str(trial)) + '.hex')

@@ -1,10 +1,5 @@
 @classmethod
 def setUpClass(cls):
-    global SEED, localhost
+    global SEED
     SEED = h2o.setup_random_seed()
-    localhost = h2o.decide_if_localhost()
-    if localhost:
-        h2o.build_cloud(2, java_heap_MB=1300, use_flatfile=True)
-    else:
-        import h2o_hosts
-        h2o_hosts.build_cloud_with_hosts()
+    h2o.init(2, java_heap_MB=1300, use_flatfile=True)

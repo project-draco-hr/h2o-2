@@ -40,11 +40,7 @@ def test_benchmark_import(self):
     jea = ((((' -Dcom.sun.management.jmxremote.port=54330' + ' -Dcom.sun.management.jmxremote.authenticate=false') + ' -Dcom.sun.management.jmxremote.ssl=false') + ' -Dcom.sun.management.jmxremote') + ' -Dcom.sun.management.jmxremote.local.only=false')
     jea = ' -Dlog.printAll=true'
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
-        localhost = h2o.decide_if_localhost()
-        if localhost:
-            h2o.build_cloud(2, java_heap_GB=tryHeap, enable_benchmark_log=True)
-        else:
-            h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True)
+        h2o.init(2, java_heap_GB=tryHeap, enable_benchmark_log=True)
         for trial in range(trialMax):
             csvPathname = ((importFolderPath + '/') + csvFilepattern)
             (importResult, importPattern) = h2i.import_only(bucket=bucket, path=csvPathname, schema='local')
@@ -109,7 +105,7 @@ def test_benchmark_import(self):
             h2o_cmd.checkKeyDistribution()
             h2i.delete_keys_from_import_result(pattern=csvFilename, importResult=importResult)
             h2o.tear_down_cloud()
-            if (not localhost):
+            if (not h2o.localhost):
                 print 'Waiting 30 secs before building cloud again (sticky ports?)'
             sys.stdout.write('.')
             sys.stdout.flush()

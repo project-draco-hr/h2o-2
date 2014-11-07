@@ -1,6 +1,6 @@
 import unittest, time, sys
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i, h2o_browse as h2b
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_cmd, h2o_import as h2i, h2o_browse as h2b
 print 'h2o should automatically strip the single quotes if we say single_quotes=1'
 print 'should probably check the names too ..right now failing on rows'
 datalines = "' FirstName '\x01' Middle Initials '\x01' LastName '\x01' Date of Birth  '\n'0'\x01'0.5'\x01'1'\x01'0'\n'3'\x01'0'\x01'4'\x01'1'\n'0.6'\x01'0.7'\x01'0.8'\x01'1'\n'+0.6'\x01'+0.7'\x01'+0.8'\x01'0'\n'-0.6'\x01'-0.7'\x01'-0.8'\x01'1'\n'.6'\x01'.7'\x01'.8'\x01'0'\n'+.6'\x01'+.7'\x01'+.8'\x01'1'\n'-.6'\x01'-.7'\x01'-.8'\x01'0'\n'+0.6e0'\x01'+0.7e0'\x01'+0.8e0'\x01'1'\n'-0.6e0'\x01'-0.7e0'\x01'-0.8e0'\x01'0'\n'.6e0'\x01'.7e0'\x01'.8e0'\x01'1'\n'+.6e0'\x01'+.7e0'\x01'+.8e0'\x01'0'\n'-.6e0'\x01'-.7e0'\x01'-.8e0'\x01'1'\n'+0.6e00'\x01'+0.7e00'\x01'+0.8e00'\x01'0'\n'-0.6e00'\x01'-0.7e00'\x01'-0.8e00'\x01'1'\n'.6e00'\x01'.7e00'\x01'.8e00'\x01'0'\n'+.6e00'\x01'+.7e00'\x01'+.8e00'\x01'1'\n'-.6e00'\x01'-.7e00'\x01'-.8e00'\x01'0'\n'+0.6e-01'\x01'+0.7e-01'\x01'+0.8e-01'\x01'1'\n'-0.6e-01'\x01'-0.7e-01'\x01'-0.8e-01'\x01'0'\n'.6e-01'\x01'.7e-01'\x01'.8e-01'\x01'1'\n'+.6e-01'\x01'+.7e-01'\x01'+.8e-01'\x01'0'\n'-.6e-01'\x01'-.7e-01'\x01'-.8e-01'\x01'1'\n'+0.6e+01'\x01'+0.7e+01'\x01'+0.8e+01'\x01'0'\n'-0.6e+01'\x01'-0.7e+01'\x01'-0.8e+01'\x01'1'\n'.6e+01'\x01'.7e+01'\x01'.8e+01'\x01'0'\n'+.6e+01'\x01'+.7e+01'\x01'+.8e+01'\x01'1'\n'-.6e+01'\x01'-.7e+01'\x01'-.8e+01'\x01'0'\n'6'\x01''\x01'8'\x01'0'\n"

@@ -1,5 +1,4 @@
 def test_summary2_unifiles2(self):
-    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [('breadth.csv', 'b.hex', False, [('C1', None, None, None, None, None)], 'smalldata', 'quantiles'), ('wonkysummary.csv', 'b.hex', True, [('X1', 7.0, None, None, None, 1000046.0)], 'smalldata', None), ('covtype.data', 'c.hex', False, [('C1', None, None, None, None, None)], 'home-0xdiag-datasets', 'standard')]
     timeoutSecs = 10
@@ -24,7 +23,6 @@ def test_summary2_unifiles2(self):
         print ('\n' + csvFilename)
         numRows = inspect['numRows']
         numCols = inspect['numCols']
-        h2o.beta_features = True
         summaryResult = h2o_cmd.runSummary(key=hex_key, max_qbins=MAX_QBINS)
         h2o.verboseprint('summaryResult:', h2o.dump_json(summaryResult))
         summaries = summaryResult['summaries']
