@@ -49,8 +49,8 @@ _normSub=MemoryManager.malloc8d(nnums);
 _normMul=null;
 break;
 case DESCALE:
-_normMul=MemoryManager.malloc8d(nnums);
 _normSub=null;
+_normMul=MemoryManager.malloc8d(nnums);
 break;
 case NONE:
 _normSub=_normMul=null;
@@ -70,11 +70,11 @@ case NORMALIZE:
 _normSub[i]=v.mean();
 _normMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
 break;
-case DESCALE:
-_normMul[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
-break;
 case DEMEAN:
 _normSub[i]=v.mean();
+break;
+case DESCALE:
+_normMul[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
 break;
 case NONE:
 break;
@@ -94,6 +94,10 @@ case DEMEAN:
 _normRespSub=MemoryManager.malloc8d(_responses);
 _normRespMul=null;
 break;
+case DESCALE:
+_normRespSub=null;
+_normRespMul=MemoryManager.malloc8d(_responses);
+break;
 case NONE:
 _normRespSub=_normRespMul=null;
 break;
@@ -112,7 +116,10 @@ _normRespSub[i]=v.mean();
 _normRespMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
 break;
 case DEMEAN:
-_normSub[i]=v.mean();
+_normRespSub[i]=v.mean();
+break;
+case DESCALE:
+_normRespMul[i]=v.sigma() != 0 ? 1.0 / v.sigma() : 1.0;
 break;
 case NONE:
 break;

@@ -4,5 +4,5 @@ def test_E_no_mc_snd_no_mc_rcv(self):
     multicastDropReceiveIptables()
     multicastBlockSendIptables()
     showIptables()
-    h2o_hosts.build_cloud_with_hosts(nodes_per_host, use_flatfile=True)
+    h2o.init(nodes_per_host, use_flatfile=True)
     h2o.tear_down_cloud()

@@ -20,7 +20,6 @@ def test_GBM_with_cancels(self):
                 execExpr = ('c.hex[,%s]=c.hex[,%s]>15' % ((response + 1), (response + 1)))
                 kwargs = {'str': execExpr, }
                 resultExec = h2o_cmd.runExec(**kwargs)
-            h2o.beta_features = True
             s = h2o_cmd.runSummary(key='c.hex', cols=response, max_ncols=1)
             xIgnore = []
             for i in [3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 424, 425, 426, 540, 541, response]:

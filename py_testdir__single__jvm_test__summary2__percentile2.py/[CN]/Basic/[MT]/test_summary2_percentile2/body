@@ -22,7 +22,6 @@ def test_summary2_percentile2(self):
         print "Parse result['destination_key']:", parseResult['destination_key']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
-        h2o.beta_features = True
         summaryResult = h2o_cmd.runSummary(key=hex_key, cols=0, max_ncols=1)
         if h2o.verbose:
             print 'summaryResult:', h2o.dump_json(summaryResult)

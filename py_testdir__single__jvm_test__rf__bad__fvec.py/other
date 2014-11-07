@@ -1,6 +1,6 @@
 import unittest, time, sys
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_hosts, h2o_import as h2i
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_cmd, h2o_import as h2i
 datalines = '\n# \'comment, is okay\n# "this comment, is okay too\n# \'this\' comment, is okay too\n@FirstName@ @Middle@Initials@ @LastName@ @Date@of@Birth@\n0 0.5 1 0\n3 NaN 4 1\n6  8 0\n0.6 0.7 0.8 1\n+0.6 +0.7 +0.8 0\n-0.6 -0.7 -0.8 1\n.6 .7 .8 0\n+.6 +.7 +.8 1\n-.6 -.7 -.8 0\n+0.6e0 +0.7e0 +0.8e0 1\n-0.6e0 -0.7e0 -0.8e0 0\n.6e0 .7e0 .8e0 1\n+.6e0 +.7e0 +.8e0 0\n-.6e0 -.7e0 -.8e0 1\n+0.6e00 +0.7e00 +0.8e00 0\n-0.6e00 -0.7e00 -0.8e00 1\n.6e00 .7e00 .8e00 0\n+.6e00 +.7e00 +.8e00 1\n-.6e00 -.7e00 -.8e00 0\n+0.6e-01 +0.7e-01 +0.8e-01 1\n-0.6e-01 -0.7e-01 -0.8e-01 0\n.6e-01 .7e-01 .8e-01 1\n+.6e-01 +.7e-01 +.8e-01 0\n-.6e-01 -.7e-01 -.8e-01 1\n+0.6e+01 +0.7e+01 +0.8e+01 0\n-0.6e+01 -0.7e+01 -0.8e+01 1\n.6e+01 .7e+01 .8e+01 0\n+.6e+01 +.7e+01 +.8e+01 1\n-.6e+01 -.7e+01 -.8e+01 0\n'
 datalines2 = ' FirstName , Middle Initials , LastName , Date of Birth   \n0,0.5,1,0\n3,0,4,1\n6,,8,0\n6,,8,0\n6,,8,0\n6,,8,0\n6,,8,0\n6,,8,0\n6,,8,0\n0.6,0.7,0.8,1\n+0.6,+0,7,+0.8,0\n-0.6,-0.7,-0.8,1\n'
 if (__name__ == '__main__'):
