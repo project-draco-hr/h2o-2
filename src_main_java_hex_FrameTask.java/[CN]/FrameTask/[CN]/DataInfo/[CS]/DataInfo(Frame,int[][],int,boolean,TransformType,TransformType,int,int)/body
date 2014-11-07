@@ -37,6 +37,14 @@ _normMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
 _normSub[i]=v.mean();
 }
 break;
+case DEMEAN:
+_normMul=null;
+_normSub=MemoryManager.malloc8d(_nums);
+for (int i=0; i < _nums; ++i) {
+Vec v=fr.vec(catLevels.length + i);
+_normSub[i]=v.mean();
+}
+break;
 case DESCALE:
 _normSub=null;
 _normMul=MemoryManager.malloc8d(_nums);
@@ -44,14 +52,6 @@ _normMul=MemoryManager.malloc8d(_nums);
 for (int i=0; i < _nums; ++i) {
 Vec v=fr.vec(catLevels.length + i);
 _normMul[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
-}
-break;
-case DEMEAN:
-_normMul=null;
-_normSub=MemoryManager.malloc8d(_nums);
-for (int i=0; i < _nums; ++i) {
-Vec v=fr.vec(catLevels.length + i);
-_normSub[i]=v.mean();
 }
 break;
 case NONE:
@@ -70,7 +70,7 @@ _normRespMul=MemoryManager.malloc8d(responses);
 _normRespSub=MemoryManager.malloc8d(responses);
 for (int i=0; i < responses; ++i) {
 Vec v=fr.vec(fr.numCols() - responses + i);
-_normRespSub[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
+_normRespMul[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
 _normRespSub[i]=v.mean();
 }
 break;
@@ -79,7 +79,7 @@ _normRespMul=MemoryManager.malloc8d(responses);
 _normRespSub=MemoryManager.malloc8d(responses);
 for (int i=0; i < responses; ++i) {
 Vec v=fr.vec(fr.numCols() - responses + i);
-_normRespSub[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
+_normRespMul[i]=(v.max() - v.min() > 0) ? 1.0 / (v.max() - v.min()) : 1.0;
 _normRespSub[i]=v.mean();
 }
 break;
@@ -89,6 +89,14 @@ _normRespSub=MemoryManager.malloc8d(responses);
 for (int i=0; i < responses; ++i) {
 Vec v=fr.vec(fr.numCols() - responses + i);
 _normRespSub[i]=v.mean();
+}
+break;
+case DESCALE:
+_normRespMul=MemoryManager.malloc8d(responses);
+_normRespSub=null;
+for (int i=0; i < responses; ++i) {
+Vec v=fr.vec(fr.numCols() - responses + i);
+_normRespMul[i]=(v.sigma() != 0) ? 1.0 / v.sigma() : 1.0;
 }
 break;
 case NONE:
