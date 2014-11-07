@@ -1,0 +1,29 @@
+def test_rf_float_rand_fvec(self):
+    SYNDATASETS_DIR = h2o.make_syn_dir()
+    csvFilename = 'syn_prostate.csv'
+    csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
+    headerData = 'ID,CAPSULE,AGE,RACE,DPROS,DCAPS,PSA,VOL,GLEASON'
+    totalRows = 1000
+    colCount = 7
+    write_syn_dataset(csvPathname, totalRows, colCount, headerData)
+    for trial in range(5):
+        rowData = rand_rowData(colCount)
+        num = random.randint(4096, 10096)
+        append_syn_dataset(csvPathname, colCount, num)
+        totalRows += num
+        hex_key = (((csvFilename + '_') + str(trial)) + '.hex')
+        ntree = 2
+        kwargs = {'ntrees': ntree, 'mtries': None, 'max_depth': 20, 'sample_rate': 0.67, 'destination_key': None, 'nbins': 1024, 'seed': 784834182943470027, }
+        parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, doSummary=True)
+        start = time.time()
+        rfView = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=15, pollTimeoutSecs=5, **kwargs)
+        print 'trial #', trial, 'totalRows:', totalRows, 'num:', num, 'RF end on ', csvFilename, 'took', (time.time() - start), 'seconds'
+        (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfView, ntree=ntree)
+        inspect = h2o_cmd.runInspect(key=hex_key)
+        cols = inspect['cols']
+        numCols = inspect['numCols']
+        for (i, c) in enumerate(cols):
+            if (i < (numCols - 1)):
+                colType = c['type']
+                self.assertEqual(colType, 'Real', msg=('col %d should be type Real: %s' % (i, colType)))
+        h2o.check_sandbox_for_errors()

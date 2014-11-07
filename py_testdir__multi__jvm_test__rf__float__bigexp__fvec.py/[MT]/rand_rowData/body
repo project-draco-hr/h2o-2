@@ -1,0 +1,8 @@
+def rand_rowData(colCount):
+    rowData = str(random.uniform(0, colCount))
+    for i in range(colCount):
+        if DO_FAIL:
+            rowData = ((rowData + ',') + str(random.uniform((-1e+59), 1e+59)))
+        else:
+            rowData = ((rowData + ',') + str(random.uniform((-1e+37), 1e+37)))
+    return rowData
