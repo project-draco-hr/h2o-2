@@ -1,4 +1,5 @@
-def probe_node(line, h2oNodes, expectedSize):
+def probe_node(line, h2oNodes, expectedSize, hdfsSetup):
+    (hdfs_version, hdfs_config, hdfs_name_node) = hdfsSetup
     (http_addr, sep, port) = line.rstrip('\n').partition(':')
     http_addr = http_addr.lstrip('/')
     if (port == ''):
@@ -27,8 +28,9 @@ def probe_node(line, h2oNodes, expectedSize):
         print 'tot_mem_bytes (GB):', ('%0.2f' % ((n['tot_mem_bytes'] + 0.0) / ((1024 * 1024) * 1024)))
         java_heap_GB = ((n['tot_mem_bytes'] + 0.0) / ((1024 * 1024) * 1024))
         java_heap_GB = int(round(java_heap_GB, 0))
+        num_cpus = n['num_cpus']
         print 'java_heap_GB:', java_heap_GB
-        print 'num_cpus:', n['num_cpus']
+        print 'num_cpus:', num_cpus
         java_heap_GB_list.append(java_heap_GB)
         num_cpus_list.append(num_cpus)
         name = n['name'].lstrip('/')

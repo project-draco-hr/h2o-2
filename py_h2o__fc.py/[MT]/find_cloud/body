@@ -5,16 +5,17 @@ def find_cloud(ip_port=None, expectedSize=1, nodesJsonPathname='h2o_fc-nodes.jso
     h2oNodes = {}
     probes = set()
     tries = 0
+    hdfsSetup = (hdfs_version, hdfs_config, hdfs_name_node)
     for (n1, possMember) in enumerate(possMembers):
         tries += 1
         if (possMember not in probes):
             probes.add(possMember)
-            members2 = probe_node(possMember, h2oNodes, expectedSize)
+            members2 = probe_node(possMember, h2oNodes, expectedSize, hdfsSetup)
             for (n2, member2) in enumerate(members2):
                 tries += 1
                 if (member2 not in probes):
                     probes.add(member2)
-                    probe_node(member2, h2oNodes)
+                    probe_node(member2, h2oNodes, expectedSize, hdfsSetup)
     print ('\nDid %s tries' % tries)
     print 'len(probe):', len(probes)
     h2oNodesList = [v for (k, v) in h2oNodes.iteritems()]
