@@ -17,7 +17,7 @@ def parse_our_args():
     parser.add_argument('-debug_rest', '--debug_rest', help='Print REST API interactions to rest.log', action='store_true')
     parser.add_argument('-nc', '--nocolor', help="don't emit the chars that cause color printing", action='store_true')
     parser.add_argument('-long', '--long_test_case', help='some tests will vary behavior to more, longer cases', action='store_true')
-    parser.add_argument('-uc', '--usecloud', help='ip:port of cloud to send tests to instead of starting clouds.')
+    parser.add_argument('-uc', '--usecloud', nargs='?', const='localhost:54321', type=str, help='ip:port of cloud to send tests to instead of starting clouds.')
     parser.add_argument('-ucs', '--usecloud_size', help='optionally say the size of the usecloud, code will check size is as expected')
     parser.add_argument('unittest_args', nargs='*')
     args = parser.parse_args()
