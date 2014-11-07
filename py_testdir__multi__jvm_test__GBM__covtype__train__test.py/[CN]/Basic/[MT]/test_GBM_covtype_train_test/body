@@ -35,7 +35,6 @@ def test_GBM_covtype_train_test(self):
             params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': None, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
-            h2o.beta_features = True
             h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
             trainStart = time.time()
             gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, noPoll=True, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)

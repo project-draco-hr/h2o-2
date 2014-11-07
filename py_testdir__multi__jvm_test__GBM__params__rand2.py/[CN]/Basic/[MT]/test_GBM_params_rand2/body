@@ -1,5 +1,4 @@
 def test_GBM_params_rand2(self):
-    h2o.beta_features = True
     bucket = 'home-0xdiag-datasets'
     modelKey = 'GBMModelKey'
     files = [('standard', 'covtype.shuffled.10pct.sorted.data', 'covtype.train.hex', 1800, 54, 'covtype.shuffled.10pct.data', 'covtype.test.hex')]
@@ -32,7 +31,6 @@ def test_GBM_params_rand2(self):
         inspect = h2o_cmd.runInspect(key=parseTestResult['destination_key'])
         paramsDict = define_gbm_params()
         for trial in range(3):
-            h2o.beta_features = True
             h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
             params = {'response': 54, 'ignored_cols_by_name': 'C1,C2,C3,C4,C5', 'ntrees': 2, 'validation': parseTestResult['destination_key'], }
             h2o_gbm.pickRandGbmParams(paramsDict, params)

@@ -1,6 +1,6 @@
 import unittest, random, sys, time
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_rf, h2o_hosts, h2o_import as h2i, h2o_util
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_cmd, h2o_rf, h2o_import as h2i, h2o_util
 paramDict = {'destination_key': ['model_keyA', '012345', '__hello'], 'cols': [None, None, None, None, None, '0,1,2,3,4,5,6,7,8', 'C1,C2,C3,C4,C5,C6,C7,C8'], 'ignored_cols_by_name': [None, None, None, None, 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'], 'n_folds': [None, 2, 5], 'keep_cross_validation_splits': [None, 0, 1], 'classification': [None, 1], 'balance_classes': [None, 0, 1], 'max_after_balance_size': [0.1, 1, 2], 'oobee': [None, 0, 1], 'sampling_strategy': [None, 'RANDOM'], 'select_stat_type': [None, 'ENTROPY', 'GINI'], 'response': [54, 'C55'], 'validation': [None, 'covtype.data.hex'], 'ntrees': [1], 'importance': [None, 0, 1], 'max_depth': [None, 1, 10, 20, 100], 'nbins': [None, 5, 10, 100, 1000], 'sample_rate': [None, 0.2, 0.4, 0.6, 0.8, 0.9], 'seed': [None, '0', '1', '11111', '19823134', '1231231'], 'mtries': [1, 3, 5, 7], }
 if (__name__ == '__main__'):
     h2o.unit_main()

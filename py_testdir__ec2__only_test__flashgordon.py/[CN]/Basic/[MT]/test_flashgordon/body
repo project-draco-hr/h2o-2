@@ -11,7 +11,7 @@ def test_flashgordon(self):
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
         for tryHeap in [28]:
             print '\n', tryHeap, 'GB heap, 1 jvm per host, import', protocol, 'then parse'
-            h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10)
+            h2o.init(java_heap_GB=tryHeap, enable_benchmark_log=True, timeoutSecs=120, retryDelaySecs=10)
             h2o.nodes[0].sandboxIgnoreErrors = True
             for trial in range(trialMax):
                 if USE_S3:

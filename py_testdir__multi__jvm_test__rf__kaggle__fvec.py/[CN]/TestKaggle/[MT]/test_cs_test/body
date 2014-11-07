@@ -1,5 +1,4 @@
 def test_cs_test(self):
-    h2o.beta_features = True
     parseResult = h2i.import_parse(bucket='smalldata', path='kaggle/creditsample-training.csv.gz', schema='put')
     h2o_cmd.runRF(parseResult=parseResult, ntrees=5, max_depth=100, timeoutSecs=500, response='SeriousDlqin2yrs')
     time.sleep(5)

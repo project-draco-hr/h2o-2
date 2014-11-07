@@ -1,6 +1,6 @@
 import unittest, random, sys, time
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_hosts, h2o_import as h2i, h2o_cmd, h2o_exec as h2e
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_import as h2i, h2o_cmd, h2o_exec as h2e
 exprList = ['Last.value.0 = cbind(df,indx)', 'Last.value.1 = Last.value.0[,c(151)]', 'Last.value.2 = Last.value.0[,151]', 'Last.value.3 = Last.value.2 == 1', 'Last.value.4 = Last.value.0[Last.value.3,]', 'df.train = Last.value.4', 'Last.value.5 = Last.value.0[,151]', 'Last.value.6 = Last.value.5 == 0', 'Last.value.7 = Last.value.0[Last.value.6,]', 'df.test = Last.value.7 ', 'Last.value.8 = indx[,c(1)]', 'Last.value.9 = Last.value.0[,c(151)] = Last.value.8']
 if (__name__ == '__main__'):
     h2o.unit_main()

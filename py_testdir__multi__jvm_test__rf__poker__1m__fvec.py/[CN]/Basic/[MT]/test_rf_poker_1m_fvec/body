@@ -1,5 +1,4 @@
 def test_rf_poker_1m_fvec(self):
-    h2o.beta_features = True
     csvPathname = 'poker/poker-hand-testing.data'
     parseResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put')
     h2o_cmd.runRF(parseResult=parseResult, trees=3, timeoutSecs=800, retryDelaySecs=5)

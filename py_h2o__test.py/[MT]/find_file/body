@@ -1,9 +1,11 @@
 def find_file(base):
-    f = base
+    f = os.path.expanduser(base)
     if (not os.path.exists(f)):
         f = ('../' + base)
     if (not os.path.exists(f)):
         f = ('../../' + base)
+    if (not os.path.exists(f)):
+        f = ('../../../' + base)
     if (not os.path.exists(f)):
         f = ('py/' + base)
     if (not os.path.exists(f)):

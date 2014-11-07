@@ -7,7 +7,7 @@ def test_parse_covtype20x_loop_s3n_hdfs(self):
     trialMax = 3
     for tryHeap in [4, 12]:
         print '\n', tryHeap, 'GB heap, 1 jvm per host, import folder,', "then parse 'covtype20x.data'"
-        h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap)
+        h2o.init(java_heap_GB=tryHeap)
         h2o.nodes[0].sandboxIgnoreErrors = True
         for trial in range(trialMax):
             hex_key = (csvFilename + '.hex')
