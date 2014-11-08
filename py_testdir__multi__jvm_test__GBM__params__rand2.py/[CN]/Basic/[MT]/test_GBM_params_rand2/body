@@ -39,8 +39,6 @@ def test_GBM_params_rand2(self):
             h2o_cmd.runInspect(key=parseTestResult['destination_key'])
             start = time.time()
             gbmTestResult = h2o_cmd.runPredict(data_key=parseTestResult['destination_key'], model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-            if h2o.beta_features:
-                h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
             elapsed = (time.time() - start)
             print 'GBM predict completed in', elapsed, 'seconds. On dataset: ', testFilename
             if DO_PREDICT_CM:
@@ -54,7 +52,6 @@ def test_GBM_params_rand2(self):
                 xList.append(params['max_depth'])
                 eList.append(pctWrongTrain)
                 fList.append(trainElapsed)
-        h2o.beta_features = False
         xLabel = 'max_depth'
         eLabel = 'pctWrongTrain'
         fLabel = 'trainElapsed'

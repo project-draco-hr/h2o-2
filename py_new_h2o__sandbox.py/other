@@ -1,7 +1,0 @@
-import sys, itertools, os, re, glob
-if (__name__ == '__main__'):
-    arg_names = ['me', 'LOG_DIR', 'python_test_name', 'cloudShutdownIsError', 'sandboxIgnoreErrors']
-    args = dict(itertools.izip_longest(arg_names, sys.argv))
-    errorMessage = check_sandbox_for_errors(LOG_DIR=args['LOG_DIR'], python_test_name=args['python_test_name'], cloudShutdownIsError=args['cloudShutdownIsError'], sandboxIgnoreErrors=args['sandboxIgnoreErrors'])
-    if errorMessage:
-        raise Exception('Error found in the logs that we want to consider fatal')
