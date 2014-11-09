@@ -1,6 +1,6 @@
 def test_B_build_cloud_relaxed_3(self):
     for trials in range(3):
-        h2o.build_cloud(3, java_heap_GB=1, conservative=False)
+        h2o.init(3, java_heap_GB=1, conservative=False)
         h2o.verify_cloud_size()
         h2o.tear_down_cloud()
         time.sleep(5)

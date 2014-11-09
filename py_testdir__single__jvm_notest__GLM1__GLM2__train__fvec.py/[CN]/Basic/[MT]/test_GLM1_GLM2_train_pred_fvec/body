@@ -59,7 +59,6 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     if (FAMILY == 'binomial'):
         classErr1 = glm['GLMModel']['validations'][0]['classErr']
         auc1 = glm['GLMModel']['validations'][0]['auc']
-    h2o.beta_features = True
     kwargs = {'standardize': STANDARDIZE, 'ignored_cols': ignoreX, 'response': y, 'family': FAMILY, 'n_folds': 0, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
     timeoutSecs = 120
     if ((FAMILY == 'binomial') and FORCE_BINOMIAL_RESPONSE):

@@ -1,15 +1,15 @@
-def probe_node(line, h2oNodes, expectedSize, hdfsSetup):
+def create_node(possMember, h2oNodes, expectedSize, hdfsSetup):
     (hdfs_version, hdfs_config, hdfs_name_node) = hdfsSetup
-    (http_addr, sep, port) = line.rstrip('\n').partition(':')
+    (http_addr, sep, port) = possMember.rstrip('\n').partition(':')
     http_addr = http_addr.lstrip('/')
     if (port == ''):
         port = '54321'
     if (http_addr == ''):
         http_addr = '127.0.0.1'
-    probes = []
+    possMemberList = []
     gc = do_json_request(http_addr, port, 'Cloud.json', timeout=10)
     if (gc is None):
-        return probes
+        return possMemberList
     consensus = gc['consensus']
     locked = gc['locked']
     cloud_size = gc['cloud_size']
@@ -35,7 +35,7 @@ def probe_node(line, h2oNodes, expectedSize, hdfsSetup):
         num_cpus_list.append(num_cpus)
         name = n['name'].lstrip('/')
         name_list.append(name)
-        probes.append(name)
+        possMemberList.append(name)
         (ip, sep, port) = name.partition(':')
         if ((not ip) or (not port)):
             raise Exception(("bad ip or port parsing from h2o get_cloud nodes 'name' %s" % n['name']))
@@ -51,5 +51,5 @@ def probe_node(line, h2oNodes, expectedSize, hdfsSetup):
         node = {'http_addr': ip, 'port': int(port), 'java_heap_GB': java_heap_GB, 'node_id': node_id, 'remoteH2O': 'true', 'sandbox_error_was_reported': 'false', 'sandbox_ignore_errors': 'false', 'username': '0xcustomer', 'redirect_import_folder_to_s3_path': 'false', 'redirect_import_folder_to_s3n_path': 'false', 'delete_keys_at_teardown': 'true', 'use_hdfs': use_hdfs, 'use_maprfs': use_maprfs, 'h2o_remote_buckets_root': 'false', 'hdfs_version': hdfs_version, 'hdfs_name_node': hdfs_name_node, 'hdfs_config': hdfs_config, }
         if (name not in h2oNodes):
             h2oNodes[name] = node
-            print ('Added node %s to probes' % name)
-    return probes
+            print ('Added node %s to possMemberList' % name)
+    return possMemberList

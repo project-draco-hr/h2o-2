@@ -1,16 +1,11 @@
 @classmethod
 def setUpClass(cls):
     print 'Will build_cloud() with random heap size and do overlapped import folder/parse (groups)'
-    global SEED, localhost
+    global SEED
     SEED = h2o.setup_random_seed()
     if RANDOM_HEAP:
         tryHeap = random.randint(4, 28)
     else:
         tryHeap = 28
     print '\n', tryHeap, 'GB heap, 1 jvm per host, import,  then parse'
-    localhost = h2o.decide_if_localhost()
-    h2o.beta_features = True
-    if localhost:
-        h2o.build_cloud(node_count=3, java_heap_GB=4)
-    else:
-        h2o_hosts.build_cloud_with_hosts(node_count=1, java_heap_GB=tryHeap)
+    h2o.init(node_count=3, java_heap_GB=4)

@@ -22,11 +22,7 @@ def test_parse_10k_files(self):
     pollTimeoutSecs = 120
     retryDelaySecs = 10
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
-        localhost = h2o.decide_if_localhost()
-        if localhost:
-            h2o.build_cloud(3, java_heap_GB=tryHeap, enable_benchmark_log=True)
-        else:
-            h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=tryHeap, enable_benchmark_log=True)
+        h2o.init(3, java_heap_GB=tryHeap, enable_benchmark_log=True)
         print ('This test creates files in syn_datasets for import folder\n' + 'so h2o and python need to be same machine')
         h2o.nodes[0].redirect_import_folder_to_s3_path = False
         h2o.nodes[0].redirect_import_folder_to_s3n_path = False
@@ -73,7 +69,7 @@ def test_parse_10k_files(self):
             h2o_cmd.checkKeyDistribution()
             h2i.delete_keys_from_import_result(pattern=csvFilename, importResult=importResult)
             h2o.tear_down_cloud()
-            if (not localhost):
+            if (not h2o.localhost):
                 print 'Waiting 30 secs before building cloud again (sticky ports?)'
                 time.sleep(30)
             sys.stdout.write('.')
