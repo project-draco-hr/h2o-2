@@ -1,5 +1,4 @@
 def test_GLM1_GLM2_train_pred_fvec(self):
-    h2o.beta_features = False
     SYNDATASETS_DIR = h2o.make_syn_dir()
     trees = 15
     timeoutSecs = 120
@@ -40,7 +39,6 @@ def test_GLM1_GLM2_train_pred_fvec(self):
     h2o_cmd.runSummary(key=hexKey)
     trainKey = parseResult['destination_key']
     ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
-    h2o.beta_features = False
     CLASS = 1
     kwargs = {'lsm_solver': LSM_SOLVER, 'standardize': STANDARDIZE, 'x': x, 'y': y, 'family': FAMILY, 'n_folds': 0, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
     if ((FAMILY == 'binomial') and FORCE_BINOMIAL_RESPONSE):
