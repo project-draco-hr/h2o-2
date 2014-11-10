@@ -8,10 +8,7 @@ def test_GLM_100Mx70_hosts(self):
             csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
             print 'Creating random', csvPathname
             write_syn_dataset(csvPathname, rowCount, colCount, SEEDPERFILE)
-    if localhost:
-        csvFilenameList = [('rand_logreg_100000000x70.csv', 500, 'rand_100Mx70.hex')]
-    else:
-        csvFilenameList = [('rand_logreg_100000000x70.csv', 500, 'rand_100Mx70.hex')]
+    csvFilenameList = [('rand_logreg_100000000x70.csv', 500, 'rand_100Mx70.hex')]
     lenNodes = len(h2o.nodes)
     for (csvFilename, timeoutSecs, hex_key) in csvFilenameList:
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)

@@ -1,5 +1,4 @@
 def test_parse_multiprocess_fvec(self):
-    h2o.beta_features = True
     OUTSTANDING = min(10, len(h2o.nodes))
     if DO_IRIS:
         global DO_BIGFILE
@@ -8,10 +7,7 @@ def test_parse_multiprocess_fvec(self):
         importFolderPath = 'iris'
         csvFilename = 'iris2.csv'
         csvFilePattern = 'iris2.csv'
-        if localhost:
-            trialMax = 20
-        else:
-            trialMax = 100
+        trialMax = 20
     elif DO_BIGFILE:
         bucket = 'home-0xdiag-datasets'
         importFolderPath = 'standard'

@@ -1,21 +1,21 @@
 import unittest
 import time, sys
 sys.path.extend(['.', '..', 'py'])
-import h2o_cmd, h2o, h2o_hosts, h2o_glm
+import h2o_cmd, h2o, h2o_glm, h2o_args
 import h2o_browse as h2b
 import os, csv, time, socket
 csv_header = ('time', 'nodes#', 'java_heap_GB', 'dataset', 'y', 'x', 'family', 'alpha', 'lambda', 'n_folds', 'nLines', 'nCols', 'dof', 'nullDev', 'resDev', 'aic', 'auc', 'iterations', 'model_time', 'model_iterations', 'val_time', 'val_iterations', 'lsm_time', 'wall_clock_secs')
 ec2_files = {'allstate': 's3n://h2o-datasets/allstate/train_set.zip', 'airlines': 's3n://h2o-airlines-unpacked/allyears.csv', }
 local_files = {'allstate': 'hdfs://172.16.2.176/datasets/allstate/train_set.zip', 'airlines': 'hdfs://172.16.2.176/datasets/airlines_all.csv', }
 if (__name__ == '__main__'):
-    h2o.parse_our_args()
+    h2o_args.parse_our_args()
     files = None
     if is_ec2():
         files = ec2_files
-        h2o_hosts.build_cloud_with_hosts()
+        h2o.init()
     else:
         files = local_files
-        h2o_hosts.build_cloud_with_hosts(use_hdfs=True)
+        h2o.init(use_hdfs=True)
     run_glms(files['allstate'], [{'y': 'Claim_Amount', 'lambda': l, 'alpha': a, 'family': 'gaussian', 'n_folds': 1, } for l in [0.0001] for a in [0.5]])
     x = '0,1,2,3,5,7,8,9,16,17'
     run_glms(files['airlines'], [{'y': 'IsArrDelayed', 'x': x, 'lambda': l, 'alpha': a, 'family': 'gaussian', 'n_folds': 1, 'case': 1, } for l in [0.0001] for a in [0.5]])

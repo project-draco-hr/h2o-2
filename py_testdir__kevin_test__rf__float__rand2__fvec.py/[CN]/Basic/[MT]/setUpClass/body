@@ -1,0 +1,5 @@
+@classmethod
+def setUpClass(cls):
+    global SEED
+    SEED = h2o.setup_random_seed(seed=4548383660131500992)
+    h2o.init(2, java_heap_MB=1300, use_flatfile=True)

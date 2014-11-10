@@ -1,19 +1,5 @@
 @classmethod
 def setUpClass(cls):
-    global SEED, localhost
+    global SEED
     SEED = h2o.setup_random_seed()
-    localhost = h2o.decide_if_localhost()
-    if localhost:
-        if ('Kevin' in socket.gethostname()):
-            global FROM_HDFS
-            FROM_HDFS = None
-            java_heap_GB = 20
-        else:
-            java_heap_GB = 240
-        h2o.build_cloud(1, java_heap_GB=java_heap_GB, enable_benchmark_log=True)
-    elif (FROM_HDFS == 'CDH3'):
-        h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True, use_hdfs=True, hdfs_version='cdh3', hdfs_name_node='mr-0x6')
-    elif (FROM_HDFS == 'CDH4'):
-        h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True, use_hdfs=True, hdfs_version='cdh4', hdfs_name_node='mr-0x6')
-    else:
-        h2o_hosts.build_cloud_with_hosts(enable_benchmark_log=True)
+    h2o.init(enable_benchmark_log=True, use_hdfs=True, hdfs_version='cdh3', hdfs_name_node='mr-0x6')

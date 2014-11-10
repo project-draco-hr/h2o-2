@@ -1,0 +1,43 @@
+def test_c7_fvec(self):
+    print 'Since the python is not necessarily run as user=0xcust..'
+    print "r can't use schema='put' here"
+    print 'Want to be able to run python as jenkins'
+    print "I guess for big 0xcust files, we don't need schema='put'"
+    print 'For files that we want to put (for testing put), we can get non-private files'
+    csvFilename = 'part-00000b'
+    hex_key = (csvFilename + '.hex')
+    importFolderPath = '/mnt/0xcustomer-datasets/c2'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    start = time.time()
+    parseResult = h2i.import_parse(path=csvPathname, schema='local', timeoutSecs=500, separator=9, doSummary=False)
+    print 'Parse of', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+    print "Parse result['destination_key']:", parseResult['destination_key']
+    inspect = h2o_cmd.runInspect(None, hex_key, timeoutSecs=500)
+    h2o_cmd.infoFromInspect(inspect, csvPathname)
+    numRows = inspect['numRows']
+    numCols = inspect['numCols']
+    summaryResult = h2o_cmd.runSummary(key=hex_key, numCols=numCols, numRows=numRows, timeoutSecs=500)
+    for column in range(numCols):
+        print ('Imputing any NAs in column %s to median' % column)
+        impResult = h2o.nodes[0].impute(source=hex_key, column=column, method='median')
+    inspect = h2o_cmd.runInspect(key=hex_key)
+    missingValuesList = h2o_cmd.infoFromInspect(inspect)
+    if (len(missingValuesList) != 0):
+        raise Exception(("Shouldn't be missing values after impute: %s" % missingValuesList))
+    keepPattern = 'oly_|mt_|b_'
+    y = 'is_purchase'
+    print 'y:', y
+    x = h2o_glm.goodXFromColumnInfo(y, keepPattern=keepPattern, key=hex_key)
+    print 'x:', x
+    kwargs = {'response': y, 'family': 'binomial', 'lambda': 1e-05, 'alpha': 0.5, 'max_iter': 10, 'n_folds': 1, 'beta_epsilon': 0.0001, }
+    timeoutSecs = 3600
+    start = time.time()
+    glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=60, noPoll=True, **kwargs)
+    statMean = h2j.pollStatsWhileBusy(timeoutSecs=timeoutSecs, pollTimeoutSecs=30, retryDelaySecs=5)
+    num_cpus = (statMean['num_cpus'],)
+    my_cpu_pct = (statMean['my_cpu_%'],)
+    sys_cpu_pct = (statMean['sys_cpu_%'],)
+    system_load = statMean['system_load']
+    h2j.pollWaitJobs(pattern=None, timeoutSecs=timeoutSecs, pollTimeoutSecs=30, retryDelaySecs=5)
+    elapsed = (time.time() - start)
+    print 'glm completed in', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
