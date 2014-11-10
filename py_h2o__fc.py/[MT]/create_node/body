@@ -11,8 +11,9 @@ def create_node(possMember, h2oNodes, expectedSize, hdfsSetup):
     if (gc is None):
         return possMemberList
     version = gc['version']
-    if (not version.startswith('2')):
-        raise Exception(("h2o version at node[0] doesn't look like h2o version. (start with 2) %s" % version))
+    if (version and (version != 'unknown') and (version != 'null') and (version != 'none')):
+        if (not version.startswith('2')):
+            print ("h2o version at node[0] doesn't look like h2o version. (start with 2) %s" % version)
     consensus = gc['consensus']
     locked = gc['locked']
     cloud_size = gc['cloud_size']
