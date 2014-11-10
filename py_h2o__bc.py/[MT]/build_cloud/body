@@ -79,7 +79,6 @@ def build_cloud(node_count=1, base_port=None, hosts=None, timeoutSecs=30, retryD
     print len(nodeList), 'total jvms in H2O cloud'
     nodeList[0].h2o_log_msg()
     if h2o_args.config_json:
-        LOG_DIR = get_sandbox_name()
         print 'Saving the ', h2o_args.config_json, 'we used to', LOG_DIR
         shutil.copy(h2o_args.config_json, ((LOG_DIR + '/') + os.path.basename(h2o_args.config_json)))
     if create_json:
