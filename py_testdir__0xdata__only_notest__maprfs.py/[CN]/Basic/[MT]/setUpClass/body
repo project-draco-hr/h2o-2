@@ -1,9 +1,4 @@
 @classmethod
 def setUpClass(cls):
-    global localhost
-    localhost = h2o.decide_if_localhost()
     print "This doesn't work. we don't package mapr files with h2o"
-    if localhost:
-        h2o.build_cloud(1, java_heap_GB=15, enable_benchmark_log=True, use_maprfs=True, hdfs_version='mapr3.1.1', hdfs_name_node='mr-0x2:7222')
-    else:
-        h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=15, enable_benchmark_log=True, use_maprfs=True, hdfs_version='mapr3.1.1', hdfs_name_node='mr-0x2:7222')
+    h2o.init(1, java_heap_GB=15, enable_benchmark_log=True, use_maprfs=True, hdfs_version='mapr3.1.1', hdfs_name_node='mr-0x2:7222')

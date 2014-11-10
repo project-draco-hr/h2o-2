@@ -1,6 +1,5 @@
 def test_GBM_with_cancels(self):
     print 'do import/parse with VA'
-    h2o.beta_features = False
     importFolderPath = 'standard'
     timeoutSecs = 500
     csvFilenameAll = [('standard', 'covtype.data', 54)]
@@ -8,10 +7,8 @@ def test_GBM_with_cancels(self):
     for (importFolderPath, csvFilename, response) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         (importResult, importPattern) = h2i.import_only(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', timeoutSecs=50)
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, noPoll=False, doSummary=False)
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, schema='local', hex_key='c.hex', timeoutSecs=500, doSummary=False)
         h2o.check_sandbox_for_errors()
-        if h2o.beta_features:
-            parseResult = {'destination_key': 'c.hex', }
         print '\nparseResult', h2o.dump_json(parseResult)
         print "Parse result['destination_key']:", parseResult['destination_key']
         h2o.check_sandbox_for_errors()

@@ -1,5 +1,4 @@
 def test_c9_GLM_airlines_multi(self):
-    h2o.beta_features = True
     files = [('datasets/airlines_multi', '*', 'airlines_all.05pA.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pB.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pC.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pD.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pE.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pF.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pG.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pH.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pI.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pJ.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pK.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pL.hex', 1800, 'IsDepDelayed'), ('datasets/airlines_multi', '*', 'airlines_all.05pM.hex', 1800, 'IsDepDelayed')]
     files = [('datasets/airlines_multi', '*', 'airlines_all.05pA.hex', 1800, 'IsDepDelayed')]
     for (importFolderPath, csvFilename, trainKey, timeoutSecs, response) in files:
@@ -20,28 +19,27 @@ def test_c9_GLM_airlines_multi(self):
             elapsed = (time.time() - start)
             print 'GLM training completed in', elapsed, 'seconds. On dataset: ', csvFilename
             h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
-            if h2o.beta_features:
-                modelKey = glm['glm_model']['_key']
-                submodels = glm['glm_model']['submodels']
-                validation = submodels[(-1)]['validation']
-                best_threshold = validation['best_threshold']
-                thresholds = validation['thresholds']
-                best_index = None
-                for (i, t) in enumerate(thresholds):
-                    if (t == best_threshold):
-                        best_index = i
-                        break
-                cms = validation['_cms']
-                cm = cms[best_index]
-                pctWrong = h2o_gbm.pp_cm_summary(cm['_arr'])
-                print '\nTrain\n==========\n'
-                print h2o_gbm.pp_cm(cm['_arr'])
-                predictKey = 'Predict.hex'
-                start = time.time()
-                predictResult = h2o_cmd.runPredict(data_key=trainKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
-                predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=trainKey, vactual=response, predict=predictKey, vpredict='predict')
-                cm = predictCMResult['cm']
-                pctWrong = h2o_gbm.pp_cm_summary(cm)
-                print '\nTest\n==========\n'
-                print h2o_gbm.pp_cm(cm)
+            modelKey = glm['glm_model']['_key']
+            submodels = glm['glm_model']['submodels']
+            validation = submodels[(-1)]['validation']
+            best_threshold = validation['best_threshold']
+            thresholds = validation['thresholds']
+            best_index = None
+            for (i, t) in enumerate(thresholds):
+                if (t == best_threshold):
+                    best_index = i
+                    break
+            cms = validation['_cms']
+            cm = cms[best_index]
+            pctWrong = h2o_gbm.pp_cm_summary(cm['_arr'])
+            print '\nTrain\n==========\n'
+            print h2o_gbm.pp_cm(cm['_arr'])
+            predictKey = 'Predict.hex'
+            start = time.time()
+            predictResult = h2o_cmd.runPredict(data_key=trainKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+            predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=trainKey, vactual=response, predict=predictKey, vpredict='predict')
+            cm = predictCMResult['cm']
+            pctWrong = h2o_gbm.pp_cm_summary(cm)
+            print '\nTest\n==========\n'
+            print h2o_gbm.pp_cm(cm)
     h2i.delete_keys_at_all_nodes(timeoutSecs=600)

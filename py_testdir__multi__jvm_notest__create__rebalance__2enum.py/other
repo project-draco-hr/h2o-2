@@ -1,6 +1,6 @@
 import unittest, random, sys, time
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_util, h2o_hosts, h2o_import as h2i
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_cmd, h2o_util, h2o_import as h2i
 REBALANCE_CHUNKS = 100
 print 'Keeping the # of rows > the number of chunks I ask for. Is that a requirement?'
 paramDict = {'rows': [100, 1000], 'cols': [1, 10, 100], 'seed': [None, 1234], 'randomize': [None, 0, 1], 'value': [None, 0, 1234567890, 1000000.0, (-1000000.0)], 'real_range': [None, 0, 1234567890, 1000000.0, (-1000000.0)], 'categorical_fraction': [None, 0.1, 1.0], 'factors': [None, 5, 17], 'integer_fraction': [None, 0.1, 1.0], 'integer_range': [None, 0, 1, 1234567890], 'missing_fraction': [None, 0.1, 1.0], 'response_factors': [None, 1, 2, 10], }

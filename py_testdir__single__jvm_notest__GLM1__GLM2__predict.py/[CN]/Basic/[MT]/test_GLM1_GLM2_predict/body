@@ -1,5 +1,4 @@
 def test_GLM1_GLM2_predict(self):
-    h2o.beta_features = False
     SYNDATASETS_DIR = h2o.make_syn_dir()
     trees = 15
     timeoutSecs = 120
@@ -37,7 +36,6 @@ def test_GLM1_GLM2_predict(self):
     h2o_cmd.runSummary(key=hexKey)
     trainKey = parseResult['destination_key']
     ignore_x = h2o_glm.goodXFromColumnInfo(y, key=parseResult['destination_key'], timeoutSecs=300)
-    h2o.beta_features = False
     CLASS = 1
     kwargs = {'lsm_solver': LSM_SOLVER, 'standardize': STANDARDIZE, 'y': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 0, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, 'case': CLASS, 'case_mode': '=', }
     timeoutSecs = 120
@@ -54,7 +52,6 @@ def test_GLM1_GLM2_predict(self):
     if (FAMILY == 'binomial'):
         classErr1 = glm['GLMModel']['validations'][0]['classErr']
         auc1 = glm['GLMModel']['validations'][0]['auc']
-    h2o.beta_features = True
     kwargs = {'standardize': STANDARDIZE, 'response': ('C' + str((y + 1))), 'family': FAMILY, 'n_folds': 0, 'max_iter': MAX_ITER, 'beta_epsilon': BETA_EPSILON, }
     timeoutSecs = 120
     if (FAMILY == 'binomial'):
