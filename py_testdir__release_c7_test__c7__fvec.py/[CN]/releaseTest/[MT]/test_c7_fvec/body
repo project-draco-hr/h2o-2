@@ -5,11 +5,11 @@ def test_c7_fvec(self):
     print "I guess for big 0xcust files, we don't need schema='put'"
     print 'For files that we want to put (for testing put), we can get non-private files'
     csvFilename = 'part-00000b'
-    hex_key = (csvFilename + '.hex')
+    hex_key = 'part_00000b.hex'
     importFolderPath = '/mnt/0xcustomer-datasets/c2'
     csvPathname = ((importFolderPath + '/') + csvFilename)
     start = time.time()
-    parseResult = h2i.import_parse(path=csvPathname, schema='local', timeoutSecs=500, separator=9, doSummary=False)
+    parseResult = h2i.import_parse(path=csvPathname, schema='local', separator=9, hex_key=hex_key, doSummary=False, timeoutSecs=500)
     print 'Parse of', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
     print "Parse result['destination_key']:", parseResult['destination_key']
     inspect = h2o_cmd.runInspect(None, hex_key, timeoutSecs=500)
