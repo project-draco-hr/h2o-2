@@ -4,6 +4,8 @@
   IS_SYSTEM_RUNNING=true;
   VERSION=getVersion();
   START_TIME_MILLIS=System.currentTimeMillis();
+  GA=new GoogleAnalytics("UA-56665317-2","H2O",H2O.getVersion());
+  if ((new File(".h2o_no_collect")).exists() || (new File(System.getProperty("user.home") + "/.h2o_no_collect")).exists())   GA.setEnabled(false);
   Arguments arguments=new Arguments(args);
   arguments.extract(OPT_ARGS);
   ARGS=arguments.toStringArray();
@@ -48,4 +50,5 @@
   }
   startupFinalize();
   Log.POST(380,"");
+  postStartupGAEvents();
 }

@@ -1,0 +1,21 @@
+{
+  if (!config.isEnabled()) {
+    return null;
+  }
+  Future<GoogleAnalyticsResponse> future=getExecutor().submit(new Callable<GoogleAnalyticsResponse>(){
+    public GoogleAnalyticsResponse call() throws Exception {
+      try {
+        @SuppressWarnings("rawtypes") GoogleAnalyticsRequest request=requestProvider.getRequest();
+        if (request != null) {
+          return post(request);
+        }
+      }
+ catch (      Exception e) {
+        Log.warn("Request Provider (" + requestProvider + ") thrown exception "+ e.toString()+ " and hence nothing is posted to GA.");
+      }
+      return null;
+    }
+  }
+);
+  return future;
+}

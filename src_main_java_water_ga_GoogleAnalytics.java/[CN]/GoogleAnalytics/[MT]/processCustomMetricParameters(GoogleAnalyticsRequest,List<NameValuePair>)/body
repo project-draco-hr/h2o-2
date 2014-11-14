@@ -1,0 +1,13 @@
+{
+  Map<String,String> customMetricParms=new HashMap<String,String>();
+  for (  String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
+    customMetricParms.put(defaultCustomMetricKey,defaultRequest.custommMetrics().get(defaultCustomMetricKey));
+  }
+  @SuppressWarnings("unchecked") Map<String,String> requestCustomMetrics=request.custommMetrics();
+  for (  String requestCustomDimKey : requestCustomMetrics.keySet()) {
+    customMetricParms.put(requestCustomDimKey,requestCustomMetrics.get(requestCustomDimKey));
+  }
+  for (  String key : customMetricParms.keySet()) {
+    postParms.add(new BasicNameValuePair(key,customMetricParms.get(key)));
+  }
+}

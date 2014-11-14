@@ -1,0 +1,14 @@
+{
+  String cId;
+  hitType(isEmpty(hitType) ? "pageview" : hitType);
+  trackingId(trackingId);
+  applicationName(appName);
+  applicationVersion(appVersion);
+  try {
+    cId=UUID.nameUUIDFromBytes((InetAddress.getLocalHost().getHostAddress().toString() + System.getProperty("user.name")).getBytes()).toString();
+  }
+ catch (  UnknownHostException e) {
+    cId=UUID.nameUUIDFromBytes(System.getProperty("user.name").getBytes()).toString();
+  }
+  clientId(cId);
+}
