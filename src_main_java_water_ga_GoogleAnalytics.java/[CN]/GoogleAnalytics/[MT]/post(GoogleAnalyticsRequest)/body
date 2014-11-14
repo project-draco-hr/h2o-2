@@ -10,7 +10,7 @@
     processParameters(request,postParms);
     processCustomDimensionParameters(request,postParms);
     processCustomMetricParameters(request,postParms);
-    Log.warn("GA Processed all parameters and sending the request " + postParms);
+    Log.debug("GA Processed all parameters and sending the request " + postParms);
     HttpPost httpPost=new HttpPost(config.getUrl());
     try {
       httpPost.setEntity(new UrlEncodedFormEntity(postParms,"UTF-8"));

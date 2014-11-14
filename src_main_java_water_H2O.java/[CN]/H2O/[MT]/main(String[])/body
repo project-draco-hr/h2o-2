@@ -5,7 +5,10 @@
   VERSION=getVersion();
   START_TIME_MILLIS=System.currentTimeMillis();
   GA=new GoogleAnalytics("UA-56665317-2","H2O",H2O.getVersion());
-  if ((new File(".h2o_no_collect")).exists() || (new File(System.getProperty("user.home") + "/.h2o_no_collect")).exists())   GA.setEnabled(false);
+  if ((new File(".h2o_no_collect")).exists() || (new File(System.getProperty("user.home") + "/.h2o_no_collect")).exists() || OPT_ARGS.ga_opt_out) {
+    GA.setEnabled(false);
+    Log.info("Opted out of sending usage metrics.");
+  }
   Arguments arguments=new Arguments(args);
   arguments.extract(OPT_ARGS);
   ARGS=arguments.toStringArray();
