@@ -6,11 +6,9 @@
   BasicHttpResponse httpResponse=null;
   try {
     List<NameValuePair> postParms=new ArrayList<NameValuePair>();
-    Log.debug("GA Processing " + request);
     processParameters(request,postParms);
     processCustomDimensionParameters(request,postParms);
     processCustomMetricParameters(request,postParms);
-    Log.debug("GA Processed all parameters and sending the request " + postParms);
     HttpPost httpPost=new HttpPost(config.getUrl());
     try {
       httpPost.setEntity(new UrlEncodedFormEntity(postParms,"UTF-8"));
@@ -27,7 +25,6 @@
 catch (    IOException e) {
       Log.warn("GA connectivity suffered a protocol error.  " + e.toString());
     }
-    Log.debug("GA response: " + httpResponse.toString());
     response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
     response.setPostedParms(postParms);
     try {
