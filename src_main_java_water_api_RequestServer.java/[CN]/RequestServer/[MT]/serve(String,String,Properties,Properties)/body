@@ -3,7 +3,7 @@
   uri=maybeTransformRequest(uri);
   Request.RequestType type=Request.RequestType.requestType(uri);
   String requestName=type.requestName(uri);
-  maybeLogRequest(uri,method,parms);
+  maybeLogRequest(uri,method,parms,header);
   int version=parseVersion(uri);
   int idx=version >> 16;
   version&=0xFFFF;

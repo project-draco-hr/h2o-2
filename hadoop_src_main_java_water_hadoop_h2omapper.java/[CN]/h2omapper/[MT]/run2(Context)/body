@@ -25,6 +25,8 @@
   String betaString=conf.get(H2O_BETA_KEY);
   String randomUdpDropString=conf.get(H2O_RANDOM_UDP_DROP_KEY);
   String licenseData=conf.get(H2O_LICENSE_DATA_KEY);
+  String hadoopVersion=conf.get(H2O_HADOOP_VERSION);
+  String gaOptOut=conf.get(H2O_GA_OPTOUT);
   ServerSocket ss=new ServerSocket();
   InetSocketAddress sa=new InetSocketAddress("127.0.0.1",0);
   ss.bind(sa);
@@ -85,6 +87,11 @@
       argsList.add(fileName);
     }
   }
+  if (hadoopVersion != null) {
+    argsList.add("-ga_hadoop_ver");
+    argsList.add(hadoopVersion);
+  }
+  if (gaOptOut != null)   argsList.add(gaOptOut);
   argsList.add("-driverip");
   argsList.add(driverIp);
   argsList.add("-driverport");
