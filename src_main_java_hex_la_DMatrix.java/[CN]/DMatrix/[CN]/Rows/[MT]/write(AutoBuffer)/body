@@ -1,0 +1,8 @@
+{
+  ab.put4(_rows.length);
+  for (int i=0; i < _rows.length; ++i) {
+    ab.put4(_rows[i].frozenType());
+    ab.putA1(_rows[i]._mem);
+  }
+  return ab;
+}

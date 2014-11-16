@@ -1,7 +1,10 @@
 {
   if (x.numCols() != y.numRows())   throw new IllegalArgumentException("dimensions do not match! x.numcols = " + x.numCols() + ", y.numRows = "+ y.numRows());
   Frame z=new Frame(x.anyVec().makeZeros(y.numCols()));
-  new MatrixMulTsk(y).doAll(Utils.append(x.vecs(),z.vecs()));
+  x=transpose(x,new Frame(y.anyVec().makeZeros((int)x.numRows())));
+  x.reloadVecs();
+  new MatrixMulTsk2(x,y).doAll(z);
   z.reloadVecs();
+  x.delete();
   return z;
 }
