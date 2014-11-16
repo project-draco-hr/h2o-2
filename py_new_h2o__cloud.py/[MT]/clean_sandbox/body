@@ -1,8 +1,0 @@
-def clean_sandbox():
-    if os.path.exists(LOG_DIR):
-        for f in glob.glob((LOG_DIR + '/syn_datasets/*')):
-            verboseprint('cleaning', f)
-            os.remove(f)
-        shutil.rmtree(LOG_DIR, ignore_errors=False, onerror=handleRemoveError)
-    if (not os.path.exists(LOG_DIR)):
-        os.mkdir(LOG_DIR)

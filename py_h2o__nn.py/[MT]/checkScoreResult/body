@@ -4,5 +4,5 @@ def checkScoreResult(self, result, expectedErr, relTol, **kwargs):
     if ((result['classification_error'] != expectedErr) and (abs(((expectedErr - result['classification_error']) / expectedErr)) > relTol)):
         raise Exception(('Scored classification error of %s is not within %s %% relative error of %s' % (result['classification_error'], (float(relTol) * 100), expectedErr)))
     warnings = None
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return warnings

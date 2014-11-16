@@ -2,5 +2,5 @@ def runGLMGrid(node=None, parseResult=None, timeoutSecs=60, retryDelaySecs=2, **
     if (not parseResult):
         raise Exception('No parseResult for GLMGrid')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     return node.GLMGrid(parseResult['destination_key'], timeoutSecs, **kwargs)

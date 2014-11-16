@@ -3,8 +3,8 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=60, pollTimeo
     waitTime = 0
     ignoredJobs = set()
     while wait:
-        a = h2o.nodes[0].jobs_admin(timeoutSecs=pollTimeoutSecs)
-        h2o.verboseprint('jobs_admin():', h2o.dump_json(a))
+        a = h2o_nodes.nodes[0].jobs_admin(timeoutSecs=pollTimeoutSecs)
+        verboseprint('jobs_admin():', dump_json(a))
         jobs = a['jobs']
         busy = 0
         for j in jobs:
@@ -17,8 +17,8 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=60, pollTimeo
             result = j['result']
             start_time = j['start_time']
             if (('exception' in result) and result['exception']):
-                h2o.check_sandbox_for_errors()
-                msg = ("ERROR: pollWaitJobs found a job with a exception result when it shouldn't have:\n %s" % h2o.dump_json(j))
+                check_sandbox_for_errors()
+                msg = ("ERROR: pollWaitJobs found a job with a exception result when it shouldn't have:\n %s" % dump_json(j))
                 raise Exception(msg)
             if result:
                 if (('val' in result) and (result['val'] == 'OK')):
@@ -26,22 +26,22 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=60, pollTimeo
                 else:
                     print ('non-empty result: %s for %s' % (result, key))
             if (errorIfCancelled and cancelled):
-                h2o.check_sandbox_for_errors()
-                print ("ERROR: not stopping, but: pollWaitJobs found a cancelled job when it shouldn't have:\n %s" % h2o.dump_json(j))
+                check_sandbox_for_errors()
+                print ("ERROR: not stopping, but: pollWaitJobs found a cancelled job when it shouldn't have:\n %s" % dump_json(j))
                 print 'Continuing so maybe a json response will give more info'
             elif ((end_time == '') and (not cancelled)):
                 if (not pattern):
                     print 'time:', time.strftime('%I:%M:%S'), 'progress:', progress, destination_key
-                    h2o.verboseprint('description:', description, 'end_time:', end_time)
+                    verboseprint('description:', description, 'end_time:', end_time)
                     busy += 1
-                    h2o.verboseprint(('pollWaitJobs: found a busy job, now: %s' % busy))
+                    verboseprint(('pollWaitJobs: found a busy job, now: %s' % busy))
                 elif ((pattern in key) or (pattern in destination_key) or (pattern in description)):
                     busy += 1
-                    h2o.verboseprint(('pollWaitJobs: found a pattern-matched busy job, now %s' % busy))
+                    verboseprint(('pollWaitJobs: found a pattern-matched busy job, now %s' % busy))
                     print 'time:', time.strftime('%I:%M:%S'), 'progress:', progress, destination_key
                 elif (key not in ignoredJobs):
                     jobMsg = ('%s %s %s' % (key, description, destination_key))
-                    h2o.verboseprint((" %s job in progress but we're ignoring it. Doesn't match pattern." % jobMsg))
+                    verboseprint((" %s job in progress but we're ignoring it. Doesn't match pattern." % jobMsg))
                     ignoredJobs.add(key)
         if stallForNJobs:
             waitFor = stallForNJobs
@@ -52,7 +52,7 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=60, pollTimeo
         if (not wait):
             break
         if (wait and (waitTime > timeoutSecs)):
-            print h2o.dump_json(jobs)
+            print dump_json(jobs)
             raise Exception("Some queued jobs haven't completed after", timeoutSecs, 'seconds')
         sys.stdout.write('.')
         sys.stdout.flush()
@@ -60,7 +60,7 @@ def pollWaitJobs(pattern=None, errorIfCancelled=False, timeoutSecs=60, pollTimeo
         waitTime += retryDelaySecs
         if benchmarkLogging:
             h2o.cloudPerfH2O.get_log_save(benchmarkLogging)
-        h2o.check_sandbox_for_errors()
+        check_sandbox_for_errors()
     patternKeys = []
     for j in jobs:
         if (pattern and (pattern in j['destination_key'])):

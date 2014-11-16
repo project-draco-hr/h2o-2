@@ -1,9 +1,3 @@
 @classmethod
 def setUpClass(cls):
-    global localhost
-    localhost = h2o.decide_if_localhost()
-    h2o.beta_features = True
-    if localhost:
-        h2o.build_cloud(1, use_hdfs=True, aws_credentials='/home/kevin/.ec2/AwsCredentials.properties', hdfs_config='/home/kevin/.ec2/core-site.xml', java_heap_GB=12, java_extra_args='-XX:+PrintGCDetails')
-    else:
-        h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=20, java_extra_args='-XX:+PrintGCDetails')
+    h2o.init(1, use_hdfs=True, aws_credentials='~/.ec2/AwsCredentials.properties', hdfs_config='~/.ec2/core-site.xml', java_heap_GB=12, java_extra_args='-XX:+PrintGCDetails')

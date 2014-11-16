@@ -1,5 +1,4 @@
 def test_fp_many_cols_fvec(self):
-    h2o.beta_features = True
     SYNDATASETS_DIR = h2o.make_syn_dir()
     if H2O_SUPPORTS_OVER_500K_COLS:
         tryList = [(100, 200000, 'cG', 120, 120), (100, 300000, 'cH', 120, 120), (100, 400000, 'cI', 120, 120), (100, 500000, 'cJ', 120, 120), (100, 700000, 'cL', 120, 120), (100, 800000, 'cM', 120, 120), (100, 900000, 'cN', 120, 120), (100, 1000000, 'cO', 120, 120), (100, 1200000, 'cK', 120, 120)]
@@ -9,7 +8,7 @@ def test_fp_many_cols_fvec(self):
     for (rowCount, colCount, hex_key, timeoutSecs, timeoutSecs2) in tryList:
         SEEDPERFILE = random.randint(0, sys.maxint)
         NUM_CASES = h2o_util.fp_format()
-        sel = random.randint(0, NUM_CASES)
+        sel = random.randint(0, (NUM_CASES - 1))
         csvFilename = ('syn_%s_%s_%s_%s.csv' % (SEEDPERFILE, sel, rowCount, colCount))
         csvPathname = ((SYNDATASETS_DIR + '/') + csvFilename)
         print 'Creating random', csvPathname

@@ -1,0 +1,24 @@
+def kmeans(self, key, key2=None, timeoutSecs=300, retryDelaySecs=0.2, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, **kwargs):
+    params_dict = {'initialization': 'Furthest', 'k': 1, 'source': key, 'destination_key': key2, 'seed': None, 'cols': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'max_iter': None, 'normalize': None, 'drop_na_cols': None, }
+    if (key2 is not None):
+        params_dict['destination_key'] = key2
+    browseAlso = kwargs.get('browseAlso', False)
+    check_params_update_kwargs(params_dict, kwargs, 'kmeans', print_params=True)
+    algo = '2/KMeans2'
+    print ('\n%s params list:' % algo), params_dict
+    a1 = self.do_json_request((algo + '.json'), timeout=timeoutSecs, params=params_dict)
+    if noPoll:
+        return a1
+    a1 = self.poll_url(a1, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging)
+    print 'For now, always dumping the last polled kmeans result ..are the centers good'
+    print ('\n%s result:' % algo), dump_json(a1)
+    if (1 == 0):
+        a = self.kmeans_view(model=a1['model']['_key'], timeoutSecs=30)
+        verboseprint(('\n%s model view result:' % algo), dump_json(a))
+    else:
+        a = a1
+    if (browseAlso | h2o_args.browse_json):
+        print ('Redoing the %s through the browser, no results saved though' % algo)
+        h2b.browseJsonHistoryAsUrlLastMatch(algo)
+        time.sleep(5)
+    return a

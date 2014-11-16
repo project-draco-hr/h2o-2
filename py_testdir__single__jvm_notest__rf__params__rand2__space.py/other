@@ -1,6 +1,6 @@
 import unittest, sys
-sys.path.extend(['.', '..', 'py'])
-import h2o, h2o_cmd, h2o_rf, h2o_hosts, h2o_import as h2i
+sys.path.extend(['.', '..', '../..', 'py'])
+import h2o, h2o_cmd, h2o_rf, h2o_import as h2i
 print 'Temporarily not using bin_limit=1 to 4'
 paramDict = {'depth': [None, 1, 10, 20, 100], 'bin_limit': [None, 5, 10, 100, 1000], 'seed': [None, '0', '1', '11111', '19823134', '1231231'], 'features': [None, 1], 'exclusive_split_limit': [None], 'sampling_strategy': [None, 'RANDOM', 'STRATIFIED_LOCAL'], 'strata_samples': [None, 'no=10', 'yes=5', 'no=7,yes=3', 'yes=1,no=1', 'no=100,yes=100', 'no=0,yes=0'], }
 if (__name__ == '__main__'):

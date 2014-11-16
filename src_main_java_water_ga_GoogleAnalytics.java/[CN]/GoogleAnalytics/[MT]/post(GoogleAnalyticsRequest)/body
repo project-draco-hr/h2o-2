@@ -1,0 +1,48 @@
+{
+  GoogleAnalyticsResponse response=new GoogleAnalyticsResponse();
+  if (!config.isEnabled()) {
+    return response;
+  }
+  BasicHttpResponse httpResponse=null;
+  try {
+    List<NameValuePair> postParms=new ArrayList<NameValuePair>();
+    processParameters(request,postParms);
+    processCustomDimensionParameters(request,postParms);
+    processCustomMetricParameters(request,postParms);
+    HttpPost httpPost=new HttpPost(config.getUrl());
+    try {
+      httpPost.setEntity(new UrlEncodedFormEntity(postParms,"UTF-8"));
+    }
+ catch (    UnsupportedEncodingException e) {
+      Log.warn("This systems doesn't support UTF-8!");
+    }
+    try {
+      httpResponse=(BasicHttpResponse)httpClient.execute(httpPost);
+    }
+ catch (    ClientProtocolException e) {
+      Log.warn("GA connectivity had a problem or the connectivity was aborted.  " + e.toString());
+    }
+catch (    IOException e) {
+      Log.warn("GA connectivity suffered a protocol error.  " + e.toString());
+    }
+    response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+    response.setPostedParms(postParms);
+    try {
+      EntityUtils.consume(httpResponse.getEntity());
+    }
+ catch (    IOException e) {
+    }
+    if (config.isGatherStats()) {
+      gatherStats(request);
+    }
+  }
+ catch (  Exception e) {
+    if (e instanceof UnknownHostException) {
+      Log.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+    }
+ else {
+      Log.warn("Exception while sending the Google Analytics tracker request: " + request + ".  "+ e.toString());
+    }
+  }
+  return response;
+}

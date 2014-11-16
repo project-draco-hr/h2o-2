@@ -1,7 +1,7 @@
 def log_jstack(self, initOnly=False):
     if ((self.snapshotTime - self.pollStats['lastJstackTime']) < self.JSTACKINTERVAL):
         return
-    jstackResult = h2o.nodes[0].jstack()
+    jstackResult = h2o_nodes.nodes[0].jstack()
     node0 = jstackResult['nodes'][0]
     stack_traces = node0['traces']
     stackLines = stack_traces.split('\n')

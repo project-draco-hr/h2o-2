@@ -2,6 +2,6 @@ def runSpeeDRF(node=None, parseResult=None, ntrees=5, max_depth=10, timeoutSecs=
     if (not parseResult):
         raise Exception('No parseResult for SpeeDRF')
     if (not node):
-        node = h2o.nodes[0]
+        node = h2o_nodes.nodes[0]
     Key = parseResult['destination_key']
     return node.speedrf(Key, ntrees=ntrees, max_depth=max_depth, timeoutSecs=timeoutSecs, **kwargs)

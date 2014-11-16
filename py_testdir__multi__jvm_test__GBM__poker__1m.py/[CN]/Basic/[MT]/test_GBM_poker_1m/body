@@ -1,22 +1,14 @@
 def test_GBM_poker_1m(self):
-    h2o.beta_features = True
     for trial in range(2):
-        h2o.beta_features = False
         start = time.time()
         xList = []
         eList = []
         fList = []
         modelKey = 'GBMModelKey'
         timeoutSecs = 900
-        if h2o.beta_features:
-            print 'Parsing to fvec directly! Have to noPoll=true!, and doSummary=False!'
         csvPathname = 'poker/poker-hand-testing.data'
         hex_key = 'poker-hand-testing.data.hex'
-        parseTrainResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, noPoll=h2o.beta_features, doSummary=False)
-        if h2o.beta_features:
-            h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
-            print "Filling in the parseTrainResult['destination_key'] for h2o"
-            parseTrainResult['destination_key'] = trainKey
+        parseTrainResult = h2i.import_parse(bucket='smalldata', path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=timeoutSecs, doSummary=False)
         elapsed = (time.time() - start)
         print 'train parse end on ', csvPathname, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'train parse result:', parseTrainResult['destination_key']
@@ -28,17 +20,13 @@ def test_GBM_poker_1m(self):
         print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         numRows = inspect['numRows']
         numCols = inspect['numCols']
-        h2o.beta_features = True
         ntrees = 2
         for max_depth in [5, 10, 20]:
             params = {'learn_rate': 0.1, 'nbins': 10, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': (numCols - 1), 'ignored_cols_by_name': None, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
-            h2o.beta_features = True
             trainStart = time.time()
-            gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, noPoll=h2o.beta_features, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
-            if h2o.beta_features:
-                h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
+            gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
             trainElapsed = (time.time() - trainStart)
             print 'GBM training completed in', trainElapsed, 'seconds. On dataset: ', csvPathname
             algo = (((('GBM ' + ' ntrees=') + str(ntrees)) + ' max_depth=') + str(max_depth))
@@ -56,7 +44,6 @@ def test_GBM_poker_1m(self):
             xList.append(max_depth)
             eList.append(pctWrongTrain)
             fList.append(trainElapsed)
-    h2o.beta_features = False
     if DO_PLOT_IF_KEVIN:
         xLabel = 'max_depth'
         eLabel = 'pctWrong'

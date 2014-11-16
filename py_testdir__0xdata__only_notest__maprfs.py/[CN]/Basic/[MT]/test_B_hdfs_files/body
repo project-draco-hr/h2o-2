@@ -31,9 +31,7 @@ def test_B_hdfs_files(self):
         totalBytes = value_size_bytes
         print 'Loading', csvFilename, 'from maprfs'
         start = time.time()
-        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, doSummary=False, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
-        if h2o.beta_features:
-            h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, doSummary=False, benchmarkLogging=benchmarkLogging)
         print csvFilename, 'parse time:', parseResult['response']['time']
         print 'parse result:', parseResult['destination_key']
         elapsed = (time.time() - start)
@@ -46,9 +44,7 @@ def test_B_hdfs_files(self):
             start = time.time()
             kwargs = {'ntree': 1, }
             paramsString = json.dumps(kwargs)
-            RFview = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=2000, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features, **kwargs)
-            if h2o.beta_features:
-                h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
+            RFview = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=2000, benchmarkLogging=benchmarkLogging, **kwargs)
             elapsed = (time.time() - start)
             print 'rf end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:s} for {:.2f} secs {:s}'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'KMeans', ('trial ' + str(trial)), csvFilename, elapsed, paramsString)

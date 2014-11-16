@@ -1,0 +1,13 @@
+{
+  Map<String,String> customDimParms=new HashMap<String,String>();
+  for (  String defaultCustomDimKey : defaultRequest.customDimentions().keySet()) {
+    customDimParms.put(defaultCustomDimKey,defaultRequest.customDimentions().get(defaultCustomDimKey));
+  }
+  @SuppressWarnings("unchecked") Map<String,String> requestCustomDims=request.customDimentions();
+  for (  String requestCustomDimKey : requestCustomDims.keySet()) {
+    customDimParms.put(requestCustomDimKey,requestCustomDims.get(requestCustomDimKey));
+  }
+  for (  String key : customDimParms.keySet()) {
+    postParms.add(new BasicNameValuePair(key,customDimParms.get(key)));
+  }
+}

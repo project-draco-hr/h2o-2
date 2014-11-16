@@ -1,5 +1,4 @@
 def test_GBM_regression_rand2(self):
-    h2o.beta_features = False
     bucket = 'home-0xdiag-datasets'
     modelKey = 'GBMModelKey'
     files = [('standard', 'covtype.shuffled.10pct.sorted.data', 'covtype.train.hex', 1800, 'C55', 'covtype.shuffled.10pct.data', 'covtype.test.hex')]
@@ -23,7 +22,6 @@ def test_GBM_regression_rand2(self):
             h2o_gbm.pickRandGbmParams(paramsDict, params)
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
-            h2o.beta_features = True
             trainStart = time.time()
             gbmTrainResult = h2o_cmd.runGBM(parseResult=parseTrainResult, timeoutSecs=timeoutSecs, destination_key=modelKey, **kwargs)
             trainElapsed = (time.time() - trainStart)

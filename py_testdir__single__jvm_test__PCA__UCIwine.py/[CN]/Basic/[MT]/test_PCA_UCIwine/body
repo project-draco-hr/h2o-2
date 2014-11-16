@@ -10,7 +10,6 @@ def test_PCA_UCIwine(self):
     print 'parse result:', parseResult['destination_key']
     params = {'destination_key': 'python_PCA_key', 'tolerance': 0.0, 'standardize': 1, }
     kwargs = params.copy()
-    h2o.beta_features = True
     PCAResult = {'python_elapsed': 0, 'python_%timeout': 0, }
     start = time.time()
     h2o_cmd.runPCA(parseResult=parseResult, timeoutSecs=timeoutSecs, noPoll=True, returnFast=False, **kwargs)

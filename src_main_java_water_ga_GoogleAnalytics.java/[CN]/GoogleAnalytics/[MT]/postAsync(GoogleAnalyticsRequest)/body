@@ -1,0 +1,12 @@
+{
+  if (!config.isEnabled()) {
+    return null;
+  }
+  Future<GoogleAnalyticsResponse> future=getExecutor().submit(new Callable<GoogleAnalyticsResponse>(){
+    public GoogleAnalyticsResponse call() throws Exception {
+      return post(request);
+    }
+  }
+);
+  return future;
+}

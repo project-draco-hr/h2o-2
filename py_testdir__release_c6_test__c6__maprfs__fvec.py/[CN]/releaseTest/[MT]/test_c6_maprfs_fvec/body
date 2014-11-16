@@ -1,5 +1,4 @@
 def test_c6_maprfs_fvec(self):
-    h2o.beta_features = True
     print '\nLoad a list of files from maprfs, parse and do 1 RF tree'
     csvFilenameAll = ['TEST-poker1000.csv', 'and-testing.data', 'arcene2_train.both', 'arcene_train.both', 'bestbuy_test.csv', 'bestbuy_train.csv', 'covtype.13x.data', 'covtype.13x.shuffle.data', 'covtype.4x.shuffle.data', 'covtype.data', 'covtype4x.shuffle.data', 'hhp.unbalanced.012.1x11.data.gz', 'hhp.unbalanced.012.data.gz', 'hhp.unbalanced.data.gz', 'hhp_9_14_12.data', 'leads.csv', 'prostate_long_1G.csv']
     h2o.setup_benchmark_log()
@@ -29,9 +28,7 @@ def test_c6_maprfs_fvec(self):
         totalBytes = 0
         print 'Loading', csvFilename, 'from maprfs'
         start = time.time()
-        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, pollTimeoutSecs=360, doSummary=False, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features)
-        if h2o.beta_features:
-            h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
+        parseResult = h2i.import_parse(path=csvPathname, schema='maprfs', timeoutSecs=timeoutSecs, pollTimeoutSecs=360, doSummary=False, benchmarkLogging=benchmarkLogging)
         print 'parse result:', parseResult['destination_key']
         elapsed = (time.time() - start)
         fileMBS = ((totalBytes / 1000000.0) / elapsed)
@@ -43,9 +40,7 @@ def test_c6_maprfs_fvec(self):
             start = time.time()
             kwargs = {'ntrees': 1, }
             paramsString = json.dumps(kwargs)
-            RFview = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=2000, benchmarkLogging=benchmarkLogging, noPoll=h2o.beta_features, **kwargs)
-            if h2o.beta_features:
-                h2j.pollWaitJobs(timeoutSecs=timeoutSecs, pollTimeoutSecs=timeoutSecs)
+            RFview = h2o_cmd.runRF(parseResult=parseResult, timeoutSecs=2000, benchmarkLogging=benchmarkLogging, **kwargs)
             elapsed = (time.time() - start)
             print 'rf end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
             l = '{!s} jvms, {!s}GB heap, {:s} {:s} {:s} for {:.2f} secs {:s}'.format(len(h2o.nodes), h2o.nodes[0].java_heap_GB, 'RF', ('trial ' + str(trial)), csvFilename, elapsed, paramsString)

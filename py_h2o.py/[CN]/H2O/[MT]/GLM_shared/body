@@ -1,7 +1,0 @@
-def GLM_shared(self, key, timeoutSecs=300, retryDelaySecs=0.5, initialDelaySecs=None, pollTimeoutSecs=180, parentName=None, **kwargs):
-    browseAlso = kwargs.pop('browseAlso', False)
-    params_dict = {'strong_rules_enabled': None, 'lambda_search': None, 'nlambdas': None, 'lambda_min_ratio': None, 'prior': None, 'source': key, 'destination_key': None, 'response': None, 'cols': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'max_iter': None, 'standardize': None, 'family': None, 'link': None, 'alpha': None, 'lambda': None, 'beta_epsilon': None, 'tweedie_variance_power': None, 'n_folds': None, 'parallelism': None, 'beta_eps': None, 'higher_accuracy': None, 'use_all_factor_levels': None, 'variable_importances': None, }
-    check_params_update_kwargs(params_dict, kwargs, parentName, print_params=True)
-    a = self.__do_json_request((parentName + '.json'), timeout=timeoutSecs, params=params_dict)
-    verboseprint(parentName, dump_json(a))
-    return a

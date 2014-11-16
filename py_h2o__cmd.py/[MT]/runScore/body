@@ -3,11 +3,11 @@ def runScore(node=None, dataKey=None, modelKey=None, predictKey='Predict.hex', v
     start = time.time()
     predictResult = runPredict(data_key=dataKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
     if doAUC:
-        resultAUC = h2o.nodes[0].generate_auc(thresholds=None, actual=dataKey, predict='Predict.hex', vactual=vactual, vpredict=vpredict)
+        resultAUC = h2o_nodes.nodes[0].generate_auc(thresholds=None, actual=dataKey, predict='Predict.hex', vactual=vactual, vpredict=vpredict)
         auc = resultAUC['aucdata']['AUC']
         if expectedAuc:
             h2o_util.assertApproxEqual(auc, expectedAuc, tol=0.15, msg=('actual auc: %s not close enough to %s' % (auc, expectedAuc)))
-    predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=dataKey, predict=predictKey, vactual=vactual, vpredict='predict')
+    predictCMResult = h2o_nodes.nodes[0].predict_confusion_matrix(actual=dataKey, predict=predictKey, vactual=vactual, vpredict='predict')
     if doAUC:
         cm = predictCMResult['cm']
         pctWrong = h2o_gbm.pp_cm_summary(cm)

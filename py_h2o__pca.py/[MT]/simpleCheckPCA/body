@@ -8,23 +8,23 @@ def simpleCheckPCA(self, pca, **kwargs):
             if re.search(x, w):
                 raise Exception(w)
     pcaResult = pca
-    h2o.verboseprint('pcaResult Inspect:', h2o.dump_json(pcaResult))
+    verboseprint('pcaResult Inspect:', dump_json(pcaResult))
     print 'Checking sdevs...'
     sdevs = pcaResult['pca_model']['sdev']
-    h2o.verboseprint('pca sdevs:', h2o.dump_json(sdevs))
+    verboseprint('pca sdevs:', dump_json(sdevs))
     for (PC, s) in enumerate(sdevs):
         if math.isnan(s):
             raise Exception(('sdev %s is NaN: %s' % (PC, s)))
     print 'Checking propVars...',
     propVars = pcaResult['pca_model']['propVar']
-    h2o.verboseprint('pca propVars:', h2o.dump_json(propVars))
+    verboseprint('pca propVars:', dump_json(propVars))
     for (PC, propvar) in enumerate(propVars):
         if math.isnan(propvar):
             raise Exception('propVar %s is NaN: %s', (PC, propvar))
     print ' Good!'
     print 'Checking eigVec...',
     pcs = pcaResult['pca_model']['eigVec']
-    h2o.verboseprint('pca eigVec:', h2o.dump_json(pcs))
+    verboseprint('pca eigVec:', dump_json(pcs))
     for (i, s) in enumerate(pcs):
         for (r, e) in enumerate(s):
             if math.isnan(e):
@@ -41,5 +41,5 @@ def simpleCheckPCA(self, pca, **kwargs):
     print "The last entry from the eigenvector, should have the largest std dev, because it's sorted"
     print "Rule of thumb is we can then look at the sorted values, and guess it's related to column importance"
     print 'The sort should be on the abs(), since the signs can be + or -'
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return warnings

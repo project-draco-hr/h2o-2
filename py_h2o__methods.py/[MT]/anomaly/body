@@ -1,0 +1,9 @@
+def anomaly(self, timeoutSecs=300, retryDelaySecs=1, initialDelaySecs=5, pollTimeoutSecs=30, noPoll=False, print_params=True, benchmarkLogging=None, **kwargs):
+    params_dict = {'destination_key': None, 'source': None, 'dl_autoencoder_model': None, 'thresh': (-1), }
+    check_params_update_kwargs(params_dict, kwargs, 'anomaly', print_params)
+    a = self.do_json_request('2/Anomaly.json', timeout=timeoutSecs, params=params_dict)
+    if noPoll:
+        return a
+    a = self.poll_url(a, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, benchmarkLogging=benchmarkLogging, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
+    verboseprint('\nanomaly result:', dump_json(a))
+    return a

@@ -1,0 +1,14 @@
+def speedrf(self, data_key, ntrees=50, max_depth=20, timeoutSecs=300, retryDelaySecs=1.0, initialDelaySecs=None, pollTimeoutSecs=180, noise=None, benchmarkLogging=None, noPoll=False, print_params=True, noPrint=False, **kwargs):
+    params_dict = {'balance_classes': None, 'classification': 1, 'cols': None, 'destination_key': None, 'ignored_cols': None, 'ignored_cols_by_name': None, 'importance': 0, 'keep_cross_validation_splits': None, 'max_after_balance_size': None, 'max_depth': max_depth, 'mtries': (-1.0), 'nbins': 1024.0, 'n_folds': None, 'ntrees': ntrees, 'oobee': 0, 'response': None, 'sample_rate': 0.67, 'sampling_strategy': 'RANDOM', 'score_pojo': None, 'seed': (-1.0), 'select_stat_type': 'ENTROPY', 'source': data_key, 'validation': None, 'verbose': None, }
+    check_params_update_kwargs(params_dict, kwargs, 'SpeeDRF', print_params)
+    if print_params:
+        print ('\n%s parameters:' % 'SpeeDRF'), params_dict
+        sys.stdout.flush()
+    rf = self.do_json_request('2/SpeeDRF.json', timeout=timeoutSecs, params=params_dict)
+    print ('\n%s result:' % 'SpeeDRF'), dump_json(rf)
+    if noPoll:
+        print 'Not polling SpeeDRF'
+        return rf
+    time.sleep(2)
+    rfView = self.poll_url(rf, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, initialDelaySecs=initialDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noise=noise, benchmarkLogging=benchmarkLogging, noPrint=noPrint)
+    return rfView

@@ -1,6 +1,6 @@
 def checkLastValidationError(self, model, rows, expectedErr, relTol, **kwargs):
     errsLast = model['validation_errors'][(-1)]
-    h2o.verboseprint("Deep Learning 'Last scoring on test set:'", h2o.dump_json(errsLast))
+    verboseprint("Deep Learning 'Last scoring on test set:'", dump_json(errsLast))
     expectedSamples = (rows * kwargs['epochs'])
     print (('Expecting ' + format(expectedSamples)) + ' training samples')
     if (errsLast['training_samples'] != expectedSamples):
@@ -10,5 +10,5 @@ def checkLastValidationError(self, model, rows, expectedErr, relTol, **kwargs):
     if ((errsLast['classification'] != expectedErr) and (abs(((expectedErr - errsLast['classification']) / expectedErr)) > relTol)):
         raise Exception(('Test set classification error of %s is not within %s %% relative error of %s' % (errsLast['classification'], (float(relTol) * 100), expectedErr)))
     warnings = None
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return warnings

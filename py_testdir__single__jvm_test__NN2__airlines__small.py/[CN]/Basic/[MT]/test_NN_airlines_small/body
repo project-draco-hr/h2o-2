@@ -1,5 +1,4 @@
 def test_NN_airlines_small(self):
-    h2o.beta_features = True
     csvPathname_train = 'airlines/AirlinesTrain.csv.zip'
     csvPathname_test = 'airlines/AirlinesTest.csv.zip'
     hex_key = 'airlines_train.hex'
@@ -31,7 +30,6 @@ def test_NN_airlines_small(self):
     print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
     predict_key = (('score_' + identifier) + '.hex')
     kwargs = {'data_key': validation_key, 'destination_key': predict_key, 'model_key': model_key, }
-    h2o.beta_features = True
     predictResult = h2o_cmd.runPredict(timeoutSecs=timeoutSecs, **kwargs)
     h2o_cmd.runInspect(key=predict_key, verbose=True)
     kwargs = {}
@@ -43,4 +41,3 @@ def test_NN_airlines_small(self):
     print ('expected classification error:' + format(expectedErr))
     if ((actualErr != expectedErr) and (abs(((expectedErr - actualErr) / expectedErr)) > relTol)):
         raise Exception(('Scored classification error of %s is not within %s %% relative error of %s' % (actualErr, (float(relTol) * 100), expectedErr)))
-    h2o.beta_features = False

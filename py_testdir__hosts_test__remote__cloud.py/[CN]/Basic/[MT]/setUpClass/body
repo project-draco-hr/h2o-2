@@ -1,7 +1,7 @@
 @classmethod
 def setUpClass(cls):
     start = time.time()
-    h2o_hosts.build_cloud_with_hosts(node_count, use_flatfile=True, java_heap_GB=1)
+    h2o.init(node_count, use_flatfile=True, java_heap_GB=1)
     print 'jar/flatfile copied and Cloud of', len(h2o.nodes), 'built in', (time.time() - start), 'seconds'
     global totalNodes
     totalNodes = len(h2o.nodes)

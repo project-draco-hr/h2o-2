@@ -9,14 +9,14 @@ def exec_expr_list_rand(lenNodes, exprList, keyX, minCol=1, maxCol=55, minRow=1,
         colX = random.randint(minCol, maxCol)
         row = str(random.randint(minRow, maxRow))
         execExpr = fill_in_expr_template(exprTemplate, colX, (((trial + 1) % 4) + 1), row, keyX)
-        (resultExec, result) = exec_expr(h2o.nodes[execNode], execExpr, None, timeoutSecs, ignoreH2oError)
+        (resultExec, result) = exec_expr(h2o_nodes.nodes[execNode], execExpr, None, timeoutSecs, ignoreH2oError)
         checkScalarResult(resultExec, None, allowEmptyResult=allowEmptyResult, nanOkay=nanOkay)
         if keyX:
             inspect = h2o_cmd.runInspect(key=keyX)
             print keyX, '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         sys.stdout.write('.')
         sys.stdout.flush()
-        if h2o.check_sandbox_for_errors():
+        if check_sandbox_for_errors():
             raise Exception(('Found errors in sandbox stdout or stderr, on trial #%s.' % trial))
         trial += 1
         print 'Trial #', trial, 'completed\n'

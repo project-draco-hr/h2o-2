@@ -1,7 +1,7 @@
 def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False, prettyPrint=False, noPrint=False, maxExpectedIterations=None, doNormalized=False, **kwargs):
     GLMModel = glm['glm_model']
     if (not GLMModel):
-        raise Exception(("GLMModel didn't exist in the glm response? %s" % h2o.dump_json(glm)))
+        raise Exception(("GLMModel didn't exist in the glm response? %s" % dump_json(glm)))
     warnings = None
     if (('warnings' in GLMModel) and GLMModel['warnings']):
         warnings = GLMModel['warnings']
@@ -33,7 +33,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     if ((maxExpectedIterations is not None) and (iterations > maxExpectedIterations)):
         raise Exception(('Convergence issue? GLM did iterations: %d which is greater than expected: %d' % (iterations, maxExpectedIterations)))
     if ('validation' not in submodels1):
-        raise Exception(("Should be a 'validation' key in submodels1: %s" % h2o.dump_json(submodels1)))
+        raise Exception(("Should be a 'validation' key in submodels1: %s" % dump_json(submodels1)))
     validationsList = submodels1['validation']
     validations = validationsList
     n_folds = kwargs.setdefault('n_folds', None)
@@ -56,9 +56,10 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         print ("Now printing the right 'best_threshold' %s from '_cms" % best_threshold)
         submodels = glm['glm_model']['submodels']
         cms = submodels[0]['validation']['_cms']
+        self.assertEqual(len(thresholds), len(cms), msg=('thresholds %s and cm %s should be lists of the same size. %s' % (len(thresholds), len(cms), thresholds)))
         assert (best_index < len(cms)), ('%s %s' % (best_index, len(cms)))
         cm = cms[best_index]
-        print 'cm:', h2o.dump_json(cm['_arr'])
+        print 'cm:', dump_json(cm['_arr'])
         predErr = cm['_predErr']
         classErr = cm['_classErr']
         pctWrong = h2o_gbm.pp_cm_summary(cm['_arr'])
@@ -125,9 +126,9 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
     print '\nTotal # of coefficients:', len(coefficients_names)
     if ((not allowZeroCoeff) and (colX is not None)):
         absXCoeff = abs(float(coefficients[str(colX)]))
-        self.assertGreater(absXCoeff, 1e-26, ((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)))
+        self.assertGreater(absXCoeff, 1e-26, (((((((("abs. value of GLM coefficients['" + str(colX)) + "'] is ") + str(absXCoeff)) + ', not >= 1e-26 for X=') + str(colX)) + '\n') + 'kwargs:') + dump_json(kwargs)))
     absIntercept = abs(float(intercept))
-    self.assertGreater(absIntercept, 1e-26, (("abs. value of GLM coefficients['Intercept'] is " + str(absIntercept)) + ', not >= 1e-26 for Intercept'))
+    self.assertGreater(absIntercept, 1e-26, ((((("abs. value of GLM coefficients['Intercept'] is " + str(absIntercept)) + ', not >= 1e-26 for Intercept') + '\n') + 'kwargs:') + dump_json(kwargs)))
     if (len(coefficients) > 0):
         maxKey = max([(abs(coefficients[x]), x) for x in coefficients])[1]
         print 'H2O Largest abs. coefficient value:', maxKey, coefficients[maxKey]
@@ -140,7 +141,7 @@ def simpleCheckGLM(self, glm, colX, allowFailWarning=False, allowZeroCoeff=False
         for c in coefficients:
             v = coefficients[c]
             s += abs(float(v))
-        self.assertGreater(s, 1e-26, (('sum of abs. value of GLM coefficients/intercept is ' + str(s)) + ', not >= 1e-26'))
+        self.assertGreater(s, 1e-26, (((('sum of abs. value of GLM coefficients/intercept is ' + str(s)) + ', not >= 1e-26\n') + 'kwargs:') + dump_json(kwargs)))
     print 'submodels1, run_time (milliseconds):', submodels1['run_time']
-    h2o.check_sandbox_for_errors()
+    check_sandbox_for_errors()
     return (warnings, cList, intercept)

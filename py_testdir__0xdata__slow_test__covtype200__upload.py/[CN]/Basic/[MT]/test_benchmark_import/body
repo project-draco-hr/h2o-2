@@ -11,11 +11,7 @@ def test_benchmark_import(self):
     bucket = 'home-0xdiag-datasets'
     importFolderPath = 'standard'
     for (i, (csvFilepattern, csvFilename, totalBytes, timeoutSecs)) in enumerate(csvFilenameList):
-        localhost = h2o.decide_if_localhost()
-        if localhost:
-            h2o.build_cloud(2, java_heap_GB=tryHeap, enable_benchmark_log=True)
-        else:
-            h2o_hosts.build_cloud_with_hosts(1, java_heap_GB=(tryHeap / 2), enable_benchmark_log=True)
+        h2o.init(2, java_heap_GB=tryHeap, enable_benchmark_log=True)
         for trial in range(trialMax):
             csvPathname = ((importFolderPath + '/') + csvFilepattern)
             h2o.cloudPerfH2O.change_logfile(csvFilename)

@@ -22,7 +22,7 @@ def test_parse_cust(self):
         print 'importKey:', importKey
         trial += 1
         start = time.time()
-        parseResult = h2i.parse_only(pattern=importKey, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
+        parseResult = h2i.parse_only(pattern=importKey, header=0, timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs)
         elapsed = (time.time() - start)
         print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print "Parse result['destination_key']:", parseResult['destination_key']
