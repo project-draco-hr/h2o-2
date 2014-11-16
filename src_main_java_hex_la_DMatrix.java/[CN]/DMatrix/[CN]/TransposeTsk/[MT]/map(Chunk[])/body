@@ -1,0 +1,23 @@
+{
+  final Frame tgt=_tgt;
+  long[] espc=tgt.anyVec()._espc;
+  NewChunk[] tgtChunks=new NewChunk[chks[0]._len];
+  int colStart=(int)chks[0]._start;
+  for (int i=0; i < espc.length - 1; ++i) {
+    for (int j=0; j < tgtChunks.length; ++j)     tgtChunks[j]=new NewChunk(tgt.vec(j + colStart),i);
+    for (int c=((int)espc[i]); c < (int)espc[i + 1]; ++c) {
+      NewChunk nc=chks[c].inflate();
+      Iterator<Value> it=nc.values();
+      while (it.hasNext()) {
+        Value v=it.next();
+        NewChunk t=tgtChunks[v.rowId0()];
+        t.addZeros(c - (int)espc[i] - t.len());
+        v.add2Chunk(t);
+      }
+    }
+    for (    NewChunk t : tgtChunks) {
+      t.addZeros((int)(espc[i + 1] - espc[i]) - t.len());
+      t.close(_fs);
+    }
+  }
+}

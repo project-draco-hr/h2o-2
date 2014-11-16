@@ -1,0 +1,7 @@
+{
+  if (x.numCols() != y.numRows())   throw new IllegalArgumentException("dimensions do not match! x.numcols = " + x.numCols() + ", y.numRows = "+ y.numRows());
+  Frame z=new Frame(y.anyVec().makeZeros(y.numCols()));
+  transpose(x,z);
+  z.reloadVecs();
+  return z;
+}
