@@ -1,5 +1,5 @@
 def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float', h2oSummary2=None, h2oSummary2MaxErr=None, h2oQuantilesApprox=None, h2oQuantilesExact=None, h2oExecQuantiles=None, interpolate='linear', quantile=0.5, use_genfromtxt=False):
-    SCIPY_INSTALLED = True
+    SCIPY_INSTALLED = False
     try:
         import scipy as sp
         import numpy as np
@@ -7,9 +7,7 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
     except ImportError:
         print 'numpy or scipy is not installed. Will only do sort-based checking'
         SCIPY_INSTALLED = False
-    if (not SCIPY_INSTALLED):
-        return
-    if use_genfromtxt:
+    if (use_genfromtxt and SCIPY_INSTALLED):
         print 'Using numpy.genfromtxt. Better handling of null bytes'
         target = np.genfromtxt(open(csvPathname, 'r'), delimiter=',', skip_header=(1 if skipHeader else 0), dtype=None)
     else:
@@ -19,34 +17,36 @@ def quantile_comparisons(csvPathname, skipHeader=False, col=0, datatype='float',
         targetFP = map(float, target)
     if (datatype == 'int'):
         targetFP = map(int, target)
-    p = np.percentile(targetFP, (quantile * 100))
-    h2p.red_print('numpy.percentile', p)
-    from scipy import stats
-    s1 = stats.scoreatpercentile(targetFP, (quantile * 100))
-    h2p.red_print('scipy stats.scoreatpercentile', s1)
-    if (1 == 0):
-        alphap = 0
-        betap = 0
-        alphap = 0.5
-        betap = 0.5
-        alphap = (1 / 3.0)
-        betap = (1 / 3.0)
-    if (interpolate == 'mean'):
-        alphap = 0.4
-        betap = 0.4
-    if (interpolate == 'linear'):
-        alphap = 1
-        betap = 1
-    s2List = stats.mstats.mquantiles(targetFP, prob=quantile, alphap=alphap, betap=betap)
-    s2 = s2List[0]
-    h2p.red_print('scipy stats.mstats.mquantiles:', s2)
+    if SCIPY_INSTALLED:
+        p = np.percentile(targetFP, (quantile * 100))
+        h2p.red_print('numpy.percentile', p)
+        from scipy import stats
+        s1 = stats.scoreatpercentile(targetFP, (quantile * 100))
+        h2p.red_print('scipy stats.scoreatpercentile', s1)
+        if (1 == 0):
+            alphap = 0
+            betap = 0
+            alphap = 0.5
+            betap = 0.5
+            alphap = (1 / 3.0)
+            betap = (1 / 3.0)
+        if (interpolate == 'mean'):
+            alphap = 0.4
+            betap = 0.4
+        if (interpolate == 'linear'):
+            alphap = 1
+            betap = 1
+        s2List = stats.mstats.mquantiles(targetFP, prob=quantile, alphap=alphap, betap=betap)
+        s2 = s2List[0]
+        h2p.red_print('scipy stats.mstats.mquantiles:', s2)
     targetFP.sort()
     b = percentileOnSortedList(targetFP, quantile, interpolate='linear')
     label = (str((quantile * 100)) + '%')
     h2p.blue_print(label, 'from sort:', b)
-    h2p.blue_print(label, 'from numpy:', p)
-    h2p.blue_print(label, 'from scipy 1:', s1)
-    h2p.blue_print(label, 'from scipy 2:', s2)
+    if SCIPY_INSTALLED:
+        h2p.blue_print(label, 'from numpy:', p)
+        h2p.blue_print(label, 'from scipy 1:', s1)
+        h2p.blue_print(label, 'from scipy 2:', s2)
     h2p.blue_print(label, 'from h2o summary:', h2oSummary2)
     h2p.blue_print(label, 'from h2o multipass:', h2oQuantilesExact)
     h2p.blue_print(label, 'from h2o singlepass:', h2oQuantilesApprox)
