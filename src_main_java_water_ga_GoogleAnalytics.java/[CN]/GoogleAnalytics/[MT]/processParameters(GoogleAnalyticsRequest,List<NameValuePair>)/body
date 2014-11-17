@@ -1,0 +1,14 @@
+{
+  Map<GoogleAnalyticsParameter,String> requestParms=request.getParameters();
+  Map<GoogleAnalyticsParameter,String> defaultParms=defaultRequest.getParameters();
+  for (  GoogleAnalyticsParameter parm : defaultParms.keySet()) {
+    String value=requestParms.get(parm);
+    String defaultValue=defaultParms.get(parm);
+    if (isEmpty(value) && !isEmpty(defaultValue)) {
+      requestParms.put(parm,defaultValue);
+    }
+  }
+  for (  GoogleAnalyticsParameter key : requestParms.keySet()) {
+    postParms.add(new BasicNameValuePair(key.getParameterName(),requestParms.get(key)));
+  }
+}

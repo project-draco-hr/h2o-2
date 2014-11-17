@@ -1,0 +1,9 @@
+{
+  if (config.isDiscoverRequestParameters() && config.getRequestParameterDiscoverer() != null) {
+    config.getRequestParameterDiscoverer().discoverParameters(config,defaultRequest);
+  }
+  this.config=config;
+  this.defaultRequest=defaultRequest;
+  this.defaultRequest.userAgent(config.getUserAgent());
+  this.httpClient=createHttpClient(config);
+}
