@@ -1,0 +1,25 @@
+{
+  Key parsed=Key.make("prostate_parsed");
+  Futures fs=new Futures();
+  Frame fr=getFrameForFile(parsed,"smalldata/glm_test/prostate_cat_replaced.csv");
+  fr.remove("RACE").remove(fs);
+  Key k=Key.make("rebalanced");
+  H2O.submitTask(new RebalanceDataSet(fr,k,64)).join();
+  fr.delete();
+  fr=DKV.get(k).get();
+  Frame tr=DMatrix.transpose(fr);
+  tr.reloadVecs();
+  Frame z=DMatrix.mmul(tr,fr);
+  DataInfo dinfo=new DataInfo(fr,0,false,false,DataInfo.TransformType.NONE);
+  GramTask gt=new GramTask(null,dinfo,false,false).doAll(dinfo._adaptedFrame);
+  gt._gram.mul(gt._nobs);
+  double[][] gram=gt._gram.getDenseXX();
+  for (int i=0; i < gram.length; ++i)   for (int j=0; j < gram[i].length; ++j)   assertEquals("position " + i + ", "+ j,gram[i][j],z.vec(j).at(i),1e-4);
+  Frame z2=DMatrix.mmul2(tr,fr);
+  for (int i=0; i < gram.length; ++i)   for (int j=0; j < gram[i].length; ++j)   assertEquals("position " + i + ", "+ j,gram[i][j],z2.vec(j).at(i),1e-4);
+  fr.delete();
+  for (  Vec v : tr.vecs())   v.remove(fs);
+  for (  Vec v : z.vecs())   v.remove(fs);
+  for (  Vec v : z2.vecs())   v.remove(fs);
+  fs.blockForPending();
+}

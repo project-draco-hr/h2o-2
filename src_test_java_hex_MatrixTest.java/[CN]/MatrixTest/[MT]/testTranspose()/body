@@ -1,0 +1,19 @@
+{
+  Futures fs=new Futures();
+  Key parsed=Key.make("prostate_parsed");
+  Key modelKey=Key.make("prostate_model");
+  GLMModel model=null;
+  File f=TestUtil.find_test_file("smalldata/glm_test/prostate_cat_replaced.csv");
+  Frame fr=getFrameForFile(parsed,"smalldata/glm_test/prostate_cat_replaced.csv");
+  fr.remove("RACE").remove(fs);
+  Key k=Key.make("rebalanced");
+  H2O.submitTask(new RebalanceDataSet(fr,k,64)).join();
+  fr.delete();
+  fr=DKV.get(k).get();
+  Frame tr=DMatrix.transpose(fr);
+  tr.reloadVecs();
+  for (int i=0; i < fr.numRows(); ++i)   for (int j=0; j < fr.numCols(); ++j)   assertEquals(fr.vec(j).at(i),tr.vec(i).at(j),1e-4);
+  fr.delete();
+  for (  Vec v : tr.vecs())   v.remove(fs);
+  fs.blockForPending();
+}
