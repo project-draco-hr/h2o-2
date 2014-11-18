@@ -1,6 +1,14 @@
 {
-  final int off=rid == -1 ? OFF : findOffset(rid);
+  if (rid == -1) {
+    _offCache=OFF;
+    return getId(OFF);
+  }
+  int off=_offCache;
   int x=getId(off);
+  if (x != rid) {
+    off=_offCache=rid == -1 ? OFF : findOffset(rid);
+    x=getId(off);
+  }
   if (x > rid)   return x;
   if (off < _mem.length - _ridsz - _valsz)   return getId(off + _ridsz + _valsz);
   return _len;
