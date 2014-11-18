@@ -1,0 +1,11 @@
+{
+  int i=_cntr.incrementAndGet();
+  RebalanceTask rbt=(RebalanceTask)caller;
+  Futures fs=new Futures();
+  for (  Vec v : rbt._srcVecs)   v.remove(fs);
+  fs.blockForPending();
+  ;
+  if (i < _newVecs.length) {
+    new RebalanceTask(new Cmp(),_vecs[i]).asyncExec(_newVecs[i]);
+  }
+}

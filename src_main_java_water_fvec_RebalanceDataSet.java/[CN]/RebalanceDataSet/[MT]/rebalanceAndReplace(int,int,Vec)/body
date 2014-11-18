@@ -1,0 +1,5 @@
+{
+  RebalanceAndReplaceDriver rbt=new RebalanceAndReplaceDriver(nchunks,maxP,vecs);
+  H2O.submitTask(rbt).join();
+  return rbt._newVecs;
+}

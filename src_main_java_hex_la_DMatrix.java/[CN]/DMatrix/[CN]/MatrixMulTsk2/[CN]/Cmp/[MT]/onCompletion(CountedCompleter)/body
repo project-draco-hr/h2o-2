@@ -1,0 +1,8 @@
+{
+  VecMulTsk tsk=(VecMulTsk)caller;
+  Chunk c=new NewChunk(tsk._res).compress();
+  DKV.put(tsk._k,c,_fs,false);
+  new UpdateProgress(c._mem.length,c.frozenType()).fork(_progressKey);
+  int j=_j.incrementAndGet();
+  if (j < chks.length)   new VecMulTsk(new Cmp(j,chks,xs),chks[j],_fs).asyncExec(Utils.append(new Vec[]{_Y.vec(j)},xs));
+}
