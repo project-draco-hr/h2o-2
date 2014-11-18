@@ -1,0 +1,25 @@
+{
+  Chunk[] ncs=Arrays.copyOfRange(chks,chks.length - _Y.numCols(),chks.length);
+  chks=Arrays.copyOf(chks,chks.length - _Y.numCols());
+  NewChunk[] urows=new NewChunk[chks[0]._len];
+  for (int i=0; i < urows.length; ++i)   urows[i]=new NewChunk(null,-1,0);
+  for (int i=0; i < chks.length; ++i) {
+    Chunk c=chks[i];
+    NewChunk nc=c.inflate();
+    Iterator<Value> it=nc.values();
+    while (it.hasNext()) {
+      Value v=it.next();
+      int ri=v.rowId0();
+      urows[ri].addZeros(i - urows[ri]._len);
+      v.add2Chunk(urows[ri]);
+    }
+  }
+  Chunk[] crows=new Chunk[urows.length];
+  for (int i=0; i < urows.length; ++i) {
+    urows[i].addZeros(chks.length - urows[i]._len);
+    crows[i]=urows[i].compress();
+    urows[i]=null;
+  }
+  addToPendingCount(1);
+  new ChunkMulTsk(this,crows,ncs,_fs).asyncExec(_Y);
+}

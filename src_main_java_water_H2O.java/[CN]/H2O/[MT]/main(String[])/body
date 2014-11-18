@@ -9,6 +9,11 @@
   ARGS=arguments.toStringArray();
   printAndLogVersion();
   printWarningIfRootOnMac();
+  GA=new GoogleAnalytics("UA-56665317-2","H2O",H2O.getVersion());
+  if ((new File(".h2o_no_collect")).exists() || (new File(System.getProperty("user.home") + File.separator + ".h2o_no_collect")).exists() || OPT_ARGS.ga_opt_out) {
+    GA.setEnabled(false);
+    Log.info("Opted out of sending usage metrics.");
+  }
   if (OPT_ARGS.baseport != 0) {
     DEFAULT_PORT=OPT_ARGS.baseport;
   }
@@ -48,4 +53,5 @@
   }
   startupFinalize();
   Log.POST(380,"");
+  startGAStartupReport();
 }

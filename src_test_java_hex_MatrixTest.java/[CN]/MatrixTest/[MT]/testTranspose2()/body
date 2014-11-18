@@ -1,0 +1,14 @@
+{
+  Key parsed=Key.make("arcene_parsed");
+  GLMModel model=null;
+  String[] data=new String[]{"1 2:.2 5:.5 9:.9\n-1 1:.1 4:.4 8:.8\n","1 2:.2 5:.5 9:.9\n1 3:.3 6:.6\n","-1 7:.7 8:.8 9:.9\n1 20:2.\n","+1 1:.1 5:.5 6:.6 10:1\n1 19:1.9\n","1 2:.2 5:.5 9:.9\n-1 1:.1 4:.4 8:.8\n","1 2:.2 5:.5 9:.9\n1 3:.3 6:.6\n","-1 7:.7 8:.8 9:.9\n1 20:2.\n","+1 1:.1 5:.5 6:.6 10:1\n1 19:1.9\n","1 2:.2 5:.5 9:.9\n-1 1:.1 4:.4 8:.8\n","1 2:.2 5:.5 9:.9\n1 3:.3 6:.6\n","-1 7:.7 8:.8 9:.9\n1 20:2.\n","+1 1:.1 5:.5 6:.6 10:1\n1 19:1.9\n"};
+  Key k=FVecTest.makeByteVec(Key.make("svmtest_bits").toString(),data);
+  Frame fr=ParseDataset2.parse(parsed,new Key[]{k});
+  Frame tr=DMatrix.transpose(fr);
+  tr.reloadVecs();
+  for (int i=0; i < fr.numRows(); ++i)   for (int j=0; j < fr.numCols(); ++j)   assertEquals("at " + i + ", "+ j+ ":",fr.vec(j).at(i),tr.vec(i).at(j),1e-4);
+  fr.delete();
+  Futures fs=new Futures();
+  for (  Vec v : tr.vecs())   v.remove(fs);
+  fs.blockForPending();
+}

@@ -33,4 +33,4 @@ def test_rf_enums_score_subset_fvec(self):
         print 'rf end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
         (classification_error, classErrorPctList, totalScores) = h2o_rf.simpleCheckRFView(rfv=rfResult, ntree=ntrees)
         modelKey = rfResult['drf_model']['_key']
-        h2o_cmd.runScore(dataKey=scoreDataKey, modelKey=modelKey, vactual=y, vpredict=1, expectedAuc=0.85)
+        h2o_cmd.runScore(dataKey=scoreDataKey, modelKey=modelKey, vactual=y, vpredict=1)

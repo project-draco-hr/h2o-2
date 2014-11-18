@@ -1,0 +1,21 @@
+{
+  try {
+    if (isEmpty(config.getUserAgent())) {
+      config.setUserAgent(getUserAgentString());
+    }
+    if (isEmpty(request.userLanguage())) {
+      String region=System.getProperty("user.region");
+      if (isEmpty(region)) {
+        region=System.getProperty("user.country");
+      }
+      request.userLanguage(System.getProperty("user.language") + "-" + region);
+    }
+    if (isEmpty(request.documentEncoding())) {
+      request.documentEncoding(System.getProperty("file.encoding"));
+    }
+  }
+ catch (  Exception e) {
+    Log.warn("Exception while deriving the System properties for request " + request);
+  }
+  return request;
+}

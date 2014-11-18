@@ -1,0 +1,34 @@
+{
+  double[] gaps=gaps();
+  double[] log_wks=wks();
+  double[] sks=sk();
+  int kmin=-1;
+  for (int i=0; i < gaps.length - 1; ++i) {
+    int cur_k=i + 1;
+    if (gaps[cur_k] == 0) {
+      kmin=0;
+      k_best=1;
+      break;
+    }
+    if (i == gaps.length - 1) {
+      kmin=cur_k;
+      k_best=kmin;
+      break;
+    }
+    if (gaps[i] >= (gaps[i + 1] - sks[i + 1])) {
+      kmin=cur_k;
+      k_best=kmin;
+      break;
+    }
+  }
+  if (kmin <= 0)   k_best=1;
+  if (log_wks[log_wks.length - 1] != 0) {
+    if (kmin > 1)     k_best=kmin;
+  }
+ else {
+    if (kmin > 1)     k_best=kmin;
+  }
+  if (k_best <= 0)   k_best=(int)Double.NaN;
+  if (k_best == 0)   k_best=1;
+  return kmin;
+}
