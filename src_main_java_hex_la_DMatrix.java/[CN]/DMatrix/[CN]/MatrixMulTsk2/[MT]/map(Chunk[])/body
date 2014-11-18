@@ -1,7 +1,8 @@
 {
+  _j=new AtomicInteger(MAX_P);
   addToPendingCount(chks.length);
   int iStart=(int)chks[0]._start;
   int iEnd=iStart + chks[0]._len;
   Vec[] xs=Arrays.copyOfRange(_X.vecs(),iStart,iEnd);
-  for (int j=0; j < chks.length; ++j)   new VecMulTsk(this,chks[j],_fs).asyncExec(Utils.append(new Vec[]{_Y.vec(j)},xs));
+  for (int i=0; i < Math.min(MAX_P,chks.length); ++i)   new VecMulTsk(new Cmp(i,chks,xs),chks[i],_fs).asyncExec(Utils.append(new Vec[]{_Y.vec(i)},xs));
 }

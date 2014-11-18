@@ -1,7 +1,21 @@
 {
-  if (x.numCols() != y.numRows())   throw new IllegalArgumentException("dimensions do not match! x.numcols = " + x.numCols() + ", y.numRows = "+ y.numRows());
+  final Key progressKey=Key.make();
   Frame z=new Frame(x.anyVec().makeZeros(y.numCols()));
-  new MatrixMulTsk(y).doAll(Utils.append(x.vecs(),z.vecs()));
+  DKV.put(progressKey,new MulProgress(z.vecs().length * z.anyVec().nChunks()));
+  Job j=new Job(Key.make(x._key + " %*% " + y._key),progressKey){
+    @Override public float progress(){
+      MulProgress p=DKV.get(progressKey).get();
+      return p.progress();
+    }
+  }
+;
+  j.start(new H2OEmptyCompleter());
+  if (x.numCols() != y.numRows())   throw new IllegalArgumentException("dimensions do not match! x.numcols = " + x.numCols() + ", y.numRows = "+ y.numRows());
+  x=transpose(x,new Frame(y.anyVec().makeZeros((int)x.numRows())));
+  x.reloadVecs();
+  new MatrixMulTsk2(x,y,progressKey).doAll(z);
   z.reloadVecs();
+  x.delete();
+  j.remove();
   return z;
 }
