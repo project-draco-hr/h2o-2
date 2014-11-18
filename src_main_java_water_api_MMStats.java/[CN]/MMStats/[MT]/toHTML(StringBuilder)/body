@@ -1,0 +1,19 @@
+{
+  DocGen.HTML.arrayHead(sb);
+  sb.append("<tr>");
+  sb.append("<td>").append("run time").append("</td><td>" + pprintTime(_stats.lastUpdateAt - _stats._startTime) + "</td>");
+  sb.append("</tr><tr>");
+  sb.append("<td>").append("chunks total").append("</td><td>" + _stats.chunksTotal + "</td>");
+  sb.append("</tr><tr>");
+  sb.append("<td>").append("chunks done").append("</td><td>" + _stats.chunksDone + "</td>");
+  sb.append("</tr><tr>");
+  sb.append("<td>").append("output size").append("</td><td>" + prettyprint(_stats.size) + "</td>");
+  for (int i=0; i < _stats.chunkTypes.length; ++i) {
+    int ct=_stats.chunkTypes[i];
+    sb.append("</tr><tr>");
+    sb.append("<td>").append(TypeMap.newInstance(ct).getClass().getSimpleName()).append("</td><td>" + _stats.chunkCnts[i] + "</td>");
+  }
+  sb.append("</tr>");
+  DocGen.HTML.arrayTail(sb);
+  return true;
+}

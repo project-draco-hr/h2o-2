@@ -1,0 +1,7 @@
+{
+  long gigs=l >> 30;
+  long megs=(l - gigs) >> 20;
+  long kbs=(l - gigs - megs) >> 10;
+  long bytes=(l - gigs - megs- kbs);
+  return (gigs > 0 ? (gigs + "GB ") : "") + (megs > 0 ? (megs + "MB ") : ("")) + (kbs > 0 ? (kbs + "KB ") : (""))+ bytes+ "B";
+}
