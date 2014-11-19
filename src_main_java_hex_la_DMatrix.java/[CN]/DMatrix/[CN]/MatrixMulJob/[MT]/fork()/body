@@ -1,0 +1,19 @@
+{
+  Futures fs=new Futures();
+  DKV.put(_dstKey,new MatrixMulStats(_x.anyVec().nChunks() * _y.numCols(),self()),fs);
+  fs.blockForPending();
+  start(new H2OEmptyCompleter());
+  H2O.submitTask(new MatrixMulTsk(new H2OCallback<MatrixMulTsk>(_fjtask){
+    @Override public void callback(    MatrixMulTsk mmt){
+      _z=mmt._z;
+      DKV.put(_dstKey,_z);
+      remove();
+    }
+    @Override public boolean onExceptionalCompletion(    Throwable ex,    CountedCompleter caller){
+      MatrixMulJob.this.cancel(ex);
+      return true;
+    }
+  }
+,_dstKey,_x,_y));
+  return this;
+}

@@ -1,0 +1,10 @@
+{
+  this(vec,cidx);
+  _ds=vals;
+  _sparseLen=_len=vals.length;
+  _nzCnt=0;
+  for (  double d : vals) {
+    if (Double.isNaN(d))     ++_naCnt;
+ else     if (d != 0)     _nzCnt++;
+  }
+}
