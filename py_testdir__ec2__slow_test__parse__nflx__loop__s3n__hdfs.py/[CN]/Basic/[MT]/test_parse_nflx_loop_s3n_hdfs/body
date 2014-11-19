@@ -63,7 +63,6 @@ def test_parse_nflx_loop_s3n_hdfs(self):
                         print 'Loading', protocol, 'key:', src_key, 'to', hex_key
                         parse3Result = h2i.import_parse(bucket='home-0xdiag-datasets', path=((importFolderPath + '/') + csvFilepattern), timeoutSecs=timeoutSecs, retryDelaySecs=retryDelaySecs, pollTimeoutSecs=pollTimeoutSecs, noPoll=noPoll, benchmarkLogging=benchmarkLogging)
                 elapsed = (time.time() - start)
-                print src_key, 'parse time:', parseResult['response']['time']
                 print 'parse result:', parseResult['destination_key']
                 print 'Parse #', trial, 'completed in', ('%6.2f' % elapsed), 'seconds.', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
                 if noPoll:

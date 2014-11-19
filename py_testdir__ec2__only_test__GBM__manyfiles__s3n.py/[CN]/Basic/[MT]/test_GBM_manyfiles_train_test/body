@@ -16,12 +16,12 @@ def test_GBM_manyfiles_train_test(self):
         print 'train parse end on ', trainFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'train parse result:', parseTrainResult['destination_key']
         inspect = h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
-        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
-        num_rows = inspect['num_rows']
-        num_cols = inspect['num_cols']
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
         execExpr = ('%s[,378] = %s[,378]>15 ? 1 : 0' % (trainKey, trainKey))
         resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=500)
-        parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, doSummary=False)
+        parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='s3n', hex_key=testKey, timeoutSecs=timeoutSecs, doSummary=False)
         elapsed = (time.time() - start)
         print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'test parse result:', parseTestResult['destination_key']
