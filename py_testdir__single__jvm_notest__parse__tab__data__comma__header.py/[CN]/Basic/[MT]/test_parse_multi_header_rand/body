@@ -91,12 +91,11 @@ def test_parse_multi_header_rand(self):
             pattern = (((('*syn_data_*' + str(trial)) + '_') + rowxcol) + '*')
         parseResult = h2i.parse_only(pattern=pattern, hex_key=hex_key, timeoutSecs=timeoutSecs, **kwargs)
         print ("parseResult['destination_key']: " + parseResult['destination_key'])
-        print 'parse time:', parseResult['response']['time']
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         h2o_cmd.infoFromInspect(inspect, csvPathname)
-        print ('\n' + csvPathname), '    num_rows:', '{:,}'.format(inspect['num_rows']), '    num_cols:', '{:,}'.format(inspect['num_cols'])
+        print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
         h2o_cmd.columnInfoFromInspect(parseResult['destination_key'], exceptionOnMissingValues=False)
-        self.assertEqual(inspect['num_cols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['num_cols'], totalCols)))
+        self.assertEqual(inspect['numCols'], totalCols, ('parse created result with the wrong number of cols %s %s' % (inspect['numCols'], totalCols)))
         h2oLosesOneData = ((headerRowsDone == 0) and (kwargs['header'] == 1) and (not DATA_HAS_HDR_ROW))
         h2oGainsOneData = ((headerRowsDone != 0) and (kwargs['header'] == 1) and DATA_HAS_HDR_ROW and (kwargs['header_from_file'] is not None))
         print 'h2oLosesOneData:', h2oLosesOneData
@@ -105,7 +104,7 @@ def test_parse_multi_header_rand(self):
             totalDataRows -= 1
         if h2oGainsOneData:
             totalDataRows += 1
-        self.assertEqual(inspect['num_rows'], totalDataRows, ("parse created result with the wrong number of rows (header rows don't count) h2o: %s gen'ed: %s" % (inspect['num_rows'], totalDataRows)))
+        self.assertEqual(inspect['numRows'], totalDataRows, ("parse created result with the wrong number of rows (header rows don't count) h2o: %s gen'ed: %s" % (inspect['numRows'], totalDataRows)))
         h2oShouldSeeHeader = ((HEADER_HAS_HDR_ROW and (kwargs['header_from_file'] is not None)) or DATA_HAS_HDR_ROW)
         if h2oShouldSeeHeader:
             kwargs = {'sample': 75, 'depth': 25, 'ntree': 1, 'ignore': 'A', }

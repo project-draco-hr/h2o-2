@@ -1,0 +1,8 @@
+{
+  super(jobKey,dstKey);
+  if (x.numCols() != y.numRows())   throw new IllegalArgumentException("dimensions do not match! x.numcols = " + x.numCols() + ", y.numRows = "+ y.numRows());
+  _dstKey=dstKey;
+  _x=x;
+  _y=y;
+  description=(_x._key != null && _y._key != null) ? (_x._key + " %*% " + _y._key) : "matrix multiplication";
+}

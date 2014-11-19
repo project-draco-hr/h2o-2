@@ -1,0 +1,10 @@
+{
+  Key jk=Key.make(after + "_job");
+  Futures fs=new Futures();
+  if (skip_first_col && x.numCols() == (y.numRows() + 1)) {
+    x.remove(0).remove(fs);
+    y.remove(0).remove(fs);
+  }
+  new DMatrix.MatrixMulJob(jk,after,x,y).fork();
+  return Response.redirect(this,"/2/Inspector","src_key",after);
+}
