@@ -1,9 +1,0 @@
-{
-  addToPendingCount(1);
-  new GetNonZerosTsk(new H2OCallback<GetNonZerosTsk>(this){
-    @Override public void callback(    GetNonZerosTsk gnz){
-      new MatrixMulTsk3(VecTsk.this,_progressKey,gnz._res,_yVec).asyncExec(Utils.append(_x.vecs(gnz._res),_zVec));
-    }
-  }
-).asyncExec(_yVec);
-}

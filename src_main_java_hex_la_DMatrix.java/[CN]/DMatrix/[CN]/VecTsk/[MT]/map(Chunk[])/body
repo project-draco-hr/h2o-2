@@ -1,12 +1,13 @@
 {
-  Chunk yChunk=_y.chunkForChunkIdx(0);
   Chunk zChunk=chks[chks.length - 1];
   double[] res=MemoryManager.malloc8d(chks[0]._len);
-  for (int i=0; i < _nzs.length; ++i) {
-    final double yVal=yChunk.at0(_nzs[i]);
+  for (int i=0; i < _y.length; ++i) {
+    final double yVal=_y[i];
     final Chunk xChunk=chks[i];
-    for (int k=xChunk.nextNZ(-1); k < res.length; ++k)     res[k]+=yVal * xChunk.at0(k);
+    for (int k=xChunk.nextNZ(-1); k < res.length; k=xChunk.nextNZ(k))     res[k]+=yVal * xChunk.at0(k);
   }
   zChunk.setAll(res);
   new UpdateProgress(zChunk.modifiedChunk()._mem.length,zChunk.modifiedChunk().frozenType()).fork(_progressKey);
+  _y=null;
+  _progressKey=null;
 }
