@@ -1,4 +1,4 @@
 {
   int i=_cntr.incrementAndGet();
-  if (i < _y.numCols())   new VecTsk(new Callback(),_progressKey,_x,_y.vec(i),_z.vec(i)).fork();
+  if (i < _y.numCols())   forkVecTask(i);
 }

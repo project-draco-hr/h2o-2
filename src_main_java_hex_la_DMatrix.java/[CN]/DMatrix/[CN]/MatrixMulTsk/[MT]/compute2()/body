@@ -1,10 +1,10 @@
 {
   _z=new Frame(_x.anyVec().makeZeros(_y.numCols()));
   final Key k=Key.makeSystem(Key.make().toString());
-  new RebalanceDataSet(_y,k,1).fork().join();
-  _y=DKV.get(k).get();
-  int maxP=100;
+  int total_cores=H2O.CLOUD.size() * H2O.NUMCPUS;
+  int chunksPerCol=_y.anyVec().nChunks();
+  int maxP=(8 * total_cores) / chunksPerCol;
   _cntr=new AtomicInteger(maxP - 1);
-  addToPendingCount(_y.numCols() - 1);
-  for (int i=0; i < Math.min(_y.numCols(),maxP); ++i)   new VecTsk(new Callback(),_progressKey,_x,_y.vec(i),_z.vec(i)).fork();
+  addToPendingCount(2 * _y.numCols() - 1);
+  for (int i=0; i < Math.min(_y.numCols(),maxP); ++i)   forkVecTask(i);
 }
