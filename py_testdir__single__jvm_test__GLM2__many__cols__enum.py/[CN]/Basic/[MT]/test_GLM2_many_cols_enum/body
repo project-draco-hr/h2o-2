@@ -22,7 +22,7 @@ def test_GLM2_many_cols_enum(self):
         inspect = h2o_cmd.runInspect(None, parseResult['destination_key'])
         print ('\n' + csvFilename)
         y = colCount
-        kwargs = {'response': y, 'max_iter': 2, 'family': 'binomial', 'lambda': 0.0001, 'alpha': 0.6, 'n_folds': 1, 'beta_epsilon': 0.0001, 'strong_rules_enabled': 1, }
+        kwargs = {'response': y, 'max_iter': 2, 'family': 'binomial', 'lambda': 0.0001, 'alpha': 0.6, 'n_folds': 1, 'beta_epsilon': 0.0001, 'strong_rules': 1, }
         start = time.time()
         glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
         elapsed = (time.time() - start)
