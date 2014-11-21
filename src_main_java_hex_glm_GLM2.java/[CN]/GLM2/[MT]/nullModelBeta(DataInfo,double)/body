@@ -1,6 +1,6 @@
 {
   double[] beta=MemoryManager.malloc8d(_srcDinfo.fullN() + (dinfo._hasIntercept ? 1 : 0) - _noffsets);
-  if (has_intercept) {
+  if (intercept) {
     double icpt=_noffsets == 0 ? _glm.link(ymu) : computeIntercept(dinfo,ymu,offset,response);
     if (dinfo._hasIntercept)     beta[beta.length - 1]=icpt;
   }
