@@ -8,7 +8,7 @@
       res[i]._type=ParserSetup.Coltype.STR;
       res[i]._strongGuess=true;
     }
- else     if (_nstrings[i] >= 9 * (_nnums[i] + _nzeros[i])) {
+ else     if (_nstrings[i] >= STRING_DOMINANCE_RATIO * (_nnums[i] + _nzeros[i])) {
       res[i]._type=ParserSetup.Coltype.STR;
     }
   }
