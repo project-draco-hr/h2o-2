@@ -9,7 +9,7 @@
   int[] nzs=MemoryManager.malloc4(res.length + 1);
   int j=0;
   for (int i=0; i < res.length; ++i)   if (res[i] != 0)   nzs[j++]=i;
-  Chunk modChunk=(j < (res.length >> 1)) ? new CXDChunk(zChunk._start,res,nzs,j) : new C8DChunk(zChunk._start,res);
+  Chunk modChunk=(j < (res.length >> 1)) ? new CXDChunk(res,nzs,j) : new C8DChunk(res);
   new UpdateProgress(modChunk._mem.length,modChunk.frozenType()).fork(_progressKey);
   DKV.put(zChunk._vec.chunkKey(zChunk.cidx()),modChunk,_fs);
 }
