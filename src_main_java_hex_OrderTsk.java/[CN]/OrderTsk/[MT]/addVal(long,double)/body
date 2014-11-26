@@ -1,0 +1,17 @@
+{
+  int x=_n - 1;
+  if (_vals[x] > val) {
+    _vals[x]=val;
+    _ids[x]=id;
+    while (x > 0 && _vals[x - 1] > _vals[x]) {
+      double v=_vals[x - 1];
+      _vals[x - 1]=_vals[x];
+      _vals[x]=v;
+      long l=_ids[x - 1];
+      _ids[x - 1]=_ids[x];
+      _ids[x]=l;
+      --x;
+    }
+  }
+  return x < _n;
+}

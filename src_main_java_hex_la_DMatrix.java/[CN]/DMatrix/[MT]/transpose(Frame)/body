@@ -1,5 +1,5 @@
 {
-  int nchunks=Math.min(src.numCols(),4 * H2O.NUMCPUS * H2O.CLOUD.size());
+  int nchunks=Math.max(1,src.numCols() / 10000);
   long[] espc=new long[nchunks + 1];
   int rpc=(src.numCols() / nchunks);
   int rem=(src.numCols() % nchunks);

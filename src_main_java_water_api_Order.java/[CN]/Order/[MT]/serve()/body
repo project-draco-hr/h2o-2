@@ -1,0 +1,24 @@
+{
+  if (n > 10000)   throw H2O.unimpl();
+  long[] espc=new long[]{0,n};
+  final Vec[] dst=new Vec(Vec.newKey(),espc).makeZeros(cols.length);
+  H2OEmptyCompleter cmp=new H2OEmptyCompleter();
+  cmp.setPendingCount(cols.length - 1);
+  for (int i=0; i < cols.length; ++i) {
+    final int fi=i;
+    new OrderTsk(new H2OCallback<OrderTsk>(cmp){
+      @Override public void callback(      OrderTsk ot){
+        Vec.Writer w=dst[fi].open();
+        for (int j=0; j < ot._ids.length; ++j)         w.set(j,ot._ids[j]);
+        w.close();
+      }
+    }
+,n,rev).asyncExec(source.vec(cols[i]));
+  }
+  cmp.join();
+  Futures fs=new Futures();
+  if (destination_key == null)   destination_key=Key.make(source._key.toString() + ".order");
+  DKV.put(destination_key,new Frame(destination_key,Utils.select(source.names(),cols),dst),fs);
+  fs.blockForPending();
+  return Inspect2.redirect(this,destination_key.toString());
+}

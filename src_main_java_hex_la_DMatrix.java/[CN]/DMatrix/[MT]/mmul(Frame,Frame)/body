@@ -1,5 +1,5 @@
 {
-  MatrixMulJob mmj=new MatrixMulJob(Key.make("mmul"),Key.make("mmulProgress"),x,y);
+  MatrixMulJob mmj=new MatrixMulJob(Key.make("mmul" + ++cnt),Key.make("mmulProgress"),x,y);
   mmj.fork()._fjtask.join();
   DKV.remove(mmj._dstKey);
   return mmj._z;
