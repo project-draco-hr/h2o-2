@@ -1,4 +1,5 @@
 {
+  if (src.numRows() != (int)src.numRows())   throw H2O.unimpl();
   int nchunks=Math.max(1,src.numCols() / 10000);
   long[] espc=new long[nchunks + 1];
   int rpc=(src.numCols() / nchunks);
