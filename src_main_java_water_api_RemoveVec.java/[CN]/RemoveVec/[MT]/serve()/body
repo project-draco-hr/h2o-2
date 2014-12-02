@@ -1,6 +1,7 @@
 {
   Futures fs=new Futures();
   for (  Vec v : source.remove(cols))   v.remove(fs);
+  DKV.put(source._key,source,fs);
   fs.blockForPending();
   return Inspect2.redirect(this,source._key.toString());
 }
