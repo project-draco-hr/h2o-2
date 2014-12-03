@@ -1,0 +1,18 @@
+{
+  Key dest1=Key.make("f1");
+  File file1=TestUtil.find_test_file("smalldata/tnc3_10.csv");
+  Key fkey1=NFSFileVec.make(file1);
+  Frame fr1=ParseDataset2.parse(dest1,new Key[]{fkey1});
+  Frame rbinded_frame;
+  Env ev=Exec2.exec("rbind(" + fr1._key + ","+ fr1._key+ ")");
+  try {
+    rbinded_frame=ev.popAry();
+  }
+  finally {
+    if (ev != null)     ev.remove_and_unlock();
+  }
+  System.out.println(rbinded_frame.numRows());
+  System.out.println(fr1.numRows());
+  rbinded_frame.delete();
+  Lockable.delete(dest1);
+}
