@@ -1,8 +1,17 @@
 {
-  File f=new File(path);
-  if (!force && f.exists())   throw new IllegalArgumentException("The file " + path + " already exists!");
+  File parentDir=new File(path);
+  if (!force && parentDir.exists())   throw new IllegalArgumentException("The file " + path + " already exists!");
   try {
-    new Model2FileBinarySerializer().save(model,new File(path));
+    if (force && parentDir.exists())     delete(parentDir);
+    parentDir.mkdirs();
+    new Model2FileBinarySerializer().save(model,new File(parentDir,model._key.toString()));
+    if (save_cv) {
+      Model[] models=getCrossValModels(model);
+      System.out.println(models);
+      for (      Model m : models) {
+        new Model2FileBinarySerializer().save(m,new File(parentDir,m._key.toString()));
+      }
+    }
   }
  catch (  IOException e) {
     throw new IllegalArgumentException("Cannot save file " + path,e);

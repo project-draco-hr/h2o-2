@@ -2,10 +2,17 @@
   if (FSUtils.isBareS3NBucketWithoutTrailingSlash(path)) {
     path+="/";
   }
-  Path f=new Path(path);
+  Path parentDir=new Path(path);
   try {
-    FileSystem fs=FileSystem.get(f.toUri(),PersistHdfs.CONF);
-    new Model2HDFSBinarySerializer(fs,force).save(model,f);
+    FileSystem fs=FileSystem.get(parentDir.toUri(),PersistHdfs.CONF);
+    fs.mkdirs(parentDir);
+    new Model2HDFSBinarySerializer(fs,force).save(model,new Path(parentDir,model._key.toString()));
+    if (save_cv) {
+      Model[] models=getCrossValModels(model);
+      for (      Model m : models) {
+        new Model2HDFSBinarySerializer(fs,force).save(m,new Path(parentDir,m._key.toString()));
+      }
+    }
   }
  catch (  IOException e) {
     throw new IllegalArgumentException("Cannot save file " + path,e);

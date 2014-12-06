@@ -2,6 +2,7 @@
   final Pattern p=makePattern(input);
   final Pattern exclude;
   if (_hdrFrom.specified())   _header.setValue(true);
+  if (_hashHeader.value())   _header.setValue(true);
   exclude=_excludeExpression.specified() ? makePattern(_excludeExpression.value()) : null;
   final Key[] keyAry=H2O.KeySnapshot.globalSnapshot().filter(new H2O.KVFilter(){
     @Override public boolean filter(    H2O.KeyInfo k){
@@ -20,12 +21,10 @@
     hKey=_hdrFrom.value()._key;
     _header.setValue(true);
   }
-  boolean checkHeader=!_header.specified();
-  boolean hasHeader=_header.value();
-  CustomParser.ParserSetup userSetup=new CustomParser.ParserSetup(_parserType.value(),_separator.value(),hasHeader,_sQuotes.value());
+  CustomParser.ParserSetup userSetup=new CustomParser.ParserSetup(_parserType.value(),_separator.value(),_header.value(),_hashHeader.value(),_sQuotes.value());
   CustomParser.PSetupGuess setup=null;
   try {
-    setup=GuessSetup.guessSetup(keys,hKey,userSetup,checkHeader);
+    setup=GuessSetup.guessSetup(keys,hKey,userSetup,!_header.specified());
   }
  catch (  GuessSetup.ParseSetupGuessException e) {
     throw new IllegalArgumentException(e.getMessage());
