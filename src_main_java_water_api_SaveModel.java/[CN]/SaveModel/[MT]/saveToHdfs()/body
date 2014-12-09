@@ -5,14 +5,22 @@
   Path parentDir=new Path(path);
   try {
     FileSystem fs=FileSystem.get(parentDir.toUri(),PersistHdfs.CONF);
+    if (force && fs.exists(parentDir))     fs.delete(parentDir);
     fs.mkdirs(parentDir);
     new Model2HDFSBinarySerializer(fs,force).save(model,new Path(parentDir,model._key.toString()));
+    Path model_names=new Path(parentDir,"model_names");
+    BufferedWriter br=new BufferedWriter(new OutputStreamWriter(fs.create(model_names,true)));
+    br.write(model._key.toString());
+    br.newLine();
     if (save_cv) {
       Model[] models=getCrossValModels(model);
       for (      Model m : models) {
         new Model2HDFSBinarySerializer(fs,force).save(m,new Path(parentDir,m._key.toString()));
+        br.write(m._key.toString());
+        br.newLine();
       }
     }
+    br.close();
   }
  catch (  IOException e) {
     throw new IllegalArgumentException("Cannot save file " + path,e);

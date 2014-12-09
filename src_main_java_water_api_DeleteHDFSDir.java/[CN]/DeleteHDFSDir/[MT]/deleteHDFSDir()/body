@@ -1,0 +1,13 @@
+{
+  if (FSUtils.isBareS3NBucketWithoutTrailingSlash(path)) {
+    path+="/";
+  }
+  Path parentDir=new Path(path);
+  try {
+    FileSystem fs=FileSystem.get(parentDir.toUri(),PersistHdfs.CONF);
+    fs.delete(parentDir);
+  }
+ catch (  IOException e) {
+    throw new IllegalArgumentException("Cannot delete file " + path,e);
+  }
+}

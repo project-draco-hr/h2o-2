@@ -5,13 +5,22 @@
     if (force && parentDir.exists())     delete(parentDir);
     parentDir.mkdirs();
     new Model2FileBinarySerializer().save(model,new File(parentDir,model._key.toString()));
+    File model_names=new File(parentDir,"model_names");
+    FileOutputStream is=new FileOutputStream(model_names);
+    OutputStreamWriter osw=new OutputStreamWriter(is);
+    BufferedWriter br=new BufferedWriter(osw);
+    br.write(model._key.toString());
+    br.newLine();
     if (save_cv) {
       Model[] models=getCrossValModels(model);
       System.out.println(models);
       for (      Model m : models) {
         new Model2FileBinarySerializer().save(m,new File(parentDir,m._key.toString()));
+        br.write(m._key.toString());
+        br.newLine();
       }
     }
+    br.close();
   }
  catch (  IOException e) {
     throw new IllegalArgumentException("Cannot save file " + path,e);
