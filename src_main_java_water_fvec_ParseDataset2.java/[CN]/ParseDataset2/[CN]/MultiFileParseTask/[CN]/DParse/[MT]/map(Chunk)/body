@@ -1,4 +1,6 @@
 {
+  _appendables=_appendables.clone();
+  for (int i=0; i < _appendables.length; ++i)   _appendables[i]=(AppendableVec)_appendables[i].clone();
   Enum[] enums=enums(_eKey,_setup._ncols);
   FVecDataIn din=new FVecDataIn(in);
   FVecDataOut dout;
@@ -6,11 +8,11 @@
 switch (_setup._pType) {
 case CSV:
     p=new CsvParser(_setup);
-  dout=new FVecDataOut(_vg,_startChunkIdx + in.cidx(),_setup._ncols,_vecIdStart,enums,_appendables);
+  dout=new FVecDataOut(_vg,_chunkOff,_chunkOff + in.cidx(),enums,_appendables);
 break;
 case SVMLight:
 p=new SVMLightParser(_setup);
-dout=new SVMLightFVecDataOut(_vg,_startChunkIdx + in.cidx(),_setup._ncols,_vecIdStart,enums);
+dout=new SVMLightFVecDataOut(_vg,_chunkOff + in.cidx(),_appendables,_vecIdStart,_chunkOff,enums);
 break;
 default :
 throw H2O.unimpl();
