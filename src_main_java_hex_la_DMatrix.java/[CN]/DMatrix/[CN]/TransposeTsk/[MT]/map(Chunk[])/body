@@ -16,18 +16,11 @@
         v.add2Chunk(t);
       }
     }
-    addToPendingCount(tgtChunks.length - 1);
     for (int j=0; j < tgtChunks.length; ++j) {
       final int fj=j;
-      new CountedCompleter(this){
-        @Override public void compute(){
-          tgtChunks[fj].addZeros((int)(espc[fi + 1] - espc[fi]) - tgtChunks[fj]._len);
-          tgtChunks[fj].close(_fs);
-          tgtChunks[fj]=null;
-          tryComplete();
-        }
-      }
-.fork();
+      tgtChunks[fj].addZeros((int)(espc[fi + 1] - espc[fi]) - tgtChunks[fj]._len);
+      tgtChunks[fj].close(_fs);
+      tgtChunks[fj]=null;
     }
   }
 }
