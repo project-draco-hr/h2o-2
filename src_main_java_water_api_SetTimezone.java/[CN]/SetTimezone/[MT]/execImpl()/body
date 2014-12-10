@@ -1,0 +1,7 @@
+{
+  Set<String> idSet=DateTimeZone.getAvailableIDs();
+  if (!idSet.contains(tz))   throw new IllegalArgumentException("Unacceptable timezone name given.  For a list of acceptable names, use listTimezone().");
+  SetTimezoneTask task=new SetTimezoneTask();
+  task._tz=tz;
+  task.invokeOnAllNodes();
+}
