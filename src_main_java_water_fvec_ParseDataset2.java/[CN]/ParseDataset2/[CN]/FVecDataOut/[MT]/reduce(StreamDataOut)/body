@@ -1,7 +1,7 @@
 {
   FVecDataOut dout=(FVecDataOut)sdout;
+  _nChunks+=dout._nChunks;
   if (dout != null && _vecs != dout._vecs) {
-    _nCols=Math.max(_nCols,dout._nCols);
     if (dout._vecs.length > _vecs.length) {
       AppendableVec[] v=_vecs;
       _vecs=dout._vecs;
