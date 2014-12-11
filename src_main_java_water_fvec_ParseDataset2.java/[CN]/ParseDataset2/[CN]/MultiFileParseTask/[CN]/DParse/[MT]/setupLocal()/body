@@ -1,7 +1,5 @@
 {
   super.setupLocal();
-  _appendables=new AppendableVec[_setup._ncols];
-  long[] espc=MemoryManager.malloc8(_nchunks);
-  for (int i=0; i < _setup._ncols; ++i)   _appendables[i]=new AppendableVec(_vg.vecKey(_vecIdStart + i),espc,_chunkOff);
+  _espc=MemoryManager.malloc8(_nchunks);
   _visited=new NonBlockingSetInt();
 }

@@ -1,2 +1,15 @@
 {
+  if (_dout.length == 1)   return _dout[0]._vecs;
+  int nCols=0;
+  for (  FVecDataOut dout : _dout)   nCols=Math.max(dout._vecs.length,nCols);
+  AppendableVec[] res=new AppendableVec[nCols];
+  int nchunks=0;
+  for (  FVecDataOut dout : _dout)   nchunks+=dout.nChunks();
+  long[] espc=MemoryManager.malloc8(nchunks);
+  for (int i=0; i < res.length; ++i) {
+    res[i]=new AppendableVec(_vg.vecKey(_vecIdStart + i),espc,0);
+    res[i]._chunkTypes=MemoryManager.malloc1(nchunks);
+  }
+  for (int i=0; i < _dout.length; ++i)   for (int j=0; j < _dout[i]._vecs.length; ++j)   res[j].setSubRange(_dout[i]._vecs[j]);
+  return res;
 }
