@@ -1,6 +1,6 @@
 {
   AppendableVec[] avs=new AppendableVec[localSetup._ncols];
-  AppendableVec.Espc espc=new AppendableVec.Espc(MemoryManager.malloc8(nchunks));
+  long[] espc=MemoryManager.malloc8(nchunks);
   for (int i=0; i < avs.length; ++i)   avs[i]=new AppendableVec(_vg.vecKey(i + _vecIdStart),espc,chunkOff);
   return localSetup._pType == ParserType.SVMLight ? new SVMLightFVecDataOut(_vg,0,avs,_vecIdStart,chunkOff,enums(_eKey,localSetup._ncols)) : new FVecDataOut(_vg,chunkOff,0,enums(_eKey,localSetup._ncols),avs);
 }
