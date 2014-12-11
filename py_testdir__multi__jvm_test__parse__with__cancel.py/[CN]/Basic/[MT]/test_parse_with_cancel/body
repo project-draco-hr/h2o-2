@@ -1,7 +1,8 @@
 def test_parse_with_cancel(self):
+    mustWait = 10
     importFolderPath = 'standard'
     timeoutSecs = 500
-    csvFilenameList = [('standard', 'covtype.data', 54), ('manyfiles-nflx-gz', 'file_1.dat.gz', 378), ('standard', 'covtype20x.data', 54), ('manyfiles-nflx-gz', 'file_[1-9].dat.gz', 378)]
+    csvFilenameList = [('standard', 'covtype.data', 54), ('manyfiles-nflx-gz', 'file_1.dat.gz', 378), ('standard', 'covtype20x.data', 54), ('manyfiles-nflx-gz', 'file_[100-109].dat.gz', 378)]
     for (importFolderPath, csvFilename, response) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
         hex_key = (csvFilename + '.hex')
@@ -23,3 +24,5 @@ def test_parse_with_cancel(self):
             if (csvFilename in keyName):
                 h2o_cmd.runInspect(key=keyName)
                 h2o.check_sandbox_for_errors()
+        print 'Waiting', mustWait, 'seconds before next reparse-cancel.'
+        time.sleep(mustWait)
