@@ -1,4 +1,9 @@
 {
+  if (_grp2val == null)   _grp2val=new NonBlockingHashMap<Group,Double>();
+  if (_cols == null) {
+    _cols=new int[cs.length - 1];
+    for (int i=0; i < _cols.length; ++i)     _cols[i]=i;
+  }
   int rows=cs[0].len();
   Chunk vals=cs[cs.length - 1];
   for (int row=0; row < rows; ++row) {
