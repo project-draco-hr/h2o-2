@@ -1,6 +1,7 @@
 def allAcceptIptables():
     print 'Stopping firewall and allowing everyone...'
-    cmds = ['iptables -F']
+    cmds = []
+    cmds.append('iptables -F')
     cmds.append('iptables -X')
     cmds.append('iptables -t nat -F')
     cmds.append('iptables -t nat -X')

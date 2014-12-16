@@ -1,9 +1,10 @@
 def multicastAcceptIptables():
     print 'Enabling Multicast (only), send and receive'
-    cmds = ['iptables -A INPUT  -m pkttype --pkt-type multicast -j ACCEPT']
-    cmds.append('iptables -A OUTPUT -m pkttype --pkt-type multicast -j ACCEPT')
+    cmds = []
+    cmds.append('iptables -A INPUT  -m pkttype --pkt-type multicast -j ACCEPT')
     cmds.append('iptables -A INPUT  --protocol igmp -j ACCEPT')
-    cmds.append('iptables -A OUTPUT --protocol igmp -j ACCEPT')
     cmds.append("iptables -A INPUT  --dst '224.0.0.0/4' -j ACCEPT")
+    cmds.append('iptables -A OUTPUT -m pkttype --pkt-type multicast -j ACCEPT')
+    cmds.append('iptables -A OUTPUT --protocol igmp -j ACCEPT')
     cmds.append("iptables -A OUTPUT --dst '224.0.0.0/4' -j ACCEPT")
     runLinuxCmds(cmds)
