@@ -9,7 +9,7 @@
     FileOutputStream is=new FileOutputStream(model_names);
     OutputStreamWriter osw=new OutputStreamWriter(is);
     BufferedWriter br=new BufferedWriter(osw);
-    br.write(model._key.toString());
+    br.write("main model : " + model._key.toString());
     br.newLine();
     if (save_cv) {
       Model[] models=getCrossValModels(model);
