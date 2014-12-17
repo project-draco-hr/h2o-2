@@ -1,0 +1,10 @@
+def allAcceptIptablesMethod2():
+    print 'Stopping firewall and allowing everyone...'
+    cmds = []
+    cmds.append('iptables -flush')
+    cmds.append('iptables -delete-chain')
+    cmds.append('iptables -table filter -flush')
+    cmds.append('iptables -table nat -delete-chain')
+    cmds.append('iptables -table filter -delete-chain')
+    cmds.append('iptables -table nat -flush')
+    runLinuxCmds(cmds)

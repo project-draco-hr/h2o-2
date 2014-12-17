@@ -37,7 +37,7 @@ def test_ddply_plot(self):
             execExpr = (('a1 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
             start = time.time()
             (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=90)
-            groups = execResult['numRows']
+            groups = execResult['num_rows']
             h2o_util.assertApproxEqual(groups, maxExpectedGroups, rel=0.2, msg=("groups %s isn't close to expected amount %s, minInt: %s maxInt: %s" % (groups, maxExpectedGroups, minInt, maxInt)))
             ddplyElapsed = (time.time() - start)
             print 'ddplyElapsed:', ddplyElapsed
@@ -49,7 +49,7 @@ def test_ddply_plot(self):
             execExpr = (('a2 = ddply(r.hex, c(1,2), ' + PHRASE) + ')')
             start = time.time()
             (execResult, result) = h2e.exec_expr(h2o.nodes[0], execExpr, resultKey=None, timeoutSecs=90)
-            groups = execResult['numRows']
+            groups = execResult['num_rows']
             h2o_util.assertApproxEqual(groups, maxExpectedGroups, rel=0.2, msg=("groups %s isn't close to expected amount %s, minInt: %s maxInt: %s" % (groups, maxExpectedGroups, minInt, maxInt)))
             ddplyElapsed = (time.time() - start)
             print 'ddplyElapsed:', ddplyElapsed

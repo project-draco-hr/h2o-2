@@ -1,8 +1,5 @@
 {
   super.setupLocal();
-  if (_setup._pType == ParserType.CSV) {
-    _appendables=new AppendableVec[_setup._ncols];
-    for (int i=0; i < _setup._ncols; ++i)     _appendables[i]=new AppendableVec(_vg.vecKey(_vecIdStart + i));
-  }
+  _espc=MemoryManager.malloc8(_nchunks);
   _visited=new NonBlockingSetInt();
 }

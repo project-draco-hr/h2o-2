@@ -4,12 +4,14 @@ def infoFromSummary(summaryResult, noPrint=False, numCols=None, numRows=None):
     summaries = summaryResult['summaries']
     if ((1 == 0) and numCols and (len(summaries) != numCols)):
         raise Exception(('Expected numCols: %s cols in summary. Got %s' % (numCols, len(summaries))))
+    coltypeList = []
     for column in summaries:
         colname = column['colname']
         coltype = column['type']
         nacnt = column['nacnt']
         stats = column['stats']
         stattype = stats['type']
+        coltypeList.append(stattype)
         h2o_exec.checkForBadFP(nacnt, ('nacnt for colname: %s stattype: %s' % (colname, stattype)))
         if (stattype == 'Enum'):
             cardinality = stats['cardinality']
@@ -58,3 +60,4 @@ def infoFromSummary(summaryResult, noPrint=False, numCols=None, numRows=None):
             print 'hstep:', hstep
             print 'hbrk:', hbrk
             print 'hcnt:', hcnt
+    return coltypeList

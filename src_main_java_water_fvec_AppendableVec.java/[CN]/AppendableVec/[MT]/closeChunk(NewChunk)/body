@@ -1,9 +1,10 @@
 {
-  final int cidx=chk._cidx;
-  while (cidx >= _espc.length) {
-    _espc=Arrays.copyOf(_espc,_espc.length << 1);
-    _chunkTypes=Arrays.copyOf(_chunkTypes,_chunkTypes.length << 1);
+  final int cidx=chk._cidx - _chunkOff;
+  if (cidx >= _espc.length) {
+    int newlen=Math.max(_espc.length * 2,cidx + 1);
+    _espc=Arrays.copyOf(_espc,newlen);
   }
+  if (_chunkTypes.length < _espc.length)   _chunkTypes=Arrays.copyOf(_chunkTypes,_espc.length);
   _espc[cidx]=chk._len;
   _chunkTypes[cidx]=chk.type();
   _naCnt+=chk._naCnt;

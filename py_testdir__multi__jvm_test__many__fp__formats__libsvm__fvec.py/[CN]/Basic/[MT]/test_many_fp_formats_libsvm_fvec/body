@@ -21,7 +21,7 @@ def test_many_fp_formats_libsvm_fvec(self):
                 summaryResult = h2o_cmd.runSummary(key=selKey2, timeoutSecs=360)
                 h2o_cmd.infoFromSummary(summaryResult, noPrint=True)
             print synColSumDict.keys(), colNumberMax
-            self.assertEqual((colNumberMax + 1), numCols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), numCols)))
+            self.assertEqual((colNumberMax + 1), numCols, msg=('generated %s cols (including output). parsed to %s cols' % ((colNumberMax + 1), numCols)))
             h2e.exec_zero_list(zeroList)
             colSumList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
             self.assertEqual(rowCount, numRows, msg=('generated %s rows, parsed to %s rows' % (rowCount, numRows)))

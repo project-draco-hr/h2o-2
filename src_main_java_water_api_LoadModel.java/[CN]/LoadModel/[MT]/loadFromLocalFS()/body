@@ -1,10 +1,23 @@
 {
-  File f=new File(path);
-  if (!f.exists())   throw new IllegalArgumentException("File " + path + " does not exist!");
+  File parentDir=new File(path);
+  File model_names=new File(parentDir,"model_names");
+  if (!parentDir.exists())   throw new IllegalArgumentException("Directory " + path + " does not exist!");
+  if (!model_names.exists())   throw new IllegalArgumentException("File model_names does not exist!");
   try {
-    model=new Model2FileBinarySerializer().load(f);
+    BufferedReader br=new BufferedReader(new FileReader(model_names));
+    String line;
+    while ((line=br.readLine()) != null) {
+      if (line.contains("main model : ")) {
+        File modelFile=new File(parentDir,line.split(": ")[1]);
+        model=new Model2FileBinarySerializer().load(modelFile);
+      }
+ else {
+        File modelFile=new File(parentDir,line);
+        new Model2FileBinarySerializer().load(modelFile);
+      }
+    }
   }
  catch (  IOException e) {
-    throw new IllegalArgumentException("Cannot load file " + path,e);
+    throw new IllegalArgumentException("Cannot load models ",e);
   }
 }

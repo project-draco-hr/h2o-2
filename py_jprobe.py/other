@@ -1,7 +1,6 @@
 import random, jenkinsapi, getpass, re, os, argparse, shutil, json, logging, sys
 import string
 from jenkinsapi.jenkins import Jenkins
-from see import see
 DO_LAST_GOOD = True
 import sys
 sys.excepthook = my_hook
@@ -159,7 +158,6 @@ print 'build result set name', rs.name
 print 
 aTxt = open((LOG_DIR + '/artifacts.txt'), 'a')
 PRINTALL = False
-see(buildtimestamp)
 t = buildtimestamp
 hm = ('%s_%s' % (t.hour, t.minute))
 hms = ('%s_%s' % (hm, t.second))

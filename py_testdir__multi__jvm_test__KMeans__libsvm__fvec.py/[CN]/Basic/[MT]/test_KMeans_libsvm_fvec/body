@@ -1,18 +1,32 @@
 def test_KMeans_libsvm_fvec(self):
+
+    def do_summary_and_inspect():
+        summaryResult = h2o_cmd.runSummary(key=hex_key)
+        coltypeList = h2o_cmd.infoFromSummary(summaryResult)
+        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=360)
+        h2o_cmd.infoFromInspect(inspect, csvFilename)
+        numRows = inspect['numRows']
+        numCols = inspect['numCols']
+        if (csvFilename == 'covtype.binary.svm'):
+            for k in range(55):
+                naCnt = inspect['cols'][k]['naCnt']
+                self.assertEqual(0, naCnt, msg=('col %s naCnt %d should be %s' % (k, naCnt, 0)))
+                stype = inspect['cols'][k]['type']
+                print k, stype
+                self.assertEqual('Int', stype, msg=('col %s type %s should be %s' % (k, stype, 'Int')))
+            for (i, c) in enumerate(coltypeList):
+                print ('column index: %s  column type: %s' % (i, c))
+                assert (c == 'Numeric'), ('All cols in covtype.binary.svm should be parsed as Numeric! %s %s' % (i, c))
     csvFilenameList = [('colon-cancer.svm', 'cA', 30, 1), ('connect4.svm', 'cB', 30, 1), ('covtype.binary.svm', 'cC', 30, 1), ('mnist_train.svm', 'cM', 30, 1), ('duke.svm', 'cD', 30, 1), ('gisette_scale.svm', 'cF', 120, 1), ('mushrooms.svm', 'cG', 30, 1), ('syn_6_1000_10.svm', 'cK', 30, 1), ('syn_0_100_1000.svm', 'cL', 30, 1)]
+    csvFilenameList = [('covtype.binary.svm', 'cC', 30, 1)]
+    h2b.browseTheCloud()
     lenNodes = len(h2o.nodes)
     firstDone = False
     importFolderPath = 'libsvm'
     for (csvFilename, hex_key, timeoutSecs, resultMult) in csvFilenameList:
         csvPathname = ((importFolderPath + '/') + csvFilename)
-        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=2000)
-        print "Parse result['destination_key']:", parseResult['destination_key']
-        start = time.time()
-        inspect = h2o_cmd.runInspect(None, parseResult['destination_key'], timeoutSecs=360)
-        print 'Inspect:', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
-        h2o_cmd.infoFromInspect(inspect, csvFilename)
-        numRows = inspect['numRows']
-        numCols = inspect['numCols']
+        parseResult = h2i.import_parse(bucket='home-0xdiag-datasets', path=csvPathname, hex_key=hex_key, timeoutSecs=2000, doSummary=False)
+        do_summary_and_inspect()
         for trial in range(1):
             kwargs = {'k': 3, 'initialization': 'Furthest', 'ignored_cols': None, 'max_iter': 10, 'seed': 265211114317615310, }
             timeoutSecs = 600
@@ -20,5 +34,8 @@ def test_KMeans_libsvm_fvec(self):
             kmeans = h2o_cmd.runKMeans(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
             elapsed = (time.time() - start)
             print 'kmeans end on ', csvPathname, 'took', elapsed, 'seconds.', ('%d pct. of timeout' % ((elapsed / timeoutSecs) * 100))
+            do_summary_and_inspect()
             h2o_kmeans.simpleCheckKMeans(self, kmeans, **kwargs)
+            print 'hello'
             (centers, tupleResultList) = h2o_kmeans.bigCheckResults(self, kmeans, csvPathname, parseResult, 'd', **kwargs)
+            do_summary_and_inspect()

@@ -10,7 +10,7 @@
     new Model2HDFSBinarySerializer(fs,force).save(model,new Path(parentDir,model._key.toString()));
     Path model_names=new Path(parentDir,"model_names");
     BufferedWriter br=new BufferedWriter(new OutputStreamWriter(fs.create(model_names,true)));
-    br.write(model._key.toString());
+    br.write("main model : " + model._key.toString());
     br.newLine();
     if (save_cv) {
       Model[] models=getCrossValModels(model);

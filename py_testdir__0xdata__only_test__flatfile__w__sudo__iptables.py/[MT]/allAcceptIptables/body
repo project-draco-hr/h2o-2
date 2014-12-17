@@ -1,0 +1,13 @@
+def allAcceptIptables():
+    print 'Stopping firewall and allowing everyone...'
+    cmds = []
+    cmds.append('iptables -F')
+    cmds.append('iptables -X')
+    cmds.append('iptables -t nat -F')
+    cmds.append('iptables -t nat -X')
+    cmds.append('iptables -t mangle -F')
+    cmds.append('iptables -t mangle -X')
+    cmds.append('iptables -P INPUT ACCEPT')
+    cmds.append('iptables -P FORWARD ACCEPT')
+    cmds.append('iptables -P OUTPUT ACCEPT')
+    runLinuxCmds(cmds)

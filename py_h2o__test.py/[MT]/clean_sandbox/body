@@ -1,9 +1,13 @@
 def clean_sandbox():
-    IS_THIS_FASTER = True
+    IS_THIS_FASTER = False
     if os.path.exists(LOG_DIR):
-        for f in glob.glob((LOG_DIR + '/syn_datasets/*')):
-            verboseprint('cleaning', f)
-            os.remove(f)
+        if (1 == 0):
+            for f in glob.glob((LOG_DIR + '/syn_datasets/*/*')):
+                verboseprint('cleaning', f)
+                os.remove(f)
+            for f in glob.glob((LOG_DIR + '/syn_datasets/*')):
+                verboseprint('cleaning', f)
+                os.remove(f)
         print 'Removing', LOG_DIR, '(if slow, might be old ice dir spill files)'
         start = time.time()
         if IS_THIS_FASTER:

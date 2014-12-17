@@ -1,0 +1,7 @@
+def multicastBlockSendIptables():
+    print 'Disabling Multicast (only), send only'
+    cmds = []
+    cmds.append('iptables -A OUTPUT -m pkttype --pkt-type multicast -j DROP')
+    cmds.append('iptables -A OUTPUT --protocol igmp -j DROP')
+    cmds.append("iptables -A OUTPUT --dst '224.0.0.0/4' -j DROP")
+    runLinuxCmds(cmds)

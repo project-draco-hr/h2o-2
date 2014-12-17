@@ -1,7 +1,0 @@
-def multicastDropReceiveIptables():
-    print 'Disabling Multicast (only), send and receive'
-    cmds = ['iptables -A INPUT  -m pkttype --pkt-type multicast -j DROP']
-    cmds.append('iptables -A INPUT  --protocol igmp -j DROP')
-    cmds.append("iptables -A INPUT  --dst '224.0.0.0/4' -j DROP")
-    cmds.append("iptables -A OUTPUT --dst '224.0.0.0/4' -j DROP")
-    runLinuxCmds(cmds)
