@@ -1,4 +1,5 @@
 def test_many_fp_formats_libsvm_2_fvec(self):
+    h2b.browseTheCloud()
     SYNDATASETS_DIR = h2o.make_syn_dir()
     tryList = [(100, 10000, 'cA', 300, 'sparse50'), (100, 10000, 'cB', 300, 'sparse')]
     for (rowCount, colCount, hex_key, timeoutSecs, distribution) in tryList:
@@ -24,12 +25,12 @@ def test_many_fp_formats_libsvm_2_fvec(self):
             self.assertEqual((colNumberMax + 1), numCols, msg=('generated %s cols (including output).  parsed to %s cols' % ((colNumberMax + 1), numCols)))
             if DO_COMPARE_SUM:
                 h2e.exec_zero_list(zeroList)
-                colResultList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs)
-                print '\n*************'
-                print 'colResultList', colResultList
-                print '*************'
+                colResultList = h2e.exec_expr_list_across_cols(None, exprList, selKey2, maxCol=(colNumberMax + 1), timeoutSecs=timeoutSecs, print_params=False)
             self.assertEqual(rowCount, numRows, msg=('generated %s rows, parsed to %s rows' % (rowCount, numRows)))
-            for (k, v) in synColSumDict.iteritems():
+            sortedColSumDict = OrderedDict(sorted(synColSumDict.items()))
+            print sortedColSumDict
+            for (k, v) in sortedColSumDict.iteritems():
+                print k
                 if DO_COMPARE_SUM:
                     self.assertTrue(((k >= 0) and (k < len(colResultList))))
                     compare = colResultList[k]
@@ -37,6 +38,14 @@ def test_many_fp_formats_libsvm_2_fvec(self):
                     self.assertAlmostEqual(v, compare, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, compare)))
                 synMean = ((v + 0.0) / rowCount)
                 mean = float(inspect['cols'][k]['mean'])
-                self.assertAlmostEqual(mean, synMean, places=0, msg=('col %s mean %0.6f is not equal to generated mean %0.6f' % (k, mean, synMean)))
+                if (not h2o_util.approxEqual(mean, synMean, tol=0.0001)):
+                    execExpr = ('sum(%s[,%s])' % (selKey2, (k + 1)))
+                    resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=300)
+                    print 'Result of exec sum on failing col:..:', k, h2o.dump_json(resultExec)
+                    print 'Result of remembered sum on failing col:..:', k, v
+                    print 'Result of inspect mean * rowCount on failing col..:', (mean * rowCount)
+                    print 'k: ', k, 'mean: ', mean, 'remembered sum/rowCount : ', synMean
+                    sys.stdout.flush()
+                    raise Exception(('col %s mean %0.6f is not equal to generated mean %0.6f' % (k, mean, synMean)))
                 naCnt = inspect['cols'][k]['naCnt']
                 self.assertEqual(0, naCnt, msg=('col %s naCnt %d should be 0' % (k, naCnt)))

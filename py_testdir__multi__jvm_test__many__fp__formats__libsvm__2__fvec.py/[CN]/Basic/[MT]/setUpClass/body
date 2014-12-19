@@ -1,5 +1,8 @@
 @classmethod
 def setUpClass(cls):
     global SEED
-    SEED = h2o.setup_random_seed()
+    if DO_BAD_SEED:
+        SEED = h2o.setup_random_seed(seed=5605820711843900818)
+    else:
+        SEED = h2o.setup_random_seed()
     h2o.init(2, java_heap_GB=5)

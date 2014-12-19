@@ -2,9 +2,11 @@ import unittest, random, sys, time
 sys.path.extend(['.', '..', '../..', 'py'])
 import h2o, h2o_cmd, h2o_browse as h2b, h2o_import as h2i, h2o_exec as h2e, h2o_glm
 import h2o_util
+from collections import OrderedDict
 zeroList = ['Result0 = 0']
-exprList = ['Result<n> = sum(<keyX>[<col1>])']
+exprList = ['Result<n> = sum(<keyX>[,<col1>])']
 DO_SUMMARY = False
 DO_COMPARE_SUM = False
+DO_BAD_SEED = True
 if (__name__ == '__main__'):
     h2o.unit_main()
