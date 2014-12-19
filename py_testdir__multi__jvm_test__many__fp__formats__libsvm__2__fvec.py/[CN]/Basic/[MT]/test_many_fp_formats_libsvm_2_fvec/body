@@ -37,7 +37,7 @@ def test_many_fp_formats_libsvm_2_fvec(self):
                     self.assertAlmostEqual(v, compare, places=0, msg=('%0.6f col sum is not equal to expected %0.6f' % (v, compare)))
                 synMean = ((v + 0.0) / rowCount)
                 mean = float(inspect['cols'][k]['mean'])
-                if (not h2o_util.approxEqual(mean, synMean, tol=0.0001)):
+                if (not h2o_util.approxEqual(mean, synMean, tol=0.001)):
                     execExpr = ('sum(%s[,%s])' % (selKey2, (k + 1)))
                     resultExec = h2o_cmd.runExec(str=execExpr, timeoutSecs=300)
                     print 'Result of exec sum on failing col:..:', k, h2o.dump_json(resultExec)
