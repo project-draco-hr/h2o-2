@@ -1,4 +1,4 @@
-def exec_expr(node=None, execExpr=None, resultKey=None, timeoutSecs=10, ignoreH2oError=False):
+def exec_expr(node=None, execExpr=None, resultKey=None, timeoutSecs=10, ignoreH2oError=False, **kwargs):
     if (not node):
         node = h2o_nodes.nodes[0]
     start = time.time()
@@ -20,6 +20,5 @@ def exec_expr(node=None, execExpr=None, resultKey=None, timeoutSecs=10, ignoreH2
         print 'function return'
         result = resultExec['funstr']
     else:
-        print 'scalar return'
         result = resultExec['scalar']
     return (resultExec, result)
