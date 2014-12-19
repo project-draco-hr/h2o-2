@@ -11,14 +11,14 @@ def test_NN2_mnist_multi(self):
     response = (inspect['numCols'] - 1)
     identifier = ''.join(random.sample((string.ascii_lowercase + string.digits), 10))
     model_key = (('nn_' + identifier) + '.hex')
-    kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '117,131,129', 'rate': 0.005, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 100000, 'momentum_stable': 0.9, 'l1': 1e-05, 'l2': 1e-07, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 20.0, 'destination_key': model_key, 'validation': validation_key, }
+    kwargs = {'ignored_cols': None, 'response': response, 'classification': 1, 'activation': 'RectifierWithDropout', 'input_dropout_ratio': 0.2, 'hidden': '117,131,129', 'rate': 0.005, 'rate_annealing': 1e-06, 'momentum_start': 0.5, 'momentum_ramp': 100000, 'momentum_stable': 0.9, 'l1': 1e-05, 'l2': 1e-07, 'seed': 98037452452, 'loss': 'CrossEntropy', 'max_w2': 15, 'initial_weight_distribution': 'UniformAdaptive', 'epochs': 30.0, 'destination_key': model_key, 'validation': validation_key, }
     expectedErr = 0.03
     timeoutSecs = 600
     start = time.time()
     nn = h2o_cmd.runDeepLearning(parseResult=parseResult, timeoutSecs=timeoutSecs, **kwargs)
     print 'neural net end on ', csvPathname_train, ' and ', csvPathname_test, 'took', (time.time() - start), 'seconds'
     expectedErr = 0.046
-    relTol = 0.35
+    relTol = 0.4
     predict_key = 'Predict.hex'
     kwargs = {'data_key': validation_key, 'destination_key': predict_key, 'model_key': model_key, }
     predictResult = h2o_cmd.runPredict(timeoutSecs=timeoutSecs, **kwargs)
