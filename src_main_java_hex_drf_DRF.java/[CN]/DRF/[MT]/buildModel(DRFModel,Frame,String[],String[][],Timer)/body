@@ -1,2 +1,21 @@
 {
+  Random rand=createRNG(_seed);
+  for (int i=0; i < _ntreesFromCheckpoint; i++)   rand.nextLong();
+  int tid;
+  DTree[] ktrees=null;
+  TreeStats tstats=model.treeStats != null ? model.treeStats : new TreeStats();
+  for (tid=0; tid < ntrees; tid++) {
+    if (tid != 0 || checkpoint == null) {
+      model=doScoring(model,fr,ktrees,tid,tstats,tid == 0,!hasValidation(),build_tree_one_node);
+    }
+    Timer kb_timer=new Timer();
+    ktrees=buildNextKTrees(fr,_mtry,sample_rate,rand,tid);
+    Log.info(logTag(),(tid + 1) + ". tree was built " + kb_timer.toString());
+    if (!Job.isRunning(self()))     break;
+    tstats.updateBy(ktrees);
+  }
+  if (Job.isRunning(self())) {
+    model=doScoring(model,fr,ktrees,tid,tstats,true,!hasValidation(),build_tree_one_node);
+  }
+  return model;
 }
