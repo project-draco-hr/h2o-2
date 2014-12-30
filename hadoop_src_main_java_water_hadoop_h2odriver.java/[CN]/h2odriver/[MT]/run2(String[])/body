@@ -41,7 +41,7 @@
     conf.set("mapreduce.job.ubertask.enable","false");
     String mapreduceMapMemoryMb=Long.toString(processTotalPhysicalMemoryMegabytes);
     conf.set("mapreduce.map.memory.mb",mapreduceMapMemoryMb);
-    String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx+ (enableExceptions ? " -ea" : "")+ (enableVerboseGC ? " -verbose:gc" : "")+ (enablePrintGCDetails ? " -XX:+PrintGCDetails" : "")+ (enablePrintGCTimeStamps ? " -XX:+PrintGCTimeStamps" : "")+ (enableVerboseClass ? " -verbose:class" : "")+ (enablePrintCompilation ? " -XX:+PrintCompilation" : "")+ (enableExcludeMethods ? " -XX:CompileCommand=exclude,water/fvec/NewChunk.append2slowd" : "")+ (enableLog4jDefaultInitOverride ? " -Dlog4j.defaultInitOverride=true" : "")+ (enableDebug ? " -agentlib:jdwp=transport=dt_socket,server=y,suspend=" + (enableSuspend ? "y" : "n") + ",address="+ debugPort : "");
+    String mapChildJavaOpts="-Xms" + mapperXmx + " -Xmx"+ mapperXmx+ (enableExceptions ? " -ea" : "")+ (enableVerboseGC ? " -verbose:gc" : "")+ (enablePrintGCDetails ? " -XX:+PrintGCDetails" : "")+ (enablePrintGCTimeStamps ? " -XX:+PrintGCTimeStamps" : "")+ (enableVerboseClass ? " -verbose:class" : "")+ (enablePrintCompilation ? " -XX:+PrintCompilation" : "")+ (enableExcludeMethods ? " -XX:CompileCommand=exclude,water/fvec/NewChunk.append2slowd" : "")+ (enableLog4jDefaultInitOverride ? " -Dlog4j.defaultInitOverride=true" : "")+ (enableDebug ? " -agentlib:jdwp=transport=dt_socket,server=y,suspend=" + (enableSuspend ? "y" : "n") + ",address="+ debugPort : "")+ (extraJavaOpts != null ? (" " + extraJavaOpts) : "");
     conf.set("mapred.child.java.opts",mapChildJavaOpts);
     conf.set("mapred.map.child.java.opts",mapChildJavaOpts);
     System.out.println("Memory Settings:");
