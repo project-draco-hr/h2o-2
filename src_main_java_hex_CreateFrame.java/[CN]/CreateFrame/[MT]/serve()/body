@@ -20,6 +20,7 @@
     H2O.submitTask(fct);
     fct.join();
     Log.info("Created frame '" + key + "'.");
+    Log.info(FrameUtils.chunkSummary((Frame)UKV.get(Key.make(key))).toString());
     return Response.done(this);
   }
  catch (  Throwable t) {
