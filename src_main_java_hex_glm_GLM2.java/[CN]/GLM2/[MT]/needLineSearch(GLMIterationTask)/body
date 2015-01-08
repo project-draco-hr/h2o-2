@@ -1,4 +1,5 @@
 {
+  if (disable_line_search)   return false;
   if (_glm.family == Family.gaussian)   return false;
   if (glmt._beta == null)   return false;
   if (Utils.hasNaNsOrInfs(glmt._xy) || (glmt._grad != null && Utils.hasNaNsOrInfs(glmt._grad)) || (glmt._gram != null && glmt._gram.hasNaNsOrInfs())) {
