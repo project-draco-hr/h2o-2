@@ -1,0 +1,24 @@
+{
+  if (seed == -1)   seed=new Random().nextLong();
+  Vec rv=new Vec(f.anyVec().group().addVecs(1)[0],f.anyVec()._espc);
+  Futures fs=new Futures();
+  DKV.put(rv._key,rv,fs);
+  for (int i=0; i < rv._espc.length - 1; ++i)   DKV.put(rv.chunkKey(i),new C0DChunk(0,(int)(rv._espc[i + 1] - rv._espc[i])),fs);
+  fs.blockForPending();
+  final long zeed=seed;
+  new MRTask2(){
+    @Override public void map(    Chunk c){
+      Random rng=new Random(zeed * c.cidx());
+      for (int i=0; i < c._len; ++i)       c.set0(i,(float)rng.nextDouble());
+    }
+  }
+.doAll(rv);
+  Vec[] vecs=new Vec[f.numCols() + 1];
+  System.arraycopy(f.vecs(),0,vecs,0,f.numCols());
+  vecs[f.numCols()]=rv;
+  Frame doAllFr=new Frame(null,vecs);
+  Frame left=new DeepSelectThresh(threshold,true).doAll(f.numCols(),doAllFr).outputFrame(null,doAllFr.domains());
+  Frame rite=new DeepSelectThresh(threshold,false).doAll(f.numCols(),doAllFr).outputFrame(null,doAllFr.domains());
+  UKV.remove(rv._key);
+  return new Frame[]{left,rite};
+}
