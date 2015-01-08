@@ -1,5 +1,8 @@
 {
   Vec[] vecs=new Vec[_argcnt];
-  for (int j=0; j < _argcnt; ++j)   vecs[j]=_env.ary(-(j + 1)).vec(i);
+  for (int j=0; j < _argcnt; ++j) {
+    Vec vm, v=_f[j].vec(i);
+    vecs[j]=((vm=v.masterVec()) == null) ? v : vm;
+  }
   new RbindTask(new Callback(),vecs,_vecs[i],_espc).fork();
 }

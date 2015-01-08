@@ -2,16 +2,24 @@
   if (argcnt - 1 == 1) {
     return;
   }
+  Frame[] fs=new Frame[argcnt - 1];
   Frame f1=env.peekAry();
-  for (int i=0; i < argcnt - 1; ++i) {
+  int j=fs.length - 1;
+  boolean[] wrapped=new boolean[f1.numCols()];
+  for (int c=0; c < f1.numCols(); ++c)   wrapped[c]=f1.vec(c).masterVec() != null;
+  fs[j--]=f1;
+  for (int i=1; i < argcnt - 1; ++i) {
     Frame t=env.ary(-(i + 1));
+    fs[j--]=t;
     if (t.numCols() != f1.numCols())     throw new IllegalArgumentException("Column mismatch! Expected " + f1.numCols() + " but frame has "+ t.numCols());
     for (int c=0; c < f1.numCols(); ++c) {
+      wrapped[c]|=t.vec(c).masterVec() != null;
       if (!get_type(f1.vec(c)).equals(get_type(t.vec(c))))       throw new IllegalArgumentException("Column type mismatch! Expected type " + get_type(f1.vec(c)) + " but vec has type "+ get_type(t.vec(c)));
     }
   }
   ParallelRbinds t;
-  H2O.submitTask(t=new ParallelRbinds(env,argcnt - 1)).join();
+  H2O.submitTask(t=new ParallelRbinds(fs,argcnt - 1)).join();
+  for (int i=0; i < wrapped.length; ++i)   if (wrapped[i])   t._vecs[i]=t._vecs[i].toEnum();
   Key m=Key.make();
   env.poppush(argcnt,new Frame(m,f1.names(),t._vecs),m.toString());
 }
