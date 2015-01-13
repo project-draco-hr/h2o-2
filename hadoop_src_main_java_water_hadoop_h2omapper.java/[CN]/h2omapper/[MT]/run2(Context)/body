@@ -20,7 +20,8 @@
   String driverIp=conf.get(H2O_DRIVER_IP_KEY);
   String driverPortString=conf.get(H2O_DRIVER_PORT_KEY);
   String network=conf.get(H2O_NETWORK_KEY);
-  String chunkBitsString=conf.get(H2O_CHUNKBITS_KEY);
+  String manyColsString=conf.get(H2O_MANYCOLS_KEY);
+  String chunkBytesString=conf.get(H2O_CHUNKBITS_KEY);
   String dataMaxFactorLevelsString=conf.get(H2O_DATAMAXFACTORLEVELS_KEY);
   String nthreadsString=conf.get(H2O_NTHREADS_KEY);
   String basePortString=conf.get(H2O_BASE_PORT_KEY);
@@ -66,11 +67,16 @@
       argsList.add(Integer.toString(dataMaxFactorLevels));
     }
   }
-  if (chunkBitsString != null) {
-    if (chunkBitsString.length() > 0) {
-      argsList.add("-chunk_bits");
-      int chunkBits=Integer.parseInt(chunkBitsString);
-      argsList.add(Integer.toString(chunkBits));
+  if (manyColsString != null) {
+    if (manyColsString.length() > 0) {
+      argsList.add("-many_cols");
+    }
+  }
+  if (chunkBytesString != null) {
+    if (chunkBytesString.length() > 0) {
+      argsList.add("-chunk_bytes");
+      int chunkBytes=Integer.parseInt(chunkBytesString);
+      argsList.add(Integer.toString(chunkBytes));
     }
   }
   if (betaString != null) {

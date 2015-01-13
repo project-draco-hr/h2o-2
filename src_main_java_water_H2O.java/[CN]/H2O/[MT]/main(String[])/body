@@ -23,8 +23,22 @@
     DATA_MAX_FACTOR_LEVELS=OPT_ARGS.data_max_factor_levels;
     Log.info("Max. number of factor levels per column: " + DATA_MAX_FACTOR_LEVELS);
   }
-  if (OPT_ARGS.chunk_bits != 0) {
-    if (OPT_ARGS.chunk_bits > 0)     LOG_CHK=OPT_ARGS.chunk_bits;
+  if (OPT_ARGS.chunk_bytes != 0 || OPT_ARGS.many_cols != null) {
+    if (OPT_ARGS.many_cols != null) {
+      LOG_CHK=24;
+      if (OPT_ARGS.chunk_bytes > 0) {
+        Log.warn("-chunk_bytes is ignored since -many_cols was set.");
+      }
+    }
+ else     if (OPT_ARGS.chunk_bytes > 0) {
+      LOG_CHK=OPT_ARGS.chunk_bytes;
+      if (OPT_ARGS.chunk_bytes < 22) {
+        Log.warn("-chunk_bytes < 22 is not officially supported. Use at your own risk.");
+      }
+      if (OPT_ARGS.chunk_bytes > 24) {
+        Log.warn("-chunk_bytes > 24 is not officially supported. Use at your own risk.");
+      }
+    }
   }
   Log.info("Chunk size: " + PrettyPrint.bytes(1 << LOG_CHK));
   String ice=DEFAULT_ICE_ROOT();

@@ -88,12 +88,15 @@
       }
       nthreads=Integer.parseInt(args[i]);
     }
- else     if (s.equals("-chunk_bits")) {
+ else     if (s.equals("-many_cols")) {
+      manyCols=true;
+    }
+ else     if (s.equals("-chunk_bytes")) {
       i++;
       if (i >= args.length) {
         usage();
       }
-      chunk_bits=Integer.parseInt(args[i]);
+      chunk_bytes=Integer.parseInt(args[i]);
     }
  else     if (s.equals("-data_max_factor_levels")) {
       i++;
