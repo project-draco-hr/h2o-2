@@ -68,6 +68,12 @@
   if (beta) {
     conf.set(h2omapper.H2O_BETA_KEY,"-beta");
   }
+  if (chunk_bits > 0) {
+    conf.set(h2omapper.H2O_CHUNKBITS_KEY,Integer.toString(chunk_bits));
+  }
+  if (data_max_factor_levels > 0) {
+    conf.set(h2omapper.H2O_DATAMAXFACTORLEVELS_KEY,Integer.toString(data_max_factor_levels));
+  }
   if (enableRandomUdpDrop) {
     conf.set(h2omapper.H2O_RANDOM_UDP_DROP_KEY,"-random_udp_drop");
   }

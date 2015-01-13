@@ -88,6 +88,20 @@
       }
       nthreads=Integer.parseInt(args[i]);
     }
+ else     if (s.equals("-chunk_bits")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      chunk_bits=Integer.parseInt(args[i]);
+    }
+ else     if (s.equals("-data_max_factor_levels")) {
+      i++;
+      if (i >= args.length) {
+        usage();
+      }
+      data_max_factor_levels=Integer.parseInt(args[i]);
+    }
  else     if (s.equals("-baseport")) {
       i++;
       if (i >= args.length) {
