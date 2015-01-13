@@ -1,8 +1,10 @@
 {
   try {
-    if (integer_fraction + categorical_fraction > 1)     throw new IllegalArgumentException("Integer and categorical fractions must add up to <= 1.");
+    if (integer_fraction + binary_fraction + categorical_fraction > 1)     throw new IllegalArgumentException("Integer, binary and categorical fractions must add up to <= 1.");
     if (Math.abs(missing_fraction) > 1)     throw new IllegalArgumentException("Missing fraction must be between 0 and 1.");
     if (Math.abs(integer_fraction) > 1)     throw new IllegalArgumentException("Integer fraction must be between 0 and 1.");
+    if (Math.abs(binary_fraction) > 1)     throw new IllegalArgumentException("Binary fraction must be between 0 and 1.");
+    if (Math.abs(binary_ones_fraction) > 1)     throw new IllegalArgumentException("Binary ones fraction must be between 0 and 1.");
     if (Math.abs(categorical_fraction) > 1)     throw new IllegalArgumentException("Categorical fraction must be between 0 and 1.");
     if (categorical_fraction > 0 && factors <= 1)     throw new IllegalArgumentException("Factors must be larger than 2 for categorical data.");
     if (response_factors < 1)     throw new IllegalArgumentException("Response factors must be either 1 (real-valued response), or >=2 (factor levels).");
@@ -18,6 +20,7 @@
     H2O.submitTask(fct);
     fct.join();
     Log.info("Created frame '" + key + "'.");
+    Log.info(FrameUtils.chunkSummary((Frame)UKV.get(Key.make(key))).toString());
     return Response.done(this);
   }
  catch (  Throwable t) {

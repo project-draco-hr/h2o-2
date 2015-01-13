@@ -1,0 +1,19 @@
+{
+  int idx=_chunkOffset + cs.cidx();
+  Key ckey=Vec.chunkKey(_v._key,idx);
+  if (_emap != null) {
+    NewChunk nc=new NewChunk(_v,idx);
+    for (int r=0; r < cs._len; ++r) {
+      if (cs.isNA0(r))       nc.addNA();
+ else       nc.addNum(_emap[(int)cs.at80(r)],0);
+    }
+    nc.close(_fs);
+  }
+ else {
+    Chunk oc=cs.clone();
+    oc._start=-1;
+    oc._vec=null;
+    oc._mem=cs.getBytes().clone();
+    DKV.put(ckey,oc,_fs,true);
+  }
+}
