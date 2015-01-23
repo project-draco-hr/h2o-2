@@ -1,12 +1,10 @@
 {
   final int n_offsets=(parameters.offset_columns == null) ? 0 : parameters.offset_columns.length;
-  final int n_time=time.length;
-  final int n_coef=coef.length;
   final int n_cats=data_info._cats;
   final int n_nums=data_info._nums;
   final int n_data=n_cats + n_nums;
-  final int n_full=n_coef + n_offsets;
   final int numStart=data_info.numStart();
+  final int n_non_offsets=n_nums - n_offsets;
   boolean catsAllNA=true;
   boolean catsHasNA=false;
   boolean numsHasNA=false;
@@ -16,33 +14,19 @@
   }
   for (int j=n_cats; j < n_data; ++j)   numsHasNA|=Double.isNaN(data[j]);
   if (numsHasNA || (catsHasNA && !catsAllNA)) {
-    for (int i=1; i <= 2 * n_time; ++i)     preds[i]=Float.NaN;
+    preds[0]=Float.NaN;
   }
  else {
-    double[] full_data=MemoryManager.malloc8d(n_full);
-    for (int j=0; j < n_cats; ++j)     if (Double.isNaN(data[j])) {
-      final int kst=data_info._catOffsets[j];
-      final int klen=data_info._catOffsets[j + 1] - kst;
-      System.arraycopy(x_mean_cat,kst,full_data,kst,klen);
-    }
- else     if (data[j] != 0)     full_data[data_info._catOffsets[j] + (int)(data[j] - 1)]=1;
-    for (int j=0; j < n_nums; ++j)     full_data[numStart + j]=data[n_cats + j] - data_info._normSub[j];
     double logRisk=0;
-    for (int j=0; j < n_coef; ++j)     logRisk+=full_data[j] * coef[j];
-    for (int j=n_coef; j < full_data.length; ++j)     logRisk+=full_data[j];
-    final double risk=Math.exp(logRisk);
-    for (int t=0; t < n_time; ++t)     preds[t + 1]=(float)(risk * cumhaz_0[t]);
-    for (int t=0; t < n_time; ++t) {
-      final double cumhaz_0_t=cumhaz_0[t];
-      double var_cumhaz_2_t=0;
-      for (int j=0; j < n_coef; ++j) {
-        double sum=0;
-        for (int k=0; k < n_coef; ++k)         sum+=var_coef[j][k] * (full_data[k] * cumhaz_0_t - var_cumhaz_2[t][k]);
-        var_cumhaz_2_t+=(full_data[j] * cumhaz_0_t - var_cumhaz_2[t][j]) * sum;
-      }
-      preds[t + 1 + n_time]=(float)(risk * Math.sqrt(var_cumhaz_1[t] + var_cumhaz_2_t));
+    for (int j=0; j < n_cats; ++j) {
+      final int k_start=data_info._catOffsets[j];
+      final int k_end=data_info._catOffsets[j + 1];
+      if (Double.isNaN(data[j]))       for (int k=k_start; k < k_end; ++k)       logRisk+=x_mean_cat[k] * coef[k];
+ else       if (data[j] != 0)       logRisk+=coef[k_start + (int)(data[j] - 1)];
     }
+    for (int j=0; j < n_non_offsets; ++j)     logRisk+=(data[n_cats + j] - data_info._normSub[j]) * coef[numStart + j];
+    for (int j=n_non_offsets; j < n_nums; ++j)     logRisk+=(data[n_cats + j] - data_info._normSub[j]);
+    preds[0]=(float)Math.exp(logRisk);
   }
-  preds[0]=Float.NaN;
   return preds;
 }
