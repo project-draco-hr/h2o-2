@@ -1,0 +1,19 @@
+{
+  super(selfKey,dataKey,dinfo._adaptedFrame,null);
+  this.parameters=(GLM2)parameters.clone();
+  submodels=new Submodel[]{new Submodel(0,beta,null,-1,-1,false)};
+  this.coefficients_names=coefficients_names;
+  alpha=0;
+  lambda_max=Double.NaN;
+  this.threshold=threshold;
+  useAllFactorLevels=dinfo._useAllFactorLevels;
+  global_beta=submodels[0].beta.clone();
+  this.glm=glmp;
+  this.ymu=Double.NaN;
+  this.prior=Double.NaN;
+  this.warnings=new String[]{"Hand made model."};
+  this.data_info=dinfo;
+  this.beta_eps=Double.NaN;
+  this.job_key=null;
+  best_lambda_idx=0;
+}
