@@ -1,0 +1,24 @@
+{
+  try {
+    double[] b;
+    String[] ns=names.split(",");
+    if (beta.length == model.coefficients_names.length && Arrays.equals(ns,model.coefficients_names))     b=beta;
+ else {
+      b=MemoryManager.malloc8d(model.coefficients_names.length);
+      HashMap<String,Integer> map=new HashMap<String,Integer>();
+      for (int i=0; i < model.coefficients_names.length; ++i)       map.put(model.coefficients_names[i],i);
+      for (int i=0; i < ns.length; ++i) {
+        String s=ns[i];
+        if (!map.containsKey(s))         throw new IllegalArgumentException("Unknown coefficient " + s);
+        b[map.get(s)]=beta[i];
+      }
+    }
+    destination_key=Key.make();
+    GLMModel m=new GLMModel(model.get_params(),destination_key,model._dataKey,model.getParams(),model.coefficients_names,b,model.dinfo(),threshold);
+    m.delete_and_lock(null).unlock(null);
+    return Response.done(this);
+  }
+ catch (  Throwable t) {
+    return Response.error(t);
+  }
+}
