@@ -20,6 +20,11 @@
   int[] layers=new int[neurons.length];
   for (int i=0; i < neurons.length; ++i)   layers[i]=neurons[i].units;
   JCodeGen.toStaticVar(sb,"NEURONS",layers,"Number of neurons for each layer.");
+  if (get_params().autoencoder) {
+    sb.i(1).p("@Override public int getPredsSize() { return " + model_info.units[model_info.units.length - 1] + "; }").nl();
+    sb.i(1).p("@Override public boolean isAutoEncoder() { return true; }").nl();
+    sb.i(1).p("@Override public String getHeader() { return \"" + getHeader() + "\"; }").nl();
+  }
   sb.i(1).p("// Storage for neuron activation values.").nl();
   sb.i(1).p("public static final float[][] ACTIVATION = new float[][] {").nl();
   for (int i=0; i < neurons.length; i++) {
