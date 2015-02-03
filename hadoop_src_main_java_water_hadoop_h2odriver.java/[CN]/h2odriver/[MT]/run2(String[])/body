@@ -128,7 +128,7 @@
   System.out.println("(Press Ctrl-C to kill the cluster)");
   System.out.println("Blocking until the H2O cluster shuts down...");
   waitForClusterToShutdown();
-  ctrlc.setComplete();
+  cleanUpDriverResources();
   boolean success=job.isSuccessful();
   int exitStatus;
   exitStatus=success ? 0 : 1;
