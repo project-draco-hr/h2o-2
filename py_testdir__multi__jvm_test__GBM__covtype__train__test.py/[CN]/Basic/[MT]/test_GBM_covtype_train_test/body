@@ -11,14 +11,24 @@ def test_GBM_covtype_train_test(self):
         elapsed = (time.time() - start)
         print 'train parse end on ', trainFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'train parse result:', parseTrainResult['destination_key']
+        result = h2o.nodes[0].to_enum(None, src_key=trainKey, column_index=(54 + 1))
         parseTestResult = h2i.import_parse(bucket=bucket, path=((importFolderPath + '/') + testFilename), schema='local', hex_key=testKey, timeoutSecs=timeoutSecs, doSummary=False)
         elapsed = (time.time() - start)
         print 'test parse end on ', testFilename, 'took', elapsed, 'seconds', ('%d pct. of timeout' % ((elapsed * 100) / timeoutSecs))
         print 'test parse result:', parseTestResult['destination_key']
+        result = h2o.nodes[0].to_enum(None, src_key=testKey, column_index=(54 + 1))
         inspect = h2o_cmd.runInspect(key=parseTestResult['destination_key'])
-        ntrees = 2
-        for max_depth in [40, 5]:
-            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': None, }
+        ntrees = 3
+        for trial in range(9):
+            imp = (trial % 2)
+            if (imp == 2):
+                importance = None
+                group_split = None
+            else:
+                importance = imp
+                group_split = imp
+            max_depth = 10
+            params = {'ntrees': ntrees, 'response': response, 'importance': importance, 'group_split': group_split, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
@@ -45,10 +55,10 @@ def test_GBM_covtype_train_test(self):
             pctWrong = h2o_gbm.pp_cm_summary(cm)
             print '\nTest\n==========\n'
             print h2o_gbm.pp_cm(cm)
-            xList.append(max_depth)
+            xList.append(trial)
             eList.append(pctWrong)
             fList.append(trainElapsed)
-        xLabel = 'max_depth'
+        xLabel = 'trial. importance=0,1,default,...'
         eLabel = 'pctWrong'
         fLabel = 'trainElapsed'
         eListTitle = ''
