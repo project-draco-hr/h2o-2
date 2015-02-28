@@ -1,14 +1,18 @@
 {
   API_PORT=OPT_ARGS.port != 0 ? OPT_ARGS.port : DEFAULT_PORT;
   while (true) {
-    UDP_PORT=API_PORT + 1;
-    if (API_PORT < 0 || API_PORT > 65534)     Log.die("Attempting to use system illegal port, either " + API_PORT + " or "+ UDP_PORT);
+    H2O_PORT=API_PORT + 1;
+    if (API_PORT < 0 || API_PORT > 65534)     Log.die("Attempting to use system illegal port, either " + API_PORT + " or "+ H2O_PORT);
     try {
       _apiSocket=OPT_ARGS.ip == null ? new ServerSocket(API_PORT) : new ServerSocket(API_PORT,-1,SELF_ADDRESS);
       _apiSocket.setReuseAddress(true);
       _udpSocket=DatagramChannel.open();
       _udpSocket.socket().setReuseAddress(true);
-      _udpSocket.socket().bind(new InetSocketAddress(SELF_ADDRESS,UDP_PORT));
+      InetSocketAddress isa=new InetSocketAddress(H2O.SELF_ADDRESS,H2O_PORT);
+      _udpSocket.socket().bind(isa);
+      TCPReceiverThread.SOCK=ServerSocketChannel.open();
+      TCPReceiverThread.SOCK.socket().setReceiveBufferSize(water.AutoBuffer.TCP_BUF_SIZ);
+      TCPReceiverThread.SOCK.socket().bind(isa);
       break;
     }
  catch (    IOException e) {
@@ -19,14 +23,20 @@
         Log.err(ohwell);
       }
       Utils.close(_udpSocket);
+      if (TCPReceiverThread.SOCK != null)       try {
+        TCPReceiverThread.SOCK.close();
+      }
+ catch (      IOException ie) {
+      }
       _apiSocket=null;
       _udpSocket=null;
+      TCPReceiverThread.SOCK=null;
       if (OPT_ARGS.port != 0)       Log.die("On " + SELF_ADDRESS + " some of the required ports "+ (OPT_ARGS.port + 0)+ ", "+ (OPT_ARGS.port + 1)+ " are not available, change -port PORT and try again.");
     }
     API_PORT+=2;
   }
   SELF=H2ONode.self(SELF_ADDRESS);
-  Log.info("Internal communication uses port: ",UDP_PORT,"\nListening for HTTP and REST traffic on  http://",SELF_ADDRESS.getHostAddress(),":" + _apiSocket.getLocalPort() + "/");
+  Log.info("Internal communication uses port: ",H2O_PORT,"\nListening for HTTP and REST traffic on  http://",SELF_ADDRESS.getHostAddress(),":" + _apiSocket.getLocalPort() + "/");
   String embeddedConfigFlatfile=null;
   AbstractEmbeddedH2OConfig ec=getEmbeddedH2OConfig();
   if (ec != null) {
