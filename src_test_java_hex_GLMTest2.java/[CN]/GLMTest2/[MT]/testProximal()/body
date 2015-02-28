@@ -1,0 +1,30 @@
+{
+  Key parsed=Key.make("prostate_parsed");
+  Key modelKey=Key.make("prostate_model");
+  GLMModel model=null;
+  Frame fr=getFrameForFile(parsed,"smalldata/logreg/prostate.csv",new String[]{"ID"},"CAPSULE");
+  Key k=Key.make("rebalanced");
+  H2O.submitTask(new RebalanceDataSet(fr,k,64)).join();
+  fr.delete();
+  fr=DKV.get(k).get();
+  fr.remove("ID");
+  Key betaConsKey=Key.make("beta_constraints");
+  FVecTest.makeByteVec(betaConsKey,"names, beta_given, rho\n AGE, .5, 2\n RACE, .75, 1 \n DPROS, -.5, 10 \n DCAPS, .4, .5 \n PSA, -.15, 25\n VOL, .1, .5\nGLEASON, -.5, .5\n Intercept, 0, 0 \n");
+  Frame betaConstraints=ParseDataset2.parse(parsed,new Key[]{betaConsKey});
+  try {
+    GLM2.Source src=new GLM2.Source((Frame)fr.clone(),fr.vec("CAPSULE"),true,true);
+    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,src,Family.binomial).setNonNegative(false).setRegularization(new double[]{0},new double[]{0.000}).setBetaConstraints(betaConstraints).doInit().fork().get();
+    model=DKV.get(modelKey).get();
+    System.out.println(Arrays.toString(model.coefficients_names));
+    System.out.println(model.coefficients());
+    fr.add("CAPSULE",fr.remove("CAPSULE"));
+    DataInfo dinfo=new DataInfo(fr,1,true,false,TransformType.NONE,DataInfo.TransformType.NONE);
+    GLMIterationTask glmt=new GLMTask.GLMIterationTask(0,null,dinfo,new GLMParams(Family.binomial),false,true,true,model.beta(),0,1.0 / 380,ModelUtils.DEFAULT_THRESHOLDS,null).doAll(dinfo._adaptedFrame);
+    double[] beta=model.beta();
+    double[] grad=glmt.gradient(0,0);
+  }
+  finally {
+    fr.delete();
+    if (model != null)     model.delete();
+  }
+}
