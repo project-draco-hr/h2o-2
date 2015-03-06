@@ -9,6 +9,7 @@
     }
   }
 ).keys();
+  Log.info("Locking " + frameKeys.length + "keys for Exec2.");
   for (  Key k : frameKeys) {
     Value val=DKV.get(k);
     if (val == null || !val.isFrame())     continue;
