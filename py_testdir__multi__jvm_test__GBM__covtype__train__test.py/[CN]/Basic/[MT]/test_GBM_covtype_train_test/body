@@ -17,8 +17,12 @@ def test_GBM_covtype_train_test(self):
         print 'test parse result:', parseTestResult['destination_key']
         inspect = h2o_cmd.runInspect(key=parseTestResult['destination_key'])
         ntrees = 2
-        for max_depth in [40, 5]:
-            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': None, }
+        for trial in range(9):
+            imp = (trial % 2)
+            if (imp == 2):
+                imp = None
+            max_depth = 10
+            params = {'learn_rate': 0.2, 'nbins': 1024, 'ntrees': ntrees, 'max_depth': max_depth, 'min_rows': 10, 'response': response, 'ignored_cols_by_name': None, 'importance': imp, 'classification': 1, }
             print 'Using these parameters for GBM: ', params
             kwargs = params.copy()
             h2o_cmd.runInspect(key=parseTrainResult['destination_key'])
@@ -45,10 +49,10 @@ def test_GBM_covtype_train_test(self):
             pctWrong = h2o_gbm.pp_cm_summary(cm)
             print '\nTest\n==========\n'
             print h2o_gbm.pp_cm(cm)
-            xList.append(max_depth)
+            xList.append(trial)
             eList.append(pctWrong)
             fList.append(trainElapsed)
-        xLabel = 'max_depth'
+        xLabel = 'trial'
         eLabel = 'pctWrong'
         fLabel = 'trainElapsed'
         eListTitle = ''
