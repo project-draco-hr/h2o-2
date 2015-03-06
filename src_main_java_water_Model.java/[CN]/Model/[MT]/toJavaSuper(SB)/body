@@ -3,5 +3,7 @@
   sb.ii(1);
   sb.i().p("public String[]   getNames() { return NAMES; } ").nl();
   sb.i().p("public String[][] getDomainValues() { return DOMAINS; }").nl();
+  String uuid=this.uniqueId != null ? this.uniqueId.getId() : this._key.toString();
+  sb.i().p("public String     getUUID() { return ").ps(uuid).p("; }").nl();
   return sb;
 }
