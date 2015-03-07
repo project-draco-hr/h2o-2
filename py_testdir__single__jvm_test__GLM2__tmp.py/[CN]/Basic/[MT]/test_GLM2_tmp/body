@@ -1,0 +1,36 @@
+def test_GLM2_tmp(self):
+    importFolderPath = '/tmp'
+    csvFilename = 's.csv'
+    bcFilename = 'bc.csv'
+    csvPathname = ((importFolderPath + '/') + csvFilename)
+    bcPathname = ((importFolderPath + '/') + bcFilename)
+    hex_key = (csvFilename + '.hex')
+    bc_key = (bcFilename + '.hex')
+    parseResult = h2i.import_parse(path=csvPathname, schema='put', hex_key=hex_key, timeoutSecs=180)
+    inspect = h2o_cmd.runInspect(key=hex_key)
+    print ('\n' + csvPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    bcResult = h2i.import_parse(path=bcPathname, schema='put', hex_key=bc_key, timeoutSecs=180)
+    inspect = h2o_cmd.runInspect(key=bc_key)
+    print ('\n' + bcPathname), '    numRows:', '{:,}'.format(inspect['numRows']), '    numCols:', '{:,}'.format(inspect['numCols'])
+    numRows = inspect['numRows']
+    trainDataKey = hex_key
+    testDataKey = hex_key
+    kwargs = {'response': 'response', 'non_negative': 0, 'standardize': 1, 'strong_rules': 1, 'alpha': 0, 'max_iter': 100, 'lambda_min_ratio': (-1), 'higher_accuracy': 1, 'beta_constraints': bc_key, 'link': 'family_default', 'use_all_factor_levels': 0, 'variable_importances': 0, 'lambda': 0, 'prior': 0.00301875221383974, 'nlambdas': (-1), 'source': hex_key, 'lambda_search': 0, 'disable_line_search': 0, 'n_folds': 0, 'family': 'binomial', 'beta_epsilon': 0.0001, 'intercept': 1, 'max_predictors': (-1), }
+    timeoutSecs = 180
+    for trial in range(10):
+        parseKey = trainDataKey
+        start = time.time()
+        glm = h2o_cmd.runGLM(parseResult=parseResult, timeoutSecs=timeoutSecs, pollTimeoutSecs=180, **kwargs)
+        print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
+        h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
+        modelKey = glm['glm_model']['_key']
+        predictKey = 'Predict.hex'
+        start = time.time()
+        predictResult = h2o_cmd.runPredict(data_key=testDataKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
+        predictCMResult = h2o.nodes[0].predict_confusion_matrix(actual=testDataKey, vactual='response', predict=predictKey, vpredict='predict')
+        cm = predictCMResult['cm']
+        pctWrong = h2o_gbm.pp_cm_summary(cm)
+        self.assertLess(pctWrong, 8, 'Should see less than 7% error')
+        print '\nTest\n==========\n'
+        print h2o_gbm.pp_cm(cm)
+        print 'Trial #', trial, 'completed'
