@@ -1,4 +1,4 @@
-def runScore(node=None, dataKey=None, modelKey=None, predictKey='Predict.hex', vactual='C1', vpredict=1, expectedAuc=None, doAUC=True, timeoutSecs=200):
+def runScore(node=None, dataKey=None, modelKey=None, predictKey='Predict.hex', vactual='C1', vpredict=1, expectedAuc=None, expectedAucTol=0.15, doAUC=True, timeoutSecs=200):
     predictKey = 'Predict.hex'
     start = time.time()
     predictResult = runPredict(data_key=dataKey, model_key=modelKey, destination_key=predictKey, timeoutSecs=timeoutSecs)
@@ -6,7 +6,7 @@ def runScore(node=None, dataKey=None, modelKey=None, predictKey='Predict.hex', v
         resultAUC = h2o_nodes.nodes[0].generate_auc(thresholds=None, actual=dataKey, predict='Predict.hex', vactual=vactual, vpredict=vpredict)
         auc = resultAUC['aucdata']['AUC']
         if expectedAuc:
-            h2o_util.assertApproxEqual(auc, expectedAuc, tol=0.15, msg=('actual auc: %s not close enough to %s' % (auc, expectedAuc)))
+            h2o_util.assertApproxEqual(auc, expectedAuc, tol=expectedAucTol, msg=('actual auc: %s not close enough to %s' % (auc, expectedAuc)))
     predictCMResult = h2o_nodes.nodes[0].predict_confusion_matrix(actual=dataKey, predict=predictKey, vactual=vactual, vpredict='predict')
     if doAUC:
         cm = predictCMResult['cm']

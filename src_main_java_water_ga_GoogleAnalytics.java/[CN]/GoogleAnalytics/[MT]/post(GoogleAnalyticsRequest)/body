@@ -20,10 +20,10 @@
       httpResponse=(BasicHttpResponse)httpClient.execute(httpPost);
     }
  catch (    ClientProtocolException e) {
-      Log.warn("GA connectivity had a problem or the connectivity was aborted.  " + e.toString());
+      Log.trace("GA connectivity had a problem or the connectivity was aborted.  " + e.toString());
     }
 catch (    IOException e) {
-      Log.warn("GA connectivity suffered a protocol error.  " + e.toString());
+      Log.trace("GA connectivity suffered a protocol error.  " + e.toString());
     }
     response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
     response.setPostedParms(postParms);
@@ -38,10 +38,10 @@ catch (    IOException e) {
   }
  catch (  Exception e) {
     if (e instanceof UnknownHostException) {
-      Log.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+      Log.trace("Coudln't connect to GA. Internet may not be available. " + e.toString());
     }
  else {
-      Log.warn("Exception while sending the Google Analytics tracker request: " + request + ".  "+ e.toString());
+      Log.trace("Exception while sending the GA tracker request: " + request + ".  "+ e.toString());
     }
   }
   return response;
