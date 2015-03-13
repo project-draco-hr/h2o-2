@@ -1,0 +1,28 @@
+{
+  String h2oUrlImportEndPoint=H2O_HOST_URL + H2O_PARSE_URL + key;
+  log.debug("@@@ Calling endpoint {}",h2oUrlImportEndPoint);
+  MultiValueMap<String,String> parameters=new LinkedMultiValueMap<String,String>();
+  parameters.add("parser_type","CSV");
+  parameters.add("separator","44");
+  parameters.add("header","1");
+  parameters.add("singleQuotes","0");
+  parameters.add("source_key",key);
+  parameters.add("destination_key",framename);
+  parameters.add("delete_on_done","true");
+  RestTemplate restTemplate=new RestTemplate();
+  HttpHeaders headers=new HttpHeaders();
+  headers.add("Accept",MediaType.APPLICATION_JSON_VALUE);
+  HttpEntity<MultiValueMap<String,String>> request=new HttpEntity<MultiValueMap<String,String>>(parameters,headers);
+  ResponseEntity<String> response=restTemplate.exchange(h2oUrlImportEndPoint,HttpMethod.GET,request,String.class);
+  String responseBody=response.getBody();
+  log.debug("@@@ Response json from h2o {}",responseBody);
+  JSONObject jsonobject=new JSONObject(responseBody);
+  String job_key=(String)jsonobject.get("job_key");
+  log.debug("!!!!!! Job name {}",job_key);
+  String destination_key=(String)jsonobject.get("destination_key");
+  String job_status=JobStatus(job_key,destination_key);
+  if (job_status != null) {
+    return destination_key;
+  }
+  return null;
+}

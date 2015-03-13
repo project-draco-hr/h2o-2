@@ -1,0 +1,21 @@
+{
+  Double AUC;
+  String prediction_name="Predict_GBM";
+  String h2oUrlCalculateAUCEndPoint=H2O_HOST_URL + H2O_GBM_MODEL_AUC_URL + "actual="+ actual+ "&vactual="+ vactual+ "&predict="+ prediction_name+ "&vpredict="+ vpredict+ "&threshold_criterion=maximum_F1";
+  System.out.println(h2oUrlCalculateAUCEndPoint);
+  log.debug("@@@ Calling endpoint {}",h2oUrlCalculateAUCEndPoint);
+  try {
+    RestTemplate restTemplate=new RestTemplate();
+    String responseBody=restTemplate.getForObject(h2oUrlCalculateAUCEndPoint,String.class);
+    JSONObject jsonobject=new JSONObject(responseBody);
+    JSONObject aucdata=(JSONObject)jsonobject.get("aucdata");
+    AUC=(Double)aucdata.get("AUC");
+    System.out.println("AUC: " + AUC);
+  }
+ catch (  Exception ex) {
+    log.debug("!!!!!! Error Occurred while getting job status  {}",ex);
+    ex.printStackTrace();
+    return null;
+  }
+  return AUC;
+}

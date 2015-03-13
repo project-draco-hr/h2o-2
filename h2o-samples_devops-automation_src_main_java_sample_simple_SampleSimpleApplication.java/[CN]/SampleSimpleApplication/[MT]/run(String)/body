@@ -1,0 +1,31 @@
+{
+  System.out.println(this.helloWorldService.getHelloMessage());
+  String key_value=h2oservice.ImportCSVFile(IMPORT_FILE);
+  if (!key_value.equalsIgnoreCase("error")) {
+    String destination_key=h2oservice.ParseCSVFile(key_value,"prostate_csv.hex");
+    System.out.println(destination_key);
+    if (destination_key != null) {
+      String gbm_key_value=h2oservice.BuildGBMModel("gbmmodelDestinationKey",destination_key);
+      if (gbm_key_value != null) {
+        String predict=h2oservice.PredictGBM(gbm_key_value,destination_key);
+        if (predict != null) {
+          Double AUC=h2oservice.CalculateAUC(destination_key,"CAPSULE","1");
+          String download_pojo_location=h2oservice.DownloadPOJO("gbmmodelDestinationKey");
+          System.out.println(download_pojo_location);
+        }
+ else {
+          System.out.println("Error in prediction");
+        }
+      }
+ else {
+        System.out.println("Error in building GBM model");
+      }
+    }
+ else {
+      System.out.println("Error in parsing data set");
+    }
+  }
+ else {
+    log.debug("Error occurred in Importing File, {}",IMPORT_FILE);
+  }
+}
