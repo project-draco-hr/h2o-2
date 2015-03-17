@@ -1,0 +1,22 @@
+{
+  String key;
+  String h2oUrlImportEndPoint=H2O_HOST_URL + H2O_IMPORT_URL + path;
+  log.debug("@@@ Calling endpoint {}",h2oUrlImportEndPoint);
+  RestTemplate restTemplate=new RestTemplate();
+  String result=restTemplate.getForObject(h2oUrlImportEndPoint,String.class);
+  log.debug("@@@ Response json from h2o {}",result);
+  JSONObject jsonobject=new JSONObject(result);
+  JSONObject response_info=(JSONObject)jsonobject.get("response_info");
+  String status=(String)response_info.get("status");
+  log.debug("!!!!!! Import Status  {}",status);
+  if (status.equalsIgnoreCase("DONE")) {
+    JSONArray jsonarray=(JSONArray)jsonobject.get("keys");
+    key=(String)jsonarray.get(0);
+    System.out.println("!!!!!! Import key : " + key);
+    log.debug("!!!!!! Import key  {}",key);
+    return key;
+  }
+ else {
+    return "error";
+  }
+}

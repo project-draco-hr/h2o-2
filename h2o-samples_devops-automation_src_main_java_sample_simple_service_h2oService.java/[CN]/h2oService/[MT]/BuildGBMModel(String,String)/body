@@ -1,0 +1,57 @@
+{
+  String h2oUrlGBMEndPoint=H2O_HOST_URL + H2O_GBM_MODEL_URL + "destination_key={destination_key}&source={source}&response={response}&ignored_cols={ignored_cols}"+ "&classification={classification}&validation={validation}"+ "&ntrees={ntrees}&max_depth={max_depth}&min_rows={min_rows}&nbins={nbins}&score_each_iteration={score_each_iteration}"+ "&importance={importance}&balance_classes={balance_classes}"+ "&class_sampling_factors={class_sampling_factors}&max_after_balance_size={max_after_balance_size}&checkpoint={checkpoint}"+ "&overwrite_checkpoint={overwrite_checkpoint}&family={family}&learn_rate={learn_rate}&grid_parallelism={grid_parallelism}&seed={seed}&group_split={group_split}";
+  System.out.println("@@@ h2oUrlGBMEndPoint : " + h2oUrlGBMEndPoint);
+  final HashMap<String,String> parameters=new HashMap<String,String>();
+  parameters.put("destination_key",destination_key);
+  parameters.put("source",source_key);
+  parameters.put("response","CAPSULE");
+  parameters.put("ignored_cols","0");
+  parameters.put("classification","1");
+  parameters.put("validation","");
+  parameters.put("n_folds","10");
+  parameters.put("keep_cross_validation_splits","0");
+  parameters.put("ntrees","50");
+  parameters.put("max_depth","5");
+  parameters.put("min_rows","10");
+  parameters.put("nbins","20");
+  parameters.put("score_each_iteration","0");
+  parameters.put("importance","1");
+  parameters.put("balance_classes","0");
+  parameters.put("class_sampling_factors","");
+  parameters.put("max_after_balance_size","Infinity");
+  parameters.put("checkpoint","");
+  parameters.put("overwrite_checkpoint","");
+  parameters.put("family","AUTO");
+  parameters.put("learn_rate","0.1");
+  parameters.put("grid_parallelism","1");
+  parameters.put("seed","-1");
+  parameters.put("group_split","1");
+  try {
+    RestTemplate restTemplate=new RestTemplate();
+    HttpHeaders headers=new HttpHeaders();
+    headers.add("Accept",MediaType.APPLICATION_JSON_VALUE);
+    ResponseEntity<String> responseEntity=restTemplate.getForEntity(h2oUrlGBMEndPoint,String.class,parameters);
+    String responseBody=responseEntity.getBody();
+    JSONObject jsonobject=new JSONObject(responseBody);
+    String job_key=(String)jsonobject.get("job_key");
+    String ret_destination_key=(String)jsonobject.get("destination_key");
+    System.out.println("!!!!!! GBM Job Key  : " + job_key);
+    System.out.println("!!!!!! GBM Destination Key  : " + ret_destination_key);
+    String gbm_status=GBMJobStatus(job_key,ret_destination_key);
+    if (gbm_status != null) {
+      System.out.println("gbm_status : " + gbm_status);
+    }
+    return ret_destination_key;
+  }
+ catch (  HttpClientErrorException e) {
+    log.debug("Error occured in building model {}",e.getResponseBodyAsString());
+    log.debug("Root cause in GBM {}",e.getRootCause().getMessage());
+    e.printStackTrace();
+    return null;
+  }
+catch (  Exception ex) {
+    log.debug("!!!!!Error occured in deep learning {}",ex.getMessage());
+    ex.printStackTrace();
+    return null;
+  }
+}

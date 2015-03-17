@@ -1,0 +1,23 @@
+{
+  String status;
+  String inspect_status;
+  String prediction_name="Predict_GBM";
+  String h2oUrlPredictEndPoint=H2O_HOST_URL + H2O_GBM_MODEL_PREDICT_URL + "model="+ model+ "&data="+ new_data_key+ "&prediction="+ prediction_name;
+  System.out.println(h2oUrlPredictEndPoint);
+  log.debug("@@@ Calling endpoint {}",h2oUrlPredictEndPoint);
+  try {
+    RestTemplate restTemplate=new RestTemplate();
+    String responseBody=restTemplate.getForObject(h2oUrlPredictEndPoint,String.class);
+    JSONObject jsonobject=new JSONObject(responseBody);
+    JSONObject response_info=(JSONObject)jsonobject.get("response_info");
+    status=(String)response_info.get("status");
+    System.out.println("PREDICT GBM status: " + status);
+    inspect_status=PredictGBMStatus(prediction_name);
+  }
+ catch (  Exception ex) {
+    log.debug("!!!!!! Error Occurred while getting job status  {}",ex);
+    ex.printStackTrace();
+    return null;
+  }
+  return inspect_status;
+}
