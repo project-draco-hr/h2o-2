@@ -1,3 +1,16 @@
 {
-  for (int k=0; k < trees.length; k++)   if (trees[k] != null)   System.out.println(trees[k].root().toString2(new StringBuilder(),0));
+  for (int k=0; k < trees.length; k++)   if (trees[k] != null) {
+    try {
+      PrintWriter writer=new PrintWriter("/tmp/h2o.tree" + ++counter + ".txt","UTF-8");
+      writer.println(trees[k].root().toString2(new StringBuilder(),0));
+      writer.close();
+    }
+ catch (    FileNotFoundException e) {
+      e.printStackTrace();
+    }
+catch (    UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    System.out.println(trees[k].root().toString2(new StringBuilder(),0));
+  }
 }
