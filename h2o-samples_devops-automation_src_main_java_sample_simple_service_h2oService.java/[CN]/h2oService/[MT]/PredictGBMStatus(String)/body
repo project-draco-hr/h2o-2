@@ -1,0 +1,26 @@
+{
+  String status;
+  String h2oUrlJobStatusEndPoint=H2O_HOST_URL + H2O_GBM_MODEL_PREDICT_STATUS_URL + "src_key="+ src_key;
+  System.out.println(h2oUrlJobStatusEndPoint);
+  System.out.println("@@@ Calling endpoint {} : " + h2oUrlJobStatusEndPoint);
+  log.debug("@@@ Calling endpoint {}",h2oUrlJobStatusEndPoint);
+  RestTemplate restTemplate=new RestTemplate();
+  try {
+    while (true) {
+      String responseBody=restTemplate.getForObject(h2oUrlJobStatusEndPoint,String.class);
+      JSONObject jsonobject=new JSONObject(responseBody);
+      JSONObject response_info=(JSONObject)jsonobject.get("response_info");
+      status=(String)response_info.get("status");
+      log.debug("!!!!!! JOB Status  {}",status);
+      if (status.equalsIgnoreCase("done")) {
+        break;
+      }
+      Thread.sleep(2000L);
+    }
+  }
+ catch (  Exception ex) {
+    log.debug("!!!!!! Error Occured while getting job status  {}",ex);
+    return null;
+  }
+  return status;
+}

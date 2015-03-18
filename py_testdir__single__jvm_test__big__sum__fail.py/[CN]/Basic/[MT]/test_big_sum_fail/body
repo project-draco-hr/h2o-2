@@ -4,7 +4,7 @@ def test_big_sum_fail(self):
     csvPathname = (SYNDATASETS_DIR + '/temp.csv')
     hex_key = 'temp.hex'
     for trial in range(5):
-        cfResult = h2o.nodes[0].create_frame(key=hex_key, binary_ones_fraction=0.02, binary_fraction=0, randomize=1, missing_fraction=0, integer_fraction=1, real_range=100, has_response=0, response_factors=2, factors=100, cols=1, integer_range=100, value=0, categorical_fraction=0, rows=300000000.0, timeoutSecs=300)
+        cfResult = h2o.nodes[0].create_frame(key=hex_key, binary_ones_fraction=0.02, binary_fraction=0, randomize=1, missing_fraction=0, integer_fraction=1, real_range=100, has_response=0, response_factors=2, factors=100, cols=1, integer_range=100, value=0, categorical_fraction=0, rows=250000000.0, timeoutSecs=300)
         inspect = h2o_cmd.runInspect(key=hex_key)
         h2o_cmd.infoFromInspect(inspect, hex_key)
         if UNNECESSARY:

@@ -20,10 +20,8 @@
       httpResponse=(BasicHttpResponse)httpClient.execute(httpPost);
     }
  catch (    ClientProtocolException e) {
-      Log.trace("GA connectivity had a problem or the connectivity was aborted.  " + e.toString());
     }
 catch (    IOException e) {
-      Log.trace("GA connectivity suffered a protocol error.  " + e.toString());
     }
     response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
     response.setPostedParms(postParms);
@@ -38,10 +36,8 @@ catch (    IOException e) {
   }
  catch (  Exception e) {
     if (e instanceof UnknownHostException) {
-      Log.trace("Coudln't connect to GA. Internet may not be available. " + e.toString());
     }
  else {
-      Log.trace("Exception while sending the GA tracker request: " + request + ".  "+ e.toString());
     }
   }
   return response;

@@ -38,4 +38,4 @@ def test_GLM2_ints_unbalanced(self):
             print 'glm end on ', parseResult['destination_key'], 'took', (time.time() - start), 'seconds'
             h2o_glm.simpleCheckGLM(self, glm, None, **kwargs)
             parseResult = h2i.import_parse(path=csvScorePathname, schema='put', hex_key='B.hex', timeoutSecs=30, separator=colSepInt)
-            h2o_cmd.runScore(dataKey='B.hex', modelKey=modelKey, vactual=('C' + str((y + 1))), vpredict=1, expectedAuc=0.45)
+            h2o_cmd.runScore(dataKey='B.hex', modelKey=modelKey, vactual=('C' + str((y + 1))), vpredict=1, expectedAuc=0.5, expectedAucTol=0.2)

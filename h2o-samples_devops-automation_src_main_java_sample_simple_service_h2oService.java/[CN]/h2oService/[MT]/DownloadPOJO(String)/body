@@ -1,0 +1,22 @@
+{
+  File java_pojo;
+  String h2oUrlDownloadPOJOEndPoint=H2O_HOST_URL + H2O_GBM_MODEL_POJO_URL + model_key;
+  System.out.println(h2oUrlDownloadPOJOEndPoint);
+  log.debug("@@@ Calling endpoint {}",h2oUrlDownloadPOJOEndPoint);
+  try {
+    RestTemplate restTemplate=new RestTemplate();
+    String responseBody=restTemplate.getForObject(h2oUrlDownloadPOJOEndPoint,String.class);
+    String pojofilename=model_key + ".java";
+    java_pojo=new File(pojofilename);
+    System.out.println("POJO File name" + java_pojo.getAbsolutePath());
+    PrintWriter out=new PrintWriter(java_pojo.getAbsolutePath());
+    out.write(responseBody);
+    out.close();
+  }
+ catch (  Exception ex) {
+    log.debug("!!!!!! Error Occurred while getting job status  {}",ex);
+    ex.printStackTrace();
+    return null;
+  }
+  return java_pojo.getAbsolutePath();
+}
