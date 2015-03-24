@@ -21,6 +21,11 @@
     assertEquals(2015,model.null_validation.residualDeviance(),1e-1);
     assertEquals(1516,val.residualDeviance(),1e-1);
     assertEquals(1532,val.aic(),1e-1);
+    fr=getFrameForFile(parsed,"smalldata/glm_test/abcd.csv",new String[0],"D");
+    new GLM2("GLM testing constant offset on a toy dataset.",Key.make(),modelKey,new GLM2.Source(fr,fr.vec("D"),false,false,fr.vec("E")),Family.gaussian).setRegularization(new double[]{0},new double[]{0}).doInit().fork().get();
+    model=DKV.get(modelKey).get();
+    assertEquals(model.coefficients().get("E"),1,0);
+    assertTrue(model.validation().residualDeviance() <= model.validation().nullDeviance());
   }
   finally {
     fr.delete();
