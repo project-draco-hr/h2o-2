@@ -51,10 +51,20 @@
       assertTrue("should've thrown",false);
     }
  catch (    IllegalArgumentException t) {
-      assertTrue(t.getMessage().contains("duplicate coordinate constraints for 'AGE'"));
+      assertTrue(t.getMessage().contains("duplicate constraints for 'AGE'"));
+    }
+    FVecTest.makeByteVec(betaConsKey,"names, lower_bounds, upper_bounds\n AGE, .5, .5\n XXX, -.5, .5\n DCAPS, -.4, .4\n DPROS, -.5, .5 \nPSA, -.5, .5\n VOL, -.5, .5\nGLEASON, -.5, .5");
+    betaConstraints=ParseDataset2.parse(parsed,new Key[]{betaConsKey});
+    try {
+      new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source((Frame)fr.clone(),fr.vec("CAPSULE"),true,true),Family.binomial).setNonNegative(false).setRegularization(new double[]{1},new double[]{0.001607}).setBetaConstraints(betaConstraints).doInit().fork().get();
+      assertTrue("should've thrown",false);
+    }
+ catch (    IllegalArgumentException t) {
+      assertTrue(t.getMessage().contains("unknown predictor name 'XXX'"));
     }
   }
   finally {
+    if (betaConstraints != null)     betaConstraints.delete();
     fr.delete();
     if (model != null)     model.delete();
   }
