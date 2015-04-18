@@ -4,7 +4,11 @@
   double step=GLM2.LS_STEP;
   for (int i=0; i < betas.length; ++i) {
     betas[i]=MemoryManager.malloc8d(newBeta.length);
-    for (int j=0; j < oldBeta.length; ++j)     betas[i][j]=oldBeta[j] + step * (newBeta[j] - oldBeta[j]);
+    for (int j=0; j < oldBeta.length; ++j) {
+      betas[i][j]=oldBeta[j] + step * (newBeta[j] - oldBeta[j]);
+      if (lowerBounds != null && betas[i][j] < lowerBounds[j])       betas[i][j]=lowerBounds[j];
+      if (upperBounds != null && betas[i][j] > upperBounds[j])       betas[i][j]=upperBounds[j];
+    }
     step*=GLM2.LS_STEP;
   }
   _glmts=new GLMIterationTask[betas.length];

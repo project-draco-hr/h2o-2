@@ -4,8 +4,8 @@
   if (_bgs != null && _rho != null) {
     for (int i=0; i < _bgs.length; ++i) {
       double diff=fullBeta[i] - _bgs[i];
-      res+=.5 * _rho[i] * diff* diff;
+      res+=_rho[i] * diff * diff;
     }
   }
-  return res;
+  return .5 * res;
 }

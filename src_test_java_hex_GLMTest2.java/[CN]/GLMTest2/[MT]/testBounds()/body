@@ -25,6 +25,34 @@
     GLMValidation val=model.validation();
     assertEquals(512.2888,model.null_validation.residualDeviance(),1e-1);
     assertEquals(388.4686,val.residualDeviance(),1e-1);
+    model.delete();
+    betaConstraints.delete();
+    FVecTest.makeByteVec(betaConsKey,"names, lower_bounds, upper_bounds\n AGE, .5, .5 \n RACE, -.5, .5\n DCAPS, -.4, .4\n DPROS, -.5, .5 \nPSA, -.5, .5\n VOL, -.5, .5\nGLEASON, -.5, .5");
+    betaConstraints=ParseDataset2.parse(parsed,new Key[]{betaConsKey});
+    new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source((Frame)fr.clone(),fr.vec("CAPSULE"),true,true),Family.binomial).setNonNegative(false).setRegularization(new double[]{1},new double[]{0.001607}).setBetaConstraints(betaConstraints).doInit().fork().get();
+    model=DKV.get(modelKey).get();
+    System.out.println(model.coefficients());
+    assertEquals(.5,model.coefficients().get("AGE"),1e-16);
+    FVecTest.makeByteVec(betaConsKey,"names, lower_bounds, upper_bounds\n AGE, .51, .5\n RACE, -.5, .5\n DCAPS, -.4, .4\n DPROS, -.5, .5 \nPSA, -.5, .5\n VOL, -.5, .5\nGLEASON, -.5, .5");
+    model.delete();
+    betaConstraints=ParseDataset2.parse(parsed,new Key[]{betaConsKey});
+    try {
+      new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source((Frame)fr.clone(),fr.vec("CAPSULE"),true,true),Family.binomial).setNonNegative(false).setRegularization(new double[]{1},new double[]{0.001607}).setBetaConstraints(betaConstraints).doInit().fork().get();
+      assertTrue("should've thrown",false);
+    }
+ catch (    IllegalArgumentException t) {
+      assertTrue(t.getMessage().contains("Invalid upper/lower bounds"));
+    }
+    FVecTest.makeByteVec(betaConsKey,"names, lower_bounds, upper_bounds\n AGE, .5, .5\n AGE, -.5, .5\n DCAPS, -.4, .4\n DPROS, -.5, .5 \nPSA, -.5, .5\n VOL, -.5, .5\nGLEASON, -.5, .5");
+    model.delete();
+    betaConstraints=ParseDataset2.parse(parsed,new Key[]{betaConsKey});
+    try {
+      new GLM2("GLM offset test on prostate.",Key.make(),modelKey,new GLM2.Source((Frame)fr.clone(),fr.vec("CAPSULE"),true,true),Family.binomial).setNonNegative(false).setRegularization(new double[]{1},new double[]{0.001607}).setBetaConstraints(betaConstraints).doInit().fork().get();
+      assertTrue("should've thrown",false);
+    }
+ catch (    IllegalArgumentException t) {
+      assertTrue(t.getMessage().contains("duplicate coordinate constraints for 'AGE'"));
+    }
   }
   finally {
     fr.delete();
