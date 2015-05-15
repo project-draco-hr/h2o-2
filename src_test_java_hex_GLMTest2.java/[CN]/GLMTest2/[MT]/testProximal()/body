@@ -9,7 +9,7 @@
   fr=DKV.get(k).get();
   fr.remove("ID");
   Key betaConsKey=Key.make("beta_constraints");
-  FVecTest.makeByteVec(betaConsKey,"names, beta_given, rho\n AGE, 0.1, 1\n RACE, -0.1, 1 \n DPROS, 10, 1 \n DCAPS, -10, 1 \n PSA, 0, 1\n VOL, 0, 1\nGLEASON, 0, 1\n Intercept, 0, 0 \n");
+  FVecTest.makeByteVec(betaConsKey,"names, beta_given, rho\n AGE, 0.1, 1\nRACE, -0.1, 1 \n DPROS, 10, 1 \n DCAPS, -10, 1 \n PSA, 0, 1\n VOL, 0, 1\nGLEASON, 0, 1\n Intercept, 0, 0 \n");
   Frame betaConstraints=ParseDataset2.parse(parsed,new Key[]{betaConsKey});
   try {
     GLM2.Source src=new GLM2.Source((Frame)fr.clone(),fr.vec("CAPSULE"),false,true);
