@@ -1,0 +1,7 @@
+{
+  for (  H2ONode node : H2O.CLOUD._memary) {
+    GCTask t=new GCTask();
+    new RPC<GCTask>(node,t).call().get();
+  }
+  return RequestBuilders.Response.doneEmpty();
+}
