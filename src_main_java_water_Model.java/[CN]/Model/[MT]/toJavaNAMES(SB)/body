@@ -1,3 +1,4 @@
 {
-  return JCodeGen.toStaticVar(sb,"NAMES",_names,"Names of columns used by model.");
+  int limit=((1 << 16) - 4 * 500) / (4 * 2 * 2);
+  return _names.length < limit ? JCodeGen.toStaticVar(sb,"NAMES",_names,"Names of columns used by model.") : JCodeGen.toStaticVar(sb,"NAMES",JCodeGen.EMPTY_SA,"Names of columns used by model. WARNING: It is too large to be generated!");
 }

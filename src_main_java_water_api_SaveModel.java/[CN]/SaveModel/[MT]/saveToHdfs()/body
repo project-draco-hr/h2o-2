@@ -7,7 +7,7 @@
     FileSystem fs=FileSystem.get(parentDir.toUri(),PersistHdfs.CONF);
     if (force && fs.exists(parentDir))     fs.delete(parentDir);
     fs.mkdirs(parentDir);
-    new Model2HDFSBinarySerializer(fs,force).save(model,new Path(parentDir,model._key.toString()));
+    new Model2HDFSBinarySerializer(fs,force).save(model,new Path(parentDir,JCodeGen.toJavaId(model._key.toString())));
     Path model_names=new Path(parentDir,"model_names");
     BufferedWriter br=new BufferedWriter(new OutputStreamWriter(fs.create(model_names,true)));
     br.write("main model : " + model._key.toString());
@@ -15,8 +15,8 @@
     if (save_cv) {
       Model[] models=getCrossValModels(model);
       for (      Model m : models) {
-        new Model2HDFSBinarySerializer(fs,force).save(m,new Path(parentDir,m._key.toString()));
-        br.write(m._key.toString());
+        new Model2HDFSBinarySerializer(fs,force).save(m,new Path(parentDir,JCodeGen.toJavaId(m._key.toString())));
+        br.write(JCodeGen.toJavaId(m._key.toString()));
         br.newLine();
       }
     }

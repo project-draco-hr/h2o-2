@@ -7,7 +7,8 @@
     String[] dom=_domains[i];
     String colInfoClazz="ColInfo_" + i;
     sb.i(1).p("/* ").p(_names[i]).p(" */ ");
-    sb.p(colInfoClazz).p(".VALUES");
+    if (dom != null)     sb.p(colInfoClazz).p(".VALUES");
+ else     sb.p("null");
     if (i != _domains.length - 1)     sb.p(',');
     sb.nl();
     fileContextSB.i().p("// The class representing column ").p(_names[i]).nl();
