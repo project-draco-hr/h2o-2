@@ -1,0 +1,8 @@
+{
+  String namesHolderClassName="NamesHolder";
+  sb.i().p("// ").p("Names of columns used by model.").nl();
+  sb.i().p("public static final String[] NAMES = NamesHolder.VALUES;").nl();
+  fileContextSB.i().p("// The class representing training column names ").nl();
+  JCodeGen.toClassWithArray(fileContextSB,null,namesHolderClassName,_names);
+  return sb;
+}
